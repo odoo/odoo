@@ -42,7 +42,7 @@
                         </div>
                         <div t-attf-class="dropdown-menu border-0 shadow-lg {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}" role="menu">
                             <t t-foreach="state.getWebsiteTypes()" t-as="type" t-key="type.name">
-                                <a t-att-title="type.name" t-on-click="() => this.selectWebsiteType(type.id)" class="dropdown-item o_change_website_type">
+                                <a t-att-title="type.name" t-on-click="() => this.selectWebsiteType(type.id)" class="dropdown-item o_change_website_type" role="menuitem">
                                     <t t-esc="type.label"/>
                                 </a>
                             </t>
@@ -51,8 +51,11 @@
                     <span t-attf-class="me-2 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}"> for my</span>
                 </div>
                 <div t-attf-class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}">
+                    <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
+                    <t t-set="industry_placeholder">Clothes, Marketing, ...</t>
                     <label class="o_configurator_industry_wrapper me-2" t-ref="industrySelection">
                         <AutoComplete
+                            placeholder="industry_placeholder"
                             value="state.selectedIndustry?.label ?? ''"
                             sources="sources"
                             onSelect.bind="_setSelectedIndustry"
@@ -104,7 +107,7 @@
                                 </div>
                             </div>
                             <div t-if="state.logo" class="o_configurator_logo_wrapper position-absolute d-flex justify-content-center align-items-center bg-white w-100 h-100">
-                                <img style="height: 120px" t-attf-src="{{state.logo}}"/>
+                                <img style="height: 120px" t-attf-src="{{state.logo}}" alt="Logo"/>
                             </div>
                             <i t-if="state.logo" class="fa fa-2x fa-times-circle text-danger position-absolute top-0 end-0 pe-2 pt-2" t-on-click="removeLogo"/>
                         </div>

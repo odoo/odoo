@@ -16,6 +16,7 @@
     ],
     'data': [
         'data/cron.xml',
+        'data/mail_templates_email_layouts.xml',
         'views/account_journal_dashboard_views.xml',
         'views/account_move_views.xml',
         'views/res_partner_views.xml',
@@ -30,5 +31,6 @@
         'web.assets_backend': [
             'account_peppol/static/src/components/**/*',
         ],
-    }
+    },
+    'pre_init_hook': 'pre_init_hook',
 }

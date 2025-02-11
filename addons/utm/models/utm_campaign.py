@@ -34,7 +34,9 @@ class UtmCampaign(models.Model):
 
     @api.depends('title')
     def _compute_name(self):
-        new_names = self.env['utm.mixin']._get_unique_names(self._name, [c.title for c in self])
+        new_names = self.env['utm.mixin'].with_context(
+            utm_check_skip_record_ids=self.ids
+        )._get_unique_names(self._name, [c.title for c in self])
         for campaign, new_name in zip(self, new_names):
             campaign.name = new_name
 

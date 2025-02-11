@@ -12,11 +12,15 @@ class AccountMove(models.Model):
         if self.company_id.country_id.code != "PE" or not self.journal_id.l10n_latam_use_documents or self.journal_id.type != "sale":
             return result
         result.append(("code", "in", ("01", "03", "07", "08", "20", "40")))
-        if self.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code != '6':
-            result.append(('id', 'in', (self.env.ref('l10n_pe.document_type08b') | self.env.ref('l10n_pe.document_type02') | self.env.ref('l10n_pe.document_type07b')).ids))
+        if self.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code != '6' and self.move_type == 'out_invoice':
+            result.append(('id', 'in', (
+                self.env.ref('l10n_pe.document_type08b')
+                | self.env.ref('l10n_pe.document_type02')
+                | self.env.ref('l10n_pe.document_type07b')
+            ).ids))
         return result
 
-    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
+    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'partner_id')
     def _inverse_l10n_latam_document_number(self):
         """Inherit to complete the l10n_latam_document_number with the expected 8 characters after that a '-'
         Example: Change FFF-32 by FFF-00000032, to avoid incorrect values on the reports"""

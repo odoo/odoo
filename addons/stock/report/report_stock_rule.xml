@@ -158,14 +158,14 @@
         </div>
     </template>
     <template id="report_stock_rule_right_arrow">
-        <div class="o_report_stock_rule_arrow">
+        <div t-attf-class="o_report_stock_rule_arrow {{ 'o_report_stock_rule_rtl' if is_rtl else '' }}">
             <svg width="100%" height="100%" viewBox="0 0 10 10">
                 <polygon points="0,0 0,10 10,5" t-attf-style="stroke: #{color}; fill: #{color};"/>
             </svg>
         </div>
     </template>
     <template id="report_stock_rule_left_arrow">
-        <div class="o_report_stock_rule_arrow">
+        <div t-attf-class="o_report_stock_rule_arrow {{ 'o_report_stock_rule_rtl' if is_rtl else '' }}">
             <svg width="100%" height="100%" viewBox="0 0 10 10">
                 <polygon points="0,5 10,10 10,0" t-attf-style="stroke: #{color}; fill: #{color};"/>
             </svg>

@@ -5,11 +5,11 @@
 # Translators:
 # InfernalLV <karlisdreizis@gmail.com>, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
-# Will Sensors, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Anzelika Adejanova, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# Will Sensors, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2023\n"
+"Last-Translator: Will Sensors, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,13 +28,13 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "<strong>Error:</strong> The currency is missing or invalid."
-msgstr ""
+msgstr "<strong>Kļūda:</strong> Iztrūkst valūta vai tā ir nederīga."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid ""
 "<strong>Error:</strong> There was a problem during the payment process."
-msgstr ""
+msgstr "<strong>Kļūda:</strong> Radās problēma maksājuma procesa laikā."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -50,6 +50,7 @@ msgstr ""
 #, python-format
 msgid "A POS config cannot have more than one online payment method."
 msgstr ""
+"POS konfigurācijā nevar būt vairāk kā vienas tiešsaistes maksājumu metodes."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -69,7 +70,7 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "All available providers"
-msgstr ""
+msgstr "Visi pieejamie maksājumu sniedzēji"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -84,7 +85,7 @@ msgstr ""
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
 msgid "Allowed Providers"
-msgstr ""
+msgstr "Atļautie maksājumu sniedzēji"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -109,7 +110,7 @@ msgstr "Atcelt"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Cancel payment"
-msgstr ""
+msgstr "Atcelt maksājumu"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -153,33 +154,33 @@ msgstr ""
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Invalid online payment"
-msgstr ""
+msgstr "Nederīgs tiešsaistes maksājums"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Invalid online payments"
-msgstr ""
+msgstr "Nederīgi tiešsaistes maksājumi"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
 #, python-format
 msgid "Invite your customer to scan the QR code to pay:"
-msgstr ""
+msgstr "Ielūdziet Jūsu klientu, lai noskenēt QR kodu, lai veikt apmaksu:"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Invoice could not be generated"
-msgstr ""
+msgstr "Rēķins nevarēja tikt ģenerēts"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
 msgid "Next online payment amount to pay"
-msgstr ""
+msgstr "Nākošā tiešsaistes maksājuma summa apmaksai"
 
 #. module: pos_online_payment
 #: model:ir.model.fields.selection,name:pos_online_payment.selection__pos_payment_method__type__online
@@ -192,12 +193,12 @@ msgstr "Tiešsaistē"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
 #, python-format
 msgid "Online Payment"
-msgstr "Maksājums tiešsaistē."
+msgstr "Tiešsaistes maksājums"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
-msgstr ""
+msgstr "Tiešsaites maksājuma metode"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -212,7 +213,7 @@ msgstr ""
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Online payment unavailable"
-msgstr ""
+msgstr "Tiešsaistes maksājums nepieejams"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -224,17 +225,17 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Order ID"
-msgstr ""
+msgstr "Pasūtījuma ID"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Order ID:"
-msgstr ""
+msgstr "Pasūtījuma ID:"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Order Reference"
-msgstr "Atsauce uz Pasūtījumu"
+msgstr "Pasūtījuma atsauce"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -242,7 +243,7 @@ msgstr "Atsauce uz Pasūtījumu"
 #: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
 #, python-format
 msgid "Order id:"
-msgstr ""
+msgstr "Pasūtījuma ID:"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -250,7 +251,7 @@ msgstr ""
 #: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
 #, python-format
 msgid "Order reference:"
-msgstr ""
+msgstr "Pasūtījuma atsauce:"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -269,7 +270,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
 #, python-format
 msgid "POS Order"
-msgstr ""
+msgstr "POS pasūtījums"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
@@ -321,7 +322,7 @@ msgstr "Pārdošanas punkta sesija"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Processed by"
-msgstr ""
+msgstr "Apstrādāja"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -411,7 +412,7 @@ msgstr ""
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The order has been canceled."
-msgstr ""
+msgstr "Pasūtījums ir atcelts."
 
 #. module: pos_online_payment
 #. odoo-javascript

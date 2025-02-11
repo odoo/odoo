@@ -125,6 +125,21 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
     );
 
     QUnit.test(
+        "can get a Pivot from cell formula where the id is a reference in an inactive sheet",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot();
+            const firstSheetId = model.getters.getActiveSheetId();
+            model.dispatch("CREATE_SHEET", { sheetId: "2" });
+            model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: firstSheetId, sheetIdTo: "2" });
+            setCellContent(model, "A1", "1");
+            setCellContent(model, "A2", '=ODOO.PIVOT(A1,"probability")');
+            model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: "2", sheetIdTo: firstSheetId });
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId: "2", col: 0, row: 1 });
+            assert.strictEqual(pivotId, "1");
+        }
+    );
+
+    QUnit.test(
         "can select a Pivot from cell formula (Mix of test scenarios above)",
         async function (assert) {
             const { model } = await createSpreadsheetWithPivot({
@@ -306,6 +321,52 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             assert.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
         }
     );
+
+    QUnit.test("Context is purged from PivotView related keys", async function (assert) {
+        const spreadsheetData = {
+            sheets: [
+                {
+                    id: "sheet1",
+                    cells: {
+                        A1: { content: `=ODOO.PIVOT(1, "probability")` },
+                    },
+                },
+            ],
+            pivots: {
+                1: {
+                    id: 1,
+                    colGroupBys: ["foo"],
+                    rowGroupBys: ["bar"],
+                    domain: [],
+                    measures: [{ field: "probability", operator: "avg" }],
+                    model: "partner",
+                    context: {
+                        pivot_measures: ["__count"],
+                        // inverse row and col group bys
+                        pivot_row_groupby: ["test"],
+                        pivot_column_groupby: ["check"],
+                        dummyKey: "true",
+                    },
+                },
+            },
+        };
+        const model = await createModelWithDataSource({
+            spreadsheetData,
+            mockRPC: function (route, { model, method, kwargs }) {
+                if (model === "partner" && method === "read_group") {
+                    assert.step(`pop`);
+                    assert.notOk(
+                        ["pivot_measures", "pivot_row_groupby", "pivot_column_groupby"].some(
+                            (val) => val in (kwargs.context || {})
+                        ),
+                        "The context should not contain pivot related keys"
+                    );
+                }
+            },
+        });
+        await waitForDataSourcesLoaded(model);
+        assert.verifySteps(["pop", "pop", "pop", "pop"]);
+    });
 
     QUnit.test("fetch metadata only once per model", async function (assert) {
         const spreadsheetData = {
@@ -598,6 +659,66 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.equal(getCellValue(model, "D4"), 10);
         assert.equal(getCellValue(model, "E4"), 95);
     });
+
+    QUnit.test("aggregate to 0", async function (assert) {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records = [
+            { id: 1, name: "A", probability: 10 },
+            { id: 2, name: "B", probability: -10 },
+        ];
+
+        const { model } = await createSpreadsheetWithPivot({
+            serverData,
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="name" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        });
+        setCellContent(model, "A1", '=ODOO.PIVOT(1, "probability", "name", "A")');
+        setCellContent(model, "A2", '=ODOO.PIVOT(1, "probability", "name", "B")');
+        setCellContent(model, "A3", '=ODOO.PIVOT(1, "probability")');
+        assert.strictEqual(getEvaluatedCell(model, "A1").value, 10);
+        assert.strictEqual(getEvaluatedCell(model, "A2").value, -10);
+        assert.strictEqual(getEvaluatedCell(model, "A3").value, 0);
+    });
+
+    QUnit.test(
+        "pivot formula for total should return empty string instead of 'FALSE' when pivot doesn't match any data",
+        async function (assert) {
+            const serverData = getBasicServerData();
+            serverData.models.partner.records = [{ id: 1, name: "A", probability: 10 }];
+
+            const { model } = await createSpreadsheetWithPivot({
+                serverData,
+                arch: /*xml*/ `
+                <pivot>
+                    <field name="name" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+            });
+
+            model.dispatch("UPDATE_ODOO_PIVOT_DOMAIN", {
+                pivotId: 1,
+                domain: [["probability", "=", 100]],
+            });
+            await waitForDataSourcesLoaded(model);
+
+            setCellContent(model, "A1", '=ODOO.PIVOT(1, "probability", "name", "A")');
+            setCellContent(model, "A2", '=ODOO.PIVOT(1, "probability")');
+            assert.strictEqual(getEvaluatedCell(model, "A1").value, "");
+            assert.strictEqual(getEvaluatedCell(model, "A2").value, "");
+
+            model.dispatch("UPDATE_ODOO_PIVOT_DOMAIN", {
+                pivotId: 1,
+                domain: [],
+            });
+            await waitForDataSourcesLoaded(model);
+
+            assert.strictEqual(getEvaluatedCell(model, "A1").value, 10);
+            assert.strictEqual(getEvaluatedCell(model, "A2").value, 10);
+        }
+    );
 
     QUnit.test("can import/export sorted pivot", async (assert) => {
         const spreadsheetData = {

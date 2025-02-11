@@ -66,7 +66,7 @@ class PaymentTransaction(models.Model):
         api_url = 'https://checkout.payulatam.com/ppp-web-gateway-payu/' \
             if self.provider_id.state == 'enabled' \
             else 'https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/'
-        base_url = self.get_base_url()
+        base_url = self.provider_id.get_base_url()
         payulatam_values = {
             'merchantId': self.provider_id.payulatam_merchant_id,
             'referenceCode': self.reference,

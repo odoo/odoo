@@ -5,6 +5,9 @@ from odoo import tools
 
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.tests.common import Form
+from odoo.exceptions import UserError
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSProductsWithTax(TestPoSCommon):
@@ -91,13 +94,13 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
-                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 24.89, 'reconciled': False},
-                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 51.82, 'reconciled': False},
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 110, 'reconciled': False},
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 272.73, 'reconciled': False},
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 245.45, 'reconciled': False},
-                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 230.25, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 474.64, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 24.89, 'reconciled': False, 'display_type': 'tax'},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 51.82, 'reconciled': False, 'display_type': 'tax'},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 110, 'reconciled': False, 'display_type': 'product'},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 272.73, 'reconciled': False, 'display_type': 'product'},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 245.45, 'reconciled': False, 'display_type': 'product'},
+                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 230.25, 'credit': 0, 'reconciled': True, 'display_type': 'product'},
+                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 474.64, 'credit': 0, 'reconciled': True, 'display_type': 'product'},
                     ],
                 },
                 'cash_statement': [
@@ -551,3 +554,147 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.test_orders_no_invoiced()
         tax_pos.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_pos.is_used)
+
+    def test_pos_loaded_product_taxes_on_branch(self):
+        """ Check loaded product taxes on branch company """
+        # create the following branch hierarchy:
+        #     Parent company
+        #         |----> Branch X
+        #                   |----> Branch XX
+        company = self.config.company_id
+        branch_x = self.env['res.company'].create({
+            'name': 'Parent Company',
+            'country_id': company.country_id.id,
+            'parent_id': company.id,
+        })
+        branch_xx = self.env['res.company'].create({
+            'name': 'Branch XX',
+            'country_id': company.country_id.id,
+            'parent_id': branch_x.id,
+        })
+        self.cr.precommit.run()  # load the CoA
+        # create taxes for the parent company and its branches
+        tax_groups = self.env['account.tax.group'].create([{
+            'name': 'Tax Group',
+            'company_id': company.id,
+        }, {
+            'name': 'Tax Group X',
+            'company_id': branch_x.id,
+        }, {
+            'name': 'Tax Group XX',
+            'company_id': branch_xx.id,
+        }])
+        tax_a = self.env['account.tax'].create({
+            'name': 'Tax A',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'tax_group_id': tax_groups[0].id,
+            'company_id': company.id,
+        })
+        tax_b = self.env['account.tax'].create({
+            'name': 'Tax B',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15,
+            'tax_group_id': tax_groups[0].id,
+            'company_id': company.id,
+        })
+        tax_x = self.env['account.tax'].create({
+            'name': 'Tax X',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 20,
+            'tax_group_id': tax_groups[1].id,
+            'company_id': branch_x.id,
+        })
+        tax_xx = self.env['account.tax'].create({
+            'name': 'Tax XX',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 25,
+            'tax_group_id': tax_groups[2].id,
+            'company_id': branch_xx.id,
+        })
+        # create several products with different taxes combination
+        product_all_taxes = self.env['product.product'].create({
+            'name': 'Product all taxes',
+            'available_in_pos': True,
+            'taxes_id': [odoo.Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
+        })
+        product_no_xx_tax = self.env['product.product'].create({
+            'name': 'Product no tax from XX',
+            'available_in_pos': True,
+            'taxes_id': [odoo.Command.set((tax_a + tax_b + tax_x).ids)],
+        })
+        product_no_branch_tax = self.env['product.product'].create({
+            'name': 'Product no tax from branch',
+            'available_in_pos': True,
+            'taxes_id': [odoo.Command.set((tax_a + tax_b).ids)],
+        })
+        product_no_tax = self.env['product.product'].create({
+            'name': 'Product no tax',
+            'available_in_pos': True,
+            'taxes_id': [],
+        })
+        # configure a session on Branch XX
+        xx_config = self.env['pos.config'].with_company(branch_xx).create({
+            'name': 'Branch XX config',
+            'company_id': branch_xx.id,
+        })
+        xx_account_receivable = self.company_data['default_account_receivable'].copy()
+        xx_account_receivable.company_id = branch_xx
+        xx_cash_journal = self.company_data['default_journal_cash'].copy()
+        xx_cash_journal.company_id = branch_xx
+        xx_cash_payment_method = self.env['pos.payment.method'].create({
+            'name': 'XX Cash Payment',
+            'receivable_account_id': xx_account_receivable.id,
+            'journal_id': xx_cash_journal.id,
+            'company_id': branch_xx.id,
+        })
+        xx_config.write({'payment_method_ids': [
+            odoo.Command.set(xx_cash_payment_method.ids),
+        ]})
+        self.config = xx_config
+        pos_session = self.open_new_session()
+        # load the session data from Branch XX:
+        # - Product all taxes           => tax from Branch XX should be set
+        # - Product no tax from XX      => tax from Branch X should be set
+        # - Product no tax from branch  => 2 taxes from parent company should be set
+        # - Product no tax              => no tax should be set
+        pos_data = pos_session.load_pos_data()
+        self.assertEqual(
+            next(iter(filter(lambda p: p['id'] == product_all_taxes.id, pos_data['product.product'])))['taxes_id'],
+            tax_xx.ids
+        )
+        self.assertEqual(
+            next(iter(filter(lambda p: p['id'] == product_no_xx_tax.id, pos_data['product.product'])))['taxes_id'],
+            tax_x.ids
+        )
+        tax_data_no_branch = next(iter(filter(lambda p: p['id'] == product_no_branch_tax.id, pos_data['product.product'])))['taxes_id']
+        tax_data_no_branch.sort()
+        self.assertEqual(
+            tax_data_no_branch,
+            (tax_a + tax_b).ids
+        )
+        self.assertEqual(
+            next(iter(filter(lambda p: p['id'] == product_no_tax.id, pos_data['product.product'])))['taxes_id'],
+            []
+        )
+
+    def test_combo_product_variant_error(self):
+        """This tests make sure that product containing variants cannot change type to combo"""
+
+        size_attribute = self.env['product.attribute'].create({'name': 'Size'})
+        a1 = self.env['product.attribute.value'].create({'name': 'V0hFCg==', 'attribute_id': size_attribute.id})
+        self.variant_product = self.env["product.product"].create(
+            {
+                "name": "Test product",
+                "attribute_line_ids": [(0, 0, {
+                    "attribute_id": size_attribute.id,
+                    "value_ids": [(6, 0, [a1.id])]
+                })],
+            })
+        with self.assertRaises(UserError):
+            with Form(self.variant_product.product_tmpl_id) as product:
+                product.detailed_type = "combo"

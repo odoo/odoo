@@ -41,11 +41,11 @@ class RequestUID(object):
 
 
 class ModelConverter(werkzeug.routing.BaseConverter):
+    regex = r'[0-9]+'
 
     def __init__(self, url_map, model=False):
-        super(ModelConverter, self).__init__(url_map)
+        super().__init__(url_map)
         self.model = model
-        self.regex = r'([0-9]+)'
 
     def to_python(self, value):
         _uid = RequestUID(value=value, converter=self)
@@ -57,12 +57,11 @@ class ModelConverter(werkzeug.routing.BaseConverter):
 
 
 class ModelsConverter(werkzeug.routing.BaseConverter):
+    regex = r'[0-9,]+'
 
     def __init__(self, url_map, model=False):
-        super(ModelsConverter, self).__init__(url_map)
+        super().__init__(url_map)
         self.model = model
-        # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
-        self.regex = r'([0-9,]+)'
 
     def to_python(self, value):
         _uid = RequestUID(value=value, converter=self)
@@ -210,7 +209,7 @@ class IrHttp(models.AbstractModel):
                 args[key].check_access_rule('read')
             except (odoo.exceptions.AccessError, odoo.exceptions.MissingError) as e:
                 # custom behavior in case a record is not accessible / has been removed
-                if handle_error := rule.endpoint.original_routing.get('handle_params_access_error'):
+                if handle_error := rule.endpoint.routing.get('handle_params_access_error'):
                     if response := handle_error(e):
                         werkzeug.exceptions.abort(response)
                 if isinstance(e, odoo.exceptions.MissingError):
@@ -240,7 +239,7 @@ class IrHttp(models.AbstractModel):
     def _serve_fallback(cls):
         model = request.env['ir.attachment']
         attach = model.sudo()._get_serve_attachment(request.httprequest.path)
-        if attach:
+        if attach and (attach.store_fname or attach.db_datas):
             return Stream.from_attachment(attach).get_response()
 
     @classmethod
@@ -266,7 +265,7 @@ class IrHttp(models.AbstractModel):
         for url, endpoint in self._generate_routing_rules(mods, converters=self._get_converters()):
             routing = submap(endpoint.routing, ROUTING_KEYS)
             if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
-                routing['methods'] = routing['methods'] + ['OPTIONS']
+                routing['methods'] = [*routing['methods'], 'OPTIONS']
             rule = FasterRule(url, endpoint=endpoint, **routing)
             rule.merge_slashes = False
             routing_map.add(rule)
@@ -274,6 +273,8 @@ class IrHttp(models.AbstractModel):
 
     @api.autovacuum
     def _gc_sessions(self):
+        if os.getenv("ODOO_SKIP_GC_SESSIONS"):
+            return
         ICP = self.env["ir.config_parameter"]
         max_lifetime = int(ICP.get_param('sessions.max_inactivity_seconds', http.SESSION_LIFETIME))
         http.root.session_store.vacuum(max_lifetime=max_lifetime)
@@ -322,4 +323,8 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):
+        return True
+
+    @api.model
+    def _verify_request_recaptcha_token(self, action):
         return True

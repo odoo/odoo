@@ -3,14 +3,14 @@
 # 	* portal
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -91,7 +91,7 @@ msgstr "<i title=\"系統使用說明\" class=\"fa fa-fw o_button_icon fa-info-c
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">Country...</option>"
-msgstr "<option value=\"\">國家...</option>"
+msgstr "<option value=\"\">國家/地區⋯</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -353,19 +353,9 @@ msgid "Add extra content to display in the email"
 msgstr "添加額外內容以顯示在電子郵件中"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Add, remove or modify your addresses"
-msgstr "加入、移除或修改你的地址"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
 msgstr "加入於"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Addresses"
-msgstr "地址"
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
@@ -648,7 +638,7 @@ msgstr "電郵地址已有其他用戶使用"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "電子郵件行程"
+msgstr "電郵對話串"
 
 #. module: portal
 #. odoo-javascript
@@ -754,7 +744,7 @@ msgstr "無效的郵件地址"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "無效電郵！請輸入有效的電子信件地址。"
+msgstr "電郵無效。請輸入有效的電郵地址。"
 
 #. module: portal
 #. odoo-python
@@ -801,6 +791,13 @@ msgid ""
 msgstr ""
 "此描述清晰完整是\n"
 "                非常重要，"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr "金鑰描述"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -908,11 +905,6 @@ msgid "Next"
 msgstr "下一頁"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr "沒有文件可顯示"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
 msgstr "備註"
@@ -934,7 +926,7 @@ msgstr "只有內部用戶和門戶用戶才能創建API密鑰"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr "糟糕！出錯了。請嘗試重新加載頁面並登入。"
+msgstr "哎呀！有東西出錯。請嘗試重新載入頁面，然後登入。"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
@@ -1012,7 +1004,7 @@ msgstr "官方技術支援"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Previous"
-msgstr "前一個"
+msgstr "上一頁"
 
 #. module: portal
 #. odoo-javascript
@@ -1099,6 +1091,7 @@ msgstr "安全"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "資訊安全控制"
@@ -1435,7 +1428,7 @@ msgstr "這個密鑰(密碼)用於?"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
 msgid "Wizard"
-msgstr "視窗"
+msgstr "精靈"
 
 #. module: portal
 #. odoo-javascript
@@ -1499,7 +1492,7 @@ msgstr "您在 {{ object.user_id.company_id.name }} 的帳戶"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
 msgid "Your contact"
-msgstr "您的連絡人"
+msgstr "你的聯絡人"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -1566,6 +1559,13 @@ msgstr "odoo"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
 msgstr "密碼"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "revoke"
+msgstr "撤銷"
 
 #. module: portal
 #. odoo-javascript

@@ -3,7 +3,7 @@
 
     <t t-name="web.PivotRenderer">
         <t t-call="{{ props.buttonTemplate }}"/>
-        <div t-if="model.hasData() and model.metaData.activeMeasures.length" class="o_pivot table-responsive mx-3">
+        <div t-if="model.hasData() and model.metaData.activeMeasures.length" t-att-class="env.isSmall ? 'table-responsive' : ''" class="o_pivot mx-3">
             <table
                 class="table-hover table table-sm table-bordered table-borderless"
                 t-att-class="{ o_enable_linking: !model.metaData.disableLinking }"

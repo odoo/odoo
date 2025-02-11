@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="web.EmojiPicker">
-    <div class="o-EmojiPicker bg-view d-flex flex-column justify-content-center" t-on-click="onClick" t-on-keydown="onKeydown">
+    <div class="o-EmojiPicker bg-view d-flex flex-column justify-content-center" t-att-class="{ 'align-items-center': emojis.length === 0 }" t-on-click="onClick" t-on-keydown="onKeydown">
         <t t-if="emojis.length === 0">
             <span class="o-EmojiPicker-empty">😵‍💫</span>
             <span class="fs-5 text-muted">Failed to load emojis...</span>

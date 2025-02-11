@@ -107,6 +107,45 @@ QUnit.test("Message post in chat window of chatter should log a note", async () 
     });
 });
 
+QUnit.test("Chatter in chat window should scroll to most recent message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    // Fill both channels with random messages in order for the scrollbar to
+    // appear.
+    pyEnv["mail.message"].create(
+        Array(50)
+            .fill(0)
+            .map((_, index) => ({
+                model: "res.partner",
+                body: "Non Empty Body ".repeat(25),
+                author_id: pyEnv.odoobotId,
+                needaction: true,
+                needaction_partner_ids: [pyEnv.currentPartnerId],
+                res_id: partnerId,
+            }))
+    );
+    const lastMessageId = pyEnv["mail.message"].create({
+        model: "res.partner",
+        body: "A needaction message to have it in messaging menu",
+        author_id: pyEnv.odoobotId,
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: lastMessageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-Message", { count: 30 });
+    await contains(".o-mail-Thread", { scroll: "bottom" });
+});
+
 QUnit.test("load messages from opening chat window from messaging menu", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -346,6 +385,43 @@ QUnit.test(
         await contains(".o-mail-ChatWindow");
     }
 );
+
+QUnit.test("Close active thread action in chatwindow on ESCAPE", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId, is_minimized: true }),
+        ],
+    });
+    await start();
+    await contains(".o-mail-ChatWindow");
+    await click(".o-mail-ChatWindow-command", { text: "General" });
+    await click(".dropdown-item", { text: "Add Users" });
+    await contains(".o-discuss-ChannelInvitation");
+    triggerHotkey("Escape");
+    await contains(".o-discuss-ChannelInvitation", { count: 0 });
+    await contains(".o-mail-ChatWindow");
+});
+
+QUnit.test("ESC cancels thread rename", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId, is_minimized: true }),
+        ],
+        create_uid: pyEnv.currentUserId,
+    });
+    await start();
+    await click(".o-mail-ChatWindow-command", { text: "General" });
+    await click(".dropdown-item", { text: "Rename" });
+    await contains(".o-mail-AutoresizeInput.o-focused[title='General']");
+    await insertText(".o-mail-AutoresizeInput", "New", { replace: true });
+    triggerHotkey("Escape");
+    await contains(".o-mail-AutoresizeInput.o-focused", { count: 0 });
+    await contains(".o-mail-ChatWindow-command", { text: "General" });
+});
 
 QUnit.test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", async (assert) => {
     const pyEnv = await startServer();

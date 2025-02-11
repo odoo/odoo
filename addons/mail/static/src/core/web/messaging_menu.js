@@ -32,9 +32,7 @@ export class MessagingMenu extends Component {
             addingChannel: false,
             isOpen: false,
         });
-        onExternalClick("selector", () => {
-            Object.assign(this.state, { addingChat: false, addingChannel: false });
-        });
+        onExternalClick("selector", this.handleExternalClick.bind(this));
     }
 
     beforeOpen() {
@@ -85,7 +83,7 @@ export class MessagingMenu extends Component {
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
             (this.store.odoobot &&
-                this.notification.permission === "prompt" &&
+                this.shouldAskPushPermission &&
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
             (this.store.odoobot &&
@@ -114,9 +112,7 @@ export class MessagingMenu extends Component {
             displayName: _t("%s has a request", this.store.odoobot.name),
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
-            isShown:
-                this.store.discuss.activeTab === "main" &&
-                this.notification.permission === "prompt",
+            isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
         };
     }
 
@@ -126,6 +122,10 @@ export class MessagingMenu extends Component {
 
     getThreads() {
         return this.store.menuThreads;
+    }
+
+    handleExternalClick() {
+        Object.assign(this.state, { addingChat: false, addingChannel: false });
     }
 
     /**
@@ -257,10 +257,28 @@ export class MessagingMenu extends Component {
         if (this.canPromptToInstall) {
             value++;
         }
-        if (this.notification.permission === "prompt") {
+        if (this.shouldAskPushPermission) {
             value++;
         }
         return value;
+    }
+
+    get displayChannelSelector() {
+        return this.state.addingChannel || this.state.addingChat;
+    }
+
+    get displayStartConversation() {
+        return (
+            !this.ui.isSmall ||
+            (this.ui.isSmall &&
+                this.store.discuss.activeTab !== "channel" &&
+                !this.state.addingChat &&
+                !(this.env.inDiscussApp && this.store.discuss.activeTab === "main"))
+        );
+    }
+
+    get shouldAskPushPermission() {
+        return this.notification.permission === "prompt";
     }
 }
 

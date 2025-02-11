@@ -64,6 +64,7 @@ class WorkerMock extends SharedWorkerMock {
 }
 
 let websocketWorker;
+QUnit.testDone(() => (websocketWorker = null));
 /**
  * @param {*} params Parameters used to patch the websocket worker.
  * @returns {WebsocketWorker} Instance of the worker which will run during the

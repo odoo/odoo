@@ -155,7 +155,7 @@ class SequenceMixin(models.AbstractModel):
                     return ret_val
         raise ValidationError(_(
             'The sequence regex should at least contain the seq grouping keys. For instance:\n'
-            '^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+            r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
         ))
 
     def _get_last_sequence_domain(self, relaxed=False):

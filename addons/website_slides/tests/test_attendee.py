@@ -444,12 +444,6 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
         invite_url_no_user = self.channel_partner_no_user.invitation_link
         self.channel.visibility = 'members'
 
-        # No such channel
-        invite_url = "/slides/-1"
-        res = self.url_open(invite_url)
-        self.assertEqual(res.status_code, 200)
-        self.assertTrue('/slides?invite_error=no_channel' in res.url, "This channel does not exist. Redirect to the main /slides page.")
-
         # Hash is wrong
         invite_url_false_hash = invite_url_emp + 'abc'
         res = self.url_open(invite_url_false_hash)
@@ -461,6 +455,20 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
         res = self.url_open(invite_url_no_user)
         self.assertEqual(res.status_code, 200)
         self.assertTrue('/slides?invite_error=partner_fail' in res.url, "Using an other user's invitation link should redirect to the course page")
+
+        # slugification can give: "/slides/-ID" which should work, despite resulting in a negative ID
+        invite_url = f'/slides/-{self.channel.id}'
+        res = self.url_open(invite_url)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(invite_url in res.url)
+
+        # No such channel
+        max_channel_id = self.env['slide.channel'].search([], order='id desc', limit=1).id
+        invite_url = f'/slides/{max_channel_id + 1}'
+        res = self.url_open(invite_url)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue('/slides?invite_error=no_channel' in res.url,
+            "Should have redirected to the 'no_channel' page as this channel ID does not exist")
 
         # Expired Link. Redirects to the main slides page.
         self.channel_partner_emp.sudo().unlink()
@@ -510,3 +518,43 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
         self.assertFalse(channel_partner_portal.exists(), 'Expired invitations should be removed, even if archived')
         self.assertTrue(self.channel_partner_emp.exists(), 'Memberships with progress should never be removed, even archived.')
         self.assertFalse(self.channel_partner_no_user.exists(), 'No Last Invitation Date is considered as expired for invited members')
+
+    def test_invite_email_translation(self):
+        "Make sure that invitation emails are translated if unchanged when adding attendees to a course"
+        self.env['res.lang']._activate_lang('fr_FR')
+        jean = self.env['res.partner'].create({'name': 'Jean', 'lang': 'fr_FR'})
+
+        template = self.env['mail.template'].create({
+            'subject': 'Hello',
+            'body_html': 'en',
+        })
+        template.lang = '{{ object.partner_id.lang }}'
+        template.render_model = 'slide.channel.partner'
+
+        template.with_context(lang='fr_FR').subject = 'Bonjour'
+        template.with_context(lang='fr_FR').body_html = 'fr'
+
+        channel = self.env['slide.channel'].create({'name': 'Test Course'})
+        slide_channel_jean = self.env['slide.channel.partner'].create({
+            'channel_id': channel.id,
+            'partner_id': jean.id,
+        })
+
+        wizard = self.env['slide.channel.invite'].create({
+            'send_email': True,
+            'partner_ids': [jean.id],
+            'channel_id': channel.id,
+            'template_id': template.id,
+        })
+
+        mail_vals = wizard._prepare_mail_values(slide_channel_jean)
+        self.assertEqual(
+            mail_vals['body_html'],
+            'fr',
+            "Mail body should have been translated into recipient's language"
+        )
+        self.assertEqual(
+            mail_vals['subject'],
+            'Bonjour',
+            "Mail subject should have been translated into recipient's language"
+        )

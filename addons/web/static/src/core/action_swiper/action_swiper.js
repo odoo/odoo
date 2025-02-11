@@ -168,15 +168,15 @@ export class ActionSwiper extends Component {
     handleSwipe(action) {
         if (this.props.animationType === "bounce") {
             this.state.containerStyle = `transform: translateX(${this.swipedDistance}px)`;
-            this.actionTimeoutId = browser.setTimeout(() => {
-                action(Promise.resolve());
+            this.actionTimeoutId = browser.setTimeout(async () => {
+                await action(Promise.resolve());
                 this._reset();
             }, 500);
         } else if (this.props.animationType === "forwards") {
             this.state.containerStyle = `transform: translateX(${this.swipedDistance}px)`;
-            this.actionTimeoutId = browser.setTimeout(() => {
+            this.actionTimeoutId = browser.setTimeout(async () => {
                 const prom = new Deferred();
-                action(prom);
+                await action(prom);
                 this.state.isSwiping = true;
                 this.state.containerStyle = `transform: translateX(${-this.swipedDistance}px)`;
                 this.resetTimeoutId = browser.setTimeout(() => {

@@ -10,6 +10,8 @@ import { _t } from "@web/core/l10n/translation";
 const { UIPlugin } = spreadsheet;
 
 export class OdooChartUIPlugin extends UIPlugin {
+    shouldChartUpdateReloadDataSource = false;
+
     constructor(config) {
         super(config);
         this.dataSources = config.custom.dataSources;
@@ -36,6 +38,25 @@ export class OdooChartUIPlugin extends UIPlugin {
                 // any evaluation
                 this._addDomains();
                 break;
+            case "UPDATE_CHART": {
+                switch (cmd.definition.type) {
+                    case "odoo_pie":
+                    case "odoo_bar":
+                    case "odoo_line": {
+                        const dataSource = this.getChartDataSource(cmd.id);
+                        const chart = this.getters.getChart(cmd.id);
+                        if (
+                            cmd.definition.type !== chart.type ||
+                            dataSource.getInitialDomainString() !==
+                                new Domain(cmd.definition.searchParams.domain).toString()
+                        ) {
+                            this.shouldChartUpdateReloadDataSource = true;
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
         }
     }
 
@@ -61,12 +82,9 @@ export class OdooChartUIPlugin extends UIPlugin {
                     case "odoo_pie":
                     case "odoo_bar":
                     case "odoo_line": {
-                        const dataSource = this.getChartDataSource(cmd.id);
-                        if (
-                            dataSource.getInitialDomainString() !==
-                            new Domain(cmd.definition.searchParams.domain).toString()
-                        ) {
+                        if (this.shouldChartUpdateReloadDataSource) {
                             this._resetChartDataSource(cmd.id);
+                            this.shouldChartUpdateReloadDataSource = false;
                         }
                         this._setChartDataSource(cmd.id);
                         break;

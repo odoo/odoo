@@ -5,7 +5,7 @@ import io
 import base64
 
 from PIL import Image
-from werkzeug.urls import url_quote
+from werkzeug.urls import url_unquote_plus
 
 from odoo.tests.common import HttpCase, tagged
 
@@ -99,37 +99,61 @@ class TestImage(HttpCase):
             'datas': b'R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=',
             'name': """fô☺o-l'éb \n a"!r".gif""",
             'public': True,
-            'mimetype': 'image/gif'
+            'mimetype': 'image/gif',
         })
 
-        res = self.url_open(f'/web/image/{att.id}')
-        expected_ufilename = url_quote(att.name.replace('\n', '_').replace('\r', '_'))
-        self.assertEqual(res.headers['Content-Disposition'], r"""inline; filename="foo-l'eb _ a\"!r\".gif"; filename*=UTF-8''""" + expected_ufilename)
-        res.raise_for_status()
+        def remove_prefix(text, prefix):
+            if text.startswith(prefix):
+                return text[len(prefix):]
+            return text
 
-        res = self.url_open(f'/web/image/{att.id}/custom_invalid_name\nis-ok.gif')
-        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=custom_invalid_name_is-ok.gif')
-        res.raise_for_status()
+        def assert_filenames(
+                url,
+                expected_filename,
+                expected_filename_star='',
+                message=r"File that will be saved on disc should have the original filename without \n and \r",
+            ):
+            res = self.url_open(url)
+            res.raise_for_status()
+            if expected_filename_star:
+                inline, filename, filename_star = res.headers['Content-Disposition'].split('; ')
+            else:
+                inline, filename = res.headers['Content-Disposition'].split('; ')
+                filename_star = ''
 
-        res = self.url_open(f'/web/image/{att.id}/\r\n')
-        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=__.gif')
-        res.raise_for_status()
+            filename = remove_prefix(filename, "filename=").strip('"')
+            filename_star = url_unquote_plus(remove_prefix(filename_star, "filename*=UTF-8''").strip('"'))
 
-        res = self.url_open(f'/web/image/{att.id}/你好')
-        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=.gif; filename*=UTF-8\'\'%E4%BD%A0%E5%A5%BD.gif')
-        res.raise_for_status()
+            self.assertEqual(inline, 'inline')
+            self.assertEqual(filename, expected_filename, message)
+            self.assertEqual(filename_star, expected_filename_star, message)
 
-        res = self.url_open(f'/web/image/{att.id}/%E9%9D%A2%E5%9B%BE.gif')
-        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=.gif; filename*=UTF-8\'\'%E9%9D%A2%E5%9B%BE.gif')
-        res.raise_for_status()
-
-        res = self.url_open(f'/web/image/{att.id}/hindi_नमस्ते.gif')
-        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=hindi_.gif; filename*=UTF-8\'\'hindi_%E0%A4%A8%E0%A4%AE%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%87.gif')
-        res.raise_for_status()
-        res = self.url_open(f'/web/image/{att.id}/arabic_مرحبا.gif')
-        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=arabic_.gif; filename*=UTF-8\'\'arabic_%D9%85%D8%B1%D8%AD%D8%A8%D8%A7.gif')
-        res.raise_for_status()
-
-        res = self.url_open(f'/web/image/{att.id}/4wzb_!!63148-0-t1.jpg_360x1Q75.jpg_.webp')
-        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename=4wzb_!!63148-0-t1.jpg_360x1Q75.jpg_.webp')
-        res.raise_for_status()
+        assert_filenames(f'/web/image/{att.id}',
+            r"""foo-l'eb _ a\"!r\".gif""",
+            r"""fô☺o-l'éb _ a"!r".gif""",
+        )
+        assert_filenames(f'/web/image/{att.id}/custom_invalid_name\nis-ok.gif',
+            r"""custom_invalid_name_is-ok.gif""",
+        )
+        assert_filenames(f'/web/image/{att.id}/\r\n',
+            r"""__.gif""",
+        )
+        assert_filenames(f'/web/image/{att.id}/你好',
+            r""".gif""",
+            r"""你好.gif""",
+        )
+        assert_filenames(f'/web/image/{att.id}/%E9%9D%A2%E5%9B%BE.gif',
+            r""".gif""",
+            r"""面图.gif""",
+        )
+        assert_filenames(f'/web/image/{att.id}/hindi_नमस्ते.gif',
+            r"""hindi_.gif""",
+            r"""hindi_नमस्ते.gif""",
+        )
+        assert_filenames(f'/web/image/{att.id}/arabic_مرحبا',
+            r"""arabic_.gif""",
+            r"""arabic_مرحبا.gif""",
+        )
+        assert_filenames(f'/web/image/{att.id}/4wzb_!!63148-0-t1.jpg_360x1Q75.jpg_.webp',
+            r"""4wzb_!!63148-0-t1.jpg_360x1Q75.jpg_.webp""",
+        )

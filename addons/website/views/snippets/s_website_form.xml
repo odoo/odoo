@@ -76,8 +76,7 @@
                                 <span class="s_website_form_mark"> *</span>
                             </label>
                             <div class="col-sm">
-                                <textarea class="form-control s_website_form_input" name="description" required="1" id="oyeqnysxh10b" rows="3">
-                                </textarea>
+                                <textarea class="form-control s_website_form_input" name="description" required="1" id="oyeqnysxh10b" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
@@ -94,7 +93,7 @@
 
 <template id="s_website_form_options" inherit_id="website.snippet_options">
     <!-- Extend drop locations to columns -->
-    <xpath expr="//t[@t-set='so_content_addition_selector']" position="inside">, .s_website_form</xpath>
+    <xpath expr="//t[@t-set='so_content_addition_selector']" position="inside" t-translation="off">, .s_website_form</xpath>
 
     <xpath expr="//div" position="after">
         <!-- Form -->

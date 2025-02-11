@@ -1094,6 +1094,40 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
+    QUnit.test("Export dialog: no column_invisible fields in default export list", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="bar" column_invisible="1"/>
+                </tree>`,
+            actionMenus: {},
+            mockRPC(route) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
+            }
+        });
+
+        await openExportDataDialog();
+        assert.containsOnce(
+            target,
+            ".modal .o_export_field",
+            "there is only one field in export field list."
+        );
+        assert.strictEqual(
+            target.querySelector(".modal .o_export_field").textContent,
+            "Foo",
+            "the field to export corresponds to the visible one in the list view"
+        );
+    });
+
     QUnit.test(
         "Export dialog: export list contains field with 'default_export: true'",
         async function (assert) {

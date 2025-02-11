@@ -37,9 +37,9 @@
                             </td>
                             <td style="width:67%" valign="center">
                                 <table style="width:155pt; height:85pt" class="table-borderless">
-                                    <tr><th><div style="font-size:15pt; margin-bottom:0pt;margin-top:0pt;" align="center"><span t-out="employee.name">Marc Demo</span></div></th></tr>
-                                    <tr><td><div align="center" style="font-size:10pt;margin-bottom:5pt;"><span t-out="employee.job_id.name">Software Developer</span></div></td></tr>
-                                    <tr><td><div t-if="employee.barcode" t-field="employee.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 120, 'img_style': 'max-height:50pt;max-width:100%;', 'img_align': 'center'}">12345678901</div></td></tr>
+                                    <tr><th><div style="font-size:15pt; margin-bottom:0pt;margin-top:0pt;" align="center"><span t-out="employee.name" data-oe-demo="Marc Demo"/></div></th></tr>
+                                    <tr><td><div align="center" style="font-size:10pt;margin-bottom:5pt;"><span t-out="employee.job_id.name" data-oe-demo="Software Developer"/></div></td></tr>
+                                    <tr><td><div t-if="employee.barcode" t-field="employee.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 120, 'img_style': 'max-height:50pt;max-width:100%;', 'img_align': 'center'}" data-oe-demo="12345678901"/></td></tr>
                                 </table>
                             </td>
                         </table>

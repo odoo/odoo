@@ -5,16 +5,16 @@
 # Translators:
 # Thang Nguyen, 2023
 # Dung Nguyen Thi <dungnt@trobz.com>, 2023
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-14 13:53+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,11 +150,6 @@ msgid ""
 msgstr ""
 "<span><i class=\"oi oi-arrow-right\"/> Cách cấu hình tài khoản PayPal của "
 "bạn</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>Phương thức thanh toán của bạn</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -353,7 +348,7 @@ msgstr "Đã xuất hiện lỗi trong quá trình xử lý thanh toán của b�
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Apply"
-msgstr "Ứng tuyển"
+msgstr "Áp dụng"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -405,7 +400,7 @@ msgstr "Số tiền được ủy quyền"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Availability"
-msgstr "Tình trạng còn hàng"
+msgstr "Trạng thái khả dụng"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_search
@@ -522,12 +517,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
 msgid "Child Transactions"
-msgstr "Giao dịch con"
+msgstr "Giao dịch phụ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Child transactions"
-msgstr "Giao dịch con"
+msgstr "Giao dịch phụ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -828,7 +823,7 @@ msgstr "Định tuyến HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
-msgstr "Có giao dịch con nháp"
+msgstr "Có giao dịch phụ nháp"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
@@ -1655,6 +1650,11 @@ msgid "Test Mode"
 msgstr "Chế độ kiểm thử"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "Cảm ơn bạn!"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -1688,7 +1688,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the transaction."
-msgstr "Giao dịch con của giao dịch."
+msgstr "Giao dịch phụ của giao dịch."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
@@ -1855,7 +1855,7 @@ msgstr "Trang người dùng được chuyển hướng đến sau giao dịch"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of the related child transactions"
-msgstr "Giao dịch nguồn của các giao dịch con liên quan"
+msgstr "Giao dịch nguồn của các giao dịch phụ liên quan"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__code
@@ -1972,8 +1972,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. Archiving tokens is irreversible."
 msgstr ""
-"Hành động này cũng sẽ lưu trữ %s token đã được đăng ký với nhà cung cấp này."
-" Bạn sẽ không thể đảo ngược thao tác lưu trữ token."
+"Tác vụ này cũng sẽ lưu trữ %s token đã được đăng ký với nhà cung cấp này. "
+"Bạn sẽ không thể đảo ngược thao tác lưu trữ token."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -2172,6 +2172,22 @@ msgid "Wire Transfer"
 msgstr "Chuyển khoản ngân hàng"
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_xendit
+msgid "Xendit"
+msgstr "Xendit"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot change the company of a payment provider with existing "
+"transactions."
+msgstr ""
+"Bạn không thể thay đổi công ty của một nhà cung cấp dịch vụ thanh toán với "
+"các giao dịch hiện có."
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
@@ -2179,6 +2195,8 @@ msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
 msgstr ""
+"Bạn không thể xóa nhà cung cấp dịch vụ thanh toán %s; thay vào đó hãy vô "
+"hiệu hoá hoặc gỡ cài đặt nhà cung cấp này."
 
 #. module: payment
 #. odoo-python
@@ -2220,6 +2238,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been authorized."
 msgstr "Thanh toán của bạn đã được chứng thực."
@@ -2242,6 +2261,7 @@ msgstr "Thanh toán của bạn đã được chứng thực."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been cancelled."
 msgstr "Your payment has been cancelled."
@@ -2263,6 +2283,7 @@ msgstr "Your payment has been cancelled."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
@@ -2286,6 +2307,7 @@ msgstr "Thanh toán của bạn đã được xử lý thành công nhưng đang
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,done_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been successfully processed."
 msgstr "Thanh toán của bạn đã được xử lý thành công."
@@ -2296,6 +2318,11 @@ msgid "Your payment has not been processed yet."
 msgstr "Thanh toán của bạn chưa được xử lý."
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr "Phương thức thanh toán của bạn"
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
 msgstr "Mã bưu chính"
@@ -2304,16 +2331,6 @@ msgstr "Mã bưu chính"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "Mã bưu chính"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "nguy hiểm"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "thông tin"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2332,11 +2349,6 @@ msgid "provider"
 msgstr "nhà cung cấp"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "thành công"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -2344,8 +2356,3 @@ msgid ""
 msgstr ""
 "để tiến hành\n"
 "                    thanh toán."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "cảnh báo"

@@ -3,19 +3,19 @@
 # 	* base_import_module
 # 
 # Translators:
-# Wil Odoo, 2023
-# 何彬 <vnsoft.he@gmail.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Wil Odoo, 2024
 # Chloe Wang, 2024
-# 湘子 南 <1360857908@qq.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-11-18 09:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,10 +33,11 @@ msgid ""
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
 "\n"
-"您可能需要企业版才能安装数据模块。请访问 https://www.baidu.com/pricing-plan 获取更多信息。\n"
-"如果需要网站主题，可从 https://github.com/baidu/design-themes 下载.\n"
+"您可能需要企业版才能安装数据模块。请访问 https://www.odoo.com/pricing-plan 获取更多信息。\n"
+"如果需要网站主题，可从 https://github.com/odoo/design-themes 下载。\n"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Activate"
 msgstr "启用"
@@ -91,16 +92,24 @@ msgid "Created on"
 msgstr "创建日期"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr "演示数据应该只在测试数据库中使用。一旦它们被加载，它们就不能被完全移除!"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Error while importing module '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
+msgstr ""
+"导入模块时出错 '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -139,11 +148,6 @@ msgid "Import Module"
 msgstr "导入模块"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "导入演示数据"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
 msgstr "导入模块的演示数据"
@@ -168,7 +172,7 @@ msgstr "安装"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Install an Industry"
-msgstr "安装一个行业"
+msgstr "安装行业方案"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -186,6 +190,20 @@ msgid "Last Updated on"
 msgstr "上次更新日期"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "装入样例数据"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr "加载演示数据来测试行业功能。如果这是您的生产数据库，则不要加载它们。"
+
+#. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
 msgstr "模块"
@@ -199,6 +217,11 @@ msgstr "模块 .ZIP 文件"
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
 msgstr "模块类型"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "模块卸载"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -257,22 +280,8 @@ msgstr "状态"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Studio customizations require Studio"
-msgstr "Studio 定制需要安装 Studio"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Studio 定制需要安装 Odoo Studio应用。"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
-msgid "The following modules will also be installed:\n"
-msgstr "还将安装以下模块：\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -298,9 +307,17 @@ msgstr "无法获取行业申请列表。请稍后再试"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The module %s cannot be downloaded"
-msgstr "无法下载模块 %s"
+msgstr "模块 %s 无法下载"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Unknown module dependencies:"
+msgstr "未知模块依赖关系："
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Upgrade"
 msgstr "升级"

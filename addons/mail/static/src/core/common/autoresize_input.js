@@ -25,6 +25,7 @@ export class AutoresizeInput extends Component {
     setup() {
         this.state = useState({
             value: this.props.value,
+            isFocused: false,
         });
         this.inputRef = useRef("input");
         onWillUpdateProps((nextProps) => {
@@ -50,9 +51,15 @@ export class AutoresizeInput extends Component {
                 this.inputRef.el.blur();
                 break;
             case "Escape":
+                ev.stopPropagation();
                 this.state.value = this.props.value;
                 this.inputRef.el.blur();
                 break;
         }
+    }
+
+    onBlurInput() {
+        this.state.isFocused = false;
+        this.props.onValidate(this.state.value);
     }
 }

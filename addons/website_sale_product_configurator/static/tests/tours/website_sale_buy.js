@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import "@website_sale/../tests/tours/website_sale_buy";
 
-patch(registry.category("web_tour.tours").get("shop_buy_product"), {
+patch(registry.category('web_tour.tours').get('shop_update_cart'), {
     steps() {
         const originalSteps = super.steps();
         const addCartStepIndex = originalSteps.findIndex((step) => step.id === "add_cart_step");

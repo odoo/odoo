@@ -59,6 +59,9 @@
             ('include', 'test_assetsbundle.manifest4'),
         ],
         'test_assetsbundle.manifest_multi_module1': [],
+        'test_assetsbundle.broken_css': [
+            'test_assetsbundle/static/invalid_src/css/invalid_css.css',
+        ],
         'test_assetsbundle.lazy_test_component': [
             'test_assetsbundle/static/tests/lazy_test_component/**/*',
         ],

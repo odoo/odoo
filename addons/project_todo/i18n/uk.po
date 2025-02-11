@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,8 @@ msgid ""
 "&amp;#128075; <br/>\n"
 "    Welcome to the To-do app!"
 msgstr ""
+"&amp;#128075; <br/>\n"
+"    Вітаємо в модулі To-do!"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -120,6 +122,9 @@ msgid ""
 "        During the conversion of a to-do to a task, you will be able to add or remove assignees to control who has access to the created task. Note that its visibility will also depend on the visibility settings of the project you are assigning it to.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Під час перетворення to-do на завдання ви зможете додавати або видаляти виконавців, щоб контролювати, хто має доступ до створеного завдання. Зауважте, що його видимість також залежатиме від налаштувань видимості проєкту, якому ви його призначаєте.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -136,6 +141,17 @@ msgid ""
 "        Similarly, private tasks created in the Project app will also appear in your to-dos.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        To-do тепер як \n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">приватні задачі</font>\n"
+"        </span>\n"
+"        і будуть зʼявлятися в модулі Проєкт під \n"
+"        <span>\n"
+"            <font style=\"font-weight: bolder;\" class=\"text-o-color-2\">Моїми завданнями</font>.\n"
+"        </span>\n"
+"        Так само приватні завдання, створені в модулі Проєкт, також відображатимуться у ваших to-do.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -148,6 +164,13 @@ msgid ""
 "        field above to share this to-do with other users.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        To-do, як і приватні завдання, доступні лише користувачам, на яких вони призначені. Ви можете використовувати поле\n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">призначення</font>\n"
+"        </span>\n"
+"        вище, щоб поділитися цим to-do з іншими користувачами.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -156,6 +179,9 @@ msgid ""
 "        Use it to manage your urgent work, take notes on the go, and create tasks based on them. \n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Використовуйте його, щоб керувати своїми терміновими задачами, робіть нотатки на ходу та створюйте завдання на їх основі. \n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -168,6 +194,13 @@ msgid ""
 "        pop-up from the action menu of the to-do.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Ви можете перетворити свої to-do на завдання та призначити їх проєкту. Для цього вам потрібно отримати доступ до попапу\n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">Конвертування в задачу</font>\n"
+"        </span>\n"
+"        з меню дій to-do.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -200,6 +233,9 @@ msgid ""
 "    <br/>\n"
 "    <span style=\"font-size: 14px;\">Ready to give it a spin?</span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">Це приватне завдання для вас.</span>\n"
+"    <br/>\n"
+"    <span style=\"font-size: 14px;\">Готові спробувати?</span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -228,12 +264,20 @@ msgstr "Тип дії"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Add To-Do"
-msgstr ""
+msgstr "Додати To-Do"
+
+#. module: project_todo
+#. odoo-javascript
+#: code:addons/project_todo/static/src/web/activity/activity_menu_patch.js:0
+#: code:addons/project_todo/static/src/web/activity/activity_menu_patch.js:0
+#, python-format
+msgid "Add a To-Do"
+msgstr "Додати To-Do"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Add details about your to-do..."
-msgstr ""
+msgstr "Додайте деталі вашого to-do..."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
@@ -255,17 +299,17 @@ msgstr "Виконавці"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "By assigned tags"
-msgstr ""
+msgstr "За призначеними тегами"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "By personal stages"
-msgstr ""
+msgstr "За персональними етапами"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
 msgid "Choose tags from the selected project"
-msgstr ""
+msgstr "Виберіть теги з вибраного проєкту"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -294,7 +338,7 @@ msgstr "Створіть завдання"
 #. module: project_todo
 #: model:ir.model,name:project_todo.model_mail_activity_todo_create
 msgid "Create activity and todo at the same time"
-msgstr ""
+msgstr "Створюйте дію і завдання одночасно"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__create_uid
@@ -340,7 +384,7 @@ msgstr "Групувати за"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Hey"
-msgstr ""
+msgstr "Привіт"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__id
@@ -353,6 +397,8 @@ msgid ""
 "Keep your work organized by using memos and to-do lists.\n"
 "                Your to-do items are private by default, but you can choose to share them with others by adding them as assignees."
 msgstr ""
+"Організовуйте свою роботу за допомогою нотаток і списків справ.\n"
+"                За замовчуванням ваші завдання приватні, але ви можете поділитися ними з іншими, додавши їх як виконавців."
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__write_uid
@@ -380,7 +426,7 @@ msgstr "Позначте як готово"
 #. module: project_todo
 #: model_terms:ir.actions.act_window,help:project_todo.project_task_action_todo
 msgid "No to-do found. Let's create one!"
-msgstr ""
+msgstr "Не знайдено жодного завдання. Створіть його!"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__note
@@ -390,7 +436,7 @@ msgstr "Примітка"
 #. module: project_todo
 #: model:res.groups,name:project_todo.group_onboarding_todo
 msgid "Onboarding todo already generated for those users"
-msgstr ""
+msgstr "Для цих користувачів уже створено завдання реєстрації"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -406,12 +452,12 @@ msgstr "Нагадування"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Reminder to..."
-msgstr ""
+msgstr "Нагадування для..."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
 msgid "Select an existing project"
-msgstr ""
+msgstr "Оберіть існуючий проєкт"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -444,19 +490,19 @@ msgstr "Завдання"
 #: model:ir.ui.menu,name:project_todo.menu_todo_todos
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
 msgid "To-do"
-msgstr "Зробити"
+msgstr "To-do"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
 msgid "To-do Title"
-msgstr ""
+msgstr "Заголовок To-do"
 
 #. module: project_todo
 #: model:ir.actions.act_window,name:project_todo.project_task_action_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_activity
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_tree
 msgid "To-dos"
-msgstr ""
+msgstr "To-do"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -466,28 +512,28 @@ msgstr "Сьогоднішні дії"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "Todos"
-msgstr ""
+msgstr "Todo"
 
 #. module: project_todo
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project_todo/models/project_task.py:0
 #: code:addons/project_todo/static/src/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name.js:0
 #, python-format
 msgid "Untitled to-do"
-msgstr ""
+msgstr "to-do без назви"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Using the editor"
-msgstr ""
+msgstr "Використовуючи редактор"
 
 #. module: project_todo
 #. odoo-python
 #: code:addons/project_todo/models/project_task.py:0
 #, python-format
 msgid "Welcome %s!"
-msgstr ""
+msgstr "Вітаємо %s!"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -499,7 +545,7 @@ msgstr "Хто і куди має доступ?"
 #: code:addons/project_todo/wizard/mail_activity_todo_create.py:0
 #, python-format
 msgid "Your to-do has been successfully added to your pipeline."
-msgstr ""
+msgstr "Ваш to-do успішно додано до вашого конвеєру."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
@@ -509,4 +555,4 @@ msgstr "напр. Надіслати запрошення"
 #. module: project_todo
 #: model:ir.actions.server,name:project_todo.project_task_preload_action_todo
 msgid "menu load To-dos"
-msgstr ""
+msgstr "завантаження меню To-do"

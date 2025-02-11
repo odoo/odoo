@@ -5,18 +5,19 @@
 # Translators:
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2023
 # Hamid Darabi, 2023
-# Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
-# Martin Trigaux, 2023
 # Hanna Kheradroosta, 2023
+# Martin Trigaux, 2023
+# F Hariri <fhari1234@gmail.com>, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Hanna Kheradroosta, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -176,7 +177,7 @@ msgstr ""
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_type__category
 msgid "Action"
-msgstr "عمل"
+msgstr "اقدام"
 
 #. module: project_todo
 #: model:ir.model.fields,help:project_todo.field_mail_activity_type__category
@@ -198,6 +199,14 @@ msgid "Add To-Do"
 msgstr ""
 
 #. module: project_todo
+#. odoo-javascript
+#: code:addons/project_todo/static/src/web/activity/activity_menu_patch.js:0
+#: code:addons/project_todo/static/src/web/activity/activity_menu_patch.js:0
+#, python-format
+msgid "Add a To-Do"
+msgstr ""
+
+#. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Add details about your to-do..."
 msgstr ""
@@ -211,13 +220,13 @@ msgstr "بایگانی شده"
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__user_id
 msgid "Assigned to"
-msgstr "واگذار شده به"
+msgstr "واگذار‌شده به"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "Assignees"
-msgstr "محول شده به"
+msgstr "محول‌شده به"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -261,12 +270,12 @@ msgstr ""
 #. module: project_todo
 #: model:ir.model,name:project_todo.model_mail_activity_todo_create
 msgid "Create activity and todo at the same time"
-msgstr ""
+msgstr "ایجاد فعالیت و انجام‌کار در همان زمان"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__create_uid
 msgid "Created by"
-msgstr "ایجاد شده توسط"
+msgstr "ایجادشده توسط"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__create_date
@@ -287,7 +296,7 @@ msgstr "رها کردن"
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__display_name
 msgid "Display Name"
-msgstr "نام نمایش داده شده"
+msgstr "نام نمایشی"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__date_deadline
@@ -297,7 +306,7 @@ msgstr "تاریخ سررسید"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "Future Activities"
-msgstr "فعالیت های آینده"
+msgstr "فعالیت‌های آینده"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -324,12 +333,12 @@ msgstr ""
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__write_uid
 msgid "Last Updated by"
-msgstr "آخرین بروز رسانی توسط"
+msgstr "آخرین به‌روزرسانی توسط"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__write_date
 msgid "Last Updated on"
-msgstr "آخرین بروز رسانی در"
+msgstr "آخرین به‌روزرسانی در"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -411,7 +420,7 @@ msgstr "وظیفه"
 #: model:ir.ui.menu,name:project_todo.menu_todo_todos
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
 msgid "To-do"
-msgstr ""
+msgstr "اقدامات و پیگیری‌ها"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
@@ -423,21 +432,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_activity
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_tree
 msgid "To-dos"
-msgstr ""
+msgstr "اقدامات و پیگیری‌ها"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "Today Activities"
-msgstr "فعالیت های امروز"
+msgstr "فعالیت‌های امروز"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "Todos"
-msgstr ""
+msgstr "پیگیری‌ها"
 
 #. module: project_todo
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project_todo/models/project_task.py:0
 #: code:addons/project_todo/static/src/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name.js:0
 #, python-format
@@ -471,9 +480,9 @@ msgstr ""
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
 msgid "e.g. Send Invitations"
-msgstr ""
+msgstr "به عنوان مثال ارسال دعوت‌نامه‌ها"
 
 #. module: project_todo
 #: model:ir.actions.server,name:project_todo.project_task_preload_action_todo
 msgid "menu load To-dos"
-msgstr ""
+msgstr "اقدامات و پیگیری‌ها"

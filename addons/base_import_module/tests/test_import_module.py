@@ -15,6 +15,7 @@ from unittest.mock import patch
 
 from odoo import release
 from odoo.addons import __path__ as __addons_path__
+from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 
 
@@ -55,8 +56,17 @@ class TestImportModule(odoo.tests.TransactionCase):
                     </record>
                 </data>
             """),
+            ('bar/i18n/fr_FR.po', b"""
+                #. module: bar
+                #: model:res.country,name:bar.foo
+                msgid "foo"
+                msgstr "dumb"
+            """),
         ]
-        self.import_zipfile(files)
+        self.env['res.lang']._activate_lang('fr_FR')
+        with self.assertLogs('odoo.addons.base_import_module.models.ir_module') as log_catcher:
+            self.import_zipfile(files)
+            self.assertIn('INFO:odoo.addons.base_import_module.models.ir_module:module foo: no translation for language fr_FR', log_catcher.output)
         self.assertEqual(self.env.ref('foo.foo')._name, 'res.partner')
         self.assertEqual(self.env.ref('foo.foo').name, 'foo')
         self.assertEqual(self.env.ref('foo.bar')._name, 'res.partner')
@@ -65,6 +75,11 @@ class TestImportModule(odoo.tests.TransactionCase):
 
         self.assertEqual(self.env.ref('bar.foo')._name, 'res.country')
         self.assertEqual(self.env.ref('bar.foo').name, 'foo')
+        self.assertEqual(self.env.ref('bar.foo').with_context(lang="fr_FR").name, 'dumb')
+
+        # Check that activating a non-loaded language does not crash the code
+        self.env['res.lang']._activate_lang('es')
+        self.assertEqual(self.env.ref('bar.foo').with_context(lang="es").name, 'foo')
 
         for path, data in files:
             if path.split('/')[1] == 'static':
@@ -77,9 +92,39 @@ class TestImportModule(odoo.tests.TransactionCase):
         files = [
             ('foo/__manifest__.py', b"foo")
         ]
-        with mute_logger("odoo.addons.base_import_module.models.ir_module"):
-            result = self.import_zipfile(files)
-        self.assertIn("Error while importing module 'foo'", result[0])
+        error_message = "Error while importing module 'foo'"
+        with (
+            mute_logger("odoo.addons.base_import_module.models.ir_module"),
+            self.assertRaises(UserError, msg=error_message),
+        ):
+            self.import_zipfile(files)
+
+    def test_import_zip_invalid_data(self):
+        """Assert no data remains in the db if module import fails"""
+        files = [
+            ('foo/__manifest__.py', b"{'data': ['foo.xml', 'bar.xml']}"),
+            ('foo/foo.xml', b"""
+                <data>
+                    <record id="foo" model="res.partner">
+                        <field name="name">foo</field>
+                    </record>
+                </data>
+            """),
+            # typo in model to throw an error
+            ('foo/bar.xml', b"""
+                <data>
+                    <record id="bar" model="res.prtner">
+                        <field name="name">bar</field>
+                    </record>
+                </data>
+            """),
+        ]
+        with (
+            mute_logger("odoo.addons.base_import_module.models.ir_module"),
+            self.assertRaises(UserError),
+        ):
+            self.import_zipfile(files)
+        self.assertFalse(self.env.ref('foo.foo', raise_if_not_found=False))
 
     def test_import_zip_data_not_in_manifest(self):
         """Assert a data file not mentioned in the manifest is not imported"""
@@ -115,8 +160,8 @@ class TestImportModule(odoo.tests.TransactionCase):
         ]
         with self.assertLogs('odoo.addons.base_import_module.models.ir_module') as log_catcher:
             self.import_zipfile(files)
-            self.assertEqual(len(log_catcher.output), 1)
-            self.assertIn('module foo: skip unsupported file res.partner.xls', log_catcher.output[0])
+            self.assertIn("INFO:odoo.addons.base_import_module.models.ir_module:module foo: skip unsupported file res.partner.xls", log_catcher.output)
+            self.assertIn("INFO:odoo.addons.base_import_module.models.ir_module:Successfully imported module 'foo'", log_catcher.output)
             self.assertFalse(self.env.ref('foo.foo', raise_if_not_found=False))
 
     def test_import_zip_extract_only_useful(self):
@@ -291,6 +336,26 @@ class TestImportModule(odoo.tests.TransactionCase):
         asset_data = self.env['ir.model.data'].search([('model', '=', 'ir.asset'), ('res_id', '=', asset.id)])
         self.assertEqual(asset_data.module, 'test_module')
         self.assertEqual(asset_data.name, f'{bundle}_/{path}'.replace(".", "_"))
+
+    def test_import_wrong_dependencies(self):
+        files = [
+            ('foo/__manifest__.py', b"{'data': ['foo.xml'], 'depends': ['base', 'bar', 'baz']}"),
+            ('foo/foo.xml', b"""
+                <data>
+                    <record id="foo" model="res.partner">
+                        <field name="name">foo</field>
+                    </record>
+                </data>
+            """),
+        ]
+        with (
+            mute_logger("odoo.addons.base_import_module.models.ir_module"),
+            self.assertRaisesRegex(
+                UserError,
+                "Unknown module dependencies",
+                msg="Cannot allow import of modules with unknown dependencies"),
+        ):
+            self.import_zipfile(files)
 
 
 class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):

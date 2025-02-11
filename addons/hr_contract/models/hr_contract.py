@@ -23,7 +23,7 @@ class Contract(models.Model):
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
-    structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type", compute="_compute_structure_type_id", readonly=False, store=True)
+    structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type", compute="_compute_structure_type_id", readonly=False, store=True, tracking=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     department_id = fields.Many2one('hr.department', compute='_compute_employee_contract', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
@@ -36,7 +36,7 @@ class Contract(models.Model):
         help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule', compute='_compute_employee_contract', store=True, readonly=False,
-        default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True,
+        default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True, tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
@@ -52,7 +52,7 @@ class Contract(models.Model):
         default=lambda self: self.env.company, required=True)
     company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
-    contract_type_id = fields.Many2one('hr.contract.type', "Contract Type")
+    contract_type_id = fields.Many2one('hr.contract.type', "Contract Type", tracking=True)
     contracts_count = fields.Integer(related='employee_id.contracts_count')
 
     """
@@ -82,6 +82,10 @@ class Contract(models.Model):
     def _compute_calendar_mismatch(self):
         for contract in self:
             contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
+
+    def _get_salary_costs_factor(self):
+        self.ensure_one()
+        return 12.0
 
     def _expand_states(self, states, domain, order):
         return [key for key, val in self._fields['state'].selection]
@@ -157,6 +161,15 @@ class Contract(models.Model):
                     'Contract %(contract)s: start date (%(start)s) must be earlier than contract end date (%(end)s).',
                     contract=contract.name, start=contract.date_start, end=contract.date_end,
                 ))
+
+    def _get_employee_vals_to_update(self):
+        self.ensure_one()
+        vals = {'contract_id': self.id}
+        if self.job_id and self.job_id != self.employee_id.job_id:
+            vals['job_id'] = self.job_id.id
+        if self.department_id:
+            vals['department_id'] = self.department_id.id
+        return vals
 
     @api.model
     def update_state(self):
@@ -261,7 +274,8 @@ class Contract(models.Model):
 
     def _assign_open_contract(self):
         for contract in self:
-            contract.employee_id.sudo().write({'contract_id': contract.id})
+            vals = contract._get_employee_vals_to_update()
+            contract.employee_id.sudo().write(vals)
 
     @api.depends('wage')
     def _compute_contract_wage(self):

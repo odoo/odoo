@@ -23,6 +23,9 @@
         border: none !important;
     }
     .o_survey_result {
+        // force to print background-images to render the leaderboard bar
+        -webkit-print-color-adjust: exact !important; /* Chrome, Safari */
+        print-color-adjust: exact !important; /*Firefox*/
         canvas {
             margin-bottom: 2rem;
         }
@@ -37,6 +40,9 @@
         }
         .o_survey_results_question_wrapper:has(button.collapsed) {
             display: none;
+        }
+        .o_survey_results_question_wrapper:has(div.collapsed) {
+            display: none !important;
         }
         .o_survey_user_responses_table_wrapper {
             height: auto !important;
@@ -112,6 +118,14 @@
 }
 
 .o_survey_results_question {
+    .o_survey_results_question_header {
+        div[aria-expanded="true"] i.fa-caret-right {
+            display: none;
+        }
+        div[aria-expanded="false"] i.fa-caret-down {
+            display: none;
+        }
+    }
     .o_survey_results_question_pill {
         .only_right_radius {
             border-radius: 0 2em 2em 0;
@@ -135,6 +149,9 @@
             padding-right:18px;
             cursor:default;
         }
+    }
+    .collapse:not(.show) {
+        display: none !important;
     }
     .nav-tabs .nav-link.active {
         background-color: transparent;

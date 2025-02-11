@@ -23,6 +23,15 @@ class AccountMoveSend(models.TransientModel):
         values['send_by_post'] = self.checkbox_send_by_post
         return values
 
+    @api.model
+    def _get_wizard_vals_restrict_to(self, only_options):
+        # EXTENDS 'account'
+        values = super()._get_wizard_vals_restrict_to(only_options)
+        return {
+            'checkbox_send_by_post': False,
+            **values,
+        }
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -67,7 +76,6 @@ class AccountMoveSend(models.TransientModel):
             'partner_id': move.partner_id.id,
             'model': 'account.move',
             'res_id': move.id,
-            'user_id': self.env.user.id,
             'company_id': move.company_id.id,
             'report_template': self.env['ir.actions.report']._get_report('account.account_invoices').id
         }
@@ -77,16 +85,17 @@ class AccountMoveSend(models.TransientModel):
         # EXTENDS 'account'
         super()._hook_if_success(moves_data, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
-        moves = self.env['account.move']
-        for move, move_data in moves_data.items():
-            if move_data.get('send_by_post') and move.invoice_pdf_report_id:
-                moves |= move
-        if not moves:
-            return
-
-        self.env['snailmail.letter']\
-            .create([
-                self._prepare_snailmail_letter_values(move)
-                for move in moves
+        to_send = {
+            move: move_data
+            for move, move_data in moves_data.items()
+            if move_data.get('send_by_post') and move.invoice_pdf_report_id
+        }
+        if to_send:
+            self.env['snailmail.letter'].create([
+                {
+                    'user_id': move_data.get('sp_user_id', self.env.user.id),
+                    **self._prepare_snailmail_letter_values(move),
+                }
+                for move, move_data in to_send.items()
             ])\
             ._snailmail_print(immediate=False)

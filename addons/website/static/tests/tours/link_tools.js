@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import wTourUtils from '@website/js/tours/tour_utils';
-import { boundariesIn, setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { boundariesIn, setSelection, nodeSize } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const clickOnImgStep = {
     content: "Click somewhere else to save.",
@@ -30,6 +30,42 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Type the link URL odoo.com",
         trigger: '#toolbar:not(.oe-floating) #o_link_dialog_url_input',
+        run: 'text odoo.com'
+    },
+    clickOnImgStep,
+    {
+        content: "Select the newly created link",
+        trigger: 'iframe #wrap .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+        run() {
+            setSelection(this.$anchor[0], 0, this.$anchor[0], nodeSize(this.$anchor[0]));
+        }
+    },
+    // Remove the link.
+    {
+        content: "Click on the newly created link",
+        trigger: 'iframe #wrap .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+    },
+    {
+        content: "Remove the link.",
+        trigger: 'iframe .popover:contains("http://odoo.com") a .fa-chain-broken',
+    },
+    {
+        content: "Check that the link was removed",
+        trigger: 'iframe #wrap .s_text_image p:contains("Go to odoo:"):not(:has(a))',
+        run: () => {}, // It's a check.
+    },
+    // Recreate the link.
+    {
+        content: "Select first paragraph, to insert a new link",
+        trigger: 'iframe #wrap .s_text_image p',
+    },
+    {
+        content: "Open link tools",
+        trigger: "#toolbar #create-link",
+    },
+    {
+        content: "Type the link URL odoo.com",
+        trigger: '#o_link_dialog_url_input',
         run: 'text odoo.com'
     },
     clickOnImgStep,
@@ -126,7 +162,28 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: 'iframe .popover div a:contains("http://odoo.com")',
         isCheck: true,
     },
+    ...wTourUtils.clickOnSave(),
+    {
+        content: "Check that the first image was saved.",
+        trigger: 'iframe .s_three_columns .row > :nth-child(1) div > a > img',
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Check that the second image was saved.",
+        trigger: 'iframe .s_three_columns .row > :nth-child(2) div > img',
+        run: () => {}, // It's a check.
+    },
     // 5. Remove link from image.
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
+        content: "Reselect the first image.",
+        trigger: 'iframe .s_three_columns .row > :nth-child(1) div > a > img',
+    },
+    {
+        content: "Check that link tools appear.",
+        trigger: 'iframe .popover div a:contains("http://odoo.com")',
+        run: () => {}, // It's a check.
+    },
     {
         content: "Remove link.",
         trigger: 'iframe .popover:contains("http://odoo.com") a .fa-chain-broken',
@@ -164,7 +221,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     wTourUtils.clickOnElement("mega menu", "iframe header .o_mega_menu_toggle"),
     wTourUtils.changeOption("MegaMenuLayout", "we-toggler"),
     wTourUtils.changeOption("MegaMenuLayout", '[data-select-label="Cards"]'),
-    wTourUtils.clickOnElement("card's text", "iframe header .s_mega_menu_cards p"),
+    wTourUtils.clickOnElement("card's text", "iframe header .s_mega_menu_cards span"),
     {
         content: "Enter an URL",
         trigger: "#o_link_dialog_url_input",
@@ -172,7 +229,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check nothing is lost",
-        trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p)",
+        trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(span)",
         isCheck: true,
     },
     // 7. Create new a link from a URL-like text.

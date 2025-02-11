@@ -3,13 +3,14 @@
     line-height: 0;
     hr {
         padding: 0;
+        // TODO we already change the way the color is applied (using a border)
+        // in website.css. In master, we should just let that system work the
+        // way it is and not force something here.
         border: 0;
         border-top: 1px solid $border-color;
         margin: 0;
-        color: inherit;
-        // As BS5 added "opacity" and "background-color" on hr tag, we remove
-        // that here to let users set the color as they want.
+        // Bootstrap sets a configurable "opacity" on hr tag, we remove that
+        // here to let users set the color as they want.
         opacity: 1;
-        background-color: transparent;
     }
 }

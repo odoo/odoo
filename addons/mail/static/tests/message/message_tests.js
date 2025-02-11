@@ -42,6 +42,34 @@ QUnit.test("Start edition on click edit", async () => {
     await contains(".o-mail-Message-editable .o-mail-Composer-input", { value: "Hello world" });
 });
 
+QUnit.test("Editing message keeps the mentioned channels", async () => {
+    const pyEnv = await startServer();
+    const channelId1 = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "other",
+        channel_type: "channel",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId1);
+    await insertText(".o-mail-Composer-input", "#");
+    await click(".o-mail-Composer-suggestion strong", { text: "#other" });
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o_channel_redirect", { count: 1, text: "#other" });
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message-editable .o-mail-Composer-input", {
+        value: "#other",
+    });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
+    await click(".o-mail-Message a", { text: "save" });
+    await contains(".o-mail-Message-content", { text: "#other bye" });
+    await click(".o_channel_redirect", { text: "#other" });
+    await contains(".o-mail-Discuss-threadName", { value: "other" });
+});
+
 QUnit.test("Edit message (mobile)", async () => {
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
@@ -90,6 +118,27 @@ QUnit.test("Can edit message comment in chatter", async () => {
     await click(".o-mail-Message [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
+    await contains(".o-mail-Message-content", { text: "edited message" });
+});
+
+QUnit.test("Can edit message comment in chatter (mobile)", async () => {
+    patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "original message",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    const { openFormView } = await start();
+    openFormView("res.partner", partnerId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message [title='Edit']");
+    await contains("button", { text: "Discard editing" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
+    await click("button[aria-label='Save editing']");
     await contains(".o-mail-Message-content", { text: "edited message" });
 });
 
@@ -1132,39 +1181,12 @@ QUnit.test("allow attachment delete on authored message", async () => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
-    await click(".o-mail-AttachmentImage div[title='Remove']");
+    await openDiscuss(channelId);
+    await click(".o-mail-AttachmentImage [title='Actions']");
+    await click(".dropdown-item", { text: "Remove" });
     await contains(".modal-dialog .modal-body", { text: 'Do you really want to delete "BLAH"?' });
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentCard", { count: 0 });
-});
-
-QUnit.test("prevent attachment delete on non-authored message in channels", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    pyEnv["mail.message"].create({
-        attachment_ids: [
-            [
-                0,
-                0,
-                {
-                    mimetype: "image/jpeg",
-                    name: "BLAH",
-                    res_id: channelId,
-                    res_model: "discuss.channel",
-                },
-            ],
-        ],
-        author_id: partnerId,
-        body: "<p>Test</p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
-    await contains(".o-mail-AttachmentImage");
-    await contains(".o-mail-AttachmentImage div[title='Remove']", { count: 0 });
 });
 
 QUnit.test("Toggle star should update starred counter on all tabs", async () => {
@@ -1206,8 +1228,9 @@ QUnit.test("allow attachment image download on message", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
-    await contains(".o-mail-AttachmentImage .fa-download");
+    await openDiscuss(channelId);
+    await click(".o-mail-AttachmentImage [title='Actions']");
+    await contains(".dropdown-item", { text: "Download" });
 });
 
 QUnit.test("Can download all files of a message", async () => {

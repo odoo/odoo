@@ -1,4 +1,4 @@
-$o-wevent-bg-color-base: $body-bg;
+$o-wevent-bg-color-base: $gray-100;
 $o-wevent-bg-color-base-contrast: color-contrast($o-wevent-bg-color-base);
 $o-wevent-bg-color-light: mix($o-wevent-bg-color-base, #E9ECEF);
 $o-wevent-bg-color-dark: mix($o-wevent-bg-color-base, #24363a);
@@ -95,7 +95,8 @@ $o-wevent-color: $body-color;
             }
         }
         .event_color_0 {
-            background-color: unset;
+            color: $o-wevent-bg-color-base-contrast;
+
             &.event_track{
                 border-top: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
             }
@@ -114,6 +115,12 @@ $o-wevent-color: $body-color;
                 }
             }
         }
+    }
+
+    // To be more efficiently implemented by using default Bootstrap accordion
+    // components
+    .o_wevent_collapse_link:not(.collapsed) .oi {
+        transform: rotate(180deg);
     }
 
     .o_wevent_cta  {

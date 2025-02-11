@@ -28,7 +28,7 @@
                         <div class="section-financials-body d-flex flex-column flex-sm-row">
                             <table class="table table-borderless mb-0">
                                 <tr>
-                                    <td>Price excl. VAT:</td>
+                                    <td>Price excl. Tax:</td>
                                     <td><t t-esc="env.utils.formatCurrency(productInfo.all_prices.price_without_tax)"/></td>
                                 </tr>
                                 <tr t-if="_hasMarginsCostsAccessRights()">
@@ -77,7 +77,7 @@
                     <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="productInfo.suppliers.length > 0">
                         <h3 class="section-title">Replenishment</h3>
                         <div class="section-supplier-body">
-                            <t t-foreach="productInfo.suppliers" t-as="supplier" t-key="supplier.name">
+                            <t t-foreach="productInfo.suppliers" t-as="supplier" t-key="supplier.id">
                                 <div class="d-flex flex-column flex-md-row gap-2">
                                     <div>
                                         <span t-esc="supplier.name" class="table-name"/>:
@@ -104,7 +104,7 @@
                                         </div>
                                         <div class="d-flex flex-wrap gap-1">
                                             <t t-foreach="variant.values" t-as="attribute_value" t-key="attribute_value.name">
-                                                <span class="searchable btn btn-secondary" t-on-click="() => this.searchProduct(attribute_value.search)">
+                                                <span class="searchable btn btn-secondary" t-on-click="() => this.searchProduct(attribute_value.search + ';product_tmpl_id:' + props.product.product_tmpl_id)">
                                                     <t t-esc="attribute_value.name"/>
                                                 </span>
                                                 <t t-if="attribute_value_index lt variant.values.length - 1"> </t>
@@ -120,7 +120,7 @@
                         <div class="section-order-body">
                             <table class="table table-borderless w-100 w-sm-50 mb-0">
                                 <tr>
-                                    <td>Total Price excl. VAT:</td>
+                                    <td>Total Price excl. Tax:</td>
                                     <td t-esc="orderPriceWithoutTaxCurrency" class="table-value"/>
                                 </tr>
                                 <tr t-if="_hasMarginsCostsAccessRights()">

@@ -4,6 +4,7 @@ import {
     click,
     clickDiscard,
     clickSave,
+    drag,
     dragAndDrop,
     editInput,
     editSelect,
@@ -11,6 +12,7 @@ import {
     nextTick,
     patchWithCleanup,
     triggerEvent,
+    patchDate,
 } from "@web/../tests/helpers/utils";
 import { toggleActionMenu } from "@web/../tests/search/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -39,6 +41,7 @@ async function changeType(target, propertyType) {
         char: 1,
         integer: 3,
         float: 4,
+        date: 5,
         datetime: 6,
         selection: 7,
         tags: 8,
@@ -142,6 +145,10 @@ function getLocalStorageFold() {
         "fake.model,1337":
             JSON.parse(window.localStorage.getItem("properties.fold,fake.model,1337")) || [],
     };
+}
+
+function getPropertyHandleElement(propertyName) {
+    return target.querySelector(`*[property-name='${propertyName}'] .oi-draggable`);
 }
 
 QUnit.module("Fields", (hooks) => {
@@ -333,13 +340,14 @@ QUnit.module("Fields", (hooks) => {
      * change the properties value).
      */
     QUnit.test("properties: no access to parent", async function (assert) {
+        assert.expect(6);
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return false;
             }
         }
 
-        await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -357,6 +365,16 @@ QUnit.module("Fields", (hooks) => {
             actionMenus: {},
         });
 
+        patchWithCleanup(form.env.services.notification, {
+            add: (message, options) => {
+                assert.strictEqual(
+                    message,
+                    "You need edit access on the parent document to update these property fields"
+                );
+                assert.strictEqual(options.type, "warning");
+            },
+        });
+
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
 
@@ -364,8 +382,15 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target,
             ".o_cp_action_menus span:contains(Add Properties)",
-            "Show Add Properties btn in cog menu",
+            "Show Add Properties btn in cog menu"
         );
+        const menuItems = target.querySelectorAll(".o_cp_action_menus span.o_menu_item");
+        for (const item of menuItems) {
+            if (item.textContent === "Add Properties") {
+                await click(item, null);
+                break;
+            }
+        }
 
         const editButton = field.querySelector(".o_field_property_open_popover");
         assert.notOk(editButton, "The edit definition button must not be in the view");
@@ -410,7 +435,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target,
             ".o_cp_action_menus span:contains(Add Properties)",
-            "The add button must be in the cog menu",
+            "The add button must be in the cog menu"
         );
 
         const editButton = field.querySelectorAll(".o_field_property_open_popover");
@@ -513,7 +538,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target,
             ".o_cp_action_menus span:contains(Add Properties)",
-            "The add button must be in the cog menu",
+            "The add button must be in the cog menu"
         );
 
         // Create a new property
@@ -1863,6 +1888,65 @@ QUnit.module("Fields", (hooks) => {
         }
     });
 
+    QUnit.test("properties: default value date", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
+                return true;
+            }
+        }
+
+        patchDate(2022, 0, 3, 8, 0, 0);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="properties"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+            actionMenus: {},
+        });
+
+        const field = target.querySelector(".o_field_properties");
+        assert.ok(field, "The field must be in the view");
+
+        // add a new date property
+        await toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus span .fa-cogs");
+        await nextTick();
+        let popover = target.querySelector(".o_property_field_popover");
+        assert.ok(popover, "Should have opened the definition popover");
+        await changeType(target, "date");
+        const type = popover.querySelector(".o_field_property_definition_type input");
+        assert.strictEqual(type.value, "Date", "Should have changed the property type");
+        // choose a default value and check that it is propagated on the property field
+        await click(target, ".o_field_property_definition_value .o_datetime_input");
+        assert.containsOnce(target, ".o_date_picker");
+        await click(getPickerCell("3").at(0));
+        await closePopover(target);
+        assert.strictEqual(
+            target.querySelector(".o_datetime_input").value,
+            "01/03/2022",
+            "The default date value should have been propagated"
+        );
+        // save the form and check that the default value is not reset
+        await click(target, ".o_form_button_save");
+        await click(target, ".o_property_field:nth-last-child(2) .o_field_property_open_popover");
+        popover = target.querySelector(".o_property_field_popover");
+        assert.strictEqual(
+            popover.querySelector(".o_field_property_definition_value input").value,
+            "01/03/2022"
+        );
+    });
+
     /**
      * check if property field popover closes when clicking on delete property icon.
      */
@@ -2503,7 +2587,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target,
             ".o_field_property_add button",
-            "The add button must be in the view",
+            "The add button must be in the view"
         );
     });
 
@@ -2520,7 +2604,7 @@ QUnit.module("Fields", (hooks) => {
             });
             await toggleActionMenu(target);
             assert.containsNone(target, ".o_cp_action_menus span:contains(Add Properties)");
-        },
+        }
     );
 
     QUnit.test("properties: onChange return new properties", async function (assert) {
@@ -2587,5 +2671,149 @@ QUnit.module("Fields", (hooks) => {
             ),
             ["Hello"]
         );
+    });
+
+    QUnit.test("new property, change record, change property type", async (assert) => {
+        const records = serverData.models.partner.records;
+        records[0].properties = [];
+        records[1].properties = [];
+        async function mockRPC(route, { method, args }) {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
+                return true;
+            }
+            if (method === "web_save") {
+                if (args[0][0] === 1) {
+                    // On property creation in first record, add a copy with empty value in
+                    // second record
+                    records[1].properties.push({
+                        ...args[1].properties[0],
+                    });
+                    records[1].properties[0].value = "";
+                } else {
+                    // When changing type of second record's properties, also apply it to
+                    // first record and the property's value should be reset on name change
+                    records[0].properties[0].type = args[1].properties[0].type;
+                    if (records[0].properties[0].name !== args[1].properties[0].name) {
+                        records[0].properties[0].value = null;
+                    }
+                    records[0].properties[0].name = args[1].properties[0].name;
+                }
+            }
+        }
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            resIds: [1, 2],
+            serverData,
+            arch: `
+                <form>
+                    <field name="company_id"/>
+                    <field name="properties"/>
+                </form>`,
+            mockRPC,
+            actionMenus: {},
+        });
+        // Add a new property
+        await toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus span .fa-cogs");
+
+        await editInput(target, ".o_property_field .o_property_field_value input", "aze");
+        await click(target, ".o_pager_next");
+        assert.strictEqual(
+            target.querySelector(".o_property_field .o_property_field_value input").value,
+            ""
+        );
+        // Change second record's property type
+        await click(target, ".o_property_field:nth-child(1) .o_field_property_open_popover");
+        await changeType(target, "integer");
+
+        await click(target, ".o_pager_previous");
+        assert.strictEqual(
+            target.querySelector(".o_property_field .o_property_field_value input").value,
+            "0"
+        );
+    });
+
+    QUnit.test(
+        "properties: moving single property to 2nd group in auto split mode",
+        async function (assert) {
+            await makePropertiesGroupView([false]);
+
+            const { moveTo, drop } = await drag(getPropertyHandleElement("property_1"));
+
+            const secondGroup = target.querySelector(".o_property_group:last-of-type");
+            await moveTo(secondGroup, "bottom");
+            await drop(target, "bottom-right");
+
+            assert.deepEqual(getGroups(), [
+                [["GROUP 1", "property_gen_2"]],
+                [
+                    ["GROUP 2", "property_gen_3"],
+                    ["Property 1", "property_1"],
+                ],
+            ]);
+        }
+    );
+
+    QUnit.test("properties: moving single property to 1st group", async function (assert) {
+        await makePropertiesGroupView([true, true, false]);
+
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_1")
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["SEPARATOR 1", "property_1"],
+                ["Property 3", "property_3"],
+            ],
+            [["SEPARATOR 2", "property_2"]],
+        ]);
+    });
+
+    QUnit.test("properties: split, moving property from 2nd group to 1st", async function (assert) {
+        await makePropertiesGroupView([true, false, false]);
+
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_2"),
+            "top"
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["SEPARATOR 1", "property_1"],
+                ["Property 3", "property_3"],
+                ["Property 2", "property_2"],
+            ],
+            [["GROUP 2", "property_gen_2"]],
+        ]);
+    });
+
+    QUnit.test("properties: split, moving property from 1st group to 2nd", async function (assert) {
+        await makePropertiesGroupView([true, false, false, false, false, false]);
+
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_6"),
+            "top"
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["SEPARATOR 1", "property_1"],
+                ["Property 2", "property_2"],
+                ["Property 4", "property_4"],
+            ],
+            [
+                ["GROUP 2", "property_gen_2"],
+                ["Property 5", "property_5"],
+                ["Property 3", "property_3"],
+                ["Property 6", "property_6"],
+            ],
+        ]);
     });
 });

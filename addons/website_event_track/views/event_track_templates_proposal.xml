@@ -7,10 +7,10 @@
         <div class="oe_structure" id="oe_structure_website_event_track_proposal_1"/>
         <div class="container">
             <section class="row mb-3">
-                <div class="col-lg-8 col-xl-9">
+                <div class="col-lg-8 col-xl-9 pe-xxl-5">
                     <t t-call="website_event.navbar"/>
-                    <section>
-                        <h3>Call for Proposals</h3>
+                    <section class="pt-3">
+                        <h3 class="mt-0 mb-4">Call for Proposals</h3>
                     </section>
                     <section id="forms" t-if="not event.website_track_proposal">
                         <h2>Proposals are closed!</h2>
@@ -20,7 +20,7 @@
                     </section>
                     <div class="oe_structure">
                     <section>
-                        <h4 class="mt-3">
+                        <h4 class="mt-0">
                             Introduction
                         </h4>
                         <p class="lead">
@@ -37,9 +37,9 @@
                 </div>
                     <div>
                         <section id="forms" t-if="event.website_track_proposal">
-                            <form class="js_website_submit_form o_website_event_track_proposal_form mt-3" t-att-data-event-id="event.id" enctype="multipart/form-data">
+                            <form class="js_website_submit_form o_website_event_track_proposal_form row mt-3" t-att-data-event-id="event.id" enctype="multipart/form-data">
                                 <input name="csrf_token" type="hidden" t-att-value="request.csrf_token()"/>
-                                <div id="track_intro">
+                                <div id="track_intro" class="col-12">
                                     <h4 class="mt-3">Talk Intro</h4>
                                     <div class="form-text text-muted mb16">
                                         What is your talk about?
@@ -59,7 +59,7 @@
                                             <span>*</span>
                                         </label>
                                         <div class="col-sm">
-                                            <textarea name="description" class="form-control" required="True"/>
+                                            <textarea name="description" class="form-control" rows="4" required="True"/>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -70,7 +70,7 @@
                                     </div>
                                 </div>
                                 <br/>
-                                <div id="speaker_profile">
+                                <div id="speaker_profile" class="col-12">
                                     <h4 class="mt-3">Speaker Profile</h4>
                                     <div class="form-text text-muted mb16">
                                         Who will give this talk? We will show this to attendees to showcase your talk.
@@ -97,11 +97,11 @@
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-form-label col-sm-auto" for="partner_biography" style="width: 200px" >Biography</label>
-                                        <div class="col-sm"><textarea name="partner_biography" class="form-control"/></div>
+                                        <div class="col-sm"><textarea name="partner_biography" rows="4" class="form-control"/></div>
                                     </div>
                                 </div>
                                 <t t-call="website_event_track.event_track_proposal_contact_details"/>
-                                <div class="o_form_buttons d-flex justify-content-end">
+                                <div class="o_form_buttons col-12 d-flex align-items-center pb-5">
                                     <button type="submit" class="btn btn-primary o_wetrack_proposal_submit_button">Submit Proposal</button>
                                     <span class="o_wetrack_proposal_error_section text-danger d-none ml8">
                                         <i class="fa fa-close mr4" role="img" aria-label="Error" title="Error"/>
@@ -115,11 +115,11 @@
                 </div>
                 <aside class="col-lg-4 col-xl-3 mt-3 mt-lg-0 pt-3">
                     <h5 class="o_page_header">Talks Types</h5>
-                    <h6 class="fw-bold">Regular Talks</h6>
+                    <h6>Regular Talks</h6>
                     <p>
                         These are standard talks with slides, alocated in slots of 60 minutes.
                     </p>
-                    <h6 class="fw-bold">Lightning Talks</h6>
+                    <h6>Lightning Talks</h6>
                     <p>
                         These are 30 minutes talks on many different topics. Most topics are accepted in lightning talks.
                     </p>
@@ -146,13 +146,13 @@
 </template>
 
 <template id="event_track_proposal_contact_details">
-    <div id="event_track_proposal_additional_contact_section">
+    <div id="event_track_proposal_additional_contact_section" class="col-12">
         <div class="mb-3">
             <input name="add_contact_information" type= "checkbox" class="o_wetrack_add_contact_information_checkbox"/>
             <label class="fw-normal" for="add_contact_information">Contact me through a different email/phone</label>
         </div>
         <div class="o_wetrack_contact_information d-none">
-            <h4><b>Contact Information</b></h4>
+            <h4><b class="fw-normal">Contact Information</b></h4>
             <div class="form-text text-muted mb16">
                 How can our team get in touch with you?
             </div> 

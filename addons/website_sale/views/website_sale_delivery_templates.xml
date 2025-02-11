@@ -44,10 +44,10 @@
 
     <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
         <!-- //t[@t-if='website_sale_order.amount_total'] should be removed in master -->
-        <xpath expr="//t[@name='website_sale_non_free_cart'] | //t[@t-if='website_sale_order.amount_total']" position="before">
+        <xpath expr="//div[@name='website_sale_non_free_cart'] | //t[@name='website_sale_non_free_cart'] | //t[@t-if='website_sale_order.amount_total']" position="before">
             <div t-if="deliveries" id="delivery_carrier">
                 <t t-set="delivery_nb" t-value="len(deliveries)"/>
-                <h4>Choose a delivery method</h4>
+                <h4 class="fs-6 small text-uppercase fw-bolder">Choose a delivery method</h4>
                 <div class="card border-0" id="delivery_method">
                     <ul class="list-group">
                     <t t-foreach="deliveries" t-as="delivery">

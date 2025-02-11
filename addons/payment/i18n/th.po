@@ -3,16 +3,16 @@
 # 	* payment
 # 
 # Translators:
-# Wil Odoo, 2023
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,11 +146,6 @@ msgid ""
 msgstr ""
 "<span><i class=\"oi oi-arrow-right\"/> วิธีกำหนดค่าบัญชี PayPal "
 "ของคุณ</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>วิธีการชำระเงินของคุณ</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1648,6 +1643,11 @@ msgid "Test Mode"
 msgstr "ทดสอบโหมด"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "ขอบคุณ"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -2166,6 +2166,7 @@ msgid ""
 "You cannot change the company of a payment provider with existing "
 "transactions."
 msgstr ""
+"คุณไม่สามารถเปลี่ยนบริษัทของผู้ให้บริการชำระเงินด้วยธุรกรรมที่มีอยู่ได้"
 
 #. module: payment
 #. odoo-python
@@ -2296,6 +2297,11 @@ msgid "Your payment has not been processed yet."
 msgstr "การชำระเงินของคุณยังไม่ได้รับการประมวลผล"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
 msgstr "รหัสไปรษณีย์"
@@ -2304,16 +2310,6 @@ msgstr "รหัสไปรษณีย์"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "รหัสไปรษณีย์"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "อันตราย"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "ข้อมูล"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2332,11 +2328,6 @@ msgid "provider"
 msgstr "ผู้ให้บริการ"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "สำเร็จ"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -2344,8 +2335,3 @@ msgid ""
 msgstr ""
 "เพื่อทำการ\n"
 "                    ชำระเงินนี้"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "คำเตือน"

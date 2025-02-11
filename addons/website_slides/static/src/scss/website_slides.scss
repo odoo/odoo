@@ -185,7 +185,7 @@ $line-height-truncate: 1.25em;
     a.o_wslides_js_quiz_is_correct {
         color: black;
         input:checked + i.fa-check-circle-o {
-            color: $primary !important;
+            color: $success !important;
         }
     }
 
@@ -249,7 +249,6 @@ $line-height-truncate: 1.25em;
     .o_wprofile_progress_circle {
         margin-left: auto;
         margin-right: auto;
-        max-width: 200px;
     }
 }
 
@@ -752,6 +751,15 @@ li.o_wslides_fs_sidebar_list_item.active {
 
     .oe_slide_embed_option {
         @include o-position-absolute(0,0,0,0);
+    }
+
+    .disabled {
+        // remove JS events for disabled elements
+        pointer-events: none;
+    }
+
+    .o_slide_navigation_buttons {
+        user-select: none;
     }
 }
 

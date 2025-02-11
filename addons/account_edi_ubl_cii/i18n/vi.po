@@ -3,16 +3,16 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -225,11 +225,12 @@ msgstr "0216 - mã OVT"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0221
 msgid "0221 - The registered number of the qualified invoice issuer (Japan)"
 msgstr ""
+"0221 - Số đăng ký của tổ chức phát hành hóa đơn đủ điều kiện (Nhật Bản)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0230
 msgid "0230 - National e-Invoicing Framework (Malaysia)"
-msgstr ""
+msgstr "0230 - Khung hóa đơn điện tử quốc gia (Malaysia)"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -436,7 +437,7 @@ msgstr "9951 - Mã số thuế GTGT của San Marino"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
-msgid "9952 - Turkey VAT number"
+msgid "9952 - Türkiye VAT number"
 msgstr "9952 - Mã số thuế GTGT của Thổ Nhĩ Kỳ"
 
 #. module: account_edi_ubl_cii
@@ -510,17 +511,17 @@ msgstr "Tệp đính kèm"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_bis3
 msgid "BIS Billing 3.0"
-msgstr ""
+msgstr "BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_a_nz
 msgid "BIS Billing 3.0 A-NZ"
-msgstr ""
+msgstr "BIS Billing 3.0 A-NZ"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_sg
 msgid "BIS Billing 3.0 SG"
-msgstr ""
+msgstr "BIS Billing 3.0 SG"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
@@ -559,12 +560,17 @@ msgid "Companies"
 msgstr "Công ty"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__show_ubl_company_warning
+msgid "Company warning"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "Conditional cash/payment discount"
-msgstr ""
+msgstr "Chiết khấu thanh toán/tiền mặt có điều kiện"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_config_settings
@@ -612,7 +618,7 @@ msgstr "E-FFF (BE)"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_partner_view_search
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_partner_view_tree
 msgid "EDI Format"
-msgstr ""
+msgstr "Định dạng EDI"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -631,7 +637,7 @@ msgstr "Mỗi dòng hoá đơn có một và chỉ một loại thuế."
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line should have a product or a label."
-msgstr ""
+msgstr "Mỗi dòng hóa đơn phải có một sản phẩm hoặc nhãn."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -652,10 +658,10 @@ msgstr "Bật Ubl Cii Xml"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
-msgstr ""
+msgstr "Đã xảy ra lỗi khi tạo tài liệu EDI (định dạng: %s):"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -750,6 +756,40 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__ubl_partner_warning
+msgid "Partner warning"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"Peppol EAS code 9901 is deprecated. Please use a different Danish EAS code "
+"instead."
+msgstr ""
+"Mã Peppol EAS 9901 không được dùng nữa. Vui lòng sử dụng mã EAS khác của Đan"
+" Mạch để thay thế."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid "Peppol EAS code 9955 is deprecated. Please use 0007 instead."
+msgstr ""
+"Mã Peppol EAS 9955 không được dùng nữa. Thay vào đó, vui lòng sử dụng mã "
+"0007."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
+"instead."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
@@ -765,6 +805,15 @@ msgstr "Địa chỉ điện tử Peppol (EAS)"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_config_settings__invoice_is_ubl_cii
 msgid "Peppol format"
 msgstr "Định dạng Peppol"
+
+#. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_move_send_form
+msgid ""
+"Please fill in Peppol EAS and Peppol Endpoint in your company form to "
+"generate a complete file."
+msgstr ""
+"Vui lòng điền Peppol EAS và Peppol Endpoint vào biểu mẫu công ty của bạn để "
+"tạo một tệp hoàn chỉnh."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
@@ -787,8 +836,19 @@ msgstr "Thuế '%s' không hợp lệ: %s"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
-msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
 msgstr ""
+"Endpoint Peppol không hợp lệ. Nó phải chứa đúng 10 chữ số (Mã số đăng ký "
+"công ty). Định dạng hợp lệ là: 1234567890"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
+msgstr "Endpoint Peppol không hợp lệ. Định dạng dự kiến là: 0239843188"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -796,7 +856,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The Peppol endpoint is not valid. The expected format is: 73282932000074"
-msgstr ""
+msgstr "Endpoint Peppol không hợp lệ. Định dạng hợp lệ là: 73282932000074"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -808,6 +868,20 @@ msgid ""
 msgstr ""
 "Mã số thuế GTGT của nhà cung cấp dường như không hợp lệ. Nó phải có dạng: "
 "NO179728982MVA."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The VAT of the %s should be prefixed with its country code."
+msgstr "Thuế GTGT của %s phải được bắt đầu bằng mã quốc gia của nó."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The country is required for the %s."
+msgstr "Yêu cầu có quốc gia cho cho %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -843,12 +917,16 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid ""
-"The invoice contains line(s) with a negative unit price, which is not "
-"allowed. You might need to set a negative quantity instead."
+"The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
+"Please check those in their Accounting tab. Otherwise, the generated files "
+"will be incomplete."
 msgstr ""
+"Các đối tác sau thiếu trường Peppol EAS hoặc Peppol Endpoint: %s. Vui lòng "
+"kiểm tra chúng trong tab Kế toán của họ. Nếu không, các tệp được tạo sẽ "
+"không đầy đủ."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -862,11 +940,14 @@ msgstr "Hóa đơn đã được chuyển đổi thành giấy báo có và số
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
-msgid "The supplier %s must have a Bronnoysund company registry."
-msgstr "Nhà cung cấp %s phải có mã số doanh nghiệp của Bronnoysund."
+msgid ""
+"This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
+"those in its Accounting tab or the generated file will be incomplete."
+msgstr ""
+"Đối tác này thiếu trường Peppol EAS hoặc Peppol Endpoint. Vui lòng kiểm tra "
+"chúng trong tab Kế toán, nếu không tệp được tạo sẽ không đầy đủ."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -933,11 +1014,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
 msgstr "factur-x.xml"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
-msgid "false"
-msgstr "sai"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

@@ -9,7 +9,7 @@
             <div id="oe_structure_website_event_location_1" class="oe_structure"/>
             <!-- Content -->
             <div class="o_wemeet_container container h-100">
-                <div class="row h-100 mb-5 mx-0">
+                <div class="row h-100 mb-5">
                     <t t-call="website_event_meet.community_main"/>
                     <t t-call="website_event_meet.community_aside"/>
                 </div>
@@ -26,10 +26,10 @@
 
 <!-- Meeting Rooms Main Display -->
 <template id="community_main" name="Meeting Rooms: Main Display">
-    <div class="col-12 col-lg-8 col-xl-9 ps-0">
+    <div class="col-12 col-lg-8 col-xl-9 pe-xxl-5">
         <t t-call="website_event.navbar"/>
-        <div class="d-flex flex-row align-items-center justify-content-between mb-2">
-            <h3 class="mb-0">Join a room</h3>
+        <div class="d-flex flex-row flex-wrap gap-2 pt-3 justify-content-between mb-2">
+            <h3 class="my-0 lh-1">Join a room</h3>
             <div class="dropdown">
                 <a class="dropdown-toggle btn btn-light" title="Languages Menu"
                     aria-label="Dropdown menu" data-bs-display="static" data-bs-toggle="dropdown" href="#" role="button">
@@ -118,7 +118,7 @@
     </t>
 
     <a t-if="is_event_user or not meeting_room.room_is_full"
-        class="card o_wevent_meeting_room_card w-100 my-2 d-block text-decoration-none rounded-0 text-dark"
+        class="card o_wevent_meeting_room_card w-100 my-2 d-block text-decoration-none rounded-0 bg-transparent text-reset"
         t-att-data-meeting-room-id="meeting_room.id"
         t-att-data-open-room="opened"
         t-att-data-is-event-manager="int(is_event_user)"
@@ -168,8 +168,8 @@
 <template id="community_aside" name="Community: Aside">
     <div class="d-lg-flex justify-content-end col-lg-4 col-xl-3 mb-3 mb-lg-0">
         <div class="o_wevent_community_aside mt-3">
-            <div class="d-none d-md-block mb-3" t-if="event.meeting_room_allow_creation">
-                <h4 class="o_page_header">Start a topic</h4>
+            <div class="d-none d-md-block mb-4" t-if="event.meeting_room_allow_creation">
+                <h4 class="o_page_header h6">Start a topic</h4>
                 <p>Want to create your own discussion room?</p>
                 <a href="#" role="button"
                     class="btn btn-secondary o_wevent_create_room_button w-100"

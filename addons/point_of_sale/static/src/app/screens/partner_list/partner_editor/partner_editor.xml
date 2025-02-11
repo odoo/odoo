@@ -18,13 +18,13 @@
                 <div class="partner-details-box row row-cols-1 row-cols-sm-2 gy-3 mt-3">
                     <t t-foreach="['Street', 'City', 'Zip', 'Email', 'Phone', 'Mobile', 'Barcode' ]" t-as="item" t-key="item">
                         <div class="partner-detail col">
-                            <label class="form-label label" t-attf-for="{{item}}" t-esc="item"/>
+                            <label class="form-label label" t-attf-for="{{item}}" t-esc="partnerDetailsFields[item]"/>
                             <input
                                 class="detail form-control"
                                 t-attf-id="{{item}}"
                                 t-attf-name="{{item}}"
                                 t-model="changes[item.toLowerCase()]"
-                                t-attf-placeholder="{{item}}"
+                                t-attf-placeholder="{{partnerDetailsFields[item]}}"
                                 t-att="{'disabled': isFieldCommercialAndPartnerIsChild(item)}"
                                 t-att-class="{'border-danger': missingFields.includes(item.toLowerCase())}" />
                         </div>

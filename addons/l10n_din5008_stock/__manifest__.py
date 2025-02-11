@@ -8,6 +8,9 @@
         'l10n_din5008',
         'stock',
     ],
+    'data': [
+        'report/din5008_stock_picking_layout.xml',
+    ],
     'auto_install': True,
     'license': 'LGPL-3',
 }

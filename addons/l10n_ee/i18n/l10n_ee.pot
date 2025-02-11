@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-27 09:46+0000\n"
-"PO-Revision-Date: 2023-03-27 09:46+0000\n"
+"POT-Creation-Date: 2024-11-08 14:25+0000\n"
+"PO-Revision-Date: 2024-11-08 14:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -163,13 +163,17 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ee
+#: model:ir.model,name:l10n_ee.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_ee
 #: model:account.report.column,name:l10n_ee.tax_report_balance
 msgid "Balance"
 msgstr ""
 
 #. module: l10n_ee
 #: model:ir.model.fields,field_description:l10n_ee.field_account_tax__l10n_ee_kmd_inf_code
-#: model:ir.model.fields,field_description:l10n_ee.field_account_tax_template__l10n_ee_kmd_inf_code
 msgid "KMD INF Code"
 msgstr ""
 
@@ -181,25 +185,21 @@ msgstr ""
 
 #. module: l10n_ee
 #: model:ir.model.fields.selection,name:l10n_ee.selection__account_tax__l10n_ee_kmd_inf_code__11
-#: model:ir.model.fields.selection,name:l10n_ee.selection__account_tax_template__l10n_ee_kmd_inf_code__11
 msgid "Purchase KMS §29(4)/30/32"
 msgstr ""
 
 #. module: l10n_ee
 #: model:ir.model.fields.selection,name:l10n_ee.selection__account_tax__l10n_ee_kmd_inf_code__12
-#: model:ir.model.fields.selection,name:l10n_ee.selection__account_tax_template__l10n_ee_kmd_inf_code__12
 msgid "Purchase KMS §41^1"
 msgstr ""
 
 #. module: l10n_ee
 #: model:ir.model.fields.selection,name:l10n_ee.selection__account_tax__l10n_ee_kmd_inf_code__1
-#: model:ir.model.fields.selection,name:l10n_ee.selection__account_tax_template__l10n_ee_kmd_inf_code__1
 msgid "Sale KMS §41/42"
 msgstr ""
 
 #. module: l10n_ee
 #: model:ir.model.fields.selection,name:l10n_ee.selection__account_tax__l10n_ee_kmd_inf_code__2
-#: model:ir.model.fields.selection,name:l10n_ee.selection__account_tax_template__l10n_ee_kmd_inf_code__2
 msgid "Sale KMS §41^1"
 msgstr ""
 
@@ -209,19 +209,13 @@ msgid "Tax"
 msgstr ""
 
 #. module: l10n_ee
-#: model:ir.model,name:l10n_ee.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr ""
-
-#. module: l10n_ee
 #: model:ir.model.fields,help:l10n_ee.field_account_tax__l10n_ee_kmd_inf_code
-#: model:ir.model.fields,help:l10n_ee.field_account_tax_template__l10n_ee_kmd_inf_code
 msgid ""
 "This field is used for the comments/special code column in the KMD INF "
 "report."
 msgstr ""
 
 #. module: l10n_ee
-#: model:account.report,name:l10n_ee.tax_report_vat
+#: model:account.report,name:l10n_ee.tax_report
 msgid "VAT Report (KMD)"
 msgstr ""

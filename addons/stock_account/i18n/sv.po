@@ -8,21 +8,21 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2023
 # Robin Calvin, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Simon S, 2023
 # Martin Trigaux, 2023
 # Lasse L, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +77,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "6.00"
-msgstr ""
+msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -87,7 +87,7 @@ msgstr "<b>Ställ in andra inmatnings-/utmatningskonton på specifik </b>"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Värdering</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -171,17 +171,17 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analyskonto"
+msgstr "Objektkonto"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
 msgid "Analytic Account Line"
-msgstr "Analytisk kundrad"
+msgstr "Objektkontorad"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plans"
-msgstr "Analytiska planer"
+msgstr "Objektscheman"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
@@ -191,7 +191,7 @@ msgstr "Automatiserad"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
 msgid "Automatic Stock Accounting"
-msgstr ""
+msgstr "Automatisk lagerredovisning"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -206,12 +206,12 @@ msgstr "Genomsnittlig kostnad (AVCO)"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "BC46282798"
-msgstr ""
+msgstr "BC46282798"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "Bacon"
-msgstr ""
+msgstr "Bacon"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -262,7 +262,7 @@ msgstr "Välj ett datum för att få värderingen vid det datumet"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
 msgid "Cogs Origin"
-msgstr ""
+msgstr "Koggars ursprung"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -313,7 +313,7 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"Motsvarande journalposter för alla inkommande lagerflyttar kommer att bokföras på detta konto, såvida det inte finns ett specifikt värderingskonto\n"
+"Motsvarande verifikat för alla inkommande lagerflyttar kommer att bokföras på detta konto, såvida det inte finns ett specifikt värderingskonto\n"
 "                värderat konto på källplatsen. Detta är standardvärdet för alla produkter i denna kategori. Det kan också ställas in direkt på varje produkt."
 
 #. module: stock_account
@@ -364,8 +364,8 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
-"Datum då bokföringsposterna kommer att skapas vid automatisk lagervärdering."
-" Om det är tomt används inventeringsdatumet."
+"Datum då verifikaten kommer att skapas vid automatisk lagervärdering. Om det"
+" är tomt används inventeringsdatumet."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -401,6 +401,8 @@ msgid ""
 "Due to a change of product category (from %s to %s), the costing method has "
 "changed for product template %s: from %s to %s."
 msgstr ""
+"På grund av en ändring av produktkategori (från %s till %s) har "
+"kalkylmetoden ändrats för produktmall %s: från %s till %s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -432,7 +434,7 @@ msgstr "Inkommande"
 #: model:ir.actions.act_window,name:stock_account.inventory_aging_action
 #: model:ir.ui.menu,name:stock_account.menu_inventory_aging
 msgid "Inventory Aging"
-msgstr ""
+msgstr "Lageråldring"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -504,7 +506,7 @@ msgstr "Länkad till"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Parti- och serienummer kommer att visas på fakturan"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -535,8 +537,8 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"Manuell: Bokföringsposterna för att värdera lagret bokförs inte automatiskt.\n"
-"        Automatiserad: En bokföringspost skapas automatiskt för att värdera lagret när en produkt kommer in i eller lämnar företaget.\n"
+"Manuell: Verifikaten för att värdera lagret bokförs inte automatiskt.\n"
+"        Automatiserad: En verifikat skapas automatiskt för att värdera lagret när en produkt kommer in i eller lämnar företaget.\n"
 "        "
 
 #. module: stock_account
@@ -636,7 +638,7 @@ msgstr "Orsak till omvärdering"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__warehouse_id
 msgid "Receipt WH"
-msgstr ""
+msgstr "Kvitto WH"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
@@ -704,7 +706,7 @@ msgstr ""
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
 msgid "Stock Accounting Automatic"
-msgstr ""
+msgstr "Lagerredovisning Automatisk"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -872,6 +874,8 @@ msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
 msgstr ""
+"Värdet på ett lagervärderingslager kan inte vara negativt. Landat "
+"anskaffningsvärde kan användas för att korrigera en specifik överföring."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.inventory_aging_action
@@ -887,7 +891,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Moved Quantity"
-msgstr ""
+msgstr "Total flyttad kvantitet"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
@@ -1048,7 +1052,7 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"När automatisk lagerutvärdering utförs kommer motpostjournalposter för alla utgående lagerflyttningar att postas på detta konto,\n"
+"När automatisk lagerutvärdering utförs kommer motpostverifikat för alla utgående lagerflyttningar att postas på detta konto,\n"
 "                om det inte finns ett specifikt utvärderingskonto inställt på destinationen. Detta är standardvärdet för alla produkter i denna kategori.\n"
 "                Det kan också direkt ställas in på varje produkt."
 
@@ -1090,7 +1094,7 @@ msgid ""
 "rights."
 msgstr ""
 "Du kan inte uppdatera anskaffningsvärdet för en produkt i automatiserad "
-"värdering eftersom det leder till att en journalpost skapas, för vilken du "
+"värdering eftersom det leder till att en verifikat skapas, för vilken du "
 "inte har åtkomsträttigheter."
 
 #. module: stock_account
@@ -1103,6 +1107,17 @@ msgid ""
 msgstr ""
 "Du har ingen värderingskontodefinition för din produktkategori. Du måste "
 "definiera en innan du fortsätter med denna operation."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr ""
+"Du har inte definierat något utdatavärderingskonto för din produktkategori. "
+"Du måste definiera ett innan du bearbetar denna operation."
 
 #. module: stock_account
 #. odoo-python
@@ -1165,4 +1180,4 @@ msgstr "platser"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "enheter"

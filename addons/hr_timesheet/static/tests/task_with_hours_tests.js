@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { registry } from "@web/core/registry";
 import { makeView } from "@web/../tests/views/helpers";
 import { click, clickDropdown, editInput, getFixture } from "@web/../tests/helpers/utils";
 
@@ -17,6 +18,11 @@ QUnit.module("hr_timesheet", (hooks) => {
             { task_id: "task_with_hours" },
             { task_id: "{ 'default_project_id': project_id }" });
         target = getFixture();
+        registry.category("services").add("create_edit_project_ids", {
+            start() {
+                return {};
+            },
+        });
     });
 
     QUnit.module("task_with_hours");
@@ -34,6 +40,11 @@ QUnit.module("hr_timesheet", (hooks) => {
     QUnit.test("quick create is enabled when project_id is set", async function (assert) {
         await makeView({
             serverData,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/project.project/get_create_edit_project_ids') {
+                    return [];
+                }
+            },
             type: "list",
             resModel: "account.analytic.line",
         });
@@ -44,6 +55,11 @@ QUnit.module("hr_timesheet", (hooks) => {
     QUnit.test("quick create is no enabled when project_id is not set", async function (assert) {
         await makeView({
             serverData,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/project.project/get_create_edit_project_ids') {
+                    return [];
+                }
+            },
             type: "list",
             resModel: "account.analytic.line",
         });
@@ -54,6 +70,11 @@ QUnit.module("hr_timesheet", (hooks) => {
     QUnit.test("the text of the task includes hours in the drop down but not in the line", async function (assert) {
         await makeView({
             serverData,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/project.project/get_create_edit_project_ids') {
+                    return [];
+                }
+            },
             type: "list",
             resModel: "account.analytic.line",
         });
@@ -67,6 +88,11 @@ QUnit.module("hr_timesheet", (hooks) => {
     QUnit.test("project task progress bar color", async function (assert) {
         await makeView({
             serverData,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/project.project/get_create_edit_project_ids') {
+                    return [];
+                }
+            },
             type: "list",
             resModel: "project.task",
             arch: `

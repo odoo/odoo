@@ -341,3 +341,43 @@ class TestVirtualAvailable(TestStockCommon):
         product_form.detailed_type = 'service'
         product = product_form.save()
         self.assertEqual(product.tracking, 'none')
+
+    def test_domain_locations_only_considers_selected_companies(self):
+        product = self.env['product.product'].create({'name': 'Product', 'type': 'product'})
+        company_a = self.env['res.company'].create({'name': 'Company A'})
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        warehouse_a = self.env['stock.warehouse'].create({
+            'code': 'WHA', 'company_id': company_a.id
+        })
+        warehouse_b = self.env['stock.warehouse'].create({
+            'code': 'WHB', 'company_id': company_b.id
+        })
+        self.env['stock.quant'].create([
+            {'product_id': product.id, 'location_id': warehouse_a.lot_stock_id.id, 'quantity': 1},
+            {'product_id': product.id, 'location_id': warehouse_b.lot_stock_id.id, 'quantity': 2},
+        ])
+
+        self.assertEqual(product.sudo().with_context(
+            allowed_company_ids=[company_a.id]
+        ).qty_available, 1)
+        self.assertEqual(product.sudo().with_context(
+            allowed_company_ids=[company_b.id]
+        ).qty_available, 2)
+        self.assertEqual(product.sudo().with_context(
+            allowed_company_ids=[company_a.id, company_b.id]
+        ).qty_available, 3)
+
+    def test_change_product_type_archived_product(self):
+        self.picking_out.action_confirm()
+        self.picking_out.action_assign()
+        # At this point product_3 should have the quantity reserved
+        self.product_3.active = False
+
+        # Should not be possible to change the product type when quantities are reserved
+        with self.assertRaises(UserError):
+            self.product_3.write({'type': 'consu'})
+
+        # Should not be possible to change the product type when moves are done.
+        self.picking_out.button_validate()
+        with self.assertRaises(UserError):
+            self.product_3.write({'type': 'consu'})

@@ -22,3 +22,6 @@ class TestWebsiteGridLayout(odoo.tests.HttpCase):
             'datas': base64.b64encode(req.content),
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_replace_grid_image', login="admin")
+
+    def test_02_scroll_to_new_grid_item(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'scroll_to_new_grid_item', login='admin')

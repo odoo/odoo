@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="web_editor.AutoResizeImage">
-    <div t-ref="auto-resize-image-container" class="o_existing_attachment_cell o_we_image align-items-center justify-content-center me-1 mb-1 opacity-trigger-hover opacity-0 cursor-pointer" t-att-class="{ o_we_attachment_optimized: props.isOptimized, 'o_loaded position-relative opacity-100': state.loaded, o_we_attachment_selected: props.selected, 'position-fixed': !state.loaded }" t-on-click="props.onImageClick">
+    <div t-ref="auto-resize-image-container" class="o_existing_attachment_cell o_we_image align-items-center justify-content-center me-1 mb-1 opacity-trigger-hover opacity-0" t-att-class="{ o_we_attachment_optimized: props.isOptimized, 'o_loaded position-relative opacity-100': state.loaded, o_we_attachment_selected: props.selected, 'position-fixed': !state.loaded, 'cursor-pointer': !props.unselectable }" t-on-click="props.onImageClick">
         <RemoveButton t-if="props.isRemovable" model="props.model" remove="() => this.remove()"/>
-        <div class="o_we_media_dialog_img_wrapper">
-            <img t-ref="auto-resize-image" class="o_we_attachment_highlight img img-fluid w-100" t-att-src="props.src" t-att-alt="props.altDescription" t-att-title="props.title" loading="lazy"/>
+        <div class="o_we_media_dialog_img_wrapper" t-att-class="{ 'bg-light': props.unselectable }">
+            <t t-set="unselectable_attachment_title">You can not use this image in a field</t>
+            <img t-ref="auto-resize-image" class="o_we_attachment_highlight img img-fluid w-100" t-att-class="{ 'opacity-25': props.unselectable}" t-att-src="props.src" t-att-alt="props.altDescription" loading="lazy" t-att-title="props.unselectable ? unselectable_attachment_title : props.title"/>
             <a t-if="props.author" class="o_we_media_author position-absolute start-0 bottom-0 end-0 text-truncate text-center text-primary fs-6 bg-white-50" t-att-href="props.authorLink" target="_blank" t-esc="props.author"/>
         </div>
         <span t-if="props.isOptimized" class="badge position-absolute bottom-0 end-0 m-1 text-bg-success">Optimized</span>
@@ -48,6 +49,7 @@
                         src="attachment.thumbnail_src or attachment.image_src"
                         name="attachment.name"
                         title="attachment.name"
+                        unselectable = "!!attachment.unselectable"
                         altDescription="attachment.altDescription"
                         model="attachment.res_model"
                         minRowHeight="MIN_ROW_HEIGHT"

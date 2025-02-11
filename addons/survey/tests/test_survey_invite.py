@@ -40,11 +40,13 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         bad_cases = [
             {},  # empty
             {   # no question
-                'question_and_page_ids': [Command.create({'is_page': True, 'question_type': False, 'title': 'P0', 'sequence': 1})]
+                'question_and_page_ids': [Command.create({'is_page': True, 'question_type': False, 'title': 'P0', 'sequence': 1})],
+                'session_code': '100000',
             }, {
                 # scored without positive score obtainable
                 'scoring_type': 'scoring_with_answers',
                 'question_and_page_ids': [Command.create({'question_type': 'numerical_box', 'title': 'Q0', 'sequence': 1})],
+                'session_code': '100001',
             }, {
                 # scored without positive score obtainable from simple choice
                 'scoring_type': 'scoring_with_answers',
@@ -56,13 +58,15 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
                         Command.create({'value': '2', 'answer_score': 0}),
                     ],
                 })],
+                'session_code': '100002',
             }, {
                 # closed
                 'active': False,
                 'question_and_page_ids': [
                     Command.create({'is_page': True, 'question_type': False, 'title': 'P0', 'sequence': 1}),
                     Command.create({'title': 'Q0', 'sequence': 2, 'question_type': 'text_box'})
-                ]
+                ],
+                'session_code': '100003',
              },
         ]
         good_cases = [
@@ -72,6 +76,7 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
                 'question_and_page_ids': [
                     Command.create({'question_type': 'numerical_box', 'title': 'Q0', 'sequence': 1, 'answer_score': 1}),
                 ],
+                'session_code': '100004',
             }, {
                 # scored with positive score obtainable from simple choice
                 'scoring_type': 'scoring_with_answers',
@@ -91,7 +96,9 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
                             Command.create({'value': '1', 'answer_score': 0}),
                             Command.create({'value': '2', 'answer_score': 1}),
                         ],
-                    })],
+                    }),
+                ],
+                'session_code': '100005',
             },
         ]
         surveys = self.env['survey.survey'].with_user(self.survey_manager).create([
@@ -311,3 +318,52 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         answers = self.env['survey.user_input'].search([('survey_id', '=', self.survey.id)])
         self.assertEqual(len(answers), 1)
         self.assertEqual(answers.partner_id.display_name, first_partner.display_name)
+
+    @users('survey_user')
+    def test_survey_invite_with_template_attachment(self):
+        """
+        Test that a group_survey_user can send a survey that includes an attachment from the survey invite's
+            email template
+        """
+        mail_template = self.env['mail.template'].create({
+            'name': 'test mail template',
+            'attachment_ids': [Command.create({
+                'name': 'some_attachment.pdf',
+                'res_model': 'mail.template',
+                'datas': 'test',
+                'type': 'binary',
+            })],
+        })
+
+        user_survey = self.env['survey.survey'].create({
+            'title': 'User Created Survey',
+            'access_mode': 'public',
+            'users_login_required': False,
+            'users_can_go_back': False,
+            'question_and_page_ids': [
+                Command.create({
+                    'title': 'First page',
+                    'sequence': 1,
+                    'is_page': True,
+                    'question_type': False,
+                }),
+                Command.create({
+                    'title': 'Test Free Text',
+                    'sequence': 2,
+                    'question_type': 'text_box',
+                }),
+            ]
+        })
+
+        action = user_survey.action_send_survey()
+        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+        invite_form.send_email = True
+        invite_form.template_id = mail_template
+        invite_form.emails = 'test_survey_invite_with_template_attachment@odoo.gov'
+        invite = invite_form.save()
+        with self.mock_mail_gateway():
+            invite.action_invite()
+
+        self.assertEqual(self.env['mail.mail'].sudo().search([
+            ('email_to', '=', 'test_survey_invite_with_template_attachment@odoo.gov')
+        ]).attachment_ids, mail_template.attachment_ids)

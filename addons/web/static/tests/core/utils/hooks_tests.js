@@ -712,6 +712,28 @@ QUnit.module("utils", () => {
             }
         );
 
+        QUnit.test("ref is on an element with contenteditable attribute", async (assert) => {
+            class MyComponent extends Component {
+                static props = ["*"];
+                static template = xml`
+                    <div t-ref="spellcheck"  contenteditable="true" class="editableDiv" />`;
+                setup() {
+                    useSpellCheck();
+                }
+            }
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            await mount(MyComponent, target, { env });
+            const editableDiv = target.querySelector(".editableDiv");
+
+            assert.strictEqual(editableDiv.spellcheck, true);
+            editableDiv.focus();
+            assert.strictEqual(editableDiv.spellcheck, true);
+            editableDiv.blur();
+            assert.strictEqual(editableDiv.spellcheck, false);
+        });
+
         QUnit.module("useChildRef / useForwardRefToParent");
 
         QUnit.test("simple usecase", async function (assert) {

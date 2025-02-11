@@ -111,7 +111,7 @@ class PortalAccount(CustomerPortal):
             'page_name': 'invoice',
             'pager': {  # vals to define the pager.
                 "url": url,
-                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
                 "total": AccountInvoice.search_count(domain) if AccountInvoice.check_access_rights('read', raise_exception=False) else 0,
                 "page": page,
                 "step": self._items_per_page,
@@ -132,10 +132,8 @@ class PortalAccount(CustomerPortal):
             return request.redirect('/my')
 
         if report_type == 'pdf' and download and invoice_sudo.state == 'posted':
-            # Send & Print wizard with only the 'download' checkbox to get the official attachment(s)
-            template = request.env.ref(invoice_sudo._get_mail_template())
-            attachment_ids = invoice_sudo._generate_pdf_and_send_invoice(template, bypass_download=True, checkbox_send_mail=False, checkbox_download=True)
-            attachments = request.env['ir.attachment'].browse(attachment_ids)
+            # Download the official attachment(s) or a Pro Forma invoice
+            attachments = invoice_sudo._get_invoice_legal_documents()
             if len(attachments) > 1:
                 filename = invoice_sudo._get_invoice_report_filename(extension='zip')
                 zip_content = attachments.sudo()._build_zip_from_attachments()
@@ -145,6 +143,8 @@ class PortalAccount(CustomerPortal):
             return request.make_response(attachments.raw, list(headers.items()))
 
         elif report_type in ('html', 'pdf', 'text'):
+            has_generated_invoice = bool(invoice_sudo.invoice_pdf_report_id)
+            request.update_context(proforma_invoice=not has_generated_invoice)
             return self._show_report(model=invoice_sudo, report_type=report_type, report_ref='account.account_invoices', download=download)
 
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)

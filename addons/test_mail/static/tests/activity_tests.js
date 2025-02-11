@@ -2,19 +2,21 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { ActivityController } from "@mail/views/web/activity/activity_controller";
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
+import { DynamicList } from "@web/model/relational_model/dynamic_list"
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { Domain } from "@web/core/domain";
-import { serializeDate } from "@web/core/l10n/dates";
-import { deepEqual } from "@web/core/utils/objects";
+import { serializeDate, formatDate } from "@web/core/l10n/dates";
+import { deepEqual, omit } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
-import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/helpers/utils";
+import { editInput, patchWithCleanup, click, patchDate, triggerEvent } from "@web/../tests/helpers/utils";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
-import { contains } from "@web/../tests/utils";
+import { contains, insertText } from "@web/../tests/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 const { DateTime } = luxon;
@@ -22,30 +24,54 @@ const { DateTime } = luxon;
 let serverData;
 let pyEnv;
 
+async function openViewAndPatchDoAction(assert) {
+    const { env, openView } = await start({
+        serverData,
+    });
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+    });
+    patchWithCleanup(env.services.action, {
+        doAction(action, options) {
+            assert.step("doAction");
+            options.onClose();
+        },
+    });
+}
+
+function patchActivityDomain(load, params) {
+    if (params.domain) {
+        // Remove domain term used to filter record having "done" activities (not understood by the getRecords mock)
+        const domain = new Domain(params.domain);
+        const newDomain = Domain.removeDomainLeaves(domain.toList(), [
+            "activity_ids.active",
+        ]);
+        if (!deepEqual(domain.toList(), newDomain.toList())) {
+            return load({
+                ...params,
+                domain: newDomain.toList(),
+                context: params.context
+                    ? { ...params.context, active_test: false }
+                    : { active_test: false },
+            });
+        }
+    }
+    return load(params);
+}
+
 QUnit.module("test_mail", {}, function () {
     QUnit.module("activity view", {
         async beforeEach() {
             patchDate(2023, 4, 8, 10, 0, 0);
+            patchWithCleanup(DynamicList.prototype, {
+                async load(params) {
+                    return patchActivityDomain(super.load.bind(this), params);
+                },
+            })
             patchWithCleanup(RelationalModel.prototype, {
                 async load(params) {
-                    if (params.domain) {
-                        // Remove domain term used to filter record having "done" activities (not understood by the getRecords mock)
-                        const domain = new Domain(params.domain);
-                        const newDomain = Domain.removeDomainLeaves(domain.toList(), [
-                            "activity_ids.active",
-                        ]);
-                        if (!deepEqual(domain.toList(), newDomain.toList())) {
-                            return super.load({
-                                ...params,
-                                domain: newDomain.toList(),
-                                context: params.context
-                                    ? { ...params.context, active_test: false }
-                                    : { active_test: false },
-                            });
-                        }
-                        return super.load(params);
-                    }
-                    return super.load(params);
+                    return patchActivityDomain(super.load.bind(this), params);
                 },
             });
             pyEnv = await startServer();
@@ -211,7 +237,7 @@ QUnit.module("test_mail", {}, function () {
             'should contain "Meeting Room Furnitures" in first colum of second row'
         );
 
-        const today = DateTime.now().toLocaleString(luxon.DateTime.DATE_SHORT);
+        const today = formatDate(DateTime.now());
 
         assert.ok(
             $activity.find(
@@ -348,15 +374,11 @@ QUnit.module("test_mail", {}, function () {
         });
         // Cells dates
         await contains(".o-mail-ActivityCell-deadline", {
-            text: luxon.DateTime.fromISO(uploadPlannedActs[0].date_deadline).toLocaleString(
-                luxon.DateTime.DATE_SHORT
-            ),
+            text: formatDate(luxon.DateTime.fromISO(uploadPlannedActs[0].date_deadline)),
             target: domRowMeetingCellUpload,
         });
         await contains(".o-mail-ActivityCell-deadline", {
-            text: luxon.DateTime.fromISO(uploadDoneActs[1].date_done).toLocaleString(
-                luxon.DateTime.DATE_SHORT
-            ),
+            text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[1].date_done)),
             target: domRowOfficeCellUpload,
         });
         // Activity list popovers content
@@ -373,18 +395,15 @@ QUnit.module("test_mail", {}, function () {
         await contains(".o-mail-ActivityListPopover .badge.text-bg-secondary", { text: "1" }); // 1 done
         await contains(".o-mail-ActivityListPopoverItem", { text: uploadDoneActs[0].user_id[1] });
         await contains(".o-mail-ActivityListPopoverItem", {
-            text: luxon.DateTime.fromISO(uploadDoneActs[0].date_done).toLocaleString(
-                luxon.DateTime.DATE_SHORT
-            ),
+            text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[0].date_done), {format: "M/d/yyyy"})
         });
 
         await click(domActivity, `${selRowOfficeCellUpload} > div`);
         await contains(".o-mail-ActivityListPopover .badge.text-bg-secondary", { text: "3" }); // 3 done
         for (const actIdx of [1, 2, 3]) {
+            console.log();
             await contains(".o-mail-ActivityListPopoverItem", {
-                text: luxon.DateTime.fromISO(uploadDoneActs[actIdx].date_done).toLocaleString(
-                    luxon.DateTime.DATE_SHORT
-                ),
+                text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[actIdx].date_done), {format: "M/d/yyyy"}),
             });
             await contains(".o-mail-ActivityListPopoverItem", {
                 text: uploadDoneActs[actIdx].user_id[1],
@@ -541,8 +560,8 @@ QUnit.module("test_mail", {}, function () {
     });
 
     QUnit.test("activity view: activity_ids condition in domain", async function (assert) {
-        assert.expect(3);
-        const { openView } = await start({
+        assert.expect(5);
+        const { openView, target } = await start({
             serverData,
             mockRPC: function (route, args) {
                 if (["get_activity_data", "web_search_read"].includes(args.method)) {
@@ -555,9 +574,18 @@ QUnit.module("test_mail", {}, function () {
             views: [[false, "activity"]],
         });
 
+        // enter edit mode
+        await click(target, ".o_pager_value");
+        await triggerEvent(target, ".o_pager_value", 'keydown', { key: 'Enter' });
+
         assert.verifySteps([
+            // load view requests
             JSON.stringify([["activity_ids.active", "in", [true, false]]]),
-            '[[1,"=",1]]', // Due to the patch above that removes it
+            '[[1,"=",1]]', // Due to the relational model patch above that removes it
+            // pager requests
+            JSON.stringify([["activity_ids.active", "in", [true, false]]]),
+            // Due to the dynamic list patch above that removes it
+            '[[1,"=",1]]',
         ]);
     });
 
@@ -883,37 +911,99 @@ QUnit.module("test_mail", {}, function () {
     );
 
     QUnit.test("activity view: Domain should not reset on load", async function (assert) {
+        Object.assign(serverData.views, {
+            "mail.test.activity,false,list":
+                '<tree string="MailTestActivity"><field name="name"/></tree>',
+        });
+        const { env, openView } = await start({
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[false, "activity"]],
+            domain: [['id', '=', 1]],
+        });
+        patchWithCleanup(env.services.action, {
+            doAction(action, options) {
+                assert.step("doAction");
+                options.onClose();
+            },
+        });
+
+        await click(document.querySelector(".o_activity_view .o_record_selector"));
+        // search create dialog
+        await click(document.querySelector(".modal-lg .o_data_row .o_data_cell"));
+        assert.verifySteps(["doAction"]);
+
+        await click(document.querySelector(".o_activity_view .o_record_selector"));
+        // again open search create dialog
+        assert.strictEqual(
+            document.querySelectorAll(".modal-lg .o_data_row").length,
+            1,
+            "Should contains only one record after calling schedule activity which load view again"
+        );
+    });
+
+    QUnit.test(
+        "activity view: 'scheduleActivity' does not add activity_ids condition as selectCreateDialog domain",
+        async function (assert) {
+            patchWithCleanup(ActivityController.prototype, {
+                scheduleActivity() {
+                    super.scheduleActivity();
+                    assert.step(JSON.stringify(this.getSearchProps().domain));
+                },
+            });
             Object.assign(serverData.views, {
                 "mail.test.activity,false,list":
                     '<tree string="MailTestActivity"><field name="name"/></tree>',
             });
-            const { env, openView } = await start({
-                serverData,
-            });
-            await openView({
-                res_model: "mail.test.activity",
-                views: [[false, "activity"]],
-                domain: [['id', '=', 1]],
-            });
-            patchWithCleanup(env.services.action, {
-                doAction(action, options) {
-                    assert.step("doAction");
-                    options.onClose();
+            await openViewAndPatchDoAction(assert);
+
+            // open search create dialog and schedule an activity
+            await click(document.querySelector(".o_activity_view .o_record_selector"));
+            await click(document.querySelectorAll(".modal-lg .o_data_row .o_data_cell")[0]);
+
+            // again open search create dialog
+            await click(document.querySelector(".o_activity_view .o_record_selector"));
+            assert.verifySteps(["[]", "doAction", "[]"]);
+        }
+    );
+
+    QUnit.test(
+        "activity view: 'onClose' of 'openActivityFormView' does not add activity_ids condition as selectCreateDialog domain",
+        async function (assert) {
+            patchWithCleanup(ActivityController.prototype, {
+                openActivityFormView(resId, activityTypeId) {
+                    super.openActivityFormView(resId, activityTypeId);
+                    assert.step(JSON.stringify(this.getSearchProps().domain));
                 },
             });
+            await openViewAndPatchDoAction(assert);
 
-            await click(document.querySelector(".o_activity_view .o_record_selector"));
-            // search create dialog
-            await click(document.querySelector(".modal-lg .o_data_row .o_data_cell"));
-            assert.verifySteps(["doAction"]);
-
-            await click(document.querySelector(".o_activity_view .o_record_selector"));
-            // again open search create dialog
-            assert.strictEqual(
-                document.querySelectorAll(".modal-lg .o_data_row").length,
-                1,
-                "Should contains only one record after calling schedule activity which load view again"
+            //schedule an activity on an empty activity cell
+            await click(
+                document.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell")
             );
+            assert.verifySteps(["doAction", "[]"]);
+        }
+    );
+
+    QUnit.test(
+        "activity view: 'onReloadData' does not add activity_ids condition as selectCreateDialog domain",
+        async function (assert) {
+            patchWithCleanup(ActivityController.prototype, {
+                get rendererProps() {
+                    const rendererProps = { ...super.rendererProps };
+                    assert.step(JSON.stringify(this.getSearchProps().domain));
+                    return rendererProps;
+                },
+            });
+            await openViewAndPatchDoAction(assert);
+
+            //schedule another activity on an activity cell with a scheduled activity
+            await click(document.querySelector(".today .o-mail-ActivityCell-deadline"));
+            await click($(".o-mail-ActivityListPopover button:contains(Schedule an activity)")[0]);
+            assert.verifySteps(["[]", "doAction", "[]", "[]"]);
         }
     );
 
@@ -1314,9 +1404,7 @@ QUnit.module("test_mail", {}, function () {
         assert.ok(
             target
                 .querySelector(".o_activity_record img")
-                .dataset.src.endsWith(
-                    "/web/image?model=partner&field=image&id=2&unique=1659688620000"
-                ),
+                .dataset.src.endsWith("/web/image?model=partner&field=image&id=2"),
             "image src is the preview image given in option"
         );
     });
@@ -1355,6 +1443,82 @@ QUnit.module("test_mail", {}, function () {
                 ".invisible_node",
                 "The node with the invisible attribute should be displayed since `invisible` key in the context contains truly value"
             );
+        }
+    );
+
+    QUnit.test("update activity view after creating multiple activities", async function (assert) {
+        Object.assign(serverData.views, {
+            "mail.test.activity,false,list":
+                '<tree string="MailTestActivity"><field name="name"/><field name="activity_ids" widget="list_activity"/></tree>',
+            "mail.activity,false,form": '<form><field name="activity_type_id"/></form>',
+            "mail.activity.schedule,false,form": "<form><field name='display_name'/></form>",
+        });
+
+        const activityToCreate = omit(pyEnv.mockServer.models["mail.activity"].records[0], "id");
+        pyEnv.mockServer.models["mail.activity"].records = [];
+
+        pyEnv.mockServer.models["mail.activity.schedule"] = {
+            fields: {
+                id: { type: "integer" },
+                display_name: { type: "char" },
+            },
+            records: [],
+        };
+
+        const { openView, target } = await start({
+            mockRPC(route, args) {
+                if (args.method === "name_search") {
+                    args.kwargs.name = "MailTestActivity";
+                }
+                if (args.method === "web_save" && args.model === "mail.activity.schedule") {
+                    pyEnv["mail.activity"].create(activityToCreate);
+                }
+            },
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[false, "activity"]],
+        });
+        assert.containsNone(target, ".o_activity_summary_cell");
+        await click(target, "table tfoot tr .o_record_selector");
+        await click(
+            target,
+            ".o_list_renderer table tbody tr:nth-child(2) td:nth-child(2) .o-mail-ActivityButton"
+        );
+        await click(target, ".o-mail-ActivityListPopover > button.btn-secondary");
+        const modalSchedule = target.querySelector(".modal:has(.o_form_view)");
+        await insertText(`.o_form_view .o_field_widget[name='display_name'] input`, "test1", {
+            target: modalSchedule,
+        });
+        await click(modalSchedule, ".modal-footer button.o_form_button_save");
+        await click(target, ".modal-footer button.o_form_button_cancel");
+        assert.containsOnce(target, ".o_activity_summary_cell:not(.o_activity_empty_cell)");
+    });
+
+    QUnit.test(
+        "Activity View: Hide 'New' button in SelectCreateDialog based on action context",
+        async function (assert) {
+            assert.expect(1);
+
+            Object.assign(serverData.views, {
+                "mail.test.activity,false,list":
+                    '<tree string="MailTestActivity"><field name="name"/></tree>',
+            });
+
+            const { openView } = await start({
+                serverData,
+            });
+            await openView({
+                res_model: "mail.test.activity",
+                views: [[false, "activity"]],
+                context: { create: false },
+            });
+
+            const activity = $(document);
+            await testUtils.dom.click(activity.find("table tfoot tr .o_record_selector"));
+
+            assert.containsNone(activity, ".o_create_button", "'New' button should be hidden.");
         }
     );
 });

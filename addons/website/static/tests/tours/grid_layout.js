@@ -42,3 +42,37 @@ wTourUtils.registerWebsitePreviewTour('website_replace_grid_image', {
     },
     ...wTourUtils.clickOnSave()
 ]);
+
+wTourUtils.registerWebsitePreviewTour("scroll_to_new_grid_item", {
+    test: true,
+    url: "/",
+    edition: true,
+}, () => [
+    // Drop enough snippets to scroll.
+    wTourUtils.dragNDrop({id: "s_text_image", name: "Text - Image"}),
+    wTourUtils.dragNDrop({id: "s_image_text", name: "Image - Text"}),
+    wTourUtils.dragNDrop({id: "s_image_text", name: "Image - Text"}),
+    // Toggle the first snippet to grid mode.
+    wTourUtils.clickOnSnippet({id: "s_text_image", name: "Text - Image"}),
+    wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
+    // Add a new grid item.
+    wTourUtils.changeOption("layout_column", 'we-button[data-add-element="image"]'),
+    {
+        content: "Check that the page scrolled to the new grid item",
+        trigger: "iframe .s_text_image .o_grid_item:nth-child(3)",
+        run: function () {
+            // Leave some time to the page to scroll.
+            setTimeout(() => {
+                const newItemPosition = this.$anchor[0].getBoundingClientRect();
+                if (newItemPosition.top < 0) {
+                    console.error("The page did not scroll to the new grid item.");
+                }
+                document.body.classList.add("o_scrolled_to_grid_item");
+            }, 500);
+        },
+    }, {
+        content: "Make sure the scroll check is done",
+        trigger: ".o_scrolled_to_grid_item",
+        isCheck: true,
+    },
+]);

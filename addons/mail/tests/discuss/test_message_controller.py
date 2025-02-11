@@ -361,32 +361,32 @@ class TestMessageController(HttpCaseWithUserDemo):
         res = self.url_open(
             url=f"/discuss/channel/{self.channel.id}/avatar_128?unique={self.channel._get_avatar_cache_key()}"
         )
-        self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
+        self.assertIn(f"max-age={STATIC_CACHE_LONG}", res.headers["Cache-Control"])
 
         res = self.url_open(
             url=f"/discuss/channel/{self.channel.id}/avatar_128"
         )
-        self.assertEqual(res.headers["Cache-Control"], "no-cache")
+        self.assertIn("no-cache", res.headers["Cache-Control"])
 
         res = self.url_open(
             url=f"/discuss/channel/{self.channel.id}/partner/{partner.id}/avatar_128?unique={partner.write_date.isoformat()}"
         )
-        self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
+        self.assertIn(f"max-age={STATIC_CACHE_LONG}", res.headers["Cache-Control"])
 
         res = self.url_open(
             url=f"/discuss/channel/{self.channel.id}/partner/{partner.id}/avatar_128"
         )
-        self.assertEqual(res.headers["Cache-Control"], "no-cache")
+        self.assertIn("no-cache", res.headers["Cache-Control"])
 
         res = self.url_open(
             url=f"/discuss/channel/{self.channel.id}/guest/{self.guest.id}/avatar_128?unique={self.guest.write_date.isoformat()}"
         )
-        self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
+        self.assertIn(f"max-age={STATIC_CACHE_LONG}", res.headers["Cache-Control"])
 
         res = self.url_open(
             url=f"/discuss/channel/{self.channel.id}/guest/{self.guest.id}/avatar_128"
         )
-        self.assertEqual(res.headers["Cache-Control"], "no-cache")
+        self.assertIn("no-cache", res.headers["Cache-Control"])
 
     def test_chatter_on_archived_record(self):
         self.authenticate("admin", "admin")

@@ -146,7 +146,11 @@ export const multiTabService = {
             }
         }
 
-        function onPagehide() {
+        /**
+         * Unregister this tab from the multi-tab service. It will no longer
+         * be able to become the main tab.
+         */
+        function unregister() {
             clearTimeout(heartbeatTimeout);
             const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
             delete lastPresenceByTab[tabId];
@@ -160,7 +164,7 @@ export const multiTabService = {
             }
         }
 
-        browser.addEventListener("pagehide", onPagehide);
+        browser.addEventListener("pagehide", unregister);
         browser.addEventListener("storage", onStorage);
 
         // REGISTER THIS TAB
@@ -216,6 +220,11 @@ export const multiTabService = {
             removeSharedValue(key) {
                 browser.localStorage.removeItem(generateLocalStorageKey(key));
             },
+            /**
+             * Unregister this tab from the multi-tab service. It will no longer
+             * be able to become the main tab.
+             */
+            unregister: unregister,
         };
     },
 };

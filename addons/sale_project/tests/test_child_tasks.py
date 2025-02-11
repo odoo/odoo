@@ -246,3 +246,42 @@ class TestNestedTaskUpdate(TransactionCase):
         subtask2.project_id = project_non_billable
         self.assertFalse(subtask2.allow_billable)
         self.assertFalse(subsubtask.allow_billable)
+
+    # ----------------------------------
+    #
+    #   When copying a project template, some values go on the child
+    #
+    # ----------------------------------
+
+    def test_associate_copied_task_to_copied_project(self):
+        """
+            When confirming an SO with a product generating a project from a template,
+            check that the copied task and subtask are correctly assigned to the copied
+            project rather than its template.
+        """
+        project_tempalte = self.env['project.project'].create({'name': 'Super Project'})
+        parent = self.env['project.task'].create({'name': 'parent task', 'project_id': project_tempalte.id})
+        child = self.env['project.task'].create({'name': 'child task', 'parent_id': parent.id, 'project_id': project_tempalte.id})
+        super_product = self.env['product.product'].create({
+            'name': 'Super product',
+            'detailed_type': 'service',
+            'service_tracking': 'project_only',
+            'project_template_id': project_tempalte.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'name': super_product.name,
+                    'product_id': super_product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 100,
+                })
+            ]
+        })
+        sale_order.action_confirm()
+        self.assertEqual(project_tempalte.tasks, parent | child)
+        super_project = sale_order.order_line.project_id
+        self.assertFalse(super_project.tasks & project_tempalte.tasks)
+        self.assertEqual(len(super_project.tasks), 2)
+        self.assertEqual(super_project.tasks.parent_id, super_project.tasks.child_ids.parent_id)

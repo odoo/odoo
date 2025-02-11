@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import re
 import time
 
 import lxml.html
 from werkzeug import urls
 
 import odoo
-import re
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
@@ -50,16 +50,29 @@ class Crawler(HttpCaseWithUserDemo):
                 'website_published': True,
             })
 
+    def clean_url(self, url):
+        # convert <slug>
+        clean_url = re.sub(r"(?<=/)(([^/=?&]+)?-?[0-9]+)(?=(/|$|\?|#))", r"<slug>", url)
+
+        # remove # part, sort param and clean trailing /?
+        base, *qs = clean_url.split('#', 1)[0].split('?', 1)
+        qs_sorted = '?' + '&'.join(sorted(''.join(qs).split('&')))
+
+        # convert ?qs=<param>
+        qs_sorted = re.sub(r"([^=?&]+)=[^=?&]+", r'\g<1>=<param>', qs_sorted)
+        clean_url = base.rstrip('/#') + qs_sorted.rstrip('?#')
+
+        return clean_url
+
     def crawl(self, url, seen=None, msg=''):
         if seen is None:
             seen = set()
 
-        url_slug = re.sub(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", '/<slug>/', url)
-        url_slug = re.sub(r"([^/=?&]+)=[^/=?&]+", '\g<1>=param', url_slug)
+        url_slug = self.clean_url(url)
+
         if url_slug in seen:
             return seen
-        else:
-            seen.add(url_slug)
+        seen.add(url_slug)
 
         _logger.info("%s %s", msg, url)
         r = self.url_open(url, allow_redirects=False)
@@ -88,12 +101,49 @@ class Crawler(HttpCaseWithUserDemo):
                     not parts.path.startswith('/') or \
                     parts.path == '/web' or\
                     parts.path.startswith('/web/') or \
-                    parts.path.startswith('/en_US/') or \
-                    (parts.scheme and parts.scheme not in ('http', 'https')):
+                    parts.path.startswith('/en/') or \
+                   (parts.scheme and parts.scheme not in ('http', 'https')):
                     continue
 
                 self.crawl(href, seen, msg)
         return seen
+
+    def test_05_test_clean_url(self):
+        urls_to_check = [
+            ("/my/1/20/300", "/my/<slug>/<slug>/<slug>"),
+            ("/my/19/", "/my/<slug>"),
+            ("/my/19#", "/my/<slug>"),
+            ("/my/19#a=b", "/my/<slug>"),
+            ("/my/19/?access_token=www-xxx-yyy-zzz", "/my/<slug>?access_token=<param>"),
+            ("/my/19?access_token=www-xxx-yyy-zzz", "/my/<slug>?access_token=<param>"),
+            ("/my/19?access_token=www-xxx-yyy-zzz&report_type=pdf", "/my/<slug>?access_token=<param>&report_type=<param>"),
+            ("/my/slug-19/", "/my/<slug>"),
+            ("/my/slug-19#a=b", "/my/<slug>"),
+            ("/my/slug-19/?access_token=www-xxx-yyy-zzz", "/my/<slug>?access_token=<param>"),
+            ("/my/slug-19?access_token=www-xxx-yyy-zzz", "/my/<slug>?access_token=<param>"),
+            ("/my/slug-19?access_token=www-xxx-yyy-zzz&report_type=pdf", "/my/<slug>?access_token=<param>&report_type=<param>"),
+            ("/my/page/2?order=website_sequence+asc", "/my/page/<slug>?order=<param>"),
+            ("/my/page/2", "/my/page/<slug>"),
+            ("/my/page/2/", "/my/page/<slug>"),
+            ("/terms", "/terms"),
+            ("/controller/slug-1", "/controller/<slug>"),
+            ("/controller/tag/slug-2", "/controller/tag/<slug>"),
+            ("/controller/slug-1/slug-2", "/controller/<slug>/<slug>"),
+            ("/controller/slug-1/tag/slug-2", "/controller/<slug>/tag/<slug>"),
+            ("/controller/slug-1/tag/slug-2/end", "/controller/<slug>/tag/<slug>/end"),
+            ("/controller?tags=%5B5%5D", "/controller?tags=<param>"),
+            ("/controller?date=upcoming&tags=%5B5%5D", "/controller?date=<param>&tags=<param>"),
+            ("/controller?tags=%5B%5D&date=upcoming", "/controller?date=<param>&tags=<param>"),
+            ("/controller?tags=%5B%5D&from=/a/b/c", "/controller?from=<param>&tags=<param>"),
+            ("/controller?tags=%5B%5D&from=d/e/f&to=/a/b", "/controller?from=<param>&tags=<param>&to=<param>"),
+            ("/controller?tags=%5B%5D&from=d/e/f&to=/c/d", "/controller?from=<param>&tags=<param>&to=<param>"),
+        ]
+        uniq = set()
+        for url, clean_expected in urls_to_check:
+            cleaned = self.clean_url(url)
+            self.assertEqual(cleaned, clean_expected)
+            uniq.add(cleaned)
+        self.assertEqual(len(uniq), 16)
 
     def test_10_crawl_public(self):
         t0 = time.time()
@@ -126,19 +176,3 @@ class Crawler(HttpCaseWithUserDemo):
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
         _logger.runbot("demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
-
-    def test_30_crawl_admin(self):
-        # If no forum.post is existing, the route /forum//ask will be called instead -> 404
-        if 'forum.post' in self.env:
-            self.env['forum.post'].create({
-                'name': 'Very Smart Question',
-                'forum_id': self.env.ref('website_forum.forum_help').id,
-            })
-        t0 = time.time()
-        t0_sql = self.registry.test_cr.sql_log_count
-        self.authenticate('admin', 'admin')
-        seen = self.crawl('/', msg='admin')
-        count = len(seen)
-        duration = time.time() - t0
-        sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.runbot("admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)

@@ -4,24 +4,35 @@ import json
 from io import StringIO
 from socket import gethostbyname
 from unittest.mock import patch
-from urllib.parse import urlparse
 
 import odoo
 from odoo.http import root, content_disposition
 from odoo.tests import tagged
 from odoo.tests.common import HOST, new_test_user, get_db_name, BaseCase
-from odoo.tools import config, file_path
+from odoo.tools import config, file_path, parse_version
 from odoo.addons.test_http.controllers import CT_JSON
 
 from odoo.addons.test_http.utils import TEST_IP
 from .test_common import TestHttpBase
+
+try:
+    from importlib import metadata
+    werkzeug_version = metadata.version('werkzeug')
+except ImportError:
+    import werkzeug
+    werkzeug_version = werkzeug.__version__
 
 
 @tagged('post_install', '-at_install')
 class TestHttpMisc(TestHttpBase):
     def test_misc0_redirect(self):
         res = self.nodb_url_open('/test_http//greeting')
-        self.assertEqual(res.status_code, 404)
+        awaited_codes = [404]
+        if parse_version('2.2.0') <= parse_version(werkzeug_version) <= parse_version('3.0.1'):
+            # Bug in werkzeug from 2.2.0 up to 3.0.1 (shipped in Ubuntu Noble 24.04)
+            # not a big deal but should be removed once fixed upstream.
+            awaited_codes.append(308)
+        self.assertIn(res.status_code, awaited_codes)
 
     def test_misc1_reverse_proxy(self):
         # client <-> reverse-proxy <-> odoo
@@ -115,7 +126,7 @@ class TestHttpMisc(TestHttpBase):
             'X-Forwarded-Host': 'odoo.com',
             'X-Forwarded-Proto': 'https'
         }
-        with patch.dict('odoo.tools.config.options', {'proxy_mode': True}):
+        with patch.dict(odoo.tools.config.options, {'proxy_mode': True}):
             res = self.nodb_url_open('/test_http/geoip', headers=headers)
             res.raise_for_status()
             self.assertEqual(res.json(), {
@@ -191,13 +202,13 @@ class TestHttpEnsureDb(TestHttpBase):
         res = self.multidb_url_open('/test_http/ensure_db')
         res.raise_for_status()
         self.assertEqual(res.status_code, 303)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/web/database/selector')
+        self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
 
     def test_ensure_db1_grant_db(self):
-        res = self.multidb_url_open('/test_http/ensure_db?db=db0', timeout=10000)
+        res = self.multidb_url_open('/test_http/ensure_db?db=db0')
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
+        self.assertURLEqual(res.headers.get('Location'), '/test_http/ensure_db?db=db0')
         self.assertEqual(odoo.http.root.session_store.get(res.cookies['session_id']).db, 'db0')
 
         # follow the redirection
@@ -224,7 +235,7 @@ class TestHttpEnsureDb(TestHttpBase):
         res = self.multidb_url_open('/test_http/ensure_db?db=db1')
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
+        self.assertURLEqual(res.headers.get('Location'), '/test_http/ensure_db?db=db1')
 
         new_session = odoo.http.root.session_store.get(res.cookies['session_id'])
         self.assertNotEqual(session.sid, new_session.sid)
@@ -237,6 +248,26 @@ class TestHttpEnsureDb(TestHttpBase):
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, 'db1')
+
+    def test_ensure_db4_unicode(self):
+        self.db_list = ["basededonnée1", "basededonnée2"]  # é matters
+
+        res = self.multidb_url_open('/test_http/ensure_db?db=basededonnée1')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 302)
+        self.assertURLEqual(
+            res.headers.get('Location'),
+            '/test_http/ensure_db?db=basededonnée1')
+        self.assertEqual(
+            odoo.http.root.session_store.get(res.cookies['session_id']).db,
+            'basededonnée1')
+
+        # follow the redirection
+        res = self.multidb_url_open('/test_http/ensure_db')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, 'basededonnée1')
+
 
 class TestContentDisposition(BaseCase):
 

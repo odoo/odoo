@@ -27,6 +27,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
@@ -131,7 +132,13 @@ export class Chatter extends Component {
                             return;
                         }
                     }
-                    files.forEach((file) => this.attachmentUploader.uploadFile(file));
+                    Promise.all(files.map((file) => this.attachmentUploader.uploadFile(file))).then(
+                        () => {
+                            if (this.props.hasParentReloadOnAttachmentsChanged) {
+                                this.reloadParentView();
+                            }
+                        }
+                    );
                     this.state.isAttachmentBoxOpened = true;
                 }
             },
@@ -232,12 +239,13 @@ export class Chatter extends Component {
             .slice(0, 5)
             .map(({ partner }) => {
                 const text = partner.email ? partner.emailWithoutDomain : partner.name;
-                return `<span class="text-muted" title="${escape(partner.email)}">${escape(
-                    text
-                )}</span>`;
+                return `<span class="text-muted" title="${escape(
+                    partner.email || _t("no email address")
+                )}">${escape(text)}</span>`;
             });
         const formatter = new Intl.ListFormat(
-            this.store.env.services["user"].lang?.replace("_", "-"),
+            this.store.env.services["user"].lang &&
+                pyToJsLocale(this.store.env.services["user"].lang),
             { type: "unit" }
         );
         if (this.state.thread && this.state.thread.recipients.length > 5) {
@@ -372,14 +380,16 @@ export class Chatter extends Component {
         }
     }
 
-    onUploaded(data) {
-        this.attachmentUploader.uploadData(data);
+    async onUploaded(data) {
+        await this.attachmentUploader.uploadData(data);
         if (this.props.hasParentReloadOnAttachmentsChanged) {
             this.reloadParentView();
         }
         this.state.isAttachmentBoxOpened = true;
-        this.rootRef.el.scrollTop = 0;
-        this.state.thread.scrollTop = 0;
+        if (this.rootRef.el) {
+            this.rootRef.el.scrollTop = 0;
+        }
+        this.state.thread.scrollTop = "bottom";
     }
 
     onClickAddAttachments() {
@@ -389,7 +399,7 @@ export class Chatter extends Component {
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
         if (this.state.isAttachmentBoxOpened) {
             this.rootRef.el.scrollTop = 0;
-            this.state.thread.scrollTop = 0;
+            this.state.thread.scrollTop = "bottom";
         }
     }
 

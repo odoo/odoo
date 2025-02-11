@@ -146,7 +146,7 @@
                                    <th name="th_description" class="text-start"><span>Description</span></th>
                                    <th name="th_quantity" class="text-end"><span>Quantity</span></th>
                                    <th name="th_priceunit" class="text-end d-md-table-cell"><span>Unit Price</span></th>
-                                   <th name="th_taxes" class="text-start d-md-table-cell"><span>Taxes</span></th>
+                                   <th name="th_taxes" class="text-end d-md-table-cell"><span>Taxes</span></th>
                                    <th name="th_subtotal" class="text-end">
                                        <span>Amount</span>
                                    </th>
@@ -162,7 +162,7 @@
                                    <td class="text-end d-md-table-cell">
                                        <span class="text-nowrap">1,500.00</span>
                                    </td>
-                                   <td class="text-start d-md-table-cell">
+                                   <td class="text-end d-md-table-cell">
                                        <span id="line_tax_ids">Tax 15%</span>
                                    </td>
                                    <td class="text-end o_price_total">
@@ -178,7 +178,7 @@
                                    <td class="text-end d-md-table-cell">
                                        <span class="text-nowrap">2,350.00</span>
                                    </td>
-                                   <td class="text-start d-md-table-cell">
+                                   <td class="text-end d-md-table-cell">
                                        <span id="line_tax_ids">Tax 15%</span>
                                    </td>
                                    <td class="text-end o_price_total">
@@ -370,7 +370,9 @@
                     <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                 </div>
                 <div class="col-6 text-end mb4">
-                    <div class="mt0 h4" t-if="company.report_header" t-field="company.report_header">Company tagline</div>
+                    <t t-if="company.report_header and company.report_header.strip() != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'">
+                        <div class="mt0 h4" t-field="company.report_header"/>
+                    </t>
                     <div name="company_address" class="float-end mb4">
                         <ul class="list-unstyled" name="company_address_list">
                             <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>

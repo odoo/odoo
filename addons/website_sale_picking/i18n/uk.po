@@ -3,16 +3,16 @@
 # 	* website_sale_picking
 # 
 # Translators:
-# Wil Odoo, 2023
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +62,7 @@ msgstr "Якщо ви вважаєте, що це помилка, зверніт
 #: code:addons/website_sale_picking/static/src/js/payment_form.js:0
 #, python-format
 msgid "No suitable payment method could be found."
-msgstr ""
+msgstr "Неможливо знайти підходящий спосіб оплати."
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
@@ -78,7 +78,7 @@ msgstr "Комплектування на місці"
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
 #: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
 msgid "Pay in Store"
-msgstr ""
+msgstr "Оплата в магазині"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_payment_provider
@@ -101,6 +101,11 @@ msgstr "Комплектування в магазині"
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
 msgid "Provider"
 msgstr "Провайдер"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_sale_order
+msgid "Sales Order"
+msgstr "Замовлення на продаж"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_delivery_carrier
@@ -144,7 +149,7 @@ msgstr "Ваш платіж скасовано."
 #. module: website_sale_picking
 #: model_terms:payment.provider,done_msg:website_sale_picking.payment_provider_onsite
 msgid "Your payment has been successfully processed."
-msgstr ""
+msgstr "Ваш платіж успішно оброблено."
 
 #. module: website_sale_picking
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier

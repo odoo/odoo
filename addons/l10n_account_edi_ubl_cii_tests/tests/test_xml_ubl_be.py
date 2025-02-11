@@ -120,6 +120,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             self.partner_1,
             self.partner_2,
             move_type='out_invoice',
+            delivery_date='2017-01-15',
             invoice_line_ids=[
                 {
                     'product_id': self.product_a.id,
@@ -314,6 +315,30 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         )
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_out_invoice_rounding.xml')
 
+    def test_inverting_negative_price_unit(self):
+        """ We can not have negative unit prices, so we try to invert the unit price and quantity.
+        """
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': -25.0,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                }
+            ],
+        )
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_out_invoice_negative_unit_price.xml')
+
     def test_export_with_fixed_taxes_case1(self):
         # CASE 1: simple invoice with a recupel tax
         invoice = self._generate_move(
@@ -371,6 +396,31 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         )
         self.assertEqual(invoice.amount_total, 121)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_ecotaxes_case3.xml')
+
+    def test_export_with_fixed_taxes_case4(self):
+        """ CASE 4: simple invoice with a recupel tax + discount
+        1) Subtotal (price after discount, without taxes): 99 * 2 * (1-0.9) = 178.2
+        2) Taxes:
+            - recupel = 2
+            - VAT = (178.2 + 2) * 0.21 = 37.842
+        3) Total = 178.2 + 2 + 37.842 = 218.042
+        """
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 2,
+                    'discount': 10,
+                    'price_unit': 99,
+                    'tax_ids': [(6, 0, [self.recupel.id, self.tax_21.id])],
+                }
+            ],
+        )
+        self.assertEqual(invoice.amount_total, 218.042)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_ecotaxes_case4.xml')
 
     def test_export_payment_terms(self):
         """
@@ -438,6 +488,214 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         )
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_pay_term_ecotax.xml')
 
+    def test_export_payment_terms_with_discount(self):
+        self.maxDiff = None
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            currency_id=self.env.company.currency_id.id,
+            move_type='out_invoice',
+            invoice_payment_term_id=self.pay_term.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 20,
+                    'discount': 41,
+                    'price_unit': 180.75,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 480,
+                    'discount': 41,
+                    'price_unit': 25.80,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'discount': 39,
+                    'price_unit': 532.5,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'discount': 39,
+                    'price_unit': 74.25,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'discount': 39,
+                    'price_unit': 369.0,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 5,
+                    'discount': 39,
+                    'price_unit': 79.5,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 5,
+                    'discount': 39,
+                    'price_unit': 107.5,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 5,
+                    'discount': 39,
+                    'price_unit': 160.0,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 5,
+                    'discount': 39,
+                    'price_unit': 276.75,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 60,
+                    'discount': 39,
+                    'price_unit': 8.32,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 60,
+                    'discount': 39,
+                    'price_unit': 8.32,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 12,
+                    'discount': 39,
+                    'price_unit': 37.65,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 12,
+                    'discount': 39,
+                    'price_unit': 89.4,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 12,
+                    'discount': 39,
+                    'price_unit': 149.4,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 6,
+                    'discount': 39,
+                    'price_unit': 124.8,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'discount': 39,
+                    'price_unit': 253.2,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 12,
+                    'discount': 39,
+                    'price_unit': 48.3,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 20,
+                    'discount': 39,
+                    'price_unit': 34.8,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 10,
+                    'discount': 39,
+                    'price_unit': 48.3,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 10,
+                    'discount': 39,
+                    'price_unit': 72.0,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 5,
+                    'discount': 39,
+                    'price_unit': 96.0,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'discount': 39,
+                    'price_unit': 115.5,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 4,
+                    'discount': 39,
+                    'price_unit': 50.75,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 30,
+                    'discount': 39,
+                    'price_unit': 21.37,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'discount': 39,
+                    'price_unit': 40.8,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'discount': 39,
+                    'price_unit': 40.8,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'discount': 39,
+                    'price_unit': 32.9,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': -1,
+                    'price_unit': 1337.83,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+            ],
+        )
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_pay_term_discount.xml')
+
     def test_export_with_changed_taxes(self):
         invoice = self._generate_move(
             self.partner_1,
@@ -502,15 +760,24 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             self.partner_1,
             self.partner_2,
             move_type='out_invoice',
-            invoice_line_ids=[{
-                'product_id': self.product_a.id,
-                'quantity': 3,
-                'price_unit': 102.15,
-                'tax_ids': [Command.set([self.tax_12.id])]
-            }],
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'price_unit': 102.15,
+                    'tax_ids': [Command.set([self.tax_12.id])],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'price_unit': 83.60,
+                    'tax_ids': [Command.set([self.tax_21.id])],
+                },
+            ],
         )
-        price_amount = etree.fromstring(invoice.ubl_cii_xml_id.raw).find('.//{*}InvoiceLine/{*}Price/{*}PriceAmount')
-        self.assertEqual(price_amount.text, '102.15')
+        price_amounts = etree.fromstring(invoice.ubl_cii_xml_id.raw).findall('.//{*}InvoiceLine/{*}Price/{*}PriceAmount')
+        self.assertEqual(price_amounts[0].text, '102.15')
+        self.assertEqual(price_amounts[1].text, '83.6')
 
     def test_export_tax_exempt(self):
         invoice = self._generate_move(
@@ -695,6 +962,12 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             subfolder=subfolder, filename='bis3_ecotaxes_case3.xml', amount_total=121, amount_tax=22,
             list_line_subtotals=[99], currency_id=self.currency_data['currency'].id, list_line_price_unit=[99],
             list_line_discount=[0], list_line_taxes=[tax_21+self.recupel], move_type='out_invoice',
+        )
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder, filename='bis3_ecotaxes_case4.xml', amount_total=218.04, amount_tax=39.84,
+            list_line_subtotals=[178.20000000000002], currency_id=self.currency_data['currency'].id,
+            list_line_price_unit=[99], list_line_discount=[10], list_line_taxes=[tax_21+self.recupel],
+            move_type='out_invoice',
         )
 
     def test_import_payment_terms(self):

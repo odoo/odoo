@@ -86,7 +86,10 @@
                 </t>
             </div>
 
-            <div t-attf-class="o_datetime_buttons {{ props.type === 'datetime' ? 'position-md-absolute end-0' : '' }}">
+            <div t-attf-class="o_datetime_buttons {{ props.type === 'datetime' ? 'position-md-absolute h-100 start-0' : '' }}">
+                <t t-slot="bottom_left" />
+            </div>
+            <div t-attf-class="o_datetime_buttons {{ props.type === 'datetime' ? 'position-md-absolute h-100 end-0' : '' }}">
                 <t t-slot="buttons" />
             </div>
         </div>
@@ -126,6 +129,12 @@
             t-model="timeValue[unitIndex]"
             t-on-change="() => this.selectTime(timeValue_index)"
         >
+            <option
+                t-if="unitIndex === 1 and !!(timeValue[unitIndex] % props.rounding)"
+                class="text-center"
+                value=""
+                selected="true"
+            />
             <t t-foreach="unitList" t-as="unit" t-key="unit[0]">
                 <option
                     class="text-center"

@@ -1,11 +1,17 @@
 /** @odoo-module */
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
-import { Model, parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
+import { Model, parse, helpers, iterateAstNodes, constants } from "@odoo/o-spreadsheet";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 
-const { formatValue, isDefined, toCartesian } = helpers;
+const { formatValue, isDefined, toCartesian, toXC, isNumber, isDateTime } = helpers;
+const { DEFAULT_LOCALE } = constants;
+import {
+    isMarkdownViewUrl,
+    isMarkdownIrMenuIdUrl,
+    isIrMenuXmlUrl,
+} from "@spreadsheet/ir_ui_menu/odoo_menu_link_cell";
 
 export async function fetchSpreadsheetModel(env, resModel, resId) {
     const { data, revisions } = await env.services.orm.call(resModel, "join_spreadsheet_session", [
@@ -41,6 +47,16 @@ export async function waitForDataLoaded(model) {
     });
 }
 
+function containsLinkToOdoo(link) {
+    if (link && link.url) {
+        return (
+            isMarkdownViewUrl(link.url) ||
+            isIrMenuXmlUrl(link.url) ||
+            isMarkdownIrMenuIdUrl(link.url)
+        );
+    }
+}
+
 /**
  * @param {Model} model
  * @returns {object}
@@ -50,18 +66,40 @@ export async function freezeOdooData(model) {
     const data = model.exportData();
     for (const sheet of Object.values(data.sheets)) {
         for (const [xc, cell] of Object.entries(sheet.cells)) {
+            const { col, row } = toCartesian(xc);
+            const sheetId = sheet.id;
+            const position = { sheetId, col, row };
+            const evaluatedCell = model.getters.getEvaluatedCell(position);
             if (containsOdooFunction(cell.content)) {
-                const { col, row } = toCartesian(xc);
-                const sheetId = sheet.id;
-                const evaluatedCell = model.getters.getEvaluatedCell({
-                    sheetId,
-                    col,
-                    row,
-                });
-                cell.content = evaluatedCell.value.toString();
+                if (
+                    evaluatedCell.type === "text" &&
+                    (isNumber(evaluatedCell.value, DEFAULT_LOCALE) ||
+                        isDateTime(evaluatedCell.value, DEFAULT_LOCALE))
+                ) {
+                    cell.content = `="${evaluatedCell.value}"`;
+                } else {
+                    cell.content = evaluatedCell.value.toString();
+                }
                 if (evaluatedCell.format) {
                     cell.format = getItemId(evaluatedCell.format, data.formats);
                 }
+                const spreadPositions = model.getters.getSpreadPositionsOf(position);
+                if (spreadPositions.length) {
+                    for (const spreadPosition of spreadPositions) {
+                        const xc = toXC(spreadPosition.col, spreadPosition.row);
+                        const evaluatedCell = model.getters.getEvaluatedCell(spreadPosition);
+                        sheet.cells[xc] = {
+                            ...sheet.cells[xc],
+                            content: evaluatedCell.value.toString(),
+                        };
+                        if (evaluatedCell.format) {
+                            sheet.cells[xc].format = getItemId(evaluatedCell.format, data.formats);
+                        }
+                    }
+                }
+            }
+            if (containsLinkToOdoo(evaluatedCell.link)) {
+                cell.content = evaluatedCell.link.label;
             }
         }
         for (const figure of sheet.figures) {
@@ -89,6 +127,7 @@ function exportGlobalFiltersToSheet(model, data) {
             .flat()
             .filter(isDefined)
             .map(({ value, format }) => formatValue(value, { format, locale }))
+            .filter(isDefined)
             .join(", ");
     }
 }

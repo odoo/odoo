@@ -4,6 +4,7 @@
  * Provides a way to start JS code for snippets' initialization and animations.
  */
 
+import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
 import { uniqueId } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
@@ -18,8 +19,8 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import {
     applyTextHighlight,
+    removeTextHighlight,
     switchTextHighlight,
-    getCurrentTextHighlight,
 } from "@website/js/text_processing";
 import { touching } from "@web/core/utils/ui";
 
@@ -137,7 +138,7 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         this.startEvents = startEvents || 'scroll';
         const modalEl = options.enableInModal ? parent.target.closest('.modal') : null;
         const mainScrollingElement = modalEl ? modalEl : $().getScrollingElement()[0];
-        const mainScrollingTarget = mainScrollingElement === document.documentElement ? window : mainScrollingElement;
+        const mainScrollingTarget = $().getScrollingTarget(mainScrollingElement)[0];
         this.$startTarget = $($startTarget ? $startTarget : this.startEvents === 'scroll' ? mainScrollingTarget : window);
         if (options.getStateCallback) {
             this._getStateCallback = options.getStateCallback;
@@ -464,13 +465,24 @@ registry.slider = publicWidget.Widget.extend({
         // Initialize carousel and pause if in edit mode.
         this.$el.carousel(this.editableMode ? 'pause' : undefined);
         $(window).on('resize.slider', debounce(() => this._computeHeights(), 250));
-        if (this.editableMode) {
-            // Prevent carousel slide to be an history step.
-            this.$el.on("slide.bs.carousel.slider", () => {
-                this.options.wysiwyg.odooEditor.observerUnactive();
-            });
-            this.$el.on("slid.bs.carousel.slider", () => {
-                this.options.wysiwyg.odooEditor.observerActive();
+
+        // Only for carousels having the `Carousel` and `CarouselItem` options
+        // (i.e. matching the `section > .carousel` selector).
+        if (this.editableMode && this.el.matches("section > .carousel")
+                && !this.options.wysiwyg.options.enableTranslation) {
+            this.controlEls = this.el.querySelectorAll(".carousel-control-prev, .carousel-control-next");
+            const indicatorEls = this.el.querySelectorAll(".carousel-indicators > li");
+            // Deactivate the carousel controls to handle the slides manually in
+            // edit mode (by the options).
+            this.options.wysiwyg.odooEditor.observerUnactive("disable_controls");
+            this.controlEls.forEach(controlEl => controlEl.removeAttribute("data-bs-slide"));
+            indicatorEls.forEach(indicatorEl => indicatorEl.removeAttribute("data-bs-slide-to"));
+            this.options.wysiwyg.odooEditor.observerActive("disable_controls");
+            // Redirect the clicks on the active slide, in order to start the
+            // carousel options.
+            this.__onControlClick = this._onControlClick.bind(this);
+            [...this.controlEls, ...indicatorEls].forEach(controlEl => {
+                controlEl.addEventListener("mousedown", this.__onControlClick);
             });
         }
         return this._super.apply(this, arguments);
@@ -483,13 +495,32 @@ registry.slider = publicWidget.Widget.extend({
         this.$('img').off('.slider');
         this.$el.carousel('pause');
         this.$el.removeData('bs.carousel');
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive("destroy");
         this.$(".carousel-item")
             .toArray()
             .forEach((el) => {
                 $(el).css("min-height", "");
             });
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive("destroy");
         $(window).off('.slider');
-        this.$el.off('.slider');
+        this.$el.off('.slider'); // TODO remove in master
+
+        if (this.editableMode && this.el.matches("section > .carousel")
+                && !this.options.wysiwyg.options.enableTranslation) {
+            // Restore the carousel controls.
+            const indicatorEls = this.el.querySelectorAll(".carousel-indicators > li");
+            this.options.wysiwyg.odooEditor.observerUnactive("restore_controls");
+            this.controlEls.forEach(controlEl => {
+                const direction = controlEl.classList.contains("carousel-control-prev") ?
+                    "prev" : "next";
+                controlEl.setAttribute("data-bs-slide", direction);
+            });
+            indicatorEls.forEach((indicatorEl, i) => indicatorEl.setAttribute("data-bs-slide-to", i));
+            this.options.wysiwyg.odooEditor.observerActive("restore_controls");
+            [...this.controlEls, ...indicatorEls].forEach(controlEl => {
+                controlEl.removeEventListener("mousedown", this.__onControlClick);
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -502,22 +533,20 @@ registry.slider = publicWidget.Widget.extend({
     _computeHeights: function () {
         var maxHeight = 0;
         var $items = this.$('.carousel-item');
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive("_computeHeights");
         $items.css('min-height', '');
         $items.toArray().forEach((el) => {
             var $item = $(el);
             var isActive = $item.hasClass('active');
-            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive('_computeHeights');
             $item.addClass('active');
-            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive('_computeHeights');
             var height = $item.outerHeight();
             if (height > maxHeight) {
                 maxHeight = height;
             }
-            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive('_computeHeights');
             $item.toggleClass('active', isActive);
-            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive('_computeHeights');
         });
         $items.css('min-height', maxHeight);
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive("_computeHeights");
     },
 
     //--------------------------------------------------------------------------
@@ -529,6 +558,14 @@ registry.slider = publicWidget.Widget.extend({
      */
     _onContentChanged: function (ev) {
         this._computeHeights();
+    },
+    /**
+     * Redirects a carousel control click on the active slide.
+     *
+     * @private
+     */
+    _onControlClick() {
+        this.el.querySelector(".carousel-item.active").click();
     },
 });
 
@@ -792,6 +829,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             src: src,
             frameborder: '0',
             allowfullscreen: 'allowfullscreen',
+            "aria-label": _t("Media video"),
         })[0];
         this.$el.append(iframeEl);
         return iframeEl;
@@ -914,6 +952,10 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
         this.$iframe = this.$bgVideoContainer.find('.o_bg_video_iframe');
         this.$iframe.one('load', () => {
             this.$bgVideoContainer.find('.o_bg_video_loading').remove();
+            // When there is a "slide in (left or right) animation" element, we
+            // need to adjust the iframe size once it has been loaded, otherwise
+            // an horizontal scrollbar may appear.
+            this._adjustIframe();
         });
         this.$bgVideoContainer.prependTo(this.$el);
         $oldContainer.remove();
@@ -969,8 +1011,11 @@ registry.socialShare = publicWidget.Widget.extend({
     _renderSocial: function (social) {
         var url = this.$el.data('urlshare') || document.URL.split(/[?#]/)[0];
         url = encodeURIComponent(url);
-        var title = document.title.split(" | ")[0];  // get the page title without the company name
-        var hashtags = ' #' + document.title.split(" | ")[1].replace(' ', '') + ' ' + this.hashtags;  // company name without spaces (for hashtag)
+        const titleParts = document.title.split(" | ");
+        const title = titleParts[0]; // Get the page title without the company name
+        const hashtags = titleParts.length === 1
+            ? ` ${this.hashtags}`
+            : ` #${titleParts[1].replace(" ", "")} ${this.hashtags}`; // Company name without spaces (for hashtag)
         var socialNetworks = {
             'facebook': 'https://www.facebook.com/sharer/sharer.php?u=' + url,
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
@@ -1041,23 +1086,15 @@ registry.anchorSlide = publicWidget.Widget.extend({
      * @private
      */
     _onAnimateClick: function (ev) {
-        if (this.el.pathname !== window.location.pathname) {
+        const ensureSlash = path => path.endsWith("/") ? path : path + "/";
+        if (ensureSlash(this.el.pathname) !== ensureSlash(window.location.pathname)) {
             return;
+        }
+        // Avoid flicker at destination in case of ending "/" difference.
+        if (this.el.pathname !== window.location.pathname) {
+            this.el.pathname = window.location.pathname;
         }
         var hash = this.el.hash;
-        if (hash === '#top' || hash === '#bottom') {
-            // If the anchor targets #top or #bottom, directly call the
-            // "scrollTo" function. The reason is that the header or the footer
-            // could have been removed from the DOM. By receiving a string as
-            // parameter, the "scrollTo" function handles the scroll to the top
-            // or to the bottom of the document even if the header or the
-            // footer is removed from the DOM.
-            dom.scrollTo(hash, {
-                duration: 500,
-                extraOffset: this._computeExtraOffset(),
-            });
-            return;
-        }
         if (!hash.length) {
             return;
         }
@@ -1078,11 +1115,38 @@ registry.anchorSlide = publicWidget.Widget.extend({
             // own smooth scrolling.
             ev.preventDefault();
             Offcanvas.getInstance(offcanvasEl).hide();
-            offcanvasEl.addEventListener('hidden.bs.offcanvas', () => {
-                this._scrollTo($anchor, scrollValue);
-            });
+            offcanvasEl.addEventListener('hidden.bs.offcanvas',
+                () => {
+                    this._manageScroll(hash, $anchor, scrollValue);
+                },
+                // the listener must be automatically removed when invoked
+                { once: true }
+            );
         } else {
             ev.preventDefault();
+            this._manageScroll(hash, $anchor, scrollValue);
+        }
+    },
+    /**
+     *
+     * @param {string} hash
+     * @param {jQuery} $el the element to scroll to.
+     * @param {string} [scrollValue='true'] scroll value
+     * @private
+     */
+    _manageScroll(hash, $anchor, scrollValue = "true") {
+        if (hash === "#top" || hash === "#bottom") {
+            // If the anchor targets #top or #bottom, directly call the
+            // "scrollTo" function. The reason is that the header or the footer
+            // could have been removed from the DOM. By receiving a string as
+            // parameter, the "scrollTo" function handles the scroll to the top
+            // or to the bottom of the document even if the header or the
+            // footer is removed from the DOM.
+            dom.scrollTo(hash, {
+                duration: 500,
+                extraOffset: this._computeExtraOffset(),
+            });
+        } else {
             this._scrollTo($anchor, scrollValue);
         }
     },
@@ -1266,8 +1330,9 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
      */
     async start() {
         this.$scrollingElement = $().getScrollingElement();
+        this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
         this.__hideBottomFixedElements = debounce(() => this._hideBottomFixedElements(), 100);
-        this.$scrollingElement.on('scroll.bottom_fixed_element', this.__hideBottomFixedElements);
+        this.$scrollingTarget.on('scroll.bottom_fixed_element', this.__hideBottomFixedElements);
         $(window).on('resize.bottom_fixed_element', this.__hideBottomFixedElements);
         return this._super(...arguments);
     },
@@ -1276,7 +1341,8 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
      */
     destroy() {
         this._super(...arguments);
-        this.$scrollingElement.off('.bottom_fixed_element');
+        this.$scrollingElement.off('.bottom_fixed_element'); // TODO remove in master
+        this.$scrollingTarget.off('.bottom_fixed_element');
         $(window).off('.bottom_fixed_element');
         this._restoreBottomFixedElements($('.o_bottom_fixed_element'));
     },
@@ -1361,7 +1427,8 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      */
     start() {
         this.lastScroll = 0;
-        this.$scrollingElement = $().getScrollingElement();
+        this.$scrollingElement = this.findScrollingElement();
+        this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
         this.$animatedElements = this.$('.o_animate');
 
         // Fix for "transform: none" not overriding keyframe transforms on
@@ -1399,7 +1466,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         // for events that otherwise don’t support it. (e.g. useful when
         // scrolling a modal)
         this.__onScrollWebsiteAnimate = throttleForAnimation(this._onScrollWebsiteAnimate.bind(this));
-        this.$scrollingElement[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
+        this.$scrollingTarget[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
 
         $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.tab.o_animate, shown.bs.collapse.o_animate', () => {
             this.windowsHeight = $(window).height();
@@ -1422,8 +1489,12 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
             });
         $(window).off('.o_animate');
         this.__onScrollWebsiteAnimate.cancel();
-        this.$scrollingElement[0].removeEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
+        this.$scrollingTarget[0].removeEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
         this.$scrollingElement[0].classList.remove('o_wanim_overflow_xy_hidden');
+    },
+
+    findScrollingElement() {
+        return $().getScrollingElement();
     },
 
     //--------------------------------------------------------------------------
@@ -1581,7 +1652,8 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onScrollWebsiteAnimate(ev) {
-        this._scrollWebsiteAnimate(ev.currentTarget);
+        // Note: Do not rely on ev.currentTarget which might be lost by Chrome.
+        this._scrollWebsiteAnimate(this.$scrollingElement[0]);
     },
 });
 
@@ -1614,10 +1686,7 @@ registry.ImagesLazyLoading = publicWidget.Widget.extend({
         // the image intrinsic min-height.
         const imgEls = this.el.querySelectorAll('img[loading="lazy"]');
         for (const imgEl of imgEls) {
-            // Write initial min-height on the dataset, so that it can also
-            // be properly restored on widget destroy.
-            imgEl.dataset.lazyLoadingInitialMinHeight = imgEl.style.minHeight;
-            imgEl.style.minHeight = '1px';
+            this._updateImgMinHeight(imgEl);
             wUtils.onceAllImagesLoaded($(imgEl)).then(() => {
                 if (this.isDestroyed()) {
                     return;
@@ -1647,8 +1716,34 @@ registry.ImagesLazyLoading = publicWidget.Widget.extend({
      * @param {HTMLImageElement} imgEl
      */
     _restoreImage(imgEl) {
-        imgEl.style.minHeight = imgEl.dataset.lazyLoadingInitialMinHeight;
-        delete imgEl.dataset.lazyLoadingInitialMinHeight;
+        this._updateImgMinHeight(imgEl, true);
+    },
+    /**
+     * Updates the image element style with the corresponding min-height.
+     * If the editor is enabled, it deactivates the observer during the CSS
+     * update.
+     *
+     * @param {HTMLElement} imgEl - The image element to update the minimum
+     *        height of.
+     * @param {boolean} [reset=false] - Whether to remove the minimum height
+     *        and restore the initial value.
+     */
+    _updateImgMinHeight(imgEl, reset = false) {
+        if (this.options.wysiwyg) {
+            this.options.wysiwyg.odooEditor.observerUnactive('_updateImgMinHeight');
+        }
+        if (reset) {
+            imgEl.style.minHeight = imgEl.dataset.lazyLoadingInitialMinHeight;
+            delete imgEl.dataset.lazyLoadingInitialMinHeight;
+        } else {
+            // Write initial min-height on the dataset, so that it can also
+            // be properly restored on widget destroy.
+            imgEl.dataset.lazyLoadingInitialMinHeight = imgEl.style.minHeight;
+            imgEl.style.minHeight = '1px';
+        }
+        if (this.options.wysiwyg) {
+            this.options.wysiwyg.odooEditor.observerActive('_updateImgMinHeight');
+        }
     },
 });
 
@@ -1763,9 +1858,14 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
      */
     destroy() {
         this._super(...arguments);
-        if (this.originalImgSrc && (this.lastImgSrc === this.el.getAttribute('src'))) {
+        if (this.el.dataset.originalSrcBeforeHover && !this.el.classList.contains("o_modified_image_to_save")) {
+            // Replace the image source by its original one if it has not been
+            // modified in edit mode.
+            this.el.src = this.el.dataset.originalSrcBeforeHover;
+        } else if (this.originalImgSrc && (this.lastImgSrc === this.el.getAttribute("src"))) {
             this.el.src = this.originalImgSrc;
         }
+        delete this.el.dataset.originalSrcBeforeHover;
     },
 
     //--------------------------------------------------------------------------
@@ -1862,6 +1962,9 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
                 return;
             }
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive("setImgHoverEffectSrc");
+            if (this.editableMode && !this.el.dataset.originalSrcBeforeHover) {
+                this.el.dataset.originalSrcBeforeHover = this.originalImgSrc;
+            }
             this.el.src = preloadedImg.getAttribute('src');
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive("setImgHoverEffectSrc");
             this.lastImgSrc = preloadedImg.getAttribute('src');
@@ -1880,38 +1983,71 @@ registry.TextHighlight = publicWidget.Widget.extend({
      * @override
      */
     async start() {
+        // We need to adapt the text highlights on resize (E.g. custom fonts
+        // loading, layout option changes, window resized...), mainly to take in
+        // consideration the rendered line breaks in text nodes... But after
+        // every adjustment, the `ResizeObserver` will unfortunately immediately
+        // notify a size change once new highlight items are observed leading to
+        // an infinite loop. To avoid that, we use a lock map (`observerLock`)
+        // to block the callback on this first notification for observed items.
+        this.observerLock = new Map();
+        this.resizeObserver = new window.ResizeObserver(entries => {
+            // Some options, like the popup, trigger a resize after a delay
+            // before the page is saved. This causes the highlights to be added
+            // back to the DOM after the "TextHighlight" widget has been
+            // destroyed. This is why the following line is needed.
+            if (this.isDestroyed()) {
+                return;
+            }
+            window.requestAnimationFrame(() => {
+                const textHighlightEls = new Set();
+                entries.forEach(entry => {
+                    const target = entry.target;
+                    if (this.observerLock.get(target)) {
+                        // Unlock the target, the next resize will trigger a
+                        // highlight adaptation.
+                        return this.observerLock.set(target, false);
+                    }
+                    const topTextEl = target.closest(".o_text_highlight");
+                    for (const el of topTextEl
+                        ? [topTextEl]
+                        : target.querySelectorAll(":scope .o_text_highlight")) {
+                        textHighlightEls.add(el);
+                    }
+                });
+                textHighlightEls.forEach(textHighlightEl => {
+                    for (const textHighlightItemEl of this._getHighlightItems(textHighlightEl)) {
+                        // Unobserve the highlight lines (they will be replaced
+                        // by new ones after the update).
+                        this.resizeObserver.unobserve(textHighlightItemEl);
+                    }
+                    // Adapt the highlight (new items are automatically locked
+                    // and observed).
+                    switchTextHighlight(textHighlightEl);
+                });
+            });
+        });
+
+        this.el.addEventListener("text_highlight_added", this._onTextHighlightAdded.bind(this));
+        this.el.addEventListener("text_highlight_remove", this._onTextHighlightRemove.bind(this));
         // Text highlights are saved with a single wrapper that contains all
         // information to build the effects, So we need to make the adaptation
         // here to show the SVGs.
         for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
-            applyTextHighlight(textEl, getCurrentTextHighlight(textEl));
+            applyTextHighlight(textEl);
         }
-        // We need to adapt the text highlights on resize, mainly to take in
-        // consideration the rendered line breaks in text nodes...
-        this._adaptOnResize = throttleForAnimation(() => {
-            this.options.wysiwyg?.odooEditor.observerUnactive("textHighlightResize");
-            for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
-                // Remove old effect, normalize content, redraw SVGs...
-                switchTextHighlight(textEl, getCurrentTextHighlight(textEl));
-            }
-            this.options.wysiwyg?.odooEditor.observerActive("textHighlightResize");
-        });
-        if (!this.editableMode) {
-            this._adaptOnFontsLoading();
-        }
-        window.addEventListener("resize", this._adaptOnResize);
         return this._super(...arguments);
     },
     /**
      * @override
      */
     destroy() {
-        this._super(...arguments);
-        window.removeEventListener("resize", this._adaptOnResize);
-        if (!this.editableMode) {
-            this.resizeObserver.disconnect();
-            this.observerLocked.clear();
+        // We only save the highlight information on the main text wrapper,
+        // the full structure will be restored on page load.
+        for (const textHighlightEl of this.el.querySelectorAll(".o_text_highlight")) {
+            removeTextHighlight(textHighlightEl);
         }
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1926,6 +2062,8 @@ registry.TextHighlight = publicWidget.Widget.extend({
      * here by adjusting the highlights if the text width changes using a
      * `ResizeObserver`.
      *
+     * TODO: Remove in master (left in stable for compatibility)
+     *
      * @private
      */
     _adaptOnFontsLoading() {
@@ -1937,6 +2075,9 @@ registry.TextHighlight = publicWidget.Widget.extend({
         // we use a lock map (`observerLocked`) to block the callback on this
         // first notification for observed items.
         this.resizeObserver = new window.ResizeObserver(entries => {
+            if (this.isDestroyed()) {
+                return;
+            }
             window.requestAnimationFrame(() => {
                 const topTextEls = new Set();
                 entries.forEach(entry => {
@@ -1965,7 +2106,7 @@ registry.TextHighlight = publicWidget.Widget.extend({
                         this.observerLocked.delete(unit);
                     });
                     // Adapt the highlight, lock new items and observe them.
-                    switchTextHighlight(topTextEl, getCurrentTextHighlight(topTextEl));
+                    switchTextHighlight(topTextEl);
                     this._lockHighlightObserver(topTextEl);
                     this._observeHighlightResize(topTextEl);
                 });
@@ -1975,26 +2116,90 @@ registry.TextHighlight = publicWidget.Widget.extend({
         this._lockHighlightObserver();
     },
     /**
+     * The `resizeObserver` ignores an element if it has an inline display.
+     * We need to target the closest non-inline parent.
+     *
      * @private
-     * @param {HTMLElement} [container=this.el] the element where the "resize"
-     * should be observed.
+     * @param {HTMLElement} el
      */
-    _observeHighlightResize(container = this.el) {
-        [...container.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
-            this.resizeObserver.observe(unit);
-        });
+    _closestToObserve(el) {
+        if (el === this.el || !el) {
+            return null;
+        }
+        if (window.getComputedStyle(el).display !== "inline") {
+            return el;
+        }
+        return this._closestToObserve(el.parentElement);
+    },
+    /**
+     * Returns a list of text highlight items (lines) in the provided element.
+     *
+     * @private
+     * @param {HTMLElement} el
+     */
+    _getHighlightItems(el = this.el) {
+        return el.querySelectorAll(":scope .o_text_highlight_item");
+    },
+    /**
+     * Returns a list of highlight elements to observe.
+     *
+     * @private
+     * @param {HTMLElement} topTextEl
+     */
+    _getObservedEls(topTextEl) {
+        const closestToObserve = this._closestToObserve(topTextEl);
+        return [
+            ...(closestToObserve ? [closestToObserve] : []),
+            ...this._getHighlightItems(topTextEl),
+        ];
+    },
+    /**
+     * @private
+     * @param {HTMLElement} topTextEl the element where the "resize" should
+     * be observed.
+     */
+    _observeHighlightResize(topTextEl) {
+        // The `ResizeObserver` cannot detect the width change on highlight
+        // units (`.o_text_highlight_item`) as long as the width of the entire
+        // `.o_text_highlight` element remains the same, so we need to observe
+        // each one of them and do the adjustment only once for the whole text.
+        for (const highlightItemEl of this._getObservedEls(topTextEl)) {
+            this.resizeObserver.observe(highlightItemEl);
+        }
     },
     /**
      * Used to prevent the first callback triggered by `ResizeObserver` on new
      * observed items.
      *
      * @private
-     * @param {HTMLElement} [container=this.el] the container of observed items.
+     * @param {HTMLElement} topTextEl the container of observed items.
      */
-    _lockHighlightObserver(container = this.el) {
-        [...container.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
-            this.observerLocked.set(unit, true);
-        });
+    _lockHighlightObserver(topTextEl) {
+        for (const targetEl of this._getObservedEls(topTextEl)) {
+            this.observerLock.set(targetEl, true);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onTextHighlightAdded({ target }) {
+        this._lockHighlightObserver(target);
+        this._observeHighlightResize(target);
+    },
+    /**
+     * @private
+     */
+    _onTextHighlightRemove({ target }) {
+        // We don't need to track the removed text highlight items after
+        // highlight adaptations.
+        for (const highlightItemEl of this._getHighlightItems(target)) {
+            this.observerLock.delete(highlightItemEl);
+        }
     },
 });
 

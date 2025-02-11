@@ -11,7 +11,6 @@ import werkzeug.wrappers
 
 from odoo import _, http, tools
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, UserError
@@ -158,7 +157,7 @@ class WebsiteForum(WebsiteProfile):
 
         pager = tools.lazy(lambda: request.website.pager(
             url=url, total=question_count, page=page, step=self._post_per_page,
-            scope=self._post_per_page, url_args=url_args))
+            scope=5, url_args=url_args))
 
         values = self._prepare_user_values(forum=forum, searches=post)
         values.update({
@@ -281,10 +280,21 @@ class WebsiteForum(WebsiteProfile):
                 type='http', auth="public", website=True, sitemap=False)
     def old_question(self, forum, question, **post):
         # Compatibility pre-v14
-        return request.redirect(_build_url_w_params("/forum/%s/%s" % (slug(forum), slug(question)), request.params), code=301)
+        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)), code=301)
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
-                type='http', auth="public", website=True, sitemap=True)
+    def sitemap_forum_post(env, rule, qs):
+        ForumPost = env['forum.post']
+        dom = expression.AND([
+            env['website'].get_current_website().website_domain(),
+            [('parent_id', '=', False), ('can_view', '=', True)],
+        ])
+        for forum_post in ForumPost.search(dom):
+            loc = '/forum/%s/%s' % (slug(forum_post.forum_id), slug(forum_post))
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc, 'lastmod': forum_post.write_date.date()}
+
+    @http.route(['''/forum/<model("forum.forum"):forum>/<model("forum.post"):question>'''],
+                type='http', auth="public", website=True, sitemap=sitemap_forum_post)
     def question(self, forum, question, **post):
         if not forum.active:
             return request.render("website_forum.header", {'forum': forum})
@@ -357,7 +367,7 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close', type='http', auth="user", methods=['POST'], website=True)
     def question_close(self, forum, question, **post):
         question.close(reason_id=int(post.get('reason_id', False)))
-        return request.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", methods=['POST'], website=True)
     def question_reopen(self, forum, question, **kwarg):

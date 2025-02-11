@@ -3,6 +3,7 @@
 
 from odoo.tests import Form, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -699,3 +700,215 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(len(mo), 1)
         self.assertEqual(mo.product_qty, 1.0)
         self.assertEqual(mo.bom_id, bom_2)
+
+    def test_manufacturing_bom_with_repetitions(self):
+        """
+            Checks that manufacturing orders created to manufacture the components of a BOM
+            are set with the correct quantities when products appear with repetitions.
+                - Create 5 products: product 1,2,3,4 (P1,P2,P3 and P4) and a final product (FP)
+                - Set routes to manifacture on each product
+                - For P1, P2, P3, P4 add a 0:0 reordering rule.
+                - Add a BOM for P2 with 1 unit of P1 as components
+                - Add a BOM for P3 with 1 unit of P2 as components
+                - Add a BOM for P4 with 1 unit of P3 as components
+                - Add a BOM for FP with 3 unit of P4 and 2 units of P3 as components
+        """
+        manufacturing_route = self.env['stock.rule'].search([
+            ('action', '=', 'manufacture')]).route_id
+        products = self.env['product.product'].create([
+            {
+            'name': 'FP',
+            'type': 'product',
+            'route_ids': manufacturing_route,
+            },
+            {
+            'name': 'P1',
+            'type': 'product',
+            'route_ids': manufacturing_route,
+            },
+            {
+            'name': 'P2',
+            'type': 'product',
+            'route_ids': manufacturing_route,
+            },
+            {
+            'name': 'P3',
+            'type': 'product',
+            'route_ids': manufacturing_route,
+            },
+            {
+            'name': 'P4',
+            'type': 'product',
+            'route_ids': manufacturing_route,
+            },
+
+        ])
+        self.env['stock.warehouse.orderpoint'].create([
+            {
+            'name': 'My orderpoint',
+            'product_id': i,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            } for i in products.ids[1:]
+        ])
+        self.env['mrp.bom'].create([
+            {
+            'product_tmpl_id': products[2].product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': products[2].uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': products[1].id,
+                    'product_qty': 1,
+                })
+            ]},
+            {
+            'product_tmpl_id': products[3].product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': products[3].uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': products[2].id,
+                    'product_qty': 1,
+                })
+            ]},
+            {
+            'product_tmpl_id': products[4].product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': products[4].uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': products[3].id,
+                    'product_qty': 1,
+                })
+            ]},
+            {
+            'product_tmpl_id': products[0].product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': products[0].uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': products[4].id,
+                    'product_qty': 3,
+                }),
+                Command.create({
+                    'product_id': products[2].id,
+                    'product_qty': 2,
+                }),
+            ]},
+        ])
+        mo = self.env['mrp.production'].create({
+            'product_id': products[0].id,
+            'product_uom_qty': 1,
+        })
+        mo.action_confirm()
+        mo_P1 = self.env['mrp.production'].search([('product_id', '=', products[1].id)])
+        mo_P2 = self.env['mrp.production'].search([('product_id', '=', products[2].id)])
+        self.assertEqual(mo_P1.product_uom_qty, 5.0)
+        self.assertEqual(mo_P2.product_uom_qty, 5.0)
+
+    def test_update_component_qty(self):
+        self.warehouse.manufacture_steps = "pbm"
+        component = self.bom.bom_line_ids.product_id
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom.product_id.id,
+            'bom_id': self.bom.id,
+            'product_qty': 1,
+            'location_src_id': self.warehouse.pbm_loc_id.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.product_uom_qty, 2.0)
+        self.assertEqual(mo.picking_ids.move_ids.product_uom_qty, 2.0)
+        # we require a more components to complete the MO
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as raw_move:
+            raw_move.product_id = component
+            raw_move.product_uom_qty = 1.0
+        mo = mo_form.save()
+        # check that the related moves qty is correctly updated
+        self.assertEqual(mo.move_raw_ids.product_uom_qty, 3.0)
+        self.assertEqual(mo.picking_ids.move_ids.product_uom_qty, 3.0)
+
+    def test_component_and_byproduct_on_transfers(self):
+        """
+            Checks if transfers is updated when we adding a new byproduct/component
+            after confirm the MO
+        """
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
+        demo = self.env['product.product'].create({
+            'name': 'DEMO',
+            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))],
+            'type': 'product',
+        })
+        comp1 = self.env['product.product'].create({
+            'name': 'COMP1'
+        })
+        comp2 = self.env['product.product'].create({
+            'name': 'COMP2'
+        })
+        bprod1 = self.env['product.product'].create({
+            'name': 'BPROD1'
+        })
+        bprod2 = self.env['product.product'].create({
+            'name': 'BPROD2'
+        })
+
+        warehouse = self.warehouse
+        warehouse.manufacture_steps = 'pbm_sam'
+        warehouse_stock_location = warehouse.lot_stock_id
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': demo.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [(0, 0, {
+                'product_id': comp1.id,
+                'product_qty': 1,
+            })],
+            'byproduct_ids': [(0, 0, {
+                'product_id': bprod1.id,
+                'product_qty': 1,
+            })],
+        })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse_stock_location.id,
+            'product_id': demo.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        })
+
+        self.env['procurement.group'].run_scheduler()
+        mo = self.env['mrp.production'].search([('product_id', '=', demo.id)])
+        mo.action_confirm()
+
+        self.assertEqual(len(mo.picking_ids), 2, "Should have 2 pickings: Components + Final products and byproducts")
+        self.assertEqual(len(mo.picking_ids[0].move_ids_without_package), 1, "Should have just one product, the component")
+        self.assertEqual(mo.picking_ids[0].move_ids_without_package[0].product_id, comp1)
+
+        self.assertEqual(len(mo.picking_ids[1].move_ids_without_package), 2, "Should have 2 products: final product and byproduct")
+        self.assertEqual(mo.picking_ids[1].move_ids_without_package[0].product_id, demo)
+        self.assertEqual(mo.picking_ids[1].move_ids_without_package[1].product_id, bprod1)
+
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as raw_move:
+            raw_move.product_id = comp2
+            raw_move.product_uom_qty = 1.0
+        with mo_form.move_byproduct_ids.new() as byprod_move:
+            byprod_move.product_id = bprod2
+            byprod_move.quantity = 1.0
+        mo = mo_form.save()
+
+        self.assertEqual(len(mo.picking_ids), 2, "Should have 2 pickings: Components + Final products and byproducts")
+        self.assertEqual(len(mo.picking_ids[0].move_ids_without_package), 2, "Should have just two products, with the new component added")
+        self.assertEqual(mo.picking_ids[0].move_ids_without_package[0].product_id, comp1)
+        self.assertEqual(mo.picking_ids[0].move_ids_without_package[1].product_id, comp2)
+
+        self.assertEqual(len(mo.picking_ids[1].move_ids_without_package), 3, "Should have 3 products: final product, bom byproduct and the new byprod")
+        self.assertEqual(mo.picking_ids[1].move_ids_without_package[0].product_id, demo)
+        self.assertEqual(mo.picking_ids[1].move_ids_without_package[1].product_id, bprod1)
+        self.assertEqual(mo.picking_ids[1].move_ids_without_package[2].product_id, bprod2)

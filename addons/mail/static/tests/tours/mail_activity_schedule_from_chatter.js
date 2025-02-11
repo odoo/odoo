@@ -16,11 +16,13 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
             trigger: ".dropdown-item:contains('Call')",
         },
         {
+            trigger: "input[id*='activity_type_id']:propValue('Call')",
+            run: () => {},
+        },
+        {
             extra_trigger: "button:contains('Schedule')",
             trigger: "input[id*='activity_type_id']",
-            run: function (action_helper) {
-                setTimeout(() => action_helper.click(), 100);
-            },
+            run: "click",
         },
         {
             trigger: ".dropdown-item:contains('To-Do')",

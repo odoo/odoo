@@ -61,15 +61,6 @@ class PosConfig(models.Model):
         forbidden_keys.append('floor_ids')
         return forbidden_keys
 
-    def _set_tips_after_payment_if_country_custom(self):
-        self.ensure_one()
-        company = self.company_id or self.env.company or self.env['res.company']._get_main_company()
-        if company and company.country_id and company.country_id.code == 'US':
-            self.update({
-                'iface_tipproduct': True,
-                'set_tip_after_payment': True,
-            })
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -78,7 +69,6 @@ class PosConfig(models.Model):
                 vals['iface_splitbill'] = True
             if not is_restaurant or not vals.get('iface_tipproduct', False):
                 vals['set_tip_after_payment'] = False
-            vals["iface_orderline_notes"] = is_restaurant
         pos_configs = super().create(vals_list)
         for config in pos_configs:
             if config.module_pos_restaurant:
@@ -122,7 +112,7 @@ class PosConfig(models.Model):
 
     def setup_defaults(self, company):
         main_restaurant = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
-        main_restaurant_is_present = main_restaurant and self.filtered(lambda cfg: cfg.id == main_restaurant.id)
+        main_restaurant_is_present = main_restaurant and not main_restaurant.has_active_session and self.filtered(lambda cfg: cfg.id == main_restaurant.id)
         if main_restaurant_is_present:
             non_main_restaurant_configs = self - main_restaurant
             non_main_restaurant_configs.assign_payment_journals(company)
@@ -134,7 +124,6 @@ class PosConfig(models.Model):
 
     def _setup_main_restaurant_defaults(self):
         self.ensure_one()
-        self._set_tips_after_payment_if_country_custom()
         self._link_same_non_cash_payment_methods_if_exists('point_of_sale.pos_config_main')
         self._ensure_cash_payment_method('MRCSH', _('Cash Restaurant'))
         self._archive_shop()

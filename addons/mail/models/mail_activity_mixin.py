@@ -163,6 +163,7 @@ class MailActivityMixin(models.AbstractModel):
 
         search_states_int = {integer_state_value.get(s or False) for s in search_states}
 
+        self.env['mail.activity'].flush_model(['active', 'date_deadline', 'res_model', 'user_id'])
         query = """
           SELECT res_id
             FROM (
@@ -182,7 +183,7 @@ class MailActivityMixin(models.AbstractModel):
                     ON res_users.id = mail_activity.user_id
              LEFT JOIN res_partner
                     ON res_partner.id = res_users.partner_id
-                 WHERE mail_activity.res_model = %(res_model_table)s
+                 WHERE mail_activity.res_model = %(res_model_table)s AND mail_activity.active = true 
               GROUP BY res_id
             ) AS res_record
           WHERE %(search_states_int)s @> ARRAY[activity_state]
@@ -210,6 +211,8 @@ class MailActivityMixin(models.AbstractModel):
 
     @api.model
     def _search_activity_user_id(self, operator, operand):
+        if isinstance(operand, bool) and ((operator == '=' and not operand) or (operator == '!=' and operand)):
+            return [('activity_ids', '=', False)]
         return [('activity_ids', 'any', [('active', 'in', [True, False]), ('user_id', operator, operand)])]
 
     @api.model
@@ -271,21 +274,22 @@ class MailActivityMixin(models.AbstractModel):
             """
             (SELECT res_id,
                 CASE
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))::date) > 0 THEN 'planned'
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))::date) < 0 THEN 'overdue'
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))::date) = 0 THEN 'today'
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))))) > 0 THEN 'planned'
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))))) < 0 THEN 'overdue'
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))))) = 0 THEN 'today'
                     ELSE null
                 END AS activity_state
             FROM mail_activity
             JOIN res_users ON (res_users.id = mail_activity.user_id)
             JOIN res_partner ON (res_partner.id = res_users.partner_id)
-            WHERE res_model = %(res_model)s
+            WHERE res_model = %(res_model)s AND mail_activity.active = true
             GROUP BY res_id)
             """,
             res_model=self._name,
+            today_utc=pytz.utc.localize(datetime.utcnow()),
             tz=tz,
         )
-        alias = query.join(self._table, "id", sql_join, "res_id", "last_activity_state")
+        alias = query.left_join(self._table, "id", sql_join, "res_id", "last_activity_state")
 
         return SQL.identifier(alias, 'activity_state'), ['activity_state']
 
@@ -324,12 +328,12 @@ class MailActivityMixin(models.AbstractModel):
         :param additional_domain: if set, filter on that domain;
         """
         if self.env.context.get('mail_activity_automation_skip'):
-            return False
+            return self.env['mail.activity']
 
         Data = self.env['ir.model.data'].sudo()
         activity_types_ids = [type_id for type_id in (Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids) if type_id]
         if not any(activity_types_ids):
-            return False
+            return self.env['mail.activity']
 
         domain = [
             '&', '&', '&',

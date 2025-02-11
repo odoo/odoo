@@ -52,6 +52,11 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         'click .o_forum_profile_bio_cancel_edit': '_onProfileBioCancelEditClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * @override
      */
@@ -62,13 +67,16 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         }
 
         const $textarea = this.$("textarea.o_wysiwyg_loader");
+        const resId = parseInt(this.$("input[name=user_id]").val());
+        const recordContent = await this.orm.call("res.users", "get_website_description", [resId]) || '';
 
         const options = {
             recordInfo: {
                 context: this._getContext(),
                 res_model: "res.users",
-                res_id: parseInt(this.$("input[name=user_id]").val()),
+                res_id: resId,
             },
+            value: recordContent,
             resizable: true,
             userGeneratedContent: true,
         };

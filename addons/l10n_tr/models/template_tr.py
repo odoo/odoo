@@ -30,7 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_suspense_account_id': 'tr102999',
                 'account_journal_payment_debit_account_id': 'tr102997',
                 'account_journal_payment_credit_account_id': 'tr102998',
-                'account_sale_tax_id': 'tr_kdv_satis_sale_20',
-                'account_purchase_tax_id': 'tr_kdv_satis_purchase_20',
+                'account_sale_tax_id': 'tr_s_20',
+                'account_purchase_tax_id': 'tr_p_20',
             },
         }

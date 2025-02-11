@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Junko Augias, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-30 14:16+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2024-02-07 08:49+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,13 +55,6 @@ msgstr "Odooサーバに接続できませんでした。インターネット�
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
-msgid "Do not have access to fetch token from Viva Wallet"
-msgstr "Viva Walletからトークンを取得するアクセス権がありません。"
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
 msgid "It is essential to provide API key for the use of viva wallet"
 msgstr "Viva Walletを使用するには、APIキーの提供が不可欠です。"
 
@@ -76,13 +69,6 @@ msgstr "マーチャントID"
 #, python-format
 msgid "Message from Viva Wallet: %s"
 msgstr "Viva Walletからのメッセージ: %s"
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
-msgid "Not receive Bearer Token"
-msgstr "ベアラートークンを受取らない"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -140,6 +126,15 @@ msgid "There are some issues between us and Viva Wallet, try again later.%s)"
 msgstr "Viva Walletとの間で問題が発生しました。もう少し後になってからお試し下さい: %s)"
 
 #. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
+"ID and Client Secret are correct"
+msgstr "Viva Wallet ベアラートークンを取得できません: 顧客IDと顧客シークレットが正しいことを確認して下さい。"
+
+#. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_merchant_id
 msgid ""
@@ -187,6 +182,13 @@ msgstr "Viva Wallet Webhookエンドポイント"
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_webhook_verification_key
 msgid "Viva Wallet Webhook Verification Key"
 msgstr "Viva Wallet Webhook認証キー"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid "Your transaction with Viva Wallet failed. Please try again later."
+msgstr "Viva Walletとの取引に失敗しました。後でもう一度お試し下さい。"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id

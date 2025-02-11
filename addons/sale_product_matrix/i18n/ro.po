@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_product_matrix
-#
+# 
 # Translators:
-# Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Martin Trigaux, 2022
-#
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Maria Muntean, 2024
+# Corina Calin, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Corina Calin, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: sale_product_matrix
@@ -29,20 +31,6 @@ msgid "Add product mode"
 msgstr "Adăugare mod produs"
 
 #. module: sale_product_matrix
-#. openerp-web
-#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
-#, python-format
-msgid "Choose Product Variants"
-msgstr ""
-
-#. module: sale_product_matrix
-#. openerp-web
-#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
-#, python-format
-msgid "Close"
-msgstr "Închide"
-
-#. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
 #: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order_line__product_add_mode
@@ -50,38 +38,33 @@ msgid ""
 "Configurator: choose attribute values to add the matching product variant to the order.\n"
 "Grid: add several variants at once from the grid of attribute values"
 msgstr ""
-
-#. module: sale_product_matrix
-#. openerp-web
-#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
-#, python-format
-msgid "Confirm"
-msgstr "Confirmă"
+"Configurator: alegeți valorile atributelor pentru a adăuga la comandă varianta de produs corespunzătoare.\n"
+"Grilă: adăugați mai multe variante simultan din grila de valori ale atributelor"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Șablonul produsului grilă"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
 msgid "Grid Update"
-msgstr ""
+msgstr "Actualizare grilă"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
 msgid "Matrix local storage"
-msgstr ""
+msgstr "Matricea de stocare locală"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
 msgid "Order Grid Entry"
-msgstr ""
+msgstr "Intrarea în grila de comandă"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "Tipăriți grile de variante"
 
 #. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_product_template
@@ -106,7 +89,7 @@ msgstr "Linie comandă vânzare"
 #. module: sale_product_matrix
 #: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
 msgid "Sales Variant Selection"
-msgstr ""
+msgstr "Selectarea variantei de vânzare"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
@@ -115,9 +98,16 @@ msgid ""
 "If grid_update, will be loaded on the SO.\n"
 "If not, represents the matrix to open."
 msgstr ""
+"Stocarea locală tehnică a grilei. \n"
+"Dacă grid_update, va fi încărcată pe Comanda de Vânzare.\n"
+"Dacă nu, reprezintă matricea care trebuie deschisă."
 
 #. module: sale_product_matrix
+#. odoo-python
 #: code:addons/sale_product_matrix/models/sale_order.py:0
 #, python-format
-msgid "You cannot change the quantity of a product present in multiple sale lines."
+msgid ""
+"You cannot change the quantity of a product present in multiple sale lines."
 msgstr ""
+"Nu puteți modifica cantitatea unui produs prezent în mai multe linii de "
+"vânzare."

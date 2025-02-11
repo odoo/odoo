@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo import Command
+from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.addons.base.models.res_partner import Partner
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
@@ -115,15 +116,33 @@ class TestPartner(TransactionCaseWithUserDemo):
                     'Name_create should take first found email'
                 )
 
-        # check name updates
-        for source, exp_email_formatted in [
-            ('Vlad the Impaler', '"Vlad the Impaler" <vlad.the.impaler@example.com>'),
-            ('Balázs', '"Balázs" <vlad.the.impaler@example.com>'),
-            ('Balázs <email.in.name@example.com>', '"Balázs <email.in.name@example.com>" <vlad.the.impaler@example.com>'),
+        # check name updates and extract_rfc2822_addresses
+        for source, exp_email_formatted, exp_addr in [
+            (
+                'Vlad the Impaler',
+                '"Vlad the Impaler" <vlad.the.impaler@example.com>',
+                ['vlad.the.impaler@example.com']
+            ), (
+                'Balázs', '"Balázs" <vlad.the.impaler@example.com>',
+                ['vlad.the.impaler@example.com']
+            ),
+            # check with '@' in name
+            (
+                'Bike@Home', '"Bike@Home" <vlad.the.impaler@example.com>',
+                ['Bike@Home', 'vlad.the.impaler@example.com']
+            ), (
+                'Bike @ Home@Home', '"Bike @ Home@Home" <vlad.the.impaler@example.com>',
+                ['Home@Home', 'vlad.the.impaler@example.com']
+            ), (
+                'Balázs <email.in.name@example.com>',
+                '"Balázs <email.in.name@example.com>" <vlad.the.impaler@example.com>',
+                ['email.in.name@example.com', 'vlad.the.impaler@example.com']
+            ),
         ]:
             with self.subTest(source=source):
                 new_partner.write({'name': source})
                 self.assertEqual(new_partner.email_formatted, exp_email_formatted)
+                self.assertEqual(extract_rfc2822_addresses(new_partner.email_formatted), exp_addr)
 
         # check email updates
         new_partner.write({'name': 'Balázs'})
@@ -291,6 +310,32 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.assertEqual(
             partner_merge_wizard.dst_partner_id.display_name, expected_partner_name,
             "'Destination Contact' name should contain db ID in brackets"
+        )
+
+    def test_partner_merge_null_company_property(self):
+        """ Check that partner with null company ir.property can be merged """
+        partners = self.env['res.partner'].create([
+            {'name': 'no barcode partner'},
+            {'name': 'partner1', 'barcode': 'partner1'},
+            {'name': 'partner2', 'barcode': 'partner2'},
+        ])
+        with self.assertLogs(level='ERROR'):
+            partner_merge_wizard = self.env['base.partner.merge.automatic.wizard']._merge(
+                partners.ids,
+                partners[0],
+            )
+            self.assertFalse(partners[0].barcode)
+
+        partners = self.env['res.partner'].create([
+            {'name': 'partner1', 'barcode': 'partner1'},
+            {'name': 'partner2', 'barcode': 'partner2'},
+        ])
+        self.env['ir.property'].search([
+            ('res_id', 'in', ["res.partner,{}".format(p.id) for p in partners])
+        ]).company_id = None
+        partner_merge_wizard = self.env['base.partner.merge.automatic.wizard']._merge(
+            partners.ids,
+            partners[0],
         )
 
     def test_read_group(self):
@@ -735,6 +780,26 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertEqual(res_jetha, "Jethala, Powder gali, Gokuldham Society", "name should contain comma separated name and address")
         res_bhide = test_partner_bhide.with_context(show_address=1, address_inline=1).display_name
         self.assertEqual(res_bhide, "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
+
+    def test_accessibility_of_company_partner_from_branch(self):
+        """ Check accessibility of company partner from branch. """
+        company = self.env['res.company'].create({'name': 'company'})
+        branch = self.env['res.company'].create({
+            'name': 'branch',
+            'parent_id': company.id
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'partner',
+            'company_id': company.id
+        })
+        user = self.env['res.users'].create({
+            'name': 'user',
+            'login': 'user',
+            'company_id': branch.id,
+            'company_ids': [branch.id]
+        })
+        record = self.env['res.partner'].with_user(user).search([('id', '=', partner.id)])
+        self.assertEqual(record.id, partner.id)
 
 
 @tagged('res_partner', 'post_install', '-at_install')

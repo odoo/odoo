@@ -99,6 +99,12 @@ const DIALOG_SIZES = {
     small: "sm",
 };
 
+const parser = new DOMParser();
+function isHelpEmpty(help) {
+    const doc = parser.parseFromString(help, "text/html");
+    return doc.body.innerText.trim() === "";
+}
+
 // -----------------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------------
@@ -125,6 +131,7 @@ function makeActionManager(env) {
     let dialogCloseProm;
     let actionCache = {};
     let dialog = null;
+    let nextDialog = null;
 
     // The state action (or default user action if none) is loaded as soon as possible
     // so that the next "doAction" will have its action ready when needed.
@@ -246,9 +253,7 @@ function makeActionManager(env) {
                 ? evaluateExpr(domain, Object.assign({}, env.services.user.context, action.context))
                 : domain;
         if (action.help) {
-            const htmlHelp = document.createElement("div");
-            htmlHelp.innerHTML = action.help;
-            if (!htmlHelp.innerText.trim()) {
+            if (isHelpEmpty(action.help)) {
                 delete action.help;
             }
         }
@@ -676,9 +681,6 @@ function makeActionManager(env) {
                 onError(this.onError);
             }
             onError(error) {
-                if (!this.isMounted) {
-                    reject(error);
-                }
                 if (this.isMounted) {
                     // the error occurred on the controller which is
                     // already in the DOM, so simply show the error
@@ -692,11 +694,13 @@ function makeActionManager(env) {
                     } else {
                         const lastCt = controllerStack[controllerStack.length - 1];
                         if (lastCt) {
-                            // the error occurred while rendering a new controller,
-                            // so go back to the last non faulty controller
-                            // (the error will be shown anyway as the promise
-                            // has been rejected)
-                            restore(lastCt.jsId);
+                            if (lastCt.jsId !== controller.jsId) {
+                                // the error occurred while rendering a new controller,
+                                // so go back to the last non faulty controller
+                                // (the error will be shown anyway as the promise
+                                // has been rejected)
+                                restore(lastCt.jsId);
+                            }
                         } else {
                             env.bus.trigger("ACTION_MANAGER:UPDATE", {});
                         }
@@ -773,7 +777,6 @@ function makeActionManager(env) {
         ControllerComponent.props = {
             "*": true,
         };
-        let nextDialog = null;
         if (action.target === "new") {
             const actionDialogProps = {
                 ActionComponent: ControllerComponent,
@@ -797,6 +800,9 @@ function makeActionManager(env) {
                     }
                 },
             });
+            if (nextDialog) {
+                nextDialog.remove();
+            }
             nextDialog = {
                 remove: removeDialogFn,
                 onClose: onClose || options.onClose,

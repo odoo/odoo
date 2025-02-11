@@ -14,8 +14,8 @@ export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = (
     let dragCount = 0;
     let hasTarget = false;
 
-    useExternalListener(document, "dragenter", onDragEnter);
-    useExternalListener(document, "dragleave", onDragLeave);
+    useExternalListener(document, "dragenter", onDragEnter, { capture: true });
+    useExternalListener(document, "dragleave", onDragLeave, { capture: true });
     // Prevents the browser to open or download the file when it is dropped
     // outside of the dropzone.
     useExternalListener(window, "dragover", (ev) => ev.preventDefault());
@@ -23,7 +23,7 @@ export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = (
         ev.preventDefault();
         dragCount = 0;
         updateDropzone();
-    });
+    }, { capture: true });
 
     function updateDropzone() {
         const shouldDisplayDropzone = dragCount && hasTarget && isDropzoneEnabled();

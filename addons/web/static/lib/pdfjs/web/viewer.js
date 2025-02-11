@@ -3665,14 +3665,6 @@ function webViewerInitialized() {
     appConfig.toolbar.viewFind.classList.add("hidden");
   }
 
-  appConfig.mainContainer.addEventListener("transitionend", function (evt) {
-    if (evt.target === this) {
-      eventBus.dispatch("resize", {
-        source: this
-      });
-    }
-  }, true);
-
   try {
     if (file) {
       PDFViewerApplication.open(file);
@@ -10576,6 +10568,8 @@ function _addEventListeners2() {
   this.sidebarContainer.addEventListener("transitionend", evt => {
     if (evt.target === this.sidebarContainer) {
       this.outerContainer.classList.remove("sidebarMoving");
+      // Ensure that rendering is triggered after opening/closing the sidebar.
+      this.eventBus.dispatch("resize", { source: this });
     }
   });
   this.toggleButton.addEventListener("click", () => {
@@ -18255,7 +18249,8 @@ window.print = function () {
       return activeServiceOnEntry.performPrint();
     }).catch(function () {}).then(function () {
       if (activeServiceOnEntry.active) {
-        abort();
+        // ODOO Patch: https://github.com/mozilla/pdf.js/issues/10630#issuecomment-855754913
+        setTimeout(abort, 1000);
       }
     });
   }

@@ -10,7 +10,7 @@
                     <button name="action_submit" type="object" string="Retry" class="oe_highlight" invisible="context.get('is_modal') or state != 'error'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,done" invisible="context.get('is_modal')"/>
                 </header>
-                <div class="alert alert-danger text-center my-0" role="alert" invisible="not error_type">
+                <div class="alert alert-danger text-center" role="alert" invisible="not error_type">
                     <field name="error_type" invisible="1"/>
                     <field name="lead_type" invisible="1"/>
                     <span invisible="error_type != 'credits'">

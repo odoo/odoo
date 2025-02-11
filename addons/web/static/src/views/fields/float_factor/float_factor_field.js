@@ -15,11 +15,7 @@ export class FloatFactorField extends FloatField {
     };
 
     parse(value) {
-        let factorValue = value / this.props.factor;
-        if (this.props.inputType !== "number") {
-            factorValue = factorValue.toString();
-        }
-        return super.parse(factorValue);
+        return super.parse(value) / this.props.factor;
     }
 
     get value() {

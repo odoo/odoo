@@ -176,7 +176,7 @@ class PeriodicCollector(Collector):
         super().__init__()
         self.active = False
         self.frame_interval = interval
-        self.thread = threading.Thread(target=self.run)
+        self.__thread = threading.Thread(target=self.run)
         self.last_frame = None
 
     def run(self):
@@ -208,11 +208,11 @@ class PeriodicCollector(Collector):
             init_thread.profile_hooks = []
         init_thread.profile_hooks.append(self.add)
 
-        self.thread.start()
+        self.__thread.start()
 
     def stop(self):
         self.active = False
-        self.thread.join()
+        self.__thread.join()
         self.profiler.init_thread.profile_hooks.remove(self.add)
 
     def add(self, entry=None, frame=None):
@@ -234,6 +234,8 @@ class SyncCollector(Collector):
     name = 'traces_sync'
 
     def start(self):
+        if sys.gettrace() is not None:
+            _logger.error("Cannot start SyncCollector, settrace already set: %s", sys.gettrace())
         assert not self._processed, "You cannot start SyncCollector after accessing entries."
         sys.settrace(self.hook)  # todo test setprofile, but maybe not multithread safe
 

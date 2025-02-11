@@ -1,8 +1,18 @@
 @include media-breakpoint-down(md) {
-    img, .media_iframe_video, span.fa, i.fa {
+    img, .media_iframe_video {
         &:not(.o_animate) {
             transform: none !important;
         }
+    }
+
+    // For RTL (Right-to-Left) purposes, don't disable the transform directive
+    // for Font Awesome icons that are flipped by 180deg.
+    $not-selectors: '';
+    @each $class in $rtl-fa-classes {
+        $not-selectors: '#{$not-selectors}:not(.#{$class})';
+    }
+    .fa:where(#{$not-selectors}:not(.o_animate)) {
+        transform: none !important;
     }
 }
 
@@ -44,6 +54,23 @@
 
     > * {
         padding: var(--grid-item-padding-y) var(--grid-item-padding-x) !important;
+
+        @include media-breakpoint-down(lg) {
+            // Force the horizontal padding to 15px in mobile view, to be
+            // consistent with the normal mode.
+            padding: var(--grid-item-padding-y) calc(0.5 * var(--gutter-x)) !important;
+
+            &.o_grid_item_image {
+                // If the horizontal padding is set to 0px, keep it as 0px in
+                // mobile view, otherwise, force it to 15px.
+                --mobile-grid-item-padding-x: clamp(0px, calc(var(--grid-item-padding-x) * 100000), calc(0.5 * var(--gutter-x)));
+                padding: var(--grid-item-padding-y) var(--mobile-grid-item-padding-x) !important;
+
+                > img {
+                    max-width: 100%;
+                }
+            }
+        }
     }
 }
 
@@ -57,6 +84,16 @@
 
         --gutter-x: 0px;
 
+        // Adapt the horizontal margins of a direct row child of a grid item, to
+        // make them compensate the grid item horizontal padding (to avoid an
+        // overflow).
+        .o_grid_item > .row,
+        .o_grid_item > .o_text_columns > .row {
+            --grid-inner-row-gutter-x: clamp(0px, 2 * var(--grid-item-padding-x), #{$grid-gutter-width});
+            margin-left: calc(-0.5 * var(--grid-inner-row-gutter-x));
+            margin-right: calc(-0.5 * var(--grid-inner-row-gutter-x));
+        }
+
         > * {
             margin: 0 !important;
             width: 100%;
@@ -65,7 +102,7 @@
     }
 
     .container-fluid > .o_grid_mode {
-        --gutter-x: 30px;
+        --gutter-x: #{$grid-gutter-width};
     }
 
     .o_extra_menu_items .o_grid_mode {

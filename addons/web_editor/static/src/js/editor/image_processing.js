@@ -15,6 +15,8 @@ const modifierFields = [
     'originalSrc',
     'resizeWidth',
     'aspectRatio',
+    "bgSrc",
+    "mimetypeBeforeConversion",
 ];
 export const isGif = (mimetype) => mimetype === 'image/gif';
 
@@ -549,31 +551,6 @@ export function isImageSupportedForStyle(img) {
 
     return !isTFieldImg && !isEditableRootElement;
 }
-/**
- * @param {HTMLImageElement} img
- * @returns {Promise<Boolean>}
- */
-export async function isImageCorsProtected(img) {
-    const src = img.getAttribute('src');
-    if (!src) {
-        return false;
-    }
-    let isCorsProtected = false;
-    if (!src.startsWith("/") || /\/web\/image\/\d+-redirect\//.test(src)) {
-        // The `fetch()` used later in the code might fail if the image is
-        // CORS protected. We check upfront if it's the case.
-        // Two possible cases:
-        // 1. the `src` is an absolute URL from another domain.
-        //    For instance, abc.odoo.com vs abc.com which are actually the
-        //    same database behind.
-        // 2. A "attachment-url" which is just a redirect to the real image
-        //    which could be hosted on another website.
-        isCorsProtected = await fetch(src, {method: 'HEAD'})
-            .then(() => false)
-            .catch(() => true);
-    }
-    return isCorsProtected;
-}
 
 /**
  * @param {Blob} blob
@@ -598,7 +575,7 @@ export function getDataURLBinarySize(dataURL) {
     return dataURL.split(',')[1].length / 4 * 3;
 }
 
-export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields, 'aspectRatio'];
+export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields];
 
 export default {
     applyModifications,

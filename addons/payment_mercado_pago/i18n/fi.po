@@ -5,15 +5,15 @@
 # Translators:
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-02-06 13:57+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +25,45 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
 msgid "Access Token"
 msgstr "Pääsytunniste"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"Call your card issuer to activate your card or use another payment method. "
+"The phone number is on the back of your card."
+msgstr ""
+"Soita kortin liikkeeseenlaskijalle aktivoidaksesi korttisi tai käyttääksesi "
+"toista maksutapaa. Puhelinnumero on korttisi kääntöpuolella."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Check expiration date."
+msgstr "Tarkista viimeinen voimassaolopäivä."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Check the card number."
+msgstr "Tarkista kortin numero."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Check the card security code."
+msgstr "Tarkista kortin turvakoodi."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Check the data."
+msgstr "Tarkista tiedot."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__code
@@ -64,6 +103,15 @@ msgstr "Maksupalveluntarjoaja"
 #: model:ir.model,name:payment_mercado_pago.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Maksutapahtuma"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Payment was not processed, use another card or contact issuer."
+msgstr ""
+"Maksua ei käsitelty, käytä toista korttia tai ota yhteyttä kortin "
+"myöntäjään."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -112,6 +160,110 @@ msgstr ""
 " \"%s\" (koodi %s)"
 
 #. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, python-format
+msgid ""
+"The communication with the API failed. The response is empty. Please verify "
+"your access token."
+msgstr ""
+"Yhteys API:n kanssa epäonnistui. Vastaus on tyhjä. Tarkista "
+"käyttöoikeustunnuksesi."
+
+#. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "Tämän maksupalveluntarjoajan tekninen koodi."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "This payment method does not process payments in installments."
+msgstr "Tämä maksutapa ei käsittele maksueriä."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"We are processing your payment. Don't worry, in less than 2 business days, "
+"we will notify you by e-mail if your payment has been credited."
+msgstr ""
+"Käsittelemme maksuasi. Älä huoli, alle 2 arkipäivän kuluessa ilmoitamme "
+"sinulle sähköpostitse, jos maksusi on hyvitetty."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"We are processing your payment. Don't worry, less than 2 business days we "
+"will notify you by e-mail if your payment has been credited or if we need "
+"more information."
+msgstr ""
+"Käsittelemme maksuasi. Älä huoli, alle 2 arkipäivän kuluessa ilmoitamme "
+"sinulle sähköpostitse, jos maksusi on hyvitetty tai jos tarvitsemme "
+"lisätietoja."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"We were unable to process your payment, please check your card information."
+msgstr "Emme pystyneet käsittelemään maksuasi, tarkista korttitietosi."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "We were unable to process your payment, please use another card."
+msgstr "Emme pystyneet käsittelemään maksuasi, käytä toista korttia."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"You have already made a payment for that value. If you need to pay again, "
+"use another card or another payment method."
+msgstr ""
+"Olet jo suorittanut maksun kyseisestä arvosta. Jos haluat maksaa uudelleen, "
+"käytä toista korttia tai toista maksutapaa."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"You have reached the limit of allowed attempts. Choose another card or other"
+" means of payment."
+msgstr ""
+"Olet saavuttanut sallittujen yritysten määrän. Valitse toinen kortti tai muu"
+" maksutapa."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "You must authorize the payment with this card."
+msgstr "Sinun on hyväksyttävä maksu tällä kortilla."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid "Your card has not enough funds."
+msgstr "Kortillasi ei ole tarpeeksi varoja."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+#, python-format
+msgid ""
+"Your payment has been credited. In your summary you will see the charge as a"
+" statement descriptor."
+msgstr ""
+"Maksusi on hyvitetty. Yhteenvedossasi näet veloituksen tiliöintikuvauksena."

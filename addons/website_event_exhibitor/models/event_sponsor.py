@@ -115,7 +115,7 @@ class Sponsor(models.Model):
             elif sponsor.partner_id.image_256:
                 sponsor.website_image_url = self.env['website'].image_url(sponsor.partner_id, 'image_256', size=256)
             else:
-                sponsor.website_image_url = 'website_event_exhibitor/static/src/img/event_sponsor_default_0.jpeg'
+                sponsor.website_image_url = '/website_event_exhibitor/static/src/img/event_sponsor_default.svg'
 
     def _synchronize_with_partner(self, fname):
         """ Synchronize with partner if not set. Setting a value does not write
@@ -223,6 +223,12 @@ class Sponsor(models.Model):
 
     def get_backend_menu_id(self):
         return self.env.ref('event.event_main_menu').id
+
+    def open_website_url(self):
+        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
+        if self.event_id.website_id:
+            return super().open_website_url()
+        return self.env['website'].get_client_action(f'/event/{slug(self.event_id)}/exhibitor/{slug(self)}')
 
     # ------------------------------------------------------------
     # MESSAGING

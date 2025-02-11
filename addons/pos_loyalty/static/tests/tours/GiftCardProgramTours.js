@@ -48,18 +48,18 @@ registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", {
             // Pay the 5$ gift card.
             ProductScreen.clickDisplayedProduct("Gift Card"),
             TextInputPopup.isShown(),
-            TextInputPopup.inputText("044123456"),
+            TextInputPopup.inputText("043123456"),
             TextInputPopup.clickConfirm(),
             PosLoyalty.orderTotalIs("5.00"),
             PosLoyalty.finalizeOrder("Cash", "5"),
             // Partially use the gift card. (4$)
             ProductScreen.addOrderline("Desk Pad", "2", "2", "4.0"),
-            PosLoyalty.enterCode("044123456"),
+            PosLoyalty.enterCode("043123456"),
             PosLoyalty.orderTotalIs("0.00"),
             PosLoyalty.finalizeOrder("Cash", "0"),
             // Use the remaining of the gift card. (5$ - 4$ = 1$)
             ProductScreen.addOrderline("Whiteboard Pen", "6", "6", "36.0"),
-            PosLoyalty.enterCode("044123456"),
+            PosLoyalty.enterCode("043123456"),
             PosLoyalty.orderTotalIs("35.00"),
             PosLoyalty.finalizeOrder("Cash", "35"),
         ].flat(),
@@ -89,5 +89,65 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
             ProductScreen.addOrderline("Gift Card", "1"),
             ProductScreen.selectedOrderlineHas("Gift Card", "1"),
             PosLoyalty.orderTotalIs("0.0"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            TextInputPopup.isShown(),
+            TextInputPopup.inputText("044123456"),
+            TextInputPopup.clickConfirm(),
+            PosLoyalty.orderTotalIs("50.00"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            ProductScreen.addOrderline("product_a", "1"),
+            PosLoyalty.enterCode("044123456"),
+            PosLoyalty.orderTotalIs("50.00"),
+            PosLoyalty.pointsAwardedAre("100"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyGiftCardTaxes", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            TextInputPopup.isShown(),
+            TextInputPopup.inputText("044123456"),
+            TextInputPopup.clickConfirm(),
+            PosLoyalty.orderTotalIs("50.00"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
+            ProductScreen.clickDisplayedProduct("Test Product A"),
+            PosLoyalty.enterCode("044123456"),
+            PosLoyalty.orderTotalIs("50.00"),
+            ProductScreen.checkTaxAmount("-6.52"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyGiftCardNoPoints", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            TextInputPopup.isShown(),
+            TextInputPopup.inputText("044123456"),
+            TextInputPopup.clickConfirm(),
+            PosLoyalty.orderTotalIs("0.00"),
+            ProductScreen.pressNumpad("Price"),
+            ProductScreen.modeIsActive("Price"),
+            ProductScreen.pressNumpad("5"),
+            PosLoyalty.orderTotalIs("5.00"),
+            PosLoyalty.finalizeOrder("Cash", "5"),
         ].flat(),
 });

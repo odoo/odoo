@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -43,7 +43,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
 "Permite que você compartilhe o documento com seus clientes em uma venda.\n"
 "Deixe em branco se não quiser compartilhar o documento com o cliente da venda.\n"
@@ -51,7 +52,7 @@ msgstr ""
 "ex.: esta opção pode ser útil para compartilhar arquivos de descrição de produto.\n"
 "Pedido confirmado: o documento será enviado para e acessível por clientes.\n"
 "ex.: esta opção pode ser útil para compartilhar manuais do usuário ou conteúdo digital comprado por e-commerce.\n"
-"Cotação interna: o documento será incluso no PDF da cotação, entre as páginas de cabeçalho e da tabela de cotação."
+"Cotação interna: o documento será incluso no PDF da cotação e do pedido de vendas, entre as páginas de cabeçalho e da tabela de cotação."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -81,6 +82,17 @@ msgstr "Páginas de cabeçalho"
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
 msgstr "Cotação interna"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"Parece que não foi possível processar esse PDF em uma cotação. Ele está "
+"criptografado ou codificado em um formato não suportado."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -197,3 +209,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
 msgstr "Visível em"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr ""
+"Quando anexado a uma cotação, o documento deve ser um arquivo, não um URL."

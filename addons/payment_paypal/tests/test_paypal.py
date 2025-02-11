@@ -21,7 +21,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         cancel_url = self._build_url(PaypalController._cancel_url)
         cancel_url_params = {
             'tx_ref': self.reference,
-            'access_token': self._generate_test_access_token(self.reference),
+            'return_access_tkn': self._generate_test_access_token(self.reference),
         }
         return {
             'address1': 'Huge Street 2/543',
@@ -38,6 +38,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             'item_number': self.reference,
             'last_name': 'Buyer',
             'lc': 'en_US',
+            'no_shipping': '1',
             'notify_url': self._build_url(PaypalController._webhook_url),
             'return': return_url,
             'rm': '2',

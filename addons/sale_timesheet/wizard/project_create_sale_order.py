@@ -91,7 +91,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
                 raise UserError(_('The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\nMissing employee(s): %s', ', '.join(missing_meployees.mapped('name'))))
 
         # check here if timesheet already linked to SO line
-        timesheet_with_so_line = self.env['account.analytic.line'].search_count([('task_id', 'in', self.project_id.tasks.ids), ('so_line', '!=', False)])
+        timesheet_with_so_line = self.env['account.analytic.line'].search_count([('task_id', 'in', self.project_id.tasks.ids), ('so_line', '!=', False)], limit=1)
         if timesheet_with_so_line:
             raise UserError(_('The sales order cannot be created because some timesheets of this project are already linked to another sales order.'))
 
@@ -124,7 +124,8 @@ class ProjectCreateSalesOrder(models.TransientModel):
         self._make_billable(sale_order)
 
         # confirm SO
-        sale_order.action_confirm()
+        if sale_order.state != 'sale':
+            sale_order.action_confirm()
         return sale_order
 
     def _make_billable(self, sale_order):

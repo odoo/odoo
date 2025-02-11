@@ -2,16 +2,28 @@
 
 import { Component, onWillUpdateProps } from "@odoo/owl";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
-import { getPeriodOptions } from "@web/search/utils/dates";
+import { monthsOptions } from "@spreadsheet/assets_backend/constants";
+import { QUARTER_OPTIONS } from "@web/search/utils/dates";
 
 const { DateTime } = luxon;
 
 export class DateFilterValue extends Component {
+    static template = "spreadsheet_edition.DateFilterValue";
+    static components = { DateTimeInput };
+    static props = {
+        // See @spreadsheet_edition/bundle/global_filters/filters_plugin.RangeType
+        onTimeRangeChanged: Function,
+        yearOffset: { type: Number, optional: true },
+        period: { type: String, optional: true },
+        disabledPeriods: { type: Array, optional: true },
+    };
     setup() {
         this._setStateFromProps(this.props);
-        onWillUpdateProps(this._setStateFromProps);
-        this.dateOptions = this.getDateOptions();
+        this.dateOptions = this.getDateOptions(this.props);
+        onWillUpdateProps((nextProps) => {
+            this._setStateFromProps(nextProps);
+            this.dateOptions = this.getDateOptions(nextProps);
+        });
     }
     _setStateFromProps(props) {
         this.period = props.period;
@@ -32,12 +44,18 @@ export class DateFilterValue extends Component {
      *
      * @returns {Array<Object>}
      */
-    getDateOptions() {
-        const periodOptions = getPeriodOptions(DateTime.local());
-        const quarters = FILTER_DATE_OPTION["quarter"].map((quarterId) =>
-            periodOptions.find((option) => option.id === quarterId)
-        );
-        return quarters.concat(monthsOptions);
+    getDateOptions(props) {
+        const quarterOptions = Object.values(QUARTER_OPTIONS);
+        const disabledPeriods = props.disabledPeriods || [];
+
+        const dateOptions = [];
+        if (!disabledPeriods.includes("quarter")) {
+            dateOptions.push(...quarterOptions);
+        }
+        if (!disabledPeriods.includes("month")) {
+            dateOptions.push(...monthsOptions);
+        }
+        return dateOptions;
     }
 
     isSelected(periodId) {
@@ -65,12 +83,3 @@ export class DateFilterValue extends Component {
         });
     }
 }
-DateFilterValue.template = "spreadsheet_edition.DateFilterValue";
-DateFilterValue.components = { DateTimeInput };
-
-DateFilterValue.props = {
-    // See @spreadsheet_edition/bundle/global_filters/filters_plugin.RangeType
-    onTimeRangeChanged: Function,
-    yearOffset: { type: Number, optional: true },
-    period: { type: String, optional: true },
-};

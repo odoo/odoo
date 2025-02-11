@@ -9,11 +9,9 @@
  * something happens in the DOM.
  */
 
-import { delay } from "@web/core/utils/concurrency";
+import * as minimalDom from '@web/legacy/js/core/minimal_dom';
 
-var dom = {
-    DEBOUNCE: 400,
-
+const dom = Object.assign({}, minimalDom, {
     /**
      * jQuery find function behavior is::
      *
@@ -48,119 +46,6 @@ var dom = {
         }
 
         return $results;
-    },
-    /**
-     * Protects a function which is to be used as a handler by preventing its
-     * execution for the duration of a previous call to it (including async
-     * parts of that call).
-     *
-     * Limitation: as the handler is ignored during async actions,
-     * the 'preventDefault' or 'stopPropagation' calls it may want to do
-     * will be ignored too. Using the 'preventDefault' and 'stopPropagation'
-     * arguments solves that problem.
-     *
-     * @param {function} fct
-     *      The function which is to be used as a handler. If a promise
-     *      is returned, it is used to determine when the handler's action is
-     *      finished. Otherwise, the return is used as jQuery uses it.
-     * @param {function|boolean} preventDefault
-     * @param {function|boolean} stopPropagation
-     */
-    makeAsyncHandler: function (fct, preventDefault, stopPropagation) {
-        var pending = false;
-        function _isLocked() {
-            return pending;
-        }
-        function _lock() {
-            pending = true;
-        }
-        function _unlock() {
-            pending = false;
-        }
-        return function (ev) {
-            if (preventDefault === true || preventDefault && preventDefault()) {
-                ev.preventDefault();
-            }
-            if (stopPropagation === true || stopPropagation && stopPropagation()) {
-                ev.stopPropagation();
-            }
-
-            if (_isLocked()) {
-                // If a previous call to this handler is still pending, ignore
-                // the new call.
-                return;
-            }
-
-            _lock();
-            var result = fct.apply(this, arguments);
-            Promise.resolve(result).finally(_unlock);
-            return result;
-        };
-    },
-    /**
-     * Creates a debounced version of a function to be used as a button click
-     * handler. Also improves the handler to disable the button for the time of
-     * the debounce and/or the time of the async actions it performs.
-     *
-     * Limitation: if two handlers are put on the same button, the button will
-     * become enabled again once any handler's action finishes (multiple click
-     * handlers should however not be binded to the same button).
-     *
-     * @param {function} fct
-     *      The function which is to be used as a button click handler. If a
-     *      promise is returned, it is used to determine when the button can be
-     *      re-enabled. Otherwise, the return is used as jQuery uses it.
-     */
-    makeButtonHandler: function (fct) {
-        // Fallback: if the final handler is not binded to a button, at least
-        // make it an async handler (also handles the case where some events
-        // might ignore the disabled state of the button).
-        fct = dom.makeAsyncHandler(fct);
-
-        return function (ev) {
-            var result = fct.apply(this, arguments);
-
-            var $button = $(ev.target).closest('.btn');
-            if (!$button.length) {
-                return result;
-            }
-
-            // Disable the button for the duration of the handler's action
-            // or at least for the duration of the click debounce. This makes
-            // a 'real' debounce creation useless. Also, during the debouncing
-            // part, the button is disabled without any visual effect.
-            $button.addClass('pe-none');
-            Promise.resolve(dom.DEBOUNCE && delay(dom.DEBOUNCE)).then(function () {
-                $button.removeClass('pe-none');
-                const restore = dom.addButtonLoadingEffect($button[0]);
-                return Promise.resolve(result).finally(restore);
-            });
-
-            return result;
-        };
-    },
-    /**
-     * Gives the button a loading effect by disabling it and adding a `fa`
-     * spinner icon.
-     * The existing button `fa` icons will be hidden through css.
-     *
-     * @param {HTMLElement} btn - the button to disable/load
-     * @return {function} a callback function that will restore the button
-     *         initial state
-     */
-    addButtonLoadingEffect: function (btn) {
-        const $btn = $(btn);
-        $btn.addClass('o_website_btn_loading disabled');
-        $btn.prop('disabled', true);
-        const $loader = $('<span/>', {
-            class: 'fa fa-refresh fa-spin me-2',
-        });
-        $btn.prepend($loader);
-        return () => {
-             $btn.removeClass('o_website_btn_loading disabled');
-             $btn.prop('disabled', false);
-             $loader.remove();
-        };
     },
     /**
      * Renders a button with standard odoo template. This does not use any xml
@@ -283,7 +168,9 @@ var dom = {
                 return $scrollable[0].scrollHeight - $scrollable[0].clientHeight;
             }
 
+            el.classList.add("o_check_scroll_position");
             let offsetTop = $el.offset().top;
+            el.classList.remove("o_check_scroll_position");
             if (el.classList.contains('d-none')) {
                 el.classList.remove('d-none');
                 offsetTop = $el.offset().top;
@@ -340,5 +227,5 @@ var dom = {
             $scrollable.animate({scrollTop: originalScrollTop}, clonedOptions);
         });
     },
-};
+});
 export default dom;

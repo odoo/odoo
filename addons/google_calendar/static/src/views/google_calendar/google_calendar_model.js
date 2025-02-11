@@ -2,6 +2,7 @@
 
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { patch } from "@web/core/utils/patch";
+import { useState } from "@odoo/owl";
 
 patch(AttendeeCalendarModel, {
     services: [...AttendeeCalendarModel.services, "rpc"],
@@ -11,9 +12,12 @@ patch(AttendeeCalendarModel.prototype, {
     setup(params, { rpc }) {
         super.setup(...arguments);
         this.rpc = rpc;
-        this.googleIsSync = true;
+        this.isAlive = params.isAlive;
         this.googlePendingSync = false;
-        this.googleIsPaused = false;
+        this.state = useState({
+            googleIsSync: true,
+            googleIsPaused: false,
+        });
     },
 
     /**
@@ -35,7 +39,10 @@ patch(AttendeeCalendarModel.prototype, {
             console.error("Could not synchronize Google events now.", error);
             this.googlePendingSync = false;
         }
-        return super.updateData(...arguments);
+        if (this.isAlive()) {
+            return super.updateData(...arguments);
+        }
+        return new Promise(() => {});
     },
 
     async syncGoogleCalendar(silent = false) {
@@ -51,11 +58,11 @@ patch(AttendeeCalendarModel.prototype, {
             },
         );
         if (["need_config_from_admin", "need_auth", "sync_stopped", "sync_paused"].includes(result.status)) {
-            this.googleIsSync = false;
+            this.state.googleIsSync = false;
         } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
-            this.googleIsSync = true;
+            this.state.googleIsSync = true;
         }
-        this.googleIsPaused = result.status == "sync_paused";
+        this.state.googleIsPaused = result.status == "sync_paused";
         this.googlePendingSync = false;
         return result;
     },

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.tests import tagged
+from odoo import Command
+
+from lxml import etree
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -68,6 +71,16 @@ class TestUBLNL(TestUBLCommon):
             'amount': 7,
             'type_tax_use': 'purchase',
             'country_id': cls.env.ref('base.nl').id,
+            'sequence': 2,
+        })
+
+        cls.tax_10_fixed = cls.env['account.tax'].create({
+            'name': 'Test Tax',
+            'amount_type': 'fixed',
+            'include_base_amount': True,
+            'country_id': cls.env.ref('base.nl').id,
+            'amount': 10.0,
+            'sequence': 1,
         })
 
     @classmethod
@@ -200,6 +213,24 @@ class TestUBLNL(TestUBLCommon):
         )
         self.assertEqual(attachment.name[-10:], "nlcius.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
+
+    def test_export_fixed_tax(self):
+        """
+        Ensure that an invoice containing a product with a fixed tax posted to a journal with the peppol and nlcius edi
+            tags generates edi documents with accurate LineExtensionAmount values
+        """
+        invoice = self._generate_move(
+            self.partner_1, self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[{
+                'name': 'product costing 50.0',
+                'quantity': 1,
+                'price_unit': 50.0,
+                'tax_ids': [Command.set([self.tax_10_fixed.id, self.tax_7_purchase.id])]
+            }]
+        )
+        amount = etree.fromstring(invoice.ubl_cii_xml_id.raw).find('.//{*}LegalMonetaryTotal/{*}LineExtensionAmount').text
+        self.assertEqual(amount, '60.00')
 
     ####################################################
     # Test import

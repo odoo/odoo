@@ -6,7 +6,7 @@
             <field name="model">slide.channel.invite</field>
             <field name="arch" type="xml">
                 <form string="Compose Email" class="o_mail_composer_form">
-                    <div class="alert alert-warning text-center mb-0" role="alert" invisible="channel_published or not channel_id">
+                    <div class="alert alert-warning text-center" role="alert" invisible="channel_published or not channel_id">
                         This course is not published. Attendees may not be able to access its contents.
                     </div>
                     <sheet>
@@ -24,8 +24,8 @@
                                     widget="many2many_tags_email"
                                     placeholder="Add contacts..."
                                     required="send_email"
-                                    options="{'no_create_edit': True, 'no_quick_create': True}"
-                                    context="{'show_email': True}"/>
+                                    options="{'no_quick_create': True}"
+                                    context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                             </group>
                             <group col="2" invisible="not send_email">
                                 <field name="lang" invisible="1"/>

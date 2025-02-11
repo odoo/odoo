@@ -235,8 +235,8 @@
                                         readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
                                         required="not display_type"
                                         width="35%"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
-                                        force_save="1" domain="[('purchase_ok', '=', True)]"/>
+                                        context="{'partner_id': parent.partner_id, 'quantity': product_qty, 'company_id': parent.company_id, 'use_partner_name': False}"
+                                        force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text"/>
                                     <field name="date_planned" optional="hide" required="not display_type" force_save="1"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
@@ -257,7 +257,7 @@
                                     <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
                                     <field name="price_unit" readonly="qty_invoiced != 0"/>
                                     <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" invisible="not id"/>
-                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
+                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
                                     <field name="discount" string="Disc.%" readonly="qty_invoiced != 0" optional="hide"/>
                                     <field name="price_subtotal" string="Tax excl."/>
                                     <field name="price_total"
@@ -290,6 +290,7 @@
                                                 <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging"/>
                                                 <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                                 <field name="price_unit"/>
+                                                <field name="discount"/>
                                                 <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
                                             </group>
                                             <group>
@@ -322,6 +323,7 @@
                                      <field name="price_tax"/>
                                      <field name="price_total"/>
                                      <field name="price_unit"/>
+                                     <field name="discount"/>
                                      <field name="display_type"/>
                                      <field name="taxes_id"/>
                                      <field name="tax_calculation_rounding_method"/>
@@ -348,7 +350,7 @@
                                                              <span>
                                                                  Quantity:
                                                                  <t t-esc="record.product_qty.value"/>
-                                                                 <t t-esc="record.product_uom.value" groups="uom.group_uom"/>
+                                                                 <small> <t t-esc="record.product_uom.value" groups="uom.group_uom"/></small>
                                                              </span>
                                                          </div>
                                                          <div class="col-4" t-if="record.tax_calculation_rounding_method.raw_value === 'round_per_line'">
@@ -363,8 +365,15 @@
                                                          <div class="col-12 text-muted">
                                                              <span>
                                                                  Unit Price:
-                                                                 <t t-esc="record.price_unit.value"/>
+                                                                 <field name="price_unit"/>
                                                              </span>
+                                                         </div>
+                                                     </div>
+                                                     <div class="row" t-if="record.discount.raw_value">
+                                                         <div class="col-12 text-muted">
+                                                            <span>
+                                                                Discount: <t t-out="record.discount.value"/>%
+                                                            </span>
                                                          </div>
                                                      </div>
                                                  </t>
@@ -451,7 +460,7 @@
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
-                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
+                        <filter string="Buyer" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
                     </group>
                 </search>
@@ -489,7 +498,7 @@
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
-                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
+                        <filter string="Buyer" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
                     </group>
                 </search>

@@ -200,6 +200,17 @@ class AccountMoveLine(models.Model):
                 out_qty_to_invoice = min(remaining_out_qty_to_invoice, invoicing_layer_qty)
                 qty_to_correct = invoicing_layer_qty - out_qty_to_invoice
                 layer_price_unit = layer._get_layer_price_unit()
+
+                returned_move = layer.stock_move_id.origin_returned_move_id
+                if returned_move and returned_move._is_out() and returned_move._is_returned(valued_type='out'):
+                    # Odd case! The user receives a product, then returns it. The returns are processed as classic
+                    # output, so the value of the returned product can be different from the initial one. The user
+                    # then receives again the returned product (that's where we are here) -> the SVL is based on
+                    # the returned one, the accounting entries are already compensated, and we don't want to impact
+                    # the stock valuation. So, let's fake the layer price unit with the POL one as everything is
+                    # already ok
+                    layer_price_unit = po_line._get_gross_price_unit()
+
                 aml = self
 
             aml_gross_price_unit = aml._get_gross_unit_price()
@@ -246,10 +257,6 @@ class AccountMoveLine(models.Model):
                 'currency_id': self.currency_id.id,
                 'product_id': self.product_id.id,
                 'product_uom_id': self.product_uom_id.id,
-                'quantity': qty,
-                'price_unit': price,
-                'price_subtotal': qty * price,
-                'amount_currency': qty * price * sign,
                 'balance': self.company_id.currency_id.round((qty * price * sign) / self.currency_rate),
                 'account_id': account.id,
                 'analytic_distribution': self.analytic_distribution,

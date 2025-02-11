@@ -22,5 +22,5 @@ class ItalyWebsiteSaleForm(WebsiteSale):
         if pa_index:
             if len(pa_index) < 6 or len(pa_index) > 7:
                 error['l10n_it_pa_index'] = 'error'
-                error_message.append(_('PA index must have between 6 and 7 characters'))
+                error_message.append(_('Destination Code (SDI) must have between 6 and 7 characters'))
         return error, error_message

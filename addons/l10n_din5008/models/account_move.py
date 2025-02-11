@@ -45,13 +45,26 @@ class AccountMove(models.Model):
     def _compute_l10n_din5008_addresses(self):
         for record in self:
             record.l10n_din5008_addresses = data = []
-            if record.partner_shipping_id == record.partner_id:
-                data.append((_("Invoicing and Shipping Address:"), record.partner_shipping_id))
-            elif record.move_type in ("in_invoice", "in_refund") or not record.partner_shipping_id:
-                data.append((_("Invoicing and Shipping Address:"), record.partner_id))
-            else:
-                data.append((_("Shipping Address:"), record.partner_shipping_id))
-                data.append((_("Invoicing Address:"), record.partner_id))
+            commercial_partner = record.partner_id.commercial_partner_id
+            delivery_partner = record.partner_shipping_id
+            invoice_partner = record.partner_id
+
+            different_partner_count = len({partner.id for partner in [commercial_partner, delivery_partner, invoice_partner] if partner})
+            # To avoid repetition in the address block.
+            if different_partner_count <= 1:
+                continue
+
+            if delivery_partner and delivery_partner != commercial_partner:
+                data.append((_("Shipping Address:"), delivery_partner))
+            if invoice_partner and invoice_partner != commercial_partner:
+                data.append((
+                    _("Beneficiary:"),
+                    commercial_partner,
+                    # if the invoice address is different from the company address,
+                    # the main address block will be the invoice address, and the
+                    # vat number will only be shown in the beneficiary address block.
+                    {'show_tax_id': True},
+                ))
 
     def check_field_access_rights(self, operation, field_names):
         field_names = super().check_field_access_rights(operation, field_names)

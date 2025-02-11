@@ -3,6 +3,7 @@
 
 from datetime import datetime, time
 import pytz
+import re
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -395,6 +396,15 @@ class RecurrenceRule(models.Model):
         data = {}
         day_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
+        # Skip X-named RRULE extensions
+        # TODO Remove patch when dateutils contains the fix
+        # HACK https://github.com/dateutil/dateutil/pull/1374
+        # Optional parameters starts with X- and they can be placed anywhere in the RRULE string.
+        # RRULE:FREQ=MONTHLY;INTERVAL=3;X-RELATIVE=1
+        # RRULE;X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
+        # X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
+        rule_str = re.sub(r';?X-[-\w]+=[^;:]*', '', rule_str).replace(":;", ":").lstrip(":;")
+
         if 'Z' in rule_str and date_start and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)
         rule = rrule.rrulestr(rule_str, dtstart=date_start)
@@ -529,14 +539,14 @@ class RecurrenceRule(models.Model):
         # Given the following recurrence:
         #   - monthly
         #   - 1st of each month
-        #   - timezone US/Eastern (UTC−05:00)
-        #   - at 6am US/Eastern = 11am UTC
+        #   - timezone America/New_York (UTC−05:00)
+        #   - at 6am America/New_York = 11am UTC
         #   - from 2019/02/01 to 2019/05/01.
         # The naive way would be to store:
         # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 11:00 - 2019/05/01 11:00 (UTC)
         #
-        # But a DST change occurs on 2019/03/10 in US/Eastern timezone. US/Eastern is now UTC−04:00.
-        # From this point in time, 11am (UTC) is actually converted to 7am (US/Eastern) instead of the expected 6am!
+        # But a DST change occurs on 2019/03/10 in America/New_York timezone. America/New_York is now UTC−04:00.
+        # From this point in time, 11am (UTC) is actually converted to 7am (America/New_York) instead of the expected 6am!
         # What should be stored is:
         # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 10:00 - 2019/05/01 10:00 (UTC)
         #                                                  *****              *****

@@ -3,16 +3,16 @@
 # 	* website_sale_picking
 # 
 # Translators:
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,11 +26,13 @@ msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products"
 msgstr ""
+"<i>Đơn hàng của bạn đã được lưu.</i> Vui lòng đến cửa hàng để thanh toán sản"
+" phẩm"
 
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (On site picking)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (Lấy hàng tận nơi)</span>"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_res_config_settings
@@ -45,7 +47,7 @@ msgstr "Chế độ tùy chỉnh"
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Customize Pickup Sites"
-msgstr ""
+msgstr "Cấu hình địa điểm lấy hàng"
 
 #. module: website_sale_picking
 #. odoo-javascript
@@ -61,7 +63,7 @@ msgstr "Nếu bạn cho rằng đây là lỗi, hãy liên hệ quản trị web
 #: code:addons/website_sale_picking/static/src/js/payment_form.js:0
 #, python-format
 msgid "No suitable payment method could be found."
-msgstr ""
+msgstr "Không tìm thấy phương thức thanh toán phù hợp."
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
@@ -71,13 +73,13 @@ msgstr "Tại chỗ "
 #. module: website_sale_picking
 #: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
 msgid "On site picking"
-msgstr ""
+msgstr "Lấy hàng tận nơi"
 
 #. module: website_sale_picking
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
 #: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
 msgid "Pay in Store"
-msgstr ""
+msgstr "Thanh toán tại cửa hàng"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_payment_provider
@@ -89,17 +91,22 @@ msgstr "Nhà cung cấp dịch vụ thanh toán"
 #: model:ir.model.fields,field_description:website_sale_picking.field_website__picking_site_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Picking sites"
-msgstr ""
+msgstr "Địa điểm lấy hàng"
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__delivery_carrier__delivery_type__onsite
 msgid "Pickup in store"
-msgstr ""
+msgstr "Lấy hàng tại cửa hàng"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
 msgid "Provider"
 msgstr "Nhà cung cấp"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_delivery_carrier
@@ -111,7 +118,7 @@ msgstr "Shipping Methods"
 #: code:addons/website_sale_picking/models/delivery_carrier.py:0
 #, python-format
 msgid "The picking site and warehouse must share the same company"
-msgstr ""
+msgstr "Địa điểm lấy hàng và nhà kho phải chung một công ty"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__warehouse_id
@@ -129,6 +136,8 @@ msgstr "Trang web"
 #, python-format
 msgid "You cannot pay onsite if the delivery is not onsite"
 msgstr ""
+"Bạn không thể thanh toán tại cửa hàng nếu phương thức giao hàng không phải "
+"là lấy hàng tận nơi"
 
 #. module: website_sale_picking
 #: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
@@ -148,4 +157,4 @@ msgstr "Thanh toán của bạn đã được xử lý thành công."
 #. module: website_sale_picking
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
 msgid "[On Site Pick] My Shop 1"
-msgstr ""
+msgstr "[Lấy hàng tận nơi] Cửa hàng của tôi 1"

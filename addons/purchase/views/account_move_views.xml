@@ -15,7 +15,7 @@
                         invisible="state != 'draft' or move_type != 'in_invoice'"
                         readonly="state != 'draft'"
                         class="oe_edit_only"
-                        domain="partner_id and [('company_id', '=', company_id), ('partner_id.commercial_partner_id', '=', commercial_partner_id)] or [('company_id', '=', company_id)]"
+                        domain="partner_id and [('partner_id.commercial_partner_id', '=', commercial_partner_id)] or []"
                         placeholder="Select a purchase order or an old bill"
                         context="{'show_total_amount': True}"
                         options="{'no_create': True, 'no_open': True}"/>

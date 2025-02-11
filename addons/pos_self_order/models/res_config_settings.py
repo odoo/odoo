@@ -7,6 +7,7 @@ from io import BytesIO
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import split_every
+from odoo.osv.expression import AND
 from werkzeug.urls import url_unquote
 
 
@@ -66,7 +67,7 @@ class ResConfigSettings(models.TransientModel):
         if self.pos_self_ordering_service_mode == 'counter' and self.pos_self_ordering_mode == 'mobile':
             self.pos_self_ordering_pay_after = "each"
 
-        if self.pos_self_ordering_pay_after == "each" and not self.module_pos_preparation_display:
+        if self.pos_self_ordering_mode not in ['nothing', 'consultation'] and self.pos_self_ordering_pay_after == "each" and not self.module_pos_preparation_display:
             self.module_pos_preparation_display = True
 
     def custom_link_action(self):
@@ -183,3 +184,12 @@ class ResConfigSettings(models.TransientModel):
     def update_access_tokens(self):
         self.ensure_one()
         self.pos_config_id._update_access_token()
+
+    @api.depends('pos_self_ordering_mode')
+    def _compute_pos_pricelist_id(self):
+        super()._compute_pos_pricelist_id()
+        for res_config in self:
+            if res_config.pos_self_ordering_mode == 'kiosk':
+                currency_id = res_config.pos_journal_id.currency_id.id if res_config.pos_journal_id.currency_id else res_config.pos_config_id.company_id.currency_id.id
+                domain = AND([self.env['product.pricelist']._check_company_domain(res_config.pos_config_id.company_id), [('currency_id', '=', currency_id)]])
+                res_config.pos_available_pricelist_ids = self.env['product.pricelist'].search(domain)

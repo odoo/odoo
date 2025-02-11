@@ -19,7 +19,7 @@ class TestPaymentTransaction(RazorpayCommon):
 
     def test_no_item_missing_from_order_request_payload(self):
         """ Test that the request values are conform to the transaction fields. """
-        tx = self._create_transaction('redirect', operation='online_direct', payment_method_id=self.payment_method_id)
+        tx = self._create_transaction('redirect', operation='online_direct')
         request_payload = tx._razorpay_prepare_order_payload(customer_id=self.razorpay_customer_id)
         self.maxDiff = 10000  # Allow comparing large dicts.
         converted_amount = payment_utils.to_minor_currency_units(tx.amount, tx.currency_id)
@@ -78,16 +78,20 @@ class TestPaymentTransaction(RazorpayCommon):
 
     def test_order_request_payload_for_tokenize_tx(self):
         """ Test that order payload for tokenize tx is proper. """
-        tx = self._create_transaction('redirect', operation='online_direct', tokenize=True, payment_method_id=self.payment_method_id)
-        self.assertDictEqual(tx._get_specific_rendering_values(None), {}, "Should return empty dict of rendering values for tokenize transaction")
+        tx = self._create_transaction('redirect', operation='online_direct', tokenize=True)
+        self.assertDictEqual(
+            tx._get_specific_rendering_values(None),
+            {},
+            msg="Should return empty dict of rendering values for tokenize transaction",
+        )
 
         request_payload = tx._razorpay_prepare_order_payload(customer_id=self.razorpay_customer_id)
         converted_amount = payment_utils.to_minor_currency_units(tx.amount, tx.currency_id)
         token_expiry_date = datetime.today() + relativedelta(years=10)
-        token_expiry_timeslamp = time.mktime(token_expiry_date.timetuple())
+        token_expiry_timestamp = time.mktime(token_expiry_date.timetuple())
         self.assertDictEqual(request_payload, {
             'token': {
-                "expire_at": token_expiry_timeslamp,
+                "expire_at": token_expiry_timestamp,
                 "frequency": "as_presented",
                 'max_amount': 100000000,
             },
@@ -95,24 +99,47 @@ class TestPaymentTransaction(RazorpayCommon):
             'currency': tx.currency_id.name,
             'customer_id': self.razorpay_customer_id,
             'method': 'card',
-
         })
 
     def test_processing_notification_data_confirms_tokenize_transaction(self):
         """ Test that the transaction state is set to 'done' when the notification data indicate a
         successful payment. """
-        tx = self._create_transaction('redirect', tokenize=True, payment_method_id=self.payment_method_id)
+        tx = self._create_transaction('redirect', tokenize=True)
         tx._process_notification_data(self.tokenize_payment_data)
         self.assertEqual(tx.state, 'done')
 
+    def test_processing_notification_data_only_tokenizes_once(self):
+        """ Test that only one token is created when notification data of a given transaction are
+        processed multiple times. """
+        tx1 = self._create_transaction('redirect', reference='tx1', tokenize=True)
+        tx1._process_notification_data(self.tokenize_payment_data)
+        with patch(
+            'odoo.addons.payment_razorpay.models.payment_transaction.PaymentTransaction'
+            '._razorpay_tokenize_from_notification_data'
+        ) as tokenize_mock:
+            # Create the second transaction with the first transaction's token.
+            tx2 = self._create_transaction('token', reference='tx2', token_id=tx1.token_id.id)
+            tx2._process_notification_data(self.tokenize_payment_data)
+            self.assertEqual(
+                tokenize_mock.call_count,
+                0,
+                msg="No new token should be created for transactions already linked to a token.",
+            )
+
     def test_token_creation_for_tokenize_transaction(self):
-        """ Test that the token is create on confirmation of tokenize transaction """
-        tx = self._create_transaction('redirect', tokenize=True, payment_method_id=self.payment_method_id)
+        """ Test that the token is created on confirmation of transactions to tokenize. """
+        tx = self._create_transaction(
+            'redirect', tokenize=True, payment_method_id=self.payment_method_id
+        )
         tx._process_notification_data(self.tokenize_payment_data)
         token = tx.token_id
-        self.assertTrue(token, "Should create token for tokenize transction")
-        self.assertFalse(tx.tokenize, "Trasection should be non tokenize after token creation")
+        self.assertTrue(token, msg="A token should be created for transactions to tokenize.")
+        self.assertFalse(
+            tx.tokenize,
+            msg="The transaction should no longer require tokenization after the token creation.",
+        )
         self.assertEqual(
-            token.provider_ref, f"{self.tokenize_payment_data['customer_id']},{self.tokenize_payment_data['token_id']}",
-            "Should set proper values for provider_ref to get customer_id and token_id from that field"
+            token.provider_ref,
+            f'{self.tokenize_payment_data["customer_id"]},{self.tokenize_payment_data["token_id"]}',
+            msg="The provider_ref is wrongly computed.",
         )

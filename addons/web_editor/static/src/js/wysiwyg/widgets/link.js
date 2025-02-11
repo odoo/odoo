@@ -48,6 +48,9 @@ export class Link extends Component {
     ];
     setup() {
         this.state = useState({});
+        // We need to wait for the `onMounted` changes to be done before
+        // accessing `this.$el`.
+        this.mountedPromise = new Promise(resolve => this.mountedResolve = resolve);
 
         onWillStart(() => this._updateState(this.props));
         let started = false;
@@ -82,8 +85,10 @@ export class Link extends Component {
             this.$el.find('[name="url"]').on('change', this._onURLInputChange.bind(this));
 
             await this.start();
+            this.mountedResolve();
         });
-        onWillUpdateProps((newProps) => {
+        onWillUpdateProps(async (newProps) => {
+            await this.mountedPromise;
             this._updateState(newProps);
             this.state.url = newProps.link.getAttribute('href') || '';
             this._setUrl({ shouldFocus: newProps.shouldFocusUrl });
@@ -182,7 +187,7 @@ export class Link extends Component {
      * Focuses the url input.
      */
     focusUrl() {
-        const urlInput = this.linkComponentWrapperRef.el.querySelector('input[name="url"]');
+        const urlInput = this.$el[0].querySelector('input[name="url"]');
         urlInput.focus();
         urlInput.select();
     }
@@ -240,11 +245,16 @@ export class Link extends Component {
      * @private
      */
     _correctLink(url) {
-        if (url.indexOf('tel:') === 0) {
-            url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
-        } else if (url && !url.startsWith('mailto:') && url.indexOf('://') === -1
-                    && url[0] !== '/' && url[0] !== '#' && url.slice(0, 2) !== '${') {
-            url = 'http://' + url;
+        if (
+            url &&
+            !url.startsWith("tel:") &&
+            !url.startsWith("mailto:") &&
+            !url.includes("://") &&
+            !url.startsWith("/") &&
+            !url.startsWith("#") &&
+            !url.startsWith("${")
+        ) {
+            url = "http://" + url;
         }
         return url;
     }
@@ -301,9 +311,12 @@ export class Link extends Component {
         var doStripDomain = this._doStripDomain();
         if (this.state.url.indexOf(location.origin) === 0 && doStripDomain) {
             this.state.url = this.state.url.slice(location.origin.length);
+        } else if (url.indexOf(location.origin) === 0 && !doStripDomain) {
+            this.state.url = url;
         }
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
+        const isImage = this.props.link && this.props.link.querySelector('img');
         return {
             content: content,
             url: this._correctLink(this.state.url),
@@ -316,6 +329,7 @@ export class Link extends Component {
             oldAttributes: this.state.oldAttributes,
             isNewWindow: isNewWindow,
             doStripDomain: doStripDomain,
+            isImage,
         };
     }
     /**
@@ -466,17 +480,21 @@ export class Link extends Component {
      */
     _updateLinkContent($link, linkInfos, { force = false } = {}) {
         if (force || (this.props.needLabel && (linkInfos.content !== this.state.originalText || linkInfos.url !== this.state.url))) {
-            if (linkInfos.content === this.state.originalText) {
-                $link.html(this.state.originalHTML);
+            if (linkInfos.content === this.state.originalText || linkInfos.isImage) {
+                $link.html(this.state.originalHTML.replaceAll('\u200B', '').replaceAll('\uFEFF', ''));
             } else if (linkInfos.content && linkInfos.content.length) {
                 let contentWrapperEl = $link[0];
-                // Update the first child element that has the same inner text
+                const text = $link[0].innerText.replaceAll("\u200B", "").replaceAll("\uFEFF", "").trim();
+                // Update the first not ZWS child element that has the same inner text
                 // as the link with the new content while preserving child
                 // elements within the link. (e.g. the link is bold and italic)
-                while (contentWrapperEl.firstElementChild
-                    && (contentWrapperEl.firstElementChild.innerText === $link[0].innerText)) {
-                    contentWrapperEl = contentWrapperEl.firstElementChild;
-                }
+                let child;
+                do {
+                    contentWrapperEl = child || contentWrapperEl;
+                    child = [...contentWrapperEl.children].find(
+                        (element) => !element.hasAttribute("data-o-link-zws")
+                    );
+                } while (child?.innerText.replaceAll('\u200B', '').replaceAll('\uFEFF', '').trim() === text);
                 contentWrapperEl.innerText = linkInfos.content;
             } else {
                 $link.text(linkInfos.url);

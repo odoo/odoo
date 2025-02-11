@@ -1,6 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from urllib.parse import urlparse
-
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
@@ -32,20 +30,20 @@ class TestWebsiteLinksRussian(HttpCase):
         res = self.url_open(f'/r/{self.link.code}', allow_redirects=False)
         res.raise_for_status()
         self.assertEqual(res.status_code, 301, "Should be link-tracking redirection")
-        self.assertEqual(res.headers.get('Location'), self.link.url,
+        self.assertURLEqual(res.headers.get('Location'), self.link.url,
             "Should not be redirected to /ru")
 
     def test1_russian_link_tracker(self):
         res = self.url_open(f'/r/r/{self.link.code}', allow_redirects=False)
         res.raise_for_status()
         self.assertEqual(res.status_code, 301, "Should be a lang alias redirection")
-        self.assertEqual(urlparse(res.headers.get('Location'), '').path, f'/ru/r/{self.link.code}',
+        self.assertURLEqual(res.headers.get('Location'), f'/ru/r/{self.link.code}',
             "Should be redirected to /ru as r is an alias for ru (russian)")
 
         res = self.url_open(res.headers['Location'], allow_redirects=False)
         res.raise_for_status()
         self.assertEqual(res.status_code, 301, "Should be a link-tracking redirection")
-        self.assertEqual(res.headers.get('Location'), self.link.url,
+        self.assertURLEqual(res.headers.get('Location'), self.link.url,
             "Should not be redirected to /ru")
 
     def test2_russian_page(self):

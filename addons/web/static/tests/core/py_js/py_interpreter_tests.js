@@ -312,9 +312,9 @@ QUnit.module("py", {}, () => {
 
         QUnit.module("callables");
 
-        QUnit.test("should call function from context", (assert) => {
-            assert.strictEqual(evaluateExpr("foo()", { foo: () => 3 }), 3);
-            assert.strictEqual(evaluateExpr("1 + foo()", { foo: () => 3 }), 4);
+        QUnit.test("should not call function from context", (assert) => {
+            assert.throws(() => evaluateExpr("foo()", { foo: () => 3 }));
+            assert.throws(() => evaluateExpr("1 + foo()", { foo: () => 3 }));
         });
 
         QUnit.module("dicts");
@@ -359,8 +359,8 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr("obj.a.b.c", { obj: { a: { b: { c: 321 } } } }), 321);
         });
 
-        QUnit.test("can call function in object", (assert) => {
-            assert.strictEqual(evaluateExpr("obj.f(3)", { obj: { f: (n) => n + 1 } }), 4);
+        QUnit.test("cannot call function in object", (assert) => {
+            assert.throws(() => evaluateExpr("obj.f(3)", { obj: { f: (n) => n + 1 } }));
         });
 
         QUnit.module("if expressions");

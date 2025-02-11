@@ -681,7 +681,7 @@
 
     <!-- Grid mode columns -->
     <div data-js="GridColumns"
-         data-selector=".row > div">
+         data-selector=".row:not(.s_col_no_resize) > div">
         <we-row string="Padding (Y, X)">
             <we-input data-select-style="" data-css-property="--grid-item-padding-y" data-unit="px" data-name="grid_padding_y_opt"/>
             <we-input data-select-style="" data-css-property="--grid-item-padding-x" data-unit="px" data-name="grid_padding_x_opt"/>
@@ -1097,13 +1097,13 @@
     <div data-selector="#wrapwrap > header nav.navbar .o_header_language_selector"
          data-no-check="true"
          groups="website.group_website_designer">
-        <we-select string="Language Selector" data-reload="/">
+        <we-select string="Style" data-reload="/">
             <we-button data-name="header_language_selector_none_opt"
                        data-customize-website-views="">None</we-button>
             <we-button data-customize-website-views="website.header_language_selector">Dropdown</we-button>
             <we-button data-customize-website-views="website.header_language_selector, website.header_language_selector_inline">Inline</we-button>
         </we-select>
-        <we-select string="Label" class="o_we_sublevel_1" data-dependencies="!header_language_selector_none_opt" data-reload="/">
+        <we-select string="Label" class="o_we_sublevel_1" data-dependencies="!header_language_selector_none_opt" data-reload="/" data-no-preview="true">
             <we-button data-customize-website-views="">Text</we-button>
             <we-button data-customize-website-views="website.header_language_selector_flag, website.header_language_selector_no_text">Flag</we-button>
             <we-button data-customize-website-views="website.header_language_selector_flag">Flag and Text</we-button>
@@ -1262,13 +1262,13 @@
                         data-null-value="'NULL'"
                         data-with-combinations="customizeWebsiteColor"
                         data-with-gradients="true"/>
-        <we-select data-name="footer_language_selector_opt" string="Language Selector" data-reload="/">
+        <we-select data-name="footer_language_selector_opt" string="Language Selector" data-reload="/" data-no-preview="true">
             <we-button data-name="language_selector_none_opt"
                        data-customize-website-views="">None</we-button>
             <we-button data-customize-website-views="portal.footer_language_selector">Dropdown</we-button>
             <we-button data-customize-website-views="portal.footer_language_selector, website.footer_language_selector_inline">Inline</we-button>
         </we-select>
-        <we-select data-name="footer_language_selector_label_opt" string="Label" class="o_we_sublevel_1" data-dependencies="!language_selector_none_opt" data-reload="/">
+        <we-select data-name="footer_language_selector_label_opt" string="Label" class="o_we_sublevel_1" data-dependencies="!language_selector_none_opt" data-reload="/" data-no-preview="true">
             <we-button data-customize-website-views="">Text</we-button>
             <we-button data-customize-website-views="website.footer_language_selector_flag, website.footer_language_selector_no_text">Flag</we-button>
             <we-button data-customize-website-views="website.footer_language_selector_flag">Flag and Text</we-button>

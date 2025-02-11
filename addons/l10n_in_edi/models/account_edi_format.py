@@ -31,6 +31,13 @@ class AccountEdiFormat(models.Model):
             return False
         return super()._is_enabled_by_default_on_journal(journal)
 
+    def _is_compatible_with_journal(self, journal):
+        # OVERRIDE
+        self.ensure_one()
+        if self.code != 'in_einvoice_1_03':
+            return super()._is_compatible_with_journal(journal)
+        return journal.country_code == 'IN' and journal.type == 'sale'
+
     def _get_l10n_in_base_tags(self):
         return (
            self.env.ref('l10n_in.tax_tag_base_sgst').ids
@@ -43,13 +50,28 @@ class AccountEdiFormat(models.Model):
            + self.env.ref("l10n_in.tax_tag_non_gst_supplies").ids
         )
 
+    def _get_l10n_in_gst_tags(self):
+        return (
+           self.env.ref('l10n_in.tax_tag_base_sgst')
+           + self.env.ref('l10n_in.tax_tag_base_cgst')
+           + self.env.ref('l10n_in.tax_tag_base_igst')
+           + self.env.ref('l10n_in.tax_tag_base_cess')
+           + self.env.ref('l10n_in.tax_tag_zero_rated')
+        ).ids
+
+    def _get_l10n_in_non_taxable_tags(self):
+        return (
+           self.env.ref("l10n_in.tax_tag_exempt")
+           + self.env.ref("l10n_in.tax_tag_nil_rated")
+           + self.env.ref("l10n_in.tax_tag_non_gst_supplies")
+        ).ids
+
     def _get_move_applicability(self, move):
         # EXTENDS account_edi
         self.ensure_one()
         if self.code != 'in_einvoice_1_03':
             return super()._get_move_applicability(move)
-        all_base_tags = self._get_l10n_in_base_tags()
-        is_under_gst = any(move_line_tag.id in all_base_tags for move_line_tag in move.line_ids.tax_tag_ids)
+        is_under_gst = any(move_line_tag.id in self._get_l10n_in_gst_tags() for move_line_tag in move.line_ids.tax_tag_ids)
         if move.is_sale_document(include_receipts=True) and move.country_code == 'IN' and is_under_gst and move.l10n_in_gst_treatment in (
             "regular",
             "composition",
@@ -88,7 +110,7 @@ class AccountEdiFormat(models.Model):
         error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
-        all_base_tags = self._get_l10n_in_base_tags()
+        all_base_tags = self._get_l10n_in_gst_tags() + self._get_l10n_in_non_taxable_tags()
         for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding') and not self._l10n_in_is_global_discount(line)):
             if line.price_subtotal < 0:
                 # Line having a negative amount is not allowed.
@@ -246,7 +268,7 @@ class AccountEdiFormat(models.Model):
             message.append(_("- Street2 should be min 3 and max 100 characters"))
         if not re.match("^.{3,100}$", partner.city or ""):
             message.append(_("- City required min 3 and max 100 characters"))
-        if not re.match("^.{3,50}$", partner.state_id.name or ""):
+        if partner.country_id.code == "IN" and not re.match("^.{3,50}$", partner.state_id.name or ""):
             message.append(_("- State required min 3 and max 50 characters"))
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
             message.append(_("- Zip code required 6 digits"))
@@ -491,7 +513,7 @@ class AccountEdiFormat(models.Model):
                 "TaxSch": "GST",
                 "SupTyp": self._l10n_in_get_supply_type(invoice, tax_details_by_code),
                 "RegRev": tax_details_by_code.get("is_reverse_charge") and "Y" or "N",
-                "IgstOnIntra": is_intra_state and tax_details_by_code.get("igst") and "Y" or "N"},
+                "IgstOnIntra": is_intra_state and tax_details_by_code.get("igst_amount") and "Y" or "N"},
             "DocDtls": {
                 "Typ": invoice.move_type == "out_refund" and "CRN" or "INV",
                 "No": invoice.name,
@@ -540,7 +562,7 @@ class AccountEdiFormat(models.Model):
         if is_overseas:
             json_payload.update({
                 "ExpDtls": {
-                    "RefClm": tax_details_by_code.get("igst") and "Y" or "N",
+                    "RefClm": tax_details_by_code.get("igst_amount") and "Y" or "N",
                     "ForCur": invoice.currency_id.name,
                     "CntCode": saler_buyer.get("buyer_details").country_id.code or "",
                 }
@@ -583,6 +605,9 @@ class AccountEdiFormat(models.Model):
                     for gst in ["cgst", "sgst", "igst"]:
                         if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_%s"%(gst))):
                             line_code = gst
+                        # need to separate rc tax value so it's not pass to other values
+                        if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_%s_rc" % (gst))):
+                            line_code = gst + '_rc'
             return {
                 "tax": tax,
                 "base_product_id": invl.product_id,

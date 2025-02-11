@@ -2,6 +2,7 @@
 
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { patch } from "@web/core/utils/patch";
+import { useState } from "@odoo/owl";
 
 patch(AttendeeCalendarModel, {
     services: [...AttendeeCalendarModel.services, "rpc"],
@@ -11,9 +12,12 @@ patch(AttendeeCalendarModel.prototype, {
     setup(params, { rpc }) {
         super.setup(...arguments);
         this.rpc = rpc;
-        this.microsoftIsSync = true;
+        this.isAlive = params.isAlive;
         this.microsoftPendingSync = false;
-        this.microsoftIsPaused = false;
+        this.state = useState({
+            microsoftIsSync: true,
+            microsoftIsPaused: false,
+        })
     },
 
     /**
@@ -35,7 +39,10 @@ patch(AttendeeCalendarModel.prototype, {
             console.error("Could not synchronize microsoft events now.", error);
             this.microsoftPendingSync = false;
         }
-        return super.updateData(...arguments);
+        if (this.isAlive()) {
+            return super.updateData(...arguments);
+        }
+        return new Promise(() => {});
     },
 
     async syncMicrosoftCalendar(silent = false) {
@@ -51,11 +58,11 @@ patch(AttendeeCalendarModel.prototype, {
             },
         );
         if (["need_config_from_admin", "need_auth", "sync_stopped", "sync_paused"].includes(result.status)) {
-            this.microsoftIsSync = false;
+            this.state.microsoftIsSync = false;
         } else if (result.status === "no_new_event_from_microsoft" || result.status === "need_refresh") {
-            this.microsoftIsSync = true;
+            this.state.microsoftIsSync = true;
         }
-        this.microsoftIsPaused = result.status == "sync_paused";
+        this.state.microsoftIsPaused = result.status == "sync_paused";
         this.microsoftPendingSync = false;
         return result;
     },

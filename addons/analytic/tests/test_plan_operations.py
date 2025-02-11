@@ -67,3 +67,34 @@ class TestAnalyticPlanOperations(TransactionCase):
         test_account.unlink()
         plan.unlink()
         distribution_model._validate_distribution()
+
+    def test_validate_company_plans(self):
+        company_2 = self.env['res.company'].create({
+            'name': 'company_2',
+        })
+        plan = self.env['account.analytic.plan'].create([{
+            'name': 'Plan',
+            'default_applicability': 'optional',
+        }])
+        applicability = self.env['account.analytic.applicability'].create({
+            'business_domain': 'general',
+            'analytic_plan_id': plan.id,
+            'applicability': 'mandatory',
+            'company_id': company_2.id,
+        })
+        self.env['account.analytic.account'].create([{
+            'name': 'Mandatory Account',
+            'code': 'manda',
+            'plan_id': plan.id,
+        }])
+        distribution_model = self.env['account.analytic.distribution.model'].create({}).with_context(validate_analytic=True)
+
+        # mandatory applicability is only in company_2, should not raise for company_1
+        distribution_model._validate_distribution(business_domain='general', company_id=self.env.company.id)
+
+        applicability.company_id = False
+        # It should apply for all companies now
+        with self.assertRaisesRegex(UserError, r'require a 100% analytic distribution'):
+            distribution_model._validate_distribution(business_domain='general', company_id=self.env.company.id)
+        with self.assertRaisesRegex(UserError, r'require a 100% analytic distribution'):
+            distribution_model._validate_distribution(business_domain='general')

@@ -8,9 +8,18 @@ export class ProductCatalogOrderLine extends Component {
         productId: Number,
         quantity: Number,
         price: Number,
+        productType: String,
         readOnly: { type: Boolean, optional: true },
         warning: { type: String, optional: true},
     };
+
+    /**
+     * Focus input text when clicked
+     * @param {Event} ev 
+     */
+    _onFocus(ev) {
+        ev.target.select();
+    }
 
     //--------------------------------------------------------------------------
     // Private

@@ -236,6 +236,11 @@ export class Record extends DataPoint {
         return this._setInvalidField(fieldName);
     }
 
+    resetFieldValidity(fieldName) {
+        this.dirty = true;
+        this._invalidFields.delete(fieldName);
+    }
+
     switchMode(mode) {
         return this.model.mutex.exec(() => this._switchMode(mode));
     }
@@ -597,6 +602,9 @@ export class Record extends DataPoint {
             }
             if (field.type === "one2many" || field.type === "many2many") {
                 const commands = value._getCommands({ withReadonly });
+                if (!this.isNew && !commands.length && !withReadonly) {
+                    continue;
+                }
                 result[fieldName] = commands;
             } else {
                 result[fieldName] = this._formatServerValue(field.type, value);
@@ -678,14 +686,6 @@ export class Record extends DataPoint {
     _processProperties(properties, fieldName, parent, currentValues = {}) {
         const data = {};
 
-        const relatedPropertyField = {
-            fieldName,
-        };
-        if (parent) {
-            relatedPropertyField.id = parent[0];
-            relatedPropertyField.displayName = parent[1];
-        }
-
         const hasCurrentValues = Object.keys(currentValues).length > 0;
         for (const property of properties) {
             const propertyFieldName = `${fieldName}.${property.name}`;
@@ -695,13 +695,23 @@ export class Record extends DataPoint {
                 this.fields[propertyFieldName] = {
                     ...property,
                     name: propertyFieldName,
-                    relatedPropertyField,
+                    relatedPropertyField: {
+                        name: fieldName,
+                    },
                     propertyName: property.name,
                     relation: property.comodel,
                 };
             }
             if (hasCurrentValues || !this.activeFields[propertyFieldName]) {
                 this.activeFields[propertyFieldName] = createPropertyActiveField(property);
+            }
+
+            if (!this.activeFields[propertyFieldName].relatedPropertyField) {
+                this.activeFields[propertyFieldName].relatedPropertyField = {
+                    name: fieldName,
+                    id: parent?.id,
+                    displayName: parent?.display_name,
+                };
             }
 
             // Extract property data
@@ -754,8 +764,10 @@ export class Record extends DataPoint {
                         });
                     }
                     staticList = this._createStaticListDatapoint(data, fieldName);
-                }
-                if (valueIsCommandList) {
+                    if (valueIsCommandList) {
+                        staticList._applyInitialCommands(value);
+                    }
+                } else if (valueIsCommandList) {
                     staticList._applyCommands(value);
                 }
                 parsedValues[fieldName] = staticList;
@@ -1004,7 +1016,10 @@ export class Record extends DataPoint {
             const data = { jsonrpc: "2.0", method: "call", params };
             const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
             const succeeded = navigator.sendBeacon(route, blob);
-            if (!succeeded) {
+            if (succeeded) {
+                this._changes = markRaw({});
+                this.dirty = false;
+            } else {
                 this.model._closeUrgentSaveNotification = this.model.notification.add(
                     markup(
                         _t(
@@ -1171,7 +1186,11 @@ export class Record extends DataPoint {
             { withReadonly: true }
         );
         if (this.config.relationField) {
-            localChanges[this.config.relationField] = this._parentRecord._getChanges();
+            const parentRecord = this._parentRecord;
+            localChanges[this.config.relationField] = parentRecord._getChanges(
+                parentRecord._changes,
+                { withReadonly: true }
+            );
             if (!this._parentRecord.isNew) {
                 localChanges[this.config.relationField].id = this._parentRecord.resId;
             }

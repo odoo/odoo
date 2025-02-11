@@ -9,20 +9,26 @@
 # Hanna Kheradroosta, 2023
 # Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
 # F Hariri <fhari1234@gmail.com>, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: F Hariri <fhari1234@gmail.com>, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+msgid "<span class=\"o_stat_text\">Org Chart</span>"
+msgstr "<span class=\"o_stat_text\">نمودار سازمانی</span>"
 
 #. module: hr_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
@@ -39,14 +45,14 @@ msgstr "کارمند پایه"
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__department_color
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
 msgid "Department Color"
-msgstr ""
+msgstr "رنگ بخش"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
 msgid "Direct Subordinates Count"
-msgstr ""
+msgstr "تعداد زیردستان مستقیم"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
@@ -97,7 +103,7 @@ msgstr "زیردستان غیر مستقیم"
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
 msgid "Is Subordinate"
-msgstr ""
+msgstr "است زیردست"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -124,9 +130,8 @@ msgstr "عملیات پشتیبانی نمی شود"
 #. module: hr_org_chart
 #: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
 #: model:ir.ui.menu,name:hr_org_chart.menu_hr_employee_org_chart
-#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
 msgid "Org Chart"
-msgstr ""
+msgstr "نمودار سازمانی"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
@@ -191,3 +196,10 @@ msgid ""
 msgstr ""
 "تنها با یک نگاه سریع بر روی صفحه نمایش کارمند Odoo، شما به راحتی می‌توانید تمام اطلاعات مورد نیاز خود را برای هر فرد پیدا کنید؛\n"
 "         اطلاعات مخاطب موقعیت شغلی، در دسترس بودن و غیره."
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+#, python-format
+msgid "people"
+msgstr "افراد"

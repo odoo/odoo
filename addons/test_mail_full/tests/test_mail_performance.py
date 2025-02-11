@@ -91,7 +91,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         record_ticket = self.env['mail.test.ticket.mc'].browse(self.record_ticket.ids)
         attachments = self.env['ir.attachment'].create(self.test_attachments_vals)
 
-        with self.assertQueryCount(employee=99):  # test_mail_full: 95
+        with self.assertQueryCount(employee=99):  # test_mail_full: 98
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
@@ -272,7 +272,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                 ]
             )
             self.assertEqual(format_res['author_id'], (record.customer_id.id, record.customer_id.display_name))
-            self.assertEqual(format_res['author_avatar_url'], f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50')
+            self.assertEqual(format_res['author_avatar_url'], f'/web/image/mail.message/{message.id}/author_avatar/50x50')
             self.assertEqual(format_res['date'], datetime(2023, 5, 15, 10, 30, 5))
             self.assertEqual(format_res['published_date_str'], 'May 15, 2023, 10:30:05 AM')
             self.assertEqual(format_res['id'], message.id)

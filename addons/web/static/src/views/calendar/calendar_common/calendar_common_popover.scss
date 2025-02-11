@@ -42,6 +42,10 @@ $o-cw-popup-avatar-size: 16px;
         border: none;
     }
 
+    .o_cw_popover_field .o_field_widget {
+        @include o-text-overflow(block);
+    }
+
     .o_cw_popover_fields_secondary {
         max-height: 170px; // Fallback for old browsers
         max-height: 25vh;

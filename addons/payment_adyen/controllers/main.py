@@ -128,8 +128,11 @@ class AdyenController(http.Controller):
             data.update(captureDelayHours=0)
 
         # Make the payment request to Adyen
+        idempotency_key = payment_utils.generate_idempotency_key(
+            tx_sudo, scope='payment_request_controller'
+        )
         response_content = provider_sudo._adyen_make_request(
-            endpoint='/payments', payload=data, method='POST'
+            endpoint='/payments', payload=data, method='POST', idempotency_key=idempotency_key
         )
 
         # Handle the payment request response

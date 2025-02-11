@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 
 
 class AccountMove(models.Model):
@@ -38,19 +39,6 @@ class AccountMove(models.Model):
             self.env.registry.clear_cache()
         return res
 
-    def _need_ubl_cii_xml(self):
-        self.ensure_one()
-
-        res = super()._need_ubl_cii_xml()
-        partner = self.partner_id.commercial_partner_id
-        if partner.ubl_cii_format in {False, 'facturx', 'oioubl_201'} or self.company_id.account_peppol_proxy_state != 'active':
-            return res
-        if not partner.peppol_eas or not partner.peppol_endpoint:
-            return False
-        if partner.account_peppol_verification_label == 'not_verified':
-            partner.button_account_peppol_check_partner_endpoint()
-        return res and partner.account_peppol_is_endpoint_valid
-
     def action_cancel_peppol_documents(self):
         # if the peppol_move_state is processing/done
         # then it means it has been already sent to peppol proxy and we can't cancel
@@ -69,11 +57,28 @@ class AccountMove(models.Model):
         for move in self:
             if all([
                 move.company_id.account_peppol_proxy_state == 'active',
-                move.partner_id.account_peppol_is_endpoint_valid,
+                move.commercial_partner_id.account_peppol_is_endpoint_valid,
                 move.state == 'posted',
                 move.move_type in ('out_invoice', 'out_refund', 'out_receipt'),
                 not move.peppol_move_state,
             ]):
                 move.peppol_move_state = 'ready'
+            elif (
+                move.state == 'draft'
+                and move.is_sale_document(include_receipts=True)
+                and move.peppol_move_state not in ('processing', 'done')
+            ):
+                move.peppol_move_state = False
             else:
                 move.peppol_move_state = move.peppol_move_state
+
+    def _notify_by_email_prepare_rendering_context(self, message, **kwargs):
+        render_context = super()._notify_by_email_prepare_rendering_context(message, **kwargs)
+        invoice = render_context['record']
+        invoice_country = invoice.commercial_partner_id.country_code
+        if invoice_country in PEPPOL_DEFAULT_COUNTRIES:
+            render_context['peppol_info'] = {
+                'peppol_country': invoice_country,
+                'is_peppol_sent': invoice.peppol_move_state in ('processing', 'done'),
+            }
+        return render_context

@@ -8,7 +8,7 @@ import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
 import options from "@web_editor/js/editor/snippets.options";
 import { TABLE_ATTRIBUTES, TABLE_STYLES } from '@web_editor/js/backend/convert_inline';
 
-const COLOR_PICKER_TEMPLATE = `
+export const COLOR_PICKER_TEMPLATE = `
     <colorpicker>
         <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
             <button data-color="o-color-1"/>

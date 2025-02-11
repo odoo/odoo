@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from collections import defaultdict
 from datetime import timedelta, datetime, date
 import calendar
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api, _, Command
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
+from odoo.tools import date_utils
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
@@ -26,11 +28,19 @@ MONTH_SELECTION = [
     ('12', 'December'),
 ]
 
-PEPPOL_LIST = [
-    'AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
-    'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'ME',
-    'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'SE', 'SI', 'SK', 'SM', 'TR', 'VA',
+# List of countries where Peppol should be used by default.
+PEPPOL_DEFAULT_COUNTRIES = [
+    'AT', 'BE', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
+    'FR', 'GR', 'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL',
+    'NO', 'PL', 'PT', 'RO', 'SE', 'SI',
 ]
+
+# List of countries where Peppol is accessible.
+PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
+    'AD', 'AL',  'BA', 'BG', 'GB', 'HR', 'HU', 'LI', 'MC', 'ME',
+    'MK', 'RS', 'SK', 'SM', 'TR', 'VA',
+]
+
 
 class ResCompany(models.Model):
     _name = "res.company"
@@ -81,7 +91,7 @@ class ResCompany(models.Model):
         string="Gain Exchange Rate Account",
         check_company=True,
         domain="[('deprecated', '=', False),\
-                ('account_type', 'in', ('income', 'income_other'))]")
+                ('internal_group', '=', 'income')]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
@@ -258,7 +268,7 @@ class ResCompany(models.Model):
             if html:
                 company.invoice_terms_html = html
 
-    @api.depends('parent_id.max_tax_lock_date')
+    @api.depends('tax_lock_date', 'parent_id.max_tax_lock_date')
     def _compute_max_tax_lock_date(self):
         for company in self:
             company.max_tax_lock_date = max(company.tax_lock_date or date.min, company.parent_id.sudo().max_tax_lock_date or date.min)
@@ -282,7 +292,7 @@ class ResCompany(models.Model):
         return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
     def reflect_code_prefix_change(self, old_code, new_code):
-        if not old_code:
+        if not old_code or new_code == old_code:
             return
         accounts = self.env['account.account'].search([
             *self.env['account.account']._check_company_domain(self),
@@ -412,29 +422,39 @@ class ResCompany(models.Model):
         }
 
     @api.model
+    def _get_default_opening_move_values(self):
+        """ Get the default values to create the opening move.
+
+        :return: A dictionary to be passed to account.move.create.
+        """
+        self.ensure_one()
+        default_journal = self.env['account.journal'].search(
+            domain=[
+                *self.env['account.journal']._check_company_domain(self),
+                ('type', '=', 'general'),
+            ],
+            limit=1,
+        )
+
+        if not default_journal:
+            raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
+
+        return {
+            'ref': _('Opening Journal Entry'),
+            'company_id': self.id,
+            'journal_id': default_journal.id,
+            'date': self.account_opening_date - timedelta(days=1),
+        }
+
     def create_op_move_if_non_existant(self):
         """ Creates an empty opening move in 'draft' state for the current company
         if there wasn't already one defined. For this, the function needs at least
         one journal of type 'general' to exist (required by account.move).
         """
+        # TO BE REMOVED IN MASTER
         self.ensure_one()
         if not self.account_opening_move_id:
-            default_journal = self.env['account.journal'].search([
-                *self.env['account.journal']._check_company_domain(self),
-                ('type', '=', 'general')
-            ], limit=1)
-
-            if not default_journal:
-                raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
-
-            opening_date = self.account_opening_date - timedelta(days=1)
-
-            self.account_opening_move_id = self.env['account.move'].create({
-                'ref': _('Opening Journal Entry'),
-                'company_id': self.id,
-                'journal_id': default_journal.id,
-                'date': opening_date,
-            })
+            self.account_opening_move_id = self.env['account.move'].create(self._get_default_opening_move_values())
 
     def opening_move_posted(self):
         """ Returns true if this company has an opening account move and this move is posted."""
@@ -459,14 +479,21 @@ class ResCompany(models.Model):
             ('code', '=', str(code)),
         ]):
             code -= 1
-        return self.env['account.account'].create({
-                'code': str(code),
-                'name': _('Undistributed Profits/Losses'),
-                'account_type': unaffected_earnings_type,
-                'company_id': self.id,
-            })
+        return self.env['account.account']._load_records([
+            {
+                'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
+                'values': {
+                              'code': str(code),
+                              'name': _('Undistributed Profits/Losses'),
+                              'account_type': unaffected_earnings_type,
+                              'company_id': self.id,
+                          },
+                'noupdate': True,
+            }
+        ])
 
     def get_opening_move_differences(self, opening_move_lines):
+        # TO BE REMOVED IN MASTER
         currency = self.currency_id
         balancing_move_line = opening_move_lines.filtered(lambda x: x.account_id == self.get_unaffected_earnings_account())
 
@@ -487,6 +514,7 @@ class ResCompany(models.Model):
         and is unbalanced, balances it with a automatic account.move.line in the
         current year earnings account.
         """
+        # TO BE REMOVED IN MASTER
         if self.account_opening_move_id and self.account_opening_move_id.state == 'draft':
             balancing_account = self.get_unaffected_earnings_account()
             currency = self.currency_id
@@ -516,6 +544,93 @@ class ResCompany(models.Model):
                         'debit': credit_diff,
                         'credit': debit_diff,
                     })
+
+    def _update_opening_move(self, to_update):
+        """ Create or update the opening move for the accounts passed as parameter.
+
+        :param to_update:   A dictionary mapping each account with a tuple (debit, credit).
+                            A separated opening line is created for both fields. A None value on debit/credit means the corresponding
+                            line will not be updated.
+        """
+        self.ensure_one()
+
+        # Don't allow to modify the opening move if not in draft.
+        opening_move = self.account_opening_move_id
+        if opening_move and opening_move.state != 'draft':
+            raise UserError(_(
+                'You cannot import the "openning_balance" if the opening move (%s) is already posted. \
+                If you are absolutely sure you want to modify the opening balance of your accounts, reset the move to draft.',
+                self.account_opening_move_id.name,
+            ))
+
+        def del_lines(lines):
+            nonlocal open_balance
+            for line in lines:
+                open_balance -= line.balance
+                yield Command.delete(line.id)
+
+        def update_vals(account, side, balance, balancing=False):
+            nonlocal open_balance
+            corresponding_lines = corresponding_lines_per_account[(account, side)]
+            currency = account.currency_id or self.currency_id
+            amount_currency = balance if balancing else self.currency_id._convert(balance, currency, date=conversion_date)
+            open_balance += balance
+            if self.currency_id.is_zero(balance):
+                yield from del_lines(corresponding_lines)
+            elif corresponding_lines:
+                line_to_update = corresponding_lines[0]
+                open_balance -= line_to_update.balance
+                yield Command.update(line_to_update.id, {
+                    'balance': balance,
+                    'amount_currency': amount_currency,
+                })
+                yield from del_lines(corresponding_lines[1:])
+            else:
+                yield Command.create({
+                    'name':_("Automatic Balancing Line") if balancing else _("Opening balance"),
+                    'account_id': account.id,
+                    'balance': balance,
+                    'amount_currency': amount_currency,
+                    'currency_id': currency.id,
+                })
+
+        # Decode the existing opening move.
+        corresponding_lines_per_account = defaultdict(lambda: self.env['account.move.line'])
+        corresponding_lines_per_account.update(opening_move.line_ids.grouped(lambda line: (
+            line.account_id,
+            'debit' if line.balance > 0.0 or line.amount_currency > 0.0 else 'credit',
+        )))
+
+        # Update the opening move's lines.
+        balancing_account = self.get_unaffected_earnings_account()
+        open_balance = (
+            sum(corresponding_lines_per_account[(balancing_account, 'credit')].mapped('credit'))
+            -sum(corresponding_lines_per_account[(balancing_account, 'debit')].mapped('debit'))
+        )
+        commands = []
+        move_values = {'line_ids': commands}
+        if opening_move:
+            conversion_date = opening_move.date
+        else:
+            move_values.update(self._get_default_opening_move_values())
+            conversion_date = move_values['date']
+        for account, (debit, credit) in to_update.items():
+            if debit is not None:
+                commands.extend(update_vals(account, 'debit', debit))
+            if credit is not None:
+                commands.extend(update_vals(account, 'credit', -credit))
+
+        commands.extend(update_vals(balancing_account, 'debit', max(-open_balance, 0), balancing=True))
+        commands.extend(update_vals(balancing_account, 'credit', -max(open_balance, 0), balancing=True))
+
+        # Nothing to do.
+        if not commands:
+            return
+
+        if opening_move:
+            opening_move.write(move_values)
+        else:
+            self.account_opening_move_id = self.env['account.move'].create(move_values)
 
     def action_save_onboarding_sale_tax(self):
         """ Set the onboarding step as done """
@@ -629,15 +744,27 @@ class ResCompany(models.Model):
 
         return results_by_journal
 
+    @api.model
+    def _with_locked_records(self, records):
+        """ To avoid sending the same records multiple times from different transactions,
+        we use this generic method to lock the records passed as parameter.
+
+        :param records: The records to lock.
+        """
+        if not records.ids:
+            return
+        self._cr.execute(f'SELECT * FROM {records._table} WHERE id IN %s FOR UPDATE SKIP LOCKED', [tuple(records.ids)])
+        available_ids = {r[0] for r in self._cr.fetchall()}
+        if available_ids != set(records.ids):
+            raise UserError(_("Some documents are being sent by another process already."))
+
     def compute_fiscalyear_dates(self, current_date):
         """
-        The role of this method is to provide a fallback when account_accounting is not installed.
-        As the fiscal year is irrelevant when account_accounting is not installed, this method returns the calendar year.
-        :param current_date: A datetime.date/datetime.datetime object.
+        Returns the dates of the fiscal year containing the provided date for this company.
         :return: A dictionary containing:
             * date_from
             * date_to
         """
-
-        return {'date_from': datetime(year=current_date.year, month=1, day=1).date(),
-                'date_to': datetime(year=current_date.year, month=12, day=31).date()}
+        self.ensure_one()
+        date_from, date_to = date_utils.get_fiscal_year(current_date, day=self.fiscalyear_last_day, month=int(self.fiscalyear_last_month))
+        return {'date_from': date_from, 'date_to': date_to}

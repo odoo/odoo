@@ -3,6 +3,7 @@
 import { KeepLast } from "@web/core/utils/concurrency";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { renderToElement, renderToString } from "@web/core/utils/render";
 import { debounce } from '@web/core/utils/timing';
 
@@ -13,6 +14,8 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
     events: {
         'input .search-query': '_onInput',
         'focusout': '_onFocusOut',
+        "mousedown .o_dropdown_menu .dropdown-item": "_onMousedown",
+        "mouseup .o_dropdown_menu .dropdown-item": "_onMouseup",
         'keydown .search-query, .dropdown-item': '_onKeydown',
         'search .search-query': '_onSearch',
     },
@@ -142,6 +145,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
             delete this._menuScrollAndResizeHandler;
         }
 
+        let pageScrollHeight = null;
         const $prevMenu = this.$menu;
         if (res && this.limit) {
             const results = res['results'];
@@ -180,6 +184,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
                 }
             }
 
+            pageScrollHeight = document.querySelector("#wrapwrap").scrollHeight;
             this.$el.append(this.$menu);
 
             this.$el.find('button.extra_link').on('click', function (event) {
@@ -197,6 +202,24 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
         this.$el.toggleClass('dropdown show', !!res);
         if ($prevMenu) {
             $prevMenu.remove();
+        }
+        // Adjust the menu's position based on the scroll height.
+        if (res && this.limit) {
+            this.el.classList.remove("dropup");
+            delete this.$menu[0].dataset.bsPopper;
+            const wrapwrapEl = document.querySelector("#wrapwrap");
+            if (wrapwrapEl.scrollHeight > pageScrollHeight) {
+                // If the menu overflows below the page, we reduce its height.
+                this.$menu[0].style.maxHeight = "40vh";
+                this.$menu[0].style.overflowY = "auto";
+                // We then recheck if the menu still overflows below the page.
+                if (wrapwrapEl.scrollHeight > pageScrollHeight) {
+                    // If the menu still overflows below the page after its height
+                    // has been reduced, we position it above the input.
+                    this.el.classList.add("dropup");
+                    this.$menu[0].dataset.bsPopper = "";
+                }
+            }
         }
     },
     _getFieldsNames() {
@@ -231,8 +254,22 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
      * @private
      */
     _onFocusOut: function () {
-        if (!this.$el.has(document.activeElement).length) {
+        if (!this.linkHasFocus && !this.$el.has(document.activeElement).length) {
             this._render();
+        }
+    },
+    _onMousedown(ev) {
+        // On Safari, links and buttons are not focusable by default. We need
+        // to get around that behavior to avoid _onFocusOut() from triggering
+        // _render(), as this would prevent the click from working.
+        if (isBrowserSafari) {
+            this.linkHasFocus = true;
+        }
+    },
+    _onMouseup(ev) {
+        // See comment in _onMousedown.
+        if (isBrowserSafari) {
+            this.linkHasFocus = false;
         }
     },
     /**

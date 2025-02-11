@@ -20,15 +20,22 @@
 # Vladimir Petrov <vladimir.petrov@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2023
-# Maria Boyadjieva <marabo2000@gmail.com>, 2023
+# Maria Boyadjieva <marabo2000@gmail.com>, 2024
+# Elena Varbanova, 2024
+# Venelin Stoykov, 2024
+# Margarita Katzeva, 2024
+# Milena Georgieva, 2024
+# Petko Karamotchev, 2025
+# Veselina Slavkova, 2025
+# Martin Dinovski, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
+"Last-Translator: Martin Dinovski, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -656,7 +663,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Payment terms: 30 Days</span>"
-msgstr ""
+msgstr "<span>Срок за плащане: 30 дни</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -886,6 +893,7 @@ msgstr "ИН на действие"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/action_menus/action_menus.xml:0
+#: code:addons/web/static/src/search/cog_menu/cog_menu.xml:0
 #, python-format
 msgid "Actions"
 msgstr "Действия"
@@ -906,7 +914,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Activate debug mode (with assets)"
@@ -1013,6 +1020,7 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
+#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
 #, python-format
 msgid "Add column"
 msgstr ""
@@ -1043,6 +1051,15 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.xml:0
 #, python-format
 msgid "Add start date"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#, python-format
+msgid "Add to Favorites"
 msgstr ""
 
 #. module: web
@@ -1215,7 +1232,7 @@ msgstr ""
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
-msgstr ""
+msgstr "Сигурни ли сте, че искате да архивирате този запис?"
 
 #. module: web
 #. odoo-javascript
@@ -1289,6 +1306,7 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Ascending"
 msgstr ""
@@ -1313,9 +1331,10 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Attach"
-msgstr ""
+msgstr "Прикачване"
 
 #. module: web
 #. odoo-javascript
@@ -1386,13 +1405,20 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "BACK"
-msgstr ""
+msgstr "ОБРАТНО"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "BACK arrow"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#, python-format
+msgid "Back to “%s”"
 msgstr ""
 
 #. module: web
@@ -1423,6 +1449,7 @@ msgstr "Значки"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Bar Chart"
@@ -1476,6 +1503,15 @@ msgstr "Синьо"
 #: code:addons/web/static/src/views/fields/boolean_icon/boolean_icon_field.js:0
 #, python-format
 msgid "Boolean Icon"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
+#, python-format
+msgid ""
+"Boolean field from the model used in the relation, which indicates whether "
+"the state is folded or not."
 msgstr ""
 
 #. module: web
@@ -1773,7 +1809,10 @@ msgstr ""
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
@@ -1789,12 +1828,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/datetime/datetime_picker_popover.xml:0
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.xml:0
-#: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
@@ -1830,7 +1869,7 @@ msgstr ""
 #: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
 #, python-format
 msgid "Close menu"
-msgstr ""
+msgstr "Затворете менюто"
 
 #. module: web
 #. odoo-javascript
@@ -1842,7 +1881,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Colors"
-msgstr ""
+msgstr "Цветове"
 
 #. module: web
 #. odoo-javascript
@@ -1881,7 +1920,7 @@ msgstr ""
 #. module: web
 #: model:ir.model,name:web.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Оформление на документа на компанията"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo
@@ -1945,7 +1984,7 @@ msgstr "Настройки"
 #. module: web
 #: model:ir.actions.act_window,name:web.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr ""
+msgstr "Конфигурирайте оформлението на Вашия документ"
 
 #. module: web
 #. odoo-javascript
@@ -2203,6 +2242,7 @@ msgstr "Създаване на потребител:"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Cumulative"
 msgstr ""
@@ -2292,7 +2332,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #, python-format
 msgid "Date Range"
-msgstr ""
+msgstr "Обхват на датите"
 
 #. module: web
 #. odoo-javascript
@@ -2392,7 +2432,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
 #, python-format
 msgid "Default value"
-msgstr ""
+msgstr "Стойност по подразбиране "
 
 #. module: web
 #. odoo-javascript
@@ -2470,6 +2510,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Descending"
@@ -2554,9 +2595,10 @@ msgstr "Отхвърлете"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
-msgstr ""
+msgstr "Отхвърляне на промените"
 
 #. module: web
 #. odoo-javascript
@@ -2599,6 +2641,13 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #, python-format
 msgid "Displays a warning icon if the input dates are in the future."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid "Displays or hides the time in the datetime value."
 msgstr ""
 
 #. module: web
@@ -2674,6 +2723,7 @@ msgstr ""
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Download"
@@ -2691,6 +2741,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Download xlsx"
@@ -2752,7 +2803,10 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_header.js:0
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.xml:0
@@ -2866,7 +2920,7 @@ msgstr ""
 #: code:addons/web/static/src/webclient/settings_form_view/highlight_text/form_label_highlight_text.xml:0
 #, python-format
 msgid "Enterprise"
-msgstr ""
+msgstr "предприятие"
 
 #. module: web
 #. odoo-javascript
@@ -2895,7 +2949,7 @@ msgstr "Европа"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "European"
-msgstr ""
+msgstr "Европейски"
 
 #. module: web
 #. odoo-javascript
@@ -2909,10 +2963,11 @@ msgstr "Календари на всички"
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #, python-format
 msgid "Everything"
-msgstr ""
+msgstr "Всичко"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Expand all"
@@ -2998,7 +3053,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "FREE button"
-msgstr ""
+msgstr "БЕЗПЛАТЕН бутон"
 
 #. module: web
 #. odoo-javascript
@@ -3006,7 +3061,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/float_toggle/float_toggle_field.js:0
 #, python-format
 msgid "Factor"
-msgstr ""
+msgstr "Фактор"
 
 #. module: web
 #. odoo-javascript
@@ -3047,14 +3102,14 @@ msgstr "Грешно"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Father"
-msgstr ""
+msgstr "Баща"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Father Christmas"
-msgstr ""
+msgstr "Дядо Коледа"
 
 #. module: web
 #. odoo-javascript
@@ -3131,6 +3186,7 @@ msgstr "Филтри"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Flip axis"
@@ -3251,21 +3307,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "French"
-msgstr ""
+msgstr "Френски"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "French stick"
-msgstr ""
+msgstr "Френска багета"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.js:0
 #, python-format
 msgid "Frequently used"
-msgstr ""
+msgstr "Често използван"
 
 #. module: web
 #. odoo-javascript
@@ -3279,14 +3335,14 @@ msgstr "Петък"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Frisbee"
-msgstr ""
+msgstr "Фризби"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Fuji"
-msgstr ""
+msgstr "Фуджи"
 
 #. module: web
 #. odoo-javascript
@@ -3329,8 +3385,17 @@ msgstr "Получете тази функция и много повече с O
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
+#: code:addons/web/static/src/views/fields/url/url_field.xml:0
 #, python-format
 msgid "Go to URL"
+msgstr "Отиди на URL"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer.xml:0
+#, python-format
+msgid "Google Slide Viewer"
 msgstr ""
 
 #. module: web
@@ -3372,7 +3437,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Halloween"
-msgstr ""
+msgstr "Хелоуин"
 
 #. module: web
 #. odoo-javascript
@@ -3384,6 +3449,16 @@ msgstr ""
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
+msgstr "Текстът на заглавието се показва в горната част на всички отчети."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/record.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
 msgstr ""
 
 #. module: web
@@ -3391,7 +3466,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.xml:0
 #, python-format
 msgid "Hide in kanban"
-msgstr ""
+msgstr "Скрий в канбан "
 
 #. module: web
 #. odoo-javascript
@@ -3405,7 +3480,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/reference/reference_field.js:0
 #, python-format
 msgid "Hide model"
-msgstr ""
+msgstr "Скрий модела "
 
 #. module: web
 #. odoo-javascript
@@ -3439,13 +3514,16 @@ msgid ""
 "numbers, underscores, hyphens, or dots in the database name, and you'll be "
 "golden."
 msgstr ""
+"Хюстън, имаме проблем с името на базата данни! Уверете се, че използвате "
+"само букви, цифри, долни черти, тирета или точки в името на базата данни, и "
+"всичко ще бъде наред."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/install_prompt/install_prompt.xml:0
 #, python-format
 msgid "How to get the application"
-msgstr ""
+msgstr "Как да получите приложението"
 
 #. module: web
 #. odoo-javascript
@@ -3489,7 +3567,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #, python-format
-msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"today\"."
+msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"%s\"."
 msgstr ""
 
 #. module: web
@@ -3603,6 +3681,8 @@ msgstr "Цяло число"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "Internal link"
@@ -3634,14 +3714,14 @@ msgstr "Невалидни данни"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #, python-format
 msgid "Invalid domain"
-msgstr ""
+msgstr "Невалиден домейн"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
 msgid "Invalid email address: %(address)s"
-msgstr ""
+msgstr "Невалиден имейл адрес:  %(address)s"
 
 #. module: web
 #. odoo-javascript
@@ -3671,7 +3751,7 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.js:0
 #, python-format
 msgid "Invalid fields"
-msgstr ""
+msgstr "Невалидни полета"
 
 #. module: web
 #. odoo-javascript
@@ -3679,14 +3759,14 @@ msgstr ""
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
 #, python-format
 msgid "Invalid fields: "
-msgstr ""
+msgstr "Невалидни полета:"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/controllers/domain.py:0
 #, python-format
 msgid "Invalid model: %s"
-msgstr ""
+msgstr "Невалиден модел: %s"
 
 #. module: web
 #. odoo-javascript
@@ -3701,7 +3781,7 @@ msgstr ""
 #: code:addons/web/static/src/views/view_button/view_button.xml:0
 #, python-format
 msgid "Invisible:"
-msgstr ""
+msgstr "Невидим:"
 
 #. module: web
 #. odoo-javascript
@@ -3743,7 +3823,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Islam"
-msgstr ""
+msgstr "Ислям"
 
 #. module: web
 #. odoo-javascript
@@ -3795,14 +3875,14 @@ msgstr "Япония"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Japanese"
-msgstr ""
+msgstr "Японски"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Japanese castle"
-msgstr ""
+msgstr "Японски замък"
 
 #. module: web
 #. odoo-javascript
@@ -3810,7 +3890,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Japanese dolls"
-msgstr ""
+msgstr "Японски кукли"
 
 #. module: web
 #. odoo-javascript
@@ -3818,7 +3898,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Japanese post office"
-msgstr ""
+msgstr "Японски пощенски офис "
 
 #. module: web
 #. odoo-javascript
@@ -3977,7 +4057,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Jew"
-msgstr ""
+msgstr "Евреин"
 
 #. module: web
 #. odoo-javascript
@@ -3985,7 +4065,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Jewish"
-msgstr ""
+msgstr "Еврейски"
 
 #. module: web
 #. odoo-javascript
@@ -4006,7 +4086,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Judaism"
-msgstr ""
+msgstr "Юдаизъм"
 
 #. module: web
 #. odoo-javascript
@@ -4166,6 +4246,7 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Line Chart"
 msgstr "Линейна диаграма"
@@ -4281,6 +4362,13 @@ msgstr ""
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Main actions"
+msgstr "Основни действия"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+#, python-format
+msgid "Make this filter available to other users"
 msgstr ""
 
 #. module: web
@@ -4339,7 +4427,7 @@ msgstr "Съгласувай"
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 #, python-format
 msgid "Max value field"
-msgstr ""
+msgstr "Поле за максимална стойност"
 
 #. module: web
 #. odoo-javascript
@@ -4415,7 +4503,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Milky Way"
-msgstr ""
+msgstr "Млечен път"
 
 #. module: web
 #. odoo-javascript
@@ -4480,7 +4568,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 #, python-format
 msgid "Model:"
-msgstr ""
+msgstr "Модел:"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_model
@@ -4492,6 +4580,13 @@ msgstr "Модели"
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #, python-format
 msgid "Modify Condition"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
+#, python-format
+msgid "Modify filter"
 msgstr ""
 
 #. module: web
@@ -4536,7 +4631,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Mount Fuji"
-msgstr ""
+msgstr "Планината Фуджи"
 
 #. module: web
 #. odoo-javascript
@@ -4616,7 +4711,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Muslim"
-msgstr ""
+msgstr "Мюсюлманин"
 
 #. module: web
 #. odoo-javascript
@@ -4638,7 +4733,7 @@ msgstr "НОВ"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "NEW button"
-msgstr ""
+msgstr "НОВ бутон"
 
 #. module: web
 #. odoo-javascript
@@ -4696,7 +4791,7 @@ msgstr ""
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #, python-format
 msgid "New Rule"
-msgstr ""
+msgstr "Ново правило"
 
 #. module: web
 #. odoo-javascript
@@ -4731,6 +4826,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 #: code:addons/web/static/src/core/pager/pager.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
@@ -4749,7 +4845,7 @@ msgstr ""
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 #, python-format
 msgid "Next century"
-msgstr ""
+msgstr "Следващият век"
 
 #. module: web
 #. odoo-javascript
@@ -4763,14 +4859,14 @@ msgstr ""
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 #, python-format
 msgid "Next month"
-msgstr ""
+msgstr "Следващият месец "
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 #, python-format
 msgid "Next year"
-msgstr ""
+msgstr "Следващата година "
 
 #. module: web
 #. odoo-javascript
@@ -4824,7 +4920,7 @@ msgstr ""
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "No command found"
-msgstr ""
+msgstr "Няма намерена команда"
 
 #. module: web
 #. odoo-javascript
@@ -4838,7 +4934,7 @@ msgstr ""
 #: code:addons/web/static/src/views/graph/graph_renderer.js:0
 #, python-format
 msgid "No data"
-msgstr ""
+msgstr "Няма налични данни"
 
 #. module: web
 #. odoo-javascript
@@ -4978,6 +5074,13 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 #, python-format
 msgid "Not active state, click to change it"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
+#, python-format
+msgid "Number of files"
 msgstr ""
 
 #. module: web
@@ -5359,7 +5462,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
-msgstr ""
+msgstr "Страница: <span class=\"page\"/> / <span class=\"topage\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -5426,6 +5529,7 @@ msgstr "Телефон"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Pie Chart"
@@ -5599,11 +5703,12 @@ msgstr ""
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/core/pager/pager.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "Предишен"
 
 #. module: web
 #. odoo-javascript
@@ -5691,6 +5796,13 @@ msgstr ""
 #, python-format
 msgid "Progress Bar"
 msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/view_components/column_progress.xml:0
+#, python-format
+msgid "Progress bar"
+msgstr "Лента за напредък"
 
 #. module: web
 #. odoo-javascript
@@ -5842,9 +5954,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Ready to make your record disappear into thin air? Are you sure?\n"
-"\n"
 "It will be gone forever!\n"
-"\n"
 "\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
@@ -5897,7 +6007,7 @@ msgstr "Идентификатор"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #, python-format
 msgid "Refresh"
-msgstr ""
+msgstr "Опресни"
 
 #. module: web
 #. odoo-javascript
@@ -5973,6 +6083,15 @@ msgstr ""
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
 #, python-format
 msgid "Remove field"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#, python-format
+msgid "Remove from Favorites"
 msgstr ""
 
 #. module: web
@@ -6197,6 +6316,13 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+#, python-format
+msgid "Save current search"
+msgstr "Запазете настоящото търсене"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #, python-format
 msgid "Save default"
@@ -6205,12 +6331,14 @@ msgstr "Стандартно запазване"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Save manually"
 msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
@@ -6390,6 +6518,13 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 #, python-format
 msgid "Select century"
@@ -6455,6 +6590,7 @@ msgstr "Селекция:"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #, python-format
 msgid "Send Email"
@@ -6566,10 +6702,24 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
+#, python-format
+msgid "Show matching records"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Show sub-fields"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid "Show time"
 msgstr ""
 
 #. module: web
@@ -6634,6 +6784,8 @@ msgstr "Специален:"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
@@ -6781,6 +6933,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
@@ -6918,6 +7071,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Данъчният идентификационен номер. Стойностите тук ще бъдат валидирани въз "
+"основа на формата за съответната държава. Можете да използвате '/' за да "
+"посочите, че партньорът не подлежи на данък."
 
 #. module: web
 #. odoo-python
@@ -6961,12 +7117,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_dialogs.xml:0
+#: code:addons/web/static/src/core/errors/scss_error_dialog.js:0
 #, python-format
 msgid ""
-"The style compilation failed, see the error below. This is an administrator "
-"or developer error that must be fixed for the entire database before "
-"continuing working."
+"The style compilation failed. This is an administrator or developer error "
+"that must be fixed for the entire database before continuing working. See "
+"browser console or server logs for details."
 msgstr ""
 
 #. module: web
@@ -7357,6 +7513,13 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#, python-format
+msgid "Unable to save. Correct the issue or discard changes"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
@@ -7421,7 +7584,7 @@ msgstr ""
 #: code:addons/web/static/src/views/pivot/pivot_view.js:0
 #, python-format
 msgid "Untitled"
-msgstr ""
+msgstr "Неозаглавен"
 
 #. module: web
 #. odoo-javascript
@@ -7526,6 +7689,13 @@ msgstr ""
 #, python-format
 msgid ""
 "Use it with the 'User-friendly format' option to customize the formatting."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+#, python-format
+msgid "Use this filter by default when opening this view"
 msgstr ""
 
 #. module: web
@@ -8315,6 +8485,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #, python-format
@@ -8413,6 +8584,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/utils.js:0
 #: code:addons/web/static/src/core/tree_editor/utils.js:0
 #, python-format
@@ -11268,14 +11440,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "ceremony"
-msgstr ""
+msgstr "церемония"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chain"
-msgstr ""
+msgstr "верига"
 
 #. module: web
 #. odoo-javascript
@@ -11283,7 +11455,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chains"
-msgstr ""
+msgstr "вериги"
 
 #. module: web
 #. odoo-javascript
@@ -11292,14 +11464,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chair"
-msgstr ""
+msgstr "стол"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "change room"
-msgstr ""
+msgstr "съблекалня"
 
 #. module: web
 #. odoo-javascript
@@ -11330,7 +11502,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chart"
-msgstr ""
+msgstr "графика"
 
 #. module: web
 #. odoo-javascript
@@ -11363,7 +11535,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "check"
-msgstr ""
+msgstr "проверка"
 
 #. module: web
 #. odoo-javascript
@@ -11379,14 +11551,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "check mark"
-msgstr ""
+msgstr "знак за проверка"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "check mark button"
-msgstr ""
+msgstr "бутон за знак за проверка"
 
 #. module: web
 #. odoo-javascript
@@ -11447,7 +11619,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chemist"
-msgstr ""
+msgstr "химик"
 
 #. module: web
 #. odoo-javascript
@@ -11455,7 +11627,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chemistry"
-msgstr ""
+msgstr "химия"
 
 #. module: web
 #. odoo-javascript
@@ -11478,7 +11650,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cherries"
-msgstr ""
+msgstr "череши"
 
 #. module: web
 #. odoo-javascript
@@ -11486,7 +11658,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cherry"
-msgstr ""
+msgstr "череша"
 
 #. module: web
 #. odoo-javascript
@@ -11515,7 +11687,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chest"
-msgstr ""
+msgstr "шах"
 
 #. module: web
 #. odoo-javascript
@@ -11523,7 +11695,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chestnut"
-msgstr ""
+msgstr "кестен"
 
 #. module: web
 #. odoo-javascript
@@ -11546,7 +11718,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chick pea"
-msgstr ""
+msgstr "нахут"
 
 #. module: web
 #. odoo-javascript
@@ -11555,14 +11727,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chicken"
-msgstr ""
+msgstr "пиле"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chickpea"
-msgstr ""
+msgstr "нахут"
 
 #. module: web
 #. odoo-javascript
@@ -11571,14 +11743,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "child"
-msgstr ""
+msgstr "дете"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 #, python-format
 msgid "child of"
-msgstr ""
+msgstr "дете на"
 
 #. module: web
 #. odoo-javascript
@@ -11586,7 +11758,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "children crossing"
-msgstr ""
+msgstr "преминават деца"
 
 #. module: web
 #. odoo-javascript
@@ -11608,7 +11780,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chipmunk"
-msgstr ""
+msgstr "катерица"
 
 #. module: web
 #. odoo-javascript
@@ -11622,7 +11794,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chocolate"
-msgstr ""
+msgstr "шоколад"
 
 #. module: web
 #. odoo-javascript
@@ -11653,7 +11825,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "church"
-msgstr ""
+msgstr "църква"
 
 #. module: web
 #. odoo-javascript
@@ -11661,7 +11833,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cigarette"
-msgstr ""
+msgstr "цигара"
 
 #. module: web
 #. odoo-javascript
@@ -11672,7 +11844,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cinema"
-msgstr ""
+msgstr "кино"
 
 #. module: web
 #. odoo-javascript
@@ -11690,7 +11862,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "circle"
-msgstr ""
+msgstr "кръг"
 
 #. module: web
 #. odoo-javascript
@@ -11705,21 +11877,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "circus"
-msgstr ""
+msgstr "цирк"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "circus tent"
-msgstr ""
+msgstr "циркова палатка"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "citrus"
-msgstr ""
+msgstr "цитрус"
 
 #. module: web
 #. odoo-javascript
@@ -11727,7 +11899,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "city"
-msgstr ""
+msgstr "град"
 
 #. module: web
 #. odoo-javascript
@@ -11735,7 +11907,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cityscape"
-msgstr ""
+msgstr "градски пейзаж"
 
 #. module: web
 #. odoo-javascript
@@ -11750,7 +11922,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "claim"
-msgstr ""
+msgstr "иск"
 
 #. module: web
 #. odoo-javascript
@@ -11758,7 +11930,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "clamp"
-msgstr ""
+msgstr "скоба"
 
 #. module: web
 #. odoo-javascript
@@ -11802,7 +11974,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "classical"
-msgstr ""
+msgstr "класически"
 
 #. module: web
 #. odoo-javascript
@@ -11810,7 +11982,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "classical building"
-msgstr ""
+msgstr "класическа сграда"
 
 #. module: web
 #. odoo-javascript
@@ -11825,7 +11997,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "claws"
-msgstr ""
+msgstr "Нокти"
 
 #. module: web
 #. odoo-javascript
@@ -11841,7 +12013,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cleaning"
-msgstr ""
+msgstr "чистене"
 
 #. module: web
 #. odoo-javascript
@@ -11849,7 +12021,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "clenched"
-msgstr ""
+msgstr "стиснат"
 
 #. module: web
 #. odoo-javascript
@@ -11925,7 +12097,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "clock"
-msgstr ""
+msgstr "часовник"
 
 #. module: web
 #. odoo-javascript
@@ -11934,7 +12106,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "clockwise"
-msgstr ""
+msgstr "по часовниковата стрелка"
 
 #. module: web
 #. odoo-javascript
@@ -11954,7 +12126,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "closed"
-msgstr ""
+msgstr "затворено"
 
 #. module: web
 #. odoo-javascript
@@ -12020,7 +12192,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "closet"
-msgstr ""
+msgstr "гардероб"
 
 #. module: web
 #. odoo-javascript
@@ -12052,7 +12224,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "clothing"
-msgstr ""
+msgstr "дрехи"
 
 #. module: web
 #. odoo-javascript
@@ -12071,7 +12243,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cloud"
-msgstr ""
+msgstr "облак"
 
 #. module: web
 #. odoo-javascript
@@ -12095,7 +12267,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cloud with rain"
-msgstr ""
+msgstr "облачно с дъжд"
 
 #. module: web
 #. odoo-javascript
@@ -12103,7 +12275,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cloud with snow"
-msgstr ""
+msgstr "облачно със сняг"
 
 #. module: web
 #. odoo-javascript
@@ -12117,14 +12289,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "clown"
-msgstr ""
+msgstr "клоун"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "clown face"
-msgstr ""
+msgstr "лице на клоун"
 
 #. module: web
 #. odoo-javascript
@@ -12139,7 +12311,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "clubs"
-msgstr ""
+msgstr "клубове"
 
 #. module: web
 #. odoo-javascript
@@ -12170,21 +12342,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "coat"
-msgstr ""
+msgstr "палто"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cocktail"
-msgstr ""
+msgstr "коктейл"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cocktail glass"
-msgstr ""
+msgstr "коктейлна чаша"
 
 #. module: web
 #. odoo-javascript
@@ -12192,7 +12364,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "coconut"
-msgstr ""
+msgstr "кокос"
 
 #. module: web
 #. odoo-javascript
@@ -12207,7 +12379,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "coffee"
-msgstr ""
+msgstr "кафе"
 
 #. module: web
 #. odoo-javascript
@@ -12215,14 +12387,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "coffin"
-msgstr ""
+msgstr "ковчег"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cog"
-msgstr ""
+msgstr "Зъбно колело"
 
 #. module: web
 #. odoo-javascript
@@ -12236,7 +12408,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "coin"
-msgstr ""
+msgstr "монета"
 
 #. module: web
 #. odoo-javascript
@@ -12254,7 +12426,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cold"
-msgstr ""
+msgstr "студено"
 
 #. module: web
 #. odoo-javascript
@@ -12277,7 +12449,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "column"
-msgstr ""
+msgstr "колона"
 
 #. module: web
 #. odoo-javascript
@@ -12285,7 +12457,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "comet"
-msgstr ""
+msgstr "комета"
 
 #. module: web
 #. odoo-javascript
@@ -12304,7 +12476,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "comic"
-msgstr ""
+msgstr "комичен"
 
 #. module: web
 #. odoo-javascript
@@ -12312,7 +12484,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "compass"
-msgstr ""
+msgstr "компас"
 
 #. module: web
 #. odoo-javascript
@@ -12335,14 +12507,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "computer"
-msgstr ""
+msgstr "компютър"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "computer disk"
-msgstr ""
+msgstr "компютърен диск"
 
 #. module: web
 #. odoo-javascript
@@ -12350,7 +12522,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "computer mouse"
-msgstr ""
+msgstr "компютърна мишка"
 
 #. module: web
 #. odoo-javascript
@@ -12392,14 +12564,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "confused"
-msgstr ""
+msgstr "объркан"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "confused face"
-msgstr ""
+msgstr "объркано лице"
 
 #. module: web
 #. odoo-javascript
@@ -12418,14 +12590,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "construction"
-msgstr ""
+msgstr "строителство"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "construction worker"
-msgstr ""
+msgstr "строителен работник"
 
 #. module: web
 #. odoo-javascript
@@ -12440,7 +12612,7 @@ msgstr "съдържа"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "control"
-msgstr ""
+msgstr "контрол"
 
 #. module: web
 #. odoo-javascript
@@ -12454,7 +12626,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "controller"
-msgstr ""
+msgstr "контрольор"
 
 #. module: web
 #. odoo-javascript
@@ -12483,14 +12655,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cooked"
-msgstr ""
+msgstr "сготвен"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cooked rice"
-msgstr ""
+msgstr "сготвен ориз"
 
 #. module: web
 #. odoo-javascript
@@ -12498,7 +12670,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cookie"
-msgstr ""
+msgstr "бисквитка"
 
 #. module: web
 #. odoo-javascript
@@ -12510,7 +12682,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cooking"
-msgstr ""
+msgstr "готвене"
 
 #. module: web
 #. odoo-javascript
@@ -12548,7 +12720,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "corn"
-msgstr ""
+msgstr "царевица"
 
 #. module: web
 #. odoo-javascript
@@ -12563,14 +12735,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cosmetics"
-msgstr ""
+msgstr "козметика"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "couch"
-msgstr ""
+msgstr "диван"
 
 #. module: web
 #. odoo-javascript
@@ -12578,14 +12750,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "couch and lamp"
-msgstr ""
+msgstr "диван и лампа"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "counterclockwise"
-msgstr ""
+msgstr "обратно на часовниковата стрелка"
 
 #. module: web
 #. odoo-javascript
@@ -12611,7 +12783,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "couple"
-msgstr ""
+msgstr "двойка"
 
 #. module: web
 #. odoo-javascript
@@ -12622,35 +12794,35 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "couple with heart"
-msgstr ""
+msgstr "двойка със сърце"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "couple with heart: man, man"
-msgstr ""
+msgstr "двойка със сърце: мъж, мъж"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "couple with heart: woman, man"
-msgstr ""
+msgstr "двойка със сърце: жена, мъж"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "couple with heart: woman, woman"
-msgstr ""
+msgstr "двойка със сърце: жена, жена"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cover"
-msgstr ""
+msgstr "корица "
 
 #. module: web
 #. odoo-javascript
@@ -12659,21 +12831,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cow"
-msgstr ""
+msgstr "крава"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cow face"
-msgstr ""
+msgstr "лице на крава"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cowboy"
-msgstr ""
+msgstr "каубой"
 
 #. module: web
 #. odoo-javascript
@@ -12696,7 +12868,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "crab"
-msgstr ""
+msgstr "рак"
 
 #. module: web
 #. odoo-javascript
@@ -12737,14 +12909,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "credit"
-msgstr ""
+msgstr "кредит"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "credit card"
-msgstr ""
+msgstr "кредитна карта"
 
 #. module: web
 #. odoo-javascript
@@ -12753,21 +12925,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "crescent"
-msgstr ""
+msgstr "полумесец"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "crescent moon"
-msgstr ""
+msgstr "полумесец луна"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "crescent roll"
-msgstr ""
+msgstr "кроасан"
 
 #. module: web
 #. odoo-javascript
@@ -12776,7 +12948,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cricket"
-msgstr ""
+msgstr "крикет"
 
 #. module: web
 #. odoo-javascript
@@ -12784,14 +12956,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cricket game"
-msgstr ""
+msgstr "игра на крикет"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cricket match"
-msgstr ""
+msgstr "крикет мач"
 
 #. module: web
 #. odoo-javascript
@@ -12800,7 +12972,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "criminal"
-msgstr ""
+msgstr "криминален"
 
 #. module: web
 #. odoo-javascript
@@ -12815,7 +12987,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "crocodile"
-msgstr ""
+msgstr "крокодил"
 
 #. module: web
 #. odoo-javascript
@@ -12823,7 +12995,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "croissant"
-msgstr ""
+msgstr "кроасан"
 
 #. module: web
 #. odoo-javascript
@@ -12836,7 +13008,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cross"
-msgstr ""
+msgstr "кръст"
 
 #. module: web
 #. odoo-javascript
@@ -12935,7 +13107,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cry"
-msgstr ""
+msgstr "плач"
 
 #. module: web
 #. odoo-javascript
@@ -12943,7 +13115,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "crying cat"
-msgstr ""
+msgstr "плачеща котка"
 
 #. module: web
 #. odoo-javascript
@@ -12951,21 +13123,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "crying face"
-msgstr ""
+msgstr "плачещо лице"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "crystal"
-msgstr ""
+msgstr "кристал"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "crystal ball"
-msgstr ""
+msgstr "кристална топка"
 
 #. module: web
 #. odoo-javascript
@@ -12980,14 +13152,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cucumber"
-msgstr ""
+msgstr "краставица"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "culture"
-msgstr ""
+msgstr "култура"
 
 #. module: web
 #. odoo-javascript
@@ -12995,7 +13167,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cup"
-msgstr ""
+msgstr "чаша"
 
 #. module: web
 #. odoo-javascript
@@ -13003,7 +13175,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cup with straw"
-msgstr ""
+msgstr "чаша със сламка"
 
 #. module: web
 #. odoo-javascript
@@ -13011,7 +13183,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cupcake"
-msgstr ""
+msgstr "кексче"
 
 #. module: web
 #. odoo-javascript
@@ -13025,7 +13197,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "curious"
-msgstr ""
+msgstr "любопитен"
 
 #. module: web
 #. odoo-javascript
@@ -13091,21 +13263,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "currency exchange"
-msgstr ""
+msgstr "валутен обмен"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "curry"
-msgstr ""
+msgstr "къри"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "curry rice"
-msgstr ""
+msgstr "къри ориз"
 
 #. module: web
 #. odoo-javascript
@@ -13121,7 +13293,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "customs"
-msgstr ""
+msgstr "митница"
 
 #. module: web
 #. odoo-javascript
@@ -15528,7 +15700,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fax"
-msgstr ""
+msgstr "Факс"
 
 #. module: web
 #. odoo-javascript
@@ -15536,7 +15708,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fax machine"
-msgstr ""
+msgstr "факс машина"
 
 #. module: web
 #. odoo-javascript
@@ -15849,7 +16021,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fish"
-msgstr ""
+msgstr "риба"
 
 #. module: web
 #. odoo-javascript
@@ -15857,7 +16029,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fish cake with swirl"
-msgstr ""
+msgstr "Рибен кекс с вихър"
 
 #. module: web
 #. odoo-javascript
@@ -15865,7 +16037,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fishing"
-msgstr ""
+msgstr "риболов"
 
 #. module: web
 #. odoo-javascript
@@ -15873,7 +16045,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fishing pole"
-msgstr ""
+msgstr "въдица"
 
 #. module: web
 #. odoo-javascript
@@ -15883,7 +16055,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fist"
-msgstr ""
+msgstr "юмрук"
 
 #. module: web
 #. odoo-javascript
@@ -15891,14 +16063,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "five"
-msgstr ""
+msgstr "пет"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "five o’clock"
-msgstr ""
+msgstr "пет часа"
 
 #. module: web
 #. odoo-javascript
@@ -15906,7 +16078,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "five-thirty"
-msgstr ""
+msgstr "пет и половина"
 
 #. module: web
 #. odoo-javascript
@@ -15916,7 +16088,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flag"
-msgstr ""
+msgstr "знаме"
 
 #. module: web
 #. odoo-javascript
@@ -15924,42 +16096,42 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flag in hole"
-msgstr ""
+msgstr "знаме в дупка"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flag: England"
-msgstr ""
+msgstr "знаме: Англия"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flag: Scotland"
-msgstr ""
+msgstr "знаме: Шотландия"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flag: Wales"
-msgstr ""
+msgstr "знаме: Уелс"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flamboyant"
-msgstr ""
+msgstr "Помпозен"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flame"
-msgstr ""
+msgstr "пламък"
 
 #. module: web
 #. odoo-javascript
@@ -15967,14 +16139,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flamingo"
-msgstr ""
+msgstr "фламинго"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flash"
-msgstr ""
+msgstr "светкавица"
 
 #. module: web
 #. odoo-javascript
@@ -15982,7 +16154,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flashlight"
-msgstr ""
+msgstr "фенерче"
 
 #. module: web
 #. odoo-javascript
@@ -15997,7 +16169,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flatbread"
-msgstr ""
+msgstr "Пита"
 
 #. module: web
 #. odoo-javascript
@@ -16050,7 +16222,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "floor"
-msgstr ""
+msgstr "под"
 
 #. module: web
 #. odoo-javascript
@@ -16080,7 +16252,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "flower"
-msgstr ""
+msgstr "цвете"
 
 #. module: web
 #. odoo-javascript
@@ -16151,7 +16323,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fog"
-msgstr ""
+msgstr "мъгла"
 
 #. module: web
 #. odoo-javascript
@@ -16159,7 +16331,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "foggy"
-msgstr ""
+msgstr "мъгливо"
 
 #. module: web
 #. odoo-javascript
@@ -16167,7 +16339,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "folded hands"
-msgstr ""
+msgstr "Скръстени ръце"
 
 #. module: web
 #. odoo-javascript
@@ -16175,7 +16347,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "folder"
-msgstr ""
+msgstr "папка"
 
 #. module: web
 #. odoo-javascript
@@ -16197,7 +16369,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "food"
-msgstr ""
+msgstr "храна"
 
 #. module: web
 #. odoo-javascript
@@ -16205,7 +16377,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "foot"
-msgstr ""
+msgstr "крак"
 
 #. module: web
 #. odoo-javascript
@@ -16214,14 +16386,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "football"
-msgstr ""
+msgstr "футбол"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "footprint"
-msgstr ""
+msgstr "отпечатък"
 
 #. module: web
 #. odoo-javascript
@@ -16229,7 +16401,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "footprints"
-msgstr ""
+msgstr "отпечатъци"
 
 #. module: web
 #. odoo-javascript
@@ -16256,14 +16428,14 @@ msgstr "за"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "forbidden"
-msgstr ""
+msgstr "забравен"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "forever"
-msgstr ""
+msgstr "завинаги"
 
 #. module: web
 #. odoo-javascript
@@ -16271,7 +16443,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fork"
-msgstr ""
+msgstr "вилица"
 
 #. module: web
 #. odoo-javascript
@@ -16279,7 +16451,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fork and knife"
-msgstr ""
+msgstr "вилица и нож"
 
 #. module: web
 #. odoo-javascript
@@ -16287,7 +16459,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fork and knife with plate"
-msgstr ""
+msgstr "вилица и нож с чиния"
 
 #. module: web
 #. odoo-javascript
@@ -16295,7 +16467,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fortune"
-msgstr ""
+msgstr "съдба"
 
 #. module: web
 #. odoo-javascript
@@ -16303,7 +16475,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fortune cookie"
-msgstr ""
+msgstr "Бисквитка с късметче"
 
 #. module: web
 #. odoo-javascript
@@ -16319,14 +16491,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fountain"
-msgstr ""
+msgstr "фонтан"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fountain pen"
-msgstr ""
+msgstr "Перо "
 
 #. module: web
 #. odoo-javascript
@@ -16335,28 +16507,28 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "four"
-msgstr ""
+msgstr "четири"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "four leaf clover"
-msgstr ""
+msgstr "Четирилистна детелина "
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "four o’clock"
-msgstr ""
+msgstr "четири часа"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "four-leaf clover"
-msgstr ""
+msgstr "Четирилистна детелина "
 
 #. module: web
 #. odoo-javascript
@@ -16364,14 +16536,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "four-thirty"
-msgstr ""
+msgstr "четири и половина"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "four-wheel drive"
-msgstr ""
+msgstr "Кола с 4х4 "
 
 #. module: web
 #. odoo-javascript
@@ -16379,14 +16551,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fox"
-msgstr ""
+msgstr "лисица"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "frame"
-msgstr ""
+msgstr "рамка"
 
 #. module: web
 #. odoo-javascript
@@ -16394,14 +16566,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "framed picture"
-msgstr ""
+msgstr "рамкирана снимка"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "frames"
-msgstr ""
+msgstr "рамки"
 
 #. module: web
 #. odoo-javascript
@@ -16431,7 +16603,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "french"
-msgstr ""
+msgstr "френски"
 
 #. module: web
 #. odoo-javascript
@@ -16439,35 +16611,35 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "french fries"
-msgstr ""
+msgstr "пържени картофи"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fried"
-msgstr ""
+msgstr "паржен"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fried shrimp"
-msgstr ""
+msgstr "пържена скарида"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fries"
-msgstr ""
+msgstr "Пържени картофи"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "frisbee"
-msgstr ""
+msgstr "фризби"
 
 #. module: web
 #. odoo-javascript
@@ -16475,7 +16647,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "frog"
-msgstr ""
+msgstr "жаба"
 
 #. module: web
 #. odoo-javascript
@@ -16483,7 +16655,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "front-facing baby chick"
-msgstr ""
+msgstr "Пиленце с лице напред"
 
 #. module: web
 #. odoo-javascript
@@ -16499,7 +16671,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "frown"
-msgstr ""
+msgstr "нацупен"
 
 #. module: web
 #. odoo-javascript
@@ -16507,7 +16679,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "frowning"
-msgstr ""
+msgstr "цупене"
 
 #. module: web
 #. odoo-javascript
@@ -16515,7 +16687,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "frowning face with open mouth"
-msgstr ""
+msgstr "нацупено лице с отворена уста"
 
 #. module: web
 #. odoo-javascript
@@ -16538,49 +16710,49 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fruit"
-msgstr ""
+msgstr "плод"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "frustration"
-msgstr ""
+msgstr "фрустрация"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "frying"
-msgstr ""
+msgstr "пържене"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fuel"
-msgstr ""
+msgstr "гориво"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fuel pump"
-msgstr ""
+msgstr "горивна помпа"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fuelpump"
-msgstr ""
+msgstr "горивна помпа"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fuji"
-msgstr ""
+msgstr "Фуджи "
 
 #. module: web
 #. odoo-javascript
@@ -16589,42 +16761,42 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "full"
-msgstr ""
+msgstr "пълен"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "full moon"
-msgstr ""
+msgstr "пълнолуние"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "full moon face"
-msgstr ""
+msgstr "Лице с пълнолуние"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "full-moon face"
-msgstr ""
+msgstr "Лице с пълнолуние"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "funeral"
-msgstr ""
+msgstr "погребение"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "funeral urn"
-msgstr ""
+msgstr "погребална урна"
 
 #. module: web
 #. odoo-javascript
@@ -16665,7 +16837,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "garbage"
-msgstr ""
+msgstr "боклук"
 
 #. module: web
 #. odoo-javascript
@@ -16673,7 +16845,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "garden"
-msgstr ""
+msgstr "градина"
 
 #. module: web
 #. odoo-javascript
@@ -16681,7 +16853,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "gardener"
-msgstr ""
+msgstr "градинар"
 
 #. module: web
 #. odoo-javascript
@@ -16689,14 +16861,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "garlic"
-msgstr ""
+msgstr "чесън"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "gas"
-msgstr ""
+msgstr "газ"
 
 #. module: web
 #. odoo-javascript
@@ -16704,7 +16876,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "gear"
-msgstr ""
+msgstr "Зъбно колело"
 
 #. module: web
 #. odoo-javascript
@@ -16832,7 +17004,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "ghost"
-msgstr ""
+msgstr "дух"
 
 #. module: web
 #. odoo-javascript
@@ -16848,7 +17020,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "gift"
-msgstr ""
+msgstr "подарък"
 
 #. module: web
 #. odoo-javascript
@@ -16856,7 +17028,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "giraffe"
-msgstr ""
+msgstr "жираф"
 
 #. module: web
 #. odoo-javascript
@@ -16879,7 +17051,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "girl"
-msgstr ""
+msgstr "момиче"
 
 #. module: web
 #. odoo-javascript
@@ -16892,7 +17064,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "glass"
-msgstr ""
+msgstr "чаша"
 
 #. module: web
 #. odoo-javascript
@@ -16900,7 +17072,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "glass of milk"
-msgstr ""
+msgstr "чаша мляко"
 
 #. module: web
 #. odoo-javascript
@@ -16909,14 +17081,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "glasses"
-msgstr ""
+msgstr "очила"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "glittery"
-msgstr ""
+msgstr "блестящ"
 
 #. module: web
 #. odoo-javascript
@@ -16967,7 +17139,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "glove"
-msgstr ""
+msgstr "ръкавица"
 
 #. module: web
 #. odoo-javascript
@@ -16975,7 +17147,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "gloves"
-msgstr ""
+msgstr "ръкавици"
 
 #. module: web
 #. odoo-javascript
@@ -17044,7 +17216,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "gold"
-msgstr ""
+msgstr "злато"
 
 #. module: web
 #. odoo-javascript
@@ -17052,7 +17224,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "golf"
-msgstr ""
+msgstr "голф"
 
 #. module: web
 #. odoo-javascript
@@ -17067,7 +17239,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "gondola"
-msgstr ""
+msgstr "гондола"
 
 #. module: web
 #. odoo-javascript
@@ -17109,7 +17281,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "gorilla"
-msgstr ""
+msgstr "горила"
 
 #. module: web
 #. odoo-javascript
@@ -17152,7 +17324,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "grape"
-msgstr ""
+msgstr "грозд"
 
 #. module: web
 #. odoo-javascript
@@ -17160,7 +17332,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "grapes"
-msgstr ""
+msgstr "грозде"
 
 #. module: web
 #. odoo-javascript
@@ -17210,28 +17382,28 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "green"
-msgstr ""
+msgstr "зелено"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "green apple"
-msgstr ""
+msgstr "зелена ябълка"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "green book"
-msgstr ""
+msgstr "зелена книга"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "green circle"
-msgstr ""
+msgstr "зелен кръг"
 
 #. module: web
 #. odoo-javascript
@@ -17239,28 +17411,28 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "green heart"
-msgstr ""
+msgstr "зелено сърце"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "green salad"
-msgstr ""
+msgstr "зелена салата"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "green square"
-msgstr ""
+msgstr "зелен квадрат"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "grimace"
-msgstr ""
+msgstr "гримаса"
 
 #. module: web
 #. odoo-javascript
@@ -17911,7 +18083,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hearts"
-msgstr ""
+msgstr "сърца"
 
 #. module: web
 #. odoo-javascript
@@ -17970,14 +18142,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "helicopter"
-msgstr ""
+msgstr "хеликоптер"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "helmet"
-msgstr ""
+msgstr "каска"
 
 #. module: web
 #. odoo-javascript
@@ -17985,7 +18157,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "help"
-msgstr ""
+msgstr "помощ"
 
 #. module: web
 #. odoo-javascript
@@ -18002,7 +18174,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hero"
-msgstr ""
+msgstr "герой"
 
 #. module: web
 #. odoo-javascript
@@ -18010,7 +18182,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "heroine"
-msgstr ""
+msgstr "хероин"
 
 #. module: web
 #. odoo-javascript
@@ -18086,7 +18258,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "highway"
-msgstr ""
+msgstr "магистрала"
 
 #. module: web
 #. odoo-javascript
@@ -18137,7 +18309,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hippo"
-msgstr ""
+msgstr "хипопотам"
 
 #. module: web
 #. odoo-javascript
@@ -18167,7 +18339,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hockey"
-msgstr ""
+msgstr "хокей"
 
 #. module: web
 #. odoo-javascript
@@ -18194,7 +18366,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hole"
-msgstr ""
+msgstr "дупка"
 
 #. module: web
 #. odoo-javascript
@@ -18210,14 +18382,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "home"
-msgstr ""
+msgstr "дом"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "honey"
-msgstr ""
+msgstr "мед"
 
 #. module: web
 #. odoo-javascript
@@ -18260,7 +18432,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hooray"
-msgstr ""
+msgstr "ура"
 
 #. module: web
 #. odoo-javascript
@@ -18283,7 +18455,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "horn"
-msgstr ""
+msgstr "клаксон"
 
 #. module: web
 #. odoo-javascript
@@ -18298,7 +18470,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "horrible"
-msgstr ""
+msgstr "ужасен"
 
 #. module: web
 #. odoo-javascript
@@ -18309,7 +18481,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "horse"
-msgstr ""
+msgstr "кон"
 
 #. module: web
 #. odoo-javascript
@@ -18338,7 +18510,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hospital"
-msgstr ""
+msgstr "болница"
 
 #. module: web
 #. odoo-javascript
@@ -18348,14 +18520,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hot"
-msgstr ""
+msgstr "горещ"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hot beverage"
-msgstr ""
+msgstr "топла напитка"
 
 #. module: web
 #. odoo-javascript
@@ -18363,7 +18535,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hot dog"
-msgstr ""
+msgstr "хотдог"
 
 #. module: web
 #. odoo-javascript
@@ -18379,7 +18551,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hot pepper"
-msgstr ""
+msgstr "лютива чушка"
 
 #. module: web
 #. odoo-javascript
@@ -18400,7 +18572,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hotdog"
-msgstr ""
+msgstr "хотдог"
 
 #. module: web
 #. odoo-javascript
@@ -18414,7 +18586,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hotel"
-msgstr ""
+msgstr "хотел"
 
 #. module: web
 #. odoo-javascript
@@ -18428,7 +18600,7 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.js:0
 #, python-format
 msgid "hour"
-msgstr ""
+msgstr "час"
 
 #. module: web
 #. odoo-javascript
@@ -18469,7 +18641,7 @@ msgstr "часове"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "house"
-msgstr ""
+msgstr "къща"
 
 #. module: web
 #. odoo-javascript
@@ -18477,7 +18649,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "house with garden"
-msgstr ""
+msgstr "къща с градина"
 
 #. module: web
 #. odoo-javascript
@@ -18485,14 +18657,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "houses"
-msgstr ""
+msgstr "къщи"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hug"
-msgstr ""
+msgstr "прегръдка"
 
 #. module: web
 #. odoo-javascript
@@ -18514,7 +18686,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hundred"
-msgstr ""
+msgstr "сто"
 
 #. module: web
 #. odoo-javascript
@@ -18529,7 +18701,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "hurricane"
-msgstr ""
+msgstr "ураган"
 
 #. module: web
 #. odoo-javascript
@@ -18570,7 +18742,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "ice"
-msgstr ""
+msgstr "лед"
 
 #. module: web
 #. odoo-javascript
@@ -18579,14 +18751,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "ice cream"
-msgstr ""
+msgstr "сладолед"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "ice cube"
-msgstr ""
+msgstr "леден куб"
 
 #. module: web
 #. odoo-javascript
@@ -18614,14 +18786,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "iceberg"
-msgstr ""
+msgstr "айсберг"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "icecream"
-msgstr ""
+msgstr "сладолед"
 
 #. module: web
 #. odoo-javascript
@@ -18635,14 +18807,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "idea"
-msgstr ""
+msgstr "идея"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "identity"
-msgstr ""
+msgstr "идентичност"
 
 #. module: web
 #. odoo-javascript
@@ -18681,7 +18853,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "ill"
-msgstr ""
+msgstr "болен"
 
 #. module: web
 #. odoo-javascript
@@ -18695,7 +18867,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "in love"
-msgstr ""
+msgstr "влюбен"
 
 #. module: web
 #. odoo-javascript
@@ -18723,7 +18895,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "incoming"
-msgstr ""
+msgstr "Входящ"
 
 #. module: web
 #. odoo-javascript
@@ -18773,7 +18945,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "industrial"
-msgstr ""
+msgstr "индустриален"
 
 #. module: web
 #. odoo-javascript
@@ -18797,14 +18969,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "information"
-msgstr ""
+msgstr "информация"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "injection"
-msgstr ""
+msgstr "инжекция"
 
 #. module: web
 #. odoo-javascript
@@ -18820,14 +18992,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "ink"
-msgstr ""
+msgstr "мастило"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "innocent"
-msgstr ""
+msgstr "невинен"
 
 #. module: web
 #. odoo-javascript
@@ -18908,7 +19080,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "insect"
-msgstr ""
+msgstr "насекомо"
 
 #. module: web
 #. odoo-javascript
@@ -18923,7 +19095,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "instructor"
-msgstr ""
+msgstr "инструктор"
 
 #. module: web
 #. odoo-javascript
@@ -18934,14 +19106,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "instrument"
-msgstr ""
+msgstr "инструмент"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "intelligent"
-msgstr ""
+msgstr "интелигентен"
 
 #. module: web
 #. odoo-javascript
@@ -18980,7 +19152,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "inventor"
-msgstr ""
+msgstr "откривател"
 
 #. module: web
 #. odoo-javascript
@@ -18994,7 +19166,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "iron"
-msgstr ""
+msgstr "желязо"
 
 #. module: web
 #. odoo-javascript
@@ -19059,14 +19231,14 @@ msgstr "е настроено"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "islam"
-msgstr ""
+msgstr "Ислям"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "island"
-msgstr ""
+msgstr "остров"
 
 #. module: web
 #. odoo-javascript
@@ -19103,14 +19275,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "jacket"
-msgstr ""
+msgstr "яке"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "jar"
-msgstr ""
+msgstr "буркан"
 
 #. module: web
 #. odoo-javascript
@@ -19118,14 +19290,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "jeans"
-msgstr ""
+msgstr "джинси"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "jewel"
-msgstr ""
+msgstr "бижу"
 
 #. module: web
 #. odoo-javascript
@@ -19146,7 +19318,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "jockey"
-msgstr ""
+msgstr "жокей"
 
 #. module: web
 #. odoo-javascript
@@ -19160,7 +19332,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "joke"
-msgstr ""
+msgstr "шега"
 
 #. module: web
 #. odoo-javascript
@@ -19168,7 +19340,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "joker"
-msgstr ""
+msgstr "жокер"
 
 #. module: web
 #. odoo-javascript
@@ -19176,7 +19348,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "joy"
-msgstr ""
+msgstr "наслада"
 
 #. module: web
 #. odoo-javascript
@@ -19184,7 +19356,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "joystick"
-msgstr ""
+msgstr "джойстик"
 
 #. module: web
 #. odoo-javascript
@@ -19192,14 +19364,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "judge"
-msgstr ""
+msgstr "съдия"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "judo"
-msgstr ""
+msgstr "джудо"
 
 #. module: web
 #. odoo-javascript
@@ -19229,7 +19401,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "juice"
-msgstr ""
+msgstr "сок"
 
 #. module: web
 #. odoo-javascript
@@ -19243,7 +19415,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "jump"
-msgstr ""
+msgstr "скок"
 
 #. module: web
 #. odoo-javascript
@@ -19253,7 +19425,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "justice"
-msgstr ""
+msgstr "правосъдие"
 
 #. module: web
 #. odoo-javascript
@@ -19290,14 +19462,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "karaoke"
-msgstr ""
+msgstr "караоке"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "karate"
-msgstr ""
+msgstr "карате"
 
 #. module: web
 #. odoo-javascript
@@ -19313,7 +19485,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "kebab"
-msgstr ""
+msgstr "кебаб"
 
 #. module: web
 #. odoo-javascript
@@ -19323,7 +19495,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "key"
-msgstr ""
+msgstr "ключ"
 
 #. module: web
 #. odoo-javascript
@@ -19332,7 +19504,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keyboard"
-msgstr ""
+msgstr "клавиатура"
 
 #. module: web
 #. odoo-javascript
@@ -19351,98 +19523,98 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap"
-msgstr ""
+msgstr "ключалка"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: #"
-msgstr ""
+msgstr "ключалка: #"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: *"
-msgstr ""
+msgstr "ключалка: *"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 0"
-msgstr ""
+msgstr "ключалка: 0"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 1"
-msgstr ""
+msgstr "ключалка: 1"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 10"
-msgstr ""
+msgstr "ключалка: 10"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 2"
-msgstr ""
+msgstr "ключалка: 2"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 3"
-msgstr ""
+msgstr "ключалка: 3"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 4"
-msgstr ""
+msgstr "ключалка: 4"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 5"
-msgstr ""
+msgstr "ключалка: 5"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 6"
-msgstr ""
+msgstr "ключалка: 6"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 7"
-msgstr ""
+msgstr "ключалка: 7"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 8"
-msgstr ""
+msgstr "ключалка: 8"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "keycap: 9"
-msgstr ""
+msgstr "ключалка: 9"
 
 #. module: web
 #. odoo-javascript
@@ -19466,14 +19638,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "kimono"
-msgstr ""
+msgstr "кимоно"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "king"
-msgstr ""
+msgstr "крал"
 
 #. module: web
 #. odoo-javascript
@@ -19490,7 +19662,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "kiss"
-msgstr ""
+msgstr "целувка"
 
 #. module: web
 #. odoo-javascript
@@ -19559,7 +19731,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "kitchen knife"
-msgstr ""
+msgstr "кухненски нож"
 
 #. module: web
 #. odoo-javascript
@@ -19567,14 +19739,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "kite"
-msgstr ""
+msgstr "хвърчило"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "kiwi"
-msgstr ""
+msgstr "киви"
 
 #. module: web
 #. odoo-javascript
@@ -19582,7 +19754,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "kiwi fruit"
-msgstr ""
+msgstr "киви плод"
 
 #. module: web
 #. odoo-javascript
@@ -19608,7 +19780,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "knife"
-msgstr ""
+msgstr "нож"
 
 #. module: web
 #. odoo-javascript
@@ -19622,7 +19794,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "knit"
-msgstr ""
+msgstr "плетка"
 
 #. module: web
 #. odoo-javascript
@@ -19644,7 +19816,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "koala"
-msgstr ""
+msgstr "коала"
 
 #. module: web
 #. odoo-javascript
@@ -19659,7 +19831,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lab"
-msgstr ""
+msgstr "лаборатория"
 
 #. module: web
 #. odoo-javascript
@@ -19748,7 +19920,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lamp"
-msgstr ""
+msgstr "лампа"
 
 #. module: web
 #. odoo-javascript
@@ -19785,7 +19957,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "laptop"
-msgstr ""
+msgstr "лаптоп"
 
 #. module: web
 #. odoo-javascript
@@ -19793,7 +19965,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "large"
-msgstr ""
+msgstr "голям"
 
 #. module: web
 #. odoo-javascript
@@ -19849,7 +20021,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "latin"
-msgstr ""
+msgstr "Латински"
 
 #. module: web
 #. odoo-javascript
@@ -19857,7 +20029,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "latin cross"
-msgstr ""
+msgstr "латински кръст"
 
 #. module: web
 #. odoo-javascript
@@ -19866,7 +20038,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "laugh"
-msgstr ""
+msgstr "смях"
 
 #. module: web
 #. odoo-javascript
@@ -19891,7 +20063,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lazy"
-msgstr ""
+msgstr "мързелив"
 
 #. module: web
 #. odoo-javascript
@@ -19903,7 +20075,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "leaf"
-msgstr ""
+msgstr "листо"
 
 #. module: web
 #. odoo-javascript
@@ -19927,14 +20099,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "ledger"
-msgstr ""
+msgstr "счетоводна книга"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "left"
-msgstr ""
+msgstr "ляво"
 
 #. module: web
 #. odoo-javascript
@@ -19942,7 +20114,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "left arrow"
-msgstr ""
+msgstr "лява стрелка"
 
 #. module: web
 #. odoo-javascript
@@ -19958,7 +20130,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "left luggage"
-msgstr ""
+msgstr "оставен багаж"
 
 #. module: web
 #. odoo-javascript
@@ -20005,7 +20177,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "leg"
-msgstr ""
+msgstr "крак"
 
 #. module: web
 #. odoo-javascript
@@ -20013,7 +20185,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lemon"
-msgstr ""
+msgstr "лимон"
 
 #. module: web
 #. odoo-javascript
@@ -20021,7 +20193,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "leopard"
-msgstr ""
+msgstr "леопард"
 
 #. module: web
 #. odoo-javascript
@@ -20040,7 +20212,7 @@ msgstr "преди по-малко от минута"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "letter"
-msgstr ""
+msgstr "писмо"
 
 #. module: web
 #. odoo-javascript
@@ -20048,7 +20220,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "letterbox"
-msgstr ""
+msgstr "пощенска кутия"
 
 #. module: web
 #. odoo-javascript
@@ -20057,21 +20229,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "letters"
-msgstr ""
+msgstr "писма"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lettuce"
-msgstr ""
+msgstr "маруля"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "level"
-msgstr ""
+msgstr "ниво"
 
 #. module: web
 #. odoo-javascript
@@ -20085,28 +20257,28 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "liberty"
-msgstr ""
+msgstr "свобода"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lie"
-msgstr ""
+msgstr "лъжа"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "life"
-msgstr ""
+msgstr "живот"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "life jacket"
-msgstr ""
+msgstr "спасителна жилетка"
 
 #. module: web
 #. odoo-javascript
@@ -20126,14 +20298,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "light"
-msgstr ""
+msgstr "светлина"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "light bulb"
-msgstr ""
+msgstr "електрическа крушка"
 
 #. module: web
 #. odoo-javascript
@@ -20142,7 +20314,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "light rail"
-msgstr ""
+msgstr "лека железница"
 
 #. module: web
 #. odoo-javascript
@@ -20150,7 +20322,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lightning"
-msgstr ""
+msgstr "светкавица"
 
 #. module: web
 #. odoo-javascript
@@ -20158,7 +20330,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lights"
-msgstr ""
+msgstr "светлини"
 
 #. module: web
 #. odoo-javascript
@@ -20181,7 +20353,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "link"
-msgstr ""
+msgstr "връзка"
 
 #. module: web
 #. odoo-javascript
@@ -20198,7 +20370,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lion"
-msgstr ""
+msgstr "лъв"
 
 #. module: web
 #. odoo-javascript
@@ -20206,7 +20378,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lips"
-msgstr ""
+msgstr "устни"
 
 #. module: web
 #. odoo-javascript
@@ -20221,7 +20393,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "liquor"
-msgstr ""
+msgstr "ликьор"
 
 #. module: web
 #. odoo-javascript
@@ -20325,7 +20497,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "locomotive"
-msgstr ""
+msgstr "локомотив"
 
 #. module: web
 #. odoo-javascript
@@ -20369,7 +20541,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "lotion"
-msgstr ""
+msgstr "лосион"
 
 #. module: web
 #. odoo-javascript
@@ -20416,14 +20588,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "love"
-msgstr ""
+msgstr "любов"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "love hotel"
-msgstr ""
+msgstr "любовен хотел"
 
 #. module: web
 #. odoo-javascript
@@ -20484,7 +20656,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "luggage"
-msgstr ""
+msgstr "багаж"
 
 #. module: web
 #. odoo-javascript
@@ -20502,7 +20674,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mad"
-msgstr ""
+msgstr "луд"
 
 #. module: web
 #. odoo-javascript
@@ -20527,7 +20699,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "magnet"
-msgstr ""
+msgstr "магнит"
 
 #. module: web
 #. odoo-javascript
@@ -20535,7 +20707,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "magnetic"
-msgstr ""
+msgstr "магнетичен"
 
 #. module: web
 #. odoo-javascript
@@ -20589,7 +20761,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mail"
-msgstr ""
+msgstr "поща"
 
 #. module: web
 #. odoo-javascript
@@ -20600,7 +20772,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mailbox"
-msgstr ""
+msgstr "пощенска кутия"
 
 #. module: web
 #. odoo-javascript
@@ -21384,7 +21556,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "marathon"
-msgstr ""
+msgstr "маратон"
 
 #. module: web
 #. odoo-javascript
@@ -21414,7 +21586,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "marker"
-msgstr ""
+msgstr "маркер"
 
 #. module: web
 #. odoo-javascript
@@ -21429,7 +21601,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "martial arts"
-msgstr ""
+msgstr "бойни изкуства"
 
 #. module: web
 #. odoo-javascript
@@ -21445,7 +21617,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mask"
-msgstr ""
+msgstr "маска"
 
 #. module: web
 #. odoo-javascript
@@ -21454,7 +21626,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "massage"
-msgstr ""
+msgstr "масаж"
 
 #. module: web
 #. odoo-javascript
@@ -21501,7 +21673,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "meat"
-msgstr ""
+msgstr "месо"
 
 #. module: web
 #. odoo-javascript
@@ -21525,7 +21697,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mechanic"
-msgstr ""
+msgstr "мханик"
 
 #. module: web
 #. odoo-javascript
@@ -21533,7 +21705,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mechanical arm"
-msgstr ""
+msgstr "механична ръка"
 
 #. module: web
 #. odoo-javascript
@@ -21541,7 +21713,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mechanical leg"
-msgstr ""
+msgstr "механичен крак"
 
 #. module: web
 #. odoo-javascript
@@ -21552,7 +21724,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "medal"
-msgstr ""
+msgstr "медал"
 
 #. module: web
 #. odoo-javascript
@@ -21560,7 +21732,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "medical symbol"
-msgstr ""
+msgstr "медицински знак"
 
 #. module: web
 #. odoo-javascript
@@ -21573,7 +21745,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "medicine"
-msgstr ""
+msgstr "медицина"
 
 #. module: web
 #. odoo-javascript
@@ -21582,21 +21754,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "meditation"
-msgstr ""
+msgstr "медитация"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "medium"
-msgstr ""
+msgstr "среден"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "meeting"
-msgstr ""
+msgstr "среща"
 
 #. module: web
 #. odoo-javascript
@@ -21604,7 +21776,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "megaphone"
-msgstr ""
+msgstr "мегафон"
 
 #. module: web
 #. odoo-javascript
@@ -21621,7 +21793,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "melon"
-msgstr ""
+msgstr "диня"
 
 #. module: web
 #. odoo-javascript
@@ -21629,7 +21801,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "memo"
-msgstr ""
+msgstr "записка"
 
 #. module: web
 #. odoo-javascript
@@ -21638,7 +21810,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "men"
-msgstr ""
+msgstr "мъже"
 
 #. module: web
 #. odoo-javascript
@@ -21722,7 +21894,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mermaid"
-msgstr ""
+msgstr "русалка"
 
 #. module: web
 #. odoo-javascript
@@ -21770,7 +21942,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mexican"
-msgstr ""
+msgstr "мексикански"
 
 #. module: web
 #. odoo-javascript
@@ -21778,7 +21950,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mic"
-msgstr ""
+msgstr "микрофон"
 
 #. module: web
 #. odoo-javascript
@@ -21786,7 +21958,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "microbe"
-msgstr ""
+msgstr "микроба"
 
 #. module: web
 #. odoo-javascript
@@ -21803,7 +21975,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "microscope"
-msgstr ""
+msgstr "микроскоп"
 
 #. module: web
 #. odoo-javascript
@@ -21811,14 +21983,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "middle finger"
-msgstr ""
+msgstr "среден пръст"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "military"
-msgstr ""
+msgstr "военен"
 
 #. module: web
 #. odoo-javascript
@@ -21833,7 +22005,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "milk"
-msgstr ""
+msgstr "мляко"
 
 #. module: web
 #. odoo-javascript
@@ -21841,7 +22013,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "milky way"
-msgstr ""
+msgstr "млчен път"
 
 #. module: web
 #. odoo-javascript
@@ -21856,21 +22028,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "minibus"
-msgstr ""
+msgstr "минибус"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "minidisk"
-msgstr ""
+msgstr "минидиск"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mining"
-msgstr ""
+msgstr "минно дело"
 
 #. module: web
 #. odoo-javascript
@@ -21878,14 +22050,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "minus"
-msgstr ""
+msgstr "минус"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.js:0
 #, python-format
 msgid "minute"
-msgstr ""
+msgstr "минута"
 
 #. module: web
 #. odoo-javascript
@@ -21912,21 +22084,21 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mobile"
-msgstr ""
+msgstr "мобилен"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mobile phone"
-msgstr ""
+msgstr "мобилен телефон"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mobile phone off"
-msgstr ""
+msgstr "мобилен телефон изключен"
 
 #. module: web
 #. odoo-javascript
@@ -21941,7 +22113,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mobility scooter"
-msgstr ""
+msgstr "скутер за придвижване"
 
 #. module: web
 #. odoo-javascript
@@ -21994,14 +22166,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "money"
-msgstr ""
+msgstr "пари"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "money bag"
-msgstr ""
+msgstr "торба с пари"
 
 #. module: web
 #. odoo-javascript
@@ -22036,7 +22208,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "monkey"
-msgstr ""
+msgstr "маймуна"
 
 #. module: web
 #. odoo-javascript
@@ -22050,7 +22222,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "monocle"
-msgstr ""
+msgstr "монокъл"
 
 #. module: web
 #. odoo-javascript
@@ -22072,7 +22244,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "monster"
-msgstr ""
+msgstr "чудовище"
 
 #. module: web
 #. odoo-javascript
@@ -22092,7 +22264,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "moon"
-msgstr ""
+msgstr "луна"
 
 #. module: web
 #. odoo-javascript
@@ -22130,7 +22302,7 @@ msgstr "още"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "morning"
-msgstr ""
+msgstr "сутрин"
 
 #. module: web
 #. odoo-javascript
@@ -22145,7 +22317,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mosque"
-msgstr ""
+msgstr "джамия"
 
 #. module: web
 #. odoo-javascript
@@ -22153,7 +22325,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mosquito"
-msgstr ""
+msgstr "комар"
 
 #. module: web
 #. odoo-javascript
@@ -22167,14 +22339,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mother"
-msgstr ""
+msgstr "майка"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "motor"
-msgstr ""
+msgstr "мотор"
 
 #. module: web
 #. odoo-javascript
@@ -22182,14 +22354,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "motor boat"
-msgstr ""
+msgstr "моторна лодка"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "motor scooter"
-msgstr ""
+msgstr "моторен скутер"
 
 #. module: web
 #. odoo-javascript
@@ -22204,7 +22376,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "motorcycle"
-msgstr ""
+msgstr "мотоциклет"
 
 #. module: web
 #. odoo-javascript
@@ -22220,7 +22392,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "motorway"
-msgstr ""
+msgstr "магистрала"
 
 #. module: web
 #. odoo-javascript
@@ -22252,7 +22424,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mountain"
-msgstr ""
+msgstr "планина"
 
 #. module: web
 #. odoo-javascript
@@ -22276,7 +22448,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mouse"
-msgstr ""
+msgstr "мишка"
 
 #. module: web
 #. odoo-javascript
@@ -22300,7 +22472,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mouth"
-msgstr ""
+msgstr "уста"
 
 #. module: web
 #. odoo-javascript
@@ -22311,14 +22483,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "movie"
-msgstr ""
+msgstr "филм"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "movie camera"
-msgstr ""
+msgstr "филмова камера"
 
 #. module: web
 #. odoo-javascript
@@ -22398,7 +22570,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "muscle"
-msgstr ""
+msgstr "мускул"
 
 #. module: web
 #. odoo-javascript
@@ -22406,7 +22578,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "museum"
-msgstr ""
+msgstr "музей"
 
 #. module: web
 #. odoo-javascript
@@ -22414,7 +22586,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "mushroom"
-msgstr ""
+msgstr "гъба"
 
 #. module: web
 #. odoo-javascript
@@ -22433,7 +22605,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "music"
-msgstr ""
+msgstr "музика"
 
 #. module: web
 #. odoo-javascript
@@ -22666,6 +22838,13 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+#, python-format
+msgid "new_template"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
@@ -22857,7 +23036,7 @@ msgstr ""
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #, python-format
 msgid "none"
-msgstr ""
+msgstr "нищо"
 
 #. module: web
 #. odoo-javascript
@@ -24633,7 +24812,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "phone"
-msgstr ""
+msgstr "телефон"
 
 #. module: web
 #. odoo-javascript
@@ -26427,7 +26606,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "right"
-msgstr ""
+msgstr "дясно"
 
 #. module: web
 #. odoo-javascript
@@ -26871,7 +27050,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "sake"
-msgstr ""
+msgstr "саке"
 
 #. module: web
 #. odoo-javascript
@@ -26885,14 +27064,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "salad"
-msgstr ""
+msgstr "салата"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "salon"
-msgstr ""
+msgstr "салон"
 
 #. module: web
 #. odoo-javascript
@@ -26900,7 +27079,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "salt"
-msgstr ""
+msgstr "сол"
 
 #. module: web
 #. odoo-javascript
@@ -26916,7 +27095,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "sand"
-msgstr ""
+msgstr "пясък"
 
 #. module: web
 #. odoo-javascript
@@ -26931,7 +27110,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "sandwich"
-msgstr ""
+msgstr "сандвич"
 
 #. module: web
 #. odoo-javascript
@@ -26978,14 +27157,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "satellite"
-msgstr ""
+msgstr "сателит"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "satellite antenna"
-msgstr ""
+msgstr "сателитна антена"
 
 #. module: web
 #. odoo-javascript
@@ -27015,7 +27194,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "sauna"
-msgstr ""
+msgstr "сауна"
 
 #. module: web
 #. odoo-javascript
@@ -27030,7 +27209,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "sausage"
-msgstr ""
+msgstr "наденица"
 
 #. module: web
 #. odoo-javascript
@@ -27059,14 +27238,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "saxophone"
-msgstr ""
+msgstr "саксофон"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "scale"
-msgstr ""
+msgstr "скала"
 
 #. module: web
 #. odoo-javascript
@@ -27091,7 +27270,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "scarf"
-msgstr ""
+msgstr "шал"
 
 #. module: web
 #. odoo-javascript
@@ -27107,7 +27286,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "school"
-msgstr ""
+msgstr "училище"
 
 #. module: web
 #. odoo-javascript
@@ -27116,7 +27295,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "science"
-msgstr ""
+msgstr "наука"
 
 #. module: web
 #. odoo-javascript
@@ -27125,7 +27304,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "scientist"
-msgstr ""
+msgstr "учен"
 
 #. module: web
 #. odoo-javascript
@@ -27133,7 +27312,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "scissors"
-msgstr ""
+msgstr "ножица"
 
 #. module: web
 #. odoo-javascript
@@ -27141,7 +27320,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "scooter"
-msgstr ""
+msgstr "скутер"
 
 #. module: web
 #. odoo-javascript
@@ -27149,14 +27328,14 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "score"
-msgstr ""
+msgstr "резултат"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "scorpio"
-msgstr ""
+msgstr "скорпион"
 
 #. module: web
 #. odoo-javascript
@@ -27165,7 +27344,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "scorpion"
-msgstr ""
+msgstr "скорпио"
 
 #. module: web
 #. odoo-javascript
@@ -27179,7 +27358,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "scream"
-msgstr ""
+msgstr "вид"
 
 #. module: web
 #. odoo-javascript
@@ -27201,7 +27380,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "sea"
-msgstr ""
+msgstr "море"
 
 #. module: web
 #. odoo-javascript
@@ -27212,7 +27391,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "seafood"
-msgstr ""
+msgstr "морска храна"
 
 #. module: web
 #. odoo-javascript
@@ -27221,7 +27400,7 @@ msgstr ""
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #, python-format
 msgid "search"
-msgstr ""
+msgstr "търсене"
 
 #. module: web
 #. odoo-javascript
@@ -27230,7 +27409,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "seat"
-msgstr ""
+msgstr "място"
 
 #. module: web
 #. odoo-javascript
@@ -27251,7 +27430,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "security"
-msgstr ""
+msgstr "сигурност"
 
 #. module: web
 #. odoo-javascript
@@ -27293,6 +27472,13 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+#, python-format
+msgid "self"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
@@ -27326,7 +27512,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "service"
-msgstr ""
+msgstr "услуга"
 
 #. module: web
 #. odoo-javascript
@@ -27357,7 +27543,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "seven"
-msgstr ""
+msgstr "седем"
 
 #. module: web
 #. odoo-javascript
@@ -33387,9 +33573,30 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/view_components/column_progress.xml:0
+#, python-format
+msgid "{{ bar.count }} {{ bar.string }}"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
+#, python-format
+msgid "{{ relatedFieldName }}..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "— press"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
 msgstr ""
 
 #. module: web

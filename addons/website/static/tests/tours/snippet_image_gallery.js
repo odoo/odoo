@@ -85,10 +85,36 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     content: "Click on move to next",
     trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
 }, {
-    content: "Check that the moved image still has the correct filter",
-    // FIXME somehow checking what the editor panel shows here is not reliable
-    // unless you add a big delay before checking.
+    content: "Check that the image has been moved",
+    trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='1']",
+    isCheck: true,
+}, {
+    content: "Click on the footer to reload the editor panel",
+    trigger: "iframe #footer",
+}, {
+    content: "Check that the footer options have been loaded",
+    trigger: ".snippet-option-HideFooter we-button:contains('Page Visibility')",
+    isCheck: true,
+}, {
+    content: "Click on the moved image",
     trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='1'][data-gl-filter='blur']",
+}, {
+    content: "Check that the image still has the correct filter",
+    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    isCheck: true,
+}, {
+    content: "Click to access next image",
+    trigger: "iframe .s_image_gallery .carousel-control-next",
+}, {
+    content: "Check that the option has changed",
+    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:not(:contains('Blur'))",
+    isCheck: true,
+}, {
+    content: "Click to access previous image",
+    trigger: "iframe .s_image_gallery .carousel-control-prev",
+}, {
+    content: "Check that the option is restored",
+    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
     isCheck: true,
 }]);
 

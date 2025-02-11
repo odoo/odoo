@@ -88,16 +88,12 @@
         <field name="priority" eval="25"/>
         <field name="arch" type="xml">
             <form string="Contact List">
-                <group>
-                    <group>
-                        <div class="oe_title">
-                            <label for="name"/>
-                            <h1>
-                                <field name="name" placeholder="e.g. Consumer Newsletter"/>
-                            </h1>
-                        </div>
-                    </group>
-                </group>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. Consumer Newsletter"/>
+                    </h1>
+                </div>
                 <group>
                     <field name="is_public"/>
                 </group>

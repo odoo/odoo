@@ -87,9 +87,6 @@ export class ChatBotService {
             await this.postWelcomeSteps();
             this.save();
         }
-        if (this.savedState) {
-            this._restore();
-        }
         if (!this.currentStep?.expectAnswer) {
             this._triggerNextStep();
         } else if (this.livechatService.thread?.isLastMessageFromCustomer) {
@@ -257,15 +254,21 @@ export class ChatBotService {
         }
         this.currentStep.hasAnswer = true;
         this.save();
+        let isRedirecting = false;
         if (answer) {
+            if (answer.redirectLink && URL.canParse(answer.redirectLink, window.location.href)) {
+                const url = new URL(window.location.href);
+                const nextURL = new URL(answer.redirectLink, window.location.href);
+                isRedirecting = url.pathname !== nextURL.pathname || url.origin !== nextURL.origin;
+                browser.location.assign(answer.redirectLink);
+            }
             await this.rpc("/chatbot/answer/save", {
                 channel_uuid: this.livechatService.thread.uuid,
                 message_id: stepMessage.id,
                 selected_answer_id: answer.id,
             });
         }
-        if (answer?.redirectLink) {
-            browser.location.assign(answer.redirectLink);
+        if (isRedirecting) {
             return;
         }
         this._triggerNextStep();
@@ -315,8 +318,8 @@ export class ChatBotService {
      * Clear outdated storage.
      */
     async clear() {
-        const chatbotStorageKey = this.livechatService.sessionCookie
-            ? `im_livechat.chatbot.state.uuid_${this.livechatService.sessionCookie.uuid}`
+        const chatbotStorageKey = this.livechatService.savedState
+            ? `im_livechat.chatbot.state.uuid_${this.livechatService.savedState.uuid}`
             : "";
         for (let i = 0; i < browser.localStorage.length; i++) {
             const key = browser.localStorage.key(i);
@@ -403,7 +406,7 @@ export class ChatBotService {
 
     get savedState() {
         const raw = browser.localStorage.getItem(
-            `im_livechat.chatbot.state.uuid_${this.livechatService.sessionCookie?.uuid}`
+            `im_livechat.chatbot.state.uuid_${this.livechatService.savedState?.uuid}`
         );
         return raw ? JSON.parse(raw) : null;
     }

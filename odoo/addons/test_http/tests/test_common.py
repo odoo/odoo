@@ -1,12 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timezone
 from unittest.mock import patch
+
+from werkzeug.datastructures import ResponseCacheControl
+from werkzeug.http import parse_cache_control_header
 
 import odoo
 from odoo.http import Session
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tools.func import lazy_property
 from odoo.addons.test_http.utils import MemoryGeoipResolver, MemorySessionStore
+
+HTTP_DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
 
 
 class TestHttpBase(HttpCaseWithUserDemo):
@@ -47,3 +53,15 @@ class TestHttpBase(HttpCaseWithUserDemo):
             db_filter.side_effect = lambda dbs, host=None: [db for db in dbs if db in dblist]
             Registry.return_value = self.registry
             return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)
+
+    def parse_http_cache_control(self, cache_control):
+        return parse_cache_control_header(cache_control, None, ResponseCacheControl)
+
+    def assertCacheControl(self, response, cache_control):
+        self.assertEqual(
+           self.parse_http_cache_control(response.headers['Cache-Control']),
+           self.parse_http_cache_control(cache_control),
+        )
+
+    def parse_http_expires(self, expires):
+        return datetime.strptime(expires, HTTP_DATETIME_FORMAT).replace(tzinfo=timezone.utc)

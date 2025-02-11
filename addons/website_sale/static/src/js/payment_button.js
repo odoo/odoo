@@ -35,19 +35,17 @@ paymentButton.include({
             return false; // Nothing else to check.
         }
         const carriersContainer = checkedCarriers[0].closest('.o_delivery_carrier_select');
+        if (carriersContainer.querySelector('.o_wsale_delivery_carrier_error')) {
+            // Rate shipment error.
+            return false;
+        }
         const isPickUpPointRequired = carriersContainer.querySelector('.o_show_pickup_locations');
         if (isPickUpPointRequired) {
             const address = carriersContainer.querySelector(
                 '.o_order_location_address'
             ).innerText;
-            const isPickUp = carriersContainer.lastChild.previousSibling.children;
-            if (
-                isPickUp.length > 1 && (address === '' || isPickUp[0].classList.contains('d-none'))
-            ) { // A pickup point is required but not selected
-                return false;
-            }
+            return address !== '';  // A pickup point is required but not selected.
         }
-
         return true;
     },
 

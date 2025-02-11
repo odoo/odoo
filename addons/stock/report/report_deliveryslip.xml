@@ -11,7 +11,7 @@
                         <div name="outgoing_delivery_address"
                             t-if="o.should_print_delivery_address()">
                             <span><strong>Delivery Address:</strong></span>
-                            <div t-field="o.move_ids[0].partner_id"
+                            <div t-out="o.move_ids[0].partner_id or o.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
                         <div name="outgoing_warehouse_address"
@@ -46,15 +46,15 @@
                         <span t-field="o.name">WH/OUT/0001</span>
                     </h2>
                     <div class="oe_structure"></div>
-                    <div class="row mt32 mb32">
-                        <div t-if="o.origin" class="col-auto" name="div_origin">
+                    <div class="report-wrapping-flexbox clearfix row mt32 mb32">
+                        <div t-if="o.origin" class="col-auto col-3 mw-100 mb-2" name="div_origin">
                             <strong>Order:</strong>
-                            <p t-field="o.origin">S0001</p>
+                            <p t-field="o.origin" class="m-0">S0001</p>
                         </div>
-                        <div t-if="o.state" class="col-auto" name="div_sched_date">
+                        <div t-if="o.state" class="col-auto col-3 mw-100 mb-2"  name="div_sched_date">
                             <strong>Shipping Date:</strong>
-                                <p t-if="o.state == 'done'" t-field="o.date_done"/>
-                                <p t-else="" t-field="o.scheduled_date"/>
+                                <p t-if="o.state == 'done'" t-field="o.date_done" class="m-0"/>
+                                <p t-else="" t-field="o.scheduled_date" class="m-0"/>
                         </div>
                     </div>
                     <div class="oe_structure"></div>
@@ -71,20 +71,20 @@
                             <tr t-foreach="lines" t-as="move">
                                 <td>
                                     <span t-field="move.product_id">Customizable Desk</span>
-                                    <p t-if="move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
+                                    <p t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
                                         <span t-field="move.description_picking">Description on transfer</span>
                                     </p>
                                 </td>
                                 <td>
                                     <span t-field="move.product_uom_qty">3.00</span>
-                                    <span t-field="move.product_uom">units</span>
+                                    <span t-field="move.product_uom" groups="uom.group_uom">units</span>
                                     <span t-if="move.product_packaging_id">
                                         (<span t-field="move.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="move.product_packaging_id"/>)
                                     </span>
                                 </td>
                                 <td>
                                     <span t-field="move.quantity">3.00</span>
-                                    <span t-field="move.product_uom">units</span>
+                                    <span t-field="move.product_uom" groups="uom.group_uom">units</span>
                                     <span t-if="move.product_packaging_id">
                                         (<span t-field="move.product_packaging_quantity" t-options='{"widget": "integer"}'/> <span t-field="move.product_packaging_id"/>)
                                     </span>
@@ -180,14 +180,14 @@
                                 <tr t-foreach="backorders.mapped('move_ids').filtered(lambda x: x.product_uom_qty)" t-as="bo_line">
                                     <td class="w-auto">
                                         <span t-field="bo_line.product_id">Office Chair</span>
-                                        <p t-if="bo_line.description_picking != bo_line.product_id.name and bo_line.description_picking != bo_line.product_id.display_name">
+                                        <p t-if="bo_line.description_picking and bo_line.description_picking != bo_line.product_id.name and bo_line.description_picking != bo_line.product_id.display_name">
                                             <span t-field="bo_line.description_picking">Description on transfer</span>
                                         </p>
                                     </td>
                                     <td/>
                                     <td class="text-center w-auto">
                                         <span t-field="bo_line.product_uom_qty">3.00</span>
-                                        <span t-field="bo_line.product_uom">units</span>
+                                        <span t-field="bo_line.product_uom" groups="uom.group_uom">units</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -202,7 +202,7 @@
                         <div class="offset-8">
                             <img t-att-src="image_data_uri(o.signature)" style="max-height: 4cm; max-width: 8cm;"/>
                         </div>
-                        <div class="offset-8 text-center">
+                        <div t-if="o.partner_id.name" class="offset-8 text-center">
                             <p t-field="o.partner_id.name">John Doe</p>
                         </div>
                     </div>
@@ -222,7 +222,10 @@
             <t t-if="not description and description != ''">
                 <t t-set="description" t-value="move_line.move_id.description_picking"/>
             </t>
-            <p t-if="description !='' and description != move_line.product_id.name">
+            <p t-if="description != '' and
+                     description != move_line.product_id.display_name and
+                     description != move_line.product_id.name"
+            >
                 <span t-esc="description"/>
             </p>
         </td>
@@ -232,6 +235,9 @@
         <td class="text-center" name="move_line_lot_quantity">
             <span t-field="move_line.quantity"/>
             <span t-field="move_line.product_uom_id"/>
+            <span t-if="move_line.move_id.product_packaging_id" groups="product.group_stock_packaging">
+                (<span t-field="move_line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="move_line.move_id.product_packaging_id.display_name"/>)
+            </span>
         </td>
     </template>
     <template id="stock_report_delivery_aggregated_move_lines">
@@ -239,7 +245,7 @@
             <td>
                 <span t-esc="aggregated_lines[line]['name']"/>
                 <p t-if="aggregated_lines[line]['description']">
-                    <span t-esc="aggregated_lines[line]['description']"/>
+                    <span t-esc="aggregated_lines[line]['description']"  t-options="{'widget': 'text'}"/>
                 </p>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_ordered">

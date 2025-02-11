@@ -101,8 +101,6 @@
                                    widget="monetary"/>
                             <div class="oe_subtotal_footer_separator oe_inline o_td_label">
                                 <label for="amount_total" />
-                                <button name="button_dummy"
-                                    invisible="state != 'draft'" string="(update)" class="oe_edit_only oe_link"/>
                             </div>
                             <field name="amount_total"
                                    force_save="1"
@@ -261,7 +259,7 @@
         <field name="name">pos.order.tree</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <tree string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+            <tree string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" duplicate="0">
                 <field name="currency_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="session_id"  readonly="state != 'draft'"/>

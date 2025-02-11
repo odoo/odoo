@@ -4,6 +4,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from itertools import chain, repeat
 from unittest.mock import patch
 
 from odoo import exceptions, fields, _
@@ -403,3 +404,19 @@ class TestComputeRankCommon(common.TransactionCase):
         with self.assertRaises(Exception):
             self.users[0:50]._recompute_rank()
 
+    def test_get_next_rank(self):
+        """ Test the computation of the next user rank.
+
+        The test is based on the users and ranks defined in the setup ("|" represents rank switches (karma_min)):
+        (user idx, user karma): (0, -1) | (1, 25)...(8, 235) | (9, 265)...(16, 475) | (17, 505)...(33, 985) | (34, 1015)
+        """
+        # user idx, karma:
+        for user, expected_next_rank in chain(
+                ((self.users[0], self.rank_1),),
+                zip(self.users[1:8], repeat(self.rank_2)),
+                zip(self.users[9:16], repeat(self.rank_3)),
+                zip(self.users[17:33], repeat(self.rank_4)),
+                ((self.users[34], self.env['gamification.karma.rank']),),
+        ):
+            user.next_rank_id = False  # Force the computation of the next rank
+            self.assertEqual(user._get_next_rank(), expected_next_rank)

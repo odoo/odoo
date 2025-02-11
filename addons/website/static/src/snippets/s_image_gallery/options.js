@@ -5,6 +5,10 @@ import options from "@web_editor/js/editor/snippets.options";
 import wUtils from '@website/js/utils';
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import {
+    loadImageInfo,
+    applyModifications,
+} from "@web_editor/js/editor/image_processing";
 
 /**
  * This class provides layout methods for interacting with the ImageGallery
@@ -200,6 +204,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
 
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
+        this._slideshowStart();
         this.$('li.fa').off('click');
     },
     /**
@@ -280,6 +285,50 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
     _relayout() {
         return this._setMode(this._getMode());
     },
+    /**
+     * Sets up listeners on slideshow to activate selected image.
+     */
+    _slideshowStart() {
+        const $carousel = this.$bsTarget.is(".carousel") ? this.$bsTarget : this.$bsTarget.find(".carousel");
+        let _previousEditor;
+        let _miniatureClicked;
+        const carouselIndicatorsEl = this.$target[0].querySelector(".carousel-indicators");
+        if (carouselIndicatorsEl) {
+            carouselIndicatorsEl.addEventListener("click", () => {
+                _miniatureClicked = true;
+            });
+        }
+        let lastSlideTimeStamp;
+        $carousel.on("slide.bs.carousel.image_gallery", (ev) => {
+            lastSlideTimeStamp = ev.timeStamp;
+            const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
+            for (const editor of this.options.wysiwyg.snippetsMenu.snippetEditors) {
+                if (editor.isShown() && editor.$target[0] === activeImageEl) {
+                    _previousEditor = editor;
+                    editor.toggleOverlay(false);
+                }
+            }
+        });
+        $carousel.on("slid.bs.carousel.image_gallery", (ev) => {
+            if (!_previousEditor && !_miniatureClicked) {
+                return;
+            }
+            _previousEditor = undefined;
+            _miniatureClicked = false;
+            // slid.bs.carousel is most of the time fired too soon by bootstrap
+            // since it emulates the transitionEnd with a setTimeout. We wait
+            // here an extra 20% of the time before retargeting edition, which
+            // should be enough...
+            const _slideDuration = new Date().getTime() - lastSlideTimeStamp;
+            setTimeout(() => {
+                const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
+                this.trigger_up("activate_snippet", {
+                    $snippet: $(activeImageEl),
+                    ifInactiveOptions: true,
+                });
+            }, 0.2 * _slideDuration);
+        });
+    },
 });
 
 options.registry.gallery = options.registry.GalleryLayout.extend({
@@ -295,7 +344,13 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
         } else {
             layoutPromise = Promise.resolve();
         }
-        return layoutPromise.then(() => _super.apply(this, arguments));
+        return layoutPromise.then(() => _super.apply(this, arguments).then(() => {
+            // Call specific mode's start if defined (e.g. _slideshowStart)
+            const startMode = this[`_${this._getMode()}Start`];
+            if (startMode) {
+                startMode.bind(this)();
+            }
+        }));
     },
     /**
      * @override
@@ -369,6 +424,13 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
 });
 
 options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
+    /**
+     * @override
+     */
+    init() {
+        this.rpc = this.bindService("rpc");
+        return this._super.apply(this, arguments);
+    },
     /**
      * @override
      */
@@ -446,8 +508,9 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                 multiImages: true,
                 onlyImages: true,
                 save: images => {
+                    const imagePromises = [];
                     for (const image of images) {
-                        $('<img/>', {
+                        const $img = $('<img/>', {
                             class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
                             src: image.src,
                             'data-index': ++index,
@@ -455,9 +518,34 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                             'data-name': _t('Image'),
                             style: $images.length > 0 ? $images[0].style.cssText : '',
                         }).appendTo($container);
+                        const imgEl = $img[0];
+                        imagePromises.push(new Promise(resolve => {
+                            loadImageInfo(imgEl, this.rpc).then(() => {
+                                if (imgEl.dataset.mimetype && ![
+                                    "image/gif",
+                                    "image/svg+xml",
+                                    "image/webp",
+                                ].includes(imgEl.dataset.mimetype)) {
+                                    // Convert to webp but keep original width.
+                                    imgEl.dataset.mimetype = "image/webp";
+                                    applyModifications(imgEl, {
+                                        mimetype: "image/webp",
+                                    }).then(src => {
+                                        imgEl.src = src;
+                                        imgEl.classList.add("o_modified_image_to_save");
+                                        resolve();
+                                    });
+                                } else {
+                                    resolve();
+                                }
+                            });
+                        }));
                     }
+                    savedPromise = Promise.all(imagePromises);
                     if (images.length > 0) {
-                        savedPromise = this._relayout();
+                        savedPromise = savedPromise.then(async () => {
+                            await this._relayout();
+                        });
                         this.trigger_up('cover_update');
                     }
                 },

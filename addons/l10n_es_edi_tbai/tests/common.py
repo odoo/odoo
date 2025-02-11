@@ -236,13 +236,14 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <ApellidosNombreRazonSocial>&amp;@àÁ$£€èêÈÊöÔÇç¡⅛™³</ApellidosNombreRazonSocial>
                 </EmisorFacturaRecibida>
                 <CabeceraFactura>
-                    <SerieFactura>INVTEST</SerieFactura>
-                    <NumFactura>01</NumFactura>
+                    <SerieFactura>TEST</SerieFactura>
+                    <NumFactura>INV/5234</NumFactura>
                     <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
                     <FechaRecepcion>01-01-2022</FechaRecepcion>
                     <TipoFactura>F1</TipoFactura>
                 </CabeceraFactura>
                 <DatosFactura>
+                    <DescripcionOperacion>INV/5234</DescripcionOperacion>
                     <Claves>
                         <IDClave>
                             <ClaveRegimenIvaOpTrascendencia>01</ClaveRegimenIvaOpTrascendencia>
@@ -254,10 +255,10 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <DetalleIVA>
                         <CompraBienesCorrientesGastosBienesInversion>C</CompraBienesCorrientesGastosBienesInversion>
                         <InversionSujetoPasivo>N</InversionSujetoPasivo>
-                        <BaseImponible>4000.0</BaseImponible>
+                        <BaseImponible>4000.00</BaseImponible>
                         <TipoImpositivo>21.0</TipoImpositivo>
-                        <CuotaIVASoportada>840.0</CuotaIVASoportada>
-                        <CuotaIVADeducible>840.0</CuotaIVADeducible>
+                        <CuotaIVASoportada>840.00</CuotaIVASoportada>
+                        <CuotaIVADeducible>840.00</CuotaIVADeducible>
                     </DetalleIVA>
                 </IVA>
         </FacturaRecibida>
@@ -285,13 +286,14 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <ApellidosNombreRazonSocial>partner_b</ApellidosNombreRazonSocial>
                 </EmisorFacturaRecibida>
                 <CabeceraFactura>
-                    <SerieFactura>INVTEST</SerieFactura>
-                    <NumFactura>01</NumFactura>
+                    <SerieFactura>TEST</SerieFactura>
+                    <NumFactura>INV/5234</NumFactura>
                     <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
                     <FechaRecepcion>01-01-2022</FechaRecepcion>
                     <TipoFactura>F1</TipoFactura>
                 </CabeceraFactura>
                 <DatosFactura>
+                    <DescripcionOperacion>INV/5234</DescripcionOperacion>
                     <Claves>
                         <IDClave>
                             <ClaveRegimenIvaOpTrascendencia>09</ClaveRegimenIvaOpTrascendencia>
@@ -303,17 +305,17 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <DetalleIVA>
                         <CompraBienesCorrientesGastosBienesInversion>C</CompraBienesCorrientesGastosBienesInversion>
                         <InversionSujetoPasivo>N</InversionSujetoPasivo>
-                        <BaseImponible>4000.0</BaseImponible>
+                        <BaseImponible>4000.00</BaseImponible>
                         <TipoImpositivo>21.0</TipoImpositivo>
-                        <CuotaIVASoportada>840.0</CuotaIVASoportada>
-                        <CuotaIVADeducible>840.0</CuotaIVADeducible>
+                        <CuotaIVASoportada>840.00</CuotaIVASoportada>
+                        <CuotaIVADeducible>840.00</CuotaIVADeducible>
                     </DetalleIVA><DetalleIVA>
                         <CompraBienesCorrientesGastosBienesInversion>G</CompraBienesCorrientesGastosBienesInversion>
                         <InversionSujetoPasivo>N</InversionSujetoPasivo>
-                        <BaseImponible>8000.0</BaseImponible>
+                        <BaseImponible>8000.00</BaseImponible>
                         <TipoImpositivo>21.0</TipoImpositivo>
-                        <CuotaIVASoportada>1680.0</CuotaIVASoportada>
-                        <CuotaIVADeducible>1680.0</CuotaIVADeducible>
+                        <CuotaIVASoportada>1680.00</CuotaIVASoportada>
+                        <CuotaIVADeducible>1680.00</CuotaIVADeducible>
                     </DetalleIVA>
                 </IVA>
             </FacturaRecibida>

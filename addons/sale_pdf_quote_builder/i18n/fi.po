@@ -3,19 +3,19 @@
 # 	* sale_pdf_quote_builder
 # 
 # Translators:
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Martin Trigaux, 2023
 # Joakim Weckman, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +36,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Lataa esimerkkejä"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
@@ -47,15 +47,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
-"Voit jakaa asiakirjan asiakkaillesi.\n"
-"Jätä se tyhjäksi, jos et halua jakaa asiakirjaa asiakkaan kanssa.\n"
-"Tarjous: Asiakirja lähetetään asiakkaille ja se on asiakkaiden käytettävissä milloin tahansa.\n"
-"- tämä vaihtoehto voi olla hyödyllinen tuotekuvaustiedostojen jakamisessa.\n"
-"Vahvistettu tilaus: Asiakirja lähetetään asiakkaille, ja asiakkaat saavat sen käyttöönsä.\n"
-"- tämä vaihtoehto voi olla hyödyllinen esimerkiksi käyttöohjeiden tai verkkokaupasta ostetun digitaalisen sisällön jakamisessa.\n"
-"Tarjous: Asiakirja sisällytetään tarjouksen pdf-tiedostoon otsikkosivujen ja tarjoustaulukon väliin. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -87,9 +81,20 @@ msgid "Inside quote"
 msgstr "Tarjouksen sisäinen"
 
 #. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"Näyttäisi että tarjouksen sisällä olevaa PDF-tiedostoa ei voida käsitellä. "
+"Se on joko kryptattu, tai formaatissa joka ei ole tuettu."
+
+#. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Learn more from the documentation."
-msgstr ""
+msgstr "Lue lisää dokumentaatiosta."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -146,6 +151,11 @@ msgid ""
 "                            product descriptions, details of the quote and then the footer pages.\n"
 "                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
+"Tarjoa otsikkosivuja ja alatunnisteen sivuja houkuttelevan lainauksen laatimiseksi\n"
+"                            jossa on lisätietoja yrityksestäsi, tuotteistasi ja palveluistasi.\n"
+"                            Tarjoustenne pdf-tiedosto rakennetaan kokoamalla otsikkosivut,\n"
+"                            tuotekuvaukset, tarjouksen yksityiskohdat ja sitten alatunnisteen sivut.\n"
+"                            Jos se on tyhjä, se käyttää yrityksen asetuksissa määriteltyjä sivuja.<br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -196,3 +206,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
 msgstr "Näkyvissä"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr ""
+"Kun asiakirja liitetään tarjouksen sisälle, sen on oltava tiedosto, ei URL-"
+"osoite."

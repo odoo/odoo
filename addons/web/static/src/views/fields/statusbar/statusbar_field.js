@@ -284,6 +284,7 @@ export class StatusBarField extends Component {
 
     /**
      * @param {StatusBarItem} item
+     * TODO: unused, remove in master
      */
     getItemTooltip(item) {
         if (item.isSelected) {

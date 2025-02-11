@@ -56,7 +56,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_kanban_record .o_field_widget .o_favorite > a").textContent,
-            " Remove from Favorites",
+            "Remove from Favorites",
             'the label should say "Remove from Favorites"'
         );
 
@@ -69,7 +69,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_kanban_record .o_field_widget .o_favorite > a").textContent,
-            " Add to Favorites",
+            "Add to Favorites",
             'the label should say "Add to Favorites"'
         );
     });
@@ -107,7 +107,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_kanban_record .o_field_widget .o_favorite > a").textContent,
-            " Add to Favorites",
+            "Add to Favorites",
             'the label should say "Add to Favorites"'
         );
 
@@ -149,7 +149,7 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(
                 target.querySelector(".o_kanban_record .o_field_widget .o_favorite > a")
                     .textContent,
-                " Add to Favorites",
+                "Add to Favorites",
                 'the label should say "Add to Favorites"'
             );
 
@@ -180,7 +180,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_widget .o_favorite > a").textContent,
-            " Remove from Favorites",
+            "Remove from Favorites",
             'the label should say "Remove from Favorites"'
         );
 
@@ -193,7 +193,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_widget .o_favorite > a").textContent,
-            " Add to Favorites",
+            "Add to Favorites",
             'the label should say "Add to Favorites"'
         );
 
@@ -204,7 +204,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_widget .o_favorite > a").textContent,
-            " Add to Favorites",
+            "Add to Favorites",
             'the label should say "Add to Favorites"'
         );
 
@@ -217,7 +217,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_widget .o_favorite > a").textContent,
-            " Remove from Favorites",
+            "Remove from Favorites",
             'the label should say "Remove from Favorites"'
         );
 
@@ -230,7 +230,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_widget .o_favorite > a").textContent,
-            " Remove from Favorites",
+            "Remove from Favorites",
             'the label should say "Remove from Favorites"'
         );
     });

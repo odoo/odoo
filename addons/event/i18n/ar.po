@@ -2477,7 +2477,7 @@ msgstr "تفعيل خاصية مسح الباركود "
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
 msgid "Enable or Disable Event Barcode functionality."
-msgstr "تمكين أو تعطيل وظيفة الرمز الشريطي للحدث. "
+msgstr "تمكين أو تعطيل وظيفة باركود الفعالية. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -3111,6 +3111,13 @@ msgstr "قيد التنفيذ"
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
 msgstr "إدراج خرائط Google ديناميكية في قوالب البريد الإلكتروني "
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -4570,10 +4577,10 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
-"غير مؤكدة: التسجيلات في حالة معلقة في انتظار الإجراء (حالة محددة، لا سيما حالة البيع)\n"
-"مسجلة: التسجيلات التي تم أخذها من قبل العميل\n"
-"حضر: التسجيلات التي حضر الحضور من أجلها الحدث\n"
-"ملغاة: تم إلغاء التسجيلات يدويا "
+"لم يتم التأكيد: التسجيلات في حالة معلقة في انتظار الإجراء (حالة محددة، لا سيما حالة البيع)\n"
+"تم التسجيل: التسجيلات التي تم أخذها من قبل العميل\n"
+"تم الحضور: التسجيلات التي حضر الحاضر الفعالية من أجلها\n"
+"تم الإلغاء: تم إلغاء التسجيلات يدوياً "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -4736,6 +4743,14 @@ msgstr "أسابيع"
 #, python-format
 msgid "Welcome to"
 msgstr "مرحبًا بك في"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0

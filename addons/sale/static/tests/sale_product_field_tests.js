@@ -1,7 +1,13 @@
 /** @odoo-module **/
 
 import {
-    getFixture, patchWithCleanup, addRow, editInput, triggerEvent, click } from "@web/../tests/helpers/utils";
+    getFixture,
+    patchWithCleanup,
+    addRow,
+    editInput,
+    triggerHotkey,
+    nextTick
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
 
@@ -88,7 +94,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Sale product field");
 
-    QUnit.test("blurring input with incomplete text will propose to create product", async function (assert) {
+    QUnit.test("pressing tab with incomplete text will create a product", async function (assert) {
 
         await makeView({
             type: "form",
@@ -112,23 +118,16 @@ QUnit.module("Fields", (hooks) => {
         // add a line and enter new product name
         await addRow(target, ".o_field_x2many_list");
         await editInput(target, "[name='product_template_id'] input", "new product");
-
-        // blur input => should ask for confirmation if we want to create product
-        await triggerEvent(target, "[name='product_template_id'] input", "blur");
-        assert.containsOnce(target, ".modal:contains(Create new product as a new Product)")
+        await triggerHotkey("tab");
+        await nextTick();
         assert.verifySteps([
             "get_views",
             "onchange",
             "onchange",
             "name_search",
-        ]);
-
-        await click(target, ".modal button.btn-primary");
-        assert.verifySteps([
             "name_create",
             "get_single_product_variant",
         ]);
-
     });
 
 });

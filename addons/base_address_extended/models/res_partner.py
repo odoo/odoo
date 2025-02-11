@@ -16,6 +16,10 @@ class Partner(models.Model):
     city_id = fields.Many2one(comodel_name='res.city', string='City ID')
     country_enforce_cities = fields.Boolean(related='country_id.enforce_cities')
 
+    @api.model
+    def _address_fields(self):
+        return super()._address_fields() + ['city_id']
+
     def _inverse_street_data(self):
         """ update self.street based on street_name, street_number and street_number2 """
         for partner in self:

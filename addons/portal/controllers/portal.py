@@ -330,13 +330,11 @@ class CustomerPortal(Controller):
             raise UserError(_("The document does not exist or you do not have the rights to access it."))
 
         IrAttachment = request.env['ir.attachment']
-        access_token = False
 
-        # Avoid using sudo or creating access_token when not necessary: internal
-        # users can create attachments, as opposed to public and portal users.
+        # Avoid using sudo when not necessary: internal users can create attachments,
+        # as opposed to public and portal users.
         if not request.env.user._is_internal():
             IrAttachment = IrAttachment.sudo()
-            access_token = IrAttachment._generate_access_token()
 
         # At this point the related message does not exist yet, so we assign
         # those specific res_model and res_is. They will be correctly set
@@ -347,7 +345,7 @@ class CustomerPortal(Controller):
             'datas': base64.b64encode(file.read()),
             'res_model': 'mail.compose.message',
             'res_id': 0,
-            'access_token': access_token,
+            'access_token': IrAttachment._generate_access_token(),
         })
         return request.make_response(
             data=json.dumps(attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]),
@@ -378,10 +376,13 @@ class CustomerPortal(Controller):
         error = dict()
         error_message = []
 
+        request.update_context(portal_form_country_id=data['country_id'])
         # Validation
         for field_name in self._get_mandatory_fields():
             if not data.get(field_name):
                 error[field_name] = 'missing'
+                if field_name == 'zipcode':
+                    error['zip'] = 'missing'
 
         # email validation
         if data.get('email') and not tools.single_email_re.match(data.get('email')):
@@ -422,11 +423,11 @@ class CustomerPortal(Controller):
 
     def _get_mandatory_fields(self):
         """ This method is there so that we can override the mandatory fields """
-        return self.MANDATORY_BILLING_FIELDS
+        return list(self.MANDATORY_BILLING_FIELDS)
 
     def _get_optional_fields(self):
         """ This method is there so that we can override the optional fields """
-        return self.OPTIONAL_BILLING_FIELDS
+        return list(self.OPTIONAL_BILLING_FIELDS)
 
     def _document_check_access(self, model_name, document_id, access_token=None):
         """Check if current user is allowed to access the specified record.
@@ -509,7 +510,7 @@ class CustomerPortal(Controller):
             'Content-Length': len(report),
         }
         if report_type == 'pdf' and download:
-            filename = "%s.pdf" % (re.sub('\W+', '-', model._get_report_base_filename()))
+            filename = "%s.pdf" % (re.sub(r'\W+', '-', model._get_report_base_filename()))
             headers['Content-Disposition'] = content_disposition(filename)
         return headers
 

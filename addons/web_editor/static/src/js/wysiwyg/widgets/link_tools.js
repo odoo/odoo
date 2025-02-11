@@ -52,7 +52,8 @@ export class LinkTools extends Link {
 
     setup() {
         super.setup(...arguments);
-        onWillUpdateProps((newProps) => {
+        onWillUpdateProps(async (newProps) => {
+            await this.mountedPromise;
             this.$link = newProps.link ? $(newProps.link) : this.link;
             this._setSelectOptionFromLink();
             this._updateOptionsUI();
@@ -532,5 +533,5 @@ export class LinkTools extends Link {
 }
 
 export function shouldUnlink(link, colorCombinationClass) {
-    return !link.getAttribute('href') && !colorCombinationClass;
+    return (!link.getAttribute("href") && !link.matches(".oe_unremovable")) && !colorCombinationClass;
 }

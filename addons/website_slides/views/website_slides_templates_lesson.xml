@@ -28,7 +28,7 @@
                                 </div>
                                 <div t-else="" t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if slide.channel_id.completed else 'd-flex'} align-items-center pb-3">
                                     <div class="progress w-50 bg-black-25" style="height: 10px;">
-                                        <div class="progress-bar rounded-start bg-info" role="progressbar"
+                                        <div class="progress-bar rounded-start bg-info" role="progressbar" aria-label="Progress bar"
                                             t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
                                             t-attf-style="width: #{slide.channel_id.completion}%;">
                                         </div>
@@ -66,8 +66,8 @@
 <template id="slide_aside_documentation" name="Slide: Sidebar in Documentation">
     <div class="o_wslides_lesson_aside_doc position-relative bg-white pb-1 my-3 border-bottom">
         <ul class="nav nav-tabs nav-fill" role="tablist">
-            <li class="nav-item"><a aria-controls="related" href="#related" class="nav-link rounded-0 border-top-0 border-start-0 py-2 active" data-bs-toggle="tab">Related</a></li>
-            <li class="nav-item"><a aria-controls="most_viewed" href="#most_viewed" class="nav-link rounded-0 border-top-0 border-end-0 py-2" data-bs-toggle="tab">Most Viewed</a></li>
+            <li class="nav-item" role="presentation"><a aria-controls="related" href="#related" class="nav-link rounded-0 border-top-0 border-start-0 py-2 active" data-bs-toggle="tab" role="tab">Related</a></li>
+            <li class="nav-item" role="presentation"><a aria-controls="most_viewed" href="#most_viewed" class="nav-link rounded-0 border-top-0 border-end-0 py-2" data-bs-toggle="tab" role="tab">Most Viewed</a></li>
         </ul>
         <div class="tab-content">
             <div role="tabpanel" id="related" class="tab-pane active bg-100">
@@ -247,7 +247,7 @@
             </span>
             <div class="btn-group flex-grow-1 flex-sm-0 my-1" role="group" aria-label="Lesson Nav">
                 <a t-attf-class="o_wslides_nav_button btn btn-light border my-auto #{'disabled' if not previous_slide else ''} me-2"
-                    role="button" t-att-aria-disabled="'disabled' if not previous_slide else None"
+                    role="button" t-att-aria-disabled="'true' if not previous_slide else None" aria-label="Previous"
                     t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
                     <i class="oi oi-chevron-left me-2"></i> <span class="d-none d-sm-inline-block">Prev</span>
                 </a>
@@ -275,17 +275,17 @@
                     </t>
                 </div>
                 <a t-attf-class="o_wslides_nav_button btn btn-light border my-auto #{'disabled' if not next_slide else ''}"
-                    role="button" t-att-aria-disabled="'disabled' if not next_slide else None"
+                    role="button" t-att-aria-disabled="'true' if not next_slide else None" aria-label="Next"
                     t-att-href="'/slides/slide/%s' % (slug(next_slide)) if next_slide else '#'">
                     <span class="d-none d-sm-inline-block">Next</span> <i class="oi oi-chevron-right ms-2"></i>
                 </a>
             </div>
-            <a class="btn btn-light border ms-2 my-1" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))">
+            <a class="btn btn-light border ms-2 my-1" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))" aria-label="Fullscreen">
                 <i class="fa fa-desktop me-xl-2 my-1"/>
                 <span class="d-none d-xl-inline-block">Fullscreen</span>
             </a>
              <a class="btn btn-light border ms-2 my-1" role="button" data-bs-toggle="modal"
-                t-att-data-bs-target="'#slideShareModal_%s' % slide.id">
+                t-att-data-bs-target="'#slideShareModal_%s' % slide.id" aria-label="Share">
                 <i class="fa fa-share-alt me-xl-2 my-1"/>
                 <span class="d-none d-xl-inline-block">Share</span>
             </a>
@@ -318,17 +318,17 @@
 
     <div class="mb-5 position-relative">
         <ul class="nav nav-tabs o_wslides_lesson_nav" role="tablist">
-            <li class="nav-item">
+            <li class="nav-item" role="presentation">
                 <a href="#about" aria-controls="about" t-att-class="'nav-link active' if not comments else 'nav-link'" role="tab" data-bs-toggle="tab">
                     <i class="fa fa-home"></i> About
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" role="presentation">
                 <a href="#discuss" aria-controls="discuss" t-att-class="'nav-link active' if comments else 'nav-link'" role="tab" data-bs-toggle="tab">
                     <i class="fa fa-comments"></i> Comments (<span t-esc="slide.comments_count"/>)
                 </a>
             </li>
-            <li class="nav-item" groups="base.group_user">
+            <li class="nav-item" role="presentation" groups="base.group_user">
                 <a href="#statistic" aria-controls="statistic" class="nav-link" role="tab" data-bs-toggle="tab">
                     <i class="fa fa-bar-chart"></i> Statistics
                 </a>

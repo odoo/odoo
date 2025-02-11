@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { isVisible } from "@web/core/utils/ui";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 // SVG generator: contains all information needed to draw highlight SVGs
@@ -289,6 +290,21 @@ export function drawTextHighlightSVG(textEl, highlightID) {
  * @param {String} highlightID
  */
 export function applyTextHighlight(topTextEl, highlightID) {
+    const endHighlightUpdate = () =>
+        topTextEl.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
+    // Don't reapply the effects to a highlighted text.
+    // If the target is invisible, we still need to notify the public widget
+    // that a highlight was detected (It's needed anyway, so the public widget
+    // can link the element to its observer, which tracks size changes and
+    // adapts the highlights accordingly).
+    if (topTextEl.querySelector(".o_text_highlight_item") || !isVisible(topTextEl)) {
+        return endHighlightUpdate();
+    }
+    const style = window.getComputedStyle(topTextEl);
+    if (!style.getPropertyValue("--text-highlight-width")) {
+        // The default value for `--text-highlight-width` is 0.1em.
+        topTextEl.style.setProperty("--text-highlight-width", `${Math.round(parseFloat(style.fontSize) * 0.1)}px`);
+    }
     const lines = [];
     let lineIndex = 0;
     const nodeIsBR = node => node.nodeName === "BR";
@@ -348,8 +364,9 @@ export function applyTextHighlight(topTextEl, highlightID) {
     }));
     // Build and set highlight SVGs.
     [...topTextEl.querySelectorAll(".o_text_highlight_item")].forEach(container => {
-        container.append(drawTextHighlightSVG(container, highlightID));
+        container.append(drawTextHighlightSVG(container, highlightID || getCurrentTextHighlight(topTextEl)));
     });
+    endHighlightUpdate();
 }
 
 /**
@@ -358,6 +375,7 @@ export function applyTextHighlight(topTextEl, highlightID) {
  * @param {HTMLElement} topTextEl
  */
 export function removeTextHighlight(topTextEl) {
+    topTextEl.dispatchEvent(new Event("text_highlight_remove", { bubbles: true }));
     // Simply replace every `<span class="o_text_highlight_item">
     // textNode1 [textNode2,...]<svg .../></span>` by `textNode1
     // [textNode2,...]`.
@@ -389,6 +407,15 @@ export function removeTextHighlight(topTextEl) {
  * if we just want to adapt the effect).
  */
 export function switchTextHighlight(textEl, highlightID) {
+    if (!isVisible(textEl)) {
+        // No need to adapt the effects on hidden targets, since they will be
+        // immediately fixed by the `resizeObserver` once they become visible.
+        // This will also prevent conflicts with the field's synchronizations
+        // in some specific cases (e.g. desktop & mobile navbar duplicated
+        // fields with highlighted content).
+        return;
+    }
+    highlightID = highlightID || getCurrentTextHighlight(textEl);
     const ownerDocument = textEl.ownerDocument;
     const sel = ownerDocument.getSelection();
     const restoreSelection = sel.rangeCount === 1 && textEl.contains(sel.anchorNode);
@@ -428,7 +455,6 @@ export function switchTextHighlight(textEl, highlightID) {
                 ...getOffsetNode(textEl, cursorEndPosition)
             );
         }
-        ownerDocument.dispatchEvent(new Event("selectionchange"));
     }
 }
 

@@ -113,6 +113,9 @@
                         <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="h6-font-size" data-apply-class="h6-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Heading 6</span></a></li>
                         <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="font-size-base" data-apply-class="base-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Normal</span></a></li>
                         <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="small-font-size" data-apply-class="o_small-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Small</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="small-twelve-font-size" data-apply-class="o_small_twelve-fs" href="#"> </a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="small-ten-font-size" data-apply-class="o_small_ten-fs" href="#"> </a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="small-eight-font-size" data-apply-class="o_small_eight-fs" href="#"> </a></li>
                     </ul>
                 </div>
             </t>
@@ -170,8 +173,16 @@
 
             <div t-if="props.showLink" id="link" class="btn-group">
                 <div id="media-insert" title="Insert media" class="fa fa-file-image-o fa-fw btn editor-ignore"></div>
+                <!--
+                Unlink button is visually last but thanks through the order-1
+                class. Indeed the create-link button needs to be last in the DOM
+                for the border-radius to be right when unlink is not shown, e.g.
+                in website.
+                TODO this should be done another way (split web_editor/website
+                to review).
+                -->
+                <div id="unlink" data-call="unlink" title="Remove link" class="fa fa-unlink fa-fw btn order-1"></div>
                 <div id="create-link" title="Insert or edit link" class="fa fa-link fa-fw btn editor-ignore"></div>
-                <div id="unlink" data-call="unlink" title="Remove link" class="fa fa-unlink fa-fw btn"></div>
                 <a id="media-description" href="#" title="Edit media description" class="btn editor-ignore">Description</a>
             </div>
 

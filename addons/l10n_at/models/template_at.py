@@ -17,8 +17,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'chart_at_template_3740',
             'property_stock_account_output_categ_id': 'chart_at_template_5000',
             'property_stock_valuation_account_id': 'chart_at_template_1600',
-            'property_tax_payable_account_id': 'chart_at_template_3530',
-            'property_tax_receivable_account_id': 'chart_at_template_3530',
             'code_digits': '4',
         }
 
@@ -45,7 +43,8 @@ class AccountChartTemplate(models.AbstractModel):
     def _setup_utility_bank_accounts(self, template_code, company, template_data):
         super()._setup_utility_bank_accounts(template_code, company, template_data)
         if template_code == "at":
-            company.account_journal_suspense_account_id.tag_ids = self.env.ref('l10n_at.account_tag_external_code_2300')
-            company.account_journal_payment_debit_account_id.tag_ids = self.env.ref('l10n_at.account_tag_external_code_2300')
-            company.account_journal_payment_credit_account_id.tag_ids = self.env.ref('l10n_at.account_tag_external_code_2300')
-            company.transfer_account_id.tag_ids = self.env.ref('l10n_at.account_tag_external_code_2885')
+            bank_tags = self.env.ref('l10n_at.account_tag_external_code_2300') | self.env.ref('l10n_at.account_tag_l10n_at_ABIV')
+            company.account_journal_suspense_account_id.tag_ids |= bank_tags
+            company.account_journal_payment_debit_account_id.tag_ids |= bank_tags
+            company.account_journal_payment_credit_account_id.tag_ids |= bank_tags
+            company.transfer_account_id.tag_ids |= self.env.ref('l10n_at.account_tag_external_code_2885') | self.env.ref('l10n_at.account_tag_l10n_at_ABIV')

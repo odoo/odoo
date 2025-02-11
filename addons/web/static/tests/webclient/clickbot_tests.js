@@ -12,6 +12,8 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { errorService } from "@web/core/errors/error_service";
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 
 let serverData;
 let clickEverywhereDef;
@@ -314,6 +316,68 @@ QUnit.module("clickbot", (hooks) => {
             "web_search_read called", // click on the Second Filter
             "response",
             "test successful",
+        ]);
+    });
+
+    QUnit.test("clickbot show rpc error when an error dialog is detected", async (assert) => {
+        patchDate(2024, 3, 10, 0, 0, 0);
+        let clickBotStarted = false;
+        registry.category("services").add("error", errorService);
+        serverData.actions = {
+            1001: {
+                id: 1,
+                name: "App1",
+                res_model: "foo",
+                type: "ir.actions.act_window",
+                views: [[false, "list"]],
+            },
+        };
+        serverData.menus = {
+            root: { id: "root", children: [1], name: "root", appID: "root" },
+            1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
+        };
+        patchWithCleanup(browser, {
+            console: {
+                log: (msg) => {
+                    if (msg === "test successful") {
+                        assert.step(msg);
+                        clickEverywhereDef.resolve();
+                    }
+                },
+                error: (msg) => {
+                    assert.step(msg.toString());
+                    clickEverywhereDef.resolve();
+                },
+            },
+        });
+        let id = 1;
+        await createWebClient({
+            serverData,
+            mockRPC: async function (route, args) {
+                if (args.method === "web_search_read") {
+                    if (clickBotStarted) {
+                        if (id === 3) {
+                            // click on the Second Filter
+                            throw makeServerError({
+                                message:
+                                    "This is a server Error, it should be displayed in an error dialog",
+                            });
+                        }
+                        id++;
+                    }
+                }
+            },
+        });
+        clickBotStarted = true;
+
+        clickEverywhereDef = makeDeferred();
+        window.clickEverywhere();
+        await clickEverywhereDef;
+        await nextTick();
+        assert.verifySteps([
+            'A RPC in error was detected, maybe it\'s related to the error dialog : {"data":{"id":6,"jsonrpc":"2.0","method":"call","params":{"model":"foo","method":"web_search_read","args":[],"kwargs":{"specification":{"foo":{}},"offset":0,"order":"","limit":80,"context":{"lang":"en","uid":7,"tz":"taht","bin_size":true},"count_limit":10001,"domain":["|",["bar","=",false],"&",["date",">=","2024-04-01"],["date","<=","2024-04-30"]]}}},"settings":{"silent":false},"error":{"name":"RPC_ERROR","type":"server","code":200,"data":{"name":"odoo.exceptions.UserError","debug":"traceback","arguments":[],"context":{}},"exceptionName":"odoo.exceptions.UserError","message":"This is a server Error, it should be displayed in an error dialog","errorEvent":{"isTrusted":true}}}',
+            "Error while testing App1 app1",
+            'Error: Error dialog detected<header class="modal-header"><h4 class="modal-title text-break">Odoo Error</h4><button type="button" class="btn-close" aria-label="Close" tabindex="-1"></button></header><footer class="modal-footer justify-content-around justify-content-md-start flex-wrap gap-1 w-100" style="order:2"><button class="btn btn-primary o-default-button">Close</button><button class="btn btn-secondary"><i class="fa fa-clipboard mr8"></i>Copy error to clipboard</button></footer><main class="modal-body"><div role="alert"><p class="text-prewrap"><p><b>An error occurred</b></p><p>Please use the copy button to report the error to your support service.</p></p><button class="btn btn-link">See details</button></div></main>',
         ]);
     });
 

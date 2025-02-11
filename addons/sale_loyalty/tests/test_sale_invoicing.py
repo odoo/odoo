@@ -50,17 +50,19 @@ class TestSaleInvoicing(TestSaleCouponCommon):
 
         order.action_confirm()
         invoiceable_lines = order._get_invoiceable_lines()
-        # Product was not delivered, we cannot invoice
-        # the product line nor the promotion line
-        order._compute_invoice_status()
+        # Product was not delivered, the order invoice status is 'No' as invoicing it should not be
+        # promoted, but the reward line should still be invoiceable, if users wants to invoice it
         self.assertEqual(order.invoice_status, 'no')
+        self.assertEqual(len(invoiceable_lines), 1)
+
+        inv = order._create_invoices()
+        self.assertEqual(len(inv.invoice_line_ids), 1)
+        invoiceable_lines = order._get_invoiceable_lines()
         self.assertEqual(len(invoiceable_lines), 0)
-        with self.assertRaises(UserError):
-            order._create_invoices()
+        inv.button_cancel()
 
         order.order_line[0].qty_delivered = 1
         # Product is delivered, the two lines can be invoiced.
-        order._compute_invoice_status()
         self.assertEqual(order.invoice_status, 'to invoice')
         invoiceable_lines = order._get_invoiceable_lines()
         self.assertEqual(order.order_line, invoiceable_lines)

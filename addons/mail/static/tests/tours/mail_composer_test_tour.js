@@ -120,6 +120,15 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             trigger: '.o-mail-Message-body:contains("blahblah @Not A Demo User")',
         },
         {
+            content: "Click on envelope to see recipients of message",
+            trigger:
+                '.o-mail-Message:has(.o-mail-Message-body:contains("blahblah @Not A Demo User")) .o-mail-Message-notification',
+        },
+        {
+            content: "Check message has correct recipients",
+            trigger: ".o-mail-MessageNotificationPopover:contains('Not A Demo UserJane')",
+        },
+        {
             content: "Check message contains the attachment",
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
             isCheck: true,

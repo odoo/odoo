@@ -44,7 +44,7 @@ class TestSaleOrderDiscount(SaleCommon):
         self.wizard.action_apply_discount()
 
         discount_line = self.sale_order.order_line[-1]
-        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount*0.5)
+        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount * 0.5)
         self.assertFalse(discount_line.tax_id)
         self.assertEqual(discount_line.product_uom_qty, 1.0)
 
@@ -56,7 +56,7 @@ class TestSaleOrderDiscount(SaleCommon):
 
         discount_line = self.sale_order.order_line - solines
         discount_line.ensure_one()
-        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount*0.5)
+        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount * 0.5)
         self.assertEqual(discount_line.tax_id, dumb_tax)
         self.assertEqual(discount_line.product_uom_qty, 1.0)
 
@@ -107,3 +107,19 @@ class TestSaleOrderDiscount(SaleCommon):
     def test_percent_discount_above_100(self):
         with self.assertRaises(ValidationError):
             self.wizard.write({'discount_percentage': 1.1, 'discount_type': 'sol_discount'})
+
+    def test_line_and_global_discount(self):
+        solines = self.sale_order.order_line
+        amount_before_discount = self.sale_order.amount_untaxed
+        self.assertEqual(len(solines), 2)
+
+        solines.discount = 10
+        self.assertEqual(self.sale_order.amount_untaxed, amount_before_discount * 0.9)
+        amount_with_line_discount = self.sale_order.amount_untaxed
+
+        self.wizard.write({
+            'discount_percentage': 0.1,  # 10%
+            'discount_type': 'so_discount',
+        })
+        self.wizard.action_apply_discount()
+        self.assertEqual(self.sale_order.amount_untaxed, amount_with_line_discount * 0.9)

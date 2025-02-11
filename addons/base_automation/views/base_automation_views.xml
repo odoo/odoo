@@ -86,17 +86,27 @@
                                 </div>
                                 <field name="filter_pre_domain" widget="domain" groups="base.group_no_one"
                                        options="{'model': 'model_name', 'in_dialog': True}"
-                                       invisible="trigger == 'on_webhook'"
+                                       invisible="trigger in ['on_change', 'on_webhook']"
                                 />
-                                <label for="filter_domain" invisible="trigger not in ['on_create_or_write', 'on_change', 'on_unlink']"/>
-                                <label for="filter_domain" string="Extra Conditions" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"/>
+                                <field name="filter_domain" widget="domain" groups="base.group_no_one"
+                                    options="{'model': 'model_name', 'in_dialog': True}"
+                                    invisible="trigger in ['on_change', 'on_webhook']"
+                                />
+                                <label for="filter_domain" groups="!base.group_no_one"
+                                    invisible="trigger not in ['on_create_or_write', 'on_unlink']"
+                                />
+                                <label for="filter_domain" groups="!base.group_no_one"
+                                    string="Extra Conditions"
+                                    invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"
+                                />
                                 <field name="filter_domain" nolabel="1" widget="domain"
+                                    groups="!base.group_no_one"
                                     options="{'model': 'model_name', 'in_dialog': False, 'foldable': True}"
-                                    invisible="trigger not in ['on_create_or_write', 'on_change', 'on_unlink', 'on_time', 'on_time_created', 'on_time_updated']"
+                                    invisible="trigger not in ['on_create_or_write', 'on_unlink', 'on_time', 'on_time_created', 'on_time_updated']"
                                 />
                                 <field name="trigger_field_ids" string="When updating" placeholder="Select fields..."
                                     options="{'no_open': True, 'no_create': True}"
-                                    domain="[('model_id', '=', model_id)]"
+                                    domain="[('model_id', '=', model_id),('store','=',True)]"
                                     context="{'hide_model': 1}"
                                     invisible="trigger != 'on_create_or_write'" widget="many2many_tags" />
                                 <field name="on_change_field_ids" string="When updating" placeholder="Select fields..."

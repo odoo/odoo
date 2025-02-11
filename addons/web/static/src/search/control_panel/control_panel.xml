@@ -36,7 +36,7 @@
                     <span class="d-none d-xl-block me-auto"/> <!-- Spacer -->
                 </div>
 
-                <div class="o_control_panel_actions d-empty-none d-flex align-items-center justify-content-start justify-content-lg-around order-2 order-lg-1 w-100 w-lg-auto">
+                <div class="o_control_panel_actions d-empty-none d-flex align-items-center justify-content-start justify-content-lg-around order-2 order-lg-1 w-100 mw-100 w-lg-auto">
                     <t t-if="display.layoutActions" t-slot="layout-actions"/>
                     <t t-slot="control-panel-selection-actions"/>
                 </div>
@@ -105,7 +105,7 @@
                     </li>
                     <t t-foreach="visiblePathBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
                         <li class="breadcrumb-item d-inline-flex min-w-0" t-att-class="{ o_back_button: breadcrumb_last }" t-att-data-hotkey="breadcrumb_last and 'b'" t-on-click.prevent="() => this.onBreadcrumbClicked(breadcrumb.jsId)">
-                            <a href="#" class="fw-bold text-truncate" t-att-data-tooltip="'Back to &quot;' + breadcrumb.name + '&quot;'"><t t-call="web.Breadcrumb.Name"/></a>
+                            <a href="#" class="fw-bold text-truncate" t-att-data-tooltip="getBreadcrumbTooltip(breadcrumb)"><t t-call="web.Breadcrumb.Name"/></a>
                         </li>
                     </t>
                 </ol>

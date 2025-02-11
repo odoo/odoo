@@ -9,6 +9,7 @@ import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
 
+const { DateTime } = luxon;
 const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long run memory issues and (to some extent) invalid data
 
 patch(PosStore.prototype, {
@@ -95,7 +96,18 @@ patch(PosStore.prototype, {
                 return false;
             }
             const trimmedCode = code.trim();
-            if (trimmedCode && trimmedCode.startsWith("044")) {
+            let nomenclatureRules = this.barcodeReader.parser.nomenclature.rules;
+            if (this.barcodeReader.fallbackParser) {
+                nomenclatureRules = nomenclatureRules.concat(
+                    this.barcodeReader.fallbackParser.nomenclature.rules
+                );
+            }
+            const couponRules = nomenclatureRules.filter((rule) => rule.type === "coupon");
+            const isValidCoupon = couponRules.some((rule) => {
+                const patterns = rule.pattern.split("|");
+                return patterns.some((pattern) => trimmedCode.startsWith(pattern));
+            });
+            if (isValidCoupon) {
                 // check if the code exist in the database
                 // if so, use its balance, otherwise, use the unit price of the gift card product
                 const fetchedGiftCard = await this.orm.searchRead(
@@ -161,15 +173,17 @@ patch(PosStore.prototype, {
         const result = [];
         for (const couponProgram of allCouponPrograms) {
             const program = this.program_by_id[couponProgram.program_id];
-            if (program.pricelist_ids.length > 0
-                && (!order.pricelist || !program.pricelist_ids.includes(order.pricelist.id))) {
+            if (
+                program.pricelist_ids.length > 0 &&
+                (!order.pricelist || !program.pricelist_ids.includes(order.pricelist.id))
+            ) {
                 continue;
             }
 
             const points = order._getRealCouponPoints(couponProgram.coupon_id);
             const hasLine = order.orderlines.filter((line) => !line.is_reward_line).length > 0;
             for (const reward of program.rewards.filter(
-                (reward) => reward.reward_type == "product"
+                (reward) => reward.reward_type == "product" && reward.reward_product_ids.length > 0
             )) {
                 if (points < reward.required_points) {
                     continue;
@@ -213,7 +227,7 @@ patch(PosStore.prototype, {
             reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
         }
 
-        this.fieldTypes = loadedData['field_types'];
+        this.fieldTypes = loadedData["field_types"];
         await super._processData(loadedData);
         this.productId2ProgramIds = loadedData["product_id_to_program_ids"];
         this.programs = loadedData["loyalty.program"] || []; //TODO: rename to `loyaltyPrograms` etc
@@ -244,7 +258,7 @@ patch(PosStore.prototype, {
                 .filter((product) => domain.contains(product))
                 .forEach((product) => reward.all_discount_product_ids.add(product.id));
         } catch (error) {
-            if (!(error instanceof InvalidDomainError)) {
+            if (!(error instanceof InvalidDomainError || error instanceof TypeError)) {
                 throw error;
             }
             const index = this.rewards.indexOf(reward);
@@ -267,8 +281,11 @@ patch(PosStore.prototype, {
 
         for (const program of this.programs) {
             this.program_by_id[program.id] = program;
+            if (program.date_from) {
+                program.date_from = DateTime.fromISO(program.date_from);
+            }
             if (program.date_to) {
-                program.date_to = new Date(program.date_to);
+                program.date_to = DateTime.fromISO(program.date_to);
             }
             program.rules = [];
             program.rewards = [];
@@ -300,7 +317,7 @@ patch(PosStore.prototype, {
         // When an order is selected, it doesn't always contain the reward lines.
         // And the list of active programs are not always correct. This is because
         // of the use of DropPrevious in _updateRewards.
-        if (order) {
+        if (order && !order.finalized) {
             order._updateRewards();
         }
         return result;

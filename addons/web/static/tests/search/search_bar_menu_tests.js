@@ -2138,5 +2138,37 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(searchBar.env.searchModel.groupBy, ["properties.my_datetime:quarter"]);
             assert.deepEqual(getFacetTexts(target), ["My Datetime: Quarter"]);
         });
+
+        QUnit.test("shorten descriptions of long lists", async function (assert) {
+            patchWithCleanup(odoo, { debug: true });
+
+            const controlPanel = await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: SearchBar,
+                searchMenuTypes: ["filter"],
+                searchViewId: false,
+                searchViewArch: `<search />`,
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
+            });
+            assert.deepEqual(getFacetTexts(target), []);
+            assert.deepEqual(getDomain(controlPanel), []);
+
+            await toggleSearchBarMenu(target);
+            await openAddCustomFilterDialog(target);
+            const values = new Array(500).fill(42525245);
+
+            await editInput(target, dsHelpers.SELECTORS.debugArea, `[("id", "in", [${values}])]`);
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), [
+                `ID is in ( ${values.slice(0, 20).join(" , ")} , ... )`,
+            ]);
+            assert.deepEqual(getDomain(controlPanel), [["id", "in", values]]);
+        });
     });
 });

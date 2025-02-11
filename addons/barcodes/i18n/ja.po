@@ -3,7 +3,8 @@
 # 	* barcodes
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -257,6 +258,13 @@ msgid "The barcode matching pattern"
 msgstr "バーコードマッチングパターン"
 
 #. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr "バーコードパターン %(pattern)s は検証済の正規表現にはなりません。"
+
+#. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
 msgstr "バーコード規則のリスト"
@@ -273,7 +281,7 @@ msgstr "一致したパターンはこのバーコードにエイリアスしま
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
-msgstr "バーコードパターン%(pattern)sにシンタックスエラーがあります: 1 つのルールには中括弧を 1 組しか含めることができません。"
+msgstr "バーコードパターン%(pattern)sにシンタックスエラーがあります: 1 つの規則には中括弧を 1 組しか含めることができません。"
 
 #. module: barcodes
 #. odoo-python
@@ -297,7 +305,7 @@ msgstr "バーコードパターン%(pattern)sにシンタックスエラーが�
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
-msgstr "このルールは、バーコードが指定されたエンコーディングでエンコードされている場合にのみ適用されます"
+msgstr "この規則は、バーコードが指定されたエンコーディングでエンコードされている場合にのみ適用されます"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -311,7 +319,7 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
 msgstr ""
-"UPCコードは、プレフィックスとしてゼロを付けてJAN/EANに変換できます。 この設定では、あるルールと他のエンコーディングを一致させるときにUPC "
+"UPCコードは、プレフィックスとしてゼロを付けてJAN/EANに変換できます。 この設定では、ある規則と他のエンコーディングを一致させるときにUPC "
 "/EANバーコードを自動的に変換するかどうかを決定します。"
 
 #. module: barcodes
@@ -345,7 +353,7 @@ msgstr "不明なバーコードコマンド"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
-msgstr "より小さなシーケンスのルールが最初に一致するようにルールを順序付けするために使用されます"
+msgstr "より小さな付番規則が最初に一致するように規則を順序付けするために使用されます"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned

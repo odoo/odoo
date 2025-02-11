@@ -573,4 +573,36 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(getInput().value, "٠٢/٠٨/٢٠١٧ ١١:٤٥:٠٠");
     });
+
+    QUnit.test("list datetime with date widget test", async (assert) => {
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            arch: /* xml */ `
+                <tree editable="bottom">
+                    <field name="datetime" widget="datetime" options="{'show_time': false}"/>
+                    <field name="datetime" widget="datetime"/>
+                </tree>`,
+            serverData,
+        });
+
+        const dates = target.querySelectorAll(".o_field_cell");
+
+        assert.strictEqual(
+            dates[0].textContent,
+            "02/08/2017",
+            "for datetime field only date should be visible with show_time as false and readonly"
+        );
+        assert.strictEqual(
+            dates[1].textContent,
+            "02/08/2017 11:00:00",
+            "for datetime field both date and time should be visible with show_time by default true"
+        );
+        await click(dates[0]);
+        assert.strictEqual(
+            target.querySelector(".o_field_datetime input").value,
+            "02/08/2017 11:00:00",
+            "for datetime field both date and time should be visible with show_time as false and edit"
+        );
+    });
 });

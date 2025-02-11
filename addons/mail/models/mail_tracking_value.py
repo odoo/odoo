@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class MailTracking(models.Model):
@@ -38,8 +38,10 @@ class MailTracking(models.Model):
     @api.depends('mail_message_id', 'field_id')
     def _compute_field_groups(self):
         for tracking in self:
-            model = self.env[tracking.mail_message_id.model]
-            field = model._fields.get(tracking.field_id.name)
+            field = None
+            if tracking.field_id:
+                model = self.env[tracking.field_id.model]
+                field = model._fields.get(tracking.field_id.name)
             tracking.field_groups = field.groups if field else 'base.group_system'
 
     @api.model
@@ -115,31 +117,56 @@ class MailTracking(models.Model):
         :return list: for each tracking value in self, their formatted display
           values given as a dict;
         """
+        model_map = {}
+        for tracking in self:
+            model = tracking.field_id.model or tracking.mail_message_id.model
+            model_map.setdefault(model, self.browse())
+            model_map[model] += tracking
+        formatted = []
+        for model, trackings in model_map.items():
+            formatted += trackings._tracking_value_format_model(model)
+        return formatted
+
+    def _tracking_value_format_model(self, model):
+        """ Return structure and formatted data structure to be used by chatter
+        to display tracking values. Order it according to asked display, aka
+        ascending sequence (and field name).
+
+        :return list: for each tracking value in self, their formatted display
+          values given as a dict;
+        """
         if not self:
             return []
-        field_models = self.field_id.mapped('model')
-        if len(set(field_models)) != 1:
-            raise ValueError('All tracking value should belong to the same model.')
-        TrackedModel = self.env[field_models[0]]
-        tracked_fields = TrackedModel.fields_get(self.field_id.mapped('name'), attributes={'string', 'type'})
+
+        # fetch model-based information
+        if model:
+            TrackedModel = self.env[model]
+            tracked_fields = TrackedModel.fields_get(self.field_id.mapped('name'), attributes={'string', 'type'})
+            model_sequence_info = dict(TrackedModel._mail_track_order_fields(tracked_fields)) if model else {}
+        else:
+            tracked_fields, model_sequence_info = {}, {}
+
+        # generate sequence of trackings
+        fields_sequence_map = dict(
+            {
+                tracking.field_info['name']: tracking.field_info.get('sequence', 100)
+                for tracking in self.filtered('field_info')
+            },
+            **model_sequence_info,
+        )
+        # generate dict of field information, if available
         fields_col_info = (
             tracked_fields.get(tracking.field_id.name) or {
-                'string': tracking.field_info['desc'],
-                'type': tracking.field_info['type'],
-            }
-            for tracking in self
-        )
-        fields_sequence_map = dict(
-            {tracking.field_info['name']: tracking.field_info.get('sequence', 100)
-             for tracking in self.filtered('field_info')},
-            **dict(TrackedModel._mail_track_order_fields(tracked_fields))
+                'string': tracking.field_info['desc'] if tracking.field_info else _('Unknown'),
+                'type': tracking.field_info['type'] if tracking.field_info else 'char',
+            } for tracking in self
         )
 
         formatted = [
             {
                 'changedField': col_info['string'],
                 'id': tracking.id,
-                'fieldName': tracking.field_id.name or tracking.field_info['name'],
+                'fieldName': tracking.field_id.name or (tracking.field_info['name'] if tracking.field_info else 'unknown'),
                 'fieldType': col_info['type'],
                 'newValue': {
                     'currencyId': tracking.currency_id.id,
@@ -153,7 +180,7 @@ class MailTracking(models.Model):
             for tracking, col_info in zip(self, fields_col_info)
         ]
         formatted.sort(
-            key=lambda info: (fields_sequence_map[info['fieldName']], info['fieldName']),
+            key=lambda info: (fields_sequence_map.get(info['fieldName'], 100), info['fieldName']),
             reverse=False,
         )
         return formatted

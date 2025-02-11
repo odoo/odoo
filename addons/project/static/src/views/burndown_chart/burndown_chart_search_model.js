@@ -43,7 +43,7 @@ export class BurndownChartSearchModel extends SearchModel {
      */
     deactivateGroup(groupId) {
         // Prevent removing Date & Stage group by from the search
-        if (this.searchItems[this.stageIdSearchItemId].groupId == groupId && this.searchItems[this.dateSearchItemId].groupId) {
+        if (this.stageIdSearchItemId && this.searchItems[this.stageIdSearchItemId].groupId == groupId && this.searchItems[this.dateSearchItemId].groupId) {
             this._addGroupByNotification(_t("Date and Stage"));
             return;
         }

@@ -931,3 +931,323 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
         line_values = report_values['lines']['components'][0]
         self.assertEqual(line_values['availability_state'], 'expected', 'The first component should be expected as there is an incoming PO.')
+
+    def test_purchase_multistep_kit_qty_change(self):
+        self.warehouse.write({"reception_steps": "two_steps"})
+        self.partner = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        kit_prod = self._create_product('kit_prod', self.uom_unit)
+        sub_kit = self._create_product('sub_kit', self.uom_unit)
+        component = self._create_product('component', self.uom_unit)
+
+        # 6 kit_prod == 5 component
+        self.env['mrp.bom'].create([{  # 2 kit_prod == 5 sub_kit
+            'product_tmpl_id': kit_prod.product_tmpl_id.id,
+            'product_qty': 2.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': sub_kit.id,
+                'product_qty': 5,
+            })],
+        }, {  # 3 sub_kit == 1 component
+            'product_tmpl_id': sub_kit.product_tmpl_id.id,
+            'product_qty': 3.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': component.id,
+                'product_qty': 1,
+            })],
+        }])
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'name': kit_prod.name,
+                'product_id': kit_prod.id,
+                'product_qty': 30,
+            })],
+        })
+        # Validate the PO
+        po.button_confirm()
+        picking = po.picking_ids
+        # Check the component qty in the created picking should be 25
+        self.assertEqual(picking.move_line_ids.quantity_product_uom, 30 * 5 / 6)
+
+        # Update the kit quantity in the PO
+        po.order_line[0].product_qty = 60
+        # Check the component qty after the update should be 50
+        self.assertEqual(picking.move_line_ids.quantity_product_uom, 60 * 5 / 6)
+
+        # Recieve half the quantity 25 component == 30 kit_prod
+        picking.move_line_ids.quantity = 25
+        picking.with_context(skip_backorder=True).button_validate()
+        self.assertEqual(po.order_line.qty_received, 25 / 5 * 6)
+
+        # Return 10 components
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.id,
+            active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
+        for return_move in return_wiz.product_return_moves:
+            return_move.write({
+                'quantity': 10,
+                'to_refund': True
+            })
+        res = return_wiz.create_returns()
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+
+        # Process all components and validate the return
+        return_pick.button_validate()
+        self.assertEqual(po.order_line.qty_received, 15 / 5 * 6)
+
+    def test_bom_report_vendor_quantities(self):
+        """ Test bom overview with different vendor minimum quantities, see if it picks the right ones.
+        """
+        buy_route = self.warehouse.buy_pull_id.route_id
+        final = self.env['product.product'].create({'name': 'Final', 'type': 'product'})
+        # Compo A has 2 vendors, one faster but with a min qty of 5, the other with more delay but without a min qty
+        self.component_a.write({
+            'route_ids': [Command.link(buy_route.id)],
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id, 'min_qty': 0, 'delay': 5}),
+                Command.create({'partner_id': self.partner_b.id, 'min_qty': 5, 'delay': 1}),
+            ],
+        })
+        # Compo B has 1 vendor with a min qty of 5
+        self.component_b.write({
+            'route_ids': [Command.link(buy_route.id)],
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id, 'min_qty': 5}),
+            ]
+        })
+        # Compo C has 1 vendor with a min qty of 5
+        self.component_c.write({
+            'route_ids': [Command.link(buy_route.id)],
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id, 'min_qty': 5}),
+            ]
+        })
+        # Compo D has 1 vendor with a min qty of 1 dozen
+        self.component_d.write({
+            'uom_po_id': self.uom_dozen.id,
+            'route_ids': [Command.link(buy_route.id)],
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id, 'min_qty': 1, 'price': 10}),
+            ]
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': final.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.component_a.id,
+                    'product_qty': 10,
+                    'product_uom_id': self.uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': self.component_b.id,
+                    'product_qty': 3,
+                    'product_uom_id': self.uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': self.component_c.id,
+                    'product_qty': 1,
+                    'product_uom_id': self.uom_dozen.id,
+                }),
+                Command.create({
+                    'product_id': self.component_d.id,
+                    'product_qty': 3,
+                    'product_uom_id': self.uom_unit.id,
+                })
+            ]
+        })
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+
+        compo_a_values = report_values['lines']['components'][0]
+        self.assertEqual(compo_a_values['route_detail'], self.partner_b.display_name, "Compo A should have picked the fastest supplier")
+        compo_b_values = report_values['lines']['components'][1]
+        self.assertEqual(compo_b_values['route_detail'], self.partner_a.display_name, "Compo B should have found the supplier, even without enough qty")
+        self.assertTrue(compo_b_values['route_alert'], "Should be true as there isn't enough quantity for this vendor")
+        compo_c_values = report_values['lines']['components'][2]
+        self.assertEqual(compo_c_values['route_detail'], self.partner_a.display_name)
+        self.assertFalse(compo_c_values['route_alert'], "Should be false as 1 dozen > 5 units for this vendor")
+        compo_d_values = report_values['lines']['components'][3]
+        self.assertEqual(compo_d_values['route_detail'], self.partner_a.display_name, "Compo D should have found the supplier, even without enough qty")
+        self.assertTrue(compo_d_values['route_alert'], "Should be true as 3 units < 1 dozen for this vendor")
+
+    def test_valuation_with_backorder(self):
+        fifo_category = self.env['product.category'].create({
+            'name': 'FIFO',
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time'
+        })
+        kit, cmp1, cmp2 = self.env['product.product'].create([{
+            'name': name,
+            'standard_price': 0,
+            'type': 'product',
+            'categ_id': fifo_category.id,
+        } for name in ['Kit', 'Cmp1', 'Cmp2']])
+        kit.uom_id = self.uom_gm.id
+        cmp1.uom_id = self.uom_gm.id
+        cmp2.uom_id = self.uom_kg.id
+
+        self.env['mrp.bom'].create({
+            'product_uom_id': self.uom_kg.id,
+            'product_qty': 3,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cmp1.id, 'product_qty': 2, 'product_uom_id': self.uom_kg.id}),
+                (0, 0, {'product_id': cmp2.id, 'product_qty': 1, 'product_uom_id': self.uom_gm.id})]
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        partner = self.env['res.partner'].create({'name': 'My Test Partner'})
+        po_form.partner_id = partner
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = kit
+            pol_form.product_qty = 30
+            pol_form.product_uom = self.uom_kg
+            pol_form.price_unit = 90000
+            pol_form.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_line_ids[0].quantity = 4
+        receipt.move_line_ids[1].quantity = 2
+        action = receipt.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+        # Price Unit for 1 gm of the kit = 90000/1000 = 90
+        # unit_cost for cmp1 = 90 *1000* 3 / 2 / 2 / 1000 = 67.5
+        # unit_cost for cmp2  = 90 *1000* 3 / 2 / 1  * 1000 = 135000000
+        svl = po.picking_ids[0].move_ids.stock_valuation_layer_ids
+        self.assertEqual(svl[0].unit_cost, 67.5)
+        self.assertEqual(svl[1].unit_cost, 135000000)
+
+    def test_mo_overview_mto_purchase_with_backorders(self):
+        self.warehouse.reception_steps = 'two_steps'
+        # Enable MTO route for Component
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        route_buy = self.warehouse.buy_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+        self.component_a.write({
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id},
+            )],
+            'route_ids': [
+                Command.link(route_buy),
+                Command.link(route_mto),
+            ],
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.component_b.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.component_a.id,
+                    'product_qty': 2.0,
+                }),
+            ],
+        })
+        with Form(self.env['mrp.production']) as prod_form:
+            prod_form.product_id = self.component_b
+            prod_form.bom_id = bom
+            prod_form.product_qty = 3
+            production = prod_form.save()
+        production.action_confirm()
+        self.assertEqual(production.purchase_order_count, 1)
+        purchase = production.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id
+        self.assertEqual(len(purchase), 1)
+
+        with Form(production) as prod_form:
+            prod_form.qty_producing = 1
+            production = prod_form.save()
+        backorder_action = production.button_mark_done()
+        backorder_wizard = Form(self.env['mrp.production.backorder'].with_context(**backorder_action['context']))
+        backorder_wizard.save().action_backorder()
+
+        backorder = production.procurement_group_id.mrp_production_ids - production
+        self.assertEqual(len(backorder), 1)
+        self.assertEqual(backorder.product_qty, 2)
+        report_values = self.env['report.mrp.report_mo_overview']._get_report_data(backorder.id)
+        self.assertEqual(report_values['summary']['quantity'], backorder.product_qty)
+        self.assertEqual(report_values['components'][0]['summary']['quantity'], 4)
+        replenishments = report_values['components'][0]['replenishments']
+        self.assertEqual(len(replenishments), 1)
+        self.assertEqual(replenishments[0]['summary']['name'], purchase.name)
+
+    def test_total_cost_share_rounded_to_precision(self):
+        kit, compo01, compo02 = self.env['product.product'].create([{
+            'name': name,
+            'standard_price': price,
+            'type': 'product',
+        } for name, price in [('Kit', 30), ('Compo 01', 10), ('Compo 02', 20)]])
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': compo01.id,
+                'product_qty': 1,
+                'cost_share': 99.99,
+            }), (0, 0, {
+                'product_id': compo02.id,
+                'product_qty': 1,
+                'cost_share': 0.01,
+            })],
+        })
+        self.assertTrue(bom)
+
+    def test_kit_price_without_rounding(self):
+        warehouse = self.warehouse
+        buy_route = warehouse.buy_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+
+        avco_category = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time'
+        })
+
+        prod, compo = self.env['product.product'].create([{
+        'name': name,
+        'type': 'product',
+        'categ_id': avco_category.id,
+        'route_ids': [(4, route_id)],
+        } for name, route_id in [('product a', manufacture_route.id), ('component a', buy_route.id)]])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': prod.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': compo.id,
+                'product_qty': 12,
+            })]
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        partner = self.env['res.partner'].create({'name': 'Testy'})
+        po_form.partner_id = partner
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = prod
+            pol_form.product_qty = 1
+            pol_form.price_unit = 100
+            pol_form.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.button_validate()
+        move = receipt.move_ids[0]
+        # the price unit for 1 unit of the kit is 100
+        # calculating the unit cost per component: 100 / 12 = 8.33333333333
+        # total cost for 12 components: 8.33 * 12 = 99.96
+        # however, due to rounding differences, the expected value is 100
+        svl_val = self.env['stock.valuation.layer'].search([('stock_move_id', '=', move.id)]).value
+        self.assertEqual(svl_val, 100)

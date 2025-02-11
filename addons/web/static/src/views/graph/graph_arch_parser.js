@@ -55,6 +55,13 @@ export class GraphArchParser {
                         }
                         archInfo.fieldAttrs[fieldName].string = string;
                     }
+                    const widget = node.getAttribute("widget");
+                    if (widget) {
+                        if (!archInfo.fieldAttrs[fieldName]) {
+                            archInfo.fieldAttrs[fieldName] = {};
+                        }
+                        archInfo.fieldAttrs[fieldName].widget = widget;
+                    }
                     if (
                         node.getAttribute("invisible") === "True" ||
                         node.getAttribute("invisible") === "1"

@@ -136,6 +136,11 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         await loadBundle("web.chartjs_lib");
     },
 
+    destroy: function () {
+        window.removeEventListener("afterprint", this._onAfterPrint);
+        window.removeEventListener("beforeprint", this._onBeforePrint);
+    },
+
     // -------------------------------------------------------------------------
     // Handlers
     // -------------------------------------------------------------------------
@@ -145,8 +150,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
      * @private
      */
     _onBeforePrint: function () {
-        const printWidth = 630; // Value to fit any graphic into the width of an A4 portrait page
-        this.chart.resize(printWidth, Math.floor(printWidth / this.chart.aspectRatio));
+        // Kept in case someone hooked something here
     },
 
     /**
@@ -154,7 +158,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
      * @private
      */
     _onAfterPrint: function () {
-        this.chart.resize();
+        // Kept in case someone hooked something here
     },
 
     // -------------------------------------------------------------------------

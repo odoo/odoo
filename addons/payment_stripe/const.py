@@ -29,8 +29,25 @@ PAYMENT_METHODS_MAPPING = {
     'sepa_direct_debit': 'sepa_debit',
     'afterpay': 'afterpay_clearpay',
     'clearpay': 'afterpay_clearpay',
+    'cash_app_pay': 'cashapp',
+    'mobile_pay': 'mobilepay',
     'unknown': 'card',  # For express checkout.
 }
+
+INDIAN_MANDATES_SUPPORTED_CURRENCIES = [
+    'USD',
+    'EUR',
+    'GBP',
+    'SGD',
+    'CAD',
+    'CHF',
+    'SEK',
+    'AED',
+    'JPY',
+    'NOK',
+    'MYR',
+    'HKD',
+]
 
 # Mapping of transaction states to Stripe objects ({Payment,Setup}Intent, Refund) statuses.
 # For each object's exhaustive status list, see:
@@ -52,6 +69,7 @@ HANDLED_WEBHOOK_EVENTS = [
     'payment_intent.amount_capturable_updated',
     'payment_intent.succeeded',
     'payment_intent.payment_failed',
+    'payment_intent.canceled',
     'setup_intent.succeeded',
     'charge.refunded',  # A refund has been issued.
     'charge.refund.updated',  # The refund status has changed, possibly from succeeded to failed.
@@ -105,4 +123,16 @@ SUPPORTED_COUNTRIES = {
     'SK',
     'TH',  # Beta
     'US',
+}
+
+# Businesses in supported outlying territories should register for a Stripe account with the parent
+# territory selected as the Country.
+# See https://support.stripe.com/questions/stripe-availability-for-outlying-territories-of-supported-countries.
+COUNTRY_MAPPING = {
+    'MQ': 'FR',  # Martinique
+    'GP': 'FR',  # Guadeloupe
+    'GF': 'FR',  # French Guiana
+    'RE': 'FR',  # Réunion
+    'YT': 'FR',  # Mayotte
+    'MF': 'FR',  # Saint-Martin
 }

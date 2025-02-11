@@ -28,7 +28,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    e.g: 1*(unidad de referencia)=ratio*(esta unidad)\n"
+"                                    p. ej. 1*(unidad de referencia)=ratio*(esta unidad)\n"
 "                                </span>"
 
 #. module: uom
@@ -39,7 +39,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    p.ej: 1*(esta unidad)=ratio*(unidad de referencia)\n"
+"                                    p. ej: 1*(esta unidad)=ratio*(unidad de referencia)\n"
 "                                </span>"
 
 #. module: uom
@@ -50,12 +50,12 @@ msgstr "Activo"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr "Agregar una nueva unidad de medida"
+msgstr "Añadir una nueva unidad de medida"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr "Agregar una nueva categoría de unidad de medida"
+msgstr "Añadir una nueva categoría de unidad de medida"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -65,7 +65,7 @@ msgstr "Archivado"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
-msgstr "Mayor ratio"
+msgstr "Ratio más grande"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
@@ -86,7 +86,7 @@ msgstr "Color"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
 msgid "Combined Ratio"
-msgstr "Proporción combinada"
+msgstr "Ratio combinado"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
@@ -95,7 +95,7 @@ msgid ""
 "same category. The conversion will be made based on the ratios."
 msgstr ""
 "La conversión entre las unidades de medidas sólo puede ocurrir si pertenecen"
-" a la misma categoría. La conversión se basará en los índices establecidos."
+" a la misma categoría. La conversión se hará en función de las ratios."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -142,7 +142,7 @@ msgid ""
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
 "Cuantas veces esta unidad de medida es más grande que la unidad de medida de"
-" referencia en esta categoría: 1 * (esta unidad) = razón * (unidad de "
+" referencia en esta categoría: 1 * (esta unidad) = ratio * (unidad de "
 "referencia)"
 
 #. module: uom
@@ -206,7 +206,7 @@ msgstr "Unidad de medida de referencia para esta categoría"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
 msgid "Reference UoM"
-msgstr "Referencia UdM"
+msgstr "UdM de referencia"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -216,12 +216,12 @@ msgstr "Precisión de redondeo"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Search UOM"
-msgstr "Buscar unidad de medida"
+msgstr "Buscar UdM"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
 msgid "Search UoM Category"
-msgstr "Buscar categoría UdM"
+msgstr "Buscar categoría de la UdM"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
@@ -260,13 +260,13 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
-"La cantidad calculada será un múltiplo de este valor. Use 1.0 para una "
+"La cantidad calculada será un múltiplo de este valor. Use 1,0 para una "
 "unidad de medida que no puede ser dividida, como una pieza."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "¡El ratio de conversión para una unidad de medida no puede ser 0!"
+msgstr "¡La ratio de conversión para una unidad de medida no puede ser 0!"
 
 #. module: uom
 #. odoo-python
@@ -299,17 +299,17 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
-"La unidad de medida %s que se definió en la otra linea no pertenece a la "
-"misma categoría que la unidad de medida %s que se definió en el producto. "
-"Corrija la unidad de medida que se definió en la línea de orden o en el "
-"producto, deben de ser de la misma categoría."
+"La unidad de medida %s que se definió en la línea de la orden no pertenece a"
+" la misma categoría que la unidad de medida %s definida en el producto. "
+"Corrija la unidad de medida definida en la línea de orden o en el producto, "
+"deben pertenecer a la misma categoría."
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "The value of ratio could not be Zero"
-msgstr "El valor de la proporción no puede ser cero"
+msgstr "El valor de la ratio no puede ser cero"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -434,7 +434,7 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
-"Debe definir un ratio de conversión entre varias unidades de\n"
+"Debe definir una proporción de conversión entre varias unidades de\n"
 "medida dentro de la misma categoría."
 
 #. module: uom

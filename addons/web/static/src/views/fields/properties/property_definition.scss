@@ -3,7 +3,9 @@
     overflow-y: auto;
 
     .o_modal_container {
-        min-width: calc(#{$o-form-view-sheet-max-width} / 3);
+        @include media-breakpoint-up(sm) {
+            min-width: calc(#{$o-form-view-sheet-max-width} / 3);
+        }
         max-width: calc(#{$o-form-view-sheet-max-width} / 2);
     }
 

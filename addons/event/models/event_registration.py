@@ -4,6 +4,7 @@ import logging
 import os
 
 from dateutil.relativedelta import relativedelta
+import pytz
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_date, email_normalize, email_normalize_all
@@ -209,13 +210,7 @@ class EventRegistration(models.Model):
             values['phone'] = self._phone_format(number=values['phone'], country=related_country) or values['phone']
 
         registrations = super(EventRegistration, self).create(vals_list)
-
-        if not self.env.context.get('install_mode', False):
-            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
-            # server start and hangs indefinitely, leading to serious crashes
-            # we currently avoid this by not running the scheduler, would be best to find the actual
-            # reason for this issue and fix it so we can remove this check
-            registrations._update_mail_schedulers()
+        registrations._update_mail_schedulers()
         return registrations
 
     def write(self, vals):
@@ -223,11 +218,7 @@ class EventRegistration(models.Model):
         to_confirm = (self.filtered(lambda registration: registration.state in {'draft', 'cancel'})
                       if confirming else None)
         ret = super(EventRegistration, self).write(vals)
-        if confirming and not self.env.context.get('install_mode', False):
-            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs
-            # during server start and hangs indefinitely, leading to serious crashes we
-            # currently avoid this by not running the scheduler, would be best to find the
-            # actual reason for this issue and fix it so we can remove this check
+        if confirming:
             to_confirm._update_mail_schedulers()
 
         return ret
@@ -296,22 +287,36 @@ class EventRegistration(models.Model):
     def _update_mail_schedulers(self):
         """ Update schedulers to set them as running again, and cron to be called
         as soon as possible. """
+        if self.env.context.get("install_mode", False):
+            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
+            # server start and hangs indefinitely, leading to serious crashes
+            # we currently avoid this by not running the scheduler, would be best to find the actual
+            # reason for this issue and fix it so we can remove this check
+            return
+
         open_registrations = self.filtered(lambda registration: registration.state == 'open')
         if not open_registrations:
             return
 
         onsubscribe_schedulers = self.env['event.mail'].sudo().search([
             ('event_id', 'in', open_registrations.event_id.ids),
-            ('interval_type', '=', 'after_sub')
+            ('interval_type', '=', 'after_sub'),
         ])
         if not onsubscribe_schedulers:
             return
 
         onsubscribe_schedulers.update({'mail_done': False})
-        # we could simply call _create_missing_mail_registrations and let cron do their job
-        # but it currently leads to several delays. We therefore call execute until
-        # cron triggers are correctly used
-        onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
+        # either trigger the cron, either run schedulers immediately (scaling choice)
+        async_scheduler = self.env['ir.config_parameter'].sudo().get_param('event.event_mail_async')
+        if async_scheduler:
+            self.env.ref('event.event_mail_scheduler')._trigger()
+        else:
+            # we could simply call _create_missing_mail_registrations and let cron do their job
+            # but it currently leads to several delays. We therefore call execute until
+            # cron triggers are correctly used
+            onsubscribe_schedulers.with_context(
+                event_mail_registration_ids=open_registrations.ids
+            ).with_user(SUPERUSER_ID).execute()
 
     # ------------------------------------------------------------
     # MAILING / GATEWAY
@@ -383,9 +388,9 @@ class EventRegistration(models.Model):
 
     def get_date_range_str(self, lang_code=False):
         self.ensure_one()
-        today = fields.Datetime.now()
-        event_date = self.event_begin_date
-        diff = (event_date.date() - today.date())
+        today_tz = pytz.utc.localize(fields.Datetime.now()).astimezone(pytz.timezone(self.event_id.date_tz))
+        event_date_tz = pytz.utc.localize(self.event_begin_date).astimezone(pytz.timezone(self.event_id.date_tz))
+        diff = (event_date_tz.date() - today_tz.date())
         if diff.days <= 0:
             return _('today')
         elif diff.days == 1:
@@ -394,7 +399,7 @@ class EventRegistration(models.Model):
             return _('in %d days', diff.days)
         elif (diff.days < 14):
             return _('next week')
-        elif event_date.month == (today + relativedelta(months=+1)).month:
+        elif event_date_tz.month == (today_tz + relativedelta(months=+1)).month:
             return _('next month')
         else:
             return _('on %(date)s', date=format_date(self.env, self.event_begin_date, lang_code=lang_code, date_format='medium'))

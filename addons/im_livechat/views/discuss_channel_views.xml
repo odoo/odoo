@@ -160,7 +160,7 @@
             <field name="name">Sessions</field>
             <field name="res_model">discuss.channel</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('livechat_channel_id', 'in', [active_id]), ('has_message', '=', True)]</field>
+            <field name="domain">[('livechat_channel_id', 'in', [active_id])]</field>
             <field name="context">{
                 'search_default_livechat_channel_id': [active_id],
                 'default_livechat_channel_id': active_id,

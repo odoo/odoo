@@ -4,6 +4,7 @@ import json
 
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
+from odoo.tools import SQL
 from collections import defaultdict
 
 class Project(models.Model):
@@ -17,15 +18,24 @@ class Project(models.Model):
             self.expenses_count = 0
             return
         query = self.env['hr.expense']._search([])
-        query.add_where('hr_expense.analytic_distribution ?| %s', [[str(account_id) for account_id in self.analytic_account_id.ids]])
+        query.add_where(
+            SQL(
+                "%s && %s",
+                [str(account_id) for account_id in self.analytic_account_id.ids],
+                self.env['hr.expense']._query_analytic_accounts(),
+            )
+        )
 
         query_string, query_param = query.select(
-            'jsonb_object_keys(analytic_distribution) as account_id',
-            'COUNT(DISTINCT(id)) as expense_count',
+            r"""DISTINCT id, (regexp_matches(jsonb_object_keys(hr_expense.analytic_distribution), '\d+', 'g'))[1]::int as account_id"""
         )
-        query_string = f'{query_string} GROUP BY jsonb_object_keys(analytic_distribution)'
+        query_string = f"""
+            SELECT account_id, count(id) FROM
+            ({query_string}) distribution
+            GROUP BY account_id
+        """
         self._cr.execute(query_string, query_param)
-        data = {int(record.get('account_id')): record.get('expense_count') for record in self._cr.dictfetchall()}
+        data = {res['account_id']: res['count'] for res in self._cr.dictfetchall()}
         for project in self:
             project.expenses_count = data.get(project.analytic_account_id.id, 0)
 
@@ -40,7 +50,7 @@ class Project(models.Model):
         action.update({
             'display_name': _('Expenses'),
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban'], [False, 'graph'], [False, 'pivot']],
-            'context': {'default_analytic_distribution': {self.analytic_account_id.id: 100}},
+            'context': {'project_id': self.id},
             'domain': domain or [('id', 'in', expense_ids)],
         })
         if len(expense_ids) == 1:
@@ -77,7 +87,7 @@ class Project(models.Model):
         # As both purchase orders and expenses (paid by employee) create vendor bills,
         # we need to make sure they are exclusive in the profitability report.
         move_line_ids = super()._get_already_included_profitability_invoice_line_ids()
-        query = self.env['account.move.line']._search([
+        query = self.env['account.move.line'].sudo()._search([
             ('move_id.expense_sheet_id', '!=', False),
             ('id', 'not in', move_line_ids),
         ])
@@ -88,7 +98,13 @@ class Project(models.Model):
             return {}
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
-        query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query.add_where(
+            SQL(
+                "%s && %s",
+                [str(self.analytic_account_id.id)],
+                self.env['hr.expense']._query_analytic_accounts(),
+            )
+        )
         query_string, query_param = query.select('currency_id', 'array_agg(id) as ids', 'SUM(untaxed_amount_currency) as untaxed_amount')
         query_string = f"{query_string} GROUP BY currency_id"
         self._cr.execute(query_string, query_param)
@@ -113,10 +129,10 @@ class Project(models.Model):
         }
         if can_see_expense:
             args = [section_id, [('id', 'in', expense_ids)]]
-            if expense_ids:
-                args.append(expense_ids)
+            if len(expense_ids) == 1:
+                args.append(expense_ids[0])
             action = {'name': 'action_profitability_items', 'type': 'object', 'args': json.dumps(args)}
-            expense_profitability_items['action'] = action
+            expense_profitability_items['costs']['action'] = action
         return expense_profitability_items
 
     def _get_profitability_aal_domain(self):

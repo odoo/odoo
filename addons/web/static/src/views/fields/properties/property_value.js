@@ -12,6 +12,8 @@ import {
     deserializeDateTime,
     formatDate,
     formatDateTime,
+    serializeDate,
+    serializeDateTime,
 } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { TagsList } from "@web/core/tags_list/tags_list";
@@ -202,7 +204,11 @@ export class PropertyValue extends Component {
      * @param {object} newValue
      */
     async onValueChange(newValue) {
-        if (this.props.type === "integer") {
+        if (this.props.type === "datetime") {
+            newValue = newValue && serializeDateTime(newValue);
+        } else if (this.props.type === "date") {
+            newValue = newValue && serializeDate(newValue);
+        } else if (this.props.type === "integer") {
             try {
                 newValue = parseInteger(newValue) || 0;
             } catch {
@@ -287,10 +293,6 @@ export class PropertyValue extends Component {
      * @param {object} params
      */
     async onQuickCreate(name, params = {}) {
-        if (params.triggeredOnBlur) {
-            this.onValueChange(false);
-            return;
-        }
         const result = await this.orm.call(this.props.comodel, "name_create", [name], {
             context: this.props.context,
         });

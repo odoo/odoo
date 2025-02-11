@@ -22,6 +22,7 @@ export class OrderlineNoteButton extends Component {
             return;
         }
 
+        const oldNote = this.selectedOrderline.getNote();
         const { confirmed, payload: inputNote } = await this.popup.add(TextAreaPopup, {
             startingValue: this.selectedOrderline.getNote(),
             title: _t("Add internal Note"),
@@ -30,6 +31,8 @@ export class OrderlineNoteButton extends Component {
         if (confirmed) {
             this.selectedOrderline.setNote(inputNote);
         }
+
+        return { confirmed, inputNote, oldNote };
     }
 }
 

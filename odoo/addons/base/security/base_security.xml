@@ -16,7 +16,7 @@
             the multi-company rule because it might interfere with the user's company rule
             and make some users unselectable in relational fields. This means that partners
             of internal users are always visible, not matter the company setting. -->
-            <field name="domain_force">['|', '|', ('partner_share', '=', False), ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+            <field name="domain_force">['|', '|', ('partner_share', '=', False), ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field>
         </record>
 
         <record model="ir.rule" id="res_partner_portal_public_rule">
@@ -56,13 +56,13 @@
         <record id="res_partner_bank_rule" model="ir.rule">
             <field name="name">Partner bank company rule</field>
             <field name="model_id" ref="model_res_partner_bank"/>
-            <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
 
         <record id="res_currency_rate_rule" model="ir.rule">
             <field name="name">multi-company currency rate rule</field>
             <field name="model_id" ref="model_res_currency_rate"/>
-            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field>
         </record>
 
         <record id="change_password_rule" model="ir.rule">

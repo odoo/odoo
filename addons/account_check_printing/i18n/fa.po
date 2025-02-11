@@ -12,14 +12,15 @@
 # Hanna Kheradroosta, 2023
 # saeed raesi <saeed.raesi2020@gmail.com>, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,12 @@ msgstr ""
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid ": Check Number Sequence"
-msgstr ""
+msgstr ":بررسی توالی اعداد"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "<span>&amp;nbsp;</span>"
+msgstr "<span>&amp;nbsp;</span>"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -226,6 +232,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"دستی: پرداخت یا واریز با هر روشی غیر از اودوو.\n"
+"درگاه‌های پرداخت: هر درگاه روش پرداخت مخصوص به خود دارد. با کمک توکن پرداخت ذخیره شده توسط شریک هنگام خرید یا اشتراک آنلاین، درخواست تراکنش از/به یک کارت را ارائه دهید. \n"
+"چک: پرداخت صورت‌حساب‌ها و پرینت آن از اودوو.\n"
+"واریز انبوه: جمع‌آوری چک‎‌های چند مشتری و سپس ارائه‌ی مجموع آنها برای واریز به حساب. ماژول پرداخت انبوه برای این کار موردنیاز است. \n"
+"انتقال اعتباری SEPA: پرداخت در حوزه‌ی SEPA با ارائه‎‌ی یک فایل اعتباری SEPA به بانک. مآژول حساب SAPA برای این کار لازم است. \n"
+"حق برداشت مستقیم از SEPA: پرداخت از طریق حوزه‌ی SEPA با کمک وکالت‌نامه‌ای که شریک‌تان به شما می‌دهد. استفاده از ماژول حساب SEPA ضروری است. \n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -372,7 +384,7 @@ msgstr "شماره ترتیب چک چاپی بعدی."
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
 msgid "Show Check Number"
-msgstr ""
+msgstr "شماره‌ی چک را نشان بده"
 
 #. module: account_check_printing
 #. odoo-python
@@ -382,6 +394,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"بررسی طراح دچار مشکل شده است، لطفاً طرح دیگری را در بخش تنظیمات  صدور "
+"فاکتور/حسابداری انتخاب کرده و دوباره امتحان کنید."
 
 #. module: account_check_printing
 #. odoo-python
@@ -390,7 +404,7 @@ msgstr ""
 msgid ""
 "The following numbers are already used:\n"
 "%s"
-msgstr ""
+msgstr "اعداد زیر قبلاً استفاده شده‌اند: %s"
 
 #. module: account_check_printing
 #. odoo-python
@@ -400,6 +414,8 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
+"شماره‌‎ی آخرین چک %s بود. به منظور اجتناب از رد شدن یک چک توسط بانکف تنها "
+"می‌توانید از یک عدد بزرگ‌تر استفاده کنید."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -408,6 +424,9 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
+"دفتر روزنامه‌ی انتخاب شده برای چاپ شماره‌های چک پیکربندی شده است. چکی که از "
+"قب چاتپ شده است دارای شماره است یا اگر شماره‌ی جدید نادرست است، می‌توانید آن"
+" را در صفحه‌ی پیکربندی دفتر روزنامه تغییر دهید."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -416,6 +435,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
+"اگر جزئیات چک (ته چک) در یک صفحه جای نگیرند، این گزینه به شما امکان می‌دهد "
+"آنها را روی چند صفحه چاپ کنید."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -424,12 +445,15 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"این گزینه به شما امکان می‌دهد برچسب تاریخ روی چک را برای هر CPA چاپ کنید.\n"
+"اگر این چک از قبل چاپ شده دارای برچسب تاریخ باشد، آن را لغو کنید."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
 msgstr ""
+"این گزینه امکان ذخیره‌ی شماره‌ی چک‌های مربوطه را در پرداخت‌ها فراهم می‌کند. "
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -439,7 +463,7 @@ msgstr "ارسال نشده"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "چک باطل شده"
 
 #. module: account_check_printing
 #. odoo-python
@@ -449,3 +473,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"شما باید یک طرح چک را انتخاب کنید. برای این کار، به تنظیمات صدور "
+"فاکتور/حسابداری رفته و گزینه‌ی «طرح چک» را جستجو کنید."

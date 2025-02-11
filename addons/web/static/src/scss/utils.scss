@@ -221,7 +221,7 @@
     @return $-with-support-font;
 }
 
-// Function to remove all null values of a map
+// Function to remove all null values of a map.
 @function o-map-omit($map) {
     $-map: ();
     @each $key, $value in $map {
@@ -373,7 +373,7 @@
 @mixin print-variable($key, $value) {
     @if $value != null {
         $-type: type-of($value);
-        @if $-type == 'string' {
+        @if $-type == 'string' and str-index($value, 'var(') != 1 {
             --#{$key}: '#{$value}';
         } @else if $-type == 'list' {
             --#{$key}: #{inspect($value)};

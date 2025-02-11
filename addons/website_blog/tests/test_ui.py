@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestWebsiteBlogUi(odoo.tests.HttpCase):
+class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -50,3 +51,17 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase):
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = False
         self.start_tour("/blog", 'blog_autocomplete_with_date')
+
+    def test_avatar_comment(self):
+        mail_message = self.env['mail.message'].create({
+            'author_id': self.user_public.partner_id.id,
+            'model': self.test_blog_post._name,
+            'res_id': self.test_blog_post.id,
+            'subtype_id': self.ref('mail.mt_comment'),
+        })
+        portal_message = mail_message.portal_message_format()
+        response = self.url_open(portal_message[0]['author_avatar_url'])
+        # Ensure that the avatar is visible
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers.get('Content-Type'), 'image/png')
+        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')

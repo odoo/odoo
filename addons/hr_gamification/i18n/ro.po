@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_gamification
-#
+# 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Foldi Robert <foldirobert@nexterp.ro>, 2022
-#
+# Martin Trigaux, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Maria Muntean, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2022\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Maria Muntean, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: hr_gamification
@@ -35,8 +36,12 @@ msgstr ""
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__badge_ids
-msgid "All employee badges, linked to the employee either directly or through the user"
-msgstr "Toate insignele angajaților, legate de angajat fie direct, fie prin intermediul utilizatorului"
+msgid ""
+"All employee badges, linked to the employee either directly or through the "
+"user"
+msgstr ""
+"Toate insignele angajaților, legate de angajat fie direct, fie prin "
+"intermediul utilizatorului"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -58,8 +63,11 @@ msgstr "Insigne"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr "Insignele sunt recompense ale muncii bune. Dă-le oamenilor despre care crezi că merită."
+msgid ""
+"Badges are rewards of good work. Give them to people you believe deserve it."
+msgstr ""
+"Insignele sunt recompense ale muncii bune. Dă-le oamenilor despre care crezi"
+" că merită."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
@@ -71,7 +79,7 @@ msgstr "Insigne legate direct de angajat"
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee_base
 msgid "Basic Employee"
-msgstr "BAngajat de bază"
+msgstr "Angajat de bază"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -189,11 +197,6 @@ msgid "Received Badges"
 msgstr "Insigne primite"
 
 #. module: hr_gamification
-#: model:ir.model.fields,help:hr_gamification.field_gamification_badge_user_wizard__user_id
-msgid "Related user name for the resource to manage its access."
-msgstr "Numele utilizatorului asociat resursei pentru a-i gestiona accesul."
-
-#. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
@@ -205,6 +208,7 @@ msgid "Reward Employee with"
 msgstr "Recompensați Angajatul cu"
 
 #. module: hr_gamification
+#. odoo-python
 #: code:addons/hr_gamification/models/gamification.py:0
 #, python-format
 msgid "The selected employee does not correspond to the selected user."
@@ -214,7 +218,7 @@ msgstr "Angajatul selectat nu corespunde utilizatorului selectat."
 #: model:ir.model,name:hr_gamification.model_res_users
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__user_id
 msgid "User"
-msgstr "Operator"
+msgstr "Utilizator"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -222,16 +226,11 @@ msgid "What are you thankful for?"
 msgstr "Pentru ce esti recunoscator?"
 
 #. module: hr_gamification
+#. odoo-python
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can not send a badge to yourself."
 msgstr "Nu vă puteți trimite o insignă."
-
-#. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
-#, python-format
-msgid "You can send badges only to employees linked to a user."
-msgstr "Puteți trimite ecusoane numai angajaților conectați la un utilizator."
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form

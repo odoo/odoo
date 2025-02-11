@@ -52,8 +52,8 @@ class AssetNotFound(AssetError):
 
 class AssetsBundle(object):
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
-    rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
-    rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
+    rx_preprocess_imports = re.compile(r"""(@import\s?['"]([^'"]+)['"](;?))""")
+    rx_css_split = re.compile(r"\/\*\! ([a-f0-9-]+) \*\/")
 
     TRACKED_BUNDLES = ['web.assets_web']
 
@@ -240,18 +240,14 @@ class AssetsBundle(object):
             fallback_url_pattern = self.get_asset_url(
                 unique=unique,
                 extension=extension,
+                ignore_params=True,
             )
-
             self.env.cr.execute(query, [SUPERUSER_ID, fallback_url_pattern])
             similar_attachment_ids = [r[0] for r in self.env.cr.fetchall()]
             if similar_attachment_ids:
                 similar = self.env['ir.attachment'].sudo().browse(similar_attachment_ids)
                 _logger.info('Found a similar attachment for %s, copying from %s', url_pattern, similar.url)
-                url = self.get_asset_url(
-                    unique=unique,
-                    extension=extension,
-                    ignore_params=True,
-                )
+                url = url_pattern
                 values = {
                     'name': similar.name,
                     'mimetype': similar.mimetype,
@@ -264,7 +260,7 @@ class AssetsBundle(object):
                 }
                 attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(values)
                 attachment_id = attachment.id
-                self.clean_attachments(extension)
+                self._clean_attachments(extension, url)
 
         return self.env['ir.attachment'].sudo().browse(attachment_id)
 
@@ -721,16 +717,18 @@ css_error_message {
             self.css_errors.append(msg)
             return ''
 
-        result = rtlcss.communicate(input=source.encode('utf-8'))
-        if rtlcss.returncode:
-            cmd_output = ''.join(misc.ustr(result))
-            if not cmd_output:
+        stdout, stderr = rtlcss.communicate(input=source.encode('utf-8'))
+        if rtlcss.returncode or (source and not stdout):
+            cmd_output = ''.join(misc.ustr(stderr))
+            if not cmd_output and rtlcss.returncode:
                 cmd_output = "Process exited with return code %d\n" % rtlcss.returncode
+            elif not cmd_output:
+                cmd_output = "rtlcss: error processing payload\n"
             error = self.get_rtlcss_error(cmd_output, source=source)
             _logger.warning(error)
             self.css_errors.append(error)
             return ''
-        rtlcss_result = result[0].strip().decode('utf8')
+        rtlcss_result = stdout.strip().decode('utf8')
         return rtlcss_result
 
     def get_preprocessor_error(self, stderr, source=None):

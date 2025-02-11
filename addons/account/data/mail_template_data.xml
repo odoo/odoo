@@ -42,7 +42,11 @@
             Please remit payment at your earliest convenience.
             <t t-if="object.payment_reference">
                 <br /><br />
-                Please use the following communication for your payment: <span style="font-weight:bold;" t-out="object.payment_reference or ''">INV/2021/05/0005</span>.
+                Please use the following communication for your payment: <strong t-out="object.payment_reference or ''">INV/2021/05/0005</strong>
+                <t t-if="object.partner_bank_id">
+                    on the account <strong t-out="object.partner_bank_id.acc_number"/>
+                </t>
+                .
             </t>
         </t>
         <t t-if="hasattr(object, 'timesheet_count') and object.timesheet_count">

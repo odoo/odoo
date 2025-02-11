@@ -7,7 +7,7 @@
             <t t-set="survey_form_readonly" t-value="true"/>
             <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap">
-                <div class="o_survey_print container">
+                <div class="o_survey_print o_container_small">
                     <div class='py-5 mt32'>
                         <h1><span t-field='survey.title' class="text-break"/></h1>
                         <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty text-break"/></t>
@@ -25,7 +25,7 @@
                             <canvas id="doughnut_chart"></canvas>
                         </div>
                     </div>
-                    <div class="w-lg-50 mx-lg-auto">
+                    <div>
                         <fieldset disabled="disabled">
                             <t t-set="question" t-value="False" />
                             <t t-foreach='survey.question_and_page_ids' t-as='question'>
@@ -34,14 +34,14 @@
                                             or not is_html_empty(question.description))">
                                     <hr t-if="question != survey.page_ids[0]" />
                                     <div class="o_page_header mb-5">
-                                        <h1 t-field='question.title' class="text-break" />
+                                        <h1 t-field='question.title' class="text-break fs-2" />
                                         <div t-if="question.description" t-field='question.description' class="oe_no_empty"/>
                                     </div>
                                 </t>
                                 <t t-if="not question.is_page and not answer or (question in answer.predefined_question_ids &amp; questions_to_display)" >
                                     <t t-set="answer_lines" t-value="answer.user_input_line_ids.filtered(lambda line: line.question_id == question)"/>
                                     <div class="js_question-wrapper" t-att-id="question.id">
-                                        <h2>
+                                        <h2 class="fs-4">
                                             <span t-field='question.title' class="text-break"/>
                                             <span t-if="question.constr_mandatory" class="text-danger">*</span>
                                             <span t-if="scoring_display_correction" class="badge rounded-pill" t-att-data-score-question="question.id"></span>

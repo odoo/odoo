@@ -68,21 +68,21 @@
             <li class="d-flex justify-content-between border-bottom">Planned: <span class="ps-1" t-esc="props.planned"/></li>
             <li class="d-flex justify-content-between">Available: <span class="ps-1" t-esc="props.left"/></li>
         </ul>
-        <div t-if="props.warning" class="alert alert-warning mb-0 o_time_off_card_popover_warning">
-            <span class="m-0 mt-3"
+        <div t-if="props.warning" class="alert alert-warning mb-0 pb-0 o_time_off_card_popover_warning">
+            <span class="d-inline-block m-0 mb-3"
                 t-if="props.errorLeaves.length">
                 Some leaves cannot be linked to any allocation. To see those leaves, 
                 <a t-on-click="() => this.openLeaves()" class="cursor-pointer">click here</a>.
             </span>
-            <span class="m-0 mt-3"
-                t-elif="props.closest &amp;&amp; props.closest &lt; props.left">
+            <span class="d-inline-block m-0 mb-3"
+                t-if="props.closest &amp;&amp; props.closest &lt; props.left">
                 <i class="fa fa-warning"/> Only <t t-esc="props.closest"/>
                 <t t-if="props.request_unit == 'hour'"> hours</t>
                 <t t-else=""> days</t>
                 can be used before the allocation expires.
             </span>
-            <span class="m-0 mt-3"
-                t-else="">
+            <span class="d-inline-block m-0 mb-3"
+                t-if="props.accrualExcess">
                 The leaves planned in the future are exceeding the maximum value of the allocation.
                 It will not be possible to take all of them.
             </span>

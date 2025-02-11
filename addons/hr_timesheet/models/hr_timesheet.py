@@ -11,13 +11,16 @@ from odoo.osv import expression
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    @api.model
-    def _get_favorite_project_id(self, employee_id=False):
+    def _get_favorite_project_id_domain(self, employee_id=False):
         employee_id = employee_id or self.env.user.employee_id.id
-        last_timesheet_ids = self.search([
+        return [
             ('employee_id', '=', employee_id),
             ('project_id', '!=', False),
-        ], limit=5)
+        ]
+
+    @api.model
+    def _get_favorite_project_id(self, employee_id=False):
+        last_timesheet_ids = self.search(self._get_favorite_project_id_domain(employee_id), limit=5)
         if len(last_timesheet_ids.project_id) == 1:
             return last_timesheet_ids.project_id.id
         return False
@@ -57,7 +60,7 @@ class AccountAnalyticLine(models.Model):
         compute='_compute_project_id', store=True, readonly=False)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
     employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False},
-        help="Define an 'hourly cost' on the employee to track the cost of their time.")
+        index=True, help="Define an 'hourly cost' on the employee to track the cost of their time.")
     job_title = fields.Char(related='employee_id.job_title')
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     manager_id = fields.Many2one('hr.employee', "Manager", related='employee_id.parent_id', store=True)
@@ -81,9 +84,14 @@ class AccountAnalyticLine(models.Model):
         return False
 
     def _compute_readonly_timesheet(self):
-        readonly_timesheets = self.filtered(lambda timesheet: timesheet._is_readonly())
-        readonly_timesheets.readonly_timesheet = True
-        (self - readonly_timesheets).readonly_timesheet = False
+        # Since the mrp_module gives write access to portal user on timesheet, we check that the user is an internal one before giving the write access.
+        # It is not supposed to be needed, since portal user are not supposed to have access to the views using this field, but better be safe than sorry
+        if not self.env.user.has_group('base.group_user'):
+            self.readonly_timesheet = True
+        else:
+            readonly_timesheets = self.filtered(lambda timesheet: timesheet._is_readonly())
+            readonly_timesheets.readonly_timesheet = True
+            (self - readonly_timesheets).readonly_timesheet = False
 
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
@@ -117,7 +125,7 @@ class AccountAnalyticLine(models.Model):
         if self.project_id != self.task_id.project_id:
             self.task_id = False
 
-    @api.depends('employee_id')
+    @api.depends('employee_id.user_id')
     def _compute_user_id(self):
         for line in self:
             line.user_id = line.employee_id.user_id if line.employee_id else self._default_user()
@@ -158,7 +166,8 @@ class AccountAnalyticLine(models.Model):
                     user_ids.append(user_id)
 
         # 2/ Search all employees related to user_ids and employee_ids, in the selected companies
-        employees = self.env['hr.employee'].sudo().search([
+        HrEmployee_sudo = self.env['hr.employee'].sudo()
+        employees = HrEmployee_sudo.search([
             '&', '|', ('user_id', 'in', user_ids), ('id', 'in', employee_ids), ('company_id', 'in', self.env.companies.ids)
         ])
 
@@ -185,7 +194,7 @@ class AccountAnalyticLine(models.Model):
             if employee_in_id:
                 company = False
                 if not vals.get('company_id'):
-                    company = self.env['hr.employee'].browse(employee_in_id).company_id
+                    company = HrEmployee_sudo.browse(employee_in_id).company_id
                     vals['company_id'] = company.id
                 if not vals.get('product_uom_id'):
                     vals['product_uom_id'] = company.project_time_mode_id.id if company else self.env['res.company'].browse(vals.get('company_id', self.env.company.id)).project_time_mode_id.id
@@ -210,7 +219,7 @@ class AccountAnalyticLine(models.Model):
                 vals['user_id'] = user_id
                 company = False
                 if not vals.get('company_id'):
-                    company = self.env['hr.employee'].browse(employee_out_id).company_id
+                    company = HrEmployee_sudo.browse(employee_out_id).company_id
                     vals['company_id'] = company.id
                 if not vals.get('product_uom_id'):
                     vals['product_uom_id'] = company.project_time_mode_id.id if company else self.env['res.company'].browse(vals.get('company_id', self.env.company.id)).project_time_mode_id.id
@@ -372,6 +381,10 @@ class AccountAnalyticLine(models.Model):
             if not vals.get('product_uom_id'):
                 company = account_per_id[vals['account_id']].company_id or data.company_id
                 vals['product_uom_id'] = uom_id_per_company.get(company.id, company.project_time_mode_id.id) or self.env.company.project_time_mode_id.id
+            # Set the top-level analytic plan according to the given analytic account
+            plan = self.env['account.analytic.account'].browse(vals.get('account_id')).root_plan_id
+            if plan:
+                vals[plan._column_name()] = vals.get('account_id')
         return vals_list
 
     def _timesheet_postprocess(self, values):
@@ -407,6 +420,9 @@ class AccountAnalyticLine(models.Model):
     def _is_timesheet_encode_uom_day(self):
         company_uom = self.env.company.timesheet_encode_uom_id
         return company_uom == self.env.ref('uom.product_uom_day')
+
+    def _is_updatable_timesheet(self):
+        return True
 
     @api.model
     def _convert_hours_to_days(self, time):

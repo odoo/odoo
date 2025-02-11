@@ -84,7 +84,6 @@ export class UrlAutoComplete extends Component {
 
     onInput({ inputValue }) {
         this.props.targetDropdown.value = inputValue;
-        this.props.options.urlChosen?.();
     }
 }
 

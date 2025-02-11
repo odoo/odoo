@@ -91,16 +91,14 @@
     z-index: $zindex-popover !important;
     font-size: inherit;
     box-sizing: border-box;
-}
 
-.o_xxs_form_view .o_field_properties {
-    // mobile view
-    .o_field_property_add,
-    .o_field_property_open_popover {
-        display: none;
-    }
-    .o_field_property_open_popover.disabled {
-        pointer-events: none;
+    // fullscreen on small screen sizes
+    @include media-breakpoint-down(md) {
+        top: 0px !important;
+        left: 0px !important;
+        right: 0px;
+        bottom: 0px;
+        margin-top: 0px !important;
     }
 }
 
@@ -114,6 +112,14 @@
 .o_field_properties {
     .oi-draggable {
         cursor: url(/web/static/img/openhand.cur), grab;
+    }
+    @include media-breakpoint-down(sm) {
+        .o_field_property_open_popover {
+            opacity: 1;
+            &.disabled {
+                pointer-events: none;
+            }
+        }
     }
 }
 

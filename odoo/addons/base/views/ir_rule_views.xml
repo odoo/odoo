@@ -109,7 +109,7 @@
             <field name="name">Property multi-company</field>
             <field name="model_id" ref="model_ir_property"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
 
 

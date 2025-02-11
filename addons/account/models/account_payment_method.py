@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.exceptions import UserError
 
 
 class AccountPaymentMethod(models.Model):
@@ -139,21 +138,7 @@ class AccountPaymentMethodLine(models.Model):
 
     @api.constrains('name')
     def _ensure_unique_name_for_journal(self):
-        self.flush_model(['name', 'journal_id', 'payment_method_id'])
-        self.env['account.payment.method'].flush_model(['payment_type'])
-        self._cr.execute('''
-            SELECT apml.name, apm.payment_type
-            FROM account_payment_method_line apml
-            JOIN account_payment_method apm ON apml.payment_method_id = apm.id
-            WHERE apml.journal_id IS NOT NULL
-            GROUP BY apml.name, journal_id, apm.payment_type
-            HAVING count(apml.id) > 1
-        ''')
-        res = self._cr.fetchall()
-        if res:
-            (name, payment_type) = res[0]
-            raise UserError(_("You can't have two payment method lines of the same payment type (%s) "
-                              "and with the same name (%s) on a single journal.", payment_type, name))
+        self.journal_id._check_payment_method_line_ids_multiplicity()
 
     def unlink(self):
         """

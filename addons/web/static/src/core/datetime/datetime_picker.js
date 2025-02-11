@@ -315,7 +315,10 @@ export class DateTimePicker extends Component {
         rounding: { type: Number, optional: true },
         slots: {
             type: Object,
-            shape: { buttons: { type: Object, optional: true } },
+            shape: {
+                bottom_left: { type: Object, optional: true },
+                buttons: { type: Object, optional: true },
+            },
             optional: true,
         },
         type: { type: [{ value: "date" }, { value: "datetime" }], optional: true },
@@ -511,9 +514,15 @@ export class DateTimePicker extends Component {
     applyValueAtIndex(value, valueIndex) {
         const result = [...this.values];
         if (this.props.range) {
-            if (result[0] && value.endOf("day") < result[0].startOf("day")) {
+            if (
+                (result[0] && value.endOf("day") < result[0].startOf("day")) ||
+                (result[1] && !result[0])
+            ) {
                 valueIndex = 0;
-            } else if (result[1] && result[1].endOf("day") < value.startOf("day")) {
+            } else if (
+                (result[1] && result[1].endOf("day") < value.startOf("day")) ||
+                (result[0] && !result[1])
+            ) {
                 valueIndex = 1;
             }
         }

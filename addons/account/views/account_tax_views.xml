@@ -37,7 +37,7 @@
             <field name="model">account.tax.repartition.line</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" create="1" delete="1">
-                    <field name="sequence" widget="handle" column_invisible="parent.is_used"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="factor_percent" invisible="repartition_type == 'base'"/>
                     <field name="repartition_type"/>
                     <field name="account_id" invisible="repartition_type == 'base'" options="{'no_create': True}"/>
@@ -140,12 +140,12 @@
                         <group>
                             <field name="name"/>
                             <field name="description"/>
-                            <field name="amount_type" readonly="is_used"/>
+                            <field name="amount_type"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group>
                             <field name="is_used" invisible="1"/>
-                            <field name="type_tax_use" readonly="is_used"/>
+                            <field name="type_tax_use"/>
                             <field name="tax_scope"/>
                             <label for="amount" invisible="amount_type not in ('fixed', 'percent', 'division')"/>
                             <div invisible="amount_type not in ('fixed', 'percent', 'division')">
@@ -184,8 +184,8 @@
                                     <field name="country_id" required="True"/>
                                 </group>
                                 <group name="advanced_booleans">
-                                    <field name="price_include" invisible="amount_type == 'group'" readonly="is_used"/>
-                                    <field name="include_base_amount" invisible="amount_type == 'group'" readonly="is_used"/>
+                                    <field name="price_include" invisible="amount_type == 'group'"/>
+                                    <field name="include_base_amount" invisible="amount_type == 'group'"/>
                                     <field name="is_base_affected"
                                            invisible="amount_type == 'group' or price_include"
                                            groups="base.group_no_one"/>

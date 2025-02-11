@@ -3,10 +3,7 @@
 import { jsonrpc } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add('apikeys_tour_setup', {
-    test: true,
-    url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
-    steps: () => [{
+const openUserPreferenceSecurity = () => [{
     content: 'Open user account menu',
     trigger: '.o_user_menu .dropdown-toggle',
     run: 'click',
@@ -18,7 +15,13 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
     content: "Switch to security tab",
     trigger: 'a[role=tab]:contains("Account Security")',
     run: 'click',
-}, {
+}]
+
+registry.category("web_tour.tours").add('apikeys_tour_setup', {
+    test: true,
+    url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
+    steps: () => [
+    ...openUserPreferenceSecurity(), {
     content: "Open API keys wizard",
     trigger: 'button:contains("New API Key")',
 }, {
@@ -28,7 +31,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 }, {
     content: "Input password",
     trigger: '[name=password] input',
-    run: 'text demo', // FIXME: better way to do this?
+    run: 'text test_user', // FIXME: better way to do this?
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
@@ -55,8 +58,8 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
         });
         $('button:contains("Done")').click();
     }
-}, {
-    content: "check that our key is present (FIXME: requires HR to be installed)",
+},  ...openUserPreferenceSecurity(), {
+    content: "check that our key is present",
     trigger: '[name=api_key_ids] td:contains("my key")',
     run() {},
 }]});
@@ -65,23 +68,15 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     test: true,
     url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
-    steps: () => [{
-    content: 'Open preferences',
-    trigger: '.o_user_menu .dropdown-toggle',
-}, {
-    trigger: '[data-menu=settings]',
-}, {
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-}, {
+    steps: () => [
+    ...openUserPreferenceSecurity(), {
     content: "delete key",
     trigger: '[name=api_key_ids] i.fa-trash',
     run: 'click',
 }, {
     content: "Input password for security mode again",
     trigger: '[name=password] input',
-    run: 'text demo', // FIXME: better way to do this?
+    run: 'text test_user', // FIXME: better way to do this?
 }, {
     content: "And confirm",
     trigger: 'button:contains(Confirm Password)',

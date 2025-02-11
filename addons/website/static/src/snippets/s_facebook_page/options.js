@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import options from "@web_editor/js/editor/snippets.options";
 
@@ -7,6 +8,7 @@ options.registry.facebookPage = options.Class.extend({
     init() {
         this._super(...arguments);
         this.orm = this.bindService("orm");
+        this.notification = this.bindService("notification");
     },
 
     /**
@@ -26,7 +28,7 @@ options.registry.facebookPage = options.Class.extend({
             small_header: true,
             hide_cover: true,
         };
-        this.fbData = Object.assign({}, defaults, pick(this.$target[0].dataset, Object.keys(defaults)), defaults);
+        this.fbData = Object.assign({}, defaults, pick(this.$target[0].dataset, ...Object.keys(defaults)));
         if (!this.fbData.href) {
             // Fetches the default url for facebook page from website config
             var self = this;
@@ -128,7 +130,8 @@ options.registry.facebookPage = options.Class.extend({
                     return this.fbData.tabs.split(',').includes(optionName.replace(/^tab./, ''));
                 } else {
                     if (optionName === 'show_cover') {
-                        return !this.fbData.hide_cover;
+                        // Sometimes a string, sometimes a boolean.
+                        return String(this.fbData.hide_cover) === "false";
                     }
                     return this.fbData[optionName];
                 }
@@ -156,7 +159,7 @@ options.registry.facebookPage = options.Class.extend({
         // The regex is kept as a huge one-liner for performance as it is
         // compiled once on script load. The only way to split it on several
         // lines is with the RegExp constructor, which is compiled on runtime.
-        const match = this.fbData.href.match(/^(https?:\/\/)?((www\.)?(fb|facebook)|(m\.)?facebook)\.com\/(((profile\.php\?id=|people\/[^/?#]+\/|(p\/)?[^/?#]+-)(?<id>[0-9]{15,16}))|(?<nameid>[\w.]+))($|[/?# ])/);
+        const match = this.fbData.href.trim().match(/^(https?:\/\/)?((www\.)?(fb|facebook)|(m\.)?facebook)\.com\/(((profile\.php\?id=|people\/([^/?#]+\/)?|(p\/)?[^/?#]+-)(?<id>[0-9]{12,16}))|(?<nameid>[\w.]+))($|[/?# ])/);
         if (match) {
             // Check if the page exists on Facebook or not
             const pageId = match.groups.nameid || match.groups.id;
@@ -167,11 +170,17 @@ options.registry.facebookPage = options.Class.extend({
                 } else {
                     this.fbData.id = "";
                     this.fbData.href = defaultURL;
+                    this.notification.add(_t("We couldn't find the Facebook page"), {
+                        type: "warning",
+                    });
                 }
             });
         }
         this.fbData.id = "";
         this.fbData.href = defaultURL;
+        this.notification.add(_t("You didn't provide a valid Facebook link"), {
+            type: "warning",
+        });
         return Promise.resolve();
     },
 });

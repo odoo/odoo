@@ -23,12 +23,14 @@
 
   function isElement(node) {
     var OwnElement = getWindow(node).Element;
-    return node instanceof OwnElement || node instanceof Element;
+    return node instanceof OwnElement || node.nodeType === Node.ELEMENT_NODE;
   }
 
   function isHTMLElement(node) {
     var OwnElement = getWindow(node).HTMLElement;
-    return node instanceof OwnElement || node instanceof HTMLElement;
+    // Updated to handle checks of HTMLElement created in a different document
+    // which is required to position the colorpicker correctly.
+    return node instanceof OwnElement || node.nodeType === Node.ELEMENT_NODE;
   }
 
   function isShadowRoot(node) {

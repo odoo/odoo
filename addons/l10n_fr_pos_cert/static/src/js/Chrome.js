@@ -15,7 +15,7 @@ patch(Chrome.prototype, {
                 limitDate.setDate(limitDate.getDate() + 1);
                 if (limitDate.getTime() < now) {
                     const info = await this.pos.getClosePosInfo();
-                    this.popup.add(ClosePosPopup, { ...info, keepBehind: true });
+                    this.popup.add(ClosePosPopup, { ...info });
                 }
             }
         });

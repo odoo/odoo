@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
+import dom from "@web/legacy/js/core/dom";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
@@ -44,8 +45,13 @@ class SignatureForm extends Component {
         onMounted(() => {
             this.rootRef.el.closest('.modal').addEventListener('shown.bs.modal', () => {
                 this.signature.resetSignature();
+                this.toggleSignatureFormVisibility();
             });
         });
+    }
+
+    toggleSignatureFormVisibility() {
+        this.rootRef.el.classList.toggle('d-none', document.querySelector('.editor_enable'));
     }
 
     get sendLabel() {
@@ -62,10 +68,16 @@ class SignatureForm extends Component {
      * @returns {Promise}
      */
     async onClickSubmit() {
+        const button = document.querySelector('.o_portal_sign_submit')
+        const icon = button.removeChild(button.firstChild)
+        const restoreBtnLoading = dom.addButtonLoadingEffect(button);
+
         const name = this.signature.name;
         const signature = this.signature.getSignatureImage()[1];
         const data = await this.rpc(this.props.callUrl, { name, signature });
         if (data.force_refresh) {
+            restoreBtnLoading();
+            button.prepend(icon)
             if (data.redirect_url) {
                 redirect(data.redirect_url);
             } else {

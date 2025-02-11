@@ -6,10 +6,7 @@ from xmlrpc.client import Fault
 from passlib.totp import TOTP
 
 from odoo import http
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.exceptions import AccessDenied
-from odoo.service import common as auth, model
-from odoo.tests import tagged, get_db_name, loaded_demo_data
+from odoo.tests import tagged, get_db_name, new_test_user, HttpCase
 from odoo.tools import mute_logger
 
 from ..controllers.home import Home
@@ -17,6 +14,13 @@ from ..controllers.home import Home
 _logger = logging.getLogger(__name__)
 
 class TestTOTPMixin:
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_test = new_test_user(
+            cls.env, 'test_user', password='test_user', tz='UTC',
+        )
+
     def install_totphook(self):
         totp = None
         # might be possible to do client-side using `crypto.subtle` instead of
@@ -46,32 +50,29 @@ class TestTOTPMixin:
 
 
 @tagged('post_install', '-at_install')
-class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
+class TestTOTP(TestTOTPMixin, HttpCase):
+
     def setUp(self):
         super().setUp()
         self.install_totphook()
 
     def test_totp(self):
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         # 1. Enable 2FA
-        self.start_tour('/web', 'totp_tour_setup', login='demo')
+        self.start_tour('/web', 'totp_tour_setup', login='test_user')
 
         # 2. Verify that RPC is blocked because 2FA is on.
         self.assertFalse(
-            self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {}),
+            self.xmlrpc_common.authenticate(get_db_name(), 'test_user', 'test_user', {}),
             "Should not have returned a uid"
         )
         self.assertFalse(
-            self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {'interactive': True}),
+            self.xmlrpc_common.authenticate(get_db_name(), 'test_user', 'test_user', {'interactive': True}),
             'Trying to fake the auth type should not work'
         )
-        uid = self.user_demo.id
-        with self.assertRaisesRegex(Fault, r'Access Denied'):
+        uid = self.user_test.id
+        with self.assertRaisesRegex(Fault, r'Access Denied'), mute_logger('odoo.http'):
             self.xmlrpc_object.execute_kw(
-                get_db_name(), uid, 'demo',
+                get_db_name(), uid, 'test_user',
                 'res.users', 'read', [uid, ['login']]
             )
 
@@ -85,21 +86,22 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
         self.start_tour('/', 'totp_login_disabled', login=None)
 
         # 6. Check that rpc is now re-allowed
-        uid = self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {})
-        self.assertEqual(uid, self.user_demo.id)
+        uid = self.xmlrpc_common.authenticate(get_db_name(), 'test_user', 'test_user', {})
+        self.assertEqual(uid, self.user_test.id)
         [r] = self.xmlrpc_object.execute_kw(
-            get_db_name(), uid, 'demo',
+            get_db_name(), uid, 'test_user',
             'res.users', 'read', [uid, ['login']]
         )
-        self.assertEqual(r['login'], 'demo')
+        self.assertEqual(r['login'], 'test_user')
 
 
     def test_totp_administration(self):
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
-        self.start_tour('/web', 'totp_tour_setup', login='demo')
+        self.start_tour('/web', 'totp_tour_setup', login='test_user')
+        # If not enabled (like in demo data), landing on res.config will try
+        # to disable module_sale_quotation_builder and raise an issue
+        group_order_template = self.env.ref('sale_management.group_sale_order_template', raise_if_not_found=False)
+        if group_order_template:
+            self.env.ref('base.group_user').write({"implied_ids": [(4, group_order_template.id)]})
         self.start_tour('/web', 'totp_admin_disables', login='admin')
         self.start_tour('/', 'totp_login_disabled', login=None)
 
@@ -109,12 +111,7 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
         Ensure we don't leak the session info from an half-logged-in
         user.
         """
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
-
-        self.start_tour('/web', 'totp_tour_setup', login='demo')
+        self.start_tour('/web', 'totp_tour_setup', login='test_user')
         self.url_open('/web/session/logout')
 
         headers = {
@@ -127,8 +124,8 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
             "id": 0,
             "params": {
                 "db": get_db_name(),
-                "login": "demo",
-                "password": "demo",
+                "login": "test_user",
+                "password": "test_user",
             },
         }
         response = self.url_open("/web/session/authenticate", data=json.dumps(payload), headers=headers)

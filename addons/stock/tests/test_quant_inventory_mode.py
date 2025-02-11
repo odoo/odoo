@@ -301,12 +301,12 @@ class TestEditableQuant(TransactionCase):
         quant = self.Quant.create({
             'product_id': self.product.id,
             'location_id': default_stock_location.id,
-            'inventory_quantity': 100,
+            'inventory_quantity': 0.4,
         })
         quant.action_apply_inventory()
         move_lines = self.env['stock.move.line'].search([('product_id', '=', self.product.id), ('is_inventory', '=', True)])
         self.assertEqual(len(move_lines), 1, "One inventory adjustment move lines should have been created")
-        self.assertEqual(self.product.qty_available, 100, "Before revert inventory adjustment qty is 100")
+        self.assertEqual(self.product.qty_available, 0.4, "Before revert inventory adjustment qty is 0.4")
         move_lines.action_revert_inventory()
         self.assertEqual(self.product.qty_available, 0, "After revert inventory adjustment qty is not zero")
 
@@ -327,3 +327,36 @@ class TestEditableQuant(TransactionCase):
         self.assertEqual(len(move_lines), 2, "Two inventory adjustment move lines should have been created")
         move_lines.action_revert_inventory()
         self.assertEqual(self.product.qty_available, 0, "After revert multi inventory adjustment qty is not zero")
+
+    def test_group_quants(self):
+        """
+        Check that the `inventory_quantity_auto_apply` is read in read_group even
+        if it is not stored.
+        """
+        self.Quant.create([
+            {
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+            'quantity': 100,
+            },
+            {
+            'product_id': self.product2.id,
+            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+            'quantity': 50,
+            },
+        ])
+        fields = [
+            "product_id",
+            "inventory_quantity_auto_apply",
+            "reserved_quantity",
+        ]
+        context = {
+            "inventory_mode": True,
+            "inventory_report_mode": True
+        }
+        groupby = ['product_id']
+        groups = self.Quant.with_context(**context).read_group(domain=[('product_id', 'in', (self.product.id, self.product2.id))], fields=fields, groupby=groupby, limit=2)
+        group1 = next(filter(lambda g: g['product_id'][0] == self.product.id, groups))
+        self.assertEqual(group1['inventory_quantity_auto_apply'], 100)
+        group2 = next(filter(lambda g: g['product_id'][0] == self.product2.id, groups))
+        self.assertEqual(group2['inventory_quantity_auto_apply'], 50)

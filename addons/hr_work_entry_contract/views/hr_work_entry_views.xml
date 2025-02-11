@@ -18,7 +18,7 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
                 <div invisible="state != 'conflict'">
-                    <div class="alert alert-warning mb-0" role="alert" invisible="work_entry_type_id" name="work_entry_undefined">
+                    <div class="alert alert-warning" role="alert" invisible="work_entry_type_id" name="work_entry_undefined">
                         This work entry cannot be validated. The work entry type is undefined.
                     </div>
                 </div>

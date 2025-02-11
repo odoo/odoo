@@ -3,6 +3,7 @@
 
 import base64
 import json
+import re
 
 from markupsafe import Markup
 from psycopg2 import IntegrityError
@@ -160,6 +161,16 @@ class WebsiteForm(http.Controller):
         custom_fields = []
 
         for field_name, field_value in values.items():
+            # First decode the field_name encoded at the client side.
+            html_entities = {
+                '&quot;': '"',
+                '&apos;': "'",
+                '&lsquo;': '`',
+                '&bsol;': '\\',
+            }
+            pattern = '|'.join(html_entities.keys())
+            field_name = re.sub(pattern, lambda match: html_entities[match.group(0)], field_name)
+
             # If the value of the field if a file
             if hasattr(field_value, 'filename'):
                 # Undo file upload field name indexing

@@ -4,10 +4,10 @@ import base64
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import tests
+from odoo import http, tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.gamification.tests.common import HttpCaseGamification
-from odoo.fields import Datetime
+from odoo.fields import Command, Datetime
 from odoo.tools import mute_logger
 from odoo.tools.misc import file_open
 
@@ -121,7 +121,7 @@ class TestUi(TestUICommon):
         )
         for url in urls:
             response = self.url_open(url, allow_redirects=False)
-            self.assertTrue(response.headers.get("Location", "").endswith("/slides?invite_error=no_rights"))
+            self.assertURLEqual(response.headers.get("Location"), "/slides?invite_error=no_rights")
 
         # auth="user" has priority
         urls = (
@@ -130,7 +130,8 @@ class TestUi(TestUICommon):
         )
         for url in urls:
             response = self.url_open(url, allow_redirects=False)
-            self.assertIn("/web/login", response.headers.get("Location", ""))
+            location = self.parse_http_location(response.headers.get("Location"))
+            self.assertEqual(location.path, "/web/login")
 
     def test_course_member_employee(self):
         user_demo = self.user_demo
@@ -202,6 +203,11 @@ class TestUiPublisher(HttpCaseGamification):
                 (4, self.env.ref('website_slides.group_website_slides_manager').id)
             ],
         })
+        self.env['slide.channel.tag.group'].create([{
+            'name': 'Your Favorite Role',
+            'tag_ids': [Command.create({'name': 'Gardening'})]}
+        ])
+        self.env['slide.tag'].create({'name': 'Practice'})
 
         self.start_tour(self.env['website'].get_client_action_url('/slides'), 'course_publisher_standard', login=user_demo.login)
 
@@ -264,3 +270,18 @@ class TestUiPublisherYoutube(HttpCaseGamification):
         })
 
         self.start_tour(self.env['website'].get_client_action_url('/slides'), 'course_publisher', login=user_demo.login)
+
+
+@tests.common.tagged('external', 'post_install', '-standard', '-at_install')
+class TestPortalComposer(TestUICommon):
+    def test_portal_composer_attachment(self):
+        """Check that the access token is returned when we upload an attachment."""
+        self.authenticate('demo', 'demo')
+        response = self.url_open('/portal/attachment/add', data={
+            'name': 'image.png',
+            'res_id': self.channel.id,
+            'res_model': 'slide.channel',
+            'csrf_token': http.WebRequest.csrf_token(self),
+        }, files={'file': ('image.png', '', 'image/png')})
+        self.assertTrue(response.ok)
+        self.assertTrue(response.json().get('access_token'))

@@ -60,15 +60,15 @@
                                 <field name="pos_auto_validate_terminal_payment"/>
                             </setting>
                             <setting string="Cash Rounding" invisible="is_kiosk_mode" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
-                                <field name="pos_cash_rounding"/>
+                                <field name="pos_cash_rounding" readonly="pos_has_active_session"/>
                                 <div class="content-group mt16" invisible="not pos_cash_rounding">
                                     <div class="row mt16">
                                         <label string="Rounding Method" for="pos_rounding_method" class="col-lg-3 o_light_label" />
-                                        <field name="pos_rounding_method" required="pos_cash_rounding" domain="[('company_id', '=', company_id)]"/>
+                                        <field name="pos_rounding_method" required="pos_cash_rounding" domain="[('company_id', '=', company_id)]" readonly="pos_has_active_session"/>
                                     </div>
                                     <div class="row mt16">
                                         <div class="col">
-                                            <field name="pos_only_round_cash_method"/>
+                                            <field name="pos_only_round_cash_method" readonly="pos_has_active_session"/>
                                             <label string="Only on cash methods" for="pos_only_round_cash_method" class="o_light_label" />
                                         </div>
                                     </div>
@@ -150,7 +150,7 @@
                                     Default sales tax for products
                                 </div>
                                 <div class="content-group mt16">
-                                    <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                    <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all'))]"/>
                                 </div>
                                 <div class="mt8">
                                     <button name="%(account.action_tax_form)d" icon="oi-arrow-right" type="action" string="Taxes" class="btn-link"/>
@@ -162,18 +162,18 @@
                                 <div class="text-muted">
                                     Intermediary account used for unidentified customers.
                                 </div>
-                                <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable'), ('company_id', '=', company_id)]"/>
+                                <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable')]"/>
                             </setting>
                             <setting id="flexible_taxes" title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.)." string="Flexible Taxes" help="Use fiscal positions to get different taxes by order">
                                 <field name="pos_tax_regime_selection"/>
                                 <div class="content-group mt16" invisible="not pos_tax_regime_selection">
                                     <div class="row">
                                         <label string="Default" for="pos_default_fiscal_position_id" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_default_fiscal_position_id" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+                                        <field name="pos_default_fiscal_position_id"/>
                                     </div>
                                     <div class="row">
                                         <label string="Allowed" for="pos_fiscal_position_ids" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+                                        <field name="pos_fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                     </div>
                                     <div>
                                         <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>

@@ -2135,6 +2135,7 @@ class TestStockFlow(TestStockCommon):
             picking.action_confirm()
             return picking
 
+        self.env['stock.picking.type'].browse(self.picking_type_out).reservation_method = 'at_confirm'
         out01 = create_picking(self.picking_type_out, self.stock_location, self.customer_location)
         out02 = create_picking(self.picking_type_out, self.stock_location, self.customer_location, sequence=2, delay=1)
         in01 = create_picking(self.picking_type_in, self.supplier_location, self.stock_location, delay=2)
@@ -2375,8 +2376,8 @@ class TestStockFlow(TestStockCommon):
         steps), the out-move should be automatically assigned.
         """
         self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', False)
-
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.out_type_id.reservation_method = 'by_date'
         warehouse.reception_steps = 'two_steps'
 
         out_move = self.env['stock.move'].create({
@@ -2542,6 +2543,40 @@ class TestStockFlow(TestStockCommon):
         backorder.button_validate()
         self.assertEqual(backorder.state, 'done')
 
+    def test_picking_mixed_tracking_with_backorder(self):
+        self.productB.tracking = 'lot'
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+            'company_id': self.env.company.id,
+        })
+        no_tracking_move = self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        picking.action_confirm()
+
+        no_tracking_move.picked = True
+        action_dict = picking.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action_dict['context'])).save()
+        backorder_wizard.process()
+        bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+        self.assertEqual(bo.state, 'assigned')
 
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
@@ -2617,3 +2652,49 @@ class TestStockFlowPostInstall(TestStockCommon):
         backorder = picking.backorder_ids
         self.assertEqual(backorder.move_ids.product_uom_qty, 2)
         self.assertEqual(backorder.move_ids.description_picking, 'Ipsum')
+
+    def test_onchange_picking_type_id_and_name(self):
+        """
+        when changing picking_type_id of a stock.picking, should change the name too
+        """
+        picking_type_1 = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type_1',
+            'code': 'internal',
+            'sequence_code': 'PT1/',
+        })
+        picking_type_2 = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type_2',
+            'code': 'internal',
+            'sequence_code': 'PT2/',
+        })
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_1.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        self.assertEqual(picking.name, "PT1/00001")
+        picking.picking_type_id = picking_type_2
+        self.assertEqual(picking.name, "PT2/00001")
+        picking.picking_type_id = picking_type_1
+        self.assertEqual(picking.name, "PT1/00002")
+        picking.picking_type_id = picking_type_1
+        self.assertEqual(picking.name, "PT1/00002")
+
+    def test_name_create_location(self):
+        """
+        e.g., from .csv/.xlsx import:
+            If name str has a parent location prefix we try to create as child location
+            else ignore prefixes
+        """
+        parent_location = self.env['stock.location'].create({'name': 'ParentLocation'})
+        new_location_id = self.env['stock.location'].name_create('ParentLocation/TestLocation1')[0]
+        new_location = self.env['stock.location'].browse(new_location_id)
+        self.assertEqual(new_location.name, 'TestLocation1')
+        self.assertEqual(new_location.complete_name, 'ParentLocation/TestLocation1')
+        self.assertEqual(new_location.location_id, parent_location)
+
+        new_location_complete_name = self.env['stock.location'].name_create('FauxParentLocation/TestLocation2')[1]
+        self.assertEqual(new_location_complete_name, 'TestLocation2')
+
+        new_location_complete_name = self.env['stock.location'].name_create('NoPrefixLocation')[1]
+        self.assertEqual(new_location_complete_name, 'NoPrefixLocation')

@@ -131,8 +131,8 @@ msgid ""
 "<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on Sub-tasks:</span>\n"
 "                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
 msgstr ""
-"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Ore impiegate per sotto-attività:</span>\n"
-"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Giorni impiegati per sotto-attività:</span>"
+"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Ore impiegate per sottolavori:</span>\n"
+"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Giorni impiegati per sottolavori:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -297,9 +297,9 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"Conto analitico al quale sono legati il progetto, le sotto-attività e i rispettivi fogli ore. \n"
+"Conto analitico al quale sono legati il progetto, i sotto-lavori e i rispettivi fogli ore. \n"
 "Traccia i costi e i ricavi del tuo progetto inserendo il conto analitico nei vari documenti (ad es. ordini di vendita, fatture, ordini di acquisto, fatture fornitore, note spese ecc.).\n"
-"Il conto analitico può essere modificato su ogni attività se necessario.\n"
+"Il conto analitico può essere modificato su ogni lavoro se necessario.\n"
 "Il conto analitico è necessario per l'utilizzo dei fogli ore."
 
 #. module: hr_timesheet
@@ -310,7 +310,7 @@ msgid ""
 "Analyze the projects and tasks on which your employees spend their time.<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
-"Analizza i progetti e le attività sui quali lavorano i tuoi dipendenti.<br>\n"
+"Analizza i progetti e i lavori sui quali lavorano i tuoi dipendenti.<br>\n"
 "                Valuta quale parte è fatturabile e quali costi rappresenta."
 
 #. module: hr_timesheet
@@ -1390,12 +1390,16 @@ msgstr "Giorni totali"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Hours"
 msgstr "Ore totali"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "Ore per lavoro (inclusi lavori secondari)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited

@@ -4,6 +4,7 @@
         <record id="view_partner_base_vat_form" model="ir.ui.view">
             <field name="model">res.partner</field>
             <field name="name">view.partner.base.vat.form</field>
+            <field name="priority">15</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='vat']" position="after">
@@ -13,8 +14,10 @@
                 </xpath>
                 <xpath expr="//div[@name='vat_vies_container']" position="inside">
                     <xpath expr="//field[@name='vat']" position="move"/>
-                    <label for="vies_valid" invisible="not perform_vies_validation"/>
-                    <field name="vies_valid" invisible="not perform_vies_validation" class="oe_inline"/>
+                    <span class="text-nowrap ps-2">
+                        <label for="vies_valid" invisible="not perform_vies_validation"/>
+                        <field name="vies_valid" invisible="not perform_vies_validation" class="oe_inline"/>
+                    </span>
                 </xpath>
                 <xpath expr="//field[@name='vat']" position="attributes">
                     <attribute name="class" position="add" separator=" ">oe_inline</attribute>

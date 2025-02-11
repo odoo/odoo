@@ -4,11 +4,13 @@
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail_group.tests.common import TestMailListCommon
 from odoo.exceptions import ValidationError, AccessError
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger, append_content_to_html
 
 
+@tagged("mail_group")
 class TestMailGroup(TestMailListCommon):
+
     def test_clean_email_body(self):
         footer = self.env['ir.qweb']._render('mail_group.mail_group_footer', {'group_url': 'Test remove footer'}, minimal_qcontext=True)
         body = append_content_to_html("<div>Test email body</div>", footer, plaintext=False)
@@ -30,6 +32,21 @@ class TestMailGroup(TestMailListCommon):
 
         with self.assertRaises(ValidationError, msg="Moderators must have an email"):
             mail_group.moderator_ids |= user_without_email
+
+    def test_find_group_user_for_alias(self):
+        """Check for mail incoming from an allowed group. Specifically for a situation where
+        the sender is a part of the allowed USER group, but is NOT a member of the mailing list."""
+        group_user_not_member = mail_new_test_user(self.env, login='group user not member', email="group_user_not_member@example.com")
+
+        self.assertIn(group_user_not_member, self.test_group.access_group_id.users,
+            "User, that sends e-mail, must be part of the access group (in this test scenario)")
+        self.assertNotIn(group_user_not_member.id, self.test_group.member_ids.ids,
+            "User, that sends e-mail, shan't be a member of the mail group (in this test scenario)")
+
+        self.test_group.alias_id.alias_contact = 'followers'
+        self.test_group.access_mode = 'groups'
+        err_msg = self.test_group._alias_get_error({}, {'email_from': group_user_not_member.email}, self.test_group.alias_id)
+        self.assertFalse(err_msg, "Mail with sender belonging to allowed user group (not a member of the mail group) was rejected")
 
     def test_find_member(self):
         """Test the priority to retrieve a member of a mail group from a partner_id

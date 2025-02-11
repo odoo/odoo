@@ -2,12 +2,23 @@
 
 import { freezeOdooData } from "../../src/helpers/model";
 import { createSpreadsheetWithChart } from "../utils/chart";
-import { setCellContent, setCellFormat, setGlobalFilterValue } from "../utils/commands";
+import {
+    setCellContent,
+    setCellFormat,
+    setCellStyle,
+    setGlobalFilterValue,
+} from "../utils/commands";
 import { getCell, getEvaluatedCell } from "../utils/getters";
 import { createSpreadsheetWithPivot } from "../utils/pivot";
+import { createSpreadsheetWithList } from "@spreadsheet/../tests/utils/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
 import { addGlobalFilter } from "@spreadsheet/../tests/utils/commands";
+import { registry } from "@web/core/registry";
+import { menuService } from "@web/webclient/menus/menu_service";
+import { spreadsheetLinkMenuCellService } from "@spreadsheet/ir_ui_menu/index";
+import { getMenuServerData } from "@spreadsheet/../tests/links/menu_data_utils";
+import { getBasicServerData } from "../utils/data";
 
 QUnit.module("freezing spreadsheet", {}, function () {
     QUnit.test("odoo pivot functions are replaced with their value", async function (assert) {
@@ -155,4 +166,117 @@ QUnit.module("freezing spreadsheet", {}, function () {
         assert.strictEqual(data.globalFilters[0].label, "Date Filter");
         assert.strictEqual(data.globalFilters[0].value, "1/1/2020, 1/1/2021");
     });
+
+    QUnit.test("from/to global filter without value is exported", async function (assert) {
+        const model = await createModelWithDataSource();
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "date",
+            label: "Date Filter",
+            rangeType: "from_to",
+        });
+        const data = await freezeOdooData(model);
+        const filterSheet = data.sheets[1];
+        assert.strictEqual(filterSheet.cells.A2.content, "Date Filter");
+        assert.strictEqual(filterSheet.cells.B2, undefined);
+        assert.strictEqual(filterSheet.cells.C2, undefined);
+        assert.strictEqual(data.globalFilters.length, 1);
+        assert.strictEqual(data.globalFilters[0].label, "Date Filter");
+        assert.strictEqual(data.globalFilters[0].value, "");
+    });
+
+    QUnit.test("odoo links are replaced with their label", async function (assert) {
+        const view = {
+            name: "an odoo view",
+            viewType: "list",
+            action: {
+                modelName: "partner",
+                views: [[false, "list"]],
+            },
+        };
+        const data = {
+            sheets: [
+                {
+                    cells: {
+                        A1: { content: "[menu_xml](odoo://ir_menu_xml_id/test_menu)" },
+                        A2: { content: "[menu_id](odoo://ir_menu_id/12)" },
+                        A3: { content: `[odoo_view](odoo://view/${JSON.stringify(view)})` },
+                        A4: { content: "[external_link](https://odoo.com)" },
+                        A5: { content: "[internal_link](o-spreadsheet://Sheet1)" },
+                    },
+                },
+            ],
+        };
+        registry
+            .category("services")
+            .add("menu", menuService)
+            .add("spreadsheetLinkMenuCell", spreadsheetLinkMenuCellService);
+
+        const model = await createModelWithDataSource({
+            spreadsheetData: data,
+            serverData: getMenuServerData(),
+        });
+        const frozenData = await freezeOdooData(model);
+        assert.strictEqual(frozenData.sheets[0].cells.A1.content, "menu_xml");
+        assert.strictEqual(frozenData.sheets[0].cells.A2.content, "menu_id");
+        assert.strictEqual(frozenData.sheets[0].cells.A3.content, "odoo_view");
+        assert.strictEqual(
+            frozenData.sheets[0].cells.A4.content,
+            "[external_link](https://odoo.com)"
+        );
+        assert.strictEqual(
+            frozenData.sheets[0].cells.A5.content,
+            "[internal_link](o-spreadsheet://Sheet1)"
+        );
+    });
+
+    QUnit.test("spilled pivot table", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+              <pivot>
+                  <field name="probability" type="measure"/>
+              </pivot>
+            `,
+        });
+        setCellContent(model, "A10", "=ODOO.PIVOT.TABLE(1)");
+        setCellStyle(model, "B12", { bold: true });
+        const data = await freezeOdooData(model);
+        const cells = data.sheets[0].cells;
+        assert.strictEqual(cells.A10.content, "(#1) Partner Pivot");
+        assert.strictEqual(cells.A11.content, "");
+        assert.strictEqual(cells.A12.content, "Total");
+        assert.strictEqual(cells.B10.content, "Total");
+        assert.strictEqual(cells.B11.content, "Probability");
+        assert.strictEqual(cells.B12.content, "131");
+        assert.strictEqual(data.formats[cells.B12.format], "#,##0.00");
+        assert.deepEqual(data.styles[cells.B12.style], { bold: true }, "style is preserved");
+    });
+
+    QUnit.test(
+        "Text values that match a number representation are escaped",
+        async function (assert) {
+            const serverData = getBasicServerData();
+            const names = [/*infinity*/ "23e99999", "23e76", "23e-76", "25z776", "12/12/2021"];
+            serverData.models.partner.records =
+                serverData.models.partner.records.map((record, i) => ({
+                    ...record,
+                    name: names[i],
+                }));
+            serverData.models.partner.records = names.map((name, index) => ({ ...serverData.models.partner.records[0], name, id: index +1 }));
+
+
+            const { model } = await createSpreadsheetWithList({
+                linesNumber: 5,
+                columns: ["name"],
+                serverData,
+            });
+            const data = await freezeOdooData(model);
+            const cells = data.sheets[0].cells;
+            assert.strictEqual(cells.A2.content, '="23e99999"');
+            assert.strictEqual(cells.A3.content, '="23e76"');
+            assert.strictEqual(cells.A4.content, '="23e-76"');
+            assert.strictEqual(cells.A5.content, "25z776");
+            assert.strictEqual(cells.A6.content, '="12/12/2021"');
+        }
+    );
 });

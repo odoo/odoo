@@ -26,6 +26,11 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
         animation: o_onboarding_slideInUpDownOut;
         animation-duration: 6s;
     }
+    
+    // !important required for compatibility (z-index-1 in xml)
+    .o_onboarding_btn_close {
+        z-index: 2 !important;
+    }
 
     // = Step Design
     // ------------------------------------------------------------------------

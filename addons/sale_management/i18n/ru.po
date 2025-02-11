@@ -10,6 +10,7 @@
 # Collex100, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
+# Nadia Martynova, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:30+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Nadia Martynova, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,7 +147,7 @@ msgstr "Создавайте стандартные предложения с п
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr "Создайте шаблон вашего предложения"
+msgstr "Создайте ваш шаблон коммерческого предложения"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -180,8 +181,8 @@ msgid ""
 "Default values will be overwritten by values provided by the quotation "
 "template."
 msgstr ""
-"Значения по умолчанию будут заменены значениями, предоставленными шаблоном "
-"цитаты."
+"Значения по умолчанию будут заменены значениями из шаблона коммерческого "
+"предложения. "
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
@@ -284,7 +285,9 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
-msgstr "Если флажок снят, это позволит скрыть шаблон цитаты, не удаляя его."
+msgstr ""
+"Если этот параметр не будет выбран, он позволит вам скрыть шаблон "
+"коммерческого предложения, не удаляя его."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
@@ -393,7 +396,7 @@ msgstr "Процент предоплаты должен быть действи
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
 msgid "Present on Quotation"
-msgstr " Котировка"
+msgstr "Коммерческое предложение "
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
@@ -418,7 +421,7 @@ msgstr "Количество:"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
 msgid "Quotation Duration"
-msgstr "Продолжительность котировки"
+msgstr "Срок Коммерческого предложения"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
@@ -427,28 +430,28 @@ msgstr "Продолжительность котировки"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_tree
 msgid "Quotation Template"
-msgstr "Шаблон котировки"
+msgstr "Шаблон Коммерческого предложения"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr "Строка шаблона котировки"
+msgstr "Строка шаблона коммерческого предложения"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Template Lines"
-msgstr "Строка  шаблона котировки"
+msgstr "Строки шаблона предложения"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr "Вариант шаблона котировки"
+msgstr "Вариант шаблона коммерческого предложения"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__sale_order_template_id
 msgid "Quotation Template Reference"
-msgstr "Ссылка на шаблон котировки"
+msgstr "Ссылка на шаблон предложения"
 
 #. module: sale_management
 #: model:ir.actions.act_window,name:sale_management.sale_order_template_action
@@ -457,12 +460,12 @@ msgstr "Ссылка на шаблон котировки"
 #: model:res.groups,name:sale_management.group_sale_order_template
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Quotation Templates"
-msgstr "Шаблоны котировок"
+msgstr "Шаблоны предложения"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Validity"
-msgstr "Срок действия котировки"
+msgstr "Актуальность коммерческого предложения"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -576,15 +579,16 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
-"Администратор может установить условия по умолчанию и условия в настройках "
-"продаж. Условия, установленные здесь, будут отображаться вместо этого, если "
-"вы выберете этот шаблон предложения."
+"Администратор может установить Положения и Условия по умолчанию в настройках"
+" продаж. Условия, установленные здесь, будут отображаться, если вы выберете "
+"этот шаблон предложения."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
-"Процент от суммы, которую необходимо заплатить для подтверждения котировок."
+"Процент от суммы, которую необходимо заплатить для подтверждения заказа по "
+"коммерческому предложению. "
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -601,8 +605,8 @@ msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
 msgstr ""
-"Это поле будет отмечено, если продукт опционной линии уже присутствует в "
-"предложении."
+"Это поле будет отмечено, если продукт из \"Дополнительные продукты\" уже "
+"присутствует в предложении."
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0

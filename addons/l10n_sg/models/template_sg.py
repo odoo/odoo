@@ -14,8 +14,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'account_account_777',
             'property_account_expense_categ_id': 'account_account_819',
             'property_account_income_categ_id': 'account_account_803',
-            'property_tax_payable_account_id': 'account_account_754',
-            'property_tax_receivable_account_id': 'account_account_723',
         }
 
     @template('sg', 'res.company')
@@ -31,7 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'account_account_853',
                 'account_journal_early_pay_discount_loss_account_id': 'account_account_800',
                 'account_journal_early_pay_discount_gain_account_id': 'account_account_856',
-                'account_sale_tax_id': 'sg_sale_tax_sr_8',
-                'account_purchase_tax_id': 'sg_purchase_tax_tx8_8',
+                'account_sale_tax_id': 'sg_sale_tax_sr_9',
+                'account_purchase_tax_id': 'sg_purchase_tax_tx8_9',
             },
         }

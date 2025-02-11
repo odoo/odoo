@@ -38,7 +38,7 @@ class PaymentTransaction(models.Model):
         cancel_url = urls.url_join(base_url, PaypalController._cancel_url)
         cancel_url_params = {
             'tx_ref': self.reference,
-            'access_token': payment_utils.generate_access_token(self.reference),
+            'return_access_tkn': payment_utils.generate_access_token(self.reference),
         }
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
         return {
@@ -55,6 +55,7 @@ class PaymentTransaction(models.Model):
             'item_number': self.reference,
             'last_name': partner_last_name,
             'lc': self.partner_lang,
+            'no_shipping': '1',  # Do not prompt for a delivery address.
             'notify_url': urls.url_join(base_url, PaypalController._webhook_url),
             'return_url': urls.url_join(base_url, PaypalController._return_url),
             'state': self.partner_state_id.name,
@@ -97,7 +98,7 @@ class PaymentTransaction(models.Model):
             return
 
         if not notification_data:
-            self._set_canceled(_("The customer left the payment page."))
+            self._set_canceled(state_message=_("The customer left the payment page."))
             return
 
         amount = notification_data.get('amt') or notification_data.get('mc_gross')

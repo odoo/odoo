@@ -4,7 +4,14 @@ import { registry } from "@web/core/registry";
 
 registry.category("mock_server").add("pos.session/load_pos_data", async function (route, args) {
     return {
-        "res.company": { id: 1 },
+        "res.company": {
+            id: 1,
+            account_fiscal_country_id: {
+                id: 1,
+                name: "United States of America",
+                code: "US",
+            },
+        },
         "pos.session": { id: 1 },
         "pos.printer": [],
         "pos.config": { id: 1, uuid: "TEST-UUID", trusted_config_ids: [] },

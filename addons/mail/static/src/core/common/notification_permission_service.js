@@ -3,9 +3,22 @@
 import { reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
-import { isAndroidApp, isIosApp } from "@web/core/browser/feature_detection";
+import {
+    isAndroidApp,
+    isDisplayStandalone,
+    isIOS,
+    isIosApp,
+} from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+
+async function getIosPwaPermission() {
+    if (browser.location.protocol !== "https:") {
+        return "denied";
+    }
+    const registration = await browser.navigator.serviceWorker?.getRegistration();
+    return (await registration?.pushManager.permissionState()) ?? "prompt";
+}
 
 export const notificationPermissionService = {
     dependencies: ["notification"],
@@ -29,9 +42,15 @@ export const notificationPermissionService = {
         const notification = services.notification;
         let permission;
         try {
-            permission = await browser.navigator?.permissions?.query({
-                name: "notifications",
-            });
+            if (isIOS() && isDisplayStandalone()) {
+                permission = { state: await getIosPwaPermission() };
+            } else if (isIOS()) {
+                permission = { state: "denied" };
+            } else {
+                permission = await browser.navigator?.permissions?.query({
+                    name: "notifications",
+                });
+            }
         } catch {
             // noop
         }
@@ -62,7 +81,7 @@ export const notificationPermissionService = {
                 }
             },
         });
-        if (permission) {
+        if (permission && !isIOS()) {
             permission.addEventListener("change", () => (state.permission = permission.state));
         }
         return state;

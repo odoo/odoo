@@ -12,7 +12,9 @@
 # Rivo Zängov <eraser@eraser.ee>, 2023
 # JanaAvalah, 2023
 # Piia Paurson <piia@avalah.ee>, 2023
+# Siim Raasuke, 2024
 # Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +46,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 #, python-format
 msgid "\"%s\" tag is added"
-msgstr ""
+msgstr "\"%s\" silt on lisatud"
 
 #. module: base_automation
 #. odoo-python
@@ -54,25 +56,27 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
+"„On live uuendamine” automaatikareegleid saab kasutada ainult „Täida Python-"
+"kood” tegevuse tüübiga."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "%s actions"
-msgstr ""
+msgstr "%s toimingud"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "1 action"
-msgstr ""
+msgstr "1 toiming"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>keskkond</code>: keskkond, milles toiming käivitatakse"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -94,11 +98,13 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+"<code>timezone</code>: useful Python libraries"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -118,7 +124,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span class=\"text-muted\"> Available variables: </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> Saadavad muutujad: </span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -134,11 +140,14 @@ msgid ""
 "                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
 "                                    <span invisible=\"trigger != 'on_time'\">after</span>"
 msgstr ""
+"<span invisible=\"trigger != 'on_time_created'\">peale loomist</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">peale viimast uuendust</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">peale</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by adding</span>"
-msgstr ""
+msgstr "<span>lisamisega</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -148,17 +157,19 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by removing</span>"
-msgstr ""
+msgstr "<span>eemaldamisega</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by setting it to</span>"
-msgstr ""
+msgstr "<span>määrates selle</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
 msgstr ""
+"<strong><i class=\"fa fa-lock\"/> Hoia seda saladuses, hoia seda "
+"turvalisena.</strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
@@ -174,7 +185,7 @@ msgstr "Toimingud"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Actions To Do"
-msgstr ""
+msgstr "Tegevused tegemiseks"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -184,7 +195,7 @@ msgstr "Aktiivne"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Add an action"
-msgstr ""
+msgstr "Lisa toiming"
 
 #. module: base_automation
 #. odoo-javascript
@@ -192,7 +203,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Add followers"
-msgstr ""
+msgstr "Lisa jälgijaid"
 
 #. module: base_automation
 #. odoo-python
@@ -204,12 +215,12 @@ msgstr "Lisa jälgijad: %(partner_names)s"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr ""
+msgstr "Pärast loomist"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
 msgid "After last update"
-msgstr ""
+msgstr "Pärast viimast uuendust"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
@@ -226,7 +237,7 @@ msgstr "Arhiveeritud"
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Automate <em>everything</em> with Automation Rules"
-msgstr ""
+msgstr "Automatiseeri <em>kõike</em> with automaatikareeglitega"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -253,7 +264,7 @@ msgstr "Automatiseeritud reeglid"
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr ""
+msgstr "Automaatikareeglid: kontrolli ja täida"
 
 #. module: base_automation
 #. odoo-javascript
@@ -265,7 +276,7 @@ msgstr "Automatiseerimine"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on date field"
-msgstr ""
+msgstr "Põhineb kuupäeva väljal"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
@@ -278,6 +289,9 @@ msgid ""
 "Change the URL's secret if you think the URL is no longer secure. You will "
 "have to update any automated system that calls this webhook to the new URL."
 msgstr ""
+"Muuda URL-i salajaseks, kui arvate, et URL ei ole enam turvaline. Peate "
+"uuendama kõiki automatiseeritud süsteeme, mis kutsuvad seda veebikonksu, uue"
+" URL-iga."
 
 #. module: base_automation
 #. odoo-python
@@ -358,6 +372,9 @@ msgid ""
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"Viivitus pärast käivitamise kuupäeva. Saate panna negatiivse arvu, kui "
+"vajate viivitust enne käivitamise kuupäeva, näiteks meeldetuletuse saatmine "
+"15 minutit enne koosolekut."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -372,7 +389,7 @@ msgstr "Viivituse tüüp"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delete Action"
-msgstr ""
+msgstr "Kustuta toiming"
 
 #. module: base_automation
 #. odoo-javascript
@@ -391,7 +408,7 @@ msgstr "Kirjeldus"
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Automation Rule"
-msgstr ""
+msgstr "Keela automatiseerimisreegel"
 
 #. module: base_automation
 #. odoo-javascript
@@ -403,6 +420,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Selle automaatikareegli keelamine võimaldab teil jätkata oma tööd,\n"
+"                kuid pärast seda loodud andmed võivad potentsiaalselt olla rikkis,\n"
+"                kuna te lülitate välja kohanduse, mis võib seada\n"
+"                olulisi ja/või nõutavaid välju."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -414,7 +435,7 @@ msgstr "Kuvatav nimi"
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit Automation Rule"
-msgstr ""
+msgstr "Muuda automatiseerimisreeglit"
 
 #. module: base_automation
 #. odoo-javascript
@@ -428,7 +449,7 @@ msgstr "E-post"
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Email Events"
-msgstr ""
+msgstr "E-posti sündmused"
 
 #. module: base_automation
 #. odoo-python
@@ -438,6 +459,8 @@ msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
 msgstr ""
+"E-posti, jälgija või tegevuse toimingute tüüpe ei saa kasutada, kui kirjed "
+"on kustutatud, kuna neid muudatusi ei saa enam rakendada!"
 
 #. module: base_automation
 #. odoo-javascript
@@ -465,7 +488,7 @@ msgstr "Väline"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Extra Conditions"
-msgstr ""
+msgstr "Lisatingimused"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
@@ -477,7 +500,7 @@ msgstr "Väljad, mis käivitavad  onchange'i."
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Generic User"
-msgstr ""
+msgstr "Üldkasutaja"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_is_mail_thread
@@ -500,19 +523,22 @@ msgid ""
 "If present, this condition must be satisfied before executing the automation"
 " rule."
 msgstr ""
+"Kui olemas, peab see tingimus olema täidetud enne automatiseeritud reegli "
+"täitmist."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
 "If present, this condition must be satisfied before the update of the "
-"record."
+"record. Not checked on record creation."
 msgstr ""
-"Kui see on olemas, peab see tingimus olema täidetud enne kirje uuendamist."
+"Kui see on olemas, peab see tingimus olema täidetud enne kirje uuendamist. "
+"Ei kontrollita kirje loomisel."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Keep track of what this automation does and why it exists..."
-msgstr ""
+msgstr "Jälgige, mida see automaatika teeb ja miks see eksisteerib..."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -552,6 +578,8 @@ msgid ""
 "Mail event can not be configured on model %s. Only models with discussion "
 "feature can be used."
 msgstr ""
+"Kirja sündmust ei saa konfigureerida mudelil %s. Kasutada saab ainult "
+"mudeleid, millel on arutelu funktsioon."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -576,11 +604,13 @@ msgid ""
 "Model of action %(action_name)s should match the one from automated rule "
 "%(rule_name)s."
 msgstr ""
+"Tegevuse mudel %(action_name)s peaks vastama automaatikareegli mudelile "
+"%(rule_name)s."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the automation rule runs."
-msgstr ""
+msgstr "Mudel, millel jooksutatakse automatiseerimis reegel. "
 
 #. module: base_automation
 #. odoo-javascript
@@ -595,7 +625,7 @@ msgstr "kuu(d)"
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "No record to run the automation on was found."
-msgstr ""
+msgstr "Automaatika täitmiseks ei leitud ühtegi kirjet."
 
 #. module: base_automation
 #. odoo-python
@@ -605,6 +635,8 @@ msgid ""
 "Note that this automation rule can be triggered up to %d minutes after its "
 "schedule."
 msgstr ""
+"Pange tähele, et seda automaatikareeglit saab käivitada kuni %d minutit "
+"pärast selle ajakava täitmist."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -619,22 +651,22 @@ msgstr "Käivita väljad muutustel"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "On UI change"
-msgstr ""
+msgstr "Kasutajaliidese muutmisel"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
 msgid "On archived"
-msgstr ""
+msgstr "Arhiveerimisel"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On creation"
-msgstr ""
+msgstr "Loomisel"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On deletion"
-msgstr ""
+msgstr "Kustutamisel"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
@@ -644,27 +676,27 @@ msgstr "Sissetuleva sõnumi korral"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
 msgid "On outgoing message"
-msgstr ""
+msgstr "Väljamineva sõnumi puhul"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On save"
-msgstr ""
+msgstr "Salvestamisel"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
 msgid "On unarchived"
-msgstr ""
+msgstr "Arhiivist eemaldamisel"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On update"
-msgstr ""
+msgstr "Uuendamisel"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
 msgid "On webhook"
-msgstr ""
+msgstr "Veebihaagil"
 
 #. module: base_automation
 #. odoo-javascript
@@ -683,12 +715,12 @@ msgstr "Postita märkus"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
 msgid "Priority is set to"
-msgstr ""
+msgstr "Prioriteediks on määratud"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr ""
+msgstr "Kirje hankija"
 
 #. module: base_automation
 #. odoo-javascript
@@ -696,7 +728,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Remove followers"
-msgstr ""
+msgstr "Eemalda jälgijad"
 
 #. module: base_automation
 #. odoo-python
@@ -708,22 +740,22 @@ msgstr "Eemalda jälgijad: %(partner_names)s"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Rotate Secret"
-msgstr ""
+msgstr "Pööra Secret"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a date field..."
-msgstr ""
+msgstr "Valige kuupäeva väli..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a value..."
-msgstr ""
+msgstr "Vali väärtus..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select fields..."
-msgstr ""
+msgstr "Vali väljad..."
 
 #. module: base_automation
 #. odoo-javascript
@@ -745,7 +777,7 @@ msgstr "Saada SMS: %(template_name)s"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Send Webhook Notification"
-msgstr ""
+msgstr "Saada Webhook teavitus"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -754,6 +786,9 @@ msgid ""
 "                after a month of inactivity or remind yourself to follow-up on\n"
 "                tasks when a specific tag is added."
 msgstr ""
+"Saada e-kiri, kui objekt muudab olekut, arhiveeri kirjed\n"
+"                pärast kuu aega tegevusetust või meenuta end järgima\n"
+"                ülesandeid, kui lisatakse konkreetne silt."
 
 #. module: base_automation
 #. odoo-javascript
@@ -781,6 +816,8 @@ msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
 msgstr ""
+"Mõned käivitajad vajavad viidet valikuväljale. Selle viite talletamiseks "
+"kasutatakse seda välja."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
@@ -788,6 +825,8 @@ msgid ""
 "Some triggers need a reference to another field. This field is used to store"
 " it."
 msgstr ""
+"Mõned käivitajad vajavad viidet teisele väljale. Selle viite talletamiseks "
+"kasutatakse seda välja."
 
 #. module: base_automation
 #. odoo-javascript
@@ -799,29 +838,29 @@ msgstr "Konkreetne kasutaja"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
 msgid "Stage is set to"
-msgstr ""
+msgstr "Etapiks on määratud"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 #, python-format
 msgid "Stage is set to \"%s\""
-msgstr ""
+msgstr "Etapiks on määratud \"%s\""
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
 msgid "State is set to"
-msgstr ""
+msgstr "Staatuseks on määratud"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
 msgid "Tag is added"
-msgstr ""
+msgstr "Silt on lisatud"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr ""
+msgstr "Sihtkirje"
 
 #. module: base_automation
 #. odoo-python
@@ -848,6 +887,8 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"Automaatikareegel käivitub ainult siis, kui üks neist väljadest on "
+"uuendatud. Kui tühi, jälgitakse kõiki välju."
 
 #. module: base_automation
 #. odoo-javascript
@@ -857,6 +898,8 @@ msgid ""
 "The error occurred during the execution of the automation rule\n"
 "                \""
 msgstr ""
+"Tõrge ilmnes automaatikareegli täitmise ajal\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -864,13 +907,15 @@ msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
 msgstr ""
+"See kood käivitatakse, et leida, millisel kirjel tuleks automatiseeritud "
+"reegel käivitada."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Timing Conditions"
-msgstr ""
+msgstr "Ajastustingimused"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -920,7 +965,7 @@ msgstr "URL"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "URL will be created once the rule is saved."
-msgstr ""
+msgstr "URL genereeritakse siis, kui reegel on salvestatud."
 
 #. module: base_automation
 #. odoo-python
@@ -956,14 +1001,14 @@ msgstr "Kasuta kalendrit"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
 msgid "User is set"
-msgstr ""
+msgstr "Kasutaja on määratud"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Values Updated"
-msgstr ""
+msgstr "Väärtused uuendatud"
 
 #. module: base_automation
 #. odoo-python
@@ -978,14 +1023,14 @@ msgstr "Hoiatus"
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Webhook Log"
-msgstr ""
+msgstr "Veebihaagi logi"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Webhook Logs"
-msgstr ""
+msgstr "Veebihaagi logid"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
@@ -1005,6 +1050,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Päeva põhise ajastatud tingimuse arvutamisel on võimalik kasutada kalendrit "
+"tööpäevadele tugineva kuupäeva arvutamiseks."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -1023,7 +1070,7 @@ msgstr "Kui pole märgitud, siis reegel on peidetud ning seda ei käivitata."
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "When updating"
-msgstr ""
+msgstr "Uuendamisel"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -1039,6 +1086,7 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automation rule."
 msgstr ""
+"Saate paluda administraatoril see automaatikareegel keelata või parandada."
 
 #. module: base_automation
 #. odoo-javascript
@@ -1046,6 +1094,8 @@ msgstr ""
 #, python-format
 msgid "You can disable this automation rule or edit it to solve the issue."
 msgstr ""
+"Selle probleemi lahendamiseks saate automaatikareegli keelata või seda "
+"redigeerida."
 
 #. module: base_automation
 #. odoo-python
@@ -1063,11 +1113,13 @@ msgstr ""
 msgid ""
 "Your webhook URL contains a secret. Don't share it online or carelessly."
 msgstr ""
+" \n"
+"Teie webhook URL sisaldab saladust. Ärge jagage seda internetis või hooletult."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "based on"
-msgstr ""
+msgstr "põhineb"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -1079,4 +1131,4 @@ msgstr "nt. Klienditoe töövoog"
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
 #, python-format
 msgid "no action defined..."
-msgstr ""
+msgstr "toimingut pole määratud..."

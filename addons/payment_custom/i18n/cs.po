@@ -3,12 +3,13 @@
 # 	* payment_custom
 # 
 # Translators:
-# Jiří Podhorecký, 2023
+# Jiří Podhorecký <jirka.p@volny.cz>, 2023
 # Ivana Bartonkova, 2023
 # Wil Odoo, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Jakub Smolka, 2024
 # Katerina Horylova, 2024
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katerina Horylova, 2024\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,11 +31,13 @@ msgid ""
 "<small class=\"text-center text-wrap lh-sm\">Scan me in your banking "
 "app</small>"
 msgstr ""
+"<small class=\"text-center text-wrap lh-sm\">Naskenujte mě ve své bankovní "
+"aplikaci</small>"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
 msgid "<strong class=\"mt-auto\">Communication: </strong>"
-msgstr ""
+msgstr "<strong class=\"mt-auto\">Komunikace: </strong>"
 
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
@@ -59,12 +62,12 @@ msgstr "Povolit QR kódy"
 #. module: payment_custom
 #: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
 msgid "Enable the use of QR-codes when paying by wire transfer."
-msgstr ""
+msgstr "Povolte použití QR kódů při platbě bankovním převodem"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
 msgid "Finalize your payment"
-msgstr ""
+msgstr "Dokončete platbu"
 
 #. module: payment_custom
 #. odoo-python
@@ -81,7 +84,7 @@ msgstr "NEBO"
 #. module: payment_custom
 #: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
 msgid "Only custom providers should have a custom mode."
-msgstr ""
+msgstr "Vlastní režim by měli mít pouze vlastní poskytovatele."
 
 #. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_provider
@@ -96,14 +99,14 @@ msgstr "Platební transakce"
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
 msgid "Reload Pending Message"
-msgstr ""
+msgstr "Znowu načíst čekající zprávu"
 
 #. module: payment_custom
 #. odoo-python
 #: code:addons/payment_custom/models/payment_transaction.py:0
 #, python-format
 msgid "The customer has selected %(provider_name)s to make the payment."
-msgstr ""
+msgstr "Zákazník zvolil %(provider_name)s pro provedení platby."
 
 #. module: payment_custom
 #: model:ir.model.fields,help:payment_custom.field_payment_provider__code

@@ -3,13 +3,19 @@
     <t t-name="hr_expense.ListButtons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
 
        <!-- hr.expense and hr.expense.sheet -->
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="attributes">
+            <attribute name="class" remove="d-flex" separator=" "/>
+            <attribute name="class" add="d-block d-xl-flex" separator=" "/>
+        </xpath>
         <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
             <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput"/>
-            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary me-1" t-on-click.prevent="uploadDocument">
+            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
+                Upload
+            </button>
+           <button type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
                 Scan
             </button>
-            <button t-if="displayCreateReport()" class="d-none d-md-block btn btn-secondary"
-                    t-on-click="() => this.action_show_expenses_to_submit()">
+            <button t-if="displayCreateReport()" class="btn btn-secondary" t-on-click="() => this.action_show_expenses_to_submit()">
                 Create Report
             </button>
             <button t-if="displaySubmit()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_submit_sheet')">
@@ -34,7 +40,7 @@
             </div>
         </xpath>
         <xpath expr="//div[hasclass('o_list_renderer')]" position="attributes">
-            <attribute name="t-att-class">'hr_expense h-auto o_forbidden_tooltip_parent'</attribute>
+            <attribute name="class">o_list_renderer hr_expense h-auto o_forbidden_tooltip_parent</attribute>
         </xpath>
     </t>
 

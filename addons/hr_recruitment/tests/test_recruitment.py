@@ -6,6 +6,21 @@ from odoo.tests import tagged, TransactionCase
 @tagged('recruitment')
 class TestRecruitment(TransactionCase):
 
+    def test_infer_applicant_lang_from_context(self):
+        # Prerequisites
+        self.env['res.lang']._activate_lang('pl_PL')
+        self.env['res.lang']._activate_lang('en_US')
+        self.env['ir.default'].set('res.partner', 'lang', 'en_US')
+
+        # Creating an applicant will create a partner (email_from inverse)
+        applicant = self.env['hr.applicant'].sudo().with_context(lang='pl_PL').create({
+            'name': 'Test Applicant',
+            'partner_name': 'Test Applicant',
+            'email_from': "test_aplicant@example.com"
+
+        })
+        self.assertEqual(applicant.partner_id.lang, 'pl_PL', 'Context langague not used for partner creation')
+
     def test_duplicate_email(self):
         # Tests that duplicate email match ignores case
         # And that no match is found when there is none
@@ -86,3 +101,21 @@ class TestRecruitment(TransactionCase):
         self.assertEqual(D.application_count, 3) # A, B, C
         self.assertEqual(E.application_count, 0) # Should not match with G
         self.assertEqual(F.application_count, 1) # B
+
+    def test_application_no_partner_duplicate(self):
+        """ Test that when applying, the existing partner
+            doesn't get duplicated.
+        """
+        applicant_data = {
+            'name': 'Test - CEO',
+            'partner_name': 'Test',
+            'email_from': 'test@thisisatest.com',
+        }
+        # First application, a partner should be created
+        self.env['hr.applicant'].create(applicant_data)
+        partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
+        self.assertEqual(partner_count, 1)
+        # Second application, no partner should be created
+        self.env['hr.applicant'].create(applicant_data)
+        partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
+        self.assertEqual(partner_count, 1)

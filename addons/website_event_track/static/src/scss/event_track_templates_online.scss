@@ -16,19 +16,16 @@
     // Track card
     .o_wesession_track_card {
         background-color: $o-wevent-bg-color-base;
-        color: $o-wevent-color;
+        color: $o-wevent-bg-color-base-contrast;
 
         .card-body {
             padding: 1rem;
             background-color: $o-wevent-bg-color-base  !important;
         }
 
-        .card-footer {
+        .card-footer, footer {
             padding: 0.75rem 1rem;
-
-            div {
-                color: $o-wevent-color;
-            }
+            color: color-contrast($card-bg);
         }
 
         .o_wesession_track_card_header_badge {

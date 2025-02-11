@@ -363,8 +363,8 @@ QUnit.module('Crm Forecast main flow with progressBars', (hooks) => {
         assert.verifySteps([
             // makeView
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             // drag&drop
@@ -372,10 +372,10 @@ QUnit.module('Crm Forecast main flow with progressBars', (hooks) => {
             "read_progress_bar",
             "web_read_group",
             // add column
+            "read_progress_bar",
             "web_read_group",
             "web_search_read",
             "web_search_read",
-            "read_progress_bar"
         ]);
     });
 });

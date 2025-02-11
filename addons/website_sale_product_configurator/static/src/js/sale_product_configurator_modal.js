@@ -392,9 +392,14 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         ).then(function (productId) {
             $parent.find('.product_id').val(productId);
 
+            // Get currently displayed items to exclude them from being added again as options
+            const product_tmpl_ids = new Array(...$modal.find('input.product_template_id')).map(
+                (el) => parseInt(el.value)
+            );
             jsonrpc("/sale_product_configurator/optional_product_items", {
                 'product_id': productId,
                 'pricelist_id': self.pricelistId || false,
+                'exclude_product_tmpl_ids': product_tmpl_ids,
             }).then(function (addedItem) {
                 var $addedItem = $(addedItem);
                 $modal.find('tr:last').after($addedItem);

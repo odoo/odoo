@@ -3,16 +3,17 @@
 # 	* website_sale
 # 
 # Translators:
-# Wil Odoo, 2023
 # Jolien De Paepe, 2024
+# Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,8 +32,8 @@ msgid ""
 "\"Optional\" allows guests to register from the order confirmation email to "
 "track their order."
 msgstr ""
-"En cochant \"Optionnel\", vos clients peuvent s'inscrire à partir de l'email"
-" de confirmation de la commande pour suivre leur commande."
+"En cochant \"Optionnel\", vos clients peuvent s'inscrire à partir de "
+"l'e-mail de confirmation de la commande pour suivre leur commande."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -46,7 +47,6 @@ msgstr "%s avis"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; Expédition"
 
@@ -123,7 +123,6 @@ msgstr "<b>Liste de prix</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Expédition : </b>"
 
@@ -256,7 +255,7 @@ msgid ""
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                        Vous trouverez tous les paniers abandonnés ici, par exemple les paniers générés par les visiteurs de votre site web il y a plus d'une heure, qui n'ont pas encore été confirmés.</p>\n"
-"                        <p>Vous devez envoyer un email aux clients pour les encourager !</p>\n"
+"                        <p>Vous devez envoyer un e-mail aux clients pour les encourager !</p>\n"
 "                    "
 
 #. module: website_sale
@@ -532,11 +531,6 @@ msgstr ""
 "            "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">Documents</u>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Conditions générales</u>"
@@ -608,7 +602,7 @@ msgstr "Délai d'abandon"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__send_abandoned_cart_email
 msgid "Abandoned Email"
-msgstr "Email abandonné"
+msgstr "E-mail abandonné"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__product_cross_selling
@@ -846,7 +840,7 @@ msgstr "Attributs"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Automatically send abandoned checkout emails"
-msgstr "Envoyer automatiquement des emails en cas de paiement abandonné"
+msgstr "Envoyer automatiquement des e-mails en cas de paiement abandonné"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
@@ -923,7 +917,6 @@ msgstr "Grand"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Facturation"
 
@@ -1031,22 +1024,6 @@ msgid "Can Publish"
 msgstr "Peut publier"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence a video at first position."
-msgstr "Impossible de reséquencer une vidéo en première position."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-"Ne peut pas reséquencer une image/vidéo intégrée avec une image "
-"incompatible."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Cards"
 msgstr "Cartes"
@@ -1071,12 +1048,12 @@ msgstr "Quantité du panier"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_recovery_mail_template_id
 msgid "Cart Recovery Email"
-msgstr "Email de récupération du panier"
+msgstr "E-mail de récupération du panier"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_recovery_email_sent
 msgid "Cart recovery email already sent"
-msgstr "Email de récupération du panier déjà envoyé"
+msgstr "E-mail de récupération du panier déjà envoyé"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1304,6 +1281,11 @@ msgstr "Calculer les frais d'expédition et expédier avec Easypost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Shiprocket"
+msgstr "Calculer les frais d'expédition et expédier avec Shiprocket"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
 msgstr "Calculer les frais d'expédition et expédier avec DHL"
 
@@ -1511,19 +1493,19 @@ msgid ""
 "\n"
 "- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
 msgstr ""
-"Le client doit être connecté pour que son adresse email soit connue.     \n"
+"Le client doit être connecté pour que son adresse e-mail soit connue.     \n"
 "\n"
-"- Si un client potentiel crée un ou plusieurs paiements abandonnés et puis conclut une vente avant l'envoi de l'email de récupération, l'email ne sera pas envoyé.     \n"
+"- Si un client potentiel crée un ou plusieurs paiements abandonnés et puis conclut une vente avant l'envoi de l'e-mail de récupération, l'e-mail ne sera pas envoyé.     \n"
 "\n"
-"- Si l'utilisateur a envoyé un email de récupération manuellement, l'email ne sera pas envoyé une deuxième fois.     \n"
+"- Si l'utilisateur a envoyé un e-mail de récupération manuellement, l'e-mail ne sera pas envoyé une deuxième fois.     \n"
 "\n"
-"- Si une erreur est survenue lors du traitement du paiement quand le client a essayé de procéder au paiement, l'email ne sera pas envoyé.     \n"
+"- Si une erreur est survenue lors du traitement du paiement quand le client a essayé de procéder au paiement, l'e-mail ne sera pas envoyé.     \n"
 "\n"
-"- Si votre boutique ne propose pas la livraison à l'adresse du client, l'email ne sera pas envoyé.     \n"
+"- Si votre boutique ne propose pas la livraison à l'adresse du client, l'e-mail ne sera pas envoyé.     \n"
 "\n"
-"- Si aucun des produits qui se trouvent dans le panier ne sont disponibles à l'achat (stock vide par exemple), l'email ne sera pas envoyé.     \n"
+"- Si aucun des produits qui se trouvent dans le panier ne sont disponibles à l'achat (stock vide par exemple), l'e-mail ne sera pas envoyé.     \n"
 "\n"
-"- Si tous les produits dans le panier sont gratuits et le client ne visite pas la page d'expédition pour ajouter des frais d'expédition ou si la livraison est également offerte, l'email ne sera pas envoyé."
+"- Si tous les produits dans le panier sont gratuits et le client ne visite pas la page d'expédition pour ajouter des frais d'expédition ou si la livraison est également offerte, l'e-mail ne sera pas envoyé."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -1534,7 +1516,7 @@ msgstr "Clients"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Customize Abandoned Email Template"
-msgstr "Personnalisation du modèle d'email abandonné"
+msgstr "Personnalisation du modèle d'e-mail abandonné"
 
 #. module: website_sale
 #. odoo-python
@@ -1542,7 +1524,7 @@ msgstr "Personnalisation du modèle d'email abandonné"
 #: code:addons/website_sale/models/res_config_settings.py:0
 #, python-format
 msgid "Customize Email Templates"
-msgstr "Personnalisation des modèles d'email"
+msgstr "Personnalisation des modèles d'e-mail"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1740,7 +1722,7 @@ msgstr ""
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 "Accès non disponible, ne pas tenir compte de cette donnée dans le digest "
-"d'email envoyé à l'utilisateur"
+"d'e-mail envoyé à l'utilisateur"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1748,6 +1730,11 @@ msgstr ""
 #, python-format
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Voulez-vous vider votre panier avant d'ajouter de nouveaux produits ?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Documents"
 
 #. module: website_sale
 #. odoo-python
@@ -1852,7 +1839,7 @@ msgstr "Modifier cette adresse"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
@@ -2124,7 +2111,7 @@ msgid ""
 "the account settings or contact your administrator."
 msgstr ""
 "Si vous commandez pour une personne externe, placez votre commande via le "
-"backend. Si vous voulez modifier votre nom ou adresse email, faites les "
+"backend. Si vous voulez modifier votre nom ou adresse e-mail, faites les "
 "modifications dans les paramètres du compte ou contactez votre "
 "administrateur."
 
@@ -2204,7 +2191,8 @@ msgstr "Paiement instantané, au lieu d'ajouter au panier"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "Adresse email incorrecte ! Veuillez saisir une adresse email valable."
+msgstr ""
+"Adresse e-mail incorrecte ! Veuillez saisir une adresse e-mail valable."
 
 #. module: website_sale
 #. odoo-python
@@ -2627,6 +2615,13 @@ msgstr ""
 "livraison. Veuillez nous contacter pour obtenir plus d'informations."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr "Aucun mode d'expédition sélectionné."
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
@@ -2844,11 +2839,6 @@ msgid "Pay now"
 msgstr "Payer maintenant"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Payer avec"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2863,12 +2853,17 @@ msgstr "Informations de paiement"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
 msgid "Payment Methods"
-msgstr "Modes de paiements"
+msgstr "Modes de paiement"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "Fournisseurs de paiement"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Jeton de paiement"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -3370,12 +3365,12 @@ msgstr "Produits vus récemment"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email Sent"
-msgstr "Email de récupération envoyé"
+msgstr "E-mail de récupération envoyé"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
-msgstr "Email de récupération à envoyer"
+msgstr "E-mail de récupération à envoyer"
 
 #. module: website_sale
 #. odoo-python
@@ -3611,12 +3606,12 @@ msgstr "Envoyer après"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
 msgid "Send a Cart Recovery Email"
-msgstr "Envoyer un email de récupération du panier"
+msgstr "Envoyer un e-mail de récupération du panier"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
-msgstr "Envoyer un email de récupération"
+msgstr "Envoyer un e-mail de récupération"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3626,12 +3621,12 @@ msgstr "Envoyer après"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send by Email"
-msgstr "Envoyer par email"
+msgstr "Envoyer par e-mail"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email
 msgid "Send email to customers who abandoned their cart."
-msgstr "Envoyer un email aux clients qui ont abandonné leur panier."
+msgstr "Envoyer un e-mail aux clients qui ont abandonné leur panier."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
@@ -3649,7 +3644,7 @@ msgstr "Séquence"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.services
 msgid "Services"
-msgstr "Interventions"
+msgstr "Services"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3691,6 +3686,16 @@ msgstr "Modes d'expédition"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Shipping address"
 msgstr "Adresse d'expédition"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket"
+msgstr "Shiprocket"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket Shipping Methods"
+msgstr "Modes d'expédition Shiprocket"
 
 #. module: website_sale
 #: model:website.menu,name:website_sale.menu_shop
@@ -4564,6 +4569,14 @@ msgstr ""
 "                                            Si vous souhaitez modifier votre adresse d'expédition, créez"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr ""
+"Vous ne pouvez pas utiliser une vidéo comme image principale du produit."
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4586,7 +4599,7 @@ msgid ""
 "                If they completed their address, you should send them a recovery email!"
 msgstr ""
 "Vous trouverez ici tous les paniers abandonnés par vos visiteurs.\n"
-"                S'ils ont saisi leur adresse, vous devriez leur envoyer un email de récupération !"
+"                S'ils ont saisi leur adresse, vous devriez leur envoyer un e-mail de récupération !"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
@@ -4602,7 +4615,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #, python-format
 msgid "Your Email"
-msgstr "Votre email"
+msgstr "Votre e-mail"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4610,6 +4623,18 @@ msgstr "Votre email"
 #, python-format
 msgid "Your Name"
 msgstr "Votre nom"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
+"Vous ne pouvez pas effectuer de paiement à partir de votre compte auprès de "
+"la société %s. Veuillez vous déconnecter et créer un nouveau compte pour ce "
+"site web, ou contacter l'administrateur du site web."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -4704,10 +4729,15 @@ msgid "eCommerce Shop"
 msgstr "Boutique eCommerce"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+msgid "eCommerce cart"
+msgstr "Panier eCommerce"
+
+#. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "eCommerce: send email to customers about their abandoned cart"
 msgstr ""
-"eCommerce : envoyer un email aux clients concernant leur panier abandonné"
+"eCommerce : envoyer un e-mail aux clients concernant leur panier abandonné"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart

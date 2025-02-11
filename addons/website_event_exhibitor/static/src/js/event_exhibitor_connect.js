@@ -46,8 +46,6 @@ publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
 
         if (this.userEventManager) {
             document.location = this.$el.data('sponsorUrl');
-        } else if (!this.eventIsOngoing && !this.isParticipating) {
-            document.location = this.$el.data('registerUrl');
         } else if (!this.eventIsOngoing || ! this.sponsorIsOngoing) {
             return this._openClosedDialog();
         } else {

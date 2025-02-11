@@ -127,4 +127,25 @@ QUnit.module("Components", ({ beforeEach }) => {
             );
         }
     );
+
+    QUnit.test(
+        "test name_and_signature widget update signmode with onSignatureChange prop",
+        async function (assert) {
+            const defaultName = "Noi dea";
+            let currentSignMode = "";
+            props = {
+                ...props,
+                onSignatureChange: function (signMode) {
+                    if (currentSignMode !== signMode) {
+                        currentSignMode = signMode;
+                        assert.step(signMode);
+                    }
+                },
+            };
+            props.signature.name = defaultName;
+            await mount(NameAndSignature, target, { env, props });
+            await click(target, ".o_web_sign_draw_button");
+            assert.verifySteps(["auto", "draw"], "should be draw");
+        }
+    );
 });

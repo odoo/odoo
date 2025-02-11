@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 ),
 {
     trigger: '.breadcrumb > li.breadcrumb-item:first',
-    extra_triggger: ".o_hr_expense_form_view_view",
+    extra_trigger: ".o_hr_expense_form_view_view",
     content: _t("Let's go back to your expenses."),
     position: 'bottom',
     mobile: false,

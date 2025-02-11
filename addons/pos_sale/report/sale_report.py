@@ -10,7 +10,7 @@ class SaleReport(models.Model):
     @api.model
     def _get_done_states(self):
         done_states = super()._get_done_states()
-        done_states.extend(['paid', 'invoiced'])
+        done_states.extend(['paid', 'invoiced', 'done'])
         return done_states
 
     state = fields.Selection(
@@ -51,7 +51,7 @@ class SaleReport(models.Model):
             count(*) AS nbr,
             pos.name AS name,
             pos.date_order AS date,
-            pos.state AS state,
+            (CASE WHEN pos.state = 'done' THEN 'sale' ELSE pos.state END) AS state,
             NULL as invoice_status,
             pos.partner_id AS partner_id,
             pos.user_id AS user_id,

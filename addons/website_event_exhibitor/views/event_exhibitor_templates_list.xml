@@ -31,7 +31,7 @@
 
 <!-- Main topbar -->
 <template id="exhibitors_topbar" name="Exhibitor Tools">
-    <div class="d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
+    <div class="d-flex d-print-none justify-content-end flex-wrap gap-2 w-100 mt-3">
         <h3 class="my-0 me-auto pe-sm-4">Exhibitors</h3>
         <form class="o_wevent_event_tags_form d-none d-lg-block" action="#" method="POST">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -52,7 +52,7 @@
         </div>
     </div>
     <!-- Off canvas filters on mobile-->
-    <div id="o_wevent_exhibitors_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+    <div id="o_wevent_exhibitors_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible mw-75">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">Filters</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
@@ -222,8 +222,8 @@
 <!-- Exhibitors: Cards-based display -->
 <template id="exhibitors_display_cards" name="Exhibitors Cards">
     <div t-foreach="sponsor_categories" t-as="sponsor_category" class="row mb-3">
-        <div class="col-12 mb-3">
-            <h4 class="m-0" t-out="sponsor_category['sponsorship'].name"/>
+        <div class="col-12 mt-3 mb-2">
+            <h4 class="h5 m-0" t-out="sponsor_category['sponsorship'].name"/>
         </div>
         <div t-foreach="sponsor_category['sponsors']" t-as="sponsor" class="col-md-6 col-lg-3 mb-4">
             <t t-call="website_event_exhibitor.exhibitor_card"/>
@@ -265,9 +265,9 @@
                 <main class="card-body">
                     <!-- Title -->
                     <h5 class="card-title d-flex align-items-start justify-content-between mt-0 mb-0">
-                        <span t-field="sponsor.name" itemprop="name" class="text-break"/>
+                        <span t-field="sponsor.name" itemprop="name" class="text-break fs-6 mb-2"/>
                         <span t-if="sponsor.is_in_opening_hours and sponsor.chat_room_id"
-                            class="ms-auto badge text-bg-danger">Live
+                            class="alert alert-danger mb-2 px-2 py-1 smaller lh-1">Live
                         </span>
                     </h5>
                     <!-- Catchy sentence -->
@@ -277,18 +277,16 @@
         </div>
         <div class="o_wesponsor_connect_button"
             t-att-data-sponsor-url="sponsor.website_url"
-            t-attf-data-register-url="/event/#{slug(event)}/register?from_sponsor_id=#{sponsor.id}"
             t-att-data-is-participating="event.is_participating"
             t-att-data-sponsor-id="sponsor.id"
             t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
             t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours"
             t-att-data-user-event-manager="is_event_user">
             <a href="#" class="btn btn-primary h3">
-                <t t-if="not is_event_user and not sponsor.event_id.is_ongoing and not event.is_participating">
-                    Register
+                <t t-if="sponsor.exhibitor_type != 'online'">
+                    More info
                 </t>
-                <t t-elif="sponsor.exhibitor_type == 'online'">Connect</t>
-                <t t-else="">More info</t>
+                <t t-else="">Connect</t>
             </a>
         </div>
     </article>

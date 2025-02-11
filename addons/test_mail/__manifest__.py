@@ -30,6 +30,9 @@ tests independently to functional aspects of other models. """,
         'web.tests_assets': [
             'test_mail/static/tests/helpers/*',
         ],
+        'web.assets_tests': [
+            'test_mail/static/tests/tours/*',
+        ],
     },
     'installable': True,
     'license': 'LGPL-3',

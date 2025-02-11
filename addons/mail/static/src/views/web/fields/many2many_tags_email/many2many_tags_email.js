@@ -55,6 +55,9 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
     async checkEmails() {
         const list = this.props.record.data[this.props.name];
         const invalidRecords = list.records.filter((record) => !record.data.email);
+        if (!invalidRecords.length) {
+            return;
+        }
         // Remove records with invalid data, open form view to edit those and readd them if they are updated correctly.
         const dialogDefs = [];
         for (const record of invalidRecords) {
@@ -70,7 +73,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         await Promise.all(dialogDefs);
 
         this.openedDialogs -= invalidRecords.length;
-        if (this.openedDialogs || !this.recordsIdsToAdd.length) {
+        if (this.openedDialogs) {
             return;
         }
 

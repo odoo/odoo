@@ -123,8 +123,6 @@
       </TaxesOutputs>
       <InvoiceTotals>
         <TotalGrossAmount>2400.00</TotalGrossAmount>
-        <TotalGeneralDiscounts>100.00</TotalGeneralDiscounts>
-        <TotalGeneralSurcharges>100.00</TotalGeneralSurcharges>
         <TotalGrossAmountBeforeTaxes>2400.00</TotalGrossAmountBeforeTaxes>
         <TotalTaxOutputs>504.00</TotalTaxOutputs>
         <TotalTaxesWithheld>0.00</TotalTaxesWithheld>
@@ -134,6 +132,7 @@
       </InvoiceTotals>
       <Items>
         <InvoiceLine>
+          <FileDate>2023-01-01</FileDate>
           <ItemDescription>product_a</ItemDescription>
           <Quantity>1.0</Quantity>
           <UnitOfMeasure>01</UnitOfMeasure>
@@ -154,6 +153,7 @@
           </TaxesOutputs>
         </InvoiceLine>
         <InvoiceLine>
+          <FileDate>2023-01-01</FileDate>
           <ItemDescription>product_a</ItemDescription>
           <Quantity>1.0</Quantity>
           <UnitOfMeasure>01</UnitOfMeasure>
@@ -174,6 +174,7 @@
           </TaxesOutputs>
         </InvoiceLine>
         <InvoiceLine>
+          <FileDate>2023-01-01</FileDate>
           <ItemDescription>product_a</ItemDescription>
           <Quantity>1.0</Quantity>
           <UnitOfMeasure>01</UnitOfMeasure>
@@ -194,6 +195,7 @@
           </TaxesOutputs>
         </InvoiceLine>
         <InvoiceLine>
+          <FileDate>2023-01-01</FileDate>
           <ItemDescription>product_a</ItemDescription>
           <Quantity>1.0</Quantity>
           <UnitOfMeasure>01</UnitOfMeasure>
@@ -201,6 +203,7 @@
           <TotalCost>1000.00</TotalCost>
           <DiscountsAndRebates>
             <Discount>
+              <DiscountReason>/</DiscountReason>
               <DiscountRate>10.00</DiscountRate>
               <DiscountAmount>100.00</DiscountAmount>
             </Discount>
@@ -220,6 +223,7 @@
           </TaxesOutputs>
         </InvoiceLine>
         <InvoiceLine>
+          <FileDate>2023-01-01</FileDate>
           <ItemDescription>product_a</ItemDescription>
           <Quantity>1.0</Quantity>
           <UnitOfMeasure>01</UnitOfMeasure>
@@ -227,6 +231,7 @@
           <TotalCost>1000.00</TotalCost>
           <Charges>
             <Charge>
+              <ChargeReason>/</ChargeReason>
               <ChargeRate>10.00</ChargeRate>
               <ChargeAmount>100.00</ChargeAmount>
             </Charge>
@@ -268,22 +273,22 @@
         <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
       </ds:Transforms>
       <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-      <ds:DigestValue>xdun3jji1k9eALHA/tTDx0KWCC4xbATtubCTzOufo0o=</ds:DigestValue>
+      <ds:DigestValue>+v+AUxz9tkW0fW3AllOweXyOER14IgfGTNUFE0dCilM=</ds:DigestValue>
     </ds:Reference>
     <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignatureProperties-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
       <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-      <ds:DigestValue>Tf2Mjxm9l6+Y4M8azDTj4gbHNWyRfKr8QtVGZCoBTho=</ds:DigestValue>
+      <ds:DigestValue>YXyvKAVjnGxvHZabPY9gmDt0YQgcpBcEq5Hv7ioXR1E=</ds:DigestValue>
     </ds:Reference>
     <ds:Reference URI="#KeyInfo-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
       <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
       <ds:DigestValue>ARCif8tQIKagVfeHX4Fit5ZfK3mXQCPclQISywh7h44=</ds:DigestValue>
     </ds:Reference>
   </ds:SignedInfo>
-  <ds:SignatureValue>ZDR0+T0hBbb3nUFvr5RS8EFMMrtC6bWFOpQsc80NxR5Lf3PUplDbBje7nnh3jW+bdCJs3O49inUh
-5ZhCTcBL/KAsRPTT2tz70KCWt9dzDCx2LYzU4fDgUdRIrvWKyrAmCwO4C3Hoz3kFXhDhcTct46xX
-IvDAaOItH3jKpoURmNSDCaT3GvrtHgvxt8zpWX2SisoYOwgVs/VYptgurRRJ7JIMSQBJzXc35YsM
-S7ObfL0MMfaZxZJQR8Y4YzomXXQt3vf3yNXXIkjfTjqmpwOwVRPvxbV1CYjI9zQp3kqUpSOkNj0c
-BGTyOg45cPB1GDpJA4M4yhDPd3twU2HH9dSwXg==
+  <ds:SignatureValue>Cj2/PhdPDOyj4wl5NAD029AUJmqDBT6AizdhBbHgRUI0Lnkd5I66qbhy0Mq2oD5XCE8dDGR7TFRI
+yWPlrSr33Boulu/isYWCfFXROjwMj20lipK3TwBuvD52SnuOiXd+dfWY+IutNyC1hSP8Sk7O1qiE
+C1abUoq2kOTYgn+US6lsS7+9bZcp/3j2KeF3zMDD/kaaVtPl4lU79wZyAyUA/GvSxcDr+7J3yxVQ
+K86e4v4S7l2FTdXGdcgauhKJ9BGbUhxVv59ceF5vGRrBoMvW61OcrLaUVyaQS9QNZH7vWOh1RyrI
+GotRRlx0kZP7HgLLv8F0DZPEUmqxzGFc8+7few==
 </ds:SignatureValue>
   <ds:KeyInfo Id="KeyInfo-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
     <ds:X509Data>
@@ -332,7 +337,7 @@ aWAYAMCL4KhvISclysD+5juDLpGCLHPtKxBXTQ==
                 <ds:DigestValue>FHf2lN+5FALNa7JXV2+pByL92/dr8LeCVhpItYic5oA=</ds:DigestValue>
               </xades:CertDigest>
               <xades:IssuerSerial>
-                <ds:X509IssuerName>C=BE, CN=runbot.odoo.com, L=Ramillies, O=Odoo, OU=R&amp;D, ST=Wallonnia</ds:X509IssuerName>
+                <ds:X509IssuerName>CN=runbot.odoo.com, OU=R&amp;D, O=Odoo, C=BE</ds:X509IssuerName>
                 <ds:X509SerialNumber>548631688851000697209704649636588277530075594025</ds:X509SerialNumber>
               </xades:IssuerSerial>
             </xades:Cert>

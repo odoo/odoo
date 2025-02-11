@@ -4,6 +4,7 @@
 from datetime import date, datetime, timedelta
 
 from odoo.tests.common import Form, TransactionCase
+from odoo import Command
 
 
 class TestReportsCommon(TransactionCase):
@@ -17,11 +18,24 @@ class TestReportsCommon(TransactionCase):
         cls.supplier_location = cls.env['stock.location'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_suppliers'))
         cls.stock_location = cls.env['stock.location'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_stock'))
 
+        cls.product1 = cls.env['product.product'].create({
+            'name': 'Mellohi"',
+            'type': 'product',
+            'categ_id': cls.env.ref('product.product_category_all').id,
+            'tracking': 'lot',
+            'default_code': 'C4181234""154654654654',
+            'barcode': 'scan""me'
+        })
+
         product_form = Form(cls.env['product.product'])
         product_form.detailed_type = 'product'
         product_form.name = 'Product'
         cls.product = product_form.save()
         cls.product_template = cls.product.product_tmpl_id
+        cls.wh_2 = cls.env['stock.warehouse'].create({
+            'name': 'Evil Twin Warehouse',
+            'code': 'ETWH',
+        })
 
     def get_report_forecast(self, product_template_ids=False, product_variant_ids=False, context=False):
         if product_template_ids:
@@ -39,24 +53,57 @@ class TestReportsCommon(TransactionCase):
 
 
 class TestReports(TestReportsCommon):
-    def test_reports(self):
-        product1 = self.env['product.product'].create({
-            'name': 'Mellohi',
-            'default_code': 'C418',
+
+    def test_product_label_reports(self):
+        """ Test that all the special characters are correctly rendered for the product name, the default code and the barcode.
+            In this test we test that the double quote is rendered correctly.
+        """
+        report = self.env.ref('stock.label_product_product')
+        target = b'\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FDscan""me^FS\n^XZ\n\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FDscan""me^FS\n^XZ\n'
+        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 2}, 'active_model': 'product.template'})
+        self.assertEqual(target, rendering.replace(b' ', b''), 'Product name, default code or barcode is not correctly rendered, make sure the quotes are escaped correctly')
+        self.assertEqual(qweb_type, 'text', 'the report type is not good')
+
+    def test_product_label_custom_barcode_reports(self):
+        """ Test that the custom barcodes are correctly rendered with special characters."""
+        report = self.env.ref('stock.label_product_product')
+        target = b'\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FD123"barcode^FS\n^XZ\n\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FD123"barcode^FS\n^XZ\n\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FDbarcode"456^FS\n^XZ\n\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^FO100,160^BY3\n^BCN,100,Y,N,N\n^FDbarcode"456^FS\n^XZ\n'
+        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'custom_barcodes': {self.product1.product_tmpl_id.id: [('123"barcode', 2), ('barcode"456', 2)]}, 'quantity_by_product': {}, 'active_model': 'product.template'})
+        self.assertEqual(target, rendering.replace(b' ', b''), 'Custom barcodes are most likely not corretly rendered, make sure the quotes are escaped correctly')
+        self.assertEqual(qweb_type, 'text', 'the report type is not good')
+
+    def test_reports_with_special_characters(self):
+        product_test = self.env['product.product'].create({
+            'name': 'Mellohi"',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
             'tracking': 'lot',
-            'barcode': 'scan_me'
+            'default_code': 'C4181234""154654654654',
+            'barcode': '9745213796142'
         })
+
         lot1 = self.env['stock.lot'].create({
-            'name': 'Volume-Beta',
-            'product_id': product1.id,
+            'name': 'Volume-Beta"',
+            'product_id': product_test.id,
             'company_id': self.env.company.id,
         })
-        target = b'\n\n^XA\n^FO100,50\n^A0N,44,33^FD[C418]Mellohi^FS\n^FO100,100\n^A0N,44,33^FDLN/SN:Volume-Beta^FS\n^FO100,150^BY3\n^BCN,100,Y,N,N\n^FDVolume-Beta^FS\n^XZ\n'
+        #add group to the user
+        self.env.user.groups_id += self.env.ref('stock.group_stock_lot_print_gs1')
+        report = self.env.ref('stock.label_lot_template')
+        target = b'\n\n^XA^CI28\n^FO100,50\n^A0N,44,33^FD[C4181234""154654654654]Mellohi"^FS\n^FO100,100\n^A0N,44,33^FDLN/SN:Volume-Beta"^FS\n\n^FO425,150^BY3\n^BXN,8,200\n^FD010974521379614210Volume-Beta"^FS\n^XZ\n'
 
-        rendering, qweb_type = self.env['ir.actions.report']._render_qweb_text('stock.label_lot_template', lot1.id)
-        self.assertEqual(target, rendering.replace(b' ', b''), 'The rendering is not good')
+        rendering, qweb_type = report._render_qweb_text('stock.label_lot_template', lot1.id)
+        self.assertEqual(target, rendering.replace(b' ', b''), 'The rendering is not good, make sure quotes are correctly escaped')
+        self.assertEqual(qweb_type, 'text', 'the report type is not good')
+
+    def test_reports_product_no_barcode(self):
+        """ Test that product without barcode is correctly rendered without a barcode.
+        """
+        report = self.env.ref('stock.label_product_product')
+        self.product1.barcode = False
+        target = b'\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^XZ\n'
+        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 1}, 'active_model': 'product.template'})
+        self.assertEqual(target, rendering.replace(b' ', b''), 'Product name, default code or barcode is not correctly rendered, make sure the quotes are escaped correctly')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
     def test_report_quantity_1(self):
@@ -632,10 +679,7 @@ class TestReports(TestReportsCommon):
         report display the good moves according to the selected warehouse.
         """
         # Warehouse config.
-        wh_2 = self.env['stock.warehouse'].create({
-            'name': 'Evil Twin Warehouse',
-            'code': 'ETWH',
-        })
+        wh_2 = self.wh_2
         picking_type_out_2 = self.env['stock.picking.type'].search([
             ('code', '=', 'outgoing'),
             ('warehouse_id', '=', wh_2.id),
@@ -723,6 +767,60 @@ class TestReports(TestReportsCommon):
         self.assertEqual(draft_picking_qty['out'], 0)
         self.assertEqual(lines[0]['document_out']['id'], delivery_2.id)
         self.assertEqual(lines[0]['quantity'], 8)
+
+    def test_report_forecast_5_multi_warehouse_chain(self):
+        """ Create a MTO chain inter warehouse, the forecast report should ignore the
+        "not current" warehouse"""
+
+        wh_2 = self.wh_2
+        wh = self.env.ref('stock.warehouse0')
+        # replenish rule
+        replenish_route = self.env['stock.route'].create({
+            'name': "replenish",
+            'rule_ids': [Command.create({
+                'name': "replenish",
+                'action': "pull",
+                'location_src_id': wh_2.lot_stock_id.id,
+                'location_dest_id': wh.lot_stock_id.id,
+                'picking_type_id': wh_2.int_type_id.id,
+            })],
+        })
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        self.product.route_ids = [Command.set([self.env.ref('stock.route_warehouse0_mto').id, replenish_route.id])]
+        self.env['stock.quant']._update_available_quantity(self.product, wh_2.lot_stock_id, 5)
+
+        # Creates a delivery to empty WH
+        delivery = self.env['stock.picking'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': wh.out_type_id.id,
+            'move_ids': [Command.create({
+                'name': 'Delivery',
+                'product_id': self.product.id,
+                'product_uom_qty': 5,
+                'product_uom': self.product.uom_id.id,
+                'location_id': wh.lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                'procure_method': 'make_to_order',
+            })],
+        })
+        delivery.action_confirm()
+
+        # Check the WH2 ressuply WH
+        inter_wh_delivery = self.env['stock.move'].search([
+            ('picking_type_id', '=', wh_2.int_type_id.id),
+            ('location_id', '=', wh_2.lot_stock_id.id),
+            ('location_dest_id', '=', wh.lot_stock_id.id),
+            ('product_id', '=', self.product.id),
+        ])
+        self.assertEqual(len(inter_wh_delivery), 1)
+        _, _, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse': wh.id},
+        )
+        # The forecast should show 1 line linking the delivery with the replenish
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
+        self.assertEqual(lines[0]['document_in']['id'], inter_wh_delivery.picking_id.id)
 
     def test_report_forecast_6_multi_company(self):
         """ Create transfers for two different companies and check report
@@ -1074,7 +1172,9 @@ class TestReports(TestReportsCommon):
 
     def test_report_forecast_11_non_reserved_order(self):
         """ Creates deliveries with different operation type reservation methods.
-        Checks replenishment lines are correctly sorted by reservation_date:
+        Checks replenishment lines are correctly sorted by the flollowing criteria:
+            - If the reservation date is in the past at any time T, use the priority and scheduled date
+            - If the reservation date is in the future, use reservation date, priority and scheduled date
             'manual': always last (no reservation_date)
             'at_confirm': reservation_date = time of creation
             'by_date': reservation_date = scheduled_date - reservation_days_before(_priority)
@@ -1142,11 +1242,11 @@ class TestReports(TestReportsCommon):
         delivery_at_confirm = delivery_form.save()
         delivery_at_confirm.action_confirm()
 
-        # Order should be: delivery_by_date, delivery_at_confirm, delivery_by_date_priority, delivery_manual
+        # Order should be: delivery_at_confirm, delivery_by_date, delivery_by_date_priority, delivery_manual
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         self.assertEqual(len(lines), 4, "The report must have 4 lines.")
-        self.assertEqual(lines[0]['document_out']['id'], delivery_by_date.id)
-        self.assertEqual(lines[1]['document_out']['id'], delivery_at_confirm.id)
+        self.assertEqual(lines[0]['document_out']['id'], delivery_at_confirm.id)
+        self.assertEqual(lines[1]['document_out']['id'], delivery_by_date.id)
         self.assertEqual(lines[2]['document_out']['id'], delivery_by_date_priority.id)
         self.assertEqual(lines[3]['document_out']['id'], delivery_manual.id)
 
@@ -1198,6 +1298,49 @@ class TestReports(TestReportsCommon):
         self.assertEqual(len(lines), 1)
         self.assertEqual(bool(lines[0]['move_out']), True)
         self.assertEqual(lines[0]['in_transit'], True)
+
+    def test_report_forecast_13_availability_from_sublocations(self):
+        """
+            Check that the forecast_availability is correctly computed for moves
+            whose source is a sublocation of the stock warehouse location
+        """
+        stock_location = self.env.ref('stock.warehouse0').lot_stock_id
+        sublocation = self.env['stock.location'].create({
+            'name': 'Warehouse0 / Sublocation',
+            'posx': 0,
+            'barcode': 'TEST_BARCODE_LOCATION',
+            'location_id': stock_location.id
+        })
+        self.env['stock.quant']._update_available_quantity(self.product, sublocation, 10.0)
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.picking_type_id = self.picking_type_out
+        delivery_form.partner_id = self.partner
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 3
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+        delivery.do_unreserve()
+        self.assertRecordValues(delivery.move_ids, [
+            {
+                'product_uom_qty': 3.0,
+                'location_id': stock_location.id,
+                'quantity': 0.0,
+                'forecast_availability': 3.0,
+            }
+        ])
+        # Change the source of the picking to be the sublocation
+        # and check the forecast_availability stays unchanged
+        with Form(delivery) as delivery_form:
+            delivery_form.location_id = sublocation
+        self.assertRecordValues(delivery.move_ids, [
+            {
+                'product_uom_qty': 3.0,
+                'location_id': sublocation.id,
+                'quantity': 0.0,
+                'forecast_availability': 3.0,
+            }
+        ])
 
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
@@ -1723,3 +1866,58 @@ class TestReports(TestReportsCommon):
         self.assertEqual(mto_move.product_uom_qty, incoming_qty, "Move quantities should be unchanged")
         self.assertEqual(mto_move.procure_method, 'make_to_stock', "Procure method not correctly reset")
         self.assertEqual(mto_move.state, 'assigned', "Unassigning receipt move shouldn't affect the out move reservation")
+
+    def test_report_reception_immediate_transfer(self):
+        """ Having a delivery, a receipt with a move line created before the move
+        (i.e., an immediate transfer) for the product of the SO should have the delivery in its
+        'Allocation' entries.
+        """
+        Report = self.env['report.stock.report_reception']
+
+        planned_delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'move_ids': [(0, 0, {
+                'name': 'TRRIT move',
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        planned_delivery.action_confirm()
+
+        immediate_receipt_transfer = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        self.env['stock.move.line'].create({
+            'picking_id': immediate_receipt_transfer.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'quantity': 1,
+        })
+
+        sources_to_lines = Report._get_report_values(docids=[immediate_receipt_transfer.id])['sources_to_lines']
+        for _, lines in sources_to_lines.items():
+            for line in lines:
+                self.assertFalse(line['is_qty_assignable'])
+
+        immediate_receipt_transfer.button_validate()
+        out_move = planned_delivery.move_ids
+        in_move = immediate_receipt_transfer.move_ids
+
+        sources_lines_items, = Report._get_report_values(docids=[immediate_receipt_transfer.id])['sources_to_lines'].items()
+        sources, lines = sources_lines_items
+        (source,), = sources
+        self.assertEqual(source, planned_delivery)
+        self.assertEqual(lines[0]['quantity'], out_move.quantity)
+
+        Report.action_assign(out_move.ids, [out_move.quantity], [in_move.ids])
+        self.assertEqual(out_move.procure_method, 'make_to_order')
+
+        Report.action_unassign(out_move.id, out_move.quantity, in_move.ids)
+        self.assertEqual(out_move.procure_method, 'make_to_stock')

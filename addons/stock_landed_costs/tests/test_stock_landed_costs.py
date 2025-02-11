@@ -45,7 +45,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'picking_type_id': self.warehouse.out_type_id.id,
             'move_ids': [(0, 0, {
                 'product_id': product_landed_cost_1.id,
-                'product_uom_qty': 5,
+                'product_uom_qty': 15,
                 'product_uom': self.ref('uom.product_uom_unit'),
                 'location_id': self.warehouse.lot_stock_id.id,
                 'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -59,6 +59,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         picking_landed_cost_1 = self.env['stock.picking'].create(vals)
 
         # Confirm and assign picking
+        picking_landed_cost_1.picking_type_id.create_backorder = 'never'
         self.env.company.anglo_saxon_accounting = True
         picking_landed_cost_1.action_confirm()
         picking_landed_cost_1.action_assign()
@@ -204,6 +205,13 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             po.action_create_invoice()
             bill = po.invoice_ids
             bill.invoice_date = fields.Date.today()
+
+            self.env['account.move.line'].create({
+                'move_id': bill.id,
+                'display_type': 'line_section',
+                'name': 'Great Section',
+            })
+
             bill._post()
 
             landed_cost_aml = bill.invoice_line_ids.filtered(lambda l: l.product_id == self.landed_cost)

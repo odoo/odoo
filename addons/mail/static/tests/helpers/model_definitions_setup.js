@@ -115,6 +115,16 @@ insertModelFields("res.users.settings", {
     is_discuss_sidebar_category_channel_open: { default: true },
     is_discuss_sidebar_category_chat_open: { default: true },
 });
+insertModelFields("res.partner", {
+    message_main_attachment_id: {
+        name: "message_main_attachment_id",
+        readonly: false,
+        relation: "ir.attachment",
+        required: false,
+        string: "Main attachment",
+        type: "many2one",
+    }
+});
 
 //--------------------------------------------------------------------------
 // Insertion of records

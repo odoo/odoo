@@ -39,13 +39,13 @@ QUnit.test("Thread state is saved on the session", async (assert) => {
     const env = await start();
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Thread");
-    assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
+    assert.strictEqual(env.services["im_livechat.livechat"].savedState.state, "open");
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-Thread", { count: 0 });
-    assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "folded");
+    assert.strictEqual(env.services["im_livechat.livechat"].savedState.state, "folded");
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-Thread");
-    assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
+    assert.strictEqual(env.services["im_livechat.livechat"].savedState.state, "open");
 });
 
 QUnit.test("Seen message is saved on the session", async (assert) => {
@@ -53,13 +53,13 @@ QUnit.test("Seen message is saved on the session", async (assert) => {
     await loadDefaultConfig();
     const env = await start();
     await click(".o-livechat-LivechatButton");
-    assert.notOk(env.services["im_livechat.livechat"].sessionCookie.seen_message_id);
+    assert.notOk(env.services["im_livechat.livechat"].savedState.seen_message_id);
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { count: 2 });
     await nextTick(); // wait for message seen
     assert.strictEqual(
-        env.services["im_livechat.livechat"].sessionCookie.seen_message_id,
+        env.services["im_livechat.livechat"].savedState.seen_message_id,
         env.services["im_livechat.livechat"].thread.newestMessage.id
     );
 });

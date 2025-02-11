@@ -115,8 +115,8 @@
                             <field name="portal_point_name" invisible="program_type not in ('gift_card', 'ewallet')" string="Displayed as" groups="base.group_no_one"/>
                         </group>
                     </group>
-                    <notebook invisible="program_type in ('gift_card', 'ewallet')">
-                        <page string="Rules &amp; Rewards" name="rules_rewards">
+                    <notebook>
+                        <page string="Rules &amp; Rewards" name="rules_rewards" invisible="program_type in ('gift_card', 'ewallet')">
                             <group>
                                 <group>
                                     <field name="rule_ids" colspan="2" mode="kanban" nolabel="1" add-label="Add a rule"
@@ -128,7 +128,15 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Communications" name="communications" invisible="applies_on == 'current'">
+                        <page string="Rewards" name="rewards" groups="base.group_no_one" invisible="program_type not in ('gift_card', 'ewallet')">
+                            <group>
+                                <group groups="base.group_no_one">
+                                    <field name="reward_ids" colspan="2" mode="kanban" nolabel="1" add-label="Add a reward"
+                                      class="o_loyalty_kanban_inline" widget="loyalty_one2many" context="{'currency_symbol': currency_symbol, 'program_type': program_type}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Communications" name="communications" invisible="applies_on == 'current' or program_type in ('gift_card', 'ewallet')">
                             <field name="communication_plan_ids" mode="tree"/>
                         </page>
                     </notebook>

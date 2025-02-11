@@ -3,16 +3,12 @@
 # 	* pos_sale
 # 
 # Translators:
-# Zsolt Godó <zsolttokio@gmail.com>, 2023
 # Kovács Tibor <kovika@gmail.com>, 2023
-# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
-# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
 # krnkris, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
-# Istvan <leki69@gmail.com>, 2023
 # Martin Trigaux, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +81,7 @@ msgstr "Visszavonva"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
 msgid "Config Settings"
-msgstr "Beállítások módosítása"
+msgstr "Beállítások"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -168,6 +164,13 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
+#, python-format
+msgid "Error amount too high"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 #, python-format
@@ -184,8 +187,8 @@ msgstr "Számlázva"
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid ""
-"It seems that you didn't configure a down payment product in your point of sale.\n"
-"                        You can go to your point of sale configuration to choose one."
+"It seems that you didn't configure a down payment product in your point of "
+"sale. You can go to your point of sale configuration to choose one."
 msgstr ""
 
 #. module: pos_sale
@@ -274,7 +277,7 @@ msgstr "Kifizetve"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Értékesítési pont beállítása"
+msgstr "Értékesítési pont konfiguráció"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
@@ -289,7 +292,7 @@ msgstr "Értékesítési pont rendelések"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Értékesítési Pont Értékesítési folyamat"
+msgstr "Értékesítési Pont munkamenet"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
@@ -321,14 +324,14 @@ msgstr ""
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.js:0
 #, python-format
 msgid "Quotation"
-msgstr "Árajánlat"
+msgstr "Ajánlat"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.js:0
 #, python-format
 msgid "Quotation Sent"
-msgstr "Árajánlat elküldve"
+msgstr "Ajánlat elküldve"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -360,12 +363,12 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
 msgid "Sale Order Count"
-msgstr "Értékesítési rendelések száma"
+msgstr "Vevői rendelések száma"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Sales"
-msgstr "Értékesítések"
+msgstr "Értékesítés"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_report
@@ -378,12 +381,12 @@ msgstr "Értékesítési elemzés riport"
 #: model:ir.model,name:pos_sale.model_sale_order
 #, python-format
 msgid "Sales Order"
-msgstr "Megrendelések"
+msgstr "Vevői rendelés"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Vevői megrendelés sor"
+msgstr "Vevői rendelés sor"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
@@ -549,7 +552,7 @@ msgstr ""
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "What do you want to do?"
-msgstr "Mit akarsz csinálni?"
+msgstr "Mit szeretne csinálni?"
 
 #. module: pos_sale
 #. odoo-javascript

@@ -3,17 +3,17 @@
 # 	* mrp_subcontracting
 # 
 # Translators:
-# Wil Odoo, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2024
+# Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,6 +126,7 @@ msgid "Detail Component"
 msgstr "세부 구성 요소"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Details"
 msgstr "세부 정보"
@@ -174,8 +175,8 @@ msgstr "숨기기"
 #, python-format
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
-"Internal, linked to the appropriate company and not specific to a warehouse."
-msgstr "재고를 정확하게 관리하려면 외주 생산 위치는 창고에 특정하지 않고 회사와 연관된 내부 형태의 공간으로 설정되어야 합니다."
+"Internal, linked to the appropriate company."
+msgstr "재고를 정확하게 관리하려면 외주 생산 위치는 회사와 연관된 내부 형태의 공간이어야 합니다."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -203,6 +204,13 @@ msgid ""
 "List of Products used in the BoM, used to filter the list of products in the"
 " subcontracting portal view"
 msgstr "외주 포털 보기에서 필터링 하는데 사용되는 자재명세서의 품목 목록입니다."
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -367,6 +375,7 @@ msgstr "외주업체 재공급"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting/wizard/product_replenish.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
@@ -626,6 +635,13 @@ msgstr "회사의 외주 생산 위치를 변경할 수 없습니다."
 #, python-format
 msgid "You cannot write on fields %s in mrp.production."
 msgstr "mrp.production 의 %s에는 작성할 수 없습니다."
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "You might want to update the locations of this transfer's operations"
+msgstr "이 전송 작업의 위치를 업데이트할 수 있습니다."
 
 #. module: mrp_subcontracting
 #. odoo-python

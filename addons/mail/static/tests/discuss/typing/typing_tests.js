@@ -7,7 +7,7 @@ import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains, insertText } from "@web/../tests/utils";
+import { click, contains, insertText, step, assertSteps } from "@web/../tests/utils";
 
 QUnit.module("typing");
 
@@ -369,4 +369,36 @@ QUnit.test("chat: correspondent is typing in chat window", async () => {
         })
     );
     await contains("[title='Demo is typing...']", { count: 0 });
+});
+
+QUnit.test("switching to another channel triggers notify_typing to stop", async (assert) => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "Demo" });
+    const partnerId = pyEnv["res.partner"].create({
+        im_status: "online",
+        name: "Demo",
+        user_ids: [userId],
+    });
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    pyEnv["discuss.channel"].create({ name: "general" });
+    const { advanceTime, openDiscuss } = await start({
+        hasTimeControl: true,
+        async mockRPC(route, args) {
+            if (route === "/discuss/channel/notify_typing") {
+                step(`notify_typing:${args.is_typing}`);
+            }
+        },
+    });
+    await openDiscuss(chatId);
+    await insertText(".o-mail-Composer-input", "a");
+    await assertSteps(["notify_typing:true"]);
+    await click(".o-mail-DiscussSidebar-item", { text: "general" });
+    await advanceTime(SHORT_TYPING / 2);
+    await assertSteps(["notify_typing:false"]);
 });

@@ -39,7 +39,7 @@ class ProductProduct(models.Model):
     normal_cost = fields.Float(compute='_compute_product_margin_fields_values', string='Normal Cost',
         help="Sum of Multiplication of Cost price and quantity of Vendor Bills")
     total_margin = fields.Float(compute='_compute_product_margin_fields_values', string='Total Margin',
-        help="Turnover - Standard price")
+        help="Turnover - Total cost")
     expected_margin = fields.Float(compute='_compute_product_margin_fields_values', string='Expected Margin',
         help="Expected Sale - Normal Cost")
     total_margin_rate = fields.Float(compute='_compute_product_margin_fields_values', string='Total Margin Rate(%)',
@@ -116,7 +116,7 @@ class ProductProduct(models.Model):
                         l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END) * ((100 - l.discount) * 0.01)
                     ) / NULLIF(SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)), 0) AS avg_unit_price,
                     SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS num_qty,
-                    SUM(ABS(l.balance) * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS total,
+                    SUM(CASE WHEN i.move_type = 'out_invoice' THEN -l.balance WHEN i.move_type = 'in_invoice' THEN l.balance ELSE -ABS(l.balance) END) AS total,
                     SUM(l.quantity * pt.list_price * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS sale_expected
                 FROM account_move_line l
                 LEFT JOIN account_move i ON (l.move_id = i.id)

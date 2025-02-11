@@ -53,6 +53,7 @@ class EtaUsbController(http.Controller):
             }
             return json.dumps(payload)
         except Exception as ex:
+            _logger.exception('Error while getting ETA certificate')
             return self._get_error_template(str(ex))
         finally:
             session.logout()
@@ -90,6 +91,7 @@ class EtaUsbController(http.Controller):
             }
             return json.dumps(payload)
         except Exception as ex:
+            _logger.exception('Error while signing invoices')
             return self._get_error_template(str(ex))
         finally:
             session.logout()

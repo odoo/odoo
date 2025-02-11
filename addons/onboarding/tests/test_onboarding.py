@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import unittest
+
 from psycopg2 import IntegrityError
 
 from odoo import Command
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.onboarding.tests.common import TestOnboardingCommon
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
@@ -215,3 +218,21 @@ class TestOnboarding(TestOnboardingCommon):
         # But it can
         self.step_initially_w_o_onboarding.with_company(self.company_2).action_set_just_done()
         self.assert_onboarding_is_done(self.onboarding_3.with_company(self.company_2))
+
+    @unittest.skip("Company deletion can fail because of other foreign key constraints.")
+    def test_remove_company_with_progress(self):
+        user = mail_new_test_user(
+            self.env,
+            login='erp_manager',
+            groups="base.group_erp_manager",
+        )
+        self.onboarding_1_step_1.is_per_company = True
+
+        self.onboarding_1._search_or_create_progress()
+        self.onboarding_1.with_company(self.company_2)._search_or_create_progress()
+        self.assertEqual(len(self.onboarding_1.progress_ids), 2)
+
+        # group_erp_manager has no access to onboardng, compute_current_progress is the focus of this test
+        self.company_2.with_user(user).unlink()
+        self.onboarding_1._compute_current_progress()
+        self.assertEqual(len(self.onboarding_1.progress_ids), 1)

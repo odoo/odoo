@@ -16,7 +16,9 @@ __path__ = [
 ]
 
 import sys
-assert sys.version_info > (3, 10), "Outdated python version detected, Odoo requires Python >= 3.10 to run."
+MIN_PY_VERSION = (3, 10)
+MAX_PY_VERSION = (3, 12)
+assert sys.version_info > MIN_PY_VERSION, f"Outdated python version detected, Odoo requires Python >= {'.'.join(map(str, MIN_PY_VERSION))} to run."
 
 #----------------------------------------------------------
 # Running mode flags (gevent, prefork)
@@ -66,25 +68,13 @@ import time
 if hasattr(time, 'tzset'):
     time.tzset()
 
-#----------------------------------------------------------
-# PyPDF2 hack
-# ensure that zlib does not throw error -5 when decompressing
-# because some pdf won't fit into allocated memory
-# https://docs.python.org/3/library/zlib.html#zlib.decompressobj
-# ----------------------------------------------------------
-import PyPDF2
+# ---------------------------------------------------------
+# some charset are known by Python under a different name
+# ---------------------------------------------------------
+import encodings.aliases  # noqa: E402
 
-try:
-    import zlib
-
-    def _decompress(data):
-        zobj = zlib.decompressobj()
-        return zobj.decompress(data)
-
-    PyPDF2.filters.decompress = _decompress
-except ImportError:
-    pass # no fix required
-
+encodings.aliases.aliases['874'] = 'cp874'
+encodings.aliases.aliases['windows_874'] = 'cp874'
 
 #----------------------------------------------------------
 # alias hebrew iso-8859-8-i and iso-8859-8-e on iso-8859-8

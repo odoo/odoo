@@ -141,7 +141,7 @@
                                 <ul class="list-unstyled mb-0 ps-2">
                                     <li>My Company</li>
                                     <li><i class="fa fa-map-marker fa-fw me-2"/><span class="o_force_ltr">3575 Fake Buena Vista Avenue</span></li>
-                                    <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr">+1 (650) 555-0111</span></li>
+                                    <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr">+1 555-555-5556</span></li>
                                     <li><i class="fa fa-1x fa-fw fa-envelope me-2"/><span>info@yourcompany.example.com</span></li>
                                 </ul>
                             </div>
@@ -182,7 +182,7 @@
                                         <ul class="list-unstyled mb-0 ps-2">
                                             <li>My Company</li>
                                             <li><i class="fa fa-map-marker fa-fw me-2"/><span class="o_force_ltr">3575 Fake Buena Vista Avenue</span></li>
-                                            <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr">+1 (650) 555-0111</span></li>
+                                            <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr">+1 555-555-5556</span></li>
                                             <li><i class="fa fa-1x fa-fw fa-envelope me-2"/><span>info@yourcompany.example.com</span></li>
                                         </ul>
                                     </div>
@@ -519,12 +519,14 @@
             <field name="url">/</field>
             <field name="view_id" ref="homepage"/>
             <field name="track">True</field>
+            <field name="website_meta_description">This is the homepage of the website</field>
         </record>
         <record id="contactus_page" model="website.page">
             <field name="url">/contactus</field>
             <field name="is_published">True</field>
             <field name="view_id" ref="contactus"/>
             <field name="track">True</field>
+            <field name="website_meta_description">This is the contact us page of the website</field>
         </record>
 
         <!-- Default Menu to store module menus for new website -->

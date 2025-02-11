@@ -1,12 +1,33 @@
 /* @odoo-module */
 
 import { Component, useState } from "@odoo/owl";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
+
+class ImageActions extends Component {
+    static components = { Dropdown, DropdownItem };
+    static props = ["actions", "imagesHeight"];
+    static template = "mail.ImageActions";
+
+    setup() {
+        super.setup();
+        this.actionsMenuState = useState({
+            isOpen: false,
+        });
+        this.isMobileOS = isMobileOS;
+    }
+
+    async setActionsMenuState(state) {
+        this.actionsMenuState.isOpen = state.isOpen;
+    }
+}
 
 /**
  * @typedef {Object} Props
@@ -17,6 +38,7 @@ import { url } from "@web/core/utils/urls";
  * @extends {Component<Props, Env>}
  */
 export class AttachmentList extends Component {
+    static components = { ImageActions };
     static props = ["attachments", "unlinkAttachment", "imagesHeight", "messageSearch?"];
     static template = "mail.AttachmentList";
 
@@ -26,6 +48,7 @@ export class AttachmentList extends Component {
         this.imagesWidth = 1920;
         this.dialog = useService("dialog");
         this.fileViewer = useFileViewer();
+        this.isMobileOS = isMobileOS;
     }
 
     /**
@@ -109,12 +132,38 @@ export class AttachmentList extends Component {
         return this.env.inChatWindow && !this.env.alignedRight;
     }
 
+    getActions(attachment) {
+        const res = [];
+        if (this.showDelete) {
+            res.push({
+                label: _t("Remove"),
+                icon: "fa fa-trash",
+                onSelect: () => this.onClickUnlink(attachment),
+            });
+        }
+        if (this.canDownload(attachment)) {
+            res.push({
+                label: _t("Download"),
+                icon: "fa fa-download",
+                onSelect: () => this.onClickDownload(attachment),
+            });
+        }
+        return res;
+    }
+
     get showDelete() {
+        // in the composer they should all be implicitly deletable
+        if (this.env.inComposer) {
+            return true;
+        }
+        if (!this.attachment.isDeletable) {
+            return false;
+        }
+        // in messages users are expected to delete the message instead of just the attachment
         return (
-            (this.attachment.isDeletable &&
-                (!this.env.message || this.env.message?.hasTextContent)) ||
-            this.env.inComposer ||
-            this.props.attachments.length > 1
+            !this.env.message ||
+            this.env.message.hasTextContent ||
+            (this.env.message && this.props.attachments.length > 1)
         );
     }
 }

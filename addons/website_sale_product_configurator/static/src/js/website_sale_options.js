@@ -40,7 +40,7 @@ publicWidget.registry.WebsiteSale.include({
      * @override
      */
     _submitForm() {
-        var ret = this._super(...arguments);
+        const ret = Promise.resolve(this._super(...arguments));
         if (this.optionalProductsModal && this.stayOnPageOption) {
             ret.then(()=>{
                 this.optionalProductsModal._openedResolver()
@@ -88,14 +88,14 @@ publicWidget.registry.WebsiteSale.include({
             const productsTrackingInfo = [];
             this.$('.js_product.in_cart').each((i, el) => {
                 productsTrackingInfo.push({
-                    'item_id': el.getElementsByClassName('product_id')[0].value,
+                    'item_id': parseInt(el.getElementsByClassName('product_id')[0].value),
                     'item_name': el.getElementsByClassName('product_display_name')[0].textContent,
-                    'quantity': el.getElementsByClassName('js_quantity')[0].value,
+                    'quantity': parseFloat(el.getElementsByClassName('js_quantity')[0].value),
                     'currency': currency,
-                    'price': el.getElementsByClassName('oe_price')[0].getElementsByClassName('oe_currency_value')[0].textContent,
+                    'price': parseFloat(el.getElementsByClassName('js_raw_price')[0].textContent),
                 });
             });
-            if (productsTrackingInfo) {
+            if (productsTrackingInfo.length) {
                 this.$el.trigger('add_to_cart_event', productsTrackingInfo);
             }
         }

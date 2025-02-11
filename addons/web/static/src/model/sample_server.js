@@ -673,7 +673,7 @@ export class SampleServer {
         if (groupedByM2O) {
             // re-populate co model with relevant records
             this.data[groupByField.relation].records = groups.map((g) => {
-                return { id: g.value, display_name: g.displayName };
+                return { id: g[groupBy][0], display_name: g[groupBy][1] };
             });
         }
         for (const r of this.data[params.model].records) {
@@ -683,6 +683,8 @@ export class SampleServer {
                     group.__range[params.groupBy[0]],
                     groupByField
                 );
+            } else if (groupByField.type === "many2one") {
+                r[groupBy] = group[params.groupBy[0]] ? group[params.groupBy[0]][0] : false;
             } else {
                 r[groupBy] = group[params.groupBy[0]];
             }
@@ -754,6 +756,8 @@ export class SampleServer {
                     return (
                         r[groupBy] === serializeGroupDateValue(g.__range[fullGroupBy], groupByField)
                     );
+                } else if (groupByField.type === "many2one") {
+                    return (!r[groupBy] && !g[fullGroupBy]) || r[groupBy] === g[fullGroupBy][0];
                 }
                 return r[groupBy] === g[fullGroupBy];
             });

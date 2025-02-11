@@ -10,9 +10,9 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Lasse L, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr " '*' är inte ett giltigt regex streckkodsmönster. Menade du '.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -223,13 +223,19 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Mönster kan också definiera hur numeriska värden, som vikt eller pris, kan vara\n"
+"                                kodad i streckkoden. De indikeras av  <code>{NNN}</code> när versala N\n"
+"                                definiera var numrets siffror är kodade. Decimalnummer stöds också med\n"
+"                                decimaler angivna med D, som t.ex <code>{NNNDD}</code>. I dessa fall,\n"
+"                                streckkodsfältet på tillhörande poster <i></i> visa dessa siffror som\n"
+"                                nollor."
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 #, python-format
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Vänligen skanna igen!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -262,6 +268,15 @@ msgstr "Klicka för att scanna"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
 msgstr "Streckkodsmatchningsmönstret"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr ""
+"Streckkodsmönstret %(pattern)s  leder inte till ett giltigt reguljärt "
+"uttryck."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids

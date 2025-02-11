@@ -90,6 +90,9 @@ patch(PaymentScreen.prototype, {
             if (program.is_nominative && partner) {
                 agg[pe.coupon_id].partner_id = partner.id;
             }
+            if (program.program_type != 'loyalty') {
+                agg[pe.coupon_id].date_to = program.date_to;
+            }
             return agg;
         }, {});
         for (const line of rewardLines) {
@@ -101,6 +104,9 @@ patch(PaymentScreen.prototype, {
                     coupon_id: line.coupon_id,
                     barcode: false,
                 };
+                if (reward.program_type != 'loyalty') {
+                    couponData[line.coupon_id].date_to = reward.program_id.date_to;
+                }
             }
             if (!couponData[line.coupon_id].line_codes) {
                 couponData[line.coupon_id].line_codes = [];

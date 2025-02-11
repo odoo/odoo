@@ -35,6 +35,12 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'sequence': 5
         })
 
+        cls.tax_10 = cls.env['account.tax'].create({
+            'name': "tax_10a",
+            'amount_type': 'percent',
+            'amount': 10.0,
+        })
+
         cls.tax_16 = cls.env['account.tax'].create({
             'name': "tax_16",
             'amount_type': 'percent',
@@ -54,7 +60,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
 
     def assertTaxTotals(self, document, expected_values):
         main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed'}
-        group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
+        group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount', 'hide_base_amount'}
         subtotals_keys_to_ignore = {'formatted_amount'}
 
         to_compare = document.tax_totals
@@ -305,6 +311,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount': 10.0,
             'tax_group_id': self.tax_group1.id,
             'include_base_amount': True,
+            'sequence': 2,
         })
 
         tax_20 = self.env['account.tax'].create({
@@ -312,6 +319,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount_type': 'percent',
             'amount': 20.0,
             'tax_group_id': self.tax_group1.id,
+            'sequence': 2,
         })
 
         tax_30 = self.env['account.tax'].create({
@@ -320,6 +328,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount': 30.0,
             'tax_group_id': self.tax_group2.id,
             'include_base_amount': True,
+            'sequence': 1,
         })
 
         document = self._create_document_for_tax_totals_test([
@@ -733,6 +742,14 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         run_case('round_per_line', lines, [16.60])
         run_case('round_globally', lines, [16.59])
 
+        lines = [
+            (54.45, self.tax_10),
+            (600, self.tax_10),
+            (-500, self.tax_10),
+        ]
+        run_case('round_per_line', lines, [15.45])
+        run_case('round_globally', lines, [15.45])
+
     def test_invoice_foreign_currency_tax_totals(self):
         self.env['res.currency.rate'].create({
             'name': '2018-01-01',
@@ -778,6 +795,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
 
         self.assertTaxTotals(invoice, {
             'amount_total': 470,
+            'amount_total_company_currency': 2350,
             'amount_untaxed': 400,
             'display_tax_base': True,
             'groups_by_subtotal': {

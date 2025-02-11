@@ -703,3 +703,84 @@ class TestTimesheet(TestCommonTimesheet):
             },
         ])
         self.assertEqual(self.task1.progress, 100, 'The percentage of allocated hours should be 100%.')
+
+    def test_analytic_plan_setting(self):
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'Departments 2',
+            'complete_name': 'Departments 2',
+            'default_applicability': 'optional',
+        })
+        self.env['ir.config_parameter'].set_param('analytic.analytic_plan_projects', 1)
+        project_1 = self.env['project.project'].create({
+            'name': "Project with plan setting 1",
+            'allow_timesheets': True,
+            'partner_id': self.partner.id,
+        })
+        self.assertEqual(project_1.analytic_account_id.plan_id.id, 1)
+
+        self.env['ir.config_parameter'].set_param('analytic.analytic_plan_projects', analytic_plan.id)
+        project_2 = self.env['project.project'].create({
+            'name': "Project with plan setting 2",
+            'allow_timesheets': True,
+            'partner_id': self.partner.id,
+        })
+        self.assertEqual(project_2.analytic_account_id.plan_id.id, analytic_plan.id)
+
+    def test_timesheet_update_user_on_employee(self):
+        timesheet = self.env['account.analytic.line'].create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'my first timesheet',
+            'employee_id': self.empl_employee.id,
+        })
+        self.assertEqual(timesheet.user_id, self.empl_employee.user_id)
+        new_user = self.env['res.users'].create({
+            'name': 'Test user',
+            'login': 'test',
+        })
+        self.empl_employee.user_id = new_user
+        self.assertEqual(timesheet.user_id, new_user)
+
+    def test_analytic_plan_timesheet_creation(self):
+        child_analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'Child Analytic Plan',
+            'parent_id': self.analytic_plan.id,
+        })
+        child_analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Analytic Account for Child Analytic Plan',
+            'partner_id': self.partner.id,
+            'plan_id': child_analytic_plan.id,
+            'code': 'TEST',
+        })
+        self.task1.analytic_account_id = child_analytic_account
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'unit_amount': 1,
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'employee_id': self.empl_employee.id,
+        })
+        self.assertEqual(child_analytic_account, timesheet.account_id)
+        self.assertEqual(child_analytic_account, timesheet[f'{self.analytic_plan._column_name()}'])
+
+    def test_analytic_plan_timesheet_change_analytic_account(self):
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'unit_amount': 1,
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'employee_id': self.empl_employee.id,
+        })
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'Analytic Plan'
+        })
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Analytic Account',
+            'partner_id': self.partner.id,
+            'plan_id': analytic_plan.id,
+            'code': 'TEST',
+        })
+        self.task2.analytic_account_id = analytic_account
+        timesheet.task_id = self.task2
+        self.assertEqual(analytic_account, timesheet.account_id)
+        self.assertEqual(analytic_account, timesheet[f'{analytic_plan._column_name()}'])

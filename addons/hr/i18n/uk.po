@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -996,6 +996,8 @@ msgstr ""
 "Підтримка регулярної взаємодії з ключовими клієнтами для кращого вилучення та розширення."
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1008,6 +1010,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Відділ"
 
@@ -1054,7 +1057,7 @@ msgstr "Причина звільнення"
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
 #: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
 msgid "Departure Reasons"
-msgstr "Причини від'їзду"
+msgstr "Причини звільнення"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
@@ -1408,7 +1411,7 @@ msgstr "Поле освіти"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
 msgid "Fired"
-msgstr "Звільнено"
+msgstr "Звільнення за ініціативою роботодавця"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -1925,7 +1928,7 @@ msgstr "Управління"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Manager"
-msgstr "Керівник"
+msgstr "Керівник структурного підрозділу"
 
 #. module: hr
 #. odoo-python
@@ -2234,7 +2237,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
-msgstr "Відділ"
+msgstr "Офіс"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -2245,7 +2248,7 @@ msgstr "Керівник: Керуйте всіма співробітникам
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
 msgid "On/Offboarding Plans"
-msgstr "Плани залучення/вилучення"
+msgstr "Плани адаптації/звільнення"
 
 #. module: hr
 #. odoo-javascript
@@ -2703,7 +2706,7 @@ msgstr "Пошук і розробка"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
 msgid "Resigned"
-msgstr "У відставці"
+msgstr "Звільнення за власним бажанням"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
@@ -2742,7 +2745,7 @@ msgstr "Відповідальний користувач"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_retired
 msgid "Retired"
-msgstr "Відсторонений"
+msgstr "Вихід на пенсію"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
@@ -2852,6 +2855,13 @@ msgstr "Номер соціального страхування"
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
 msgstr "Розробка програмного забезпечення"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr "Деякі співробітники вже мають робочий контракт"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

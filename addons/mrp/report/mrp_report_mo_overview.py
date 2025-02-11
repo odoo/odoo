@@ -101,7 +101,7 @@ class ReportMoOverview(models.AbstractModel):
             'unit_real_cost': unit_real_cost,
         }
         if production_done:
-            production_qty = summary.get('quantity', 1.0)
+            production_qty = summary.get('quantity') or 1.0
             extras['total_mo_cost_components'] = sum(compo.get('summary', {}).get('mo_cost', 0.0) for compo in components)
             extras['total_real_cost_components'] = sum(compo.get('summary', {}).get('real_cost', 0.0) for compo in components)
             extras['total_mo_cost_components_decorator'] = self._get_comparison_decorator(extras['total_real_cost_components'], extras['total_mo_cost_components'], currency.rounding)
@@ -131,7 +131,7 @@ class ReportMoOverview(models.AbstractModel):
             if bp_move.state == 'cancel' or float_is_zero(bp_move.cost_share, precision_digits=2):
                 continue
             # As UoMs can vary, we use the default UoM of each product
-            quantities_by_product[bp_move.product_id] += bp_move.product_qty
+            quantities_by_product[bp_move.product_id] += bp_move.product_uom._compute_quantity(bp_move.quantity, bp_move.product_id.uom_id, rounding_method='HALF-UP')
             cost_share = bp_move.cost_share / 100
             total_cost_by_product[bp_move.product_id] += extras['total_real_cost'] * cost_share
             component_cost_by_product[bp_move.product_id] += extras['total_real_cost_components'] * cost_share
@@ -368,7 +368,7 @@ class ReportMoOverview(models.AbstractModel):
                 'model': product._name,
                 'id': product.id,
                 'name': product.display_name,
-                'quantity': move_bp.product_uom_qty,
+                'quantity': move_bp.product_uom_qty if move_bp.state != 'done' else move_bp.quantity,
                 'uom_name': move_bp.product_uom.display_name,
                 'uom_precision': self._get_uom_precision(move_bp.product_uom.rounding),
                 'unit_cost': self._get_unit_cost(move_bp),
@@ -510,6 +510,7 @@ class ReportMoOverview(models.AbstractModel):
     def _get_replenishment_lines(self, production, move_raw, replenish_data, level, current_index):
         product = move_raw.product_id
         quantity = move_raw.product_uom_qty if move_raw.state != 'done' else move_raw.quantity
+        reserved_quantity = self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data)
         currency = (production.company_id or self.env.company).currency_id
         forecast = replenish_data['products'][product.id].get('forecast', [])
         current_lines = filter(lambda line: line.get('document_in', False) and line.get('document_out', False)
@@ -517,7 +518,7 @@ class ReportMoOverview(models.AbstractModel):
         total_ordered = 0
         replenishments = []
         for count, forecast_line in enumerate(current_lines):
-            if float_compare(total_ordered, quantity, precision_rounding=move_raw.product_uom.rounding) == 0:
+            if float_compare(total_ordered, quantity - reserved_quantity, precision_rounding=move_raw.product_uom.rounding) >= 0:
                 # If a same product is used twice in the same MO, don't duplicate the replenishment lines
                 break
             doc_in = self.env[forecast_line['document_in']['_name']].browse(forecast_line['document_in']['id'])
@@ -567,7 +568,6 @@ class ReportMoOverview(models.AbstractModel):
             total_ordered += in_transit_line['summary']['quantity']
             replenishments.append(in_transit_line)
 
-        reserved_quantity = self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data)
         # Avoid creating a "to_order" line to compensate for missing stock (i.e. negative free_qty).
         free_qty = max(0, product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom))
         missing_quantity = quantity - (reserved_quantity + free_qty + total_ordered)

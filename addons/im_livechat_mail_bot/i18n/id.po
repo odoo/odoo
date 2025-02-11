@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +26,14 @@ msgstr ""
 #, python-format
 msgid ""
 "Good, you can customize canned responses in the live chat "
-"application.<br/><br/><b>It's the end of this overview</b>, enjoy "
-"discovering Odoo!"
+"application.<br/><br/><b>It's the end of this overview</b>, you can now "
+"<b>close this conversation</b> or start the tour again with typing <span "
+"class=\"o_odoobot_command\">start the tour</span>. Enjoy discovering Odoo!"
 msgstr ""
-"Bagus, Anda dapat melakukan kustomisasi pada tanggapan otomatis langsung di "
-"aplikasi live chat.<br/><br/><b>Ini adalah akhir dari gambaran umum "
-"ini,</b>, enjoy discovering Odoo!"
+"Bagus, Anda dapat menyesuaikan tanggapan otomatis di aplikasi "
+"lamaran.<br/><br/><b>Di akhir gambaran umum ini</b>, Anda sekarang dapat "
+"<b>menutup percakapan ini</b> atau memulai tur lagi dengan mengetik <span "
+"class=\"o_odoobot_command\">mulai tur</span>. Enjoy discovering Odoo!"
 
 #. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_mail_bot
@@ -59,13 +62,13 @@ msgid "Onboarding canned"
 msgstr "Onboarding dibatalkan"
 
 #. module: im_livechat_mail_bot
-#. odoo-python
-#: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
-#, python-format
-msgid "That's me! 🎉<br/>Try typing %s to use canned responses."
-msgstr "Itu saya! 🎉<br/>Coba ketik %s untuk menggunakan tanggapan otomatis"
-
-#. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_res_users
 msgid "User"
 msgstr "Pengguna"
+
+#. module: im_livechat_mail_bot
+#. odoo-python
+#: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
+#, python-format
+msgid "Wonderful! 😇<br/>Try typing %s to use canned responses."
+msgstr "Wonderful! 😇<br/>Coba ketik %s untuk mengetik tanggapan otomatis."

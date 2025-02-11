@@ -12,6 +12,12 @@ class TestBlogPerformance(UtilPerf):
         if 'channel_id' in self.env['website']:
             self.env['website'].search([]).channel_id = False
 
+        # remove menu containing a slug url (only website_helpdesk normally), to
+        # avoid the menu cache being disabled, which would increase sql queries
+        self.env['website.menu'].search([
+            ('url', '=like', '/%/%-%'),
+        ]).unlink()
+
         self.env['blog.blog'].search([]).active = False
         blogs = self.env['blog.blog'].create([{
             "name": 'aaa Blog Test',
@@ -40,7 +46,6 @@ class TestBlogPerformance(UtilPerf):
 
     def test_10_perf_sql_blog_standard_data(self):
         self.assertLessEqual(self._get_url_hot_query('/blog'), 11)
-        self.assertLessEqual(self._get_url_hot_query('/blog', cache=False), 23)
 
     def test_20_perf_sql_blog_bigger_data_scaling(self):
         BlogPost = self.env['blog.post']

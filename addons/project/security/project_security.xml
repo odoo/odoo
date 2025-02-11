@@ -52,13 +52,13 @@
     <record model="ir.rule" id="project_comp_rule">
         <field name="name">Project: multi-company</field>
         <field name="model_id" ref="model_project_project"/>
-        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="project_project_stage_rule">
         <field name="name">Project Stage: multi-company</field>
         <field name="model_id" ref="model_project_project_stage"/>
-        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="project_project_manager_rule">
@@ -81,7 +81,7 @@
     <record model="ir.rule" id="task_comp_rule">
         <field name="name">Project/Task: multi-company</field>
         <field name="model_id" ref="model_project_task"/>
-        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="task_visibility_rule">
@@ -139,7 +139,7 @@
     <record model="ir.rule" id="report_project_task_user_report_comp_rule">
         <field name="name">Task Analysis multi-company</field>
         <field name="model_id" ref="model_report_project_task_user"/>
-        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="ir_rule_project_personal_stage_my" model="ir.rule">

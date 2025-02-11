@@ -5,7 +5,6 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import {
     ClientErrorDialog,
     RPCErrorDialog,
-    NetworkErrorDialog,
     standardErrorDialogProps,
 } from "@web/core/errors/error_dialogs";
 import { errorService, UncaughtPromiseError } from "@web/core/errors/error_service";
@@ -23,6 +22,7 @@ import {
     makeFakeRPCService,
 } from "../../helpers/mock_services";
 import { getFixture, makeDeferred, mount, nextTick, patchWithCleanup } from "../../helpers/utils";
+import { omit } from "@web/core/utils/objects";
 
 import { Component, xml, onError, OwlError, onWillStart } from "@odoo/owl";
 import { defaultHandler } from "@web/core/errors/error_handlers";
@@ -32,6 +32,7 @@ const serviceRegistry = registry.category("services");
 
 let errorCb;
 let unhandledRejectionCb;
+let preventDefault;
 
 QUnit.module("Error Service", {
     async beforeEach() {
@@ -43,16 +44,17 @@ QUnit.module("Error Service", {
         serviceRegistry.add("localization", makeFakeLocalizationService());
         serviceRegistry.add("ui", uiService);
         const windowAddEventListener = browser.addEventListener;
+        preventDefault = Event.prototype.preventDefault;
         browser.addEventListener = (type, cb) => {
             if (type === "unhandledrejection") {
                 unhandledRejectionCb = (ev) => {
-                    ev.preventDefault();
+                    preventDefault.call(ev);
                     cb(ev);
                 };
             }
             if (type === "error") {
                 errorCb = (ev) => {
-                    ev.preventDefault();
+                    preventDefault.call(ev);
                     cb(ev);
                 };
             }
@@ -83,7 +85,7 @@ QUnit.test("can handle rejected promise errors with a string as reason", async (
 });
 
 QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", async (assert) => {
-    assert.expect(2);
+    assert.expect(4);
     const error = new RPCError();
     error.code = 701;
     error.message = "Some strange error occured";
@@ -91,7 +93,7 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
     error.subType = "strange_error";
     function addDialog(dialogClass, props) {
         assert.strictEqual(dialogClass, RPCErrorDialog);
-        assert.deepEqual(props, {
+        assert.deepEqual(omit(props, "traceback"), {
             name: "RPC_ERROR",
             type: "server",
             code: 701,
@@ -101,8 +103,9 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
             subType: "strange_error",
             message: "Some strange error occured",
             exceptionName: null,
-            traceback: error.stack,
         });
+        assert.ok(props.traceback.indexOf("RPC_ERROR") >= 0);
+        assert.ok(props.traceback.indexOf("Some strange error occured") >= 0);
     }
     serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
@@ -117,7 +120,7 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
 QUnit.test(
     "handle custom RPC_ERROR of type='server' and associated custom dialog class",
     async (assert) => {
-        assert.expect(2);
+        assert.expect(4);
         class CustomDialog extends Component {}
         CustomDialog.template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
         CustomDialog.components = { RPCErrorDialog };
@@ -132,7 +135,7 @@ QUnit.test(
         error.data = errorData;
         function addDialog(dialogClass, props) {
             assert.strictEqual(dialogClass, CustomDialog);
-            assert.deepEqual(props, {
+            assert.deepEqual(omit(props, "traceback"), {
                 name: "RPC_ERROR",
                 type: "server",
                 code: 701,
@@ -140,8 +143,9 @@ QUnit.test(
                 subType: null,
                 message: "Some strange error occured",
                 exceptionName: null,
-                traceback: error.stack,
             });
+            assert.ok(props.traceback.indexOf("RPC_ERROR") >= 0);
+            assert.ok(props.traceback.indexOf("Some strange error occured") >= 0);
         }
         serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
         await makeTestEnv();
@@ -158,7 +162,7 @@ QUnit.test(
 QUnit.test(
     "handle normal RPC_ERROR of type='server' and associated custom dialog class",
     async (assert) => {
-        assert.expect(2);
+        assert.expect(4);
         class CustomDialog extends Component {}
         CustomDialog.template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
         CustomDialog.components = { RPCErrorDialog };
@@ -175,7 +179,7 @@ QUnit.test(
         error.data = errorData;
         function addDialog(dialogClass, props) {
             assert.strictEqual(dialogClass, NormalDialog);
-            assert.deepEqual(props, {
+            assert.deepEqual(omit(props, "traceback"), {
                 name: "RPC_ERROR",
                 type: "server",
                 code: 701,
@@ -183,8 +187,9 @@ QUnit.test(
                 subType: null,
                 message: "A normal error occured",
                 exceptionName: "normal_error",
-                traceback: error.stack,
             });
+            assert.ok(props.traceback.indexOf("RPC_ERROR") >= 0);
+            assert.ok(props.traceback.indexOf("A normal error occured") >= 0);
         }
         serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
         await makeTestEnv();
@@ -329,11 +334,12 @@ QUnit.test("handle uncaught promise errors", async (assert) => {
 
     function addDialog(dialogClass, props) {
         assert.strictEqual(dialogClass, ClientErrorDialog);
-        assert.deepEqual(props, {
+        assert.deepEqual(omit(props, "traceback"), {
             name: "UncaughtPromiseError > TestError",
             message: "Uncaught Promise > This is an error test",
-            traceback: error.stack,
         });
+        assert.ok(props.traceback.indexOf("TestError") >= 0);
+        assert.ok(props.traceback.indexOf("This is an error test") >= 0);
     }
     serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
@@ -373,24 +379,45 @@ QUnit.test("handle uncaught client errors", async (assert) => {
     assert.verifyErrors(["This is an error test"]);
 });
 
-QUnit.test("handle uncaught CORS errors", async (assert) => {
-    assert.expectErrors();
+QUnit.test("don't show dialog for errors in third-party scripts", async (assert) => {
     class TestError extends Error {}
     const error = new TestError();
-    error.message = "This is a cors error";
-    error.name = "CORS error";
+    error.message = "Script error.";
+    error.name = "Script error.";
 
-    function addDialog(dialogClass, props) {
-        assert.strictEqual(dialogClass, NetworkErrorDialog);
-        assert.strictEqual(props.message, "Uncaught CORS Error");
+    function addDialog(_dialogClass, props) {
+        assert.step(props.message);
     }
     serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
 
-    // CORS error event has no colno, no lineno and no filename
+    // Error events from errors in third-party scripts hav no colno, no lineno and no filename
+    // because of CORS.
     const errorEvent = new ErrorEvent("error", { error, cancelable: true });
     await errorCb(errorEvent);
-    assert.verifyErrors(["This is a cors error"]);
+    assert.verifySteps([]);
+});
+
+QUnit.test("show dialog for errors in third-party scripts in debug mode", async (assert) => {
+    assert.expectErrors();
+    class TestError extends Error {}
+    const error = new TestError();
+    error.message = "Script error.";
+    error.name = "Script error.";
+    patchWithCleanup(odoo, { debug: true });
+
+    function addDialog(_dialogClass, props) {
+        assert.step(props.message);
+    }
+    serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
+    await makeTestEnv();
+
+    // Error events from errors in third-party scripts have no colno, no lineno and no filename
+    // because of CORS.
+    const errorEvent = new ErrorEvent("error", { error, cancelable: true });
+    await errorCb(errorEvent);
+    assert.verifySteps(["Uncaught CORS Error"]);
+    assert.verifyErrors(["Script error."]);
 });
 
 QUnit.test("lazy loaded handlers", async (assert) => {
@@ -499,4 +526,52 @@ QUnit.test("logs the traceback of the full error chain for uncaughterror", async
     errorEvent.filename = "dummy_file.js"; // needed to not be treated as a CORS error
     await errorCb(errorEvent);
     assert.ok(errorEvent.defaultPrevented);
+});
+
+QUnit.test("error in handlers while handling an error", async (assert) => {
+    // Scenario: an error occurs at the early stage of the "boot" sequence, error handlers
+    // that are supposed to spawn dialogs are not ready then and will crash.
+    // We assert that *exactly one* error message is logged, that contains the original error's traceback
+    // and an indication that a handler has crashed just for not loosing information.
+    // The crash of the error handler should merely be seen as a consequence of the early stage at which the error occurs.
+    errorHandlerRegistry.add(
+        "__test_handler__",
+        (env, err, originalError) => {
+            throw new Error("Boom in handler");
+        },
+        { sequence: 0 }
+    );
+    // We want to assert that the error_service code does the preventDefault.
+    preventDefault = () => {};
+    patchWithCleanup(console, {
+        error(errorMessage) {
+            assert.ok(
+                errorMessage.startsWith(
+                    `@web/core/error_service: handler "__test_handler__" failed with "Error: Boom in handler" while trying to handle:\nError: Genuine Business Boom`
+                )
+            );
+            assert.step("error logged");
+        },
+    });
+
+    await makeTestEnv();
+    let errorEvent = new Event("error", {
+        promise: null,
+        cancelable: true,
+    });
+    errorEvent.error = new Error("Genuine Business Boom");
+    errorEvent.error.annotatedTraceback = "annotated";
+    errorEvent.filename = "dummy_file.js"; // needed to not be treated as a CORS error
+    await errorCb(errorEvent);
+    assert.ok(errorEvent.defaultPrevented);
+    assert.verifySteps(["error logged"]);
+
+    errorEvent = new PromiseRejectionEvent("unhandledrejection", {
+        promise: null,
+        cancelable: true,
+        reason: new Error("Genuine Business Boom"),
+    });
+    await unhandledRejectionCb(errorEvent);
+    assert.ok(errorEvent.defaultPrevented);
+    assert.verifySteps(["error logged"]);
 });

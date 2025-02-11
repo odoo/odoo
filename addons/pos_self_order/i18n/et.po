@@ -13,23 +13,24 @@
 # Patrick-Jordan Kiudorv, 2023
 # Triine Aavik <triine@avalah.ee>, 2023
 # Algo Kärp <algokarp@gmail.com>, 2023
-# Leaanika Randmets, 2023
 # Martin Trigaux, 2023
 # Katrin Kampura, 2023
 # Mihkel avalah, 2023
 # JanaAvalah, 2024
 # Eneli Õigus <enelioigus@gmail.com>, 2024
-# Anna, 2024
 # Rivo Zängov <eraser@eraser.ee>, 2024
 # Birgit Vijar, 2024
+# Leaanika Randmets, 2024
+# Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Birgit Vijar, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
 msgid "\"QR codes\""
-msgstr ""
+msgstr "QR koodid"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -50,13 +51,15 @@ msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
 msgstr ""
+"%s ei ole enam saadaval, seega on see teie tellimusest eemaldatud. Palun "
+"vaata oma tellimus üle ja kinnita see uuesti."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 #, python-format
 msgid "/ Tracker number:"
-msgstr ""
+msgstr "/ Jälgimisnumber:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -64,13 +67,15 @@ msgid ""
 "<br/>\n"
 "                    URL:"
 msgstr ""
+"<br/>\n"
+"                    URL:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid ""
 "<span>Please note that the kiosk only works with Adyen &amp; Stripe "
 "terminals</span>"
-msgstr ""
+msgstr "<span>Kiosk toimib ainult Adyen &amp; Stripe terminalidega</span>"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -99,7 +104,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_home_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Add images"
-msgstr ""
+msgstr "Lisa pilte"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -135,14 +140,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_alternative_fp_id
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Alternative Fiscal Position"
-msgstr ""
+msgstr "Alternatiivne finantspositsioon"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "An error has occurred"
-msgstr ""
+msgstr "Ilmnes viga"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -175,18 +180,18 @@ msgstr "Saadaval olevad keeled"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Available in Self"
-msgstr ""
+msgstr "Saadaval iseteeninduses"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
-msgstr ""
+msgstr "Saadaval iseteeninduses"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Available interface languages"
-msgstr ""
+msgstr "Saadaval olevad keeled"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -226,7 +231,7 @@ msgstr "Tühista tellimus"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
 msgid "Choose the kiosk mode"
-msgstr ""
+msgstr "Vali kioski režiim"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_mode
@@ -252,7 +257,7 @@ msgstr "Vali oma"
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #, python-format
 msgid "Choose your eating location"
-msgstr ""
+msgstr "Vali oma söögikoht"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -273,12 +278,12 @@ msgstr "Sulge sessioon"
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "Combo"
-msgstr ""
+msgstr "Kombo"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_line_ids
 msgid "Combo Lines"
-msgstr ""
+msgstr "Kombineeritud read"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_parent_id
@@ -288,7 +293,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
 msgid "Combo line reference"
-msgstr ""
+msgstr "Komborida viide"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_config_settings
@@ -336,7 +341,7 @@ msgstr "Praegune"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "Custom Links"
-msgstr ""
+msgstr "Kohandatud lingid"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_self_order_custom_link
@@ -348,7 +353,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Customize Header"
-msgstr ""
+msgstr "Kohanda päist"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
@@ -428,12 +433,12 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #, python-format
 msgid "Eat In"
-msgstr ""
+msgstr "Kohapeal söömine"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Eat in / Take out"
-msgstr ""
+msgstr "Söö kohapeal / võta kaasa"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -447,7 +452,7 @@ msgstr "Muuda"
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 #, python-format
 msgid "Enter your custom value"
-msgstr ""
+msgstr "Sisesta kohandatud väärtus"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -466,7 +471,7 @@ msgstr "Finantspositsioonid"
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 #, python-format
 msgid "Follow instructions on the terminal"
-msgstr ""
+msgstr "Jälgi juhiseid terminalis"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_kiosk_read_only_form_dialog
@@ -504,19 +509,19 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Home buttons"
-msgstr ""
+msgstr "Kodu nupud"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Hope you enjoyed your meal!"
-msgstr ""
+msgstr "Loodetavasti nautiste oma toitu!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "How to customize"
-msgstr ""
+msgstr "Kuidas kohandada"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -643,17 +648,17 @@ msgstr ""
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "Meal"
-msgstr ""
+msgstr "Eine"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Mobile Menu"
-msgstr ""
+msgstr "Mobiili menüü"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Mobile self-order & Kiosk"
-msgstr ""
+msgstr "Mobiilne iseteenindus & Kiosk"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -725,7 +730,7 @@ msgstr "Pole saadaval"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Not available in Self"
-msgstr ""
+msgstr "Ei ole saadaval iseteeninduses"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -744,7 +749,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Open Kiosk"
-msgstr ""
+msgstr "Ava kiosk"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_kiosk_read_only_form_dialog
@@ -753,7 +758,6 @@ msgstr "Ava uuel lehel"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
@@ -774,7 +778,7 @@ msgstr "Telli kohe"
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "Order number:"
-msgstr ""
+msgstr "Tellimuse number:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -788,7 +792,7 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Orders not found on server"
-msgstr ""
+msgstr "Tellimust ei leitud serveris"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -841,14 +845,14 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
 msgid "Pickup zone"
-msgstr ""
+msgstr "Korjamise ala"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_session.py:0
 #, python-format
 msgid "PoS Order by Session"
-msgstr ""
+msgstr "POS tellimus sessiooni järgi"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_config
@@ -878,12 +882,12 @@ msgstr "Kassa Sessioon"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Point of sale:"
-msgstr ""
+msgstr "Kassa:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid "Points of Sale"
-msgstr ""
+msgstr "Kassa"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
@@ -893,7 +897,7 @@ msgstr "Eelvaade"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Preview Web interface"
-msgstr ""
+msgstr "Veebiliidese eelvaade"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__primary
@@ -903,7 +907,7 @@ msgstr "Peamine"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Print QR Codes"
-msgstr ""
+msgstr "Prindi QR-koodid"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_template
@@ -948,7 +952,7 @@ msgstr "Toote pilt"
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Product is not available"
-msgstr ""
+msgstr "Toode ei ole saadaval"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -972,17 +976,17 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
 msgid "QR menu"
-msgstr ""
+msgstr "QR-menüü"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "QR menu & Kiosk activation"
-msgstr ""
+msgstr "QR-menüü ja kioskite aktiveerimine"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__mobile
 msgid "QR menu + Ordering"
-msgstr ""
+msgstr "QR-menüü + tellimine"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -991,12 +995,12 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 #, python-format
 msgid "Quantity select"
-msgstr ""
+msgstr "Koguse valimine"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Reset QR Codes"
-msgstr ""
+msgstr "Lähtesta QR-koodid"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_restaurant_table
@@ -1015,7 +1019,7 @@ msgstr "Proovi uuesti"
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 #, python-format
 msgid "Search product"
-msgstr ""
+msgstr "Otsi toodet"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__secondary
@@ -1042,7 +1046,7 @@ msgstr ""
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "Self Kiosk"
-msgstr ""
+msgstr "Iseteeninduse kiosk"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -1059,7 +1063,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Self Order:"
-msgstr ""
+msgstr "Enda tellimus:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1117,7 +1121,7 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Service at table"
-msgstr ""
+msgstr "Teenindus lauas"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1127,7 +1131,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Start Kiosk"
-msgstr ""
+msgstr "Käivita kiosk"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
@@ -1152,14 +1156,14 @@ msgstr "Tabel"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__table_stand_number
 msgid "Table Stand Number"
-msgstr ""
+msgstr "Laua number"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 #, python-format
 msgid "Table Tracker:"
-msgstr ""
+msgstr "Tabeli jälgija:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1171,32 +1175,32 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Table:"
-msgstr ""
+msgstr "Tabel:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__take_away
 msgid "Take Away"
-msgstr ""
+msgstr "Tulen järgi"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #, python-format
 msgid "Take Out"
-msgstr ""
+msgstr "Kaasaost"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
 msgid "Takeaway"
-msgstr ""
+msgstr "Kaasaost"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "Tax:"
-msgstr ""
+msgstr "Maks:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1210,7 +1214,7 @@ msgstr "Maksud:"
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 #, python-format
 msgid "Thanks a lot!"
-msgstr ""
+msgstr "Suur tänu!"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1252,14 +1256,14 @@ msgstr "URL"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "URL:"
-msgstr ""
+msgstr "URL:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Uncategorised"
-msgstr ""
+msgstr "Kategooriata"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
@@ -1271,21 +1275,21 @@ msgstr "Hoiatus"
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "We're currently closed"
-msgstr ""
+msgstr "Oleme hetkel suletud"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
 #, python-format
 msgid "We're currently closed."
-msgstr ""
+msgstr "Me oleme hetkel suletud."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "We're preparing your order!"
-msgstr ""
+msgstr "Me valmistame sinu tellimust!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1304,7 +1308,7 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "You're not authorized to perform this action"
-msgstr ""
+msgstr "Sul ei ole õigusi selle toimingu tegemiseks"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1319,35 +1323,35 @@ msgstr "Teie tellimus"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #, python-format
 msgid "Your Selection"
-msgstr ""
+msgstr "Sinu valik"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Your order has been canceled"
-msgstr ""
+msgstr "Sinu tellimus on tühistatud"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Your order has been paid"
-msgstr ""
+msgstr "Sinu tellimus on makstud"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Your order number"
-msgstr ""
+msgstr "Teie tellimuse number"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Your order status has been changed"
-msgstr ""
+msgstr "Sinu tellimuse olek on muudetud"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
@@ -1355,9 +1359,16 @@ msgid "empty = all points of sale"
 msgstr ""
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#, python-format
+msgid "floor"
+msgstr "floor"
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "https://odoo.com"
-msgstr ""
+msgstr "https://odoo.com"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
@@ -1369,4 +1380,4 @@ msgstr "odoo"
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 #, python-format
 msgid "options"
-msgstr ""
+msgstr "valikud"

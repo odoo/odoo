@@ -2,7 +2,7 @@ import json
 from hashlib import sha256
 from base64 import b64decode, b64encode
 from lxml import etree
-from datetime import date, datetime
+from datetime import datetime
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
@@ -411,7 +411,7 @@ class AccountEdiFormat(models.Model):
         if invoice.commercial_partner_id == invoice.company_id.partner_id.commercial_partner_id:
             errors.append(_("- You cannot post invoices where the Seller is the Buyer"))
 
-        if not all(line.tax_ids for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product')):
+        if not all(line.tax_ids for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and line._check_edi_line_tax_required())):
             errors.append(_("- Invoice lines should have at least one Tax applied."))
 
         if not journal._l10n_sa_ready_to_submit_einvoices():
@@ -435,11 +435,11 @@ class AccountEdiFormat(models.Model):
             errors.append(_set_missing_partner_fields(supplier_missing_info, _("Supplier")))
         if customer_missing_info:
             errors.append(_set_missing_partner_fields(customer_missing_info, _("Customer")))
-        if invoice.invoice_date > date.today():
+        if invoice.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
             errors.append(_("- Please, make sure the invoice date is set to either the same as or before Today."))
         if invoice.move_type in ('in_refund', 'out_refund') and not invoice._l10n_sa_check_refund_reason():
             errors.append(
-                _("- Please, make sure both the Reversed Entry and the Reversal Reason are specified when confirming a Credit/Debit note"))
+                _("- Please, make sure either the Reversed Entry or the Reversal Reason are specified when confirming a Credit/Debit note"))
         return errors
 
     def _needs_web_services(self):

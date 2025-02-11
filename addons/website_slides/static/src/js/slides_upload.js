@@ -80,6 +80,19 @@ var SlideUploadDialog = Dialog.extend({
         });
     },
 
+    /**
+     * Dirty hack to de-activate the "focustrap" from Bootstrap.
+     * Indeed, it prevents typing into our "select2" elements.
+     *
+     * Note that this is removed in saas-17.2 as dialog is owlified.
+     */
+    on_attach_callback: function () {
+        const bootstrapModal = Modal.getInstance(this.$modal[0]);
+        if (bootstrapModal) {
+            bootstrapModal._focustrap.deactivate();
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -297,8 +310,9 @@ var SlideUploadDialog = Dialog.extend({
                 return fmt(data.text);
             },
             createSearchChoice: function (term, data) {
-                var addedTags = $(this.opts.element).select2('data');
-                if (addedTags.concat(data).filter(tag => {
+                var addedTags = $(this.opts.element).select2('data') || [];
+                addedTags = Array.isArray(addedTags) ? addedTags : [addedTags];
+                if (addedTags.concat(data || []).filter(tag => {
                     return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
                 }).length === 0) {
                     if (this.opts.can_create) {

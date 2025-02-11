@@ -555,6 +555,78 @@ QUnit.test("iframe: both popper and target inside", async (assert) => {
     assert.strictEqual(popperBox.left, onPositionedArgs.solution.left);
 });
 
+QUnit.test("iframe: default container is the popper owner's document", async (assert) => {
+    assert.expect(1);
+    // Prepare an outer iframe, that will hold the popper element
+    let def = makeDeferred();
+    const outerIframe = document.createElement("iframe");
+    Object.assign(outerIframe.style, { height: "450px", width: "450px" });
+    outerIframe.onload = def.resolve;
+    getFixture().prepend(outerIframe);
+    registerCleanup(() => outerIframe.remove());
+    await def;
+    Object.assign(outerIframe.contentDocument.body.style, {
+        ...CONTAINER_STYLE,
+        margin: "0",
+        justifyContent: "flex-start",
+    });
+
+    def = makeDeferred();
+    const iframeSheet = outerIframe.contentDocument.createElement("style");
+    iframeSheet.onload = def.resolve;
+    iframeSheet.textContent = `
+            #popper {
+                background-color: plum;
+                height: 100px;
+                width: 100px;
+            }
+        `;
+    outerIframe.contentDocument.head.appendChild(iframeSheet);
+    await def; // wait for the iframe's stylesheet to be loaded
+
+    // Prepare the inner iframe, that will hold the target element
+    def = makeDeferred();
+    const innerIframe = document.createElement("iframe");
+    innerIframe.srcdoc = `<div id="target" />`;
+    Object.assign(innerIframe.style, {
+        height: "300px",
+        width: "120px",
+        marginLeft: "10px",
+    });
+    innerIframe.onload = def.resolve;
+    outerIframe.contentDocument.body.appendChild(innerIframe);
+    await def;
+    Object.assign(innerIframe.contentDocument.body.style, {
+        ...FLEXBOX_STYLE,
+        height: "300px",
+        width: "120px",
+        margin: "0",
+    });
+
+    // Prepare the target element
+    const target = innerIframe.contentDocument.getElementById("target");
+    Object.assign(target.style, TARGET_STYLE);
+
+    // Mount the popper component and check its position
+    class Popper extends Component {
+        static template = xml`<div id="popper" t-ref="popper" />`;
+        setup() {
+            usePosition("popper", () => target, {
+                position: "top-start",
+                onPositioned: (_, { direction, variant }) => {
+                    assert.strictEqual(`${direction}-${variant}`, "top-start");
+                    // the style setup in this test leaves enough space in the inner iframe
+                    // for the popper to be positioned at top-middle, but this is exactly
+                    // what we want to avoid: the popper's base container should not be the
+                    // inner iframe, but the outer iframe, so the popper should be positioned
+                    // at top-start.
+                },
+            });
+        }
+    }
+    await mount(Popper, outerIframe.contentDocument.body);
+});
+
 QUnit.test("popper as child of another", async (assert) => {
     class Child extends Component {
         static template = /* xml */ xml`

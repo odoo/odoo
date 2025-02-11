@@ -13,8 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'chart_2211',
             'property_account_income_categ_id': 'chart_711',
             'property_account_expense_categ_id': 'chart_311',
-            'property_tax_payable_account_id': 'chart_2436',
-            'property_tax_receivable_account_id': 'chart_2437',
         }
 
     @template('pt', 'res.company')
@@ -24,7 +22,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_fiscal_country_id': 'base.pt',
                 'bank_account_code_prefix': '12',
                 'cash_account_code_prefix': '11',
-                'transfer_account_code_prefix': '15',
+                'transfer_account_code_prefix': '1431',
                 'account_default_pos_receivable_account_id': 'chart_2117',
                 'income_currency_exchange_account_id': 'chart_7861',
                 'expense_currency_exchange_account_id': 'chart_6863',

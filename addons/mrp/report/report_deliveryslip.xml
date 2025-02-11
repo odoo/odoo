@@ -27,8 +27,8 @@
     </template>
 
     <template id="stock_report_delivery_kit_sections">
-        <!-- get all kits-related SML, including subkits and excluding the packaged SML -->
-        <t t-set="all_kits_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id.bom_id.type == 'phantom' and not l.result_package_id)"/>
+        <!-- get all kits-related SML, including subkits -->
+        <t t-set="all_kits_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id.bom_id.type == 'phantom')"/>
         <!-- do another map to get unique top level kits -->
         <t t-set="boms" t-value="has_kits.mapped('move_id.bom_line_id.bom_id')"/>
         <t t-foreach="boms" t-as="bom">

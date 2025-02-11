@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import os
 from collections import defaultdict, OrderedDict
 
 from odoo import api, fields, models
@@ -446,17 +445,19 @@ class IrModuleModule(models.Model):
             theme._generate_primary_snippet_templates()
             terp = self.get_module_info(theme.name)
             images = terp.get('images', [])
-            for image in images:
-                image_path = '/' + os.path.join(theme.name, image)
-                if image_path not in existing_urls:
-                    image_name = os.path.basename(image_path)
-                    IrAttachment.create({
-                        'type': 'url',
-                        'name': image_name,
-                        'url': image_path,
-                        'res_model': self._name,
-                        'res_id': theme.id,
-                    })
+            image_paths = ['/%s/%s' % (theme.name, image) for image in images]
+            if all(image_path in existing_urls for image_path in image_paths):
+                continue
+            # Images creation order must be the order specified in the manifest
+            for image_path in image_paths:
+                image_name = image_path.split('/')[-1]
+                IrAttachment.create({
+                    'type': 'url',
+                    'name': image_name,
+                    'url': image_path,
+                    'res_model': self._name,
+                    'res_id': theme.id,
+                })
 
     def get_themes_domain(self):
         """Returns the 'ir.module.module' search domain matching all available themes."""

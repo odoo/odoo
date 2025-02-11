@@ -45,7 +45,7 @@ class Meeting(models.Model):
     @api.model
     def _get_google_synced_fields(self):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
-                'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active'}
+                'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as'}
 
     @api.model
     def _restart_google_sync(self):
@@ -149,6 +149,9 @@ class Meeting(models.Model):
             'show_as': 'free' if google_event.is_available() else 'busy',
             'guests_readonly': not bool(google_event.guestsCanModify)
         }
+        # Remove 'videocall_location' when not sent by Google, otherwise the local videocall will be discarded.
+        if not values.get('videocall_location'):
+            values.pop('videocall_location', False)
         if partner_commands:
             # Add partner_commands only if set from Google. The write method on calendar_events will
             # override attendee commands if the partner_ids command is set but empty.
@@ -276,11 +279,15 @@ class Meeting(models.Model):
 
     def _google_values(self):
         if self.allday:
-            start = {'date': self.start_date.isoformat()}
-            end = {'date': (self.stop_date + relativedelta(days=1)).isoformat()}
+            # For all-day events, 'dateTime' must be set to None to indicate that it's an all-day event.
+            # Otherwise, if both 'date' and 'dateTime' are set, Google may not recognize it as an all-day event.
+            start = {'date': self.start_date.isoformat(), 'dateTime': None}
+            end = {'date': (self.stop_date + relativedelta(days=1)).isoformat(), 'dateTime': None}
         else:
-            start = {'dateTime': pytz.utc.localize(self.start).isoformat()}
-            end = {'dateTime': pytz.utc.localize(self.stop).isoformat()}
+            # For timed events, 'date' must be set to None to indicate that it's not an all-day event.
+            # Otherwise, if both 'date' and 'dateTime' are set, Google may not recognize it as a timed event
+            start = {'dateTime': pytz.utc.localize(self.start).isoformat(), 'date': None}
+            end = {'dateTime': pytz.utc.localize(self.stop).isoformat(), 'date': None}
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes
@@ -317,6 +324,8 @@ class Meeting(models.Model):
             values['conferenceData'] = {'createRequest': {'requestId': uuid4().hex}}
         if self.privacy:
             values['visibility'] = self.privacy
+        if self.show_as:
+            values['transparency'] = 'opaque' if self.show_as == 'busy' else 'transparent'
         if not self.active:
             values['status'] = 'cancelled'
         if self.user_id and self.user_id != self.env.user and not bool(self.user_id.sudo().google_calendar_token):

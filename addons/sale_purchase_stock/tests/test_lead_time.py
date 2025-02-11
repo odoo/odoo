@@ -25,13 +25,12 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
             'email': 'grand.horus@chansonbelge.dz',
         })
 
-
     def test_supplier_lead_time(self):
         """ Basic stock configuration and a supplier with a minimum qty and a lead time """
 
         self.env.user.company_id.po_lead = 7
         seller = self.env['product.supplierinfo'].create({
-            'name': self.vendor.id,
+            'partner_id': self.vendor.id,
             'min_qty': 1,
             'price': 10,
             'date_start': fields.Date.today() - timedelta(days=1),
@@ -61,3 +60,31 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
 
         po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
         self.assertEqual(po.order_line.price_unit, seller.price)
+
+    def test_dynamic_lead_time_delay(self):
+        self.product_a.write({
+            'seller_ids': [(0, 0, {
+                'partner_id': self.partner_a.id,
+                'price': 800.0,
+                'delay': 7,
+                'product_id': self.product_a.id,
+            })],
+            'type': 'product',
+        })
+        product = self.product_a
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_b.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_uom_qty': 10,
+            })],
+            'commitment_date': fields.Date.today() + timedelta(days=10),
+        })
+        sale_order.action_confirm()
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
+        })
+        self.assertEqual(orderpoint.qty_to_order, 0)
+        product.seller_ids[0].delay = 17
+        self.assertEqual(orderpoint.qty_to_order, 10)

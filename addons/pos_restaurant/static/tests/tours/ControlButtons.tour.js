@@ -43,6 +43,17 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
                 internalNote: "test note",
                 withClass: ".selected",
             }),
+            // Check that note is imported if come back to the table
+            FloorScreen.backToFloor(),
+            FloorScreen.clickTable("4"),
+            Order.hasLine({
+                productName: "Water",
+                quantity: "5",
+                price: "10.0",
+                internalNote: "test note",
+                withClass: ".selected",
+            }),
+
             ProductScreen.addOrderline("Water", "8", "1", "8.0"),
 
             // Test PrintBillButton

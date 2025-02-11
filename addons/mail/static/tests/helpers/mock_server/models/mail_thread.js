@@ -365,6 +365,16 @@ patch(MockServer.prototype, {
                     this._mockDiscussChannel_ChannelSeen(ids, message.id);
                 }
             }
+            if (message.partner_ids) {
+                for (const partner_id of message.partner_ids) {
+                    const [partner] = this.getRecords("res.partner", [["id", "=", partner_id]]);
+                    notifications.push([
+                        partner,
+                        "mail.message/inbox",
+                        messageFormat
+                    ]);
+                }
+            }
         }
         this.pyEnv["bus.bus"]._sendmany(notifications);
     },

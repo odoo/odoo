@@ -8,6 +8,7 @@
         <field name="code">7eleven</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/7eleven.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">partial</field>
@@ -41,27 +42,6 @@
         <field name="supported_currency_ids"
                eval="[Command.set([
                          ref('base.USD'),
-                     ])]"
-        />
-    </record>
-
-    <record id="payment_method_acss_debit" model="payment.method">
-        <field name="name">Pre-authorized debit in Canada</field>
-        <field name="code">acss_debit</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund">partial</field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
-                         ref('base.ca'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.CAD'),
                      ])]"
         />
     </record>
@@ -831,7 +811,7 @@
         <field name="image" type="base64" file="payment/static/img/card.png"/>
         <field name="support_tokenization">True</field>
         <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
+        <field name="support_refund">partial</field>
     </record>
 
     <record id="payment_method_cash_app_pay" model="payment.method">
@@ -860,6 +840,7 @@
         <field name="code">cashalo</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/cashalo.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">partial</field>
@@ -880,6 +861,7 @@
         <field name="code">cebuana</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/cebuana.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">partial</field>
@@ -2864,7 +2846,7 @@
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/sepa.png"/>
-        <field name="support_tokenization">False</field>
+        <field name="support_tokenization">True</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">partial</field>
         <field name="supported_country_ids"

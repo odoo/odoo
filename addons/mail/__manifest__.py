@@ -123,6 +123,7 @@ For more specific needs, you may also assign custom-defined actions
     ],
     'installable': True,
     'application': True,
+    'post_init_hook': '_mail_post_init',
     'assets': {
         'web._assets_primary_variables': [
             'mail/static/src/**/primary_variables.scss',
@@ -212,6 +213,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/core/common/**/*',
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/public/**/*',
+            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             ('remove', 'mail/static/src/**/*.dark.scss'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
@@ -222,6 +224,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/discuss/**/public/**/*',
             'mail/static/src/discuss/**/public_web/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
+            ('remove', 'web/static/src/**/*.dark.scss'),
         ]
     },
     'license': 'LGPL-3',

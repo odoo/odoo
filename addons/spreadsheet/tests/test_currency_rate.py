@@ -50,33 +50,33 @@ class TestCurrencyRates(TransactionCase):
         )
 
     def test_currency_without_date(self):
-        self.assertEqual(
+        self.assertAlmostEqual(
             self.env["res.currency.rate"]._get_rate_for_spreadsheet("USD", "EUR"),
             CURRENT_EUR / CURRENT_USD,
         )
-        self.assertEqual(
+        self.assertAlmostEqual(
             self.env["res.currency.rate"]._get_rate_for_spreadsheet("EUR", "USD"),
             CURRENT_USD,
         )
-        self.assertEqual(
+        self.assertAlmostEqual(
             self.env["res.currency.rate"]._get_rate_for_spreadsheet("USD", "CAD"),
             CURRENT_CAD / CURRENT_USD,
         )
 
     def test_currency_with_date(self):
-        self.assertEqual(
+        self.assertAlmostEqual(
             self.env["res.currency.rate"]._get_rate_for_spreadsheet(
                 "USD", "EUR", "2021-11-11"
             ),
             CURRENT_EUR / USD_11,
         )
-        self.assertEqual(
+        self.assertAlmostEqual(
             self.env["res.currency.rate"]._get_rate_for_spreadsheet(
                 "EUR", "USD", "2021-11-11"
             ),
             USD_11,
         )
-        self.assertEqual(
+        self.assertAlmostEqual(
             self.env["res.currency.rate"]._get_rate_for_spreadsheet(
                 "USD", "CAD", "2021-11-11"
             ),
@@ -117,18 +117,18 @@ class TestCurrencyRates(TransactionCase):
                 "rate": CAD_UTC,
             }
         )
-        self.env.user.tz = "Australia/ACT"
+        self.env.user.tz = "Australia/Sydney"
         self.env["res.currency.rate"].create(
             {
                 "currency_id": cad.id,
                 "rate": CAD_AUS,
             }
         )
-        self.assertEqual(
+        self.assertAlmostEqual(
             self.env["res.currency.rate"]._get_rate_for_spreadsheet("CAD", "EUR"),
             CURRENT_EUR / CAD_AUS,
         )
-        self.assertEqual(
+        self.assertAlmostEqual(
             self.env["res.currency.rate"]
             .with_context(tz="UTC")
             ._get_rate_for_spreadsheet("CAD", "EUR"),

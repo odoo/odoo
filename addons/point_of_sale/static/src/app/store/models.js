@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { random5Chars, uuidv4, qrCodeSrc } from "@point_of_sale/utils";
+import { constructFullProductName, random5Chars, uuidv4, qrCodeSrc } from "@point_of_sale/utils";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import {
@@ -148,11 +148,26 @@ export class Product extends PosModel {
         const attributes = this.attribute_line_ids
             .map((id) => this.pos.attributes_by_ptal_id[id])
             .filter((attr) => attr !== undefined);
-        return await this.env.services.popup.add(ProductConfiguratorPopup, {
-            product: this,
-            attributes: attributes,
-            quantity: initQuantity,
-        });
+        if (
+            attributes.some(
+                (attribute) => attribute.values.length > 1 || attribute.values[0].is_custom
+            )
+        ) {
+            return await this.env.services.popup.add(ProductConfiguratorPopup, {
+                product: this,
+                attributes: attributes,
+                quantity: initQuantity,
+            });
+        }
+        return {
+            confirmed: true,
+            payload: {
+                attribute_value_ids: attributes.map((attr) => attr.values[0].id),
+                attribute_custom_values: [],
+                price_extra: attributes.reduce((acc, attr) => acc + attr.values[0].price_extra, 0),
+                quantity: 1,
+            },
+        };
     }
 
     isConfigurable() {
@@ -165,6 +180,7 @@ export class Product extends PosModel {
         let quantity = 1;
         let comboLines = [];
         let attribute_custom_values = {};
+        let extras = {};
 
         if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
             quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
@@ -184,12 +200,13 @@ export class Product extends PosModel {
         if (this.combo_ids.length) {
             const { confirmed, payload } = await this.env.services.popup.add(
                 ComboConfiguratorPopup,
-                { product: this, keepBehind: true }
+                { product: this }
             );
             if (!confirmed) {
                 return;
             }
             comboLines = payload;
+            extras.price_type = "manual";
         }
         // Gather lot information if required.
         if (this.isTracked()) {
@@ -250,14 +267,15 @@ export class Product extends PosModel {
             price_extra,
             comboLines,
             attribute_value_ids,
+            extras,
         };
     }
     isPricelistItemUsable(item, date) {
         const categories = this.parent_category_ids.concat(this.categ.id);
         return (
             (!item.categ_id || categories.includes(item.categ_id[0])) &&
-            (!item.date_start || deserializeDate(item.date_start) <= date) &&
-            (!item.date_end || deserializeDate(item.date_end) >= date)
+            (!item.date_start || deserializeDate(item.date_start, {zone: "utc"}) <= date) &&
+            (!item.date_end || deserializeDate(item.date_end, {zone: "utc"}) >= date)
         );
     }
     // Port of _get_product_price on product.pricelist.
@@ -373,12 +391,13 @@ export class Orderline extends PosModel {
         if (options.json) {
             try {
                 this.init_from_JSON(options.json);
-            } catch {
+            } catch (error) {
                 console.error(
                     "ERROR: attempting to recover product ID",
                     options.json.product_id[0],
                     "not available in the point of sale. Correct the product or clean the browser cache."
                 );
+                throw error;
             }
             return;
         }
@@ -409,7 +428,6 @@ export class Orderline extends PosModel {
         this.product = this.pos.db.get_product_by_id(json.product_id);
         this.set_product_lot(this.product);
         this.price = json.price_unit;
-        this.price_type = json.price_type || "original";
         this.set_discount(json.discount);
         this.set_quantity(json.qty, "do not recompute unit price");
         this.attribute_value_ids = json.attribute_value_ids || [];
@@ -423,14 +441,16 @@ export class Orderline extends PosModel {
         this.set_full_product_name();
         this.id = json.server_id || json.id || orderline_id++;
         orderline_id = Math.max(this.id + 1, orderline_id);
-        var pack_lot_lines = json.pack_lot_ids;
-        for (var i = 0; i < pack_lot_lines.length; i++) {
-            var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = new Packlotline(
-                { env: this.env },
-                { json: { ...packlotline, order_line: this } }
-            );
-            this.pack_lot_lines.add(pack_lot_line);
+        if (this.has_product_lot) {
+            var pack_lot_lines = json.pack_lot_ids;
+            for (var i = 0; i < pack_lot_lines.length; i++) {
+                var packlotline = pack_lot_lines[i][2];
+                var pack_lot_line = new Packlotline(
+                    { env: this.env },
+                    { json: { ...packlotline, order_line: this } }
+                );
+                this.pack_lot_lines.add(pack_lot_line);
+            }
         }
         this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
         this.set_customer_note(json.customer_note);
@@ -442,6 +462,7 @@ export class Orderline extends PosModel {
         this.combo_line_ids = json.combo_line_ids;
         this.combo_parent_id = json.combo_parent_id;
         this.comboLine = this.pos.db.combo_line_by_id[json.combo_line_id];
+        this.price_type = json.price_type || this.init_price_type();
     }
     clone() {
         var orderline = new Orderline(
@@ -466,6 +487,19 @@ export class Orderline extends PosModel {
     }
     getDisplayClasses() {
         return {};
+    }
+    init_price_type() {
+        const displayPrice = this.get_display_price();
+        const unitPriceDiscount =
+            this.product.get_price(this.order.pricelist, this.get_quantity()) *
+            (1.0 - this.get_discount() / 100.0);
+        const productDisplayedPrice =
+            this.product.get_display_price({
+                pricelist: this.order.pricelist,
+                quantity: this.get_quantity(),
+                price: unitPriceDiscount,
+            }) * this.get_quantity();
+        return displayPrice !== productDisplayedPrice ? "manual" : "original";
     }
     getPackLotLinesToEdit(isAllowOnlyOneLot) {
         const currentPackLotLines = this.pack_lot_lines;
@@ -574,7 +608,7 @@ export class Orderline extends PosModel {
         this.price_extra = parseFloat(price_extra) || 0.0;
     }
     set_full_product_name() {
-        this.full_product_name = this.product.display_name;
+        this.full_product_name = this.get_full_product_name_with_variant();
     }
     get_price_extra() {
         return this.price_extra;
@@ -595,25 +629,29 @@ export class Orderline extends PosModel {
             const maxQtyToRefund =
                 toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
             if (quant > 0) {
-                this.env.services.popup.add(ErrorPopup, {
-                    title: _t("Positive quantity not allowed"),
-                    body: _t(
-                        "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
-                    ),
-                });
+                if (!this.comboParent) {
+                    this.env.services.popup.add(ErrorPopup, {
+                        title: _t("Positive quantity not allowed"),
+                        body: _t(
+                            "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
+                        ),
+                    });
+                }
                 return false;
             } else if (quant == 0) {
                 toRefundDetail.qty = 0;
             } else if (-quant <= maxQtyToRefund) {
                 toRefundDetail.qty = -quant;
             } else {
-                this.env.services.popup.add(ErrorPopup, {
-                    title: _t("Greater than allowed"),
-                    body: _t(
-                        "The requested quantity to be refunded is higher than the refundable quantity of %s.",
-                        this.env.utils.formatProductQty(maxQtyToRefund)
-                    ),
-                });
+                if (!this.comboParent) {
+                    this.env.services.popup.add(ErrorPopup, {
+                        title: _t("Greater than allowed"),
+                        body: _t(
+                            "The requested quantity to be refunded is higher than the refundable quantity of %s.",
+                            this.env.utils.formatProductQty(maxQtyToRefund)
+                        ),
+                    });
+                }
                 return false;
             }
         }
@@ -710,6 +748,23 @@ export class Orderline extends PosModel {
     get_full_product_name() {
         return this.full_product_name || this.product.display_name;
     }
+    /**
+     * Return the full product name with variant details.
+     *
+     * e.g. Desk Organiser product with variant:
+     * - Size: S
+     * - Fabric: Plastic
+     *
+     * -> "Desk Organiser (S, Plastic)"
+     * @returns {string}
+     */
+    get_full_product_name_with_variant() {
+        return constructFullProductName(
+            this,
+            this.pos.db.attribute_value_by_id,
+            this.product.display_name
+        );
+    }
     // selects or deselects this orderline
     set_selected(selected) {
         this.selected = selected;
@@ -734,9 +789,17 @@ export class Orderline extends PosModel {
             orderline.compute_fixed_price(order_line_price),
             this.pos.currency.decimal_places
         );
-        let hasSameAttributes = Object.keys(Object(orderline.attribute_value_ids)).length === Object.keys(Object(this.attribute_value_ids)).length;
-        if(hasSameAttributes && Object(orderline.attribute_value_ids)?.length && Object(this.attribute_value_ids)?.length) {
-            hasSameAttributes = orderline.attribute_value_ids.every((value, index) => value === this.attribute_value_ids[index]);
+        let hasSameAttributes =
+            Object.keys(Object(orderline.attribute_value_ids)).length ===
+            Object.keys(Object(this.attribute_value_ids)).length;
+        if (
+            hasSameAttributes &&
+            Object(orderline.attribute_value_ids)?.length &&
+            Object(this.attribute_value_ids)?.length
+        ) {
+            hasSameAttributes = orderline.attribute_value_ids.every(
+                (value, index) => value === this.attribute_value_ids[index]
+            );
         }
         return (
             !this.skipChange &&
@@ -1076,33 +1139,63 @@ export class Orderline extends PosModel {
     isPartOfCombo() {
         return Boolean(this.comboParent || this.comboLines?.length);
     }
-    findAttribute(values) {
+    getComboTotalPrice() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithTax, 0);
+    }
+    getComboTotalPriceWithoutTax() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_base_price() / line.quantity, 0);
+    }
+    findAttribute(values, customAttributes) {
         const listOfAttributes = [];
-        Object.values(this.pos.attributes_by_ptal_id).filter(
-            (attribute) => {
-                const attFound = attribute.values.filter((target) => {
-                    return Object.values(values).includes(target.id);
-                });
-                if (attFound.length > 0) {
-                    const modifiedAttribute = {
-                        ...attribute,
-                        valuesForOrderLine: attFound,
-                    };
-                    listOfAttributes.push(modifiedAttribute);
-                    return true;
+        const addedPtal_id = [];
+        for (const value of values) {
+            for (const ptal_id of this.pos.ptal_ids_by_ptav_id[value]) {
+                if (addedPtal_id.includes(ptal_id)) {
+                    continue;
                 }
-                return false;
+                const attribute = this.pos.attributes_by_ptal_id[ptal_id];
+                const attFound = attribute.values
+                    .filter((target) => {
+                        return Object.values(values).includes(target.id);
+                    })
+                    .map((att) => ({ ...att })); // make a copy
+                attFound.forEach((att) => {
+                    if (att.is_custom) {
+                        customAttributes.forEach((customAttribute) => {
+                            if (
+                                att.id ===
+                                customAttribute.custom_product_template_attribute_value_id
+                            ) {
+                                att.name = customAttribute.value;
+                            }
+                        });
+                    }
+                });
+                const modifiedAttribute = {
+                    ...attribute,
+                    valuesForOrderLine: attFound,
+                };
+                listOfAttributes.push(modifiedAttribute);
+                addedPtal_id.push(ptal_id);
             }
-        );
+        }
         return listOfAttributes;
+    }
+    getPriceString() {
+        return this.get_discount_str() === "100"
+            ? // free if the discount is 100
+            _t("Free")
+            : (this.comboLines && this.comboLines.length > 0)
+            ? // empty string if it is a combo parent line
+            ""
+            : this.env.utils.formatCurrency(this.get_display_price(), this.currency);
     }
     getDisplayData() {
         return {
             productName: this.get_full_product_name(),
-            price:
-                this.get_discount_str() === "100"
-                    ? "free"
-                    : this.env.utils.formatCurrency(this.get_display_price()),
+            price: this.getPriceString(),
             qty: this.get_quantity_str(),
             unit: this.get_unit().name,
             unitPrice: this.env.utils.formatCurrency(this.get_unit_display_price()),
@@ -1116,7 +1209,7 @@ export class Orderline extends PosModel {
                 this.getUnitDisplayPriceBeforeDiscount()
             ),
             attributes: this.attribute_value_ids
-                ? this.findAttribute(this.attribute_value_ids)
+                ? this.findAttribute(this.attribute_value_ids, this.custom_attribute_value_ids)
                 : [],
         };
     }
@@ -1349,7 +1442,9 @@ export class Order extends PosModel {
             this.init_from_JSON(options.json);
             const linesById = Object.fromEntries(this.orderlines.map((l) => [l.id || l.cid, l]));
             for (const line of this.orderlines) {
-                line.comboLines = line.combo_line_ids?.map((id) => linesById[id]);
+                line.comboLines = line.combo_line_ids
+                    ?.filter((id) => linesById[id])
+                    .map((id) => linesById[id]); 
                 const combo_parent_id = line.combo_parent_id?.[0] || line.combo_parent_id;
                 if (combo_parent_id) {
                     line.comboParent = linesById[combo_parent_id];
@@ -1397,14 +1492,12 @@ export class Order extends PosModel {
         let partner;
         if (json.state && ["done", "invoiced", "paid"].includes(json.state)) {
             this.sequence_number = json.sequence_number;
+            this.pos_session_id = json.pos_session_id;
         } else if (json.pos_session_id !== this.pos.pos_session.id) {
             this.sequence_number = this.pos.pos_session.sequence_number++;
         } else {
             this.sequence_number = json.sequence_number;
-            this.pos.pos_session.sequence_number = Math.max(
-                this.sequence_number + 1,
-                this.pos.pos_session.sequence_number
-            );
+            this.updateSequenceNumber(json);
         }
         this.session_id = this.pos.pos_session.id;
         this.uid = json.uid;
@@ -1493,6 +1586,12 @@ export class Order extends PosModel {
         this.lastOrderPrepaChange =
             json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
     }
+    updateSequenceNumber(json) {
+        this.pos.pos_session.sequence_number = Math.max(
+            this.sequence_number + 1,
+            this.pos.pos_session.sequence_number
+        );
+    }
     export_as_JSON() {
         var orderLines, paymentLines;
         orderLines = [];
@@ -1543,7 +1642,6 @@ export class Order extends PosModel {
         const paymentlines = this.paymentlines
             .filter((p) => !p.is_change)
             .map((p) => p.export_for_printing());
-        this.receiptDate ||= formatDateTime(luxon.DateTime.now());
         return {
             orderlines: this.orderlines.map((l) => omit(l.getDisplayData(), "internalNote")),
             paymentlines,
@@ -1558,21 +1656,22 @@ export class Order extends PosModel {
             name: this.get_name(),
             invoice_id: null, //TODO
             cashier: this.cashier?.name,
-            date: this.receiptDate,
+            date: formatDateTime(this.date_order),
             pos_qr_code:
                 this.pos.company.point_of_sale_use_ticket_qr_code &&
-                this.finalized &&
+                (this.finalized || ["paid", "done", "invoiced"].includes(this.state)) &&
                 qrCodeSrc(
                     `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
                 ),
-            ticket_code: this.pos.company.point_of_sale_ticket_unique_code &&
+            ticket_code:
+                this.pos.company.point_of_sale_ticket_unique_code &&
                 this.finalized &&
                 this.ticketCode,
             base_url: this.pos.base_url,
             footer: this.pos.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?
             shippingDate:
-                this.shippingDate && formatDate(DateTime.fromJSDate(new Date(this.shippingDate))),
+                this.shippingDate && formatDate(DateTime.fromSQL(this.shippingDate)),
             headerData: {
                 ...this.pos.getReceiptHeaderData(this),
                 trackingNumber: this.trackingNumber,
@@ -1653,12 +1752,13 @@ export class Order extends PosModel {
                         attribute_value_ids: line.attribute_value_ids,
                         line_uuid: line.uuid,
                         product_id: line.get_product().id,
-                        name: line.get_full_product_name(),
+                        name: line.get_full_product_name_with_variant(),
                         note: note,
                         quantity: line.get_quantity(),
                     };
                 }
                 line.setHasChange(false);
+                line.saved_quantity = line.get_quantity();
             }
         });
 
@@ -1702,7 +1802,7 @@ export class Order extends PosModel {
 
                 if (quantityDiff && orderline.skipChange === skipped) {
                     changes[lineKey] = {
-                        name: orderline.get_full_product_name(),
+                        name: orderline.get_full_product_name_with_variant(),
                         product_id: product.id,
                         attribute_value_ids: orderline.attribute_value_ids,
                         quantity: quantityDiff,
@@ -1814,7 +1914,7 @@ export class Order extends PosModel {
         return this.orderlines.length === 0;
     }
     get isBooked() {
-        return this.booked || !this.is_empty() || this.server_id;
+        return Boolean(this.booked || !this.is_empty() || this.server_id);
     }
     generate_unique_id() {
         // Generates a public identification number for the order.
@@ -1909,15 +2009,16 @@ export class Order extends PosModel {
      */
     calculate_base_amount(tax_ids_array, lines) {
         // Consider price_include taxes use case
-        const has_taxes_included_in_price = tax_ids_array.filter(
-            (tax_id) => this.pos.taxes_by_id[tax_id].price_include
+        const has_taxes_included_in_price = tax_ids_array.filter( (tax_id) =>
+            this.pos.taxes_by_id[tax_id].price_include ||
+            this.pos.taxes_by_id[tax_id].children_tax_ids.length > 0 &&
+            this.pos.taxes_by_id[tax_id].children_tax_ids.every(child_tax => child_tax.price_include)
         ).length;
 
         const base_amount = lines.reduce(
             (sum, line) =>
                 sum +
-                line.get_price_without_tax() +
-                (has_taxes_included_in_price ? line.get_total_taxes_included_in_price() : 0),
+                (has_taxes_included_in_price ? line.get_price_with_tax() : line.get_price_without_tax()),
             0
         );
         return base_amount;
@@ -2073,7 +2174,7 @@ export class Order extends PosModel {
         if (this._printed) {
             // when adding product with a barcode while being in receipt screen
             this.pos.removeOrder(this);
-            return this.pos.add_new_order().add_product(product, options);
+            return await this.pos.add_new_order().add_product(product, options);
         }
         this.assert_editable();
         options = options || {};
@@ -2112,6 +2213,12 @@ export class Order extends PosModel {
             // Make sure the combo parent is selected.
             this.select_orderline(line);
         }
+        this.hasJustAddedProduct = true;
+        clearTimeout(this.productReminderTimeout);
+        this.productReminderTimeout = setTimeout(() => {
+            this.hasJustAddedProduct = false;
+        }, 3000);
+        return line;
     }
 
     compute_child_lines(comboParentProduct, comboLines, pricelist) {
@@ -2161,6 +2268,7 @@ export class Order extends PosModel {
                     comboParent,
                     comboLine: line.comboLine,
                     attribute_value_ids: line.attribute_value_ids,
+                    extras: {price_type: "manual"},
                 }
             );
         }
@@ -2411,7 +2519,10 @@ export class Order extends PosModel {
                         orderLine.getUnitDisplayPriceBeforeDiscount() *
                         (orderLine.get_discount() / 100) *
                         orderLine.get_quantity();
-                    if (orderLine.display_discount_policy() === "without_discount") {
+                    if (
+                        orderLine.display_discount_policy() === "without_discount" &&
+                        !(orderLine.price_type === "manual")
+                    ) {
                         sum +=
                             (orderLine.get_taxed_lst_unit_price() -
                                 orderLine.getUnitDisplayPriceBeforeDiscount()) *
@@ -2638,7 +2749,7 @@ export class Order extends PosModel {
         return false;
     }
     is_paid() {
-        return this.get_due() <= 0 && this.check_paymentlines_rounding();
+        return this.get_due() <= 0;
     }
     is_paid_with_cash() {
         return !!this.paymentlines.find(function (pl) {
@@ -2779,5 +2890,8 @@ export class Order extends PosModel {
     }
     _generateTicketCode() {
         return random5Chars();
+    }
+    _getOrderOptions() {
+        return {};
     }
 }

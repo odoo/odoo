@@ -10,6 +10,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { click, contains, insertText } from "@web/../tests/utils";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { Deferred } from "@web/core/utils/concurrency";
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 
 QUnit.module("livechat service");
 
@@ -28,7 +29,7 @@ QUnit.test("persisted session history", async () => {
         livechat_operator_id: pyEnv.adminPartnerId,
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
-    cookie.set("im_livechat_session", JSON.stringify(channelInfo));
+    expirableStorage.setItem("im_livechat_session", JSON.stringify(channelInfo));
     pyEnv["mail.message"].create({
         author_id: pyEnv.adminPartnerId,
         body: "Old message in history",
@@ -78,6 +79,7 @@ QUnit.test("Only necessary requests are made when creating a new chat", async (a
     assert.verifySteps([]);
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
+    await click(".o-mail-Composer-input");
     await linkPreviewDeferred;
     assert.verifySteps([
         "/im_livechat/get_session",

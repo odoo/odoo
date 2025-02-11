@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields
+from odoo.tests import users
 from odoo.tests.common import Form, TransactionCase
 
 from datetime import datetime, time
@@ -13,7 +14,19 @@ class TestProjectRecurrence(TransactionCase):
     def setUpClass(cls):
         super(TestProjectRecurrence, cls).setUpClass()
 
-        cls.env.user.groups_id += cls.env.ref('project.group_project_recurring_tasks')
+        user_group_employee = cls.env.ref('base.group_user')
+        user_group_project_user = cls.env.ref('project.group_project_user')
+        user_group_project_recurring_task = cls.env.ref('project.group_project_recurring_tasks')
+        Users = cls.env['res.users'].with_context({'no_reset_password': True})
+
+        cls.env.user.groups_id += user_group_project_recurring_task
+        cls.user_projectuser = Users.create({
+            'name': 'Armande ProjectUser',
+            'login': 'armandel',
+            'password': 'armandel',
+            'email': 'armande.projectuser@example.com',
+            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id, user_group_project_recurring_task.id])]
+        })
 
         cls.stage_a = cls.env['project.task.type'].create({'name': 'a'})
         cls.stage_b = cls.env['project.task.type'].create({'name': 'b'})
@@ -89,18 +102,18 @@ class TestProjectRecurrence(TransactionCase):
             form.name = 'test recurring task'
             form.project_id = self.project_recurring
             form.recurring_task = True
-            form.repeat_interval = 5
+            form.repeat_interval = 1
             form.repeat_unit = 'month'
             form.repeat_type = 'until'
-            form.repeat_until = self.date_01_01 + relativedelta(months=1)
+            form.repeat_until = self.date_01_01 + relativedelta(months=1, days=1)
+            form.date_deadline = self.date_01_01
             task = form.save()
 
-        with freeze_time(self.date_01_01 + relativedelta(days=30)):
-            task.state = '1_done'
+        task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is before repeat_until, next occurrence should have been created")
 
-        with freeze_time(self.date_01_01 + relativedelta(days=32)):
-            task.state = '1_done'
+        last_recurring_task = task.recurrence_id.task_ids.filtered(lambda t: t != task)
+        last_recurring_task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is after repeat_until, next occurrence shouldn't have been created")
 
     def test_recurring_settings_change(self):
@@ -146,3 +159,21 @@ class TestProjectRecurrence(TransactionCase):
 
         self.assertFalse(any((task_a + task_b + task_c).mapped('recurring_task')),
                          "All tasks in the recurrence should have their recurrence disabled")
+
+    @users('armandel')
+    def test_closed_recurring_task(self):
+        """
+        When an active user closes a recurring task, the next occurrence should be created
+        """
+        form = Form(self.env['project.task'])
+        form.name = 'test recurring task'
+        form.project_id = self.project_recurring
+        form.recurring_task = True
+        form.repeat_interval = 1
+        form.repeat_unit = 'day'
+        form.repeat_type = 'forever'
+        task = form.save()
+
+        self.assertEqual(len(task.recurrence_id.task_ids), 1, "recurrence should have a single task")
+        task.state = '1_done'
+        self.assertEqual(len(task.recurrence_id.task_ids), 2, "a new occurrence should have been created")

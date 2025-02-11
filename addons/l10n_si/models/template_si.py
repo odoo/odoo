@@ -13,8 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'gd_acc_220000',
             'property_account_expense_categ_id': 'gd_acc_702000',
             'property_account_income_categ_id': 'gd_acc_762000',
-            'property_tax_payable_account_id': 'gd_acc_260800',
-            'property_tax_receivable_account_id': 'gd_acc_160800',
             'code_digits': '6',
             'use_storno_accounting': True,
         }

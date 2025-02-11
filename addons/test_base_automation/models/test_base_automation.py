@@ -24,6 +24,20 @@ class LeadTest(models.Model):
     deadline = fields.Boolean(compute='_compute_employee_deadline', store=True)
     is_assigned_to_admin = fields.Boolean(string='Assigned to admin user')
 
+    stage_id = fields.Many2one(
+        'test_base_automation.stage', string='Stage',
+        compute='_compute_stage_id', readonly=False, store=True)
+
+    @api.depends('state')
+    def _compute_stage_id(self):
+        Stage = self.env['test_base_automation.stage']
+        for task in self:
+            if not task.stage_id and task.state == 'draft':
+                task.stage_id = (
+                    Stage.search([('name', 'ilike', 'new')], limit=1)
+                    or Stage.create({'name': 'New'})
+                )
+
     @api.depends('partner_id.employee', 'priority')
     def _compute_employee_deadline(self):
         # this method computes two fields on purpose; don't split it
@@ -86,6 +100,7 @@ class Project(models.Model):
 
 class Task(models.Model):
     _name = _description = 'test_base_automation.task'
+    _inherit = ['mail.thread']
 
     name = fields.Char()
     parent_id = fields.Many2one('test_base_automation.task')
@@ -93,12 +108,18 @@ class Task(models.Model):
         'test_base_automation.project',
         compute='_compute_project_id', recursive=True, store=True, readonly=False,
     )
+    state = fields.Boolean(tracking=True)
 
     @api.depends('parent_id.project_id')
     def _compute_project_id(self):
         for task in self:
             if not task.project_id:
                 task.project_id = task.parent_id.project_id
+
+    def _track_template(self, changes):
+        if 'state' in changes:
+            return {'state': (self.env.ref("test_base_automation.test_tracking_template"), {})}
+        return {}
 
 
 class Stage(models.Model):
@@ -114,3 +135,29 @@ class LeadThread(models.Model):
     _inherit = ["base.automation.lead.test", "mail.thread"]
     _name = "base.automation.lead.thread.test"
     _description = "Threaded Lead Test"
+
+
+class ModelWithCharRecName(models.Model):
+    _name = "base.automation.model.with.recname.char"
+    _description = "Model with Char as _rec_name"
+    _rec_name = "description"
+    description = fields.Char()
+    user_id = fields.Many2one('res.users', string='Responsible')
+
+
+class ModelWithRecName(models.Model):
+    _name = "base.automation.model.with.recname.m2o"
+    _description = "Model with Many2one as _rec_name and name_create"
+    _rec_name = "user_id"
+    user_id = fields.Many2one("base.automation.model.with.recname.char", string='Responsible')
+
+    def name_create(self, name):
+        name = name.strip()
+        user = self.env["base.automation.model.with.recname.char"].search([('description', '=ilike', name)], limit=1)
+        if user:
+            user_id = user.id
+        else:
+            user_id, _user_name = self.env["base.automation.model.with.recname.char"].name_create(name)
+
+        record = self.create({'user_id': user_id})
+        return record.id, record.display_name

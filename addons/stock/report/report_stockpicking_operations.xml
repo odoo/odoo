@@ -21,7 +21,7 @@
                                 <div class="col-6" name="div_outgoing_address">
                                     <div t-if="o.should_print_delivery_address()">
                                         <span><strong>Delivery Address:</strong></span>
-                                        <div t-field="o.move_ids[0].partner_id"
+                                        <div t-out="o.move_ids[0].partner_id or o.partner_id"
                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'>
                                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
                                                     <strong>Delivery address</strong>
@@ -79,7 +79,7 @@
                                     <strong>Status:</strong>
                                     <p t-field="o.state">Draft</p>
                                 </div>
-                                <div class="col-auto" name="div_sched_date">
+                                <div t-if="o.scheduled_date" class="col-auto" name="div_sched_date">
                                     <strong>Scheduled Date:</strong>
                                     <p t-field="o.scheduled_date">2023-09-24</p>
                                 </div>
@@ -98,7 +98,7 @@
                                         <th name="th_from" t-if="o.picking_type_id.code != 'incoming'" align="left" groups="stock.group_stock_multi_locations">
                                             <strong>From</strong>
                                         </th>
-                                        <th name="th_to" t-elif="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <th name="th_to" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                                             <strong>To</strong>
                                         </th>
                                         <th name="th_serial_number" class="text-center" t-if="has_serial_number">
@@ -134,11 +134,11 @@
                                                     <span t-field="ml.package_id">Package A</span>
                                                 </t>
                                         </td>
-                                        <td t-elif="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                                             <div>
                                                 <span t-field="ml.location_dest_id">WH/Outgoing</span>
                                                 <t t-if="ml.result_package_id">
-                                                    <span t-field="ml.result_package_id">Shelf 1</span>
+                                                    <span t-field="ml.result_package_id">Package B</span>
                                                 </t>
                                             </div>
                                         </td>
@@ -170,7 +170,7 @@
                                     <tr>
                                         <th name="th_package">Package</th>
                                         <th name="th_pko_from" t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">From</th>
-                                        <th name="th_pki_from" t-elif="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">To</th>
+                                        <th name="th_pki_from" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">To</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -187,13 +187,13 @@
                                         <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
                                             <span t-field="package.location_id"/>
                                         </td>
-                                        <td t-elif="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                                             <span t-field="package.location_dest_id"/>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            
+
                             <t t-set="no_reserved_product" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty != x.quantity and x.move_line_ids and x.state!='done')"/>
                             <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product"><i class="fa fa-exclamation-triangle" />
                                 All products could not be reserved. Click on the "Check Availability" button to try to reserve products.

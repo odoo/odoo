@@ -27,9 +27,10 @@ patch(PosStore.prototype, {
     async setup() {
         this.orderToTransfer = null; // table transfer feature
         this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
-        this.floorPlanStyle = "default";
         this.isEditMode = false;
         await super.setup(...arguments);
+        this.floorPlanStyle =
+            localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
             this.showScreen("FloorScreen", { floor: this.table?.floor || null });
@@ -194,6 +195,7 @@ patch(PosStore.prototype, {
             await this._syncTableOrdersToServer(); // to prevent losing the transferred orders
             const ordersJsons = await this._getTableOrdersFromServer(tableIds); // get all orders
             await this._loadMissingProducts(ordersJsons);
+            await this._loadMissingPartners(ordersJsons);
             return ordersJsons;
         } else {
             return await super._getOrdersJson();

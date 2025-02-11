@@ -28,7 +28,8 @@
             <field name="name">EDI Proxy Users</field>
             <field name="model">account_edi_proxy_client.user</field>
             <field name="arch" type="xml">
-                <tree create="false" delete="false" edit="false">
+                <tree create="false" delete="false" edit="false" decoration-muted="not active">
+                    <field name="active" invisible="1"/>  <!-- Required for the decoration -->
                     <field name="company_id" groups="base.group_multi_company" column_invisible="True"/>
                     <field name="id_client" readonly="1"/>
                     <field name="edi_identification" readonly="1"/>

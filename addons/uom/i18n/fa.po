@@ -9,6 +9,7 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Martin Trigaux, 2023
 # Hanna Kheradroosta, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Hanna Kheradroosta, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,8 @@ msgid ""
 "                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey oe_inline\"> مثلاً: ۱*(واحد مرجع)=نسبت*(این واحد) "
+"</span>"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -39,6 +42,8 @@ msgid ""
 "                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey oe_inline\"> مثال: ۱*(این واحد)=نسبت*(واحد مرجع) "
+"</span>"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -68,7 +73,7 @@ msgstr "نسبت بزرگتر"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
 msgid "Bigger than the reference Unit of Measure"
-msgstr ""
+msgstr "بزرگ‌تر از واحد اندازه‌گیری مرجع"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
@@ -84,7 +89,7 @@ msgstr "رنگ"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
 msgid "Combined Ratio"
-msgstr ""
+msgstr "نسبت ترکیبی"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
@@ -139,6 +144,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"اندازه‌ای که این واحد اندازه‌گیری نسبت به واحد اندازه‌گیری مرجع در این "
+"دسته‌بندی بزرگتر است: ۱ * (این واحد) = نسبت * (واحد مرجع)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -146,6 +153,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"چقدر این واحد نسبت به واحد مرجع اندازه‌گیری برای این دسته‌بندی بزرگتر یا "
+"کوچکتر است: ۱ * (واحد مرجع) = نسبت * (این واحد)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -194,7 +203,7 @@ msgstr "نسبت"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
 msgid "Reference Unit of Measure for this category"
-msgstr ""
+msgstr "واحد اندازه‌گیری مرجع برای این دسته‌بندی"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
@@ -219,7 +228,7 @@ msgstr "جستجو در دسته واحد اندازه گیری"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr ""
+msgstr "کوچکتر از واحد اندازه‌گیری مرجع"
 
 #. module: uom
 #. odoo-python
@@ -234,11 +243,18 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"برخی از فیلدهای حیاتی در %s تغییر یافته‌اند.  \n"
+"توجه داشته باشید که داده‌های موجود با این تغییر به‌روز نخواهند شد.  \n"
+"\n"
+"از آنجایی که واحدهای اندازه‌گیری بر کل سیستم تأثیر می‌گذارند، این می‌تواند منجر به مشکلات حیاتی شود.  \n"
+"به عنوان مثال، تغییر گرد کردن می‌تواند توازن انبار شما را مختل کند.  \n"
+"\n"
+"بنابراین، تغییر واحدهای اندازه‌گیری اصلی در یک پایگاه‌داده فعال توصیه نمی‌شود."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
 msgid "Surface"
-msgstr ""
+msgstr "سطح"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -246,11 +262,13 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
+"محاسبه مقدار، ضریبی از این مقدار خواهد بود. برای یک واحد اندازه‌گیری که "
+"نمی‌توان آن را بیشتر تقسیم کرد، مانند یک قطعه، از ۱.۰ استفاده کنید."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "نسبت تبدیل برای واحد اندازه‌گیری نمی‌تواند 0 باشد!"
 
 #. module: uom
 #. odoo-python
@@ -260,16 +278,18 @@ msgid ""
 "The following units of measure are used by the system and cannot be deleted: %s\n"
 "You can archive them instead."
 msgstr ""
+"واحدهای اندازه‌گیری زیر توسط سیستم استفاده می‌شوند و نمی‌توان آنها را حذف کرد: %s  \n"
+"شما می‌توانید به جای آن‌ها را بایگانی کنید."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "واحد مرجع باید دارای ضریب تبدیل برابر با ۱ باشد."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "دقت گرد کردن باید به طور دقیق مثبت باشد."
 
 #. module: uom
 #. odoo-python
@@ -281,13 +301,17 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"واحد اندازه‌گیری %s که در خط سفارش تعریف شده است، به همان دسته‌ای که واحد "
+"اندازه‌گیری %s در محصول تعریف شده است، تعلق ندارد. لطفاً واحد اندازه‌گیری "
+"تعریف‌شده در خط سفارش یا محصول را اصلاح کنید، باید به همان دسته تعلق داشته "
+"باشند."
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "The value of ratio could not be Zero"
-msgstr ""
+msgstr "ارزش نسبت نمی‌تواند صفر باشد"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -299,6 +323,8 @@ msgstr "نوع"
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
+"فیلد فعال را غیرفعال کنید تا یک واحد اندازه‌گیری را بدون حذف کردن آن غیرفعال"
+" کنید."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -347,6 +373,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"واحدهای اندازه‌گیری که به یک دسته‌بندی تعلق دارند می‌توانند\n"
+"            به یکدیگر تبدیل شوند. برای مثال، در دسته‌بندی\n"
+"            <i>'زمان'</i>، شما دارای واحدهای اندازه‌گیری زیر خواهید بود:\n"
+"            ساعات، روزها."
 
 #. module: uom
 #. odoo-python
@@ -354,6 +384,8 @@ msgstr ""
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
+"دسته‌بندی واحد اندازه‌گیری %s باید حداقل یک واحد مرجع اندازه‌گیری داشته "
+"باشد."
 
 #. module: uom
 #. odoo-python
@@ -413,27 +445,27 @@ msgstr "سانتی‌متر"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
 msgid "fl oz (US)"
-msgstr ""
+msgstr "اونس مایع (آمریکا)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
 msgid "ft"
-msgstr ""
+msgstr "ft"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_foot
 msgid "ft²"
-msgstr ""
+msgstr "ft² مربع‌فوت"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
 msgid "ft³"
-msgstr ""
+msgstr "ft³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
-msgstr ""
+msgstr "گالن (آمریکا)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
@@ -443,7 +475,7 @@ msgstr "در"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch
 msgid "in³"
-msgstr ""
+msgstr "in³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -459,11 +491,13 @@ msgstr "کیلومتر"
 #: model:uom.uom,name:uom.product_uom_lb
 msgid "lb"
 msgstr ""
+"متاسفانه، به نظر می‌رسد که متن اصلی برای ترجمه ارائه نشده است. لطفاً متن "
+"کامل را ارسال کنید تا بتوانم آن را به فارسی ترجمه کنم."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mi"
-msgstr ""
+msgstr "می"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter
@@ -483,14 +517,14 @@ msgstr "مترمکعب"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz"
-msgstr ""
+msgstr "اوز"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt (US)"
-msgstr ""
+msgstr "کو (آمریکا)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard
 msgid "yd"
-msgstr ""
+msgstr "yd"

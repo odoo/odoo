@@ -31,31 +31,36 @@ msgid ""
 "                        <option value=\"businessChecking\">Business Checking</option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Henkilökohtainen šekkitili</option>\n"
+"                        <option value=\"savings\">Henkilökohtainen säästötili</option>\n"
+"                        <option value=\"businessChecking\">Business šekkitili</option>\n"
+"                    </select>"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr ""
+msgstr "ABA:n reititysnumero"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
 msgid "API Client Key"
-msgstr ""
+msgstr "API-asiakasavain"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
 msgid "API Login ID"
-msgstr ""
+msgstr "API-kirjautumistunnus"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "API-allekirjoitusavain"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
 msgid "API Transaction Key"
-msgstr ""
+msgstr "API-tapahtuma avain"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -65,17 +70,17 @@ msgstr "Tilinumero"
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr ""
+msgstr "Authorize.Net-profiilin tunnus"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Account Type"
-msgstr ""
+msgstr "Pankkitilin tyyppi"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -85,7 +90,7 @@ msgstr "Pankin nimi"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Code"
-msgstr ""
+msgstr "Kortin koodi"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -105,6 +110,8 @@ msgid ""
 "Could not fetch merchant details:\n"
 "%s"
 msgstr ""
+"Kauppiasta ei voitu hakea tietoja:\n"
+"%s"
 
 #. module: payment_authorize
 #. odoo-python
@@ -114,6 +121,7 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %s; error_details: "
 "%s)"
 msgstr ""
+"Tapahtuman tietoja ei voitu hakea. (virhekoodi: %s; error_details: %s)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -128,26 +136,28 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
+"Autentikointi epäonnistui.\n"
+"%s"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Generate Client Key"
-msgstr ""
+msgstr "Luo asiakasavain"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Miten saat maksun Authorize.Netin avulla"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
-msgstr ""
+msgstr "KK"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr ""
+msgstr "Nimi tilillä"
 
 #. module: payment_authorize
 #. odoo-python
@@ -161,7 +171,7 @@ msgstr "Viitettä %s vastaavaa tapahtumaa ei löytynyt."
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr ""
+msgstr "Authorize.Net-tilillä voidaan valita vain yksi valuutta."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -191,7 +201,7 @@ msgstr "Maksun käsittely epäonnistui"
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
-msgstr ""
+msgstr "Vastaanotettu data tilakoodilla \"%(status)s\" ja virhekoodilla \"%(error)s\""
 
 #. module: payment_authorize
 #. odoo-python
@@ -203,12 +213,13 @@ msgstr "Vastaanotettu väärennettyjä maksupyyntötietoja."
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Set Account Currency"
-msgstr ""
+msgstr "Aseta tilin valuutta"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
 msgstr ""
+"Tunnus, jota käytetään ainoastaan tilin tunnistamiseen Authorize.Netissä"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
@@ -216,6 +227,8 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
+"Julkinen asiakasavain. Voit luoda suoraan Odoo:sta tai Authorize.Netin "
+"taustajärjestelmästä."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
@@ -228,7 +241,7 @@ msgstr "Tämän maksupalveluntarjoajan tekninen koodi."
 #, python-format
 msgid ""
 "The transaction is not in a status to be refunded. (status: %s, details: %s)"
-msgstr ""
+msgstr "Tapahtuma ei ole palautettavassa tilassa. (status: %s, details: %s)"
 
 #. module: payment_authorize
 #. odoo-python
@@ -243,6 +256,8 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
+"Yhteistyökumppanin ja tunnisteen yhdistelmän yksilöllinen viite "
+"Authorize.netin taustajärjestelmässä."
 
 #. module: payment_authorize
 #. odoo-python
@@ -250,8 +265,9 @@ msgstr ""
 #, python-format
 msgid "This action cannot be performed while the provider is disabled."
 msgstr ""
+"Tätä toimintoa ei voi suorittaa, kun palveluntarjoaja on poistettu käytöstä."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr ""
+msgstr "YY"

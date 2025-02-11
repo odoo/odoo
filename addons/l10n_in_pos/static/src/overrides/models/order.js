@@ -6,8 +6,10 @@ import { patch } from "@web/core/utils/patch";
 patch(Order.prototype, {
     export_for_printing() {
         const result = super.export_for_printing(...arguments);
-        if (this.get_partner()) {
-            result.partner = this.get_partner();
+        if (this.pos.company.country.code === 'IN') {
+            result.tax_details.forEach((tax) => {
+                tax.tax.letter = tax.tax.tax_group_id[1]
+            })
         }
         return result;
     },

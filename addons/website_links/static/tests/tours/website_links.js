@@ -3,6 +3,33 @@
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 
+function fillSelect2(inputID, search) {
+    return [
+        {
+            content: "Click select2 form item",
+            trigger: `.o_website_links_utm_forms div:has(+ #${inputID}) > .select2-choice`,
+        },
+        {
+            content: "Enter select2 search query",
+            trigger: '.select2-drop .select2-input',
+            run: `text ${search}`,
+        },
+        {
+            content: "Select found select2 item",
+            trigger: `.select2-drop li:only-child .select2-match:containsExact("${search}")`,
+        },
+        {
+            content: "Check that select2 is properly filled",
+            trigger: `.o_website_links_utm_forms div:has(+ #${inputID}) .select2-chosen:containsExact("${search}")`,
+            run: () => null,
+        },
+    ];
+}
+
+const campaignValue = 'Super Specific Campaign';
+const mediumValue = 'Super Specific Medium';
+const sourceValue = 'Super Specific Source';
+
 registry.category("web_tour.tours").add('website_links_tour', {
     test: true,
     url: '/r',
@@ -14,17 +41,20 @@ registry.category("web_tour.tours").add('website_links_tour', {
             run: function () {}, // it's a check
         },
         {
-            content: "fill the form and submit it",
+            content: "fill the URL form input",
             trigger: '#o_website_links_link_tracker_form input#url',
             run: function () {
                 var url = window.location.host + '/contactus';
                 $('#o_website_links_link_tracker_form input#url').val(url);
-                const campaignId = Object.entries($('#s2id_campaign-select')[0]).find(([key, value]) => value.select2)[1].select2.opts.data.find(d => d.text === "Sale").id
-                $('.o_website_links_utm_forms input#campaign-select').val(campaignId).change();
-                const channelId = Object.entries($('#s2id_channel-select')[0]).find(([key, value]) => value.select2)[1].select2.opts.data.find(d => d.text === "Website").id
-                $('.o_website_links_utm_forms input#channel-select').val(channelId).change();
-                const sourceId = Object.entries($('#s2id_source-select')[0]).find(([key, value]) => value.select2)[1].select2.opts.data.find(d => d.text === "Search engine").id
-                $('.o_website_links_utm_forms input#source-select').val(sourceId).change();
+            },
+        },
+        ...fillSelect2('campaign-select', campaignValue),
+        ...fillSelect2('channel-select', mediumValue),
+        ...fillSelect2('source-select', sourceValue),
+        {
+            content: "Copy tracker link",
+            trigger: '#btn_shorten_url',
+            run: function () {
                 // Patch and ignore write on clipboard in tour as we don't have permissions
                 const oldWriteText = browser.navigator.clipboard.writeText;
                 browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
@@ -45,7 +75,8 @@ registry.category("web_tour.tours").add('website_links_tour', {
             content: "check that we landed on correct page with correct query strings",
             trigger: '.s_title h1:containsExact("Contact us")',
             run: function () {
-                var expectedUrl = "/contactus?utm_campaign=Sale&utm_source=Search+engine&utm_medium=Website";
+                const enc = c => encodeURIComponent(c).replace(/%20/g, '+');
+                const expectedUrl = `/contactus?utm_campaign=${enc(campaignValue)}&utm_source=${enc(sourceValue)}&utm_medium=${enc(mediumValue)}`;
                 if (window.location.pathname + window.location.search !== expectedUrl) {
                     console.error("The link was not correctly created. " + window.location.search);
                 }

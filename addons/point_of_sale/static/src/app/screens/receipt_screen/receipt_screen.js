@@ -34,12 +34,15 @@ export class ReceiptScreen extends Component {
             // to send in preparation it is automatically sent
             if (this.pos.orderPreparationCategories.size) {
                 try {
-                    await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+                    this.sendOrderToPreparationTools();
                 } catch (error) {
                     Promise.reject(error);
                 }
             }
         });
+    }
+    async sendOrderToPreparationTools() {
+        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
     }
     _addNewOrder() {
         this.pos.add_new_order();
@@ -101,6 +104,7 @@ export class ReceiptScreen extends Component {
     orderDone() {
         this.pos.removeOrder(this.currentOrder);
         this._addNewOrder();
+        this.pos.resetProductScreenSearch();
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
     }
@@ -123,7 +127,10 @@ export class ReceiptScreen extends Component {
         const isPrinted = await this.printer.print(
             OrderReceipt,
             {
-                data: this.pos.get_order().export_for_printing(),
+                data: {
+                    ...this.pos.get_order().export_for_printing(),
+                    isBill: this.isBill,
+                },
                 formatCurrency: this.env.utils.formatCurrency,
             },
             { webPrintFallback: true }
@@ -152,7 +159,9 @@ export class ReceiptScreen extends Component {
                 data: this.pos.get_order().export_for_printing(),
                 formatCurrency: this.env.utils.formatCurrency,
             },
-            { addClass: "pos-receipt-print" }
+            { addClass: "pos-receipt-print",
+              addEmailMargins: true,
+             }
         );
         const order = this.currentOrder;
         const orderName = order.get_name();
@@ -172,6 +181,9 @@ export class ReceiptScreen extends Component {
             orderPartner,
             ticketImage,
         ]);
+    }
+    get isBill() {
+        return false;
     }
 }
 

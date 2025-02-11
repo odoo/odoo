@@ -24,7 +24,7 @@ from PIL import Image
 from odoo import api, fields, models
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat, parse_version
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
@@ -55,10 +55,21 @@ try:
 except ImportError:
     odf_ods_reader = None
 
+try:
+    from openpyxl import load_workbook
+except ImportError:
+    load_workbook = None
+
+
 FILE_TYPE_DICT = {
     'text/csv': ('csv', True, None),
     'application/vnd.ms-excel': ('xls', xlrd, 'xlrd'),
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('xlsx', xlsx, 'xlrd >= 1.0.0'),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': (
+        'xlsx',
+        load_workbook or xlsx,
+        # if xlrd 2.x then xlsx is not available, so don't suggest it
+        'openpyxl' if xlrd and parse_version(xlrd.__VERSION__) >= parse_version("2.0") else 'openpyxl or xlrd >= 1.0.0 < 2.0',
+    ),
     'application/vnd.oasis.opendocument.spreadsheet': ('ods', odf_ods_reader, 'odfpy')
 }
 EXTENSIONS = {
@@ -430,7 +441,48 @@ class Import(models.TransientModel):
         return sheet.nrows, rows
 
     # use the same method for xlsx and xls files
-    _read_xlsx = _read_xls
+    def _read_xlsx(self, options):
+        if xlsx:
+            return self._read_xls(options)
+
+        import openpyxl.cell.cell as types
+        import openpyxl.styles.numbers as styles  # noqa: PLC0415
+        book = load_workbook(io.BytesIO(self.file or b''), data_only=True)
+        sheets = options['sheets'] = book.sheetnames
+        sheet_name = options['sheet'] = options.get('sheet') or sheets[0]
+        sheet = book[sheet_name]
+        rows = []
+        for rowx, row in enumerate(sheet.rows, 1):
+            values = []
+            for colx, cell in enumerate(row, 1):
+                if cell.data_type is types.TYPE_ERROR:
+                    raise ValueError(
+                        _("Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s", row=rowx, col=colx, cell_value=cell.value)
+                    )
+
+                if cell.value is None:
+                    values.append('')
+                elif isinstance(cell.value, float):
+                    if cell.value % 1 == 0:
+                        values.append(str(int(cell.value)))
+                    else:
+                        values.append(str(cell.value))
+                elif cell.is_date:
+                    d_fmt = styles.is_datetime(cell.number_format)
+                    if d_fmt == "datetime":
+                        values.append(cell.value.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+                    elif d_fmt == "date":
+                        values.append(cell.value.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                    else:
+                        raise ValueError(
+                        _("Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with format: %(cell_format)s, as (%(format_type)s) formats are not supported.", row=rowx, col=colx, cell_value=cell.value, cell_format=cell.number_format, format_type=d_fmt)
+                        )
+                else:
+                    values.append(str(cell.value))
+
+            if any(x.strip() for x in values):
+                rows.append(values)
+        return sheet.max_row, rows
 
     def _read_ods(self, options):
         doc = odf_ods_reader.ODSReader(file=io.BytesIO(self.file or b''))
@@ -1005,7 +1057,7 @@ class Import(models.TransientModel):
                 'advanced_mode': advanced_mode,
                 'debug': self.user_has_groups('base.group_no_one'),
                 'batch': batch,
-                'file_length': file_length
+                'file_length': len(rows),
             }
         except Exception as error:
             # Due to lazy generators, UnicodeDecodeError (for

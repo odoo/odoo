@@ -21,6 +21,7 @@ $min-contrast-ratio: $o-frontend-min-contrast-ratio !default;
 // Body
 
 $body-bg: $white !default; // BS Default
+$body-color: $o-main-text-color !default;
 
 // Components
 //
@@ -59,15 +60,32 @@ $table-color: inherit !default;
 
 // Forms
 
+$component-active-bg: $primary !default;
+
+$input-color: $body-color !default;
+$input-bg: $body-bg !default;
 $input-transition: background-color .05s ease-in-out, border-color .05s ease-in-out, box-shadow .05s ease-in-out !default;
+
+$input-disabled-bg: $gray-200 !default;
+$input-disabled-border-color: rgba($input-color, 0.15) !default;
 
 $form-check-input-border: $border-width solid $gray-400 !default;
 $form-check-input-border-radius: 0 !default;
+$form-check-input-checked-color: color-contrast($component-active-bg, $body-color, $white) !default;
+
+$form-switch-color: $input-color !default;
+$form-switch-checked-color: $form-check-input-checked-color !default;
+
+$form-select-indicator-color: $input-color !default;
+$form-select-disabled-color: mix($input-color, $input-bg) !default;
+$form-select-disabled-bg: $input-disabled-bg !default;
+$form-select-disabled-border-color: $input-disabled-border-color !default;
 
 $form-range-track-height: .1rem !default;
 $form-range-thumb-border: $border-width solid $primary !default;
 $form-range-thumb-bg: $body-bg !default;
 $form-range-thumb-active-bg: $primary !default;
+$form-range-thumb-disabled-bg: $input-disabled-bg !default;
 
 // Figures
 

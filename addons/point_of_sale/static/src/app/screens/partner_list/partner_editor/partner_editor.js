@@ -6,6 +6,7 @@ import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { loadImage } from "@point_of_sale/utils";
 
 export class PartnerDetailsEdit extends Component {
     static template = "point_of_sale.PartnerDetailsEdit";
@@ -16,20 +17,30 @@ export class PartnerDetailsEdit extends Component {
         this.intFields = ["country_id", "state_id", "property_product_pricelist"];
         const partner = this.props.partner;
         this.changes = useState({
-            name: partner.name || "",
-            street: partner.street || "",
-            city: partner.city || "",
-            zip: partner.zip || "",
+            name: partner.name || false,
+            street: partner.street || false,
+            city: partner.city || false,
+            zip: partner.zip || false,
             state_id: partner.state_id && partner.state_id[0],
             country_id: partner.country_id && partner.country_id[0],
-            lang: partner.lang || "",
-            email: partner.email || "",
-            phone: partner.phone || "",
-            mobile: partner.mobile || "",
-            barcode: partner.barcode || "",
-            vat: partner.vat || "",
+            lang: partner.lang || false,
+            email: partner.email || false,
+            phone: partner.phone || false,
+            mobile: partner.mobile || false,
+            barcode: partner.barcode || false,
+            vat: partner.vat || false,
             property_product_pricelist: this.setDefaultPricelist(partner),
         });
+        // Provides translated terms used in the view
+        this.partnerDetailsFields = {
+            'Street': _t('Street'),
+            'City': _t('City'),
+            'Zip': _t('Zip'),
+            'Email': _t('Email'),
+            'Phone': _t('Phone'),
+            'Mobile': _t('Mobile'),
+            'Barcode': _t('Barcode')
+        };
         Object.assign(this.props.imperativeHandle, {
             save: () => this.saveChanges(),
         });
@@ -92,7 +103,14 @@ export class PartnerDetailsEdit extends Component {
             });
         } else {
             const imageUrl = await getDataURLFromFile(file);
-            const loadedImage = await this._loadImage(imageUrl);
+            const loadedImage = await loadImage(imageUrl, {
+                onError: () => {
+                    this.popup.add(ErrorPopup, {
+                        title: _t("Loading Image Error"),
+                        body: _t("Encountered error when loading image. Please try again."),
+                    });
+                }
+            });
             if (loadedImage) {
                 const resizedImage = await this._resizeImage(loadedImage, 800, 600);
                 this.changes.image_1920 = resizedImage.toDataURL();
@@ -118,28 +136,6 @@ export class PartnerDetailsEdit extends Component {
         ctx.drawImage(img, 0, 0, width, height);
         return canvas;
     }
-    /**
-     * Loading image is converted to a Promise to allow await when
-     * loading an image. It resolves to the loaded image if successful,
-     * else, resolves to false.
-     *
-     * [Source](https://stackoverflow.com/questions/45788934/how-to-turn-this-callback-into-a-promise-using-async-await)
-     */
-    _loadImage(url) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.addEventListener("load", () => resolve(img));
-            img.addEventListener("error", () => {
-                this.popup.add(ErrorPopup, {
-                    title: _t("Loading Image Error"),
-                    body: _t("Encountered error when loading image. Please try again."),
-                });
-                resolve(false);
-            });
-            img.src = url;
-        });
-    }
-
     isFieldCommercialAndPartnerIsChild(field) {
         return (
             this.pos.isChildPartner(this.props.partner) &&

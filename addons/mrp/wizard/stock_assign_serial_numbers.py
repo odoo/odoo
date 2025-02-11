@@ -5,6 +5,7 @@ from collections import Counter
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_compare
 
 
 class StockAssignSerialNumbers(models.TransientModel):
@@ -57,11 +58,13 @@ class StockAssignSerialNumbers(models.TransientModel):
             self.produced_qty = 0
             raise UserError(_('There are more Serial Numbers than the Quantity to Produce'))
         self.produced_qty = len(serial_numbers)
-        self.show_apply = self.produced_qty == self.expected_qty
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        self.show_apply = float_compare(self.produced_qty, self.expected_qty, precision_digits=precision) == 0
         self.show_backorders = 0 < self.produced_qty < self.expected_qty
 
     def _assign_serial_numbers(self, cancel_remaining_quantity=False):
         serial_numbers = self._get_serial_numbers()
+        self._reset_production_qties()
         productions = self.production_id._split_productions(
             {self.production_id: [1] * len(serial_numbers)}, cancel_remaining_quantity, set_consumed_qty=True)
         production_lots_vals = []
@@ -89,3 +92,9 @@ class StockAssignSerialNumbers(models.TransientModel):
 
     def no_backorder(self):
         self._assign_serial_numbers(True)
+
+    def _reset_production_qties(self):
+        if self.production_id.qty_producing:
+            self.production_id.qty_producing = 0.0
+            self.production_id.move_raw_ids.picked = False
+            self.production_id.move_raw_ids.quantity = 0.0

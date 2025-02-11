@@ -25,7 +25,7 @@ import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-import { Component, onMounted, onWillUpdateProps, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, useRef, useState, useEffect } from "@odoo/owl";
 const { COLORS } = ColorList;
 
 const formatters = registry.category("formatters");
@@ -149,12 +149,15 @@ export function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeho
         return placeholder;
     } else {
         // Else: fetches the image related to the given id.
-        return url("/web/image", {
+        const params = {
             model,
             field,
             id,
-            unique: imageCacheKey(record.data.write_date),
-        });
+        };
+        if (isCurrentRecord) {
+            params.unique = imageCacheKey(record.data.write_date);
+        }
+        return url("/web/image", params);
     }
 }
 
@@ -174,8 +177,9 @@ function isBinSize(value) {
  * @returns {boolean} true if no content found or if containing only formatting tags
  */
 export function isHtmlEmpty(innerHTML = "") {
-    const div = Object.assign(document.createElement("div"), { innerHTML });
-    return div.innerText.trim() === "";
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(innerHTML, "text/html");
+    return doc.body.innerText.trim() === "";
 }
 
 export class KanbanRecord extends Component {
@@ -213,6 +217,18 @@ export class KanbanRecord extends Component {
             // FIXME: this needs to be changed to an attribute on the root node...
             this.allowGlobalClick = !!this.rootRef.el.querySelector(ALLOW_GLOBAL_CLICK);
         });
+        useEffect(
+            (color) => {
+                if (!color) {
+                    return;
+                }
+                const classList = this.rootRef.el.firstElementChild.classList;
+                const colorClasses = [...classList].filter((c) => c.startsWith("oe_kanban_color_"));
+                colorClasses.forEach((cls) => classList.remove(cls));
+                classList.add(getColorClass(color));
+            },
+            () => [this.props.record.data[this.props.archInfo.colorField]]
+        );
     }
 
     get record() {

@@ -17,9 +17,10 @@ options.registry.WebsiteEvent = options.Class.extend({
         this.eventId = this._getEventObjectId();
         // Only need for one RPC request as the option will be destroyed if a
         // change is made.
-        const rpcData = await this.orm.read("event.event", [this.eventId], ["website_menu"]);
+        const rpcData = await this.orm.read("event.event", [this.eventId], ["website_menu","website_url"]);
         this.data.reload = this.currentWebsiteUrl;
         this.websiteMenu = rpcData[0]['website_menu'];
+        this.data.reload = rpcData[0]['website_url'];
         return res;
     },
 
@@ -55,7 +56,7 @@ options.registry.WebsiteEvent = options.Class.extend({
      * @private
      */
     _getEventObjectId() {
-        const objectIds = this.currentWebsiteUrl.match(/-\d+(?![-\w\d])/);
-        return parseInt(objectIds[0].replace('-', '')) | 0;
+        const objectIds = this.currentWebsiteUrl.match(/\d+(?![-\w])/);
+        return parseInt(objectIds[0]) | 0;
     },
 });

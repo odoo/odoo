@@ -28,7 +28,7 @@ msgstr "Envio de Email Automático do Evento"
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr ""
+msgstr "Evento: Inscrição"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
@@ -56,12 +56,12 @@ msgstr "Agendador de Emails de Inscrições"
 #: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_sms_template
 msgid "SMS Templates"
-msgstr ""
+msgstr "Templates de SMS"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
@@ -76,3 +76,6 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: Temos o prazer de confirmar a tua inscrição para o"
+" evento {{ object.event_id.name }}."

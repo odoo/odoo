@@ -72,6 +72,34 @@
                 }
             }
         }
+
+        &:not(.o_event_dot) {
+            --o-overlay-opacity: .5;
+
+            &.o_event_hatched {
+                --o-bg-opacity: .5;
+            }
+        }
+
+        &.o_event_dot {
+            --o-overlay-opacity: .25;
+
+            display: flex;
+            align-items: center;
+            gap: map-get($spacers, 1);
+            border: none;
+
+            &:before {
+                z-index: 2;
+                display: inline-block;
+                font-family: Fontawesome;
+                content: '\f111'; // fa-circle
+            }
+
+            &:hover {
+                --o-bg-opacity: 1;
+            }
+        }
     }
 
     .o_calendar_widget {
@@ -205,10 +233,12 @@
                 }
 
                 &.fc-today {
-                    color: $primary;
+                    --o-cw-color: #{color-contrast($o-cw-color-today-accent)};
+                    --o-cw-bg: #{$o-cw-color-today-accent};
+
                     .o_cw_day_number {
                         position:relative;
-                        color: $o-view-background-color;
+                        color: var(--o-cw-color);
 
                         &:before {
                             content: '';
@@ -217,7 +247,7 @@
                             z-index: -1;
                             width: 100%;
                             border-radius: $border-radius-pill;
-                            background: $primary;
+                            background: var(--o-cw-bg);
                             aspect-ratio: 1;
                             color: $o-view-background-color;
                         }
@@ -400,7 +430,7 @@
                     }
 
                     &.fc-today {
-                        --o-cw-color: #{$white};
+                        --o-cw-color: #{color-contrast($o-cw-color-today-accent)};
                         --o-cw-bg: #{$o-cw-color-today-accent};
                         padding-top: map-get($spacers, 1)/2;
 
@@ -467,8 +497,10 @@
                     }
 
                     &:hover > .fc-day-number {
-                        --o-cw-color: #{$o-white};
-                        --o-cw-bg: #{mix($o-white, $o-action, 50%)};
+                        $-bg: mix($o-view-background-color, $o-action, 75%);
+
+                        --o-cw-color: #{color-contrast($-bg)};
+                        --o-cw-bg: #{$-bg};
 
                         &:before {
                             display: block;
@@ -593,11 +625,14 @@
 
     .o_calendar_renderer .fc-view {
         .o_calendar_color_#{$i - 1} {
+            --o-event-bg: #{$color};
+            --o-event-bg--subtle-rgb: #{to-rgb($color-subtle)};
+
             &.fc-bgevent, &:not(.o_event_dot) .fc-bg {
                 background-color: $color-subtle;
             }
 
-            &.o_event_hatched:not(.o_event_dot):not(.fc-day-grid-event), &.o_event_hatched.fc-day-grid-event .fc-bg, &.o_attendee_status_tentative:not(.o_event_dot) .fc-bg {
+            &.o_event_hatched:not(.o_event_dot):not(.fc-day-grid-event):not(.fc-time-grid-event), &.o_event_hatched .fc-bg, &.o_attendee_status_tentative:not(.o_event_dot) .fc-bg {
                 background: repeating-linear-gradient(
                     45deg,
                     RGBA(to-rgb($color), .3),
@@ -617,6 +652,14 @@
             &.fc-event:not(.o_event_dot):not(.fc-dragging) {
                 color: color-contrast($color-subtle);
                 border-color: tint-color($color, 50%);
+            }
+
+            &.o_event_dot {
+                background-color: rgba(var(--o-event-bg--subtle-rgb), var(--o-bg-opacity));
+
+                &:before {
+                    color: var(--o-event-bg, #{$info});
+                }
             }
         }
     }

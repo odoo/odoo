@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ProductTemplate(models.Model):
@@ -18,19 +18,6 @@ class ProductTemplate(models.Model):
              "whenever the customer hits *Add to Cart* (cross-sell strategy, "
              "e.g. for computers: warranty, software, etc.).",
         check_company=True)
-
-    @api.depends('attribute_line_ids.value_ids.is_custom', 'attribute_line_ids.attribute_id.create_variant')
-    def _compute_has_configurable_attributes(self):
-        """ A product is considered configurable if:
-        - It has dynamic attributes
-        - It has any attribute line with at least 2 attribute values configured
-        - It has at least one custom attribute value """
-        for product in self:
-            product.has_configurable_attributes = (
-                any(attribute.create_variant == 'dynamic' for attribute in product.attribute_line_ids.attribute_id)
-                or any(len(attribute_line_id.value_ids) >= 2 for attribute_line_id in product.attribute_line_ids)
-                or any(attribute_value.is_custom for attribute_value in product.attribute_line_ids.value_ids)
-            )
 
     def get_single_product_variant(self):
         """ Method used by the product configurator to check if the product is configurable or not.

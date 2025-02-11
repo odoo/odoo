@@ -39,13 +39,24 @@
         .o_field_html .note-editable {
             border: none !important;
             min-height: 300px;
+            padding: 16px 40px 4px 16px
         }
+    }
+
+    .o_form_sheet {
+        --formView-sheet-padding-y: 4px;
+        --formView-sheet-padding-x: 4px;
+        padding-right: 16px !important;
     }
 
     &.o_form_readonly {
         .oe_description {
             padding: $o-sheet-vpadding $o-horizontal-padding;
         }
+    }
+
+    .oe_description {
+        overflow-x: hidden;
     }
 }
 .o_todo_kanban_card_body {

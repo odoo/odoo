@@ -119,4 +119,36 @@ QUnit.module("base_automation", {}, function () {
         assert.containsNone(target, ".modal .o_disable_action_button");
         assert.containsNone(target, ".modal .o_edit_action_button");
     });
+
+    QUnit.test("display automation rule id and name in Error dialog", async function (assert) {
+        assert.expect(1);
+
+        const errorContext = {
+            exception_class: "base_automation",
+            base_automation: {
+                id: 1,
+                name: "Test base automation error dialog",
+            },
+        };
+
+        const error = makeServerError({
+            subType: "Odoo Client Error",
+            message: "Message",
+            context: errorContext,
+        });
+
+
+        const env = await makeTestEnv();
+        await mount(MainComponentsContainer, target, { env });
+
+        const errorEvent = new PromiseRejectionEvent("error", {
+            reason: error,
+            promise: null,
+            cancelable: true,
+            bubbles: true,
+        });
+        await unhandledRejectionCb(errorEvent);
+        await nextTick();
+        assert.strictEqual(target.querySelector(".modal-body p:nth-child(5)").textContent, " The error occurred during the execution of the automation rule \"Test base automation error dialog\" (ID: 1). ");
+    });
 });

@@ -37,7 +37,7 @@
                                 </t>
                                 <span t-att-style="certif_style" class="user-name" t-out="certified_name">DEMO_CERTIFIED_NAME</span>
 
-                                <br/> <span>by</span> <span class="certification-company" t-field="user_input.create_uid.company_id.display_name">Odoo</span> <span>for successfully completing</span>
+                                <br/> <span>by</span> <span class="certification-company" t-field="user_input.create_uid.sudo().company_id.display_name">Odoo</span> <span>for successfully completing</span>
                                 <br/><b><span class="certification-name" t-field="user_input.survey_id.display_name">Functional Training</span></b>
                              </p>
                             <div class="oe_structure"/>
@@ -56,7 +56,7 @@
                             <span>Date</span>
                         </div>
                         <div class="certification-company">
-                            <span class="certification-company-logo" t-field="user_input.create_uid.company_id.logo" t-options="{'widget': 'image'}" role="img"/>
+                            <span class="certification-company-logo" t-field="user_input.create_uid.sudo().company_id.partner_id.image_1920" t-options="{'widget': 'image'}" role="img"/>
                         </div>
                     </div>
                     <div t-if="user_input.test_entry" class="test-entry"/>

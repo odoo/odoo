@@ -134,10 +134,7 @@ export class Many2OneField extends Component {
         };
 
         if (this.props.canQuickCreate) {
-            this.quickCreate = (name, params = {}) => {
-                if (params.triggeredOnBlur) {
-                    return this.openConfirmationDialog(name);
-                }
+            this.quickCreate = (name) => {
                 this.state.isFloating = false;
                 return this.updateRecord([false, name]);
             };
@@ -368,7 +365,7 @@ export const many2OneField = {
     extractProps({ attrs, context, decorations, options, string }, dynamicInfo) {
         const hasCreatePermission = attrs.can_create ? evaluateBooleanExpr(attrs.can_create) : true;
         const hasWritePermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
-        const canCreate = options.no_create ? false : hasCreatePermission
+        const canCreate = options.no_create ? false : hasCreatePermission;
         return {
             placeholder: attrs.placeholder,
             canOpen: !options.no_open,

@@ -97,6 +97,18 @@ class WebsiteRewrite(models.Model):
                 for param in re.findall('/<.*?>', rewrite.url_to):
                     if param not in rewrite.url_from:
                         raise ValidationError(_('"URL to" cannot contain parameter %s which is not used in "URL from".', param))
+
+                if rewrite.url_to == '/':
+                    raise ValidationError(_('"URL to" cannot be set to "/". To change the homepage content, use the "Homepage URL" field in the website settings or the page properties on any custom page.'))
+
+                if any(
+                    rule for rule in self.env['ir.http'].routing_map().iter_rules()
+                    # Odoo routes are normally always defined without trailing
+                    # slashes + strict_slashes=False, but there are exceptions.
+                    if rule.rule.rstrip('/') == rewrite.url_to.rstrip('/')
+                ):
+                    raise ValidationError(_('"URL to" cannot be set to an existing page.'))
+
                 try:
                     converters = self.env['ir.http']._get_converters()
                     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)

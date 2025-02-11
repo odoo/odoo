@@ -21,14 +21,15 @@
 # Quim - eccit <quim@eccit.com>, 2023
 # RGB Consulting <odoo@rgbconsulting.com>, 2023
 # marcescu, 2023
+# Santiago Payà <santiagopim@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: marcescu, 2023\n"
+"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -320,7 +321,7 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"Els articles de la revista Counterpart per a tots els moviments d'estoc entrants es publicaran en aquest compte, llevat que hi hagi un compte de valoració específic\n"
+"Els articles del diari de contrapartida per a tots els moviments d'estoc entrants es publicaran en aquest compte, llevat que hi hagi un compte de valoració específic\n"
 "                estableix a la ubicació de la font. Aquest és el valor per defecte per a tots els productes d'aquesta categoria. També es pot establir directament en cada producte."
 
 #. module: stock_account
@@ -1121,6 +1122,15 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
 "You don't have any stock input account defined on your product category. You"
 " must define one before processing this operation."
 msgstr ""
@@ -1178,4 +1188,4 @@ msgstr "ubicacions"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "unitats"

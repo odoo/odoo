@@ -4,6 +4,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.misc import formatLang, format_date
+from odoo.tools.sql import column_exists, create_column
 
 INV_LINES_PER_STUB = 9
 
@@ -58,6 +59,16 @@ class AccountPayment(models.Model):
         for payment_check in self.filtered('check_number'):
             if not payment_check.check_number.isdecimal():
                 raise ValidationError(_('Check numbers can only consist of digits'))
+
+    def _auto_init(self):
+        """
+        Create compute stored field check_number
+        here to avoid MemoryError on large databases.
+        """
+        if not column_exists(self.env.cr, 'account_payment', 'check_number'):
+            create_column(self.env.cr, 'account_payment', 'check_number', 'varchar')
+
+        return super()._auto_init()
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number_unique(self):
@@ -160,8 +171,8 @@ class AccountPayment(models.Model):
             self.env.cr.execute("""
                   SELECT payment.id
                     FROM account_payment payment
-                    JOIN account_move move ON movE.id = payment.move_id
-                   WHERE journal_id = %(journal_id)s
+                    JOIN account_move move ON move.id = payment.move_id
+                   WHERE move.journal_id = %(journal_id)s
                    AND payment.check_number IS NOT NULL
                 ORDER BY payment.check_number::BIGINT DESC
                    LIMIT 1

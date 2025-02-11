@@ -5,16 +5,16 @@
 # Translators:
 # Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Fernanda Alvarez, 2024
 # Lucia Pacheco, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lucia Pacheco, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,7 +113,7 @@ msgid ""
 "            </small>"
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
-"                No puede cambiar el nombre de la empresa o el número de identificación fiscal una vez que emitió documentos para su cuenta.\n"
+"                No puede cambiar el nombre de la empresa, el número de identificación fiscal o el país luego de emitir documentos para su cuenta.\n"
 "                <br/>Póngase en contacto con nosotros para realizar esta operación.\n"
 "            </small>"
 
@@ -360,22 +360,13 @@ msgstr "Agregue contactos para compartir el documento...."
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
-msgstr "Agregue contenido adicional para mostrar en el correo electrónico"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Add, remove or modify your addresses"
-msgstr "Agregar, eliminar o modificar sus direcciones"
+msgstr ""
+"Agregue contenido adicional para que aparezca en el correo electrónico"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
 msgstr "Agregado el"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Addresses"
-msgstr "Direcciones"
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
@@ -512,7 +503,7 @@ msgstr "Contacto"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Contact Details"
-msgstr "Detalles del contacto"
+msgstr "Detalles de contacto"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -553,8 +544,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
-"Por ahora está disponible para todos los que puedan visualizar este "
-"documento, haga clic aquí para restringirlo solo a los empleados internos."
+"Por ahora está disponible para quienes puedan ver este documento, haga clic "
+"para restringirlo a empleados internos."
 
 #. module: portal
 #. odoo-javascript
@@ -564,8 +555,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
-"Por ahora está restringido solo para empleados internos, haga clic aquí para"
-" que esté disponible para quienes visualizan el documento."
+"Por ahora está restringido solo para empleados internos, haga clic para que "
+"esté disponible para quienes visualizan el documento."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
@@ -719,8 +710,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
-"Esta es su nueva clave API, úsela en lugar de la contraseña para ingresar mediante RPC.\n"
-"Para darle un uso interactivo, inicie sesión."
+"Esta es su nueva clave API, úsela para acceder al RPC en lugar de una contraseña.\n"
+"                            Necesita iniciar sesión para hacer uso interactivo."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -822,6 +813,13 @@ msgid ""
 msgstr ""
 "Es muy importante que esta descripción sea clara\n"
 "                y esté completa"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr "Descripción de la clave"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -929,11 +927,6 @@ msgstr "Contraseña nueva:"
 #, python-format
 msgid "Next"
 msgstr "Siguiente"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr "No hay documentos que mostrar"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -1124,6 +1117,7 @@ msgstr "Seguridad"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "Control de seguridad"
@@ -1610,6 +1604,13 @@ msgstr "odoo"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
 msgstr "contraseña"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "revoke"
+msgstr "revocar"
 
 #. module: portal
 #. odoo-javascript

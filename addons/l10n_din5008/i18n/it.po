@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-20 12:12+0000\n"
+"POT-Creation-Date: 2024-10-15 12:05+0000\n"
 "PO-Revision-Date: 2024-02-14 09:14+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -58,7 +58,8 @@ msgid ""
 ";\n"
 "                            }\n"
 "                            .page {\n"
-"                                [name=invoice_line_table], [name=stock_move_table], .o_main_table {\n"
+"                                [name=invoice_line_table], "
+"[name=stock_move_table], .o_main_table {\n"
 "                                    th {\n"
 "                                        color:"
 msgstr ""
@@ -87,6 +88,13 @@ msgstr "Banche"
 #. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
+msgid "Beneficiary:"
+msgstr "Beneficiario:"
+
+#. module: l10n_din5008
+#. odoo-python
+#: code:addons/l10n_din5008/models/account_move.py:0
+#, python-format
 msgid "Cancelled Invoice"
 msgstr "Fattura annullata"
 
@@ -98,7 +106,7 @@ msgstr "Città"
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__company_details
 msgid "Company Details"
-msgstr ""
+msgstr "Dettagli azienda"
 
 #. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_base_document_layout
@@ -148,7 +156,7 @@ msgstr "Paese fiscale"
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__report_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr ""
+msgstr "Piè di pagina visualizzato in fondo a tutti i documenti."
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -158,7 +166,7 @@ msgstr "No HRB:"
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
-msgstr ""
+msgstr "Testo di intestazione visualizzato all'inizio di tutti i rapporti."
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -188,20 +196,6 @@ msgstr "Data fattura"
 #, python-format
 msgid "Invoice No."
 msgstr "Fattura n."
-
-#. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#, python-format
-msgid "Invoicing Address:"
-msgstr "Indirizzo di fatturazione:"
-
-#. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#, python-format
-msgid "Invoicing and Shipping Address:"
-msgstr "Indirizzo di fatturazione e spedizione:"
 
 #. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_account_move
@@ -249,7 +243,7 @@ msgstr "Riferimento"
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__report_footer
 msgid "Report Footer"
-msgstr ""
+msgstr "Piè di pagina documento"
 
 #. module: l10n_din5008
 #. odoo-python
@@ -276,14 +270,24 @@ msgid "Street2"
 msgstr "Strada 2"
 
 #. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+msgid "Tax ID"
+msgstr "Partita IVA"
+
+#. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
 msgstr "Il paese da cui utilizzare i report fiscali per questa società"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_registry
-msgid "The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country"
-msgstr "Il numero di registro dell'azienda. Inseriscilo se è diverso dalla partita IVA. Deve essere unico per tutti i partner di una stessa nazione"
+msgid ""
+"The registry number of the company. Use it if it is different from the Tax "
+"ID. It must be unique across all partners of a same country"
+msgstr ""
+"Il numero di registro dell'azienda. Inseriscilo se è diverso dalla partita "
+"IVA. Deve essere unico per tutti i partner di una stessa nazione"
 
 #. module: l10n_din5008
 #. odoo-python

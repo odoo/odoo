@@ -232,3 +232,19 @@ registry.category("web_tour.tours").add("LotRefundTour", {
             ProductScreen.checkFirstLotNumber("123456789"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("FiscalPositionTwoTaxIncluded", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.checkTaxAmount("9.09"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.changeFiscalPosition("test fp"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.checkTaxAmount("4.76"),
+            ProductScreen.isShown(),
+        ].flat(),
+});

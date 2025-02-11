@@ -12,6 +12,8 @@ import {
     markup,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import dom from "@web/legacy/js/core/dom";
+import { preserveCursor } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 export class ImageCrop extends Component {
     static template = 'web_editor.ImageCrop';
@@ -75,12 +77,13 @@ export class ImageCrop extends Component {
         this._cropperClosed = true;
         if (this.$cropperImage) {
             this.$cropperImage.cropper('destroy');
-            this.document.removeEventListener('mousedown', this._onDocumentMousedown, {capture: true});
-            this.document.removeEventListener('keydown', this._onDocumentKeydown, {capture: true});
+            this.elRef.el.ownerDocument.removeEventListener('mousedown', this._onDocumentMousedown, {capture: true});
+            this.elRef.el.ownerDocument.removeEventListener('keydown', this._onDocumentKeydown, {capture: true});
         }
         this.media.setAttribute('src', this.initialSrc);
         this.$media.trigger('image_cropper_destroyed');
         this.state.active = false;
+        this.restoreCursor();
     }
 
     /**
@@ -113,6 +116,7 @@ export class ImageCrop extends Component {
         this.$media = $(this.media);
         // Needed for editors in iframes.
         this.document = this.media.ownerDocument;
+        this.restoreCursor = preserveCursor(this.media.ownerDocument);
         // key: ratio identifier, label: displayed to user, value: used by cropper lib
         const src = this.media.getAttribute('src');
         const data = {...this.media.dataset};
@@ -147,6 +151,7 @@ export class ImageCrop extends Component {
         }
         const $cropperWrapper = this.$('.o_we_cropper_wrapper');
 
+        await this._scrollToInvisibleImage();
         // Replacing the src with the original's so that the layout is correct.
         await loadImage(this.originalSrc, this.media);
         this.$cropperImage = this.$('.o_we_cropper_img');
@@ -173,8 +178,9 @@ export class ImageCrop extends Component {
         this._onDocumentKeydown = this._onDocumentKeydown.bind(this);
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
-        this.document.addEventListener('mousedown', this._onDocumentMousedown, {capture: true});
-        this.document.addEventListener('keydown', this._onDocumentKeydown, {capture: true});
+        // We need to add event listeners to the owner document of the widget.
+        this.elRef.el.ownerDocument.addEventListener('mousedown', this._onDocumentMousedown, {capture: true});
+        this.elRef.el.ownerDocument.addEventListener('keydown', this._onDocumentKeydown, {capture: true});
     }
     /**
      * Updates the DOM image with cropped data and associates required
@@ -221,6 +227,41 @@ export class ImageCrop extends Component {
         this.$cropperImage.cropper('clear');
         this.$cropperImage.cropper('crop');
     }
+    /**
+     * Make sure the targeted image is in the visible viewport before crop.
+     *
+     * @private
+     */
+    async _scrollToInvisibleImage() {
+        const rect = this.media.getBoundingClientRect();
+        const viewportTop = this.document.documentElement.scrollTop || 0;
+        const viewportBottom = viewportTop + window.innerHeight;
+        const closestScrollable = el => {
+            if (!el) {
+                return null;
+            }
+            if (el.scrollHeight > el.clientHeight) {
+                return $(el);
+            } else {
+                return closestScrollable(el.parentElement);
+            }
+        };
+        // Give priority to the closest scrollable element (e.g. for images in
+        // HTML fields, the element to scroll is different from the document's
+        // scrolling element).
+        const $scrollable = closestScrollable(this.media);
+
+        // The image must be in a position that allows access to it and its crop
+        // options buttons. Otherwise, the crop widget container can be scrolled
+        // to allow editing.
+        if (rect.top < viewportTop || viewportBottom - rect.bottom < 100) {
+            await dom.scrollTo(this.media, {
+                easing: "linear",
+                duration: 500,
+                ...($scrollable && { $scrollable }),
+            });
+        }
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -265,19 +306,23 @@ export class ImageCrop extends Component {
      * @param {MouseEvent} ev
      */
     _onDocumentMousedown(ev) {
-        if (document.body.contains(ev.target) && this.$(ev.target).length === 0) {
+        if (this.elRef.el.ownerDocument.body.contains(ev.target) && this.$(ev.target).length === 0) {
             return this._closeCropper();
         }
     }
     /**
-     * Save crop if user hits enter.
-     * 
+     * Save crop if user hits enter,
+     * discard crop on escape.
+     *
      * @private
      * @param {KeyboardEvent} ev
      */
     _onDocumentKeydown(ev) {
-        if(ev.key === 'Enter') {
+        if (ev.key === 'Enter') {
             return this._save();
+        } else if (ev.key === 'Escape') {
+            ev.stopImmediatePropagation();
+            return this._closeCropper();
         }
     }
     /**

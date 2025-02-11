@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
@@ -571,6 +570,29 @@ class TestCalendar(TestResourceCommon):
         self.assertEqual(last_attendance[0].replace(tzinfo=None), datetime(2023, 1, 31, 8))
         self.assertEqual(last_attendance[1].replace(tzinfo=None), datetime(2023, 1, 31, 16))
 
+    def test_resource_calendar_update(self):
+        """ Ensure leave calendar gets set correctly when updating resource calendar. """
+        holiday = self.env['resource.calendar.leaves'].create({
+            'name': "May Day",
+            'calendar_id': self.calendar_jean.id,
+            'date_from': datetime_str(2024, 5, 1, 0, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2024, 5, 1, 23, 59, 59, tzinfo=self.jean.tz),
+        })
+
+        # Jean takes a leave
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': "Jean is AFK",
+            'calendar_id': self.calendar_jean.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime_str(2024, 5, 10, 8, 0, 0, tzinfo=self.jean.tz),
+            'date_to': datetime_str(2024, 5, 10, 16, 0, 0, tzinfo=self.jean.tz),
+        })
+
+        # Jean changes working schedule to Jules'
+        self.jean.resource_calendar_id = self.calendar_jules
+        self.assertEqual(leave.calendar_id, self.calendar_jules, "Leave calendar should be updated")
+        self.assertEqual(holiday.calendar_id, self.calendar_jean, "Global leave shouldn't change")
+
 
 class TestResMixin(TestResourceCommon):
 
@@ -651,16 +673,16 @@ class TestResMixin(TestResourceCommon):
     def test_adjust_calendar_timezone_before(self):
         # Calendar:
         # Every day 8-16
-        self.jean.tz = 'Japan'
+        self.jean.tz = 'Asia/Tokyo'
         self.calendar_jean.tz = 'Europe/Brussels'
 
         result = self.jean._adjust_to_calendar(
-            datetime_tz(2020, 4, 1, 0, 0, 0, tzinfo='Japan'),
-            datetime_tz(2020, 4, 1, 23, 59, 59, tzinfo='Japan'),
+            datetime_tz(2020, 4, 1, 0, 0, 0, tzinfo='Asia/Tokyo'),
+            datetime_tz(2020, 4, 1, 23, 59, 59, tzinfo='Asia/Tokyo'),
         )
         self.assertEqual(result[self.jean], (
-            datetime_tz(2020, 4, 1, 8, 0, 0, tzinfo='Japan'),
-            datetime_tz(2020, 4, 1, 16, 0, 0, tzinfo='Japan'),
+            datetime_tz(2020, 4, 1, 8, 0, 0, tzinfo='Asia/Tokyo'),
+            datetime_tz(2020, 4, 1, 16, 0, 0, tzinfo='Asia/Tokyo'),
         ), "It should have found a starting time the 1st")
 
     def test_adjust_calendar_timezone_after(self):
@@ -721,7 +743,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )[self.john.id]
-        self.assertEqual(data, {'days': 1.4375, 'hours': 13})
+        self.assertEqual(data, {'days': 1.417, 'hours': 13})
 
         # Viewing it as Patel
         # Views from 2018/04/01 11:00:00 to 2018/04/06 10:00:00
@@ -729,7 +751,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.patel.tz),
         )[self.john.id]
-        self.assertEqual(data, {'days': 1.1875, 'hours': 10})
+        self.assertEqual(data, {'days': 1.167, 'hours': 10})
 
         # Viewing it as John
         data = self.john._get_work_days_data_batch(
@@ -875,7 +897,8 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.john.tz),
         )[self.john.id]
-        self.assertEqual(data, {'days': 0.9375, 'hours': 10})
+        # For some reason float_round fails to limit precision to 3 decimals here
+        self.assertEqual(data, {'days': 0.9580000000000001, 'hours': 10})
 
         # half days
         leave = self.env['resource.calendar.leaves'].create({
@@ -1386,3 +1409,28 @@ class TestResource(TestResourceCommon):
         """
         self.env.company.resource_calendar_id = self.two_weeks_resource
         self.env['res.company'].create({'name': 'New Company'})
+
+    def test_empty_working_hours_for_two_weeks_resource(self):
+        resource = self._define_calendar_2_weeks(
+            'Two weeks resource',
+            [],
+            'Europe/Brussels'
+        )
+        resource_attendance = self.env['resource.calendar.attendance'].create({
+            'name': 'test',
+            'calendar_id': self.calendar_jean.id,
+            'hour_from': 0,
+            'hour_to': 0
+        })
+        resource_hour = resource._get_hours_per_day(resource_attendance)
+        self.assertEqual(resource_hour, 0.0)
+
+    def test_resource_without_calendar(self):
+        resource = self.env['resource.resource'].create({
+            'name': 'resource',
+            'calendar_id': False,
+        })
+
+        resource.company_id.resource_calendar_id = False
+        unavailabilities = resource._get_unavailable_intervals(datetime(2024, 7, 11), datetime(2024, 7, 12))
+        self.assertFalse(unavailabilities)

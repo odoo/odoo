@@ -1,98 +1,104 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_sips
-#
+# 
+# Translators:
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Fenyedi Levente, 2024
+# Cozmin Candea <office@terrabit.ro>, 2024
+# Lyall Kindmurr, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Lyall Kindmurr, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__code
+msgid "Code"
+msgstr "Cod"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_version
 msgid "Interface Version"
-msgstr ""
+msgstr "Versiune Intefață"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_merchant_id
 msgid "Merchant ID"
-msgstr ""
+msgstr "ID Comerciant"
 
 #. module: payment_sips
+#. odoo-python
 #: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Nu s-a găsit nicio tranzacție care să se potrivească cu referința %s."
 
 #. module: payment_sips
-#: model:ir.model,name:payment_sips.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr ""
-
-#. module: payment_sips
-#: model:ir.model,name:payment_sips.model_account_payment_method
-msgid "Payment Methods"
-msgstr ""
+#: model:ir.model,name:payment_sips.model_payment_provider
+msgid "Payment Provider"
+msgstr "Furnizor de plată"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Tranzacție plată"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_prod_url
 msgid "Production URL"
 msgstr ""
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
-msgid "Provider"
-msgstr ""
-
-#. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_secret
 msgid "SIPS Secret Key"
 msgstr ""
 
 #. module: payment_sips
-#: model_terms:ir.ui.view,arch_db:payment_sips.payment_acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment_sips.payment_provider_form
 msgid "Secret Key"
-msgstr ""
+msgstr "Cheia Secret"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_key_version
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_key_version
 msgid "Secret Key Version"
 msgstr ""
 
 #. module: payment_sips
-#: model:account.payment.method,name:payment_sips.payment_method_sips
-#: model:ir.model.fields.selection,name:payment_sips.selection__payment_acquirer__provider__sips
+#: model:ir.model.fields.selection,name:payment_sips.selection__payment_provider__code__sips
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_test_url
 msgid "Test URL"
 msgstr ""
 
 #. module: payment_sips
-#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
+#: model:ir.model.fields,help:payment_sips.field_payment_provider__sips_merchant_id
 msgid "The ID solely used to identify the merchant account with Sips"
 msgstr ""
 
 #. module: payment_sips
-#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+#: model:ir.model.fields,help:payment_sips.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Cod tehnic al acestui procesator de plată"
 
 #. module: payment_sips
+#. odoo-python
 #: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
 msgid "Unrecognized response received from the payment provider."

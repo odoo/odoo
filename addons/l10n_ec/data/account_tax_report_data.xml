@@ -88,6 +88,42 @@
                             </record>
                         </field>
                     </record>
+                    <record id="tax_report_line_parent_line_report_7" model="account.report.line">
+                        <field name="name">Local sales (excluding fixed assets) taxed at 5%</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_104_425" model="account.report.line">
+                                <field name="name">Gross value(425)</field>
+                                <field name="code">c425_104</field>
+                            <field name="expression_ids">
+                                    <record id="tax_report_line_104_425_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">425 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_435" model="account.report.line">
+                                <field name="name">Net value(435)</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_435_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">435 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_445" model="account.report.line">
+                                <field name="name">Tax generated(445)</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_445_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">445 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
                     <record id="tax_report_line_parent_line_report_10" model="account.report.line">
                         <field name="name">VAT generated on the difference between sales and credit notes at different rates (adjustment payable)</field>
                         <field name="children_ids">
@@ -571,6 +607,44 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">521 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_parent_line_report_62" model="account.report.line">
+                        <field name="name">Acquisitions and local payments (excludes fixed assets) taxed at 5% (with the right to tax credits)</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_104_540" model="account.report.line">
+                                <field name="name">Gross value(540)</field>
+                                <field name="code">c540</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_540_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">540 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_550" model="account.report.line">
+                                <field name="name">Net value(550)</field>
+                                <field name="code">c550</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_550_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">550 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_560" model="account.report.line">
+                                <field name="name">Tax generated(560)</field>
+                                <field name="code">c560</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_560_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">560 (Reporte 104)</field>
                                     </record>
                                 </field>
                             </record>
@@ -1446,6 +1520,33 @@
                                             </record>
                                         </field>
                                     </record>
+                                     <record id="tax_report_line_parent_line_report_156" model="account.report.line">
+                                        <field name="name">Servicios profesionales prestados por sociedades residentes</field>
+                                        <field name="children_ids">
+                                            <record id="tax_report_line_103_3030" model="account.report.line">
+                                                <field name="name">Base imponible(3030)</field>
+                                                <field name="code">c3030</field>
+                                                <field name="expression_ids">
+                                                    <record id="tax_report_line_103_3030_tag" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">3030 (Reporte 103)</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="tax_report_line_103_3530" model="account.report.line">
+                                                <field name="name">Valor retenido(3530)</field>
+                                                <field name="code">c3530</field>
+                                                <field name="expression_ids">
+                                                    <record id="tax_report_line_103_3530_tag" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">3530 (Reporte 103)</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
                                     <record id="tax_report_line_parent_line_report_158" model="account.report.line">
                                         <field name="name">Intellect predominates</field>
                                         <field name="children_ids">
@@ -1637,17 +1738,17 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_line_parent_line_report_179" model="account.report.line">
-                                <field name="name">Purchase of agricultural, poultry, livestock, beekeeping, rabbit, bio-aquatic, forestry and meat goods in their natural state</field>
+                            <record id="tax_report_line_parent_line_report_177" model="account.report.line">
+                                <field name="name">Compras al productor: de bienes de origen agrícola, avícola, pecuario, apícola, cunícola, bioacuático, forestal y carnes en estado natural y los descritos en el art.27.1 de LRTI.</field>
                                 <field name="children_ids">
-                                    <record id="tax_report_line_103_3210" model="account.report.line">
-                                        <field name="name">Taxable income(3210)</field>
-                                        <field name="code">c3210</field>
+                                    <record id="tax_report_line_103_3120" model="account.report.line">
+                                        <field name="name">Base imponible(3120)</field>
+                                        <field name="code">c3120</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_line_103_3210_tag" model="account.report.expression">
+                                            <record id="tax_report_line_103_3120_tag" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">3210 (Reporte 103)</field>
+                                                <field name="formula">3120 (Reporte 103)</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1659,6 +1760,33 @@
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">3620 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_parent_line_report_178" model="account.report.line">
+                                <field name="name">Compras al Comercializador: de Bienes de Origen Bioacuático, Forestal y los Descritos el Art.27.1 de LRTI</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_3121" model="account.report.line">
+                                        <field name="name">Base imponible(3121)</field>
+                                        <field name="code">c3121</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_3121_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">3121 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_103_3621" model="account.report.line">
+                                        <field name="name">Valor retenido(3621)</field>
+                                        <field name="code">c3621</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_3621_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">3621 (Reporte 103)</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1686,6 +1814,33 @@
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">364 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_parent_line_report_183" model="account.report.line">
+                                <field name="name">Comisiones pagadas a sociedades, nacionales o extranjeras residentes en el Ecuador y establecimientos permanentes domiciliados en el país</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_3140" model="account.report.line">
+                                        <field name="name">Base imponible(3140)</field>
+                                        <field name="code">c3140</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_3140_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">3140 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_103_3640" model="account.report.line">
+                                        <field name="name">Valor retenido(3640)</field>
+                                        <field name="code">c3640</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_3640_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">3640 (Reporte 103)</field>
                                             </record>
                                         </field>
                                     </record>

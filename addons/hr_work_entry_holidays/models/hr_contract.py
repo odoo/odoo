@@ -105,13 +105,14 @@ class HrContract(models.Model):
                     # Get all overlapping contracts but exclude draft contracts that are not included in this transaction.
                     overlapping_contracts = leave._get_overlapping_contracts(contract_states=[
                         ('state', '!=', 'cancel'),
+                        ('resource_calendar_id', '!=', False),
                         '|', '|', ('id', 'in', self.ids),
                                   ('state', '!=', 'draft'),
                              ('kanban_state', '=', 'done'),
-                    ])
+                    ]).sorted(key=lambda c: {'open': 1, 'close': 2, 'draft': 3, 'cancel': 4}[c.state])
                     if len(overlapping_contracts.resource_calendar_id) <= 1:
-                        if leave.resource_calendar_id != overlapping_contracts.resource_calendar_id:
-                            leave.resource_calendar_id = overlapping_contracts.resource_calendar_id
+                        if overlapping_contracts and leave.resource_calendar_id != overlapping_contracts[0].resource_calendar_id:
+                            leave.resource_calendar_id = overlapping_contracts[0].resource_calendar_id
                         continue
                     if leave.id not in leaves_state:
                         leaves_state[leave.id] = leave.state

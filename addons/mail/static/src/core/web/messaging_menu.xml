@@ -16,7 +16,7 @@
 
 <t t-name="mail.MessagingMenu.content">
     <div t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu`">
-        <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'text-uppercase border-start-0 border-end-0': ui.isSmall, 'bg-view border-bottom': !ui.isSmall, 'd-flex flex-shrink-0': !env.inDiscussApp }">
+        <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'bg-view border-bottom': !ui.isSmall, 'd-flex flex-shrink-0': !env.inDiscussApp }">
             <t t-if="!ui.isSmall">
                 <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
                 <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
@@ -73,10 +73,10 @@
                     />
                 </t>
             </t>
-            <t t-foreach="threads" t-as="thread" t-key="thread.localId">
+            <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentNotEmptyOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
-                    body="message?.inlineBody"
+                    body="message?.inlineBody or message?.subtype_description"
                     counter="thread.needactionCounter"
                     datetime="message?.datetime"
                     displayName="thread.displayName"

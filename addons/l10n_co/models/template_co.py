@@ -19,6 +19,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_co_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.co',
                 'bank_account_code_prefix': '1110',
                 'cash_account_code_prefix': '1105',

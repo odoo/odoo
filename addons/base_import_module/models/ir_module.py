@@ -7,7 +7,6 @@ import lxml
 import os
 import requests
 import sys
-import tempfile
 import zipfile
 from collections import defaultdict
 from io import BytesIO
@@ -15,11 +14,13 @@ from os.path import join as opj
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
+from odoo.http import request
 from odoo.modules.module import adapt_version, MANIFEST_NAMES
 from odoo.osv.expression import is_leaf
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
 from odoo.tools import file_open, file_open_temporary_directory, ormcache
+from odoo.tools.translate import get_po_paths_env, TranslationImporter
 
 _logger = logging.getLogger(__name__)
 
@@ -61,6 +62,14 @@ class IrModule(models.Model):
                 module.icon_image = attachment.datas
 
     def _import_module(self, module, path, force=False, with_demo=False):
+        # Do not create a bridge module for these neutralizations.
+        # Do not involve specific website during import by resetting
+        # information used by website's get_current_website.
+        self = self.with_context(website_id=None)  # noqa: PLW0642
+        force_website_id = None
+        if request and request.session.get('force_website_id'):
+            force_website_id = request.session.pop('force_website_id')
+
         known_mods = self.search([])
         known_mods_names = {m.name: m for m in known_mods}
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
@@ -79,16 +88,18 @@ class IrModule(models.Model):
         values = self.get_values_from_terp(terp)
         if 'version' in terp:
             values['latest_version'] = adapt_version(terp['version'])
+        if self.env.context.get('data_module'):
+            values['module_type'] = 'industries'
 
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
 
         if unmet_dependencies:
-            if (unmet_dependencies == set(['web_studio']) and
-                    _is_studio_custom(path)):
-                err = _("Studio customizations require Studio")
-            else:
-                to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
-                to_install.button_immediate_install()
+            wrong_dependencies = unmet_dependencies.difference(known_mods.mapped("name"))
+            if wrong_dependencies:
+                err = _("Unknown module dependencies:") + "\n - " + "\n - ".join(wrong_dependencies)
+                raise UserError(err)
+            to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
+            to_install.button_immediate_install()
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
 
@@ -143,6 +154,10 @@ class IrModule(models.Model):
                         type='binary',
                         datas=data,
                     )
+                    # Do not create a bridge module for this check.
+                    if 'public' in IrAttachment._fields:
+                        # Static data is public and not website-specific.
+                        values['public'] = True
                     attachment = IrAttachment.sudo().search([('url', '=', url_path), ('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')])
                     if attachment:
                         attachment.write(values)
@@ -194,7 +209,23 @@ class IrModule(models.Model):
             'res_id': asset.id,
         } for asset in created_assets])
 
+        translation_importer = TranslationImporter(self.env.cr, verbose=False)
+        for lang_ in self.env['res.lang'].get_installed():
+            lang = lang_[0]
+            is_lang_imported = False
+            for po_path in get_po_paths_env(module, lang, env=self.env):
+                translation_importer.load_file(po_path, lang)
+                is_lang_imported = True
+            if lang != 'en_US' and not is_lang_imported:
+                _logger.info('module %s: no translation for language %s', module, lang)
+        translation_importer.save(overwrite=True)
+
         mod._update_from_terp(terp)
+        _logger.info("Successfully imported module '%s'", module)
+
+        if force_website_id:
+            # Restore neutralized website_id.
+            request.session['force_website_id'] = force_website_id
 
         return True
 
@@ -207,8 +238,6 @@ class IrModule(models.Model):
         if not zipfile.is_zipfile(module_file):
             raise UserError(_('Only zip files are supported.'))
 
-        success = []
-        errors = dict()
         module_names = []
         with zipfile.ZipFile(module_file, "r") as z:
             for zf in z.filelist:
@@ -243,7 +272,8 @@ class IrModule(models.Model):
                     mod_name = filename.split('/')[0]
                     is_data_file = filename in module_data_files[mod_name]
                     is_static = filename.startswith('%s/static' % mod_name)
-                    if is_data_file or is_static:
+                    is_translation = filename.startswith('%s/i18n' % mod_name) and filename.endswith('.po')
+                    if is_data_file or is_static or is_translation:
                         z.extract(file, module_dir)
 
                 dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
@@ -252,15 +282,13 @@ class IrModule(models.Model):
                     try:
                         # assert mod_name.startswith('theme_')
                         path = opj(module_dir, mod_name)
-                        if self.sudo()._import_module(mod_name, path, force=force, with_demo=with_demo):
-                            success.append(mod_name)
+                        self.sudo()._import_module(mod_name, path, force=force, with_demo=with_demo)
                     except Exception as e:
-                        _logger.exception('Error while importing module')
-                        errors[mod_name] = exception_to_unicode(e)
-        r = ["Successfully imported module '%s'" % mod for mod in success]
-        for mod, error in errors.items():
-            r.append("Error while importing module '%s'.\n\n %s \n Make sure those modules are installed and try again." % (mod, error))
-        return '\n'.join(r), module_names
+                        raise UserError(_(
+                            "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
+                            module=mod_name, error_message=exception_to_unicode(e),
+                        ))
+        return "", module_names
 
     def module_uninstall(self):
         # Delete an ir_module_module record completely if it was an imported
@@ -310,7 +338,7 @@ class IrModule(models.Model):
     def web_read(self, specification):
         fields = list(specification.keys())
         module_type = self.env.context.get('module_type', 'official')
-        if module_type != 'official':
+        if module_type == 'industries':
             modules_list = self._get_modules_from_apps(fields, module_type, self.env.context.get('module_name'))
             return modules_list
         else:
@@ -417,7 +445,7 @@ class IrModule(models.Model):
 
     @api.model
     def _get_missing_dependencies(self, zip_data):
-        modules, unavailable_modules = self._get_missing_dependencies_modules(zip_data)
+        _modules, unavailable_modules = self._get_missing_dependencies_modules(zip_data)
         description = ''
         if unavailable_modules:
             description = _(
@@ -431,10 +459,11 @@ class IrModule(models.Model):
                 "https://www.odoo.com/pricing-plan for more information.\n"
                 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
             )
-        elif modules:
-            description = _("The following modules will also be installed:\n")
-            for mod in modules:
-                description += "- " + mod.shortdesc + "\n"
+        else:
+            description = _(
+                "Load demo data to test the industry's features with sample records. "
+                "Do not load them if this is your production database.",
+            )
         return description, unavailable_modules
 
     def _get_missing_dependencies_modules(self, zip_data):

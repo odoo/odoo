@@ -5,7 +5,7 @@ import datetime
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -67,3 +67,36 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 self.assertEqual(allocation.nextcall, nextcall, 'The next call date of the cron should be in 2 days.')
                 allocation._update_accrual()
                 self.assertAlmostEqual(allocation.number_of_days, 4.37, places=2)
+
+    def test_accrual_allocation_based_on_attendance(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'level_ids': [(0, 0, {
+                'start_count': 1,
+                'added_value': 1,
+                'added_value_type': 'hour',
+                'frequency': 'hourly',
+                'cap_accrued_time': True,
+                'maximum_leave': 100,
+                'frequency_hourly_source': 'attendance'
+            })],
+        })
+        self.env['hr.attendance'].create({
+                'employee_id': self.employee_emp.id,
+                'check_in': datetime.datetime(2024, 4, 1, 8, 0, 0),
+                'check_out': datetime.datetime(2024, 4, 1, 17, 0, 0),
+            })
+        with Form(self.env['hr.leave.allocation']) as allocation_form:
+            allocation_form.allocation_type = 'accrual'
+            allocation_form.employee_ids = self.employee_emp
+            allocation_form.accrual_plan_id = accrual_plan
+            allocation_form.holiday_status_id = self.leave_type
+            allocation_form.holiday_type = 'employee'
+            allocation_form.date_from = datetime.date(2024, 3, 20)
+            allocation_form.private_name = 'Accrual allocation for employee'
+            self.assertEqual(allocation_form.number_of_hours_display, 8.0)
+            allocation_form.date_from = datetime.date(2024, 3, 25)
+            self.assertEqual(allocation_form.number_of_hours_display, 8.0)

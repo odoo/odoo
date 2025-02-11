@@ -18,7 +18,7 @@ export const patchAvatarCardPopover = {
             "job_title", 
             "department_id", 
             "employee_parent_id",
-            "employee_id",
+            "employee_ids",
         ])
     },
     get email(){
@@ -28,7 +28,7 @@ export const patchAvatarCardPopover = {
         return this.user.work_phone || this.user.phone;
     },
     async onClickViewEmployee(){
-        const employeeId = this.user.employee_id[0];
+        const employeeId = this.user.employee_ids[0];
         const action = await this.orm.call('hr.employee', 'get_formview_action', [employeeId]);
         this.actionService.doAction(action); 
     }

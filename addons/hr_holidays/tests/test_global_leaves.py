@@ -111,7 +111,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         """
         calendar_asia = self.env['resource.calendar'].create({
             'name': 'Asia calendar',
-            'tz': 'Asia/Calcutta', # UTC +05:30
+            'tz': 'Asia/Kolkata', # UTC +05:30
             'hours_per_day': 8.0,
             'attendance_ids': []
         })
@@ -124,12 +124,12 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
         # Expectation:
         # 6:00:00 in UTC (data from the browser) --> 8:00:00 for Europe/Brussel (UTC +02:00)
-        # 8:00:00 for Asia/Calcutta (UTC +05:30) --> 2:30:00 in UTC
+        # 8:00:00 for Asia/Kolkata (UTC +05:30) --> 2:30:00 in UTC
         self.assertEqual(global_leave.date_from, datetime(2023, 5, 15, 2, 30))
         self.assertEqual(global_leave.date_to, datetime(2023, 5, 15, 11, 30))
         # Note:
         # The user in Europe/Brussels timezone see 4:30 and not 2:30 because he is in UTC +02:00.
-        # The user in Asia/Calcutta timezone (determined via the browser) see 8:00 because he is in UTC +05:30
+        # The user in Asia/Kolkata timezone (determined via the browser) see 8:00 because he is in UTC +05:30
 
     def test_global_leave_number_of_days_with_new(self):
         """
@@ -175,3 +175,48 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'request_date_to': global_leave.date_to + timedelta(days=1),
         })
         self.assertEqual(leave.number_of_days, 2, 'There is a global leave')
+
+    @freeze_time('2024-12-01')
+    def test_global_leave_keeps_employee_resource_leave(self):
+        """
+            When a global leave is created, and it happens during a leave period of an employee,
+            if the employee's leave is not fully covered by the global leave, the employee's leave
+            should still have resource leaves linked to it.
+        """
+        employee = self.employee_emp
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'request_unit': 'hour',
+            'leave_validation_type': 'both',
+        })
+        self.env['hr.leave.allocation'].create({
+            'name': '20 days allocation',
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 20,
+            'employee_id': employee.id,
+            'state': 'confirm',
+            'date_from': date(2024, 12, 1),
+            'date_to': date(2024, 12, 30),
+        })
+
+        partially_covered_leave = self.env['hr.leave'].create({
+            'name': 'Holiday 1 week',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': datetime(2024, 12, 3, 7, 0),
+            'request_date_to': datetime(2024, 12, 5, 18, 0),
+        })
+        partially_covered_leave.action_validate()
+
+        global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
+            'name': 'Public holiday',
+            'date_from': "2024-12-4 06:00:00",
+            'date_to': "2024-12-4 23:00:00",
+            'calendar_id': self.calendar_1.id,
+        })
+
+        # retrieve resource leaves linked to the employee's leave
+        resource_leaves = self.env['resource.calendar.leaves'].search([
+            ('holiday_id', '=', partially_covered_leave.id)
+        ])
+        self.assertTrue(resource_leaves, 'Resource leaves linked to the employee leave should exist.')

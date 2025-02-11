@@ -528,6 +528,7 @@ class TestCursor(BaseCursor):
     """
     _cursors_stack = []
     def __init__(self, cursor, lock):
+        assert isinstance(cursor, BaseCursor)
         super().__init__()
         self._now = None
         self._closed = False
@@ -715,8 +716,9 @@ class ConnectionPool(object):
                 cnx.close()
                 last = self._connections.pop(i)[0]
                 count += 1
-        _logger.info('%r: Closed %d connections %s', self, count,
-                    (dsn and last and 'to %r' % last.dsn) or '')
+        if count:
+            _logger.info('%r: Closed %d connections %s', self, count,
+                        (dsn and last and 'to %r' % last.dsn) or '')
 
     def _dsn_equals(self, dsn1, dsn2):
         alias_keys = {'dbname': 'database'}

@@ -11,7 +11,7 @@ import { jsonrpc } from "@web/core/network/rpc_service";
 var VariantMixin = {
     events: {
         'change .css_attribute_color input': '_onChangeColorAttribute',
-        'change .o_variant_pills input' :'_onChangePillsAttribute',
+        'click .o_variant_pills': '_onChangePillsAttribute',
         'change .main_product:not(.in_cart) input.js_quantity': 'onChangeAddQuantity',
         'change [data-attribute_exclusions]': 'onChangeVariant'
     },
@@ -720,6 +720,8 @@ var VariantMixin = {
     },
 
     _onChangePillsAttribute: function (ev) {
+        const radio = ev.target.closest('.o_variant_pills').querySelector("input");
+        radio.click();  // Trigger onChangeVariant.
         var $parent = $(ev.target).closest('.js_product');
         $parent.find('.o_variant_pills')
             .removeClass("active")

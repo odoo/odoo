@@ -20,7 +20,7 @@
                             <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                         <t t-elif="not attendee">
-                            <span t-out="12345678901234567890" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                            <span t-out="'12345678901234567890'" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                     </t>
                     <div class="o_event_foldable_badge_barcode_container_top">
@@ -42,7 +42,7 @@
                             <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                         <t t-elif="not attendee">
-                            <span t-out="12345678901234567890" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                            <span t-out="'12345678901234567890'" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                     </t>
                     <div class="o_event_foldable_badge_barcode_container_bottom">
@@ -134,7 +134,7 @@
                 <div class="o_event_full_page_ticket_details d-flex">
                     <div class="o_event_full_page_left_details ps-3 pt-4 pb-3 pe-2">
                         <span itemprop="startDate" t-field="event.date_begin"
-                            t-options='{"widget": "datetime", "date_only": True}'
+                            t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
                             class="fw-bold"/>
                         <span itemprop="startDateTime" t-field="event.date_begin"
                             class="fw-bold"
@@ -253,7 +253,7 @@
 
 <template id="event_report_template_badge_card">
     <t t-set="badge_image_url" t-value="image_data_uri(event.badge_image) if event.badge_image else ''"/>
-    <div class="o_event_badge_ticket_wrapper" t-attf-style="background-image: url({{badge_image_url}});">
+    <div class="o_event_badge_ticket_wrapper" t-att-style="'background-image: url(%s);' % badge_image_url if badge_image_url else ''">
         <div class="position-relative h-100">
             <h3 class="fw-bold text-center" t-field="event.name"/>
             <div class="text-center mt-5 py-2">
@@ -271,7 +271,7 @@
                             <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                         <t t-elif="not attendee">
-                            <span t-out="12345678901234567890" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                            <span t-out="'12345678901234567890'" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                     </t>
                 </span>

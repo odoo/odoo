@@ -4,7 +4,14 @@
 
 .product-img img {
     height: 100px;
-    object-fit: cover;
+    object-fit: contain;
+}
+
+.pos-receipt {
+    .product-name {
+        -webkit-line-clamp: unset;
+        overflow-wrap: anywhere;
+    }
 }
 
 .product-name {

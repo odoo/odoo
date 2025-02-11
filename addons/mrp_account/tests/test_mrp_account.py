@@ -4,6 +4,7 @@
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
 from odoo.tests import Form, tagged
+from odoo.tests.common import new_test_user
 
 
 class TestMrpAccount(TestMrpCommon):
@@ -187,6 +188,14 @@ class TestMrpAccount(TestMrpCommon):
 
         # 1 table head at 20 + 4 table leg at 15 + 4 bolt at 10 + 10 screw at 10 + 1*20 (extra cost)
         self.assertEqual(move_value, 141, 'Thing should have the correct price')
+
+    def test_stock_user_without_account_permissions_can_create_bom(self):
+        mrp_manager = new_test_user(
+            self.env, 'temp_mrp_manager', 'mrp.group_mrp_manager,product.group_product_variant',
+        )
+
+        bom_form = Form(self.env['mrp.bom'].with_user(mrp_manager))
+        bom_form.product_id = self.dining_table
 
 
 @tagged("post_install", "-at_install")

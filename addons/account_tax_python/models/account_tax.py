@@ -35,7 +35,8 @@ class AccountTaxPython(models.Model):
             product = product.product_variant_id
         if self.amount_type == 'code':
             company = self.env.company
-            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
+            product_sudo = product and product.sudo()  # ensure access to evaluated fields
+            localdict = {'base_amount': base_amount, 'price_unit': price_unit, 'quantity': quantity, 'product': product_sudo, 'partner': partner, 'company': company}
             try:
                 safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
             except Exception as e:
@@ -49,7 +50,8 @@ class AccountTaxPython(models.Model):
 
         def is_applicable_tax(tax, company=self.env.company):
             if tax.amount_type == 'code':
-                localdict = {'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company}
+                product_sudo = product and product.sudo()  # ensure access to evaluated fields
+                localdict = {'price_unit': price_unit, 'quantity': quantity, 'product': product_sudo, 'partner': partner, 'company': company}
                 try:
                     safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
                 except Exception as e:

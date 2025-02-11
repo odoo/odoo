@@ -74,7 +74,8 @@ export class InvoiceButton extends Component {
 
         // Part 1: Handle missing partner.
         // Write to pos.order the selected partner.
-        if (!order.get_partner()) {
+        const prevPartner = order.get_partner();
+        if (!prevPartner) {
             const { confirmed: confirmedPopup } = await this.popup.add(ConfirmPopup, {
                 title: _t("Need customer to invoice"),
                 body: _t("Do you want to open the customer list to select customer?"),
@@ -90,10 +91,12 @@ export class InvoiceButton extends Component {
             }
 
             await this.orm.write("pos.order", [orderId], { partner_id: newPartner.id });
+            order.set_partner(newPartner);
         }
 
         const confirmed = await this.onWillInvoiceOrder(order);
         if (!confirmed) {
+            order.set_partner(prevPartner);
             return;
         }
 

@@ -73,7 +73,7 @@ class AccountMove(models.Model):
             Make sure credit/debit notes have a valid reason and reversal reference
         """
         self.ensure_one()
-        return self.reversed_entry_id and self.ref
+        return self.reversed_entry_id or self.ref
 
     @api.model
     def _l10n_sa_get_qr_code(self, journal_id, unsigned_xml, x509_cert, signature, is_b2c=False):
@@ -87,7 +87,7 @@ class AccountMove(models.Model):
         def xpath_ns(expr):
             return root.xpath(expr, namespaces=edi_format._l10n_sa_get_namespaces())[0].text.strip()
 
-        qr_code_str = ''
+        qr_code_str = b''
         root = etree.fromstring(unsigned_xml)
         edi_format = self.env['account.edi.xml.ubl_21.zatca']
 
@@ -98,7 +98,7 @@ class AccountMove(models.Model):
         invoice_time = xpath_ns('//cbc:IssueTime')
         invoice_datetime = datetime.strptime(invoice_date + ' ' + invoice_time, '%Y-%m-%d %H:%M:%S')
 
-        if invoice_datetime and journal_id.company_id.vat and x509_cert:
+        if invoice_datetime and journal_id.company_id.vat and x509_cert and signature:
             prehash_content = etree.tostring(root)
             invoice_hash = edi_format._l10n_sa_generate_invoice_xml_hash(prehash_content, 'digest')
 
@@ -210,9 +210,29 @@ class AccountMove(models.Model):
         zatca_doc_ids = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
         return len(zatca_doc_ids) > 0 and not any(zatca_doc_ids.filtered(lambda d: d.state == 'to_send'))
 
+    def _get_tax_lines_to_aggregate(self):
+        """
+        If the final invoice has downpayment lines, we skip the tax correction, as we need to recalculate tax amounts
+        without taking into account those lines
+        """
+        if self.country_code == 'SA' and not self._is_downpayment() and self.line_ids._get_downpayment_lines():
+            return self.env['account.move.line']
+        return super()._get_tax_lines_to_aggregate()
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
+
+    def _apply_retention_tax_filter(self, tax_values):
+        return not tax_values['tax_id'].l10n_sa_is_retention
+
+    def _is_global_discount_line(self):
+        """
+            Any line that has a negative amount and is not linked to a down-payment is considered as a
+            global discount line. These can be created either manually, or through a promotions program.
+        """
+        self.ensure_one()
+        return not self._get_downpayment_lines() and self.price_subtotal < 0
 
     @api.depends('price_subtotal', 'price_total')
     def _compute_tax_amount(self):

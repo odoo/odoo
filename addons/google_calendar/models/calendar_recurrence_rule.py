@@ -83,12 +83,14 @@ class RecurrenceRule(models.Model):
 
     def _write_from_google(self, gevent, vals):
         current_rrule = self.rrule
+        current_parsed_rrule = self._rrule_parse(current_rrule, self.dtstart)
         # event_tz is written on event in Google but on recurrence in Odoo
         vals['event_tz'] = gevent.start.get('timeZone')
         super()._write_from_google(gevent, vals)
 
         base_event_time_fields = ['start', 'stop', 'allday']
         new_event_values = self.env["calendar.event"]._odoo_values(gevent)
+        new_parsed_rrule = self._rrule_parse(self.rrule, self.dtstart)
         # We update the attendee status for all events in the recurrence
         google_attendees = gevent.attendees or []
         emails = [a.get('email') for a in google_attendees]
@@ -111,15 +113,15 @@ class RecurrenceRule(models.Model):
                 if attendee[2].get('displayName') and not partner.name:
                     partner.name = attendee[2].get('displayName')
 
+        organizers_partner_ids = [event.user_id.partner_id for event in self.calendar_event_ids if event.user_id]
         for odoo_attendee_email in set(existing_attendees.mapped('email')):
-            # Remove old attendees. Sometimes, several partners have the same email.
+            # Sometimes, several partners have the same email. Remove old attendees except organizer, otherwise the events will disappear.
             if email_normalize(odoo_attendee_email) not in emails:
-                attendees = existing_attendees.exists().filtered(lambda att: att.email == email_normalize(odoo_attendee_email))
+                attendees = existing_attendees.exists().filtered(lambda att: att.email == email_normalize(odoo_attendee_email) and att.partner_id not in organizers_partner_ids)
                 self.calendar_event_ids.write({'need_sync': False, 'partner_ids': [Command.unlink(att.partner_id.id) for att in attendees]})
 
-        # Update the recurrence values
         old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
-        if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
+        if old_event_values and any(new_event_values.get(key) and new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
             # we need to recreate the recurrence, time_fields were modified.
             base_event_id = self.base_event_id
             non_equal_values = [
@@ -134,7 +136,7 @@ class RecurrenceRule(models.Model):
             (self.calendar_event_ids - base_event_id).google_id = False
             (self.calendar_event_ids - base_event_id).unlink()
             base_event_id.with_context(dont_notify=True).write(dict(new_event_values, google_id=False, need_sync=False))
-            if self.rrule == current_rrule:
+            if new_parsed_rrule == current_parsed_rrule:
                 # if the rrule has changed, it will be recalculated below
                 # There is no detached event now
                 self.with_context(dont_notify=True)._apply_recurrence()
@@ -153,7 +155,7 @@ class RecurrenceRule(models.Model):
 
         # We apply the rrule check after the time_field check because the google_id are generated according
         # to base_event start datetime.
-        if self.rrule != current_rrule:
+        if new_parsed_rrule != current_parsed_rrule:
             detached_events = self._apply_recurrence()
             detached_events.google_id = False
             log_msg = f"Recurrence #{self.id} | current rule: {current_rrule} | new rule: {self.rrule} | remaining: {len(self.calendar_event_ids)} | removed: {len(detached_events)}"

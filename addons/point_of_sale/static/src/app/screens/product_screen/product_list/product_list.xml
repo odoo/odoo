@@ -16,7 +16,7 @@
                     isSmall="ui.isSmall"
                     placeholder="'Search products...'"
                     icon="{type: 'fa', value: 'fa-search'}"
-                    debounceMillis="100" />
+                    debounceMillis="500" />
             </div>
             <div class="product-list-container flex-grow-1 overflow-y-auto">
                 <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">

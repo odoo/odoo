@@ -4,29 +4,29 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-11 07:03+0000\n"
-"PO-Revision-Date: 2023-04-11 07:03+0000\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-10-30 12:37+0000\n"
+"PO-Revision-Date: 2024-10-30 12:37+0000\n"
+"Last-Translator: Manon Rondou <ronm@odoo.com>\n"
 "Language-Team: \n"
-"Language: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: l10n_fr_pos_cert
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/res_company.py:0
 #, python-format
 msgid "(Receipt ref.: %s)"
-msgstr "(Réf. reçu: %s)"
+msgstr "(Réf. reçu : %s)"
 
 #. module: l10n_fr_pos_cert
 #. odoo-javascript
 #: code:addons/l10n_fr_pos_cert/static/src/xml/OrderReceipt.xml:0
-#: code:addons/l10n_fr_pos_cert/static/src/xml/Orderline.xml:0
+#: code:addons/l10n_fr_pos_cert/static/src/xml/ProductScreen.xml:0
 #, python-format
 msgid "/ Units"
 msgstr "/ Unité"
@@ -36,47 +36,68 @@ msgstr "/ Unité"
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
 msgid "According to French law, you cannot delete a point of sale order."
-msgstr "Selon la loi Française, vous ne pouvez pas supprimer une commande de caisse."
+msgstr ""
+"Selon la loi française, vous ne pouvez pas supprimer une commande de caisse."
 
 #. module: l10n_fr_pos_cert
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
-msgid "According to the French law, you cannot modify a %s. Forbidden fields: %s."
-msgstr "Selon la loi française, vous ne pouvez pas modifier un %s. Champs interdits : %s."
+msgid ""
+"According to the French law, you cannot modify a %s. Forbidden fields: %s."
+msgstr ""
+"Selon la loi française, vous ne pouvez pas modifier un %s. Champs "
+"interdits : %s."
 
 #. module: l10n_fr_pos_cert
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
-msgid "According to the French law, you cannot modify a point of sale order line. Forbidden fields: %s."
-msgstr "Selon la loi française, vous ne pouvez pas modifier une ligne de commande de caisse. Champs interdits : %s."
+msgid ""
+"According to the French law, you cannot modify a point of sale order line. "
+"Forbidden fields: %s."
+msgstr ""
+"Selon la loi française, vous ne pouvez pas modifier une ligne de commande de "
+"caisse. Champs interdits : %s."
 
 #. module: l10n_fr_pos_cert
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
-msgid "According to the French law, you cannot modify a point of sale order. Forbidden fields: %s."
-msgstr "Selon la loi française, vous ne pouvez pas modifier une commande de caisse. Champs interdits : %s."
+msgid ""
+"According to the French law, you cannot modify a point of sale order. "
+"Forbidden fields: %s."
+msgstr ""
+"Selon la loi française, vous ne pouvez pas modifier une commande de caisse. "
+"Champs interdits : %s."
 
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.form_view_account_sale_closing
 msgid "Account Closing"
-msgstr "Clotûre de Compte"
+msgstr "Clotûre de compte"
+
+#. module: l10n_fr_pos_cert
+#. odoo-python
+#: code:addons/l10n_fr_pos_cert/models/res_company.py:0
+#, python-format
+msgid ""
+"Accounting is not unalterable for the company %s. This mechanism is designed "
+"for companies where accounting is unalterable."
+msgstr ""
+"La comptabilité n'est pas inaltérable pour l'entreprise %s. Ce mécanisme est "
+"conçu pour les entreprises dont la comptabilité est inaltérable."
 
 #. module: l10n_fr_pos_cert
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
-msgid "An error occurred when computing the inalterability. Impossible to get the unique previous posted point of sale order."
-msgstr "Une erreur s'est produite lors de la vérification de l'inaltérabilité. Impossible de récupérer la dernière commande de caisse unique et comptabilisée."
-
-#. module: l10n_fr_pos_cert
-#. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
-#, python-format
-msgid "An unknown error prevents us from getting closing information."
-msgstr "Une erreur inconnue empêche d'obtenir les informations de fermeture."
+msgid ""
+"An error occurred when computing the inalterability. Impossible to get the "
+"unique previous posted point of sale order."
+msgstr ""
+"Une erreur s'est produite lors de la vérification de l'inaltérabilité. "
+"Impossible de récupérer la dernière commande de caisse unique et "
+"comptabilisée."
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields.selection,name:l10n_fr_pos_cert.selection__account_sale_closing__frequency__annually
@@ -88,7 +109,7 @@ msgstr "Annuelle"
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 #, python-format
 msgid "Annual Closing"
-msgstr "Clôture Annuelle"
+msgstr "Clôture annuelle"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__date_closing_stop
@@ -113,7 +134,7 @@ msgstr "Société"
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid "Contrôle des données du point de vente"
-msgstr ""
+msgstr "Contrôle des données du point de vente"
 
 #. module: l10n_fr_pos_cert
 #. odoo-python
@@ -135,7 +156,7 @@ msgstr "Créé le"
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__cumulative_total
 msgid "Cumulative Grand Total"
-msgstr "Grant Total Cumulé"
+msgstr "Grand total cumulé"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__currency_id
@@ -152,7 +173,7 @@ msgstr "Journalière"
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 #, python-format
 msgid "Daily Closing"
-msgstr "Clôture Journalière"
+msgstr "Clôture journalière"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,help:l10n_fr_pos_cert.field_account_sale_closing__date_closing_start
@@ -165,13 +186,6 @@ msgid "Date to which the values are computed"
 msgstr "Date jusqu'à laquelle les valeurs sont calculées"
 
 #. module: l10n_fr_pos_cert
-#. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/pos.js:0
-#, python-format
-msgid "Deleting of orders is not allowed."
-msgstr "La suppression de commandes n'est pas autorisée."
-
-#. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__display_name
 msgid "Display Name"
 msgstr "Nom affiché"
@@ -179,24 +193,17 @@ msgstr "Nom affiché"
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid "Données corrompues sur la commande du point de vente:"
-msgstr ""
+msgstr "Données corrompues sur la commande du point de vente:"
 
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid "First Entry"
-msgstr "Première Entrée"
+msgstr "Première entrée"
 
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid "First Hash"
-msgstr "Premier Hachage"
-
-#. module: l10n_fr_pos_cert
-#. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/pos.js:0
-#, python-format
-msgid "Fiscal Data Module error"
-msgstr "Erreur du Module de Données Fiscales"
+msgstr "Premier hachage"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model,name:l10n_fr_pos_cert.model_account_fiscal_position
@@ -206,7 +213,7 @@ msgstr "Position fiscale"
 #. module: l10n_fr_pos_cert
 #: model:ir.ui.menu,name:l10n_fr_pos_cert.pos_fr_statements_menu
 msgid "French Statements"
-msgstr "Relevés Français"
+msgstr "Relevés français"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,help:l10n_fr_pos_cert.field_account_sale_closing__name
@@ -215,26 +222,25 @@ msgstr "Fréquence et numéro de séquence unique"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.account_sale_closing_annually_ir_actions_server
-#: model:ir.cron,cron_name:l10n_fr_pos_cert.account_sale_closing_annually
 msgid "Generate Annual Sales Closing"
 msgstr "Générer la clôture annuelle des ventes"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.account_sale_closing_daily_ir_actions_server
-#: model:ir.cron,cron_name:l10n_fr_pos_cert.account_sale_closing_daily
 msgid "Generate Daily Sales Closing"
 msgstr "Générer la clôture journalière des ventes"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.account_sale_closing_monthly_ir_actions_server
-#: model:ir.cron,cron_name:l10n_fr_pos_cert.account_sale_closing_monthly
 msgid "Generate Monthly Sales Closing"
 msgstr "Générer la clôture mensuelle des ventes"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model,name:l10n_fr_pos_cert.model_report_l10n_fr_pos_cert_report_pos_hash_integrity
 msgid "Get french pos hash integrity result as PDF."
-msgstr "Obtenir le résultat de la vérication d'intégrité de la caisse française en PDF."
+msgstr ""
+"Obtenir le résultat de la vérication d'intégrité de la caisse française en "
+"PDF."
 
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.pos_order_form_inherit
@@ -249,7 +255,7 @@ msgstr "Résultat d'intégrité en PDF"
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_order__l10n_fr_hash
@@ -274,24 +280,25 @@ msgstr "Texte à hacher"
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid ""
-"La chaîne de hachage est conforme: il n’est pas possible d’altérer les données\n"
-"                                            sans casser la chaîne de hachage pour les pièces ultérieures."
+"La chaîne de hachage est conforme: il n’est pas possible d’altérer les "
+"données\n"
+"                                            sans casser la chaîne de hachage "
+"pour les pièces ultérieures."
 msgstr ""
+"La chaîne de hachage est conforme: il n’est pas possible d’altérer les "
+"données\n"
+"                                            sans casser la chaîne de hachage "
+"pour les pièces ultérieures."
 
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid "Last Entry"
-msgstr "Dernière Entrée"
+msgstr "Dernière entrée"
 
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid "Last Hash"
-msgstr "Dernier Hachage"
-
-#. module: l10n_fr_pos_cert
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernier hachage"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__last_order_hash
@@ -301,12 +308,12 @@ msgstr "Hachage d'inaltérabilité sur la dernière commande"
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__last_order_id
 msgid "Last Pos Order"
-msgstr "Dernière Commande de caisse"
+msgstr "Dernière commande de caisse"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,help:l10n_fr_pos_cert.field_account_sale_closing__last_order_id
 msgid "Last Pos order included in the grand total"
-msgstr "Dernière Commande de caisse incluse dans le grand total"
+msgstr "Dernière commande de caisse incluse dans le grand total"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__write_uid
@@ -323,7 +330,7 @@ msgstr "Dernière mise à jour le"
 #: code:addons/l10n_fr_pos_cert/static/src/js/pos.js:0
 #, python-format
 msgid "Missing Country"
-msgstr "Pays Manquant"
+msgstr "Pays manquant"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields.selection,name:l10n_fr_pos_cert.selection__account_sale_closing__frequency__monthly
@@ -335,7 +342,7 @@ msgstr "Mensuelle"
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 #, python-format
 msgid "Monthly Closing"
-msgstr "Clôture Mensuelle"
+msgstr "Clôture mensuelle"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__name
@@ -344,18 +351,11 @@ msgstr "Nom"
 
 #. module: l10n_fr_pos_cert
 #. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
-#, python-format
-msgid "Network Error"
-msgstr "Erreur réseau"
-
-#. module: l10n_fr_pos_cert
-#. odoo-javascript
 #: code:addons/l10n_fr_pos_cert/static/src/xml/OrderReceipt.xml:0
-#: code:addons/l10n_fr_pos_cert/static/src/xml/Orderline.xml:0
+#: code:addons/l10n_fr_pos_cert/static/src/xml/ProductScreen.xml:0
 #, python-format
 msgid "Old unit price:"
-msgstr "Anciennement:"
+msgstr "Anciennement :"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.action_check_pos_hash_integrity
@@ -366,14 +366,7 @@ msgstr "Vérification d'inaltérabilité de la caisse"
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__total_interval
 msgid "Period Total"
-msgstr "Total sur la Période"
-
-#. module: l10n_fr_pos_cert
-#. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
-#, python-format
-msgid "Please check your internet connection and try again."
-msgstr "Veuillez vérifier votre connexion internet et réessayez."
+msgstr "Total sur la période"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model,name:l10n_fr_pos_cert.model_pos_config
@@ -398,18 +391,19 @@ msgstr "Session du point de vente"
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid "Résultat du test d'intégrité -"
-msgstr ""
+msgstr "Résultat du test d’intégrité -"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model,name:l10n_fr_pos_cert.model_account_sale_closing
 msgid "Sale Closing"
-msgstr "Clôture des Ventes"
+msgstr "Clôture des ventes"
 
 #. module: l10n_fr_pos_cert
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 #, python-format
-msgid "Sale Closings are not meant to be written or deleted under any circumstances."
+msgid ""
+"Sale Closings are not meant to be written or deleted under any circumstances."
 msgstr "Les clôtures de ventes ne peuvent ni être modifiées ni supprimées."
 
 #. module: l10n_fr_pos_cert
@@ -417,31 +411,57 @@ msgstr "Les clôtures de ventes ne peuvent ni être modifiées ni supprimées."
 #: model:ir.ui.menu,name:l10n_fr_pos_cert.menu_account_closing
 #: model:ir.ui.menu,name:l10n_fr_pos_cert.menu_account_closing_reporting
 msgid "Sales Closings"
-msgstr "Clôtures de Ventes"
+msgstr "Clôtures de ventes"
 
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.actions.act_window,help:l10n_fr_pos_cert.action_list_view_account_sale_closing
-msgid "Sales closings run automatically on a daily, monthly and annual basis. It computes both period and cumulative totals from all the sales entries posted in the system after the previous closing."
-msgstr "Les clôtures de ventes sont exécutées automatiquement de manière journalière, mensuelle et annuelle. Des totaux cumulatifs et par période sont calculés à partir de toutes les entrées comptabilisées  dans le système depuis la clôture précédente."
+msgid ""
+"Sales closings run automatically on a daily, monthly and annual basis. It "
+"computes both period and cumulative totals from all the sales entries posted "
+"in the system after the previous closing."
+msgstr ""
+"Les clôtures de ventes sont exécutées automatiquement de manière "
+"journalière, mensuelle et annuelle. Des totaux cumulatifs et par période "
+"sont calculés à partir de toutes les entrées comptabilisées dans le système "
+"depuis la clôture précédente."
 
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid ""
-"Selon l’article 286 du code général des impôts français, toute livraison de bien ou prestation\n"
-"                                        de services ne donnant pas lieu à facturation et étant enregistrée au moyen d’un logiciel ou\n"
-"                                        d’un système de caisse doit satisfaire à des conditions d’inaltérabilité et de sécurisation des\n"
-"                                        données en vue d’un contrôle de l’administration fiscale.\n"
+"Selon l’article 286 du code général des impôts français, toute livraison de "
+"bien ou prestation\n"
+"                                        de services ne donnant pas lieu à "
+"facturation et étant enregistrée au moyen d’un logiciel ou\n"
+"                                        d’un système de caisse doit "
+"satisfaire à des conditions d’inaltérabilité et de sécurisation des\n"
+"                                        données en vue d’un contrôle de "
+"l’administration fiscale.\n"
 "                                        <br/>\n"
 "                                        <br/>\n"
-"                                        Ces conditions sont respectées via une fonction de hachage des ventes du Point de Vente.\n"
+"                                        Ces conditions sont respectées via "
+"une fonction de hachage des ventes du Point de Vente.\n"
 "                                        <br/>\n"
 "                                        <br/>"
 msgstr ""
+"Selon l’article 286 du code général des impôts français, toute livraison de "
+"bien ou prestation\n"
+"                                        de services ne donnant pas lieu à "
+"facturation et étant enregistrée au moyen d’un logiciel ou\n"
+"                                        d’un système de caisse doit "
+"satisfaire à des conditions d’inaltérabilité et de sécurisation des\n"
+"                                        données en vue d’un contrôle de "
+"l’administration fiscale.\n"
+"                                        <br/>\n"
+"                                        <br/>\n"
+"                                        Ces conditions sont respectées via "
+"une fonction de hachage des ventes du Point de Vente.\n"
+"                                        <br/>\n"
+"                                        <br/>"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__sequence_number
 msgid "Sequence #"
-msgstr "Numéro de Séquence"
+msgstr "Numéro de séquence"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__date_closing_start
@@ -469,13 +489,24 @@ msgstr "La devis de la société"
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/res_company.py:0
 #, python-format
-msgid "There isn't any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS"
-msgstr "Il n'y a pas encore de commande marquée pour l'inaltérabilité des données pour la société %s. Cette fonction n'est utilisée que pour les commandes générées après l'installation du module France - Certification CGI 286 I-3 bis. - POS"
+msgid ""
+"There isn't any order flagged for data inalterability yet for the company "
+"%s. This mechanism only runs for point of sale orders generated after the "
+"installation of the module France - Certification CGI 286 I-3 bis. - POS"
+msgstr ""
+"Il n'y a pas encore de commande marquée pour l'inaltérabilité des données "
+"pour la société %s. Cette fonction n'est utilisée que pour les commandes "
+"générées après l'installation du module France - Certification CGI 286 I-3 "
+"bis. - POS"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,help:l10n_fr_pos_cert.field_account_sale_closing__total_interval
-msgid "Total in receivable accounts during the interval, excluding overlapping periods"
-msgstr "Total sur des comptes débiteurs pendant l'intervalle, en excluant les périodes qui se superposent"
+msgid ""
+"Total in receivable accounts during the interval, excluding overlapping "
+"periods"
+msgstr ""
+"Total sur des comptes débiteurs pendant l'intervalle, en excluant les "
+"périodes qui se superposent"
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,help:l10n_fr_pos_cert.field_account_sale_closing__cumulative_total
@@ -486,29 +517,34 @@ msgstr "Total sur les comptes débiteurs depuis l'installation de la caisse"
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid ""
 "Toutes les ventes effectuées via le Point de Vente\n"
-"                                                sont bien dans la chaîne de hachage."
+"                                                sont bien dans la chaîne de "
+"hachage."
 msgstr ""
-
-#. module: l10n_fr_pos_cert
-#. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
-#, python-format
-msgid "Unknown Error"
-msgstr "Erreur inconnue"
+"Toutes les ventes effectuées via le Point de Vente\n"
+"                                                sont bien dans la chaîne de "
+"hachage."
 
 #. module: l10n_fr_pos_cert
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/account_fiscal_position.py:0
 #, python-format
-msgid "You cannot modify a fiscal position used in a POS order. You should archive it and create a new one."
-msgstr "Vous ne pouvez pas modifer une position fiscale utilisée dans une commande de caisse. Vous pouvez l'archiver et en créer une nouvelle."
+msgid ""
+"You cannot modify a fiscal position used in a POS order. You should archive "
+"it and create a new one."
+msgstr ""
+"Vous ne pouvez pas modifer une position fiscale utilisée dans une commande "
+"de caisse. Vous pouvez l'archiver et en créer une nouvelle."
 
 #. module: l10n_fr_pos_cert
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
-msgid "You cannot overwrite the values ensuring the inalterability of the point of sale."
-msgstr "Vous ne pouvez pas modifier les valeurs assurant de l'inaltérabilité de la caisse."
+msgid ""
+"You cannot overwrite the values ensuring the inalterability of the point of "
+"sale."
+msgstr ""
+"Vous ne pouvez pas modifier les valeurs assurant de l'inaltérabilité de la "
+"caisse."
 
 #. module: l10n_fr_pos_cert
 #. odoo-python

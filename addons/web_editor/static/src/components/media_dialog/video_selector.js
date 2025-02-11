@@ -51,12 +51,6 @@ export class VideoSelector extends Component {
                 urlParameter: 'fs=0',
                 isHidden: () => this.state.options.filter(option => option.id === 'hide_controls')[0].value,
             },
-            hide_yt_logo: {
-                label: _t("Hide Youtube logo"),
-                platforms: [this.PLATFORMS.youtube],
-                urlParameter: 'modestbranding=1',
-                isHidden: () => this.state.options.filter(option => option.id === 'hide_controls')[0].value,
-            },
             hide_dm_logo: {
                 label: _t("Hide Dailymotion logo"),
                 platforms: [this.PLATFORMS.dailymotion],
@@ -94,16 +88,7 @@ export class VideoSelector extends Component {
             }
         });
 
-        onMounted(async () => {
-            await Promise.all(this.props.vimeoPreviewIds.map(async (videoId) => {
-                const { thumbnail_url: thumbnailSrc } = await this.http.get(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(videoId)}`);
-                this.state.vimeoPreviews.push({
-                    id: videoId,
-                    thumbnailSrc,
-                    src: `https://player.vimeo.com/video/${encodeURIComponent(videoId)}`
-                });
-            }));
-        });
+        onMounted(async () => this.prepareVimeoPreviews());
 
         useAutofocus();
 
@@ -232,6 +217,20 @@ export class VideoSelector extends Component {
             div.querySelector('iframe').src = video.src;
             return div;
         });
+    }
+
+    /**
+     * Based on the config vimeo ids, prepare the vimeo previews.
+     */
+    async prepareVimeoPreviews() {
+        return Promise.all(this.props.vimeoPreviewIds.map(async (videoId) => {
+            const { thumbnail_url: thumbnailSrc } = await this.http.get(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(videoId)}`);
+            this.state.vimeoPreviews.push({
+                id: videoId,
+                thumbnailSrc,
+                src: `https://player.vimeo.com/video/${encodeURIComponent(videoId)}`
+            });
+        }));
     }
 }
 VideoSelector.mediaSpecificClasses = ['media_iframe_video'];

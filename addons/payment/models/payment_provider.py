@@ -342,6 +342,8 @@ class PaymentProvider(models.Model):
     def create(self, values_list):
         providers = super().create(values_list)
         providers._check_required_if_provider()
+        if any(provider.state != 'disabled' for provider in providers):
+            self._toggle_post_processing_cron()
         return providers
 
     def write(self, values):
@@ -363,6 +365,8 @@ class PaymentProvider(models.Model):
 
         deactivated_providers._deactivate_unsupported_payment_methods()
         activated_providers._activate_default_pms()
+        if activated_providers or deactivated_providers:
+            self._toggle_post_processing_cron()
 
         return result
 
@@ -383,7 +387,7 @@ class PaymentProvider(models.Model):
         for field_name, field in self._fields.items():
             required_for_provider_code = getattr(field, 'required_if_provider', None)
             if required_for_provider_code and any(
-                required_for_provider_code == provider.code and not provider[field_name]
+                required_for_provider_code == provider._get_code() and not provider[field_name]
                 for provider in enabled_providers
             ):
                 ir_field = self.env['ir.model.fields']._get(self._name, field_name)
@@ -392,6 +396,22 @@ class PaymentProvider(models.Model):
             raise ValidationError(
                 _("The following fields must be filled: %s", ", ".join(field_names))
             )
+
+    def _toggle_post_processing_cron(self):
+        """ Enable the post-processing cron if some providers are enabled; disable it otherwise.
+
+        This allows for saving resources on the cron's wake-up overhead when it has nothing to do.
+
+        :return: None
+        """
+        post_processing_cron = self.env.ref(
+            'payment.cron_post_process_payment_tx', raise_if_not_found=False
+        )
+        if post_processing_cron:
+            any_active_provider = bool(
+                self.sudo().search_count([('state', '!=', 'disabled')], limit=1)
+            )
+            post_processing_cron.active = any_active_provider
 
     def _archive_linked_tokens(self):
         """ Archive all the payment tokens linked to the providers.
@@ -611,9 +631,12 @@ class PaymentProvider(models.Model):
     def _get_validation_currency(self):
         """ Return the currency to use for validation operations.
 
-        For a provider to support tokenization, it must override this method and return the
-        validation currency. If the validation amount is `0`, it is not necessary to create the
-        override.
+        The validation currency must be supported by both the provider and the payment method. If
+        the payment method is not passed, only the provider's supported currencies are considered.
+        If no suitable currency is found, the provider's company's currency is returned instead.
+
+        For a provider to support tokenization and specify a different validation currency, it must
+        override this method and return the appropriate validation currency.
 
         Note: `self.ensure_one()`
 
@@ -621,7 +644,22 @@ class PaymentProvider(models.Model):
         :rtype: recordset of `res.currency`
         """
         self.ensure_one()
-        return self.company_id.currency_id
+
+        # Find the validation currency at the intersection of the provider's and payment method's
+        # supported currencies. An empty recordset means that all currencies are supported.
+        provider_currencies = self.available_currency_ids
+        pm = self.env.context.get('validation_pm')
+        pm_currencies = self.env['res.currency'] if not pm else pm.supported_currency_ids
+        validation_currency = None
+        if provider_currencies and pm_currencies:
+            validation_currency = (provider_currencies & pm_currencies)[:1]
+        elif provider_currencies and not pm_currencies:
+            validation_currency = provider_currencies[:1]
+        elif not provider_currencies and pm_currencies:
+            validation_currency = pm_currencies[:1]
+        if not validation_currency:  # All currencies are supported, or no suitable one was found.
+            validation_currency = self.company_id.currency_id
+        return validation_currency
 
     def _get_redirect_form_view(self, is_validation=False):
         """ Return the view of the template used to render the redirect form.

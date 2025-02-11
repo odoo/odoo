@@ -313,6 +313,10 @@ class configmanager(object):
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
+        group.add_option("--limit-time-worker-cron", dest="limit_time_worker_cron", my_default=0,
+                         help="Maximum time a cron thread/worker stays alive before it is restarted. "
+                              "Set to 0 to disable. (default: 0)",
+                         type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Try to enable the unaccent extension when creating new databases.")
         group.add_option("--geoip-city-db", "--geoip-db", dest="geoip_city_db", my_default='/usr/share/GeoIP/GeoLite2-City.mmdb',
@@ -455,7 +459,7 @@ class configmanager(object):
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_city_db', 'geoip_country_db', 'dev_mode',
-                'shell_interface',
+                'shell_interface', 'limit_time_worker_cron',
         ]
 
         for arg in keys:
@@ -556,12 +560,47 @@ class configmanager(object):
         return opt
 
     def _warn_deprecated_options(self):
-        if self.options['longpolling_port']:
+        if self.options.get('longpolling_port', 0):
             warnings.warn(
                 "The longpolling-port is a deprecated alias to "
                 "the gevent-port option, please use the latter.",
                 DeprecationWarning)
             self.options['gevent_port'] = self.options.pop('longpolling_port')
+
+        for old_option_name, new_option_name in [
+            ('geoip_database', 'geoip_city_db'),
+            ('osv_memory_age_limit', 'transient_age_limit')
+        ]:
+            deprecated_value = self.options.pop(old_option_name, None)
+            if deprecated_value:
+                default_value = self.casts[new_option_name].my_default
+                current_value = self.options[new_option_name]
+
+                if deprecated_value in (current_value, default_value):
+                    # Surely this is from a --save that was run in a
+                    # prior version. There is no point in emitting a
+                    # warning because: (1) it holds the same value as
+                    # the correct option, and (2) it is going to be
+                    # automatically removed on the next --save anyway.
+                    pass
+                elif current_value == default_value:
+                    # deprecated_value != current_value == default_value
+                    # assume the new option was not set
+                    self.options[new_option_name] = deprecated_value
+                    warnings.warn(
+                        f"The {old_option_name!r} option found in the "
+                        "configuration file is a deprecated alias to "
+                        f"{new_option_name!r}, please use the latter.",
+                        DeprecationWarning)
+                else:
+                    # deprecated_value != current_value != default_value
+                    self.parser.error(
+                        f"The two options {old_option_name!r} "
+                        "(found in the configuration file but "
+                        f"deprecated) and {new_option_name!r} are set "
+                        "to different values. Please remove the first "
+                        "one and make sure the second is correct."
+                    )
 
     def _is_addons_path(self, path):
         from odoo.modules.module import MANIFEST_NAMES

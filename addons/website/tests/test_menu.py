@@ -342,3 +342,14 @@ class TestMenuHttp(common.HttpCase):
         self.assertIn(b"french_mega_menu_content", page.content)
         page = self.url_open('/%s?edit_translations=1' % fr.url_code)
         self.assertIn(b"french_mega_menu_content", page.content)
+
+    def test_menu_empty_url(self):
+        website = self.env['website'].browse(1)
+        menu = self.env['website.menu'].create({
+            'name': 'Test Empty URL menu',
+            'parent_id': website.menu_id.id,
+            'website_id': website.id,
+        })
+        self.assertFalse(menu.url, "Menu URL should be empty")
+        # this should not crash
+        website.is_menu_cache_disabled()

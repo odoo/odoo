@@ -3,8 +3,8 @@
 # 	* pos_loyalty
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Технічне поле, яке використовується для об’єднання кількох ядкыв винагороди з однієї винагороди.\n"
+"        Технічне поле, яке використовується для об’єднання кількох рядків винагороди з однієї винагороди.\n"
 "    "
 
 #. module: pos_loyalty
@@ -329,7 +329,7 @@ msgstr "Правило лояльності"
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "New Total"
-msgstr ""
+msgstr "Новий підсумок"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -350,7 +350,7 @@ msgstr "За цим купоном не можна отримати винаго
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "No valid eWallet found"
-msgstr ""
+msgstr "Не знайдено дійсного Електронного гаманця"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -429,14 +429,14 @@ msgstr "Вартість балів"
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "Points Spent"
-msgstr ""
+msgstr "Витрачені бали"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "Points Won"
-msgstr ""
+msgstr "Виграні бали"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__pos_report_print_id
@@ -554,6 +554,20 @@ msgstr "Цей код купону вже відскановано та акти
 #, python-format
 msgid "That promo code program has already been activated."
 msgstr "Цей промокод програми вже активовано."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That promo code program is expired."
+msgstr "Той акційний промокод протерміновано."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That promo code program is not yet valid."
+msgstr "Той акційний промокод ще не дійсний."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -805,6 +819,8 @@ msgstr ""
 msgid ""
 "You either have not created an eWallet or all your eWallets have expired."
 msgstr ""
+"Ви або не створили Електронний гаманець, або термін дії всіх ваших "
+"Електронних гаманців закінчився."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -818,7 +834,7 @@ msgstr "Ви повинні встановити '%s' перед налашту�
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "eWallet"
-msgstr "Електронний гаманецт"
+msgstr "Електронний гаманець"
 
 #. module: pos_loyalty
 #. odoo-javascript

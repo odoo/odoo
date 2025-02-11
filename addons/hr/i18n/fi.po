@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -65,7 +65,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'Nimilappu - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -147,13 +147,13 @@ msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Yritys\" title=\
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Sähköposti\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Puhelin\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -231,7 +231,7 @@ msgstr "<span class=\"o_stat_text\">Yhdistetty alkaen</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Työntekijä</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -402,6 +402,8 @@ msgid ""
 "Additional Information: \n"
 " %(description)s"
 msgstr ""
+"Lisätietoja:\n"
+" %(description)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -1005,8 +1007,19 @@ msgid ""
 "Building strong relationships with clients / customers for business growth profitability.\n"
 "Keep regular interaction with key clients for better extraction and expansion."
 msgstr ""
+"Eri Odoo-palveluiden esittely jokaiselle asiakkaalle ja asiakkaan vakuuttaminen sovelluksen toimivuudesta.\n"
+"Hakijalla tulisi olla erinomaiset viestintätaidot.\n"
+"Suhteiden luominen ja vaikuttamistaidot\n"
+"Asiantuntemus uusien asiakkaiden hankinnassa (NCA) ja asiakassuhteiden hallinnassa.\n"
+"Markkina- ja asiakastietojen kerääminen.\n"
+"Yhteensovittaminen myynti- ja tukitiimin kanssa eri strategioiden käyttöönottoa varten\n"
+"Edistymisen tarkastelu sekä mahdollisuuksien ja uusien kehitysalueiden tunnistaminen.\n"
+"Vahvojen suhteiden luominen asiakkaisiin/asiakkaisiin liiketoiminnan kasvun kannattavuuden varmistamiseksi.\n"
+"Säännöllinen vuorovaikutus avainasiakkaiden kanssa parempaa louhintaa ja laajentamista varten."
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1019,6 +1032,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Osasto"
 
@@ -1032,7 +1046,7 @@ msgstr "Osaston nimi"
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 #, python-format
 msgid "Department Organization"
-msgstr ""
+msgstr "Osaston organisaatio"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_department_kanban_action
@@ -1128,6 +1142,8 @@ msgid ""
 "Display remote work settings for each employee and dedicated reports. "
 "Presence icons will be updated with remote work location."
 msgstr ""
+"Näytä kunkin työntekijän etätyöasetukset ja omat raportit. Läsnäolokuvakkeet"
+" päivitetään etätyöpaikan mukaan."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
@@ -1252,7 +1268,7 @@ msgstr "Employee Name"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
 msgid "Employee Properties"
-msgstr ""
+msgstr "Työntekijän ominaisuudet"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -1467,7 +1483,7 @@ msgstr "Tarjolla hedelmiä, kahvia ja <br>välipaloja."
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_full_time
 msgid "Full-Time"
-msgstr ""
+msgstr "Kokoaikainen"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1488,7 +1504,7 @@ msgstr "Generoi"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Give more details about the reason of archiving the employee."
-msgstr ""
+msgstr "Kerro tarkemmin työntekijän arkistoinnin syy."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1540,7 +1556,7 @@ msgstr "HR-työntekijä: tarkista työluvan voimassaolo"
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #, python-format
 msgid "HR Presence Status"
-msgstr ""
+msgstr "HR läsnäolon tila"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1674,6 +1690,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
 msgstr ""
+"Jos sinulla on useampi kuin yksi auto, erota kilvet toisistaan "
+"välilyönnillä."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1885,7 +1903,7 @@ msgstr "Sijainnin numero"
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
-msgstr ""
+msgstr "Pitkän aikavälin hankkeet"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
@@ -1899,6 +1917,15 @@ msgid ""
 "Lorem Ipsum passages, and more recently with desktop publishing software "
 "like Aldus PageMaker including versions of Lorem Ipsum."
 msgstr ""
+"Lorem Ipsum on yksinkertaisesti paino- ja kirjapainoteollisuuden "
+"tekstitekstiä. Lorem Ipsum on ollut alan vakioteksti 1500-luvulta lähtien, "
+"jolloin tuntematon kirjapainaja otti kirjakäärön ja sekoitti sen "
+"kirjoitusnäytekirjan tekemistä varten. Se on selvinnyt viidestä "
+"vuosisadasta, mutta myös sähköisen kirjasintekniikan käyttöönotosta, ja se "
+"on pysynyt olennaisesti muuttumattomana. Se yleistyi 1960-luvulla, kun Lorem"
+" Ipsum -kohdat sisältäviä Letraset-arkkeja julkaistiin, ja viime aikoina "
+"Lorem Ipsum -versioita sisältävät pöytäjulkaisuohjelmat, kuten Aldus "
+"PageMaker."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
@@ -2115,7 +2142,7 @@ msgstr "Olisi etua, jos olisi"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "No Tags found ! Let's create one"
-msgstr ""
+msgstr "Tunnisteita ei löytynyt ! Luodaan sellainen"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2237,7 +2264,7 @@ msgstr "Toimisto"
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer: Manage all employees"
-msgstr ""
+msgstr "Esimies: Hallinnoi kaikkia työntekijöitä"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
@@ -2250,7 +2277,7 @@ msgstr "On/Offboarding-suunnitelmat"
 #: code:addons/hr/static/src/core/web/thread_actions.js:0
 #, python-format
 msgid "Open Profile"
-msgstr ""
+msgstr "Avaa profiili"
 
 #. module: hr
 #. odoo-python
@@ -2313,7 +2340,7 @@ msgstr "Ylempi polku"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Part-Time"
-msgstr ""
+msgstr "Osa-aikainen"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
@@ -2386,7 +2413,7 @@ msgstr "Henkilökohtainen kehitys"
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "Personal information update."
-msgstr ""
+msgstr "Henkilötietojen päivitys."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2413,6 +2440,8 @@ msgid ""
 "Plan %(plan_names)s cannot use a department as it is used only for employee "
 "plans."
 msgstr ""
+"Suunnitelmassa %(plan_names)s ei voida käyttää osastoa, koska sitä käytetään"
+" vain työntekijäsuunnitelmissa."
 
 #. module: hr
 #. odoo-python
@@ -2422,6 +2451,9 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
+"Suunnitelmatoiminnot %(template_names)s ei voi käyttää valmentajaa, "
+"esimiestä tai työntekijää, koska sitä käytetään vain "
+"työntekijäsuunnitelmissa."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2463,7 +2495,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Control"
-msgstr ""
+msgstr "Läsnäolon valvonta"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2507,7 +2539,7 @@ msgstr "Yksityinen osoite"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
 msgid "Private Car Plate"
-msgstr ""
+msgstr "Yksityisauton kilpi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_city
@@ -2571,7 +2603,7 @@ msgstr "Yksityinen postinumero"
 #. module: hr
 #: model:hr.department,name:hr.dep_ps
 msgid "Professional Services"
-msgstr ""
+msgstr "Ammatilliset palvelut"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_properties
@@ -2597,7 +2629,7 @@ msgstr "Asiakkaan tarpeiden määrittäminen"
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_be
 msgid "R&D USA"
-msgstr ""
+msgstr "T&K USA"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__rating_ids
@@ -2630,7 +2662,7 @@ msgstr "Syy"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__reason_code
 msgid "Reason Code"
-msgstr ""
+msgstr "Syy-koodi"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
@@ -2774,7 +2806,7 @@ msgstr "Koulu"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_seasonal
 msgid "Seasonal"
-msgstr ""
+msgstr "Kausi"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -2820,7 +2852,7 @@ msgstr "Näytä HR-kuvakkeen näyttö"
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 #, python-format
 msgid "Show employees"
-msgstr ""
+msgstr "Näytä työntekijät"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
@@ -2846,7 +2878,14 @@ msgstr "Sosiaaliturvatunnus"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
-msgstr ""
+msgstr "Ohjelmistokehittäjä"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr "Joillakin työntekijöillä on jo työpaikan yhteyshenkilö"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3002,6 +3041,10 @@ msgid ""
 "              He defines the products and customers portfolio according to the marketing plan.\n"
 "              This mission requires strong collaboration with Technical Service and Sales."
 msgstr ""
+"Markkinointipäällikkö määrittelee keskipitkän ja pitkän aikavälin markkinointistrategian kattamilleen markkinasegmenteille maailmassa.\n"
+"              Hän kehittää ja valvoo vuosibudjettia yhteistyössä myynnin kanssa.\n"
+"              Hän määrittelee tuote- ja asiakassalkun markkinointisuunnitelman mukaisesti.\n"
+"              Tämä tehtävä edellyttää tiivistä yhteistyötä teknisen palvelun ja myynnin kanssa."
 
 #. module: hr
 #. odoo-python
@@ -3044,13 +3087,15 @@ msgid ""
 "The fields %r you try to read is not available on the public employee "
 "profile."
 msgstr ""
+"Kentät %r, joita yrität lukea, eivät ole käytettävissä julkisessa "
+"työntekijäprofiilissa."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "The following fields were modified by %s"
-msgstr ""
+msgstr "Seuraavia kenttiä on muutettu %s"
 
 #. module: hr
 #. odoo-python
@@ -3115,7 +3160,7 @@ msgstr ""
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Those responsible types are limited to Employee plans."
-msgstr ""
+msgstr "Nämä vastuulliset tyypit rajoittuvat työntekijäsuunnitelmiin."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -3205,7 +3250,7 @@ msgstr "Lukemattomat viestit"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "Use tags to categorize your Employees."
-msgstr ""
+msgstr "Käytä tunnisteita luokittelemaan työntekijöitäsi."
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -3225,7 +3270,7 @@ msgstr "Käyttäjän kumppani"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies:"
-msgstr ""
+msgstr "Avoimet työpaikat:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
@@ -3249,7 +3294,7 @@ msgstr "Voimassa oleva työlupa Belgiaan"
 #: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #, python-format
 msgid "View profile"
-msgstr ""
+msgstr "Näytä profiili"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -3275,6 +3320,8 @@ msgstr "Varoitus"
 msgid ""
 "We are currently looking for someone like that to join our Consultant team."
 msgstr ""
+"Etsimme tällä hetkellä seuraavanlaista henkilöä liittymään "
+"konsulttijoukkoomme."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -3282,6 +3329,8 @@ msgid ""
 "We are currently looking for someone like that to join our Web team.\n"
 "                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
 msgstr ""
+"Etsimme parhaillaan tällaista henkilöä liittymään web-tiimiimme.\n"
+"                Jonkun, joka voi irrottautua koodauksesta ja tehdä analyysejä tai tavata asiakkaita selittääkseen heidän tarpeisiinsa sopivia teknisiä mahdollisuuksia."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3328,6 +3377,9 @@ msgid ""
 "                    can easily find all the information you need for each person;\n"
 "                    contact data, job position, availability, etc."
 msgstr ""
+"Vain nopealla vilkaisulla Odoo-työntekijän näytöllä voit\n"
+"                    löydät helposti kaikki tarvitsemasi tiedot kustakin henkilöstä;\n"
+"                    yhteystiedot, työtehtävä, saatavuus jne."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -3494,6 +3546,18 @@ msgid ""
 "contributing to the set up of a new politic,\n"
 "being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers."
 msgstr ""
+"Osallistut opastustyökalujemme ja ennakkomyyntityökalujemme päivittämiseen Odoon uuden version julkaisun jälkeen. Jokainen uusi ohjelmistoversio tuo mukanaan merkittäviä parannuksia toiminnallisuuksiin, ergonomiaan ja konfigurointiin.\n"
+"Sinun on perehdyttävä nykyisiin työkaluihin (kirjat, luokkatuki, Odoo-esityksen diat, kaupalliset työkalut),\n"
+"osallistua näiden työkalujen päivittämiseen, jotta ne soveltuisivat ohjelmistojen uuteen versioon, ja varmasti,\n"
+"ehdottaa parannuksia, jotta ohjelmiston uudet osa-alueet voidaan kattaa.\n"
+"Sinä liityt käyttöönoton tukiosastoon. Tämä 3 hengen tiimi auttaa Odoo-asiakkaita ohjelmiston käyttöönotossa. Tehtäviisi kuuluu\n"
+"animoida webinaareja, joissa esitellään ohjelmiston eri toimintoja.\n"
+"olla mukana asiakkaiden tukemisessa ja\n"
+"vastata heidän kysymyksiinsä.\n"
+"Autat tukipäällikköä uusien tukipalveluiden perustamisessa seuraavasti\n"
+"osallistumalla uusien tapausten käsittelyyn,\n"
+"osallistumalla uuden toimintatavan perustamiseen,\n"
+"osallistut tyytyväisyyskyselyihin, jotta saat paremmat tiedot siitä, miten asiakkaat kokevat annetun tuen."
 
 #. module: hr
 #. odoo-python
@@ -3510,6 +3574,9 @@ msgid ""
 "\n"
 "The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
 msgstr ""
+"Osallistut yhteistyökumppaneillemme ja asiakkaillemme tarjoamiimme konsultointipalveluihin: suunnitteluun, analysointiin, kehittämiseen, testaukseen, projektinhallintaan, tukeen ja valmennukseen. Työskentelet itsenäisesti sekä koordinoit ja ohjaat pieniä hajautettuja kehitystiimejä joissakin projekteissa. Vaihtoehtoisesti järjestät Odoo-koulutustilaisuuksia kumppaneille ja asiakkaille (8-10 henkilöä/tilaisuus). Raportoit asiantuntijapalveluiden päällikölle ja teet tiivistä yhteistyötä kaikkien kehittäjien ja konsulttien kanssa.\n"
+"\n"
+"Työpaikka sijaitsee Grand-Rosièressa (1367), Belgiassa (Louvain-La-Neuven ja Namurin välissä)."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3549,4 +3616,4 @@ msgstr "rajoitettu työntekijöihin"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
-msgstr ""
+msgstr "work_permit_name"

@@ -7,7 +7,7 @@ import pytz
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from werkzeug.urls import url_join
+from werkzeug.urls import url_encode, url_join
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -152,10 +152,9 @@ class Digest(models.Model):
                     digest_slowdown=digest in to_slowdown,
                     lang=user.lang
                 )._action_send_to_user(user, tips_count=1)
+            if digest in to_slowdown:
+                digest.periodicity = digest._get_next_periodicity()[0]
             digest.next_run_date = digest._get_next_run_date()
-
-        for digest in to_slowdown:
-            digest.periodicity = digest._get_next_periodicity()[0]
 
     def _action_send_to_user(self, user, tips_count=1, consume_tips=True):
         unsubscribe_token = self._get_unsubscribe_token(user.id)
@@ -193,8 +192,14 @@ class Digest(models.Model):
             },
         )
         # create a mail_mail based on values, without attachments
-        unsub_url = url_join(self.get_base_url(),
-                             f'/digest/{self.id}/unsubscribe?token={unsubscribe_token}&user_id={user.id}&one_click=1')
+        unsub_params = url_encode({
+            "token": unsubscribe_token,
+            "user_id": user.id,
+        })
+        unsub_url = url_join(
+            self.get_base_url(),
+            f'/digest/{self.id}/unsubscribe_oneclik?{unsub_params}'
+        )
         mail_values = {
             'auto_delete': True,
             'author_id': self.env.user.partner_id.id,
@@ -343,13 +348,13 @@ class Digest(models.Model):
                   new_perioridicy_str=new_perioridicy_str)
             )
         elif self.periodicity == 'daily' and user.has_group('base.group_erp_manager'):
-            preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>') % (
+            preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#017e84; font-weight: bold;">%s</a></p>') % (
                 _('Prefer a broader overview?'),
                 f'/digest/{self.id:d}/set_periodicity?periodicity=weekly',
                 _('Switch to weekly Digests')
             ))
         if user.has_group('base.group_erp_manager'):
-            preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>') % (
+            preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#017e84; font-weight: bold;">%s</a></p>') % (
                 _('Want to customize this email?'),
                 f'/web#view_type=form&model={self._name}&id={self.id:d}',
                 _('Choose the metrics you care about')
@@ -361,11 +366,11 @@ class Digest(models.Model):
         self.ensure_one()
         if self.periodicity == 'daily':
             delta = relativedelta(days=1)
-        if self.periodicity == 'weekly':
+        elif self.periodicity == 'weekly':
             delta = relativedelta(weeks=1)
         elif self.periodicity == 'monthly':
             delta = relativedelta(months=1)
-        elif self.periodicity == 'quarterly':
+        else:
             delta = relativedelta(months=3)
         return date.today() + delta
 
@@ -439,13 +444,13 @@ class Digest(models.Model):
     def _check_daily_logs(self):
         """ Badly named method that checks user logs and slowdown the sending
         of digest emails based on recipients being away. """
-        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today = datetime.now().replace(microsecond=0)
         to_slowdown = self.env['digest.digest']
         for digest in self:
-            if digest.periodicity == 'daily':  # 3 days ago
-                limit_dt = today - relativedelta(days=3)
-            elif digest.periodicity == 'weekly':  # 2 weeks ago
-                limit_dt = today - relativedelta(days=14)
+            if digest.periodicity == 'daily':  # 2 days ago
+                limit_dt = today - relativedelta(days=2)
+            elif digest.periodicity == 'weekly':  # 1 week ago
+                limit_dt = today - relativedelta(days=7)
             elif digest.periodicity == 'monthly':  # 1 month ago
                 limit_dt = today - relativedelta(months=1)
             elif digest.periodicity == 'quarterly':  # 3 month ago
@@ -459,11 +464,11 @@ class Digest(models.Model):
         return to_slowdown
 
     def _get_next_periodicity(self):
+        if self.periodicity == 'daily':
+            return 'weekly', _('weekly')
         if self.periodicity == 'weekly':
             return 'monthly', _('monthly')
-        if self.periodicity == 'monthly':
-            return 'quarterly', _('quarterly')
-        return 'weekly', _('weekly')
+        return 'quarterly', _('quarterly')
 
     def _format_currency_amount(self, amount, currency_id):
         pre = currency_id.position == 'before'

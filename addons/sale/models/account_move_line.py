@@ -37,7 +37,7 @@ class AccountMoveLine(models.Model):
                         move_to_reinvoice |= move_line
 
         # insert the sale line in the create values of the analytic entries
-        if move_to_reinvoice.filtered(lambda aml: not aml.move_id.reversed_entry_id):  # only if the move line is not a reversal one
+        if move_to_reinvoice.filtered(lambda aml: not aml.move_id.reversed_entry_id and aml.product_id):  # only if the move line is not a reversal one
             map_sale_line_per_move = move_to_reinvoice._sale_create_reinvoice_sale_line()
             for values in values_list:
                 sale_line = map_sale_line_per_move.get(values.get('move_line_id'))
@@ -176,7 +176,7 @@ class AccountMoveLine(models.Model):
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
 
         fpos = order.fiscal_position_id or order.fiscal_position_id._get_fiscal_position(order.partner_id)
-        product_taxes = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == order.company_id)
+        product_taxes = self.product_id.taxes_id._filter_taxes_by_company(order.company_id)
         taxes = fpos.map_tax(product_taxes)
 
         return {

@@ -8,7 +8,7 @@ import {
 } from "@web/core/utils/colors";
 import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
-import { throttleForAnimation } from "@web/core/utils/timing";
+import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 
 import {
     Component,
@@ -80,14 +80,24 @@ export class Colorpicker extends Component {
                 ".o_opacity_slider",
                 this._onMouseDownOpacitySlider.bind(this)
             );
-            this.$el.on("change", ".o_color_picker_inputs", this._onChangeInputs.bind(this));
+            const debouncedOnChangeInputs = debounce(this._onChangeInputs.bind(this), 10, true);
+            this.$el.on("change", ".o_color_picker_inputs", debouncedOnChangeInputs);
 
             this.start();
         });
         onWillUpdateProps((newProps) => {
-            if (newProps.selectedColor) {
-                this.setSelectedColor(newProps.selectedColor);
+            if (!this.el) {
+                // There is legacy code that can trigger the instantiation of the
+                // link tool when one of it's parent component is not in the dom. If
+                // that parent element is not in the dom, owl will not return
+                // `this.linkComponentWrapperRef.el` because of a check (see
+                // `inOwnerDocument`).
+                return;
             }
+            const newSelectedColor = newProps.selectedColor
+                ? newProps.selectedColor
+                : newProps.defaultColor;
+            this.setSelectedColor(newSelectedColor);
         });
         onWillDestroy(() => {
             this.destroy();
@@ -113,7 +123,10 @@ export class Colorpicker extends Component {
         this.$opacitySlider = this.$el.find(".o_opacity_slider");
         this.$opacitySliderPointer = this.$el.find(".o_opacity_pointer");
 
-        const rgba = convertCSSColorToRgba(this.props.defaultColor);
+        const defaultCssColor = this.props.selectedColor
+            ? this.props.selectedColor
+            : this.props.defaultColor;
+        const rgba = convertCSSColorToRgba(defaultCssColor);
         if (rgba) {
             this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
         }
@@ -502,8 +515,8 @@ export class Colorpicker extends Component {
     _onChangeInputs(ev) {
         switch ($(ev.target).data("colorMethod")) {
             case "hex":
-                this._updateHex(this.$el.find(".o_hex_input").val());
-                break;
+                // Handled by the "input" event (see "_onHexColorInput").
+                return;
             case "rgb":
                 this._updateRgba(
                     parseInt(this.$el.find(".o_red_input").val()),
@@ -524,5 +537,19 @@ export class Colorpicker extends Component {
         }
         this._updateUI();
         this._colorSelected();
+    }
+    /**
+     * Called when the hex color input's input event is triggered.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onHexColorInput(ev) {
+        const hexColorValue = ev.target.value.replaceAll("#", "");
+        if (hexColorValue.length === 6) {
+            this._updateHex(`#${hexColorValue}`);
+            this._updateUI();
+            this._colorSelected();
+        }
     }
 }

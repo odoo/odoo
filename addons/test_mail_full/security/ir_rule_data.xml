@@ -5,7 +5,7 @@
         <field name="name">TestRating: Multi Company</field>
         <field name="model_id" ref="test_mail_full.model_mail_test_rating"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
     <record id="mail_test_rating_rule_portal" model="ir.rule">
         <field name="name">TestRating: Portal should follow</field>

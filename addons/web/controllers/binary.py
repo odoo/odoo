@@ -19,7 +19,7 @@ from odoo import SUPERUSER_ID, _, http
 from odoo.addons.base.models.assetsbundle import ANY_UNIQUE
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request, Response
-from odoo.tools import file_open, file_path, replace_exceptions
+from odoo.tools import file_open, file_path, replace_exceptions, str2bool
 from odoo.tools.image import image_guess_size_from_field_name
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -72,16 +72,17 @@ class Binary(http.Controller):
         with replace_exceptions(UserError, by=request.not_found()):
             record = request.env['ir.binary']._find_record(xmlid, model, id and int(id), access_token)
             stream = request.env['ir.binary']._get_stream_from(record, field, filename, filename_field, mimetype)
-        send_file_kwargs = {'as_attachment': download}
+            if request.httprequest.args.get('access_token'):
+                stream.public = True
+
+        send_file_kwargs = {'as_attachment': str2bool(download)}
         if unique:
             send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
 
-        res = stream.get_response(**send_file_kwargs)
-        res.headers['Content-Security-Policy'] = "default-src 'none'"
-        return res
+        return stream.get_response(**send_file_kwargs)
 
     @http.route([
         '/web/assets/<string:unique>/<string:filename>'], type='http', auth="public")
@@ -129,7 +130,7 @@ class Binary(http.Controller):
                 elif js and bundle.javascripts:
                     attachment = bundle.js()
             except ValueError as e:
-                _logger.error(e.args[0])
+                _logger.warning("Parsing asset bundle %s has failed: %s", filename, e)
                 raise request.not_found() from e
         if not attachment:
             raise request.not_found()
@@ -171,6 +172,8 @@ class Binary(http.Controller):
                 record, field, filename=filename, filename_field=filename_field,
                 mimetype=mimetype, width=int(width), height=int(height), crop=crop,
             )
+            if request.httprequest.args.get('access_token'):
+                stream.public = True
         except UserError as exc:
             if download:
                 raise request.not_found() from exc
@@ -181,17 +184,16 @@ class Binary(http.Controller):
             stream = request.env['ir.binary']._get_image_stream_from(
                 record, 'raw', width=int(width), height=int(height), crop=crop,
             )
+            stream.public = False
 
-        send_file_kwargs = {'as_attachment': download}
+        send_file_kwargs = {'as_attachment': str2bool(download)}
         if unique:
             send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
 
-        res = stream.get_response(**send_file_kwargs)
-        res.headers['Content-Security-Policy'] = "default-src 'none'"
-        return res
+        return stream.get_response(**send_file_kwargs)
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     def upload_attachment(self, model, id, ufile, callback=None):

@@ -107,7 +107,7 @@ class AccountAnalyticLine(models.Model):
 
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
-        if self.env['account.analytic.plan'].check_access_rights('read', raise_exception=False):
+        if not self._context.get("studio") and self.env['account.analytic.plan'].check_access_rights('read', raise_exception=False):
             project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
 
             # Find main account nodes
@@ -131,7 +131,7 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         fields = super().fields_get(allfields, attributes)
-        if self.env['account.analytic.plan'].check_access_rights('read', raise_exception=False):
+        if not self._context.get("studio") and self.env['account.analytic.plan'].check_access_rights('read', raise_exception=False):
             project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
             for plan in project_plan + other_plans:
                 fname = plan._column_name()

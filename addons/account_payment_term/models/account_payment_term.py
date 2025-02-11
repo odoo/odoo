@@ -24,7 +24,7 @@ class AccountPaymentTermLine(models.Model):
     @api.constrains('days_next_month')
     def _check_valid_char_value(self):
         for record in self:
-            if record.days_next_month.isnumeric():
+            if record.days_next_month and record.days_next_month.isnumeric():
                 if not (0 <= int(record.days_next_month) <= 31):
                     raise ValidationError(_('The days added must be between 0 and 31.'))
             else:
@@ -40,15 +40,13 @@ class AccountPaymentTermLine(models.Model):
 
         due_date = fields.Date.from_string(date_ref) or fields.Date.today()
         if self.delay_type == 'days_end_of_month_on_the':
-            date_end_of_month = date_utils.end_of(due_date + relativedelta(days=self.nb_days), 'month')
+            try:
+                days_next_month = int(self.days_next_month)
+            except ValueError:
+                days_next_month = 1
 
-            # Special case handling when the day of the month is 29, 30 or 31 to avoid exceeding the next month's end
-            # For instance, with a payment term of 30 days end of month and using the 31st of a month,
-            # prevent calculation from moving beyond the end of the next month (e.g., early March instead of end February)
-            if self.days_next_month in {'29', '30', '31'}:
-                # We get the min of the days the user enter in the payment term and the last day of the next month
-                days_next_month = relativedelta(days=min(int(self.days_next_month), (date_end_of_month + relativedelta(month=2)).day))
-            else:
-                days_next_month = relativedelta(days=int(self.days_next_month))
-            return date_end_of_month + days_next_month
+            if not days_next_month:
+                return date_utils.end_of(due_date + relativedelta(days=self.nb_days), 'month')
+
+            return due_date + relativedelta(days=self.nb_days) + relativedelta(months=1, day=days_next_month)
         return res

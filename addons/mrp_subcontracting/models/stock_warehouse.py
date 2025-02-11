@@ -10,19 +10,19 @@ class StockWarehouse(models.Model):
     subcontracting_to_resupply = fields.Boolean(
         'Resupply Subcontractors', default=True)
     subcontracting_mto_pull_id = fields.Many2one(
-        'stock.rule', 'Subcontracting MTO Rule')
+        'stock.rule', 'Subcontracting MTO Rule', copy=False)
     subcontracting_pull_id = fields.Many2one(
-        'stock.rule', 'Subcontracting MTS Rule'
+        'stock.rule', 'Subcontracting MTS Rule', copy=False
     )
 
-    subcontracting_route_id = fields.Many2one('stock.route', 'Resupply Subcontractor', ondelete='restrict')
+    subcontracting_route_id = fields.Many2one('stock.route', 'Resupply Subcontractor', ondelete='restrict', copy=False)
 
     subcontracting_type_id = fields.Many2one(
         'stock.picking.type', 'Subcontracting Operation Type',
-        domain=[('code', '=', 'mrp_operation')])
+        domain=[('code', '=', 'mrp_operation')], copy=False)
     subcontracting_resupply_type_id = fields.Many2one(
         'stock.picking.type', 'Subcontracting Resupply Operation Type',
-        domain=[('code', '=', 'outgoing')])
+        domain=[('code', '=', 'outgoing')], copy=False)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -55,7 +55,7 @@ class StockWarehouse(models.Model):
         return result
 
     def _update_global_route_resupply_subcontractor(self):
-        route_id = self._find_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',
+        route_id = self._find_or_create_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',
                                            _('Resupply Subcontractor on Order'))
         if not route_id.sudo().rule_ids.filtered(lambda r: r.active):
             route_id.active = False
@@ -98,7 +98,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), raise_if_not_found=False).id,
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
                     'name': self._format_rulename(self.lot_stock_id, subcontract_location_id, 'MTO'),
                     'location_dest_id': subcontract_location_id.id,
                     'location_src_id': self.lot_stock_id.id,
@@ -115,8 +115,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',
-                                                        _('Resupply Subcontractor on Order'), raise_if_not_found=False).id,
+                    'route_id': self._find_or_create_global_route('mrp_subcontracting.route_resupply_subcontractor_mto', _('Resupply Subcontractor on Order')).id,
                     'name': self._format_rulename(subcontract_location_id, production_location_id, False),
                     'location_dest_id': production_location_id.id,
                     'location_src_id': subcontract_location_id.id,
@@ -160,13 +159,13 @@ class StockWarehouse(models.Model):
         values.update({
             'subcontracting_type_id': {
                 'name': self.name + ' ' + _('Sequence subcontracting'),
-                'prefix': self.code + (('/SBC' + str(count) + '/') if count else '/SBC/'),
+                'prefix': self.code + '/' + (self.subcontracting_type_id.sequence_code or (('SBC' + str(count)) if count else 'SBC')) + '/',
                 'padding': 5,
                 'company_id': self.company_id.id
             },
             'subcontracting_resupply_type_id': {
                 'name': self.name + ' ' + _('Sequence Resupply Subcontractor'),
-                'prefix': self.code + (('/RES' + str(count) + '/') if count else '/RES/'),
+                'prefix': self.code + '/' + (self.subcontracting_resupply_type_id.sequence_code or (('RES' + str(count)) if count else 'RES')) + '/',
                 'padding': 5,
                 'company_id': self.company_id.id
             },

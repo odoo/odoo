@@ -15,6 +15,7 @@ class RazorpayCommon(PaymentCommon):
             'razorpay_key_secret': 'Y63AyP9eL91',
             'razorpay_webhook_secret': 'coincoin_motherducker',
             'payment_method_ids': [Command.set([cls.env.ref('payment.payment_method_card').id])],
+            'allow_tokenization': True,
         })
 
         cls.razorpay_customer_id = 'cust_123'

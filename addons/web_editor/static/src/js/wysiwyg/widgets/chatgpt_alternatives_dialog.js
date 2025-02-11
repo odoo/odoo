@@ -13,6 +13,7 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
     };
     static defaultProps = {
         alternativesModes: {
+            correct: 'Correct',
             short: 'Shorten',
             long: 'Lengthen',
             friendly: 'Friendly',
@@ -33,6 +34,7 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
                     'Your goal is to help the user write alternatives to that text.\n' +
                     'Conditions:\n' +
                     '- You must respect the format (wrapping the alternative between <generated_text> and </generated_text>)\n' +
+                    '- You must detect the language of the text given to you and respond in that language\n' +
                     '- Do not write HTML\n' +
                     '- You must suggest one and only one alternative per answer\n' +
                     '- Your answer must be different every time, never repeat yourself\n' +
@@ -72,9 +74,12 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
             if (this.state.alternativesMode && !messageIndex) {
                 query += ` Make it more ${this.state.alternativesMode} than your last answer.`;
             }
+            if (this.state.alternativesMode === 'correct') {
+                query = 'Simply correct the text, without altering its meaning in any way. Preserve whatever language the user wrote their text in.';
+            }
             await this._generate(query, (content, isError) => {
                 if (this.state.currentBatchId === batchId) {
-                    const alternative = content.replace(/.*<generated_text>/, '').replace(/<\/generated_text>.*/, '');
+                    const alternative = content.replace(/^[\s\S]*<generated_text>/, '').replace(/<\/generated_text>[\s\S]*$/, '');
                     if (isError) {
                         wasError = true;
                     } else {

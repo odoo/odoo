@@ -14,16 +14,6 @@ class MailMail(models.Model):
     mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
     mailing_trace_ids = fields.One2many('mailing.trace', 'mail_mail_id', string='Statistics')
 
-    @api.model_create_multi
-    def create(self, values_list):
-        """ Override mail_mail creation to create an entry in mail.mail.statistics """
-        # TDE note: should be after 'all values computed', to have values (FIXME after merging other branch holding create refactoring)
-        mails = super(MailMail, self).create(values_list)
-        for mail, values in zip(mails, values_list):
-            if values.get('mailing_trace_ids'):
-                mail.mailing_trace_ids.write({'message_id': mail.message_id})
-        return mails
-
     def _get_tracking_url(self):
         token = self._generate_mail_recipient_token(self.id)
         return werkzeug.urls.url_join(
@@ -78,11 +68,14 @@ class MailMail(models.Model):
             emails = tools.email_split(email_values['email_to'][0])
             email_to = emails[0] if emails else False
             unsubscribe_url = self.mailing_id._get_unsubscribe_url(email_to, self.res_id)
+            unsubscribe_oneclick_url = self.mailing_id._get_unsubscribe_oneclick_url(email_to, self.res_id)
             view_url = self.mailing_id._get_view_url(email_to, self.res_id)
 
             # replace links in body
             if not tools.is_html_empty(email_values['body']):
-                if f'{base_url}/unsubscribe_from_list' in email_values['body']:
+                # replace generic link by recipient-specific one, except if we know
+                # by advance it won't work (i.e. testing mailing scenario)
+                if f'{base_url}/unsubscribe_from_list' in email_values['body'] and not self.env.context.get('mailing_test_mail'):
                     email_values['body'] = email_values['body'].replace(
                         f'{base_url}/unsubscribe_from_list',
                         unsubscribe_url,
@@ -95,7 +88,7 @@ class MailMail(models.Model):
 
             # add headers
             email_values['headers'].update({
-                'List-Unsubscribe': f'<{unsubscribe_url}>',
+                'List-Unsubscribe': f'<{unsubscribe_oneclick_url}>',
                 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
                 'Precedence': 'list',
                 'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange

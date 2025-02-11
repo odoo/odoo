@@ -79,7 +79,14 @@ export function makeFakeRPCService(mockRPC) {
                             env.bus.trigger("RPC:RESPONSE", { data, settings, result });
                             resolve(result);
                         })
-                        .catch(reject);
+                        .catch((error) => {
+                            env.bus.trigger("RPC:RESPONSE", {
+                                data,
+                                settings,
+                                error,
+                            });
+                            reject(error);
+                        });
                 });
                 rpcProm.abort = (rejectError = true) => {
                     if (rejectError) {

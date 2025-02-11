@@ -117,8 +117,13 @@ registry.category("web_tour.tours").add('project_tour', {
 }, {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     auto: true,
+    mobile: false,
 }, {
-    trigger: ".breadcrumb-item:not(.active):last",
+    trigger: "div[role='article']",
+    mobile: true,
+    run: "click",
+}, {
+    trigger: ".o_breadcrumb .o_back_button",
     extra_trigger: '.o_form_project_tasks',
     content: markup(_t("Let's go back to the <b>kanban view</b> to have an overview of your next tasks.")),
     position: "right",

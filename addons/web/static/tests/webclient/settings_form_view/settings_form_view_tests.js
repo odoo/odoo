@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { makeFakeLocalizationService, makeMockXHR } from "@web/../tests/helpers/mock_services";
 import {
     click,
     editInput,
@@ -12,6 +12,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { editSearch } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { browser } from "@web/core/browser/browser";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { errorService } from "@web/core/errors/error_service";
 import { registry } from "@web/core/registry";
@@ -41,6 +42,25 @@ QUnit.module("SettingsFormView", (hooks) => {
                     fields: {
                         foo: { string: "Foo", type: "boolean" },
                         bar: { string: "Bar", type: "boolean" },
+                        task_id: {
+                            string: "many2one field",
+                            type: "many2one",
+                            relation: "task",
+                            default: 100,
+                        },
+                        file: {
+                            string: "related binary field",
+                            type: "binary",
+                            relation: "task",
+                            related: "task_id.file",
+                            default: "coucou==\n",
+                        },
+                        file_name: {
+                            string: "related file name",
+                            type: "char",
+                            related: "task_id.file_name",
+                            default: "coucou.txt",
+                        },
                         tasks: { string: "one2many field", type: "one2many", relation: "task" },
                         baz: {
                             string: "Baz",
@@ -54,7 +74,17 @@ QUnit.module("SettingsFormView", (hooks) => {
                     },
                 },
                 task: {
-                    fields: {},
+                    fields: {
+                        file: { string: "Binary", type: "binary" },
+                        file_name: { string: "File Name", type: "char" },
+                    },
+                    records: [
+                        {
+                            id: 100,
+                            file: "coucou==\n",
+                            file_name: "coucou.txt",
+                        },
+                    ],
                 },
             },
         };
@@ -275,6 +305,26 @@ QUnit.module("SettingsFormView", (hooks) => {
             "Hide settings should not be shown"
         );
         assert.containsNone(target, ".app_settings_block:not(.d-none) .app_settings_header");
+    });
+
+    QUnit.test("don't show noContentHelper if no search is done", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <block title="Setting title" help="Settings will appear below">
+                            <div/>
+                        </block>
+                    </app>
+                </form>`,
+        });
+        assert.isNotVisible(
+            target.querySelector(".o_nocontent_help"),
+            "record not found message shown"
+        );
     });
 
     QUnit.test("unhighlight section not matching anymore", async function (assert) {
@@ -1079,6 +1129,62 @@ QUnit.module("SettingsFormView", (hooks) => {
     });
 
     QUnit.test("clicking a button with dirty settings -- discard", async (assert) => {
+        serverData.models["res.config.settings"].fields.product_ids = {
+            string: "Products",
+            type: "many2many",
+            relation: "product",
+        };
+        serverData.models.product = {
+            fields: {
+                name: { string: "Product Name", type: "char" },
+                color: { type: "integer" },
+            },
+            records: [
+                {
+                    id: 37,
+                    name: "xphone",
+                    color: 1,
+                },
+                {
+                    id: 41,
+                    name: "xpad",
+                    color: 2,
+                },
+            ],
+        };
+        // Initial onchanges !
+        serverData.models["res.config.settings"].onchanges = {
+            product_ids(obj) {
+                obj.product_ids = [
+                    [
+                        4,
+                        37,
+                        {
+                            id: 37,
+                            display_name: "xphone",
+                        },
+                    ],
+                    [
+                        4,
+                        41,
+                        {
+                            id: 41,
+                            display_name: "xpad",
+                        },
+                    ],
+                    [
+                        1,
+                        41,
+                        {
+                            color: 3,
+                        },
+                    ],
+                ];
+            },
+            bar(obj) {
+                obj.bar = true;
+            },
+        };
         registry.category("services").add(
             "action",
             {
@@ -1097,6 +1203,8 @@ QUnit.module("SettingsFormView", (hooks) => {
             arch: `
                 <form js_class="base_settings">
                     <app string="CRM" name="crm">
+                        <field name="product_ids" widget="many2many_tags" options="{ 'color_field': 'color' }"/>
+                        <field name="bar" />
                         <field name="foo" />
                         <button type="object" name="mymethod" class="myBtn"/>
                     </app>
@@ -1104,18 +1212,43 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             resModel: "res.config.settings",
             mockRPC(route, args) {
+                if (args.method === "web_save") {
+                    assert.step(args.method + " - " + JSON.stringify(args.args[1]));
+                    return;
+                }
                 assert.step(args.method);
             },
         });
 
         assert.verifySteps(["get_views", "onchange"]);
-        await click(target, ".o_field_boolean input[type='checkbox']");
+        // Initial State:
+        // The first checkbox "bar" is checked.
+        // Two tags on the many2many : xphone and xpad.
+        // The colors are 1 and 3 (the onchange is correctly apply)
+        assert.containsOnce(
+            target,
+            ".o_field_boolean[name='bar'] input:checked",
+            "checkbox should be checked"
+        );
+        assert.deepEqual(target.querySelector(".o_field_tags").innerText, "xphone\nxpad");
+        assert.containsOnce(target, ".o_tag_color_1");
+        assert.containsOnce(target, ".o_tag_color_3");
+        await click(target, ".o_field_boolean[name='foo'] input[type='checkbox']");
         await click(target, ".myBtn");
         await click(target.querySelectorAll(".modal .btn-secondary")[1]);
         assert.verifySteps([
-            "web_save",
+            'web_save - {"product_ids":[[4,37],[4,41],[1,41,{"color":3}]],"bar":true,"foo":false}',
             'action executed {"context":{"lang":"en","uid":7,"tz":"taht"},"type":"object","name":"mymethod","resModel":"res.config.settings","resId":1,"resIds":[1],"buttonContext":{}}',
         ]);
+        // We came back to the same initial state.
+        assert.containsOnce(
+            target,
+            ".o_field_boolean[name='bar'] input:checked",
+            "checkbox should be checked"
+        );
+        assert.deepEqual(target.querySelector(".o_field_tags").innerText, "xphone\nxpad");
+        assert.containsOnce(target, ".o_tag_color_1");
+        assert.containsOnce(target, ".o_tag_color_3");
     });
 
     QUnit.test(
@@ -1867,5 +2000,95 @@ QUnit.module("SettingsFormView", (hooks) => {
         await doAction(webClient, 1);
         await click(target.querySelector("button[name='2']"));
         assert.verifySteps(["/web/action/run"]);
+    });
+
+    QUnit.test("BinaryField is correctly rendered in Settings form view", async function (assert) {
+        async function send(data) {
+            assert.ok(data instanceof FormData);
+            assert.strictEqual(data.get("field"), "file", "we should download the field document");
+            assert.strictEqual(
+                data.get("data"),
+                "coucou==\n",
+                "we should download the correct data"
+            );
+
+            this.status = 200;
+            this.response = new Blob([data.get("data")], { type: "text/plain" });
+        }
+        const MockXHR = makeMockXHR("", send);
+
+        patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="Sale" name="sale">
+                    <block title="Title of group Bar">
+                        <setting>
+                            <field name="task_id" invisible="1"/>
+                            <field name="file" filename="file_name"/>
+                            <field name="file_name"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>`,
+        });
+
+        assert.containsOnce(
+            target,
+            '.o_field_widget[name="file"] .fa-download',
+            "Download button should be display in settings form view"
+        );
+        assert.strictEqual(
+            target.querySelector('.o_field_widget[name="file"].o_field_binary .o_input').value,
+            "coucou.txt",
+            "the binary field should display the file name in the input"
+        );
+        assert.containsOnce(
+            target,
+            ".o_field_binary .o_clear_file_button",
+            "there shoud be a button to clear the file"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_char input").value,
+            "coucou.txt",
+            "the filename field should have the file name as value"
+        );
+
+        // Testing the download button in the field
+        // We must avoid the browser to download the file effectively
+        const prom = makeDeferred();
+        const downloadOnClick = (ev) => {
+            const target = ev.target;
+            if (target.tagName === "A" && "download" in target.attributes) {
+                ev.preventDefault();
+                document.removeEventListener("click", downloadOnClick);
+                prom.resolve();
+            }
+        };
+        document.addEventListener("click", downloadOnClick);
+        registerCleanup(() => document.removeEventListener("click", downloadOnClick));
+        await click(target.querySelector(".fa-download"));
+        await prom;
+
+        await click(target.querySelector(".o_field_binary .o_clear_file_button"));
+
+        assert.isNotVisible(
+            target.querySelector(".o_field_binary input"),
+            "the input should be hidden"
+        );
+        assert.containsOnce(
+            target,
+            ".o_field_binary .o_select_file_button",
+            "there should be a button to upload the file"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_char input").value,
+            "",
+            "the filename field should be empty since we removed the file"
+        );
     });
 });

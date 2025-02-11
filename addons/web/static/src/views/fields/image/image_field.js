@@ -9,7 +9,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onWillRender } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export const fileTypeMagicWordMap = {
@@ -64,9 +64,26 @@ export class ImageField extends Component {
             isValid: true,
         });
         this.lastURL = undefined;
+
+        if (this.props.record.fields[this.props.name].related) {
+            this.lastUpdate = DateTime.now();
+            let key = this.props.value;
+            onWillRender(() => {
+                const nextKey = this.props.value;
+
+                if (key !== nextKey) {
+                    this.lastUpdate = DateTime.now();
+                }
+
+                key = nextKey;
+            });
+        }
     }
 
     get rawCacheKey() {
+        if (this.props.record.fields[this.props.name].related) {
+            return this.lastUpdate;
+        }
         return this.props.record.data.write_date;
     }
 
@@ -189,9 +206,6 @@ export class ImageField extends Component {
     }
     onLoadFailed() {
         this.state.isValid = false;
-        this.notification.add(_t("Could not display the selected image"), {
-            type: "danger",
-        });
     }
 }
 

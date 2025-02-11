@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
+<t t-name="website.DuplicatePageDialog">
+    <WebsiteDialog close="props.close" primaryClick="() => this.duplicate()">
+        <div class="mb-3 row">
+            <label class="col-form-label col-md-3">
+                Page Name
+            </label>
+            <div class="col-md-9">
+                <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
+            </div>
+        </div>
+    </WebsiteDialog>
+</t>
+
 <t t-name="website.PageDependencies">
     <t t-if="!!Object.keys(state.dependencies).length">
         <t t-if="props.mode === 'popover'">
@@ -34,9 +47,9 @@
                 <div t-attf-id="collapseDependencies{{ dependency_index }}" class="collapse" aria-expanded="false">
                     <ul>
                         <li t-foreach="dependency_value" t-as="item" t-key="item_index">
-                            <t t-set="link_text">This URL is contained in the '%s' of the following '%s'</t>
+                            <t t-set="link_text">This URL is contained in the “%(field)s” of the following “%(model)s”</t>
                             <a t-att-href="item.link" target="_blank">
-                                <t t-out="sprintf(link_text, item.field_name, item.model_name)"/>: <b t-out="item.record_name"/>
+                                <t t-out="sprintf(link_text, { field: item.field_name, model: item.model_name })"/>: <b t-out="item.record_name"/>
                             </a>
                         </li>
                     </ul>

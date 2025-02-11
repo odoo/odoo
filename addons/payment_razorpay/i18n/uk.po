@@ -3,8 +3,8 @@
 # 	* payment_razorpay
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-22 15:54+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +26,8 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
 "                        Enable recurring payments on Razorpay"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
+"                        Увімкніть регулярні платежі на Razorpay"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -79,7 +81,7 @@ msgstr "Платіжна операція"
 #: code:addons/payment_razorpay/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Обробка платежу не вдалася"
 
 #. module: payment_razorpay
 #: model:ir.model.fields.selection,name:payment_razorpay.selection__payment_provider__code__razorpay
@@ -106,7 +108,7 @@ msgstr "Секрет Webhook Razorpay"
 #: code:addons/payment_razorpay/models/payment_provider.py:0
 #, python-format
 msgid "Razorpay gave us the following information: '%s'"
-msgstr ""
+msgstr "Razorpay надав нам таку інформацію: '%s'"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -144,11 +146,6 @@ msgid "Received incomplete refund data."
 msgstr "Отримано неповні дані про відшкодування."
 
 #. module: payment_razorpay
-#: model_terms:ir.ui.view,arch_db:payment_razorpay.redirect_form
-msgid "TODO: remove in master"
-msgstr ""
-
-#. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
 msgid "The key solely used to identify the account with Razorpay."
 msgstr ""
@@ -160,7 +157,7 @@ msgstr ""
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 #, python-format
 msgid "The phone number is invalid."
-msgstr ""
+msgstr "Номер телефону недійсний."
 
 #. module: payment_razorpay
 #. odoo-python

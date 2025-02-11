@@ -19,7 +19,7 @@ A QR-bill will be generated if:
 The generation of the QR-bill is automatic if you meet the previous criteria. The QR-bill will be appended after the invoice when printing or sending by mail. 
 
     """,
-    'version': '11.2',
+    'version': '11.3',
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account',

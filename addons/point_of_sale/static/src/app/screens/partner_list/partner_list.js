@@ -168,7 +168,7 @@ export class PartnerListScreen extends Component {
     }
     async saveChanges(processedChanges) {
         const partnerId = await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
-        await this.pos.load_new_partners();
+        await this.pos._loadPartners([partnerId]);
         this.state.selectedPartner = this.pos.db.get_partner_by_id(partnerId);
         this.confirm();
     }
@@ -190,7 +190,19 @@ export class PartnerListScreen extends Component {
         let domain = [];
         const limit = 30;
         if (this.state.query) {
-            const search_fields = ["name", "parent_name", "phone_mobile_search", "email"];
+            const search_fields = [
+                "name",
+                "parent_name",
+                "phone_mobile_search",
+                "email",
+                "barcode",
+                "street",
+                "zip",
+                "city",
+                "state_id",
+                "country_id",
+                "vat",
+            ];
             domain = [
                 ...Array(search_fields.length - 1).fill('|'),
                 ...search_fields.map(field => [field, "ilike", this.state.query + "%"])

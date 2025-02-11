@@ -18,6 +18,13 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 
 #. module: l10n_de
+#. odoo-python
+#: code:addons/l10n_de/models/ir_attachment.py:0
+#, python-format
+msgid "%(attachment_name)s (detached by %(user)s on %(date)s)"
+msgstr "%(attachment_name)s (getrennt von %(user)s am %(date)s)"
+
+#. module: l10n_de
 #: model:account.report.line,name:l10n_de.tax_report_de_tag_21
 msgid "21. non-taxable other services (line 34)"
 msgstr "21. Nicht steuerbare sonstige Leistungen (zeile 34)"
@@ -251,6 +258,11 @@ msgid "98. at other tax rates (line 27)"
 msgstr "98. zu anderen Steuersatzen (zeile 27)"
 
 #. module: l10n_de
+#: model:ir.model,name:l10n_de.model_account_account
+msgid "Account"
+msgstr "Konto"
+
+#. module: l10n_de
 #: model:ir.model,name:l10n_de.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Kontenplan Vorlage"
@@ -259,6 +271,11 @@ msgstr "Kontenplan Vorlage"
 #: model:account.report.line,name:l10n_de.tax_report_de_tag_01
 msgid "Assessment basis"
 msgstr "Bemessungsgrundlage"
+
+#. module: l10n_de
+#: model:ir.model,name:l10n_de.model_ir_attachment
+msgid "Attachment"
+msgstr "Dateianhang"
 
 #. module: l10n_de
 #: model:account.report.column,name:l10n_de.tax_report_balance
@@ -749,3 +766,31 @@ msgstr "Dreiecksgeschäfte"
 #: model:ir.model.fields,field_description:l10n_de.field_res_company__l10n_de_widnr
 msgid "W-IdNr."
 msgstr "W-IdNr."
+
+#. module: l10n_de
+#. odoo-python
+#: code:addons/l10n_de/models/account_account.py:0
+#, python-format
+msgid "You can not change the code of an account."
+msgstr "Sie können den Code eines Kontos nicht ändern."
+
+#. module: l10n_de
+#. odoo-python
+#: code:addons/l10n_de/models/ir_attachment.py:0
+#, python-format
+msgid "You cannot remove parts of the audit trail."
+msgstr "Sie können keine Teile des Prüfpfads entfernen."
+
+#. module: l10n_de
+#. odoo-python
+#: code:addons/l10n_de/models/res_company.py:0
+#, python-format
+msgid "Your company's SteuerNummer is not compatible with your state"
+msgstr "Die Steuernummer Ihres Unternehmens ist nicht mit Ihrem Bundesland kompatibel."
+
+#. module: l10n_de
+#. odoo-python
+#: code:addons/l10n_de/models/res_company.py:0
+#, python-format
+msgid "Your company's SteuerNummer is not valid"
+msgstr "Die Steuernummer Ihres Unternehmens ist nicht gültig."

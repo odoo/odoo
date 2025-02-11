@@ -16,12 +16,17 @@ class SaleOrder(models.Model):
         only. """
         result = super(SaleOrder, self).write(vals)
         if any(line.product_type == 'event' for line in self.order_line) and vals.get('partner_id'):
-            registrations_toupdate = self.env['event.registration'].search([('sale_order_id', 'in', self.ids)])
+            registrations_toupdate = self.env['event.registration'].sudo().search([('sale_order_id', 'in', self.ids)])
             registrations_toupdate.write({'partner_id': vals['partner_id']})
         return result
 
     def action_confirm(self):
+        unconfirmed_registrations = self.order_line.registration_ids.filtered(
+            lambda reg: reg.state in ["draft", "cancel"]
+        )
         res = super(SaleOrder, self).action_confirm()
+        unconfirmed_registrations._update_mail_schedulers()
+
         for so in self:
             if not any(line.product_type == 'event' for line in so.order_line):
                 continue

@@ -41,6 +41,8 @@ async function loadFont(name, url) {
 export function makeRoot(target) {
     const root = document.createElement("div");
     root.classList.add("o-livechat-root");
+    root.style.zIndex = "calc(9e999)";
+    root.style.position = "relative";
     target.appendChild(root);
     return root;
 }

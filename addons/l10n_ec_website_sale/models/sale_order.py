@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
         :rtype: `account.move` recordset
         :raises: UserError if one of the orders has no invoiceable lines.
         """
-        moves = super()._create_invoices(grouped, final, date)
+        moves = super()._create_invoices(grouped=grouped, final=final, date=date)
         for move in moves:
             if move.transaction_ids:
                 sri_payment_methods = move.transaction_ids.mapped('payment_method_id.l10n_ec_sri_payment_id')
