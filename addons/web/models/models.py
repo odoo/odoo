@@ -319,7 +319,7 @@ class Base(models.AbstractModel):
                 Each element is `'field:agg'` (aggregate field with aggregation function `'agg'`).
                 The possible aggregation functions are the ones provided by
                 `PostgreSQL <https://www.postgresql.org/docs/current/static/functions-aggregate.html>`_,
-                `'count_distinct'` with the expected meaning.
+                 except `'count_distinct'` and `'array_agg_distinct'` with the expected meaning.
         :param list having: A domain where the valid "fields" are the aggregates.
         :param int offset: optional number of groups to skip
         :param int limit: optional max number of groups to return
@@ -337,15 +337,13 @@ class Base(models.AbstractModel):
         :raise AccessError: if user is not allowed to access requested information
         """
         groupby = tuple(groupby)
-        aggregates = tuple(aggregates)
+        aggregates = self._web_pre_process_aggregates(aggregates)
 
         if not order:
             order = ', '.join(groupby)
 
         groups = self._read_group(
-            domain, groupby,
-            # Avoid recordset in _web_read_group_format as aggregate
-            tuple(agg.replace(':recordset', ':array_agg') for agg in aggregates),
+            domain, groupby, aggregates,
             having=having, offset=offset, limit=limit, order=order,
         )
 
@@ -373,6 +371,21 @@ class Base(models.AbstractModel):
             groups = self._web_read_group_fill_temporal(groups, groupby, aggregates, **fill_temporal)
 
         return self._web_read_group_format(groupby, aggregates, groups)
+
+    def _web_pre_process_aggregates(self, aggregates):
+        # Avoid recordset in _web_read_group_format as aggregate + Add currency_field aggregates for monetary aggregates
+        return tuple(OrderedSet(
+            [agg.replace(':recordset', ':array_agg') for agg in aggregates]
+            + list(self._get_mapping_currency_aggregates(aggregates).values())
+        ))
+
+    def _get_mapping_currency_aggregates(self, aggregates):
+        return {
+            aggregate: f'{field.get_currency_field(self)}:array_agg_distinct'
+            for aggregate in aggregates
+            if (field := self._fields.get(aggregate.split(':')[0].split('.')[0]))
+            if field.type == 'monetary'
+        }
 
     def _web_read_group_field_expand(self, groupby):
         """ Return the field that should be expand """
@@ -619,9 +632,16 @@ class Base(models.AbstractModel):
         for dict_group in result:
             dict_group['__extra_domain'] = AND(dict_group.pop('__extra_domains'))
 
-        for aggregate_spec, values in zip(aggregates, column_iterator, strict=True):
-            for value, dict_group in zip(values, result, strict=True):
-                dict_group[aggregate_spec] = value
+        column_mapping = dict(zip(aggregates, column_iterator, strict=True))
+        mapping_currency_aggregates = self._get_mapping_currency_aggregates(aggregates)
+
+        for aggregate_spec, values in column_mapping.items():
+            if currency_agg := mapping_currency_aggregates.get(aggregate_spec):
+                for value, currencies, dict_group in zip(values, column_mapping[currency_agg], result):
+                    dict_group[aggregate_spec] = value if len(currencies) == 1 and currencies != [None] else False
+            else:
+                for value, dict_group in zip(values, result, strict=True):
+                    dict_group[aggregate_spec] = value
 
         return result
 

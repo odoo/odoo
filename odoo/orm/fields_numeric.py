@@ -4,6 +4,7 @@ import typing
 from operator import attrgetter
 from xmlrpc.client import MAXINT  # TODO change this
 
+from odoo.exceptions import AccessError
 from odoo.tools import float_compare, float_is_zero, float_repr, float_round
 from odoo.tools.misc import SENTINEL, Sentinel
 
@@ -190,6 +191,20 @@ class Monetary(Field[float]):
 
     def _description_currency_field(self, env: Environment) -> str | None:
         return self.get_currency_field(env[self.model_name])
+
+    def _description_aggregator(self, env: Environment):
+        model = env[self.model_name]
+        query = model._as_query(ordered=False)
+        currency_field_name = self.get_currency_field(model)
+        currency_field = model._fields[currency_field_name]
+        # The currency field needs to be aggregable too
+        if not currency_field.column_type or not currency_field.store:
+            try:
+                model._read_group_select(f"{currency_field_name}:array_agg_distinct", query)
+            except (ValueError, AccessError):
+                return None
+
+        return super()._description_aggregator(env)
 
     def get_currency_field(self, model: BaseModel) -> str | None:
         """ Return the name of the currency field. """

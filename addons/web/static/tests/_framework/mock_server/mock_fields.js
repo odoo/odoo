@@ -27,6 +27,7 @@ import { MockServerError } from "./mock_server_utils";
  * @typedef {FieldDefinition["type"]} FieldType
  *
  * @typedef {"array_agg"
+ *  | "array_agg_distinct"
  *  | "avg"
  *  | "bool_and"
  *  | "bool_or"
