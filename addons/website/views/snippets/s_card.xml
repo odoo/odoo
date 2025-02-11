@@ -15,16 +15,15 @@
 </template>
 
 <template id="s_card_options">
-    <t t-call="website.snippet_options_background_options">
-        <t t-set="selector" t-value="selector"/>
-        <t t-set="exclude" t-value="exclude"/>
-        <t t-set="target" t-value="target"/>
-        <t t-set="with_colors" t-value="True"/>
-        <t t-set="with_images" t-value="True"/>
-        <t t-set="with_shapes" t-value="True"/>
-        <t t-set="with_color_combinations" t-value="True"/>
-        <t t-set="with_gradients" t-value="True"/>
-    </t>
+    <t t-call="website.snippet_options_background_options"
+        t-arg-selector="selector"
+        t-arg-exclude="exclude"
+        t-arg-target="target"
+        t-arg-with_colors="True"
+        t-arg-with_images="True"
+        t-arg-with_shapes="True"
+        t-arg-with_color_combinations="True"
+        t-arg-with_gradients="True"/>
 
     <div data-js="Box" t-att-data-selector="selector" t-att-data-exclude="exclude" t-att-data-target="target">
         <t t-call="website.snippet_options_border_widgets"/>
@@ -122,17 +121,15 @@
 <template id="s_card_options_apply" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <!-- Binding the card options on cards without a handler parent -->
-        <t t-call="website.s_card_options">
-            <t t-set="selector" t-value="'.s_card'"/>
-            <t t-set="exclude" t-valuef="div:is(#{card_parent_handlers}) > .s_card"/>
-        </t>
+        <t t-call="website.s_card_options"
+            t-argf-selector=".s_card"
+            t-argf-exclude="div:is(#{card_parent_handlers}) > .s_card"/>
 
         <!-- Binding the card options on the card handler parents -->
-        <t t-call="website.s_card_options">
-            <t t-set="selector" t-valuef="#{card_parent_handlers}"/>
-            <t t-set="target" t-value="'> .s_card:not(.s_carousel_cards_card)'"/>
-            <t t-set="disable_width" t-value="true"/>
-        </t>
+        <t t-call="website.s_card_options"
+            t-argf-selector="#{card_parent_handlers}"
+            t-arg-target="'> .s_card:not(.s_carousel_cards_card)'"
+            t-arg-disable_width="true"/>
     </xpath>
 </template>
 

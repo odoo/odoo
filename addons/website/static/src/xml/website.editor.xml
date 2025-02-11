@@ -42,18 +42,15 @@
                 <t t-else="">Preview</t>
             </label>
         </div>
-        <t t-call="website.dialog.addFont.singlePreview">
-            <t t-set="previewLabel">Light</t>
-            <t t-set="previewWeight">300</t>
-        </t>
-        <t t-call="website.dialog.addFont.singlePreview">
-            <t t-set="previewLabel">Regular</t>
-            <t t-set="previewWeight">400</t>
-        </t>
-        <t t-call="website.dialog.addFont.singlePreview">
-            <t t-set="previewLabel">Bold</t>
-            <t t-set="previewWeight">700</t>
-        </t>
+        <t t-call="website.dialog.addFont.singlePreview"
+            t-argf-previewLabel="Light"
+            t-arg-previewWeight="300"/>
+        <t t-call="website.dialog.addFont.singlePreview"
+            t-argf-previewLabel="Regular"
+            t-arg-previewWeight="400"/>
+        <t t-call="website.dialog.addFont.singlePreview"
+            t-argf-previewLabel="Bold"
+            t-arg-previewWeight="700"/>
     </t>
     <t t-name="website.dialog.addFont">
         <Dialog title="this.props.title" size="'xl'">

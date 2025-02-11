@@ -23,14 +23,13 @@
 <template id="s_blockquote_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <!-- Color and images -->
-        <t t-call="website.snippet_options_background_options">
-            <t t-set="selector" t-value="'.s_blockquote'"/>
-            <t t-set="with_colors" t-value="True"/>
-            <t t-set="with_images" t-value="True"/>
-            <t t-set="with_shapes" t-value="True"/>
-            <t t-set="with_gradients" t-value="True"/>
-            <t t-set="with_color_combinations" t-value="True"/>
-        </t>
+        <t t-call="website.snippet_options_background_options"
+            t-argf-selector=".s_blockquote"
+            t-arg-with_colors="True"
+            t-arg-with_images="True"
+            t-arg-with_shapes="True"
+            t-arg-with_gradients="True"
+            t-arg-with_color_combinations="True"/>
 
         <!-- Layout -->
         <div data-selector=".s_blockquote">
