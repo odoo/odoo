@@ -106,22 +106,14 @@ export class DomPlugin extends Plugin {
             return;
         }
         let selection = this.dependencies.selection.getEditableSelection();
-        let startNode;
-        let insertBefore = false;
         if (!selection.isCollapsed) {
             this.dependencies.delete.deleteSelection();
             selection = this.dependencies.selection.getEditableSelection();
         }
-        if (selection.startContainer.nodeType === Node.TEXT_NODE) {
-            insertBefore = !selection.startOffset;
-            splitTextNode(selection.startContainer, selection.startOffset, DIRECTIONS.LEFT);
-            startNode = selection.startContainer;
-        }
 
-        const container = this.document.createElement("fake-element");
+        let container = this.document.createElement("fake-element");
         const containerFirstChild = this.document.createElement("fake-element-fc");
         const containerLastChild = this.document.createElement("fake-element-lc");
-
         if (typeof content === "string") {
             container.textContent = content;
         } else {
@@ -134,8 +126,21 @@ export class DomPlugin extends Plugin {
             }
             container.replaceChildren(content);
         }
-        const allInsertedNodes = [];
 
+        for (const cb of this.getResource("before_insert_processors")) {
+            container = cb(container);
+        }
+        selection = this.dependencies.selection.getEditableSelection();
+
+        let startNode;
+        let insertBefore = false;
+        if (selection.startContainer.nodeType === Node.TEXT_NODE) {
+            insertBefore = !selection.startOffset;
+            splitTextNode(selection.startContainer, selection.startOffset, DIRECTIONS.LEFT);
+            startNode = selection.startContainer;
+        }
+
+        const allInsertedNodes = [];
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
         const hasSingleChild = nodeSize(container) === 1;
