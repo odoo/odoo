@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="myinvois_document_pos_form_view" model="ir.ui.view">
+            <field name="name">myinvois.document.pos.form.view</field>
+            <field name="model">myinvois.document</field>
+            <field name="inherit_id" ref="l10n_my_edi_pos.myinvois_document_form_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name="action_view_linked_orders" type="object" icon="fa-shopping-basket" class="oe_stat_button" invisible="linked_order_count == 0">
+                         <field name="linked_order_count" string="PoS Orders" widget="statinfo"/>
+                    </button>
+                </div>
+                <field name="myinvois_issuance_date" position="before">
+                    <field name="linked_order_count" invisible="1"/>
+                    <field name="pos_config_id"/>
+                    <field name="pos_order_date_range"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="myinvois_document_pos_list_view" model="ir.ui.view">
+            <field name="name">myinvois.document.list.view</field>
+            <field name="model">myinvois.document</field>
+            <field name="inherit_id" ref="l10n_my_edi_pos.myinvois_document_list_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <header position="inside">
+                    <button name="action_open_consolidate_invoice_wizard" string="Consolidate Orders" type="object" display="always" class="btn-primary"/>
+                </header>
+                <field name="myinvois_state" position="after">
+                    <field name="pos_config_id"/>
+                    <field name="pos_order_date_range"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- For PoS purposes, we display these documents as "Consolidated Invoices" -->
+
+        <record id="action_consolidated_invoices" model="ir.actions.act_window">
+            <field name="name">Consolidated Invoices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">myinvois.document</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('myinvois_document_pos_list_view')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('myinvois_document_pos_form_view')})
+            ]"/>
+            <!-- We don't want to see documents linked to other modules here -->
+            <field name="domain">[('pos_config_id', '!=', False)]</field>
+        </record>
+
+        <menuitem name="Consolidated Invoice"
+                  id="l10n_my_edi_pos.menu_consolidated_invoices"
+                  parent="point_of_sale.menu_point_of_sale"
+                  action="l10n_my_edi_pos.action_consolidated_invoices"
+                  sequence="50"/>
+    </data>
+</odoo>
