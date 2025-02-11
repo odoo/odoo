@@ -320,9 +320,10 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order_computed(self):
-        orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
-        qty_in_progress_by_orderpoint = orderpoints_to_compute._quantity_in_progress()
-        for orderpoint in orderpoints_to_compute:
+        for orderpoint in self:
+            if not orderpoint.product_id or not orderpoint.location_id:
+                orderpoint.qty_to_order_computed = False
+                continue
             qty_to_order = 0.0
             rounding = orderpoint.product_uom.rounding
             # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
@@ -330,7 +331,7 @@ class StockWarehouseOrderpoint(models.Model):
             if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
                 # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
                 product_context = orderpoint._get_product_context(visibility_days=orderpoint.visibility_days)
-                qty_forecast_with_visibility = orderpoint.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + qty_in_progress_by_orderpoint[orderpoint.id]
+                qty_forecast_with_visibility = orderpoint.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + orderpoint._quantity_in_progress()[orderpoint.id]
                 qty_to_order = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - qty_forecast_with_visibility
                 remainder = orderpoint.qty_multiple > 0.0 and qty_to_order % orderpoint.qty_multiple or 0.0
                 if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
@@ -340,7 +341,6 @@ class StockWarehouseOrderpoint(models.Model):
                     else:
                         qty_to_order -= remainder
             orderpoint.qty_to_order_computed = qty_to_order
-        (self - orderpoints_to_compute).qty_to_order_computed = False
 
     def _get_qty_multiple_to_order(self):
         """ Calculates the minimum quantity that can be ordered according to the PO UoM or BoM
