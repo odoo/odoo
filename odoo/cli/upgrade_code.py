@@ -84,7 +84,12 @@ class FileAccessor:
     @property
     def content(self):
         if self._content is None:
-            self._content = self.path.read_text()
+            try:
+                self._content = self.path.read_text()
+            except UnicodeDecodeError:
+                print(f"Skipping {self.path} (non utf-8)", file=sys.stderr)  # noqa: T201
+                # ignore non utf-8 files
+                self._content = ''
         return self._content
 
     @content.setter
