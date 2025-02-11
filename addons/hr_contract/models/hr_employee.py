@@ -46,6 +46,14 @@ class HrEmployee(models.Model):
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count', groups="hr.group_hr_user")
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
     first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user", store=True)
+    show_contract_smart_button = fields.Boolean(compute="_compute_show_contract_smart_button", groups="hr.group_hr_user")
+
+    def _compute_show_contract_smart_button(self):
+        is_contract_manager = self.env.user.has_group("hr_contract.group_hr_contract_manager")
+        is_contract_employee_manager = self.env.user.has_group("hr_contract.group_hr_contract_employee_manager")
+        for employee in self:
+            employee.show_contract_smart_button = is_contract_manager or \
+                (is_contract_employee_manager and self.env.user.id == employee.parent_id.user_id.id)
 
     @api.depends('name')
     def _compute_legal_name(self):
