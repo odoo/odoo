@@ -19,9 +19,9 @@ export function getBaseContainerSelector(nodeName) {
     return `${nodeName}${suffix}`;
 }
 
-export const baseContainerGlobalSelector = SUPPORTED_BASE_CONTAINER_NAMES.map((name) =>
+export const baseContainerGlobalSelector = `:is(${SUPPORTED_BASE_CONTAINER_NAMES.map((name) =>
     getBaseContainerSelector(name)
-).join(",");
+).join(",")})`;
 
 /**
  * Create a new baseContainer element.
