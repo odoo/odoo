@@ -3,6 +3,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
 
+// Register the form view for the link tracker dialog
 registry.category("views").add("link_tracker_dialog_form", {
     ...formView,
 });
@@ -23,17 +24,11 @@ export class LinkTrackerDialog extends FormViewDialog {
         super.setup();
         this.viewProps = {
             ...this.viewProps,
-            resModel: this.resModel,
-            context: Object.assign(
-                {
-                    form_view_ref: "website_links.link_tracker_view_form",
-                },
-                this.viewProps.context
-            ),
-            ...{ buttonTemplate: "website_link.LinkTrackerDialogButtons" },
+            context: {
+                ...this.viewProps.context,
+                form_view_ref: "website_links.website_link_tracker_view_form",
+            },
+            buttonTemplate: "website_link.LinkTrackerDialogButtons",
         };
-    }
-    get resModel() {
-        return this.props.resModel;
     }
 }
