@@ -17,6 +17,7 @@ The main Odoo Apps include an <a href="https://www.odoo.com/page/crm">Open Sourc
 <a href="https://www.odoo.com/app/point-of-sale-shop">Point of Sale</a>,
 <a href="https://www.odoo.com/app/employees">Human Resources</a>,
 <a href="https://www.odoo.com/app/social-marketing">Marketing</a>,
+
 <a href="https://www.odoo.com/app/manufacturing">Manufacturing</a>,
 <a href="https://www.odoo.com/">...</a>
 
