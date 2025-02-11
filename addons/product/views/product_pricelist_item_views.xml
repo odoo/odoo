@@ -55,7 +55,7 @@
         <field name="arch" type="xml">
             <list string="Pricelist Rules" editable="bottom">
                 <!-- Scope = coming from a product/product template -->
-                <field name="pricelist_id" string="Pricelist" options="{'no_create_edit':1, 'no_open': 1}"/>
+                <field name="pricelist_id" string="Pricelist" options="{'no_create_edit':1, 'no_open': 1}" groups="product.group_product_pricelist"/>
                 <field name="product_id"
                     groups="product.group_product_variant"
                     readonly="context.get('active_model') == 'product.product'"
