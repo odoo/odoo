@@ -4,6 +4,7 @@ import { BuilderOptionsPlugin } from "./plugins/builder_options_plugin";
 import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
 import { CachedModelPlugin } from "./plugins/cached_model_plugin";
 import { ClonePlugin } from "./plugins/clone/clone_plugin";
+import { DragAndDropPlugin } from "./plugins/drag_and_drop/drag_and_drop_plugin";
 import { DropZonePlugin } from "./plugins/drop_zone_plugin";
 import { DropZoneSelectorPlugin } from "./plugins/dropzone_selector_plugin";
 import { GridLayoutPlugin } from "./plugins/grid_layout/grid_layout_plugin";
@@ -27,6 +28,7 @@ export const CORE_PLUGINS = [
     OverlayButtonsPlugin,
     MovePlugin,
     GridLayoutPlugin,
+    DragAndDropPlugin,
     ReplacePlugin,
     RemovePlugin,
     ClonePlugin,
