@@ -1643,6 +1643,24 @@ def _optimize_merge_x2many_not_any(cls, model, conditions):
     return _optimize_merge_many2one_not_any(cls, model, conditions)
 
 
+@nary_condition_optimization(operators=('in',), field_condition=lambda f: f.type.endswith('2many'))
+def _optimize_merge_set_conditions_x2many_in(cls: type[DomainNary], model, conditions):
+    """Merge domains of 'in' conditions for x2many fields like for 'any' operator.
+    """
+    if cls is DomainAnd:
+        return conditions
+    return _optimize_merge_set_conditions(cls, model, conditions)
+
+
+@nary_condition_optimization(operators=('not in',), field_condition=lambda f: f.type.endswith('2many'))
+def _optimize_merge_set_conditions_x2many_not_in(cls: type[DomainNary], model, conditions):
+    """Merge domains of 'not in' conditions for x2many fields like for 'not any' operator.
+    """
+    if cls is DomainOr:
+        return conditions
+    return _optimize_merge_set_conditions(cls, model, conditions)
+
+
 @nary_optimization
 def _optimize_same_conditions(cls, model, level, conditions: Iterable[Domain]):
     """Merge (adjacent) conditions that are the same.
