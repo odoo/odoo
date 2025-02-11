@@ -124,16 +124,18 @@ class ResCurrency(models.Model):
             ('id', 'in', self.ids),
         ], active_test=False)
         currency_id = self.env['res.currency']._field_to_sql(currency_query.table, 'id')
-        rate_query = self.env['res.currency.rate']._search([
+        CurrencyRate = self.env['res.currency.rate']
+        rate_query = CurrencyRate._search([
             ('name', '<=', date),
             ('company_id', 'in', (False, company.root_id.id)),
-            ('currency_id', '=', currency_id),
         ], order='company_id.id, name DESC', limit=1)
-        rate_fallback = self.env['res.currency.rate']._search([
+        equal_currency_id = SQL("%s = %s", currency_id, CurrencyRate._field_to_sql(rate_query.table, 'currency_id'))
+        rate_query.add_where(equal_currency_id)
+        rate_fallback = CurrencyRate._search([
             ('company_id', 'in', (False, company.root_id.id)),
-            ('currency_id', '=', currency_id),
         ], order='company_id.id, name ASC', limit=1)
-        rate = self.env['res.currency.rate']._field_to_sql(rate_query.table, 'rate')
+        rate_fallback.add_where(equal_currency_id)
+        rate = CurrencyRate._field_to_sql(rate_query.table, 'rate')
         return dict(self.env.execute_query(currency_query.select(
             currency_id,
             SQL("COALESCE((%s), (%s), 1.0)", rate_query.select(rate), rate_fallback.select(rate))
