@@ -5,9 +5,15 @@ import { onWillStart } from "@odoo/owl";
 patch(ForecastedButtons.prototype, {
     setup() {
         super.setup();
-        onWillStart(async () =>{
+        onWillStart(async () => {
             const fields = this.resModel === "product.template" ? ['bom_ids'] : ['bom_ids', 'variant_bom_ids'];
-            const res = (await this.orm.call(this.resModel, 'read', [this.productId], { fields }))[0];
+            const productId =
+                (this.resModel !== "product.template" &&
+                 this.context.active_model === "product.template" &&
+                 this.context.variant_id)
+                    ? this.context.variant_id
+                    : this.productId;
+            const res = (await this.orm.call(this.resModel, 'read', [productId], { fields }))[0];
             this.bomId = res.variant_bom_ids ? res.variant_bom_ids[0] || res.bom_ids[0] : res.bom_ids[0];
         });
     },
