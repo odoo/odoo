@@ -85,6 +85,7 @@ test("can post a message on a record thread", async () => {
         asyncStep("/mail/message/post");
         const expected = {
             context: args.context,
+            data_id: 1,
             post_data: {
                 body: "hey",
                 email_add_signature: true,
@@ -116,6 +117,7 @@ test("can post a note on a record thread", async () => {
         asyncStep("/mail/message/post");
         const expected = {
             context: args.context,
+            data_id: 1,
             post_data: {
                 body: "hey",
                 email_add_signature: true,

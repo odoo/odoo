@@ -91,23 +91,24 @@ const threadPatch = {
             return;
         }
         const limit = 30;
+        const dataRequest = this.store.Data.createRequest();
         const data = await rpc("/discuss/channel/sub_channel/fetch", {
             before: this.lastSubChannelLoaded?.id,
+            data_id: dataRequest.id,
             limit,
             parent_channel_id: this.id,
             search_term: searchTerm,
         });
-        const { Thread: threads = [] } = this.store.insert(data, { html: true });
+        this.store.insert(data, { html: true });
         if (searchTerm) {
+            dataRequest.delete();
             // Ignore holes in the sub-channel list that may arise when
             // searching for a specific term.
             return;
         }
-        const subChannels = threads.filter((thread) => this.eq(thread.parent_channel_id));
-        this.lastSubChannelLoaded = subChannels.reduce(
-            (min, channel) => (!min || channel.id < min.id ? channel : min),
-            this.lastSubChannelLoaded
-        );
+        const subChannels = dataRequest.channels;
+        dataRequest.delete();
+        this.lastSubChannelLoaded = subChannels.at(-1) ?? this.lastSubChannelLoaded;
         if (subChannels.length < limit) {
             this.loadSubChannelsDone = true;
         }

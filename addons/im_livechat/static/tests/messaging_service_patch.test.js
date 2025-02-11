@@ -63,6 +63,7 @@ test("push notifications are Odoo toaster on Android", async () => {
     // send after init_messaging because bus subscription is done after init_messaging
     await withGuest(guestId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "Hello world!",
                 message_type: "comment",

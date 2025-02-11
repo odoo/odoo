@@ -275,17 +275,21 @@ const threadPatch = {
             return;
         }
         this.isLoadingAttachments = true;
+        const dataRequest = this.store.Data.createRequest();
         try {
             const data = await rpc("/discuss/channel/attachments", {
                 before: Math.min(...this.attachments.map(({ id }) => id)),
                 channel_id: this.id,
+                data_id: dataRequest.id,
                 limit,
             });
-            const { "ir.attachment": attachments = [] } = this.store.insert(data);
+            this.store.insert(data);
+        } finally {
+            const attachments = dataRequest.attachments;
+            dataRequest.delete();
             if (attachments.length < limit) {
                 this.areAttachmentsLoaded = true;
             }
-        } finally {
             this.isLoadingAttachments = false;
         }
     },

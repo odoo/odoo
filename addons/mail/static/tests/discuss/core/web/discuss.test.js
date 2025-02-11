@@ -56,7 +56,10 @@ test("can create a new channel", async () => {
     await contains(".o-mail-DiscussSidebar-item", { text: "abc", count: 0 });
     await click("input[placeholder='Find or start a conversation']");
     await insertText("input[placeholder='Search a conversation']", "abc");
-    await waitForSteps([`/discuss/search - {"term":""}`, `/discuss/search - {"term":"abc"}`]);
+    await waitForSteps([
+        `/discuss/search - {"data_id":1,"term":""}`,
+        `/discuss/search - {"data_id":2,"term":"abc"}`,
+    ]);
     await click("a", { text: "Create Channel" });
     await contains(".o-mail-DiscussSidebar-item", { text: "abc" });
     await contains(".o-mail-Message", { count: 0 });
@@ -67,6 +70,7 @@ test("can create a new channel", async () => {
     ]);
     await waitForSteps([
         `/discuss/channel/create_channel - ${JSON.stringify({
+            data_id: 3,
             name: "abc",
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":${selfMember.new_message_separator}}}`,
@@ -115,9 +119,12 @@ test("can make a DM chat", async () => {
     await contains(".o-mail-Message", { count: 0 });
     const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mario, Mitchell Admin"]]);
     await waitForSteps([
-        `/discuss/search - {"term":""}`,
-        `/discuss/search - {"term":"mario"}`,
-        `/discuss/channel/get_or_create_chat - ${JSON.stringify({ partners_to: [partnerId] })}`,
+        `/discuss/search - {"data_id":1,"term":""}`,
+        `/discuss/search - {"data_id":2,"term":"mario"}`,
+        `/discuss/channel/get_or_create_chat - ${JSON.stringify({
+            data_id: 3,
+            partners_to: [partnerId],
+        })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
 });

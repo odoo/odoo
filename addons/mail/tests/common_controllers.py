@@ -160,6 +160,7 @@ class MailControllerBinaryCommon(MailControllerCommon):
         self.make_jsonrpc_request(
             route="/mail/message/post",
             params={
+                "data_id": -1,
                 "thread_model": document._name,
                 "thread_id": document.id,
                 "post_data": {
@@ -242,6 +243,7 @@ class MailControllerThreadCommon(MailControllerCommon):
         self.make_jsonrpc_request(
             route="/mail/message/post",
             params={
+                "data_id": -1,
                 "thread_model": record._name,
                 "thread_id": record.id,
                 "post_data": post_data,

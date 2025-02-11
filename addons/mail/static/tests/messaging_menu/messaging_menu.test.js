@@ -606,6 +606,7 @@ test("Counter is updated when receiving new message", async () => {
     await openDiscuss();
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             thread_id: channelId,
             thread_model: "discuss.channel",
             post_data: {
@@ -709,6 +710,7 @@ test("chat preview should not display correspondent name in body", async () => {
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "<p>test</p>",
                 message_type: "comment",
@@ -979,6 +981,7 @@ test("chat should show unread counter on receiving new messages", async () => {
     // simulate receiving a new message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "Interesting idea",
                 message_type: "comment",

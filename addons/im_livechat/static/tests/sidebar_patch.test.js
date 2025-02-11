@@ -378,6 +378,7 @@ test("Message unread counter", async () => {
     await openDiscuss();
     withGuest(guestId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "hu",
                 message_type: "comment",

@@ -9,12 +9,12 @@ from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 class SearchController(http.Controller):
     @http.route("/discuss/search", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def search(self, term, category_id=None, limit=8):
+    def search(self, data_id, term, category_id=None, limit=8):
         store = Store()
-        self.get_search_store(store, search_term=term, limit=limit)
+        self.get_search_store(store, data_id, search_term=term, limit=limit)
         return store.get_result()
 
-    def get_search_store(self, store: Store, search_term, limit):
+    def get_search_store(self, store: Store, data_id, search_term, limit):
         base_domain = [("name", "ilike", search_term), ("channel_type", "!=", "chat")]
         priority_conditions = [
             [("is_member", "=", True), *base_domain],
@@ -31,4 +31,4 @@ class SearchController(http.Controller):
             query = channels._search(expression.AND([[("id", "not in", channels.ids)], domain]), limit=remaining_limit)
             channels |= channels.browse(query)
         store.add(channels)
-        request.env["res.partner"]._search_for_channel_invite(store, search_term=search_term, limit=limit)
+        request.env["res.partner"]._search_for_channel_invite(store, data_id, search_term=search_term, limit=limit)

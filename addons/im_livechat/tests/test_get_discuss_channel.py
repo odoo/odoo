@@ -34,11 +34,12 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         operator = self.operators[0]
         with patch('odoo.http.GeoIP.country_code', new_callable=PropertyMock(return_value=belgium.code)):
             data = self.make_jsonrpc_request(
-                '/im_livechat/get_session',
+                "/im_livechat/get_session",
                 {
-                    'anonymous_name': 'Visitor 22',
-                    'previous_operator_id': operator.partner_id.id,
-                    'channel_id': self.livechat_channel.id,
+                    "anonymous_name": "Visitor 22",
+                    "channel_id": self.livechat_channel.id,
+                    "data_id": -1,
+                    "previous_operator_id": operator.partner_id.id,
                 },
             )
         channel_info = data["discuss.channel"][0]
@@ -94,11 +95,15 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
 
         # ensure visitor info are correct with real user
         self.authenticate(test_user.login, self.password)
-        data = self.make_jsonrpc_request('/im_livechat/get_session', {
-            'anonymous_name': 'whatever',
-            'previous_operator_id': operator.partner_id.id,
-            'channel_id': self.livechat_channel.id,
-        })
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "whatever",
+                "channel_id": self.livechat_channel.id,
+                "data_id": -1,
+                "previous_operator_id": operator.partner_id.id,
+            },
+        )
         channel_info = data["discuss.channel"][0]
         self.assertFalse(channel_info['anonymous_name'])
         self.assertEqual(channel_info["anonymous_country"], belgium.id)
@@ -194,11 +199,15 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         # ensure visitor info are correct when operator is testing themselves
         operator = self.operators[0]
         self.authenticate(operator.login, self.password)
-        data = self.make_jsonrpc_request('/im_livechat/get_session', {
-            'anonymous_name': 'whatever',
-            'previous_operator_id': operator.partner_id.id,
-            'channel_id': self.livechat_channel.id,
-        })
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "whatever",
+                "channel_id": self.livechat_channel.id,
+                "data_id": -1,
+                "previous_operator_id": operator.partner_id.id,
+            },
+        )
         channel_info = data["discuss.channel"][0]
         operator_member_domain = [
             ('channel_id', '=', channel_info['id']),
@@ -271,24 +280,33 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
     def _open_livechat_discuss_channel(self):
         discuss_channels = []
         for _i in range(5):
-            data = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'Anonymous', 'channel_id': self.livechat_channel.id})
+            data = self.make_jsonrpc_request(
+                "/im_livechat/get_session",
+                {
+                    "anonymous_name": "Anonymous",
+                    "channel_id": self.livechat_channel.id,
+                    "data_id": -1,
+                },
+            )
             discuss_channels.append(data["discuss.channel"][0])
             # send a message to mark this channel as 'active'
-            self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"]).message_post(
+            self.env["discuss.channel"].browse(data["Data"][0]["channel"]["id"]).message_post(
                 body="cc"
             )
         return discuss_channels
 
     def test_channel_not_pinned_for_operator_before_first_message(self):
         operator = self.operators[0]
-        params = {
-            "anonymous_name": "whatever",
-            "channel_id": self.livechat_channel.id,
-            "previous_operator_id": operator.partner_id.id
-        }
-        channel_id = self.make_jsonrpc_request("/im_livechat/get_session", params)[
-            "discuss.channel"
-        ][0]["id"]
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "whatever",
+                "channel_id": self.livechat_channel.id,
+                "data_id": -1,
+                "previous_operator_id": operator.partner_id.id,
+            },
+        )
+        channel_id = data["Data"][0]["channel"]["id"]
         member_domain = [("channel_id", "=", channel_id), ("is_self", "=", True)]
         member = self.env["discuss.channel.member"].with_user(operator).search(member_domain)
         self.assertEqual(len(member), 1, "operator should be member of channel")
@@ -301,7 +319,10 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertIn(channel_id, channel_ids, "channel should be fetched by operator on new page")
 
     def test_read_channel_unpined_for_operator_after_one_day(self):
-        data = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'visitor', 'channel_id': self.livechat_channel.id})
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"anonymous_name": "visitor", "channel_id": self.livechat_channel.id, "data_id": -1},
+        )
         member_of_operator = self.env["discuss.channel.member"].search(
             [
                 ("channel_id", "=", data["discuss.channel"][0]["id"]),
@@ -310,7 +331,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         )
         message = (
             self.env["discuss.channel"]
-            .browse(data["discuss.channel"][0]["id"])
+            .browse(data["Data"][0]["channel"]["id"])
             .message_post(body="cc")
         )
         member_of_operator._mark_as_read(message.id)
@@ -319,14 +340,17 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertFalse(member_of_operator.is_pinned, "read channel should be unpinned after one day")
 
     def test_unread_channel_not_unpined_for_operator_after_autovacuum(self):
-        data = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'visitor', 'channel_id': self.livechat_channel.id})
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"anonymous_name": "visitor", "channel_id": self.livechat_channel.id, "data_id": -1},
+        )
         member_of_operator = self.env["discuss.channel.member"].search(
             [
                 ("channel_id", "=", data["discuss.channel"][0]["id"]),
                 ("partner_id", "in", self.operators.partner_id.ids),
             ]
         )
-        self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"]).message_post(body="cc")
+        self.env["discuss.channel"].browse(data["Data"][0]["channel"]["id"]).message_post(body="cc")
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertTrue(member_of_operator.is_pinned, "unread channel should not be unpinned after autovacuum")

@@ -19,9 +19,10 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
 
         with self.with_user('chell'), MockRequest(self.env, path=share_link):
             ThreadController().mail_message_post(
-                thread_model='project.task',
+                data_id=-1,
+                thread_model="project.task",
                 thread_id=self.task_no_collabo.id,
-                post_data={'body': '(-b ±√[b²-4ac]) / 2a'},
+                post_data={"body": "(-b ±√[b²-4ac]) / 2a"},
                 token=access_token,
                 pid=pid,
                 hash=_hash,

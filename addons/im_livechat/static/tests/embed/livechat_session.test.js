@@ -88,6 +88,7 @@ test("Seen message is saved on the server", async () => {
     queryFirst(".o-mail-Composer-input").blur();
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "Hello World!",
                 message_type: "comment",

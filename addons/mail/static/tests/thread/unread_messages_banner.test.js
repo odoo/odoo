@@ -256,6 +256,7 @@ test("sidebar and banner counters display same value", async () => {
     await contains(".o-mail-DiscussSidebar-badge", { text: "30", count: 0 });
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "Hello!",
                 message_type: "comment",

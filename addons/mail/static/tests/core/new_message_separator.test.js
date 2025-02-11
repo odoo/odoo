@@ -145,6 +145,7 @@ test("show new message separator on receiving new message when out of odoo focus
     // simulate receiving a message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "hu", message_type: "comment", subtype_xmlid: "mail.mt_comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -225,6 +226,7 @@ test("show new message separator when message is received in chat window", async
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -274,6 +276,7 @@ test("show new message separator when message is received while chat window is c
     // simulate receiving a message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

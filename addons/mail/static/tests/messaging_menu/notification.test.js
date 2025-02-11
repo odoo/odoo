@@ -309,6 +309,7 @@ test("thread notifications are re-ordered on receiving a new message", async () 
     await contains(".o-mail-NotificationItem", { count: 2 });
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "<p>New message !</p>",
                 message_type: "comment",

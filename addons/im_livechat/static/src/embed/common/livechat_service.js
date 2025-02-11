@@ -217,9 +217,11 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread>}
      */
     async _createThread({ persist = false }) {
+        const dataRequest = this.store.Data.createRequest();
         const data = await rpc(
             "/im_livechat/get_session",
             {
+                data_id: dataRequest.id,
                 channel_id: this.options.channel_id,
                 anonymous_name: this.options.default_username ?? _t("Visitor"),
                 chatbot_script_id: this.savedState
@@ -232,8 +234,9 @@ export class LivechatService {
         );
         // clean copy of data for saving in storage, because store insert will add cyclic references
         const saveData = JSON.parse(JSON.stringify(data));
-        const { Thread = [] } = this.store.insert(data);
-        this.thread = Thread[0];
+        this.store.insert(data, { htlm: true });
+        this.thread = dataRequest.channel;
+        dataRequest.delete();
         if (!this.thread?.livechat_operator_id) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
             this.leave({ notifyServer: false });

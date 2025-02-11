@@ -50,6 +50,7 @@ test("Receiving a new message out of discuss app should open a chat bubble", asy
     // simulate receving new message
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Magic!", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -86,6 +87,7 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
     // simulate receiving new message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Tricky", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

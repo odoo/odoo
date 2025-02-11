@@ -142,6 +142,7 @@ class TestProjectSharingChatterAccess(TestProjectSharingCommon, HttpCase):
             url="/mail/message/post",
             data=json.dumps({
                 "params": {
+                    "data_id": -1,
                     "thread_model": self.task_no_collabo._name,
                     "thread_id": self.task_no_collabo.id,
                     "post_data": {'body': '(-b ±√[b²-4ac]) / 2a'},

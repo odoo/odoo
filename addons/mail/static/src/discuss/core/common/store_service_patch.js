@@ -26,13 +26,16 @@ const storeServicePatch = {
         return ["away", "bot", "online"];
     },
     async createGroupChat({ default_display_mode, partners_to, name }) {
+        const dataRequest = this.Data.createRequest();
         const data = await rpc("/discuss/channel/create_group", {
+            data_id: dataRequest.id,
             default_display_mode,
             partners_to,
             name,
         });
-        const { Thread } = this.insert(data);
-        const [channel] = Thread;
+        this.insert(data);
+        const channel = dataRequest.channel;
+        dataRequest.delete();
         channel.open({ focus: true });
         return channel;
     },

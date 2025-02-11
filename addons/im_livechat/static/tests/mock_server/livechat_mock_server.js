@@ -29,6 +29,7 @@ async function get_session(request) {
 
     let {
         channel_id,
+        data_id,
         anonymous_name,
         previous_operator_id,
         persisted,
@@ -63,6 +64,7 @@ async function get_session(request) {
     if (!persisted) {
         const store = new mailDataHelpers.Store();
         ResUsers._init_store_data(store);
+        store.add("Data", { id: data_id, channel: { id: -1, model: "discuss.channel" } });
         store.add("discuss.channel", {
             channel_type: "livechat",
             chatbot_current_step_id: channelVals.chatbot_current_step_id,
@@ -91,7 +93,10 @@ async function get_session(request) {
     }
     const store = new mailDataHelpers.Store();
     ResUsers._init_store_data(store);
-    store.add(DiscussChannel.browse(channelId));
+    store.add("Data", {
+        id: data_id,
+        channel: mailDataHelpers.Store.one(DiscussChannel.browse(channelId)),
+    });
     store.add(DiscussChannel.browse(channelId), {
         isLoaded: true,
         open_chat_window: true,

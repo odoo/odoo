@@ -158,6 +158,7 @@ async function load_attachments(request) {
 
     const {
         channel_id,
+        data_id,
         limit = 30,
         older_attachment_id = null,
     } = await parseRequestParams(request);
@@ -170,7 +171,10 @@ async function load_attachments(request) {
         .sort()
         .slice(0, limit)
         .map(({ id }) => id);
-    return new mailDataHelpers.Store(IrAttachment.browse(attachmentIds)).get_result();
+    return new mailDataHelpers.Store("Data", {
+        id: data_id,
+        attachments: mailDataHelpers.Store.many(IrAttachment.browse(attachmentIds)),
+    }).get_result();
 }
 
 registerRoute("/mail/rtc/channel/join_call", channel_call_join);
@@ -265,37 +269,46 @@ async function channel_call_leave(request) {
 registerRoute("/discuss/channel/get_or_create_chat", discuss_get_or_create_chat);
 /** @type {RouteCallback} */
 async function discuss_get_or_create_chat(request) {
-    const { partners_to } = await parseRequestParams(request);
+    const { data_id, partners_to } = await parseRequestParams(request);
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    const channel = DiscussChannel._get_or_create_chat(partners_to);
-    return {
-        channel_id: channel.id,
-        data: new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result(),
-    };
+    const channelId = DiscussChannel._get_or_create_chat(partners_to);
+    return new mailDataHelpers.Store("Data", {
+        id: data_id,
+        channel: mailDataHelpers.Store.one(channelId),
+    }).get_result();
 }
 
 registerRoute("/discuss/channel/create_channel", discuss_create_channel);
 /** @type {RouteCallback} */
 async function discuss_create_channel(request) {
-    const { name, group_id } = await parseRequestParams(request);
+    const { data_id, name, group_id } = await parseRequestParams(request);
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_channel(name, group_id);
+    const channelId = DiscussChannel._create_channel(name, group_id);
+    return new mailDataHelpers.Store("Data", {
+        id: data_id,
+        channel: mailDataHelpers.Store.one(channelId),
+    }).get_result();
 }
 
 registerRoute("/discuss/channel/create_group", discuss_create_group);
 /** @type {RouteCallback} */
 async function discuss_create_group(request) {
     const kwargs = await parseRequestParams(request);
+    const data_id = kwargs.data_id;
     const partners_to = kwargs.partners_to || [];
     const name = kwargs.name || "";
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_group(partners_to, name);
+    const channelId = DiscussChannel._create_group(partners_to, name);
+    return new mailDataHelpers.Store("Data", {
+        id: data_id,
+        channel: mailDataHelpers.Store.one(channelId),
+    }).get_result();
 }
 
 registerRoute("/discuss/channel/members", discuss_channel_members);
@@ -353,13 +366,12 @@ async function discuss_channel_sub_channel_fetch(request) {
     const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
-    const { parent_channel_id, before, limit } = await parseRequestParams(request);
+    const { data_id, parent_channel_id, before, limit } = await parseRequestParams(request);
     const domain = [["parent_channel_id", "=", parent_channel_id]];
     if (before) {
         domain.push(["id", "<", before]);
     }
     const subChannels = DiscussChannel.search(domain, makeKwArgs({ limit, order: "id DESC" }));
-    const store = new mailDataHelpers.Store(subChannels);
     const lastMessageIds = [];
     for (const channel of subChannels) {
         const lastMessageId = Math.max(channel.message_ids);
@@ -367,8 +379,13 @@ async function discuss_channel_sub_channel_fetch(request) {
             lastMessageIds.push(lastMessageId);
         }
     }
-    store.add(MailMessage.browse(lastMessageIds));
-    return store.get_result();
+    return new mailDataHelpers.Store(subChannels)
+        .add(MailMessage.browse(lastMessageIds))
+        .add("Data", {
+            id: data_id,
+            channels: subChannels.map((channel) => ({ id: channel.id, model: "discuss.channel" })),
+        })
+        .get_result();
 }
 
 registerRoute("/discuss/settings/mute", discuss_settings_mute);
@@ -611,8 +628,15 @@ export async function mail_message_post(request) {
     /** @type {import("mock_models").ResPartner} */
     const ResPartner = this.env["res.partner"];
 
-    const { context, post_data, thread_id, thread_model, partner_emails, canned_response_ids } =
-        await parseRequestParams(request);
+    const {
+        context,
+        data_id,
+        post_data,
+        thread_id,
+        thread_model,
+        partner_emails,
+        canned_response_ids,
+    } = await parseRequestParams(request);
     if (canned_response_ids) {
         for (const cannedResponseId of canned_response_ids) {
             this.env["mail.canned.response"].write([cannedResponseId], {
@@ -659,10 +683,13 @@ export async function mail_message_post(request) {
             model: thread_model,
         });
     }
-    return new mailDataHelpers.Store(
-        MailMessage.browse(messageIds[0]),
-        makeKwArgs({ for_current_user: true })
-    ).get_result();
+    return new mailDataHelpers.Store("Data", {
+        id: data_id,
+        message: mailDataHelpers.Store.one(
+            MailMessage.browse(messageIds[0]),
+            makeKwArgs({ for_current_user: true })
+        ),
+    }).get_result();
 }
 
 registerRoute("/mail/message/reaction", mail_message_reaction);
@@ -881,7 +908,7 @@ export async function mail_data(request) {
 registerRoute("/discuss/search", search);
 /** @type {RouteCallback} */
 async function search(request) {
-    const { term, limit = 8 } = await parseRequestParams(request);
+    const { data_id, term, limit = 8 } = await parseRequestParams(request);
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
@@ -910,8 +937,11 @@ async function search(request) {
             channels.add(channelId);
         }
     }
-    store.add(channels);
-    ResPartner._search_for_channel_invite(store, term, undefined, limit);
+    store.add("Data", {
+        id: data_id,
+        channels: mailDataHelpers.Store.many(DiscussChannel.browse([...channels])),
+    });
+    ResPartner._search_for_channel_invite(store, data_id, term, undefined, limit);
     return store.get_result();
 }
 

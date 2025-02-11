@@ -1061,6 +1061,7 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
     // simulate receiving a new message of self with odoo out-of-focused
     withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "New message",
                 message_type: "comment",
@@ -1107,6 +1108,7 @@ test("out-of-focus notif on needaction message in channel", async () => {
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "@Michell Admin",
                 partner_ids: [adminId],
@@ -1151,6 +1153,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
     // simulate receiving a new message with odoo out-of-focused
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "New message",
                 message_type: "comment",
@@ -1194,6 +1197,7 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
     // simulate receving new message
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "New message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -1251,6 +1255,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
     // simulate receiving a new message in chat 1 with odoo out-of-focused
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Hello world!", message_type: "comment" },
             thread_id: channelId_1,
             thread_model: "discuss.channel",
@@ -1260,6 +1265,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
     // simulate receiving a new message in chat 2 with odoo out-of-focused
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Hello world!", message_type: "comment" },
             thread_id: channelId_2,
             thread_model: "discuss.channel",
@@ -1269,6 +1275,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
     // simulate receiving another new message in chat 2 with odoo focused
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Hello world!", message_type: "comment" },
             thread_id: channelId_2,
             thread_model: "discuss.channel",
@@ -1297,6 +1304,7 @@ test("new message in tab title has precedence over action name", async () => {
     // simulate receiving a new message in chat 1 with odoo out-of-focused
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Hello world!", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -1325,6 +1333,7 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "@Michell Admin",
                 partner_ids: [adminId],
@@ -1364,6 +1373,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "@Michell Admin",
                 partner_ids: [adminId],
@@ -1403,6 +1413,7 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "@Michell Admin",
                 partner_ids: [adminId],
@@ -1452,6 +1463,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
     // simulate receiving the first message on channel 11
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "What do you want?", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -2015,6 +2027,7 @@ test("Message shows up even if channel data is incomplete", async () => {
     );
     await withUser(correspondentUserId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "hello world", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

@@ -115,12 +115,13 @@ class TestPortalControllers(TestPortal):
         res = self.opener.post(
             url=post_url,
             json={
-                'params': {
-                    'thread_model': self.record_portal._name,
-                    'thread_id': self.record_portal.id,
-                    'post_data': {'body': "Test"},
-                    'hash': _hash,
-                    'pid': pid,
+                "params": {
+                    "data_id": -1,
+                    "thread_model": self.record_portal._name,
+                    "thread_id": self.record_portal.id,
+                    "post_data": {"body": "Test"},
+                    "hash": _hash,
+                    "pid": pid,
                 },
             },
         )
@@ -156,13 +157,14 @@ class TestPortalControllers(TestPortal):
         self.opener.post(
             url=post_url,
             json={
-                'params': {
-                    'thread_model': self.record_portal._name,
-                    'thread_id': self.record_portal.id,
-                    'post_data': {'body': "Test"},
-                    'token': self.record_portal.access_token,
-                    'hash': self.record_portal._sign_token(self.partner_2.id),
-                    'pid': self.partner_2.id,
+                "params": {
+                    "data_id": -1,
+                    "thread_model": self.record_portal._name,
+                    "thread_id": self.record_portal.id,
+                    "post_data": {"body": "Test"},
+                    "token": self.record_portal.access_token,
+                    "hash": self.record_portal._sign_token(self.partner_2.id),
+                    "pid": self.partner_2.id,
                 },
             },
         )

@@ -5,6 +5,7 @@ declare module "models" {
     import { ChatWindow as ChatWindowClass } from "@mail/core/common/chat_window_model";
     import { Composer as ComposerClass } from "@mail/core/common/composer_model";
     import { Country as CountryClass } from "@mail/core/common/country_model";
+    import { Data as DataClass } from "@mail/core/common/data_model";
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
@@ -25,6 +26,7 @@ declare module "models" {
     export interface ChatWindow extends ChatWindowClass {}
     export interface Composer extends ComposerClass {}
     export interface Country extends CountryClass {}
+    export interface Data extends DataClass {}
     export interface Failure extends FailureClass {}
     export interface Follower extends FollowerClass {}
     export interface LinkPreview extends LinkPreviewClass {}
@@ -43,6 +45,7 @@ declare module "models" {
         "ChatHub": ChatHub,
         "ChatWindow": ChatWindow,
         "Composer": Composer,
+        "Data": Data,
         "Failure": Failure,
         "ir.attachment": Attachment,
         "mail.canned.response": CannedResponse,

@@ -112,14 +112,20 @@ commandSetupRegistry.add("@", {
     placeholder: _t("Search a conversation"),
 });
 
+/**
+ * @param {string} name
+ * @param {import("models").Store} store
+ */
 async function makeNewChannel(name, store) {
+    const dataRequest = store.Data.createRequest();
     const data = await rpc("/discuss/channel/create_channel", {
+        data_id: dataRequest.id,
         name: name,
         group_id: store.internalUserGroupId,
     });
-    const { Thread } = store.insert(data);
-    const [channel] = Thread;
-    channel.open({ focus: true });
+    store.insert(data, { html: true });
+    dataRequest.channel.open({ focus: true });
+    dataRequest.delete();
 }
 
 export class DiscussCommandPalette {

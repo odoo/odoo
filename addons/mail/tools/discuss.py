@@ -113,6 +113,13 @@ class Store:
                 self.add_records_fields(records, fields)
         return self
 
+    def add_data(self, data_id, **values):
+        """Add values to the store for the data request specified by data_id.
+
+        Use case: fulfil a specific data request from a client."""
+        self.add_model_values("Data", {"id": data_id, **values})
+        return self
+
     def add_global_values(self, store_self=None, **values):
         """Add global values to the store. Global values are stored in the Store singleton
         (mail.store service) in the client side.

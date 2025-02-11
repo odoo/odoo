@@ -29,12 +29,16 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
     def test_crm_lead_creation_guest(self):
         """ Test customer set on lead: not if public, guest if not public """
         # public: should not be set as customer
-        data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'Visitor',
-            'channel_id': self.livechat_channel.id,
-            'persisted': True,
-        })
-        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Visitor",
+                "channel_id": self.livechat_channel.id,
+                "data_id": -1,
+                "persisted": True,
+            },
+        )
+        channel = self.env["discuss.channel"].browse(data["Data"][0]["channel"]["id"])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertEqual(lead.origin_channel_id, channel)
@@ -47,12 +51,16 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         # 'base.public_user' is archived by default
         self.assertFalse(self.env.ref('base.public_user').active)
 
-        data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'Visitor',
-            'channel_id': self.livechat_channel.id,
-            'persisted': True,
-        })
-        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Visitor",
+                "channel_id": self.livechat_channel.id,
+                "data_id": -1,
+                "persisted": True,
+            },
+        )
+        channel = self.env["discuss.channel"].browse(data["Data"][0]["channel"]["id"])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertTrue(any(m.partner_id == self.user_sales_leads.partner_id for m in channel.channel_member_ids))
@@ -70,12 +78,16 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
     def test_crm_lead_creation_portal(self):
         # portal: should be set as customer
         self.authenticate("user_portal", "user_portal")
-        data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'Visitor',
-            'channel_id': self.livechat_channel.id,
-            'persisted': True,
-        })
-        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Visitor",
+                "channel_id": self.livechat_channel.id,
+                "data_id": -1,
+                "persisted": True,
+            },
+        )
+        channel = self.env["discuss.channel"].browse(data["Data"][0]["channel"]["id"])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertEqual(
