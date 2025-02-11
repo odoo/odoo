@@ -81,6 +81,7 @@ class SaleReport(models.Model):
                 / {self._case_value_or_one('pos.currency_rate')}
                 * {self._case_value_or_one('account_currency_table.rate')}))
             AS discount_amount,
+            {self.env.company.currency_id.id} AS currency_id,
             concat('pos.order', ',', pos.id) AS order_reference"""
 
         additional_fields = self._select_additional_fields()

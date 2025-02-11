@@ -39,7 +39,7 @@ class PurchaseOrderLine(models.Model):
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True)
     price_unit_discounted = fields.Float('Unit Price (Discounted)', compute='_compute_price_unit_discounted')
 
-    price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', aggregator=None, store=True)
+    price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
     price_tax = fields.Float(compute='_compute_amount', string='Tax', store=True)
 

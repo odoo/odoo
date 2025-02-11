@@ -248,7 +248,6 @@ class AccountMoveLine(models.Model):
     amount_residual_currency = fields.Monetary(
         string='Residual Amount in Currency',
         compute='_compute_amount_residual', store=True,
-        aggregator=None,
         help="The residual amount on a journal item expressed in its currency (possibly not the "
              "company currency).",
     )
@@ -404,7 +403,6 @@ class AccountMoveLine(models.Model):
         string='Discount amount in Currency',
         store=True,
         currency_field='currency_id',
-        aggregator=None,
     )
     # Discounted balance when the early payment discount is applied
     discount_balance = fields.Monetary(
@@ -3273,15 +3271,6 @@ class AccountMoveLine(models.Model):
             'gross_price_total_unit': self.currency_id.round(gross_price_subtotal / self.quantity) if self.quantity else 0.0,
             'unece_uom_code': self.product_id.product_tmpl_id.uom_id._get_unece_code(),
         }
-        return res
-
-    @api.model
-    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
-        # Hide total amount_currency from formatted_read_group when view is not grouped by currency_id. Avoids mix of currencies
-        res = super().formatted_read_group(domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order)
-        if 'currency_id' not in groupby and 'amount_currency:sum' in aggregates:
-            for group_line in res:
-                group_line['amount_currency:sum'] = False
         return res
 
     def _get_journal_items_full_name(self, name, display_name):

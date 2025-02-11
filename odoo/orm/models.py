@@ -299,6 +299,7 @@ READ_GROUP_AGGREGATE = {
     'bool_and': lambda table, expr: SQL('BOOL_AND(%s)', expr),
     'bool_or': lambda table, expr: SQL('BOOL_OR(%s)', expr),
     'array_agg': lambda table, expr: SQL('ARRAY_AGG(%s ORDER BY %s)', expr, SQL.identifier(table, 'id')),
+    'array_agg_distinct': lambda table, expr: SQL('ARRAY_AGG(DISTINCT %s ORDER BY %s)', expr, expr),
     # 'recordset' aggregates will be post-processed to become recordsets
     'recordset': lambda table, expr: SQL('ARRAY_AGG(%s ORDER BY %s)', expr, SQL.identifier(table, 'id')),
     'count': lambda table, expr: SQL('COUNT(%s)', expr),
@@ -1891,7 +1892,7 @@ class BaseModel(metaclass=MetaModel):
         fname, __, func = parse_read_group_spec(spec)  # func is either None, granularity or an aggregate
         if func in ('count', 'count_distinct'):
             return 0
-        if func == 'array_agg':
+        if func in ('array_agg', 'array_agg_distinct'):
             return []
         field = self._fields[fname]
         if (not func or func == 'recordset') and (field.relational or fname == 'id'):
