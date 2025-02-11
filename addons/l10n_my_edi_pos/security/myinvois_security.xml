@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="myinvois_document_comp_rule" model="ir.rule">
+            <field name="name">MyInvois Document</field>
+            <field name="model_id" ref="model_myinvois_document"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
+</odoo>
