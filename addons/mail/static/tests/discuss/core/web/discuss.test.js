@@ -30,7 +30,6 @@ test("can create a new channel", async () => {
     onRpcBefore((route, args) => {
         if (
             route.startsWith("/mail") ||
-            route.startsWith("/discuss/channel/create_channel") ||
             route.startsWith("/discuss/channel/messages") ||
             route.startsWith("/discuss/search")
         ) {
@@ -69,9 +68,17 @@ test("can create a new channel", async () => {
         ["partner_id", "=", serverState.partnerId],
     ]);
     await waitForSteps([
-        `/discuss/channel/create_channel - ${JSON.stringify({
-            data_id: 3,
-            name: "abc",
+        `/mail/action - ${JSON.stringify({
+            fetch_params: [
+                [
+                    "/discuss/channel/create_channel",
+                    {
+                        data_id: 3,
+                        name: "abc",
+                    },
+                ],
+            ],
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":${selfMember.new_message_separator}}}`,
     ]);
@@ -121,9 +128,11 @@ test("can make a DM chat", async () => {
     await waitForSteps([
         `/discuss/search - {"data_id":1,"term":""}`,
         `/discuss/search - {"data_id":2,"term":"mario"}`,
-        `/discuss/channel/get_or_create_chat - ${JSON.stringify({
-            data_id: 3,
-            partners_to: [partnerId],
+        `/mail/action - ${JSON.stringify({
+            fetch_params: [
+                ["/discuss/channel/get_or_create_chat", { data_id: 3, partners_to: [partnerId] }],
+            ],
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
     ]);

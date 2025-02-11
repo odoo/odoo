@@ -1,7 +1,6 @@
 import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
 
@@ -27,13 +26,16 @@ const storeServicePatch = {
     },
     async createGroupChat({ default_display_mode, partners_to, name }) {
         const dataRequest = this.Data.createRequest();
-        const data = await rpc("/discuss/channel/create_group", {
-            data_id: dataRequest.id,
-            default_display_mode,
-            partners_to,
-            name,
-        });
-        this.insert(data);
+        await this.fetchStoreData(
+            "/discuss/channel/create_group",
+            {
+                data_id: dataRequest.id,
+                default_display_mode,
+                partners_to,
+                name,
+            },
+            { readonly: false }
+        );
         const channel = dataRequest.channel;
         dataRequest.delete();
         channel.open({ focus: true });

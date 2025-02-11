@@ -3,7 +3,6 @@ import { cleanTerm } from "@mail/utils/common/format";
 import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useService } from "@web/core/utils/hooks";
@@ -118,12 +117,15 @@ commandSetupRegistry.add("@", {
  */
 async function makeNewChannel(name, store) {
     const dataRequest = store.Data.createRequest();
-    const data = await rpc("/discuss/channel/create_channel", {
-        data_id: dataRequest.id,
-        name: name,
-        group_id: store.internalUserGroupId,
-    });
-    store.insert(data, { html: true });
+    await store.fetchStoreData(
+        "/discuss/channel/create_channel",
+        {
+            data_id: dataRequest.id,
+            name: name,
+            group_id: store.internalUserGroupId,
+        },
+        { readonly: false }
+    );
     dataRequest.channel.open({ focus: true });
     dataRequest.delete();
 }

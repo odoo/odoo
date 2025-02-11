@@ -588,11 +588,14 @@ export class Store extends BaseStore {
 
     async joinChat(id, forceOpen = false) {
         const dataRequest = this.Data.createRequest();
-        const data = await rpc("/discuss/channel/get_or_create_chat", {
-            data_id: dataRequest.id,
-            partners_to: [id],
-        });
-        this.store.insert(data, { html: true });
+        await this.fetchStoreData(
+            "/discuss/channel/get_or_create_chat",
+            {
+                data_id: dataRequest.id,
+                partners_to: [id],
+            },
+            { readonly: false }
+        );
         const channel = dataRequest.channel;
         dataRequest.delete();
         return channel;

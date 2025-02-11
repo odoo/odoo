@@ -266,51 +266,6 @@ async function channel_call_leave(request) {
     BusBus._sendmany(notifications);
 }
 
-registerRoute("/discuss/channel/get_or_create_chat", discuss_get_or_create_chat);
-/** @type {RouteCallback} */
-async function discuss_get_or_create_chat(request) {
-    const { data_id, partners_to } = await parseRequestParams(request);
-
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    const channelId = DiscussChannel._get_or_create_chat(partners_to);
-    return new mailDataHelpers.Store("Data", {
-        id: data_id,
-        channel: mailDataHelpers.Store.one(channelId),
-    }).get_result();
-}
-
-registerRoute("/discuss/channel/create_channel", discuss_create_channel);
-/** @type {RouteCallback} */
-async function discuss_create_channel(request) {
-    const { data_id, name, group_id } = await parseRequestParams(request);
-
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    const channelId = DiscussChannel._create_channel(name, group_id);
-    return new mailDataHelpers.Store("Data", {
-        id: data_id,
-        channel: mailDataHelpers.Store.one(channelId),
-    }).get_result();
-}
-
-registerRoute("/discuss/channel/create_group", discuss_create_group);
-/** @type {RouteCallback} */
-async function discuss_create_group(request) {
-    const kwargs = await parseRequestParams(request);
-    const data_id = kwargs.data_id;
-    const partners_to = kwargs.partners_to || [];
-    const name = kwargs.name || "";
-
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    const channelId = DiscussChannel._create_group(partners_to, name);
-    return new mailDataHelpers.Store("Data", {
-        id: data_id,
-        channel: mailDataHelpers.Store.one(channelId),
-    }).get_result();
-}
-
 registerRoute("/discuss/channel/members", discuss_channel_members);
 /** @type {RouteCallback} */
 async function discuss_channel_members(request) {
@@ -1039,9 +994,36 @@ async function processRequest(request) {
                 store.add(channel, makeKwArgs({ delete: true }));
             }
         }
+        mailDataHelpers._process_request_for_all.call(this, store, name, params);
         mailDataHelpers._process_request_for_internal_user.call(this, store, name, params);
     }
     return store;
+}
+
+function _process_request_for_all(store, name, params) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    if (name === "/discuss/channel/get_or_create_chat") {
+        const channelId = DiscussChannel._get_or_create_chat(params.partners_to);
+        store.add("Data", {
+            id: params.data_id,
+            channel: mailDataHelpers.Store.one(channelId),
+        });
+    }
+    if (name === "/discuss/channel/create_channel") {
+        const channelId = DiscussChannel._create_channel(name, params.group_id);
+        store.add("Data", {
+            id: params.data_id,
+            channel: mailDataHelpers.Store.one(channelId),
+        });
+    }
+    if (name === "/discuss/channel/create_group") {
+        const channelId = DiscussChannel._create_group(params.partners_to, name);
+        store.add("Data", {
+            id: params.data_id,
+            channel: mailDataHelpers.Store.one(channelId),
+        });
+    }
 }
 
 function _process_request_for_internal_user(store, name, params) {
@@ -1379,6 +1361,7 @@ class Store {
 }
 
 export const mailDataHelpers = {
+    _process_request_for_all,
     _process_request_for_internal_user,
     Store,
 };
