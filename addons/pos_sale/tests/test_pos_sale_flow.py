@@ -1065,3 +1065,23 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('PoSSettleQuotation', login="accountman")
         self.assertEqual(order.order_line.qty_delivered, 1)
+
+    def test_edit_invoice_with_pos_order(self):
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour("PosOrderWithInvoice", login="pos_admin")
+
+        pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
+        invoice = pos_order.account_move
+        self.assertEqual(invoice.state, 'posted')
+
+        # when clicking on cancel button
+        invoice.button_draft()
+        self.assertEqual(invoice.state, 'draft')
+        invoice.button_cancel()
+        self.assertEqual(invoice.state, 'cancel')
+
+        # when clicking on confirm button
+        invoice.button_draft()
+        self.assertEqual(invoice.state, 'draft')
+        invoice.action_post()
+        self.assertEqual(invoice.state, 'posted')
