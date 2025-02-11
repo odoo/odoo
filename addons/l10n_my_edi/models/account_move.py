@@ -843,6 +843,8 @@ Customs form No. 1, 9, etc for Vendor Bills""",
 
         return errors
 
+        return errors
+
     def _generate_myinvois_qr_code(self):
         """ Generate the qr code which should be embedded into the invoices PDF """
         self.ensure_one()
