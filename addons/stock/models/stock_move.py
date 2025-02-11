@@ -2133,7 +2133,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         self.ensure_one()
         from_wh = self.location_id.warehouse_id
         to_wh = self.location_dest_id.warehouse_id
-        return self.picking_type_id.code == 'outgoing' or (from_wh and to_wh and from_wh != to_wh)
+        return self.picking_type_id.code in ('internal', 'outgoing') or (from_wh and to_wh and from_wh != to_wh)
 
     def _get_lang(self):
         """Determine language to use for translated description"""
