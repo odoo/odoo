@@ -366,6 +366,7 @@ class TestSalePrices(SaleCommon):
             'name': 'E.T',
             'login': 'hohoho',
         })
+        user_in_other_company.group_ids += self.env.ref("product.group_product_manager")
         with mute_logger('odoo.models.unlink'):
             self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
