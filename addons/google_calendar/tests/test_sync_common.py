@@ -98,6 +98,16 @@ class TestSyncGoogle(HttpCase):
         insert_values, insert_kwargs = matching[0]
         self.assertDictEqual(insert_kwargs, {'timeout': timeout} if timeout else {})
 
+    def assertGoogleEventInsertedMultiTime(self, values, timeout=None):
+        self.assertGreaterEqual(len(self._gsync_insert_values), 1)
+        matching = []
+        for insert_values, insert_kwargs in self._gsync_insert_values:
+            if all(insert_values.get(key, False) == value for key, value in values.items()):
+                matching.append((insert_values, insert_kwargs))
+        self.assertGreaterEqual(len(matching), 1, 'There must be at least 1 matching insert.')
+        insert_values, insert_kwargs = matching[0]
+        self.assertDictEqual(insert_kwargs, {'timeout': timeout} if timeout else {})
+
     def assertGoogleEventNotInserted(self):
         self.assertFalse(self._gsync_insert_values)
 

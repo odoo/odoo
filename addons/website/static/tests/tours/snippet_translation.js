@@ -15,7 +15,7 @@ registerWebsitePreviewTour('snippet_translation', {
 }, () => [
     {
         content: "Wait for website preview and check language",
-        trigger: ":iframe body #wrapwrap",
+        trigger: ":iframe html:has(body:contains(welcome to your)):has(.o_top_fixed_element)",
         run: () => {
             if (localization.code !== "fu_GB") {
                 console.error("the user language is not properly set");
@@ -50,7 +50,7 @@ registerWebsitePreviewTour('snippet_translation_changing_lang', {
     },
     {
         content: "Wait the language has changed.",
-        trigger: ":iframe nav li:contains(parseltongue)",
+        trigger: ":iframe header.o_top_fixed_element nav li:contains(parseltongue)",
     },
     {
         content: "Open dropdown language selector",

@@ -8,11 +8,19 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
     steps: () => [
         {
             trigger: messagesContain("Hello! I'm a bot!"),
-            run: () => {
-                // make chat bot faster for this tour
-                odoo.__WOWL_DEBUG__.root.env.services[
-                    "im_livechat.chatbot"
-                ].chatbot.script.isLivechatTourRunning = true;
+            async run() {
+                await new Promise((resolve) => {
+                    const interval = setInterval(() => {
+                        if (odoo.__WOWL_DEBUG__.root) {
+                            // make chat bot faster for this tour
+                            odoo.__WOWL_DEBUG__.root.env.services[
+                                "im_livechat.chatbot"
+                            ].chatbot.script.isLivechatTourRunning = true;
+                            clearInterval(interval);
+                            resolve();
+                        }
+                    }, 100);
+                });
             },
         },
         {

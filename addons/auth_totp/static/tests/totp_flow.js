@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { queryAll } from "@odoo/hoot-dom";
+import { queryAll, waitFor } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
@@ -241,8 +241,12 @@ registry.category("web_tour.tours").add('totp_login_device', {
 ...openUserProfileAtSecurityTab(),
 {
     content: "Open totp wizard",
-    trigger: 'button[name=action_totp_disable]',
-    run: "click",
+    //TODO: remove when PIPU macro PR is merged: https://github.com/odoo/odoo/pull/194508
+    trigger: 'a[role=tab]:contains("Account Security").active',
+    async run(actions) {
+        const el = await waitFor('button[name=action_totp_disable]', { timeout: 5000 });
+        await actions.click(el);
+    }
 },
 {
     trigger: ".modal div:contains(entering your password)",

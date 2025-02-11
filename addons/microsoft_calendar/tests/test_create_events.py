@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import patch, call
 from datetime import timedelta, datetime
 from freezegun import freeze_time
 
@@ -645,6 +645,36 @@ class TestCreateEvents(TestCommon):
         event.with_user(self.organizer_user).sudo()._sync_odoo2microsoft()
         mock_insert.assert_not_called()
 
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_create_duplicate_event_microsoft_calendar(self, mock_insert, mock_get_events):
+        """
+        Test syncing an event from Odoo to Microsoft Calendar.
+        """
+        record = self.env["calendar.event"].with_user(self.organizer_user).create(self.simple_event_values)
+
+        # Mock values to simulate Microsoft event creation
+        event_id = "123"
+        event_iCalUId = "456"
+        mock_insert.return_value = (event_id, event_iCalUId)
+        record2 = record.copy()
+        # Prepare the mock event response from Microsoft
+        self.response_from_outlook_organizer = {
+            **self.simple_event_from_outlook_organizer,
+            '_odoo_id': record.id,
+        }
+        self.response_from_outlook_organizer_1 = {
+            **self.simple_event_from_outlook_organizer,
+            '_odoo_id': record2.id,
+        }
+        mock_get_events.return_value = (MicrosoftEvent([self.response_from_outlook_organizer, self.response_from_outlook_organizer_1]), None)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        self.call_post_commit_hooks()
+        record.invalidate_recordset()
+        record2.invalidate_recordset()
+
+        # Check that Microsoft insert was called exactly once
+        mock_insert.assert_called()
 
 class TestSyncOdoo2MicrosoftMail(TestCommon, MailCommon):
     @classmethod

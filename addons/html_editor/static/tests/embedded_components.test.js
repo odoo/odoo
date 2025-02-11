@@ -35,7 +35,7 @@ import { EmbeddedComponentPlugin } from "../src/others/embedded_component_plugin
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
-import { deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
+import { addStep, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
 import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -1007,6 +1007,57 @@ describe("editable descendants", () => {
                 </div>
             `)
         );
+    });
+
+    test("embedded components in editable descendants do not generate ghost mutations when they are destroyed", async () => {
+        const SimpleEmbeddedWrapper = EmbeddedWrapperMixin("deep");
+        const { el, editor, plugins } = await setupEditor(unformat(`<p>[]after</p>`), {
+            config: getConfig([
+                embedding("wrapper", SimpleEmbeddedWrapper, (host) => ({ host }), {
+                    getEditableDescendants,
+                }),
+            ]),
+        });
+        editor.shared.dom.insert(
+            parseHTML(
+                editor.document,
+                unformat(`
+                    <div data-embedded="wrapper">
+                        <div data-embedded-editable="deep">
+                            <div data-embedded="wrapper">
+                                <div data-embedded-editable="deep">
+                                    <p>deep</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `)
+            )
+        );
+        addStep(editor);
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+                    <div class="deep">
+                        <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                            <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+                                <div class="deep">
+                                    <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                                        <p>deep</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p>[]after</p>
+            `)
+        );
+        undo(editor);
+        await animationFrame();
+        expect(getContent(el)).toBe(`<p>[]after</p>`);
+        expect(plugins.get("history").currentStep.mutations.length).toBe(0);
     });
 
     test("editable descendants are extracted and put back in place when a patch is changing the template shape", async () => {
