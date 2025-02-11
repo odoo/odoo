@@ -10,6 +10,16 @@
             <span t-out="title" role="button" t-on-click="selectElement"/>
                 <!-- TODO CSS + remove temporary BS classes -->
             <div class="float-end">
+                <div class="me-3 d-inline">
+                    <t t-if="props.headerMiddleButtons" t-foreach="props.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
+                        <BuilderContext applyTo="headerMiddleButton.applyTo">
+                            <t t-if="headerMiddleButton.Component"
+                                t-component="headerMiddleButton.Component"
+                                t-props="headerMiddleButton.props || {}"/>
+                            <t t-else="" t-call="{{headerMiddleButton.template}}"/>
+                        </BuilderContext>
+                    </t>
+                </div>
                 <t t-foreach="props.containerTopButtons" t-as="button" t-key="button_index">
                     <button class="o_we_link border-0 px-0 me-1" t-att-class="button.class"
                             t-att-title="button.title" t-att-aria-label="button.title"

@@ -67,5 +67,6 @@ export class ClonePlugin extends Plugin {
             cloneEl.scrollIntoView({ behavior: "smooth", block: "center" });
         }
         // TODO snippet_cloned ?
+        return cloneEl;
     }
 }

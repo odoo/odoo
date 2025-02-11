@@ -25,6 +25,10 @@ export class OptionsContainer extends Component {
         isRemovable: false,
         isClonable: false,
         containerTopButtons: { type: Array },
+        headerMiddleButtons: { type: Array, optional: true },
+    };
+    static defaultProps = {
+        headerMiddleButtons: [],
     };
 
     setup() {

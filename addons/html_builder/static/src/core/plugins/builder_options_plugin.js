@@ -18,6 +18,9 @@ export class BuilderOptionsPlugin extends Plugin {
             ...option,
             id: uniqueId(),
         }));
+        this.builderHeaderMiddleButtons = this.getResource("builder_header_middle_buttons").map(
+            (headerMiddleButton) => ({ ...headerMiddleButton, id: uniqueId() })
+        );
         this.addDomListener(this.editable, "pointerup", (e) => {
             this.updateContainers(e.target);
         });
@@ -41,21 +44,27 @@ export class BuilderOptionsPlugin extends Plugin {
             this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
             return;
         }
-        const elementToOptions = new Map();
-        for (const option of this.builderOptions) {
-            const { selector, exclude } = option;
-            let elements = getClosestElements(this.target, selector);
-            if (exclude) {
-                elements = elements.filter((el) => !el.matches(exclude));
-            }
-            for (const element of elements) {
-                if (elementToOptions.has(element)) {
-                    elementToOptions.get(element).push(option);
-                } else {
-                    elementToOptions.set(element, [option]);
+
+        const mapElementsToOptions = (options) => {
+            const map = new Map();
+            for (const option of options) {
+                const { selector, exclude } = option;
+                let elements = getClosestElements(this.target, selector);
+                if (exclude) {
+                    elements = elements.filter((el) => !el.matches(exclude));
+                }
+                for (const element of elements) {
+                    if (map.has(element)) {
+                        map.get(element).push(option);
+                    } else {
+                        map.set(element, [option]);
+                    }
                 }
             }
-        }
+            return map;
+        };
+        const elementToOptions = mapElementsToOptions(this.builderOptions);
+        const elementToHeaderMiddleButtons = mapElementsToOptions(this.builderHeaderMiddleButtons);
 
         // Find the closest element with no options that should still have the
         // overlay buttons.
@@ -75,6 +84,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 id: previousElementToIdMap.get(element) || uniqueId(),
                 element,
                 options,
+                headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
                 hasOverlayOptions: this.hasOverlayOptions(element),
                 isRemovable: isRemovable(element),
                 isClonable: isClonable(element),
@@ -87,8 +97,14 @@ export class BuilderOptionsPlugin extends Plugin {
             const newIds = newContainers.map((c) => c.id);
             const areSameElements = newIds.every((id, i) => id === previousIds[i]);
             if (areSameElements) {
-                const previousOptions = this.lastContainers.map((c) => c.options).flat();
-                const newOptions = newContainers.map((c) => c.options).flat();
+                const previousOptions = this.lastContainers.flatMap((c) => [
+                    ...c.options,
+                    ...c.headerMiddleButtons,
+                ]);
+                const newOptions = newContainers.flatMap((c) => [
+                    ...c.options,
+                    ...c.headerMiddleButtons,
+                ]);
                 const areSameOptions =
                     newOptions.length === previousOptions.length &&
                     newOptions.every((option, i) => option.id === previousOptions[i].id);
