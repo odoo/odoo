@@ -1,3 +1,5 @@
+import re
+
 GMC_SUPPORTED_UOM = {
     'oz',
     'lb',
@@ -20,3 +22,5 @@ GMC_SUPPORTED_UOM = {
     'sqft',
     'sqm',
 }
+
+GMC_BASE_MEASURE = re.compile(r'(?P<base_count>\d+)?\s*(?P<base_unit>[a-z]+)')

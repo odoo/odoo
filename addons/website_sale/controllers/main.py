@@ -2067,24 +2067,24 @@ class WebsiteSale(payment_portal.PaymentPortal):
         View = request.env['ir.ui.view'].sudo()
         IrHttp = request.env['ir.http']
         mimetype = 'application/xml;charset=utf-8'
-        products = request.env['product.product'].search(
+        products = request.env['product.product'].search(expression.AND([
             [
                 ('is_published', '=', True),
                 ('type', 'in', ('consu', 'combo')),
-            ]
-            + website.website_domain()
-        )
+            ],
+            website.website_domain()
+        ]))
         homepage_url = website.homepage_url or '/'
         website_homepage = website._get_website_pages(
             [('url', '=', homepage_url), ('website_id', '!=', False)],
             limit=1,
         )
 
-        vals = {
-            'title': website_homepage.website_meta_title or  website.name,
+        gmc_data = {
+            'title': website_homepage.website_meta_title or website.name,
             'link': urljoin(website.get_base_url(), IrHttp._url_lang(homepage_url)),
             'description': website_homepage.website_meta_description,
-            'items': products._get_gmc_items(),
+            'items': products._prepare_gmc_items(),
         }
-        content = View._render_template('website_sale.gmc_xml', vals)
+        content = View._render_template('website_sale.gmc_xml', gmc_data)
         return request.make_response(content, [('Content-Type', mimetype)])

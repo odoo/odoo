@@ -36,6 +36,10 @@
                             t-if="'unit_pricing_measure' in item"
                             t-out="item['unit_pricing_measure']"
                         />
+                        <g:unit_pricing_base_measure
+                            t-if="'unit_pricing_base_measure' in item"
+                            t-out="item['unit_pricing_base_measure']"
+                        />
                         <t t-foreach="item['custom_label']" t-as="tag_label">
                             <t t-translation="off">
                                 &lt;g:<t t-out="tag_label[0]"/>&gt;

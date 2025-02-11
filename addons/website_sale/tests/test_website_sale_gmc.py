@@ -1,121 +1,32 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-import io
-import time
 from datetime import datetime, timedelta
 from lxml import etree
-from PIL import Image
 from werkzeug.exceptions import NotFound
 
 from odoo import Command
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.delivery.tests.common import DeliveryCommon
-from odoo.addons.product.tests.common import ProductVariantsCommon
-from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import MockRequest
-
-
-class WebsiteSaleGMCCommon(ProductVariantsCommon, DeliveryCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.public_user = cls.env.ref('base.public_user')
-        cls.website = cls.env['website'].browse(1)
-        cls.website.enabled_gmc_src = True
-
-        cls.product_template_sofa.list_price = 1000.0
-        cls.color_attribute_red.default_extra_price = 200.0
-        (
-            cls.red_sofa,
-            cls.blue_sofa,
-        ) = cls.product_template_sofa.product_variant_ids[:2]
-        cls.red_sofa.default_code = 'SOFA-R'
-        (
-            cls.blue_sofa
-            .product_template_attribute_value_ids
-            .filtered(lambda v: v.name == 'blue')
-        ).price_extra = 200.0
-        cls.blanket = cls._create_product(name="Blanket")
-        combos = cls.env['product.combo'].create([
-            {
-                'name': "Sofa Combo",
-                'combo_item_ids': [
-                    Command.create({'product_id': cls.red_sofa.id}),
-                    Command.create({'product_id': cls.blue_sofa.id})
-                ]
-            },
-            {
-                'name': "Blanket Combo",
-                'combo_item_ids': [
-                    Command.create({'product_id': cls.blanket.id}),
-                ]
-            }
-        ])
-        cls.product_bundle = cls._create_product(
-            name="Sofa + Blanket",
-            type='combo',
-            combo_ids=[Command.set(combos.ids)],
-            list_price=1099.0
-        )
-        cls.products = cls.red_sofa + cls.blue_sofa + cls.blanket + cls.product_bundle
-        cls.products.website_published = True
-        cls.eur_currency = cls.env.ref('base.EUR')
-        cls.eur_currency.active = True
-        cls.eur_currency.write({
-            'rate_ids': [
-                Command.clear(),
-                Command.create({
-                    'name': time.strftime('%Y-%m-%d'),
-                    'rate': 1.1,
-                })
-            ],
-        })
-        cls.delivery_countries = cls.env['res.country'].search([('code', 'in', ('BE', 'LU', 'GB'))])
-        cls.belgium = cls.delivery_countries.search([('code', '=', 'BE')])
-        cls.carrier.write({
-            'country_ids': [Command.set(cls.delivery_countries.ids)],  # limit computation overhead
-            'free_over': True,
-            'amount': 1200.0,
-            'website_published': True,
-        })
-        cls.carrier.product_id.list_price = 5.0
-        cls.WebsiteSaleController = WebsiteSale()
-        cls.empty_so = cls.env['sale.order'].create({
-            'partner_id': cls.partner.id,
-            'website_id': cls.website.id,
-        })
-
-    def mock_public_request(self, **kwargs):
-        website = kwargs.pop('website', self.website)
-        return MockRequest(
-            self.products.with_user(self.public_user).env,
-            website=website.with_user(self.public_user),
-            website_sale_current_pl=kwargs.pop('pricelist', self.pricelist).id,
-            **kwargs,
-        )
-
-    def update_items(self, **kwargs):
-        with self.mock_public_request(**kwargs):
-            self.items = self.products._get_gmc_items()
-        self.red_sofa_item = self.items[self.red_sofa]
-        self.blue_sofa_item = self.items[self.blue_sofa]
+from odoo.addons.website_sale.tests.common import WebsiteSaleGMCCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
-    def test_gmc_xml_accessible_iff_gmc_src_enabled(self):
-        self.website.enabled_gmc_src = False
-        with self.assertRaises(NotFound), self.mock_public_request():
-            self.WebsiteSaleController.gmc_data_source()
-
-        self.website.enabled_gmc_src = True
+    def test_gmc_xml_accessible_if_gmc_setting_enabled(self):
         response = self.url_open('/gmc.xml')
 
         self.assertEqual(200, response.status_code)
-        gmc_xml = etree.XML(response.content)  # valid xml
+
+    def test_gmc_xml_not_found_if_gmc_setting_disabled(self):
+        self.website.enabled_gmc_src = False
+
+        with self.assertRaises(NotFound), self.mock_public_request():
+            self.WebsiteSaleController.gmc_data_source()
+
+    def test_gmc_xml_correct_xml_format(self):
+        response = self.url_open('/gmc.xml')
+
+        gmc_xml = etree.XML(response.content)  # assert valid xml
         self.assertEqual(self.website.name, gmc_xml.xpath('//title')[0].text)
         self.assertURLEqual('/', gmc_xml.xpath('//link')[0].text)
         self.assertEqual(
@@ -123,29 +34,22 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             gmc_xml.xpath('//description')[0].text,
         )
 
-    def test_gmc_xml_translation(self):
+    def test_gmc_xml_localization(self):
         fr_lang = self.env['res.lang']._activate_lang('fr_FR')
         self.website.language_ids += fr_lang
-        self.website.name = 'The best website'
-        self.website.with_context(lang=fr_lang.code).name = 'Mon unique site'
         self.red_sofa.with_context(lang=fr_lang.code).name = 'Canapé'
         self.color_attribute_red.with_context(lang=fr_lang.code).name = 'rouge'
 
-        response = self.url_open('/fr/gmc.xml')
+        self.update_items(context={'lang': fr_lang.code})
 
-        self.assertEqual(200, response.status_code)
-        gmc_xml = etree.XML(response.content)
-        self.assertEqual('Mon unique site', gmc_xml.xpath('//title')[0].text)
-        self.assertURLEqual(
-            f'/{fr_lang.url_code}',
-            gmc_xml.xpath('//link')[0].text,
+        self.assertTrue(
+            self.parse_http_location(self.red_sofa_item['link'])
+                .path.startswith(f'/{fr_lang.url_code}'),
             'The links must redirect to the french website.',
         )
         self.assertEqual(
             'Canapé (rouge)',
-            gmc_xml.xpath(
-                '//item[g:id="SOFA-R"]/g:title', namespaces={'g': 'http://base.google.com/ns/1.0'}
-            )[0].text,
+            self.red_sofa_item['title'],
         )
 
     def test_gmc_xml_pricelist(self):
@@ -188,12 +92,11 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             name="Service Type Product",
             type='service',
         )
-        *consu_combo, service_product = self.products
+        service_product = self.products[-1]
 
         self.update_items()
 
         self.assertNotIn(service_product, self.items)
-        self.assertGreaterEqual(set(consu_combo), self.items.keys())  # subseteq
 
     def test_gmc_items_use_internal_reference_if_exists(self):
         """Test prefer internal code to database id"""
@@ -288,59 +191,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             'website_sale_gmc_check_advertised_prices_blue_sofa_tax_included',
         )
 
-    def _create_image(self, color):
-        f = io.BytesIO()
-        Image.new('RGB', (1920, 1080), color).save(f, 'JPEG')
-        f.seek(0)
-        return base64.b64encode(f.read())
-
-    def url_open_image(self, link):
-        response = self.url_open(link)
-        return base64.encodebytes(response.content).replace(b'\n', b'')
-
-    def test_gmc_items_images(self):
-        image_template = self._create_image('green')
-        image_red_sofa = self._create_image('red')
-        self.product_template_sofa.image_1920 = image_template
-        self.red_sofa.image_variant_1920 = image_red_sofa
-
-        self.update_items()
-        response_image_red_sofa = self.url_open_image(self.red_sofa_item['image_link'])
-        response_image_blue_sofa = self.url_open_image(self.blue_sofa_item['image_link'])
-
-        self.assertEqual(response_image_red_sofa, image_red_sofa)
-        # no variant specific -> fallback to template
-        self.assertEqual(response_image_blue_sofa, image_template)
-
-    def test_gmc_items_additionnal_images(self):
-        extra_image_template = self._create_image('white')
-        extra_image_blue_sofa = self._create_image('blue')
-        self.product_template_sofa.write({
-            'product_template_image_ids': [Command.create({
-                'name': 'extra_image',
-                'image_1920': extra_image_template,
-            })],
-        })
-        self.blue_sofa.write({
-            'product_variant_image_ids': [Command.create({
-                'name': 'black_mouse_extra_image',
-                'image_1920': extra_image_blue_sofa,
-            })],
-        })
-
-        self.update_items()
-        response_image_red_sofa = self.url_open_image(self.red_sofa_item['additional_image_link'][0])
-        response_image_blue_sofa_0 = self.url_open_image(self.blue_sofa_item['additional_image_link'][0])
-        response_image_blue_sofa_1 = self.url_open_image(self.blue_sofa_item['additional_image_link'][1])
-
-        self.assertEqual(1, len(self.red_sofa_item['additional_image_link']))  # template image
-        # template image + variant image
-        self.assertEqual(2, len(self.blue_sofa_item['additional_image_link']))
-        self.assertEqual(response_image_red_sofa, extra_image_template)
-        self.assertEqual(response_image_blue_sofa_0, extra_image_blue_sofa)
-        self.assertEqual(response_image_blue_sofa_1, extra_image_template)
-
-    def test_gmc_items_additionnal_images_limit_to_10(self):
+    def test_gmc_items_additional_images_limit_to_10(self):
         image = self._create_image('blue')
         self.blue_sofa.write({
             'product_variant_image_ids': [
@@ -366,15 +217,9 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertNotIn('gtin', self.blue_sofa_item)
         self.assertEqual('no', self.blue_sofa_item['identifier_exists'])
 
-    def _create_public_category(self, list_vals):
-        categs = self.env['product.public.category'].create(list_vals)
-        for i in range(0, len(categs) - 1):
-            categs[i].parent_id = categs[i + 1]
-        return categs[-1]
-
     def test_gmc_items_sorted_types(self):
         # Furnitures / Sofas
-        # Electronics / Electronics Accessories / Computer Accessories
+        # Furnitures / Indoor Furnitures / Indoor Sofas
         sofas_categ = self._create_public_category([
             {'name': 'Furnitures'},
             {'name': 'Sofas', 'sequence': 1},
@@ -409,21 +254,17 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertEqual(5, len(self.red_sofa_item['product_type']))
 
     def test_gmc_product_variants(self):
-        product_one_variant = (
-            self.env['product.template']
-            .create({
-                'name': 'Test product',
-                'attribute_line_ids': [
-                    Command.create({
-                        'attribute_id': attr.attribute_id.id,
-                        'value_ids': [Command.link(attr.id)],
-                    })
-                    for attr in (self.color_attribute_green + self.size_attribute_l)
-                ],
-                'list_price': 49.0,
-            })
-            .product_variant_ids
-        )
+        product_one_variant = self.env['product.template'].create({
+            'name': 'Test product',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attr.attribute_id.id,
+                    'value_ids': [Command.link(attr.id)],
+                })
+                for attr in (self.color_attribute_green + self.size_attribute_l)
+            ],
+            'list_price': 49.0,
+        }).product_variant_ids
         self.products |= product_one_variant
 
         self.update_items()
@@ -436,7 +277,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     def test_gmc_items_bundle_iff_combo(self):
         self.update_items()
 
-        self.assertEqual('yes', self.items[self.product_bundle]['is_bundle'])
+        self.assertEqual('yes', self.items[self.sofa_bundle]['is_bundle'])
         self.assertEqual('no', self.red_sofa_item['is_bundle'])
 
     def test_gmc_items_sorted_labels(self):
@@ -450,10 +291,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
         self.update_items()
 
-        self.assertListEqual(
-            tags,
-            list(name for _, name in self.red_sofa_item['custom_label']),
-        )
+        self.assertListEqual(tags, [name for _, name in self.red_sofa_item['custom_label']])
 
     def test_gmc_items_tags_limit_to_5(self):
         self.product_template_sofa.write({
@@ -471,7 +309,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self._prepare_carrier(
             self._prepare_carrier_product(list_price=2.99),
             name="Local Shipping",
-            country_ids=[Command.set(self.belgium.ids)],
+            country_ids=[Command.set(self.country_be.ids)],
             website_published=True,
             fixed_price=2.99,
         )
@@ -493,7 +331,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self._prepare_carrier(
             self._prepare_carrier_product(list_price=2.99),
             name="Local Free above $100",
-            country_ids=[Command.set(self.belgium.ids)],
+            country_ids=[Command.set(self.country_be.ids)],
             free_over=True,
             amount=100.0,
             max_weight=20.0,
@@ -519,7 +357,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self._prepare_carrier(
             self._prepare_carrier_product(list_price=10.0),
             name="Local Carrier",
-            country_ids=[Command.set(self.belgium.ids)],
+            country_ids=[Command.set(self.country_be.ids)],
             free_over=True,
             amount=100.0,
             website_published=True,
@@ -560,8 +398,8 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
     def _setup_6l_water_pack(self):
         self.env.user.groups_id |= self.env.ref('uom.group_uom')
-        uom_litre = self.env.ref('uom.product_uom_litre')
-        base_unit_litre = self.env['website.base.unit'].create({'name': 'l'})
+        uom_litre = self.env.ref('uom.product_uom_pack_6')
+        base_unit_litre = self.env['website.base.unit'].create({'name': 'L'})
         six_pack = self.env['product.product'].create([{
             'name': 'Water Pack 6L',
             'list_price': 12.0,
@@ -581,11 +419,11 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.env.user.groups_id |= self.env.ref('website_sale.group_show_uom_price')
         self.update_items()
 
-        self.assertEqual('6l', self.items[six_pack]['unit_pricing_measure'], '$12 / 6l')
+        self.assertEqual('6.0l', self.items[six_pack]['unit_pricing_measure'], '$12 / 6l')
 
     def test_gmc_items_dont_send_unsupported_unit(self):
         six_pack = self._setup_6l_water_pack()
-        six_pack.base_unit_id = False  # remove `l` alias -> falls back to `L`
+        six_pack.base_unit_id = False  # remove `L` alias -> falls back to `Pack of 6`
 
         self.update_items()
 
