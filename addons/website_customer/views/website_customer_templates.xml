@@ -253,8 +253,8 @@
 <template id="details" name="Customer Detail">
   <t t-call="website.layout">
     <div id="wrap">
-        <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS</t>
-        <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_1" t-att-data-editor-message="editor_message"/>
+        <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_1"
+            data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS"/>
         <div class="container mb-3">
             <div class="row">
                 <div class="mt-4 mb-3" t-if="not edit_page">
@@ -267,7 +267,8 @@
                 </t>
             </div>
         </div>
-        <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_2" t-att-data-editor-message="editor_message"/>
+        <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_2"
+            data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS"/>
     </div>
   </t>
 </template>
