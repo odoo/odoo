@@ -279,7 +279,7 @@ export class SuggestionService {
                 const result = fn(p1, p2, {
                     env: this.env,
                     memberPartnerIds,
-                    searchTerms: cleanedSearchTerm,
+                    searchTerm: cleanedSearchTerm,
                     thread,
                     context,
                 });
