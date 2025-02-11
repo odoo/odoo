@@ -2089,7 +2089,7 @@ class PosSession(models.Model):
             ('barcode', '=', barcode),
             ('sale_ok', '=', True),
             ('available_in_pos', '=', True),
-        ])
+        ], limit=1)
         if product:
             return {'product_id': [product.id]}
 
