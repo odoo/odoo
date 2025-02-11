@@ -709,9 +709,12 @@ export class PosData extends Reactive {
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
-        this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
-        const results = this.models.loadData(data, [], true);
-        return results;
+        if (data) {
+            this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
+            const results = this.models.loadData(data, [], true);
+            return results;
+        }
+        return false;
     }
 
     async create(model, values, queue = true) {
