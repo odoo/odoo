@@ -1,11 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
 import {
-    isColorGradient,
-    rgbToHex,
-    hasColor,
-    hasAnyNodesColor,
-    TEXT_CLASSES_REGEX,
     BG_CLASSES_REGEX,
+    hasAnyNodesColor,
+    hasColor,
+    TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
 import { fillEmpty } from "@html_editor/utils/dom";
 import {
@@ -16,11 +14,11 @@ import {
     isZwnbsp,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
-import { isCSSColor } from "@web/core/utils/colors";
-import { ColorSelector } from "./color_selector";
+import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { withSequence } from "@html_editor/utils/resource";
+import { isColorGradient, isCSSColor, rgbToHex } from "@web/core/utils/colors";
+import { ColorSelector } from "./color_selector";
 
 /**
  * @typedef { Object } ColorShared
@@ -77,12 +75,17 @@ export class ColorPlugin extends Plugin {
         const mode = type === "foreground" ? "color" : "backgroundColor";
         return {
             type,
+            mode,
+
             getUsedCustomColors: () => this.getUsedCustomColors(mode),
             getSelectedColors: () => this.selectedColors,
-            applyColor: this.applyColor.bind(this),
-            applyColorPreview: this.applyColorPreview.bind(this),
+            applyColor: (color) => {
+                this.applyColor({ color, mode });
+                this.dependencies.selection.focusEditable();
+            },
+            applyColorPreview: (color) => this.applyColorPreview({ color, mode }),
             applyColorResetPreview: this.applyColorResetPreview.bind(this),
-            focusEditable: () => this.dependencies.selection.focusEditable(),
+            colorPrefix: mode === "color" ? "text-" : "bg-",
         };
     }
 

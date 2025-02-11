@@ -1,8 +1,8 @@
 import { withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
-import { ColorSelector } from "../font/color_selector";
 import { MediaDialog } from "./media_dialog/media_dialog";
+import { ColorSelector } from "../font/color_selector";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
