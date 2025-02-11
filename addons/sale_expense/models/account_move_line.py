@@ -34,6 +34,7 @@ class AccountMoveLine(models.Model):
         if self.expense_id:
             res['name'] = self.name
             res['product_uom_qty'] = self.expense_id.quantity
+            res['analytic_distribution'] = self.analytic_distribution
         return res
 
     def _sale_create_reinvoice_sale_line(self):
