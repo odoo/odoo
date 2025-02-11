@@ -115,6 +115,23 @@ CREATE TABLE res_partner (
     primary key(id)
 );
 
+CREATE TABLE ir_logging (
+    id serial,
+    create_uid integer,
+    write_uid integer,
+    name varchar NOT NULL,
+    type varchar NOT NULL,
+    dbname varchar,
+    level varchar,
+    path varchar NOT NULL,
+    func varchar NOT NULL,
+    line varchar NOT NULL,
+    message text NOT NULL,
+    create_date timestamp without time zone,
+    write_date timestamp without time zone,
+    primary key(id)
+);
+
 
 ---------------------------------
 -- Default data

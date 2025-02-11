@@ -60,7 +60,7 @@ class PostgreSQLHandler(logging.Handler):
             # we do not use record.levelname because it may have been changed by ColoredFormatter.
             levelname = logging.getLevelName(record.levelno)
 
-            val = ('server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
+            val = ('server', dbname, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
             cr.execute("""
                 INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
