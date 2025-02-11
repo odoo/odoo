@@ -10,15 +10,14 @@
                         <group>
                             <field name="composition_comment_option" invisible="1"/>
                             <label for="partner_ids" string="To" invisible="is_note"/>
-                            <div invisible="is_note">
-                                <field name="model" invisible="1"/>
-                                <field name="res_id" invisible="1"/>
-                                <widget invisible="composition_comment_option in ['reply_all', 'forward']" name="mail_composer_recipient_list" thread_model_field="model" thread_id_field="res_id"/>
-                                <field name="partner_ids" widget="many2many_tags_email"
+                            <div invisible="is_note" class="d-flex gap-3">
+                                <field name="partner_ids" widget="many2many_tags_email" class="w-auto flex-grow-1"
                                     placeholder="Add contacts to notify..."
                                     options="{'no_quick_create': True}"
                                     context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                                <field name="show_notified_bcc" widget="mail_composer_show_bcc_button" invisible="show_notified_bcc" class="w-auto"/>
                             </div>
+                            <field name="notified_bcc" widget="mail_composer_bcc_list" invisible="is_note or not show_notified_bcc"/>
                             <field name="subject" required="True"/>
                         </group>
                         <group col="1">

@@ -3,13 +3,13 @@ import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { BaseRecipientsList } from "@mail/core/web/base_recipients_list";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
-import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
+import { RecipientsInput } from "@mail/core/web/recipients_input";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 
@@ -34,10 +34,10 @@ Object.assign(Chatter.components, {
     Dropdown,
     FileUploader,
     FollowerList,
+    RecipientsInput,
     ScheduledMessage,
     SearchMessageInput,
     SearchMessageResult,
-    SuggestedRecipientsList,
 });
 
 Chatter.props.push(
@@ -85,6 +85,7 @@ patch(Chatter.prototype, {
             isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
+            showNotifiedBcc: false,
             showScheduledMessages: true,
         });
         this.messageSearch = useMessageSearch();
@@ -370,6 +371,10 @@ patch(Chatter.prototype, {
             this.onThreadCreated = schedule;
             this.props.saveRecord?.();
         }
+    },
+
+    showNotifiedBcc() {
+        this.state.showNotifiedBcc = true;
     },
 
     toggleActivities() {
