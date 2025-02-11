@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="pickup_location_selector_view_form" model="ir.ui.view">
+        <field name="name">pickup.location.selector.form</field>
+        <field name="model">pickup.location.selector</field>
+        <field name="arch" type="xml">
+            <form js_class="location_selector_form">
+                <field name="parent_model" invisible="1"/>
+                <field name="parent_id" invisible="1"/>
+                <field name="zip_code" invisible="1"/>
+                <field name="selected_pickup_location" invisible="1"/>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -162,7 +162,7 @@ class SaleOrder(models.Model):
         index='btree_not_null')
     partner_shipping_id = fields.Many2one(
         comodel_name='res.partner',
-        string="Delivery Address",
+        string="Customer Shipping Address",
         compute='_compute_partner_shipping_id',
         store=True, readonly=False, required=True, precompute=True,
         check_company=True,
