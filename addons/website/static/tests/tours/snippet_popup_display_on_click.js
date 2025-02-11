@@ -52,6 +52,9 @@ registerWebsitePreviewTour("snippet_popup_display_on_click", {
     },
     ...clickOnSave(),
     {
+        trigger: "body .o_notification_manager:not(.o_upload_progress_toast):empty:hidden",
+    },
+    {
         content: "Wait content of iframe is loaded",
         trigger: ":iframe main:contains(enhance your)",
     },
@@ -91,8 +94,15 @@ registerWebsitePreviewTour("snippet_popup_display_on_click", {
     },
     ...clickOnSave(),
     {
+        trigger: "body .o_notification_manager:not(.o_upload_progress_toast):empty:hidden",
+    },
+    {
         content: "Wait content of iframe is loaded",
         trigger: ":iframe main:contains(enhance your)",
+    },
+    {
+        content: "Wait form is patched",
+        trigger: ":iframe form#contactus_form input[name=company]:value(yourcompany)",
     },
     clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
