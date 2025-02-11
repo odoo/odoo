@@ -86,11 +86,7 @@ class SaleReport(models.Model):
 
     # aggregates or computed fields
     nbr = fields.Integer(string="# of Lines", readonly=True)
-    currency_id = fields.Many2one(comodel_name='res.currency', compute='_compute_currency_id')
-
-    @api.depends_context('allowed_company_ids')
-    def _compute_currency_id(self):
-        self.currency_id = self.env.company.currency_id
+    currency_id = fields.Many2one(comodel_name='res.currency', readonly=True)
 
     def _with_sale(self):
         return ""
@@ -159,6 +155,7 @@ class SaleReport(models.Model):
                 * {self._case_value_or_one('account_currency_table.rate')}
                 ) ELSE 0
             END AS discount_amount,
+            {self.env.company.currency_id.id} AS currency_id,
             concat('sale.order', ',', s.id) AS order_reference"""
 
         additional_fields_info = self._select_additional_fields()

@@ -1177,6 +1177,7 @@ const DATE_TIME_REGEX = /\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?/;
 /** @type {GroupOperator[]} */
 const VALID_AGGREGATE_FUNCTIONS = [
     "array_agg",
+    "array_agg_distinct",
     "avg",
     "bool_and",
     "bool_or",

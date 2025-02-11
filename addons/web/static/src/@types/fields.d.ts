@@ -48,7 +48,7 @@ declare module "fields" {
     }
 
     interface INumerical {
-        aggregator: "array_agg" | "avg" | "bool_and" | "bool_or" | "count" | "count_distinct" | "max" | "min" | "sum";
+        aggregator: "array_agg" | "array_agg_distinct" | "avg" | "bool_and" | "bool_or" | "count" | "count_distinct" | "max" | "min" | "sum";
     }
 
     interface ITextual {

@@ -9,7 +9,7 @@ class StockQuant(models.Model):
     _inherit = 'stock.quant'
 
     value = fields.Monetary('Value', compute='_compute_value', groups='stock.group_stock_manager')
-    currency_id = fields.Many2one('res.currency', compute='_compute_value', groups='stock.group_stock_manager')
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', groups='stock.group_stock_manager')
     accounting_date = fields.Date(
         'Accounting Date',
         help="Date at which the accounting entries will be created"
@@ -52,7 +52,6 @@ class StockQuant(models.Model):
         self.fetch(['company_id', 'location_id', 'owner_id', 'product_id', 'quantity', 'lot_id'])
         self.value = 0
         for quant in self:
-            quant.currency_id = quant.company_id.currency_id
             if not quant.location_id or not quant.product_id or\
                     not quant.location_id._should_be_valued() or\
                     quant._should_exclude_for_valuation() or\
