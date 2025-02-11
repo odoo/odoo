@@ -1444,21 +1444,16 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
 # --------------------------------------------------
 
 
-@nary_condition_optimization(operators=('in', 'not in'))
-def _optimize_merge_set_conditions(cls: type[DomainNary], conditions, model):
-    """Merge equality conditions.
+def _merge_set_conditions(cls: type[DomainNary], conditions):
+    """Base function to merge equality conditions.
 
     Combine the 'in' and 'not in' conditions to a single set of values.
-    Do not touch x2many fields which have a different semantic.
 
     Examples:
 
         a in {1} or a in {2}  <=>  a in {1, 2}
         a in {1, 2} and a not in {2, 5}  =>  a in {1}
     """
-    field = conditions[0]._field(model)
-    if field.type in ('many2many', 'one2many', 'properties'):
-        return conditions
     assert all(isinstance(cond.value, OrderedSet) for cond in conditions)
 
     # build the sets for 'in' and 'not in' conditions
@@ -1487,6 +1482,42 @@ def intersection(sets: list[OrderedSet]) -> OrderedSet:
 def union(sets: list[OrderedSet]) -> OrderedSet:
     """Union of a list of OrderedSets"""
     return OrderedSet(elem for s in sets for elem in s)
+
+
+@nary_condition_optimization(operators=('in', 'not in'))
+def _optimize_merge_set_conditions_mono_value(cls: type[DomainNary], conditions, model):
+    """Merge equality conditions.
+
+    Combine the 'in' and 'not in' conditions to a single set of values.
+    Do not touch x2many fields which have a different semantic.
+
+    Examples:
+
+        a in {1} or a in {2}  <=>  a in {1, 2}
+        a in {1, 2} and a not in {2, 5}  =>  a in {1}
+    """
+    field = conditions[0]._field(model)
+    if field.type in ('many2many', 'one2many', 'properties'):
+        return conditions
+    return _merge_set_conditions(cls, conditions)
+
+
+@nary_condition_optimization(operators=('in',), field_types=['many2many', 'one2many'])
+def _optimize_merge_set_conditions_x2many_in(cls: type[DomainNary], conditions, model):
+    """Merge domains of 'in' conditions for x2many fields like for 'any' operator.
+    """
+    if cls is DomainAnd:
+        return conditions
+    return _merge_set_conditions(cls, conditions)
+
+
+@nary_condition_optimization(operators=('not in',), field_types=['many2many', 'one2many'])
+def _optimize_merge_set_conditions_x2many_not_in(cls: type[DomainNary], conditions, model):
+    """Merge domains of 'not in' conditions for x2many fields like for 'not any' operator.
+    """
+    if cls is DomainOr:
+        return conditions
+    return _merge_set_conditions(cls, conditions)
 
 
 @nary_condition_optimization(['any'], ['many2one', 'one2many', 'many2many'])
