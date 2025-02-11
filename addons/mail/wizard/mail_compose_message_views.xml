@@ -97,7 +97,7 @@
                                 invisible="(not subtype_is_log or composition_mode == 'comment' and not composition_batch and scheduled_date) or partner_ids_all_have_email"/>
                         <button string="Schedule" name="action_schedule_message" type="object" class="btn-primary" data-hotkey="q" disabled="1"
                                 invisible="(composition_mode != 'comment' or composition_batch or not scheduled_date) or partner_ids_all_have_email"/>
-                        <button string="Discard" class="btn-secondary w-auto" special="cancel" data-hotkey="x" />
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
                         <field name="attachment_ids" widget="mail_composer_attachment_selector" invisible="not can_edit_body"/>
                         <field name="template_id" widget="mail_composer_template_selector"/>
                         <field name="scheduled_date" widget="text_scheduled_date" invisible="composition_batch or composition_mode != 'comment'"/>

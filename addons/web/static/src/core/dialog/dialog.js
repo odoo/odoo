@@ -117,7 +117,11 @@ export class Dialog extends Component {
     }
 
     get isFullscreen() {
-        return this.props.fullscreen || this.env.isSmall;
+        return this.props.fullscreen || (this.env.isSmall && this.design !== "minimal");
+    }
+
+    get design() {
+        return ["sm", "md"].includes(this.props.size) ? "minimal" : "default";
     }
 
     get contentStyle() {
