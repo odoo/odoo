@@ -88,7 +88,7 @@ export class ClosePosPopup extends Component {
         return initialState;
     }
     async confirm() {
-        if (!this.pos.config.cash_control || this.env.utils.floatIsZero(this.getMaxDifference())) {
+        if (!this.pos.config.cash_control || this.pos.currency.isZero(this.getMaxDifference())) {
             await this.closeSession();
             return;
         }

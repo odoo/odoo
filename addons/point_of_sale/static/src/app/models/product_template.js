@@ -70,8 +70,7 @@ export class ProductTemplate extends Base {
     }
 
     isAllowOnlyOneLot() {
-        const productUnit = this.uom_id;
-        return this.tracking === "lot" || !productUnit || !productUnit.is_pos_groupable;
+        return this.tracking === "lot" || !this.uom_id || !this.uom_id.is_pos_groupable;
     }
 
     isTracked() {

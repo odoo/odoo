@@ -1,9 +1,5 @@
 import { formatCurrency as webFormatCurrency } from "@web/core/currency";
-import {
-    formatFloat,
-    roundDecimals,
-    floatIsZero as genericFloatIsZero,
-} from "@web/core/utils/numbers";
+import { formatFloat } from "@web/core/utils/numbers";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { registry } from "@web/core/registry";
 import { parseFloat } from "@web/views/fields/parsers";
@@ -16,9 +12,9 @@ export const contextualUtilsService = {
     dependencies: ["pos", "localization"],
     start(env, { pos, localization }) {
         const res_currency = pos.currency;
-        const productUoMDecimals = pos.data.models["decimal.precision"].find(
+        const ProductUnit = pos.data.models["decimal.precision"].find(
             (dp) => dp.name === "Product Unit"
-        ).digits;
+        );
         const decimalPoint = localization.decimalPoint;
         const thousandsSep = localization.thousandsSep;
         // Replace the thousands separator and decimal point with regex-escaped versions
@@ -33,15 +29,14 @@ export const contextualUtilsService = {
             floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
         }
 
-        const formatProductQty = (qty) => formatFloat(qty, { digits: [true, productUoMDecimals] });
+        const formatProductQty = (qty) => formatFloat(qty, { digits: [true, ProductUnit.digits] });
 
         const formatCurrency = (value, hasSymbol = true) =>
             webFormatCurrency(value, res_currency.id, {
                 noSymbol: !hasSymbol,
             });
-        const floatIsZero = (value) => genericFloatIsZero(value, res_currency.decimal_places);
 
-        const roundCurrency = (value) => roundDecimals(value, res_currency.decimal_places);
+        const roundCurrency = (value) => res_currency.round(value);
 
         const isValidFloat = (inputValue) =>
             ![decimalPoint, "-"].includes(inputValue) && floatRegex.test(inputValue);
@@ -55,7 +50,6 @@ export const contextualUtilsService = {
             formatProductQty,
             isValidFloat,
             parseValidFloat,
-            floatIsZero,
         };
     },
 };
