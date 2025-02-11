@@ -48,8 +48,9 @@
                                 required="composition_comment_option == 'forward' or (composition_comment_option != 'reply_all' and not context.get('clicked_on_full_composer', False) and composition_mode == 'comment')"
                                 invisible="composition_comment_option != 'forward' and (context.get('clicked_on_full_composer', False) or composition_comment_option == 'reply_all' )"
                                 context="{'force_email': True, 'show_email': True, 'form_view_ref': 'base.view_partner_simple_form', 'forward_mode': True}"/>
+                            <field name="show_notified_bcc" widget="mail_composer_show_bcc_button" invisible="show_notified_bcc or composition_comment_option == 'forward'" class="w-auto"/>
                         </div>
-                        <field name="notified_bcc" placeholder="Bcc"/>
+                        <field name="notified_bcc" widget="mail_composer_bcc_list" invisible="not show_notified_bcc"/>
                         <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
                     </group>
                     <field name="can_edit_body" invisible="1"/>

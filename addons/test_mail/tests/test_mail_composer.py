@@ -1064,7 +1064,7 @@ class TestComposerInternals(TestMailComposer):
 
                 # creation values are taken
                 if composition_mode == 'comment' and not batch_mode:
-                    self.assertEqual(composer.notified_bcc, self.partner_employee_2.name)
+                    self.assertEqual(composer.notified_bcc, self.partner_employee_2)
                 else:
                     self.assertFalse(composer.notified_bcc)
                 self.assertEqual(composer.partner_ids, base_recipients)

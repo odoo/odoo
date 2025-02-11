@@ -206,8 +206,9 @@ test("Load 100 recipients at once", async () => {
     await openFormView("res.partner", partnerIds[0]);
     await contains("button[title='Show Followers']", { text: "210" });
     await click("button", { text: "Send message" });
+    await click("button", { text: "Bcc" });
     await contains(".o-mail-Chatter", {
-        text: "To: partner1, partner2, partner3, partner4, partner5, and 95 more",
+        text: "Bcc: Partner1, Partner2, Partner3, Partner4, Partner5, and 95 more",
     });
     await contains("button[title='Show all recipients']");
     await click("button[title='Show all recipients']");
@@ -244,9 +245,10 @@ test("Load recipient without email", async () => {
     await start();
     await openFormView("res.partner", partnerId_1);
     await click("button", { text: "Send message" });
+    await click("button", { text: "Bcc" });
     await contains("span[title='no email address']", { text: "Mario" });
     await click("button[title='Show all recipients']");
-    await contains(".o-mail-RecipientList li", { text: "[Mario] (no email address)" });
+    await contains(".o-mail-RecipientList li", { text: "Mario" });
 });
 
 test('Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access', async () => {
