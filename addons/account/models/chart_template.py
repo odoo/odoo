@@ -1,971 +1,1343 @@
 # -*- coding: utf-8 -*-
 
-from odoo.exceptions import AccessError
-from odoo import api, fields, models, _
-from odoo import SUPERUSER_ID
-from odoo.exceptions import UserError
+import ast
+import csv
+from collections import defaultdict
+from functools import wraps
+from inspect import getmembers
+from copy import deepcopy
 
 import logging
+import re
+
+from psycopg2.extras import Json
+
+from odoo import Command, _, models, api
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.exceptions import AccessError, UserError
+from odoo.modules import get_resource_from_path
+from odoo.tools import file_open, float_compare, get_lang, groupby, SQL
+from odoo.tools.translate import code_translations, TranslationImporter
 
 _logger = logging.getLogger(__name__)
 
-def migrate_set_tags_and_taxes_updatable(cr, registry, module):
-    ''' This is a utility function used to manually set the flag noupdate to False on tags and account tax templates on localization modules
-    that need migration (for example in case of VAT report improvements)
-    '''
-    env = api.Environment(cr, SUPERUSER_ID, {})
-    xml_record_ids = env['ir.model.data'].search([
-        ('model', 'in', ['account.tax.template', 'account.account.tag']),
-        ('module', 'like', module)
-    ]).ids
-    if xml_record_ids:
-        cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
+TEMPLATE_MODELS = (
+    'account.group',
+    'account.account',
+    'account.tax.group',
+    'account.tax',
+    'account.journal',
+    'account.reconcile.model',
+    'account.fiscal.position',
+)
 
-def migrate_tags_on_taxes(cr, registry):
-    ''' This is a utiliy function to help migrate the tags of taxes when the localization has been modified on stable version. If
-    called accordingly in a post_init_hooked function, it will reset the tags set on taxes as per their equivalent template.
-
-    Note: This unusual decision has been made in order to help the improvement of VAT reports on version 9.0, to have them more flexible
-    and working out of the box when people are creating/using new taxes.
-    '''
-    env = api.Environment(cr, SUPERUSER_ID, {})
-    xml_records = env['ir.model.data'].search([
-        ('model', '=', 'account.tax.template'),
-        ('module', 'like', 'l10n_%')
-    ])
-    tax_template_ids = [x['res_id'] for x in xml_records.sudo().read(['res_id'])]
-    for tax_template in env['account.tax.template'].browse(tax_template_ids):
-        tax_id = env['account.tax'].search([
-            ('name', '=', tax_template.name),
-            ('type_tax_use', '=', tax_template.type_tax_use),
-            ('description', '=', tax_template.description)
-        ])
-        if len(tax_id.ids) == 1:
-            tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
+TAX_TAG_DELIMITER = '||'
 
 
-#  ---------------------------------------------------------------
-#   Account Templates: Account, Tax, Tax Code and chart. + Wizard
-#  ---------------------------------------------------------------
+def preserve_existing_tags_on_taxes(env, module):
+    ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
+    xml_records = env['ir.model.data'].search([('model', '=', 'account.account.tag'), ('module', 'like', module)])
+    if xml_records:
+        env.cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
 
 
-class AccountAccountTemplate(models.Model):
-    _name = "account.account.template"
-    _description = 'Templates for Accounts'
-    _order = "code"
+def template(template=None, model='template_data'):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if template is not None:
+                # remove the template code argument as we already know it from the decorator
+                args, kwargs = args[:1], {}
+            return func(*args, **kwargs)
 
-    name = fields.Char(required=True, index=True)
-    currency_id = fields.Many2one('res.currency', string='Account Currency', help="Forces all moves for this account to have this secondary currency.")
-    code = fields.Char(size=64, required=True, index=True)
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname='user_type',
-        help="These types are defined according to your country. The type contains more information "\
-        "about the account and its specificities.")
-    reconcile = fields.Boolean(string='Allow Invoices & payments Matching', default=False,
-        help="Check this option if you want the user to reconcile entries in this account.")
-    note = fields.Text()
-    tax_ids = fields.Many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', string='Default Taxes')
-    nocreate = fields.Boolean(string='Optional Create', default=False,
-        help="If checked, the new chart of accounts will not contain this by default.")
-    chart_template_id = fields.Many2one('account.chart.template', string='Chart Template',
-        help="This optional field allow you to link an account template to a specific chart template that may differ from the one its root parent belongs to. This allow you "
-            "to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times).")
-    tag_ids = fields.Many2many('account.account.tag', 'account_account_template_account_tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
-    group_id = fields.Many2one('account.group')
+        # the module the function originates from is used for code translations
+        path = func.__globals__['__file__']
+        path_info = get_resource_from_path(path)
+        module = path_info[0] if path_info else 'account'
 
-    @api.multi
-    @api.depends('name', 'code')
-    def name_get(self):
-        res = []
-        for record in self:
-            name = record.name
-            if record.code:
-                name = record.code + ' ' + name
-            res.append((record.id, name))
-        return res
+        wrapper._module = module
+        wrapper._l10n_template = (template, model)
+        return wrapper
+    return decorator
 
 
-class AccountChartTemplate(models.Model):
+class AccountChartTemplate(models.AbstractModel):
     _name = "account.chart.template"
-    _description = "Templates for Account Chart"
+    _description = "Account Chart Template"
 
-    name = fields.Char(required=True)
-    company_id = fields.Many2one('res.company', string='Company')
-    parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
-    code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
-    visible = fields.Boolean(string='Can be Visible?', default=True,
-        help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from "
-            "templates, this is useful when you want to generate accounts of this template only when loading its child template.")
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True)
-    use_anglo_saxon = fields.Boolean(string="Use Anglo-Saxon accounting", default=False)
-    complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
-        help="This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list "
-            "of taxes. This last choice assumes that the set of tax defined on this template is complete")
-    account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
-    tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
-        help='List of all the taxes that have to be installed by the wizard')
-    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
-    cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts')
-    transfer_account_id = fields.Many2one('account.account.template', string='Transfer Account', required=True,
-        domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
-        help="Intermediary account used when moving money from a liquidity account to another")
-    income_currency_exchange_account_id = fields.Many2one('account.account.template',
-        string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
-    expense_currency_exchange_account_id = fields.Many2one('account.account.template',
-        string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
-    property_account_receivable_id = fields.Many2one('account.account.template', string='Receivable Account', oldname="property_account_receivable")
-    property_account_payable_id = fields.Many2one('account.account.template', string='Payable Account', oldname="property_account_payable")
-    property_account_expense_categ_id = fields.Many2one('account.account.template', string='Category of Expense Account', oldname="property_account_expense_categ")
-    property_account_income_categ_id = fields.Many2one('account.account.template', string='Category of Income Account', oldname="property_account_income_categ")
-    property_account_expense_id = fields.Many2one('account.account.template', string='Expense Account on Product Template', oldname="property_account_expense")
-    property_account_income_id = fields.Many2one('account.account.template', string='Income Account on Product Template', oldname="property_account_income")
-    property_stock_account_input_categ_id = fields.Many2one('account.account.template', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
-    property_stock_account_output_categ_id = fields.Many2one('account.account.template', string="Output Account for Stock Valuation", oldname="property_stock_account_output_categ")
-    property_stock_valuation_account_id = fields.Many2one('account.account.template', string="Account Template for Stock Valuation")
+    @property
+    def _template_register(self):
+        def is_template(func):
+            return callable(func) and hasattr(func, '_l10n_template')
+        template_register = defaultdict(lambda: defaultdict(list))
+        cls = self.env.registry[self._name]
+        for _attr, func in getmembers(cls, is_template):
+            template, model = func._l10n_template
+            template_register[template][model].append(func)
+        cls._template_register = template_register
+        return template_register
 
-    @api.one
-    def try_loading_for_current_company(self):
-        self.ensure_one()
-        company = self.env.user.company_id
-        # If we don't have any chart of account on this company, install this chart of account
-        if not company.chart_template_id:
-            wizard = self.env['wizard.multi.charts.accounts'].create({
-                'company_id': self.env.user.company_id.id,
-                'chart_template_id': self.id,
-                'code_digits': self.code_digits,
-                'transfer_account_id': self.transfer_account_id.id,
-                'currency_id': self.currency_id.id,
-                'bank_account_code_prefix': self.bank_account_code_prefix,
-                'cash_account_code_prefix': self.cash_account_code_prefix,
-            })
-            wizard.onchange_chart_template_id()
-            wizard.execute()
+    def _setup_complete(self):
+        super()._setup_complete()
+        self.env.registry[self._name]._template_register = AccountChartTemplate._template_register
 
-    @api.multi
-    def open_select_template_wizard(self):
-        # Add action to open wizard to select between several templates
-        if not self.company_id.chart_template_id:
-            todo = self.env['ir.actions.todo']
-            action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_wizard_multi_chart')
-            if action_rec:
-                todo.create({'action_id': action_rec.id, 'name': _('Choose Accounting Template')})
-        return True
+
+    # --------------------------------------------------------------------------------
+    # Template selection
+    # --------------------------------------------------------------------------------
+
+    def _get_chart_template_mapping(self, get_all=False):
+        """Get basic information about available CoA and their modules.
+
+        :return: a mapping between the template code and a dictionary containing the
+                 name, country id, country name, module dependencies and parent template
+        :rtype: dict[str, dict]
+        """
+        # This function is called many times. Avoid doing a search every time by using the ORM's cache.
+        # We assume that the field is always computed for all the modules at once (by this function)
+        field = self.env['ir.module.module']._fields['account_templates']
+        modules = (
+            self.env.cache.get_records(self.env['ir.module.module'], field)
+            or self.env['ir.module.module'].sudo().search([])
+        )
+
+        return {
+            name: template
+            for mapping in modules.mapped('account_templates')
+            for name, template in mapping.items()
+            if get_all or template['visible']
+        }
+
+    def _select_chart_template(self, country=None):
+        """Get the available templates in a format suited for Selection fields."""
+        country = country if country is not None else self.env.company.country_id
+        chart_template_mapping = self._get_chart_template_mapping()
+        return [
+            (template_code, template['name'])
+            for template_code, template in sorted(chart_template_mapping.items(), key=(lambda t: (
+                t[1]['name'] != 'generic_coa' if not country
+                else t[1]['country_id'] != country.id
+            )))
+        ]
+
+    def _guess_chart_template(self, country):
+        """Guess the most appropriate template based on the country."""
+        return self._select_chart_template(country)[0][0]
+
+    # --------------------------------------------------------------------------------
+    # Loading
+    # --------------------------------------------------------------------------------
+
+    def try_loading(self, template_code, company, install_demo=True):
+        """Check if the chart template can be loaded then proceeds installing it.
+
+        :param template_code: code of the chart template to be loaded.
+        :type template_code: str
+        :param company: the company we try to load the chart template on.
+            If not provided, it is retrieved from the context.
+        :type company: int, Model<res.company>
+        :param install_demo: whether or not we should load demo data right after loading the
+            chart template.
+        :type install_demo: bool
+        """
+        if not self.env.registry.loaded and not install_demo:
+            _logger.warning('Incorrect usage of try_loading without a fully loaded registry. This could lead to issues.')
+        if not company:
+            return
+        if isinstance(company, int):
+            company = self.env['res.company'].browse([company])
+
+        template_code = template_code or company and self._guess_chart_template(company.country_id)
+
+        if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
+            raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
+
+        return self._load(template_code, company, install_demo)
+
+    def _load(self, template_code, company, install_demo):
+        """Install this chart of accounts for the current company.
+
+        :param template_code: code of the chart template to be loaded.
+        :param company: the company we try to load the chart template on.
+            If not provided, it is retrieved from the context.
+        :param install_demo: whether or not we should load demo data right after loading the
+            chart template.
+        """
+        # Ensure that the context is the correct one, even if not called by try_loading
+        if not self.env.is_system():
+            raise AccessError(_("Only administrators can install chart templates"))
+
+        chart_template_mapping = self._get_chart_template_mapping()[template_code]
+        if not company.country_id:
+            company.country_id = chart_template_mapping.get('country_id')
+
+        module_name = chart_template_mapping.get('module')
+        module = self.env['ir.module.module'].search([('name', '=', module_name), ('state', '=', 'uninstalled')])
+        if module:
+            module.button_immediate_install()
+            self.env.reset()  # clear the envs with an old registry
+            self = self.env()['account.chart.template']  # create a new env with the new registry
+
+        # To be able to use code translation we load everything in 'en_US'
+        # The demo data is still loaded "normally" since code translations cannot be used for them reliably.
+        # (Since we rely on the "@template functions" to determine the module to take the code translations from.)
+        original_context_lang = self.env.context.get('lang')
+        self = self.with_context(
+            default_company_id=company.id,
+            allowed_company_ids=[company.id],
+            tracking_disable=True,
+            delay_account_group_sync=True,
+            lang='en_US',
+        )
+        company = company.with_env(self.env)
+
+        reload_template = template_code == company.chart_template
+        company.chart_template = template_code
+
+        if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
+            for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
+                if not company.parent_id:
+                    self.env[model].sudo().with_context(active_test=False).search([('company_id', 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+
+        data = self._get_chart_template_data(template_code)
+        template_data = data.pop('template_data')
+        if company.parent_id:
+            data = {
+                'res.company': data['res.company'],
+            }
+
+        if reload_template:
+            self._pre_reload_data(company, template_data, data)
+            install_demo = False
+        data = self._pre_load_data(template_code, company, template_data, data)
+        self._load_data(data)
+        self._post_load_data(template_code, company, template_data)
+        self._load_translations(companies=company)
+
+        # Manual sync because disable above (delay_account_group_sync)
+        AccountGroup = self.env['account.group'].with_context(delay_account_group_sync=False)
+        AccountGroup._adapt_accounts_for_account_groups(company=company)
+        AccountGroup._adapt_parent_account_group(company=company)
+
+        # Install the demo data when the first localization is instanciated on the company
+        if install_demo and self.ref('base.module_account').demo and not reload_template:
+            try:
+                with self.env.cr.savepoint():
+                    self = self.with_context(lang=original_context_lang)
+                    self._install_demo(company.with_env(self.env))
+            except Exception:
+                # Do not rollback installation of CoA if demo data failed
+                _logger.exception('Error while loading accounting demo data')
+        for subsidiary in company.child_ids:
+            self._load(template_code, subsidiary, install_demo)
 
     @api.model
-    def generate_journals(self, acc_template_ref, company, journals_dict=None):
+    def _install_demo(self, companies):
+        if not isinstance(companies, models.BaseModel):
+            companies = self.env['res.company'].browse(companies)
+        for company in companies:
+            self.sudo()._load_data(self._get_demo_data(company))
+            self._post_load_demo_data(company)
+
+    def _pre_reload_data(self, company, template_data, data):
+        """Pre-process the data in case of reloading the chart of accounts.
+
+        When we reload the chart of accounts, we only want to update fields that are main
+        configuration, like:
+        - tax tags
+        - fiscal position mappings linked to new records
         """
-        This method is used for creating journals.
+        for prop in list(template_data):
+            if prop.startswith('property_'):
+                template_data.pop(prop)
+        data.pop('account.reconcile.model', None)
 
-        :param chart_temp_id: Chart Template Id.
-        :param acc_template_ref: Account templates reference.
-        :param company_id: company_id selected from wizard.multi.charts.accounts.
-        :returns: True
-        """
-        JournalObj = self.env['account.journal']
-        for vals_journal in self._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict):
-            journal = JournalObj.create(vals_journal)
-            if vals_journal['type'] == 'general' and vals_journal['code'] == _('EXCH'):
-                company.write({'currency_exchange_journal_id': journal.id})
-            if vals_journal['type'] == 'general' and vals_journal['code'] == _('CABA'):
-                company.write({'tax_cash_basis_journal_id': journal.id})
-        return True
+        for xmlid, journal_data in list(data.get('account.journal', {}).items()):
+            if self.ref(xmlid, raise_if_not_found=False):
+                del data['account.journal'][xmlid]
+            else:
+                journal = None
+                lang = self._get_untranslatable_fields_target_language(company.chart_template, company)
+                translated_code = self._get_field_translation(journal_data, 'code', lang)
+                if 'code' in journal_data:
+                    journal_code = translated_code or journal_data['code']
+                    journal = self.env['account.journal'].with_context(active_test=False).search([
+                        *self.env['account.journal']._check_company_domain(company),
+                        ('code', '=', journal_code),
+                    ])
+                # Try to match by journal name to avoid conflict in the unique constraint on the mail alias
+                translated_name = self._get_field_translation(journal_data, 'name', lang)
+                if not journal and 'name' in journal_data and 'type' in journal_data:
+                    journal = self.env['account.journal'].with_context(active_test=False).search([
+                        *self.env['account.journal']._check_company_domain(company),
+                        ('type', '=', journal_data['type']),
+                        ('name', 'in', (journal_data['name'], translated_name)),
+                    ], limit=1)
+                if journal:
+                    del data['account.journal'][xmlid]
+                    self.env['ir.model.data']._update_xmlids([{
+                        'xml_id': f"account.{company.id}_{xmlid}",
+                        'record': journal,
+                        'noupdate': True,
+                    }])
 
-    @api.multi
-    def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
-        def _get_default_account(journal_vals, type='debit'):
-            # Get the default accounts
-            default_account = False
-            if journal['type'] == 'sale':
-                default_account = acc_template_ref.get(self.property_account_income_categ_id.id)
-            elif journal['type'] == 'purchase':
-                default_account = acc_template_ref.get(self.property_account_expense_categ_id.id)
-            elif journal['type'] == 'general' and journal['code'] == _('EXCH'):
-                if type=='credit':
-                    default_account = acc_template_ref.get(self.income_currency_exchange_account_id.id)
-                else:
-                    default_account = acc_template_ref.get(self.expense_currency_exchange_account_id.id)
-            return default_account
+        account_group_count = self.env['account.group'].search_count([])
+        if account_group_count:
+            data.pop('account.group', None)
 
-        journals = [{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True, 'sequence': 5},
-                    {'name': _('Vendor Bills'), 'type': 'purchase', 'code': _('BILL'), 'favorite': True, 'sequence': 6},
-                    {'name': _('Miscellaneous Operations'), 'type': 'general', 'code': _('MISC'), 'favorite': False, 'sequence': 7},
-                    {'name': _('Exchange Difference'), 'type': 'general', 'code': _('EXCH'), 'favorite': False, 'sequence': 9},
-                    {'name': _('Cash Basis Tax Journal'), 'type': 'general', 'code': _('CABA'), 'favorite': False, 'sequence': 10}]
-        if journals_dict != None:
-            journals.extend(journals_dict)
-
-        self.ensure_one()
-        journal_data = []
-        for journal in journals:
-            vals = {
-                'type': journal['type'],
-                'name': journal['name'],
-                'code': journal['code'],
-                'company_id': company.id,
-                'default_credit_account_id': _get_default_account(journal, 'credit'),
-                'default_debit_account_id': _get_default_account(journal, 'debit'),
-                'show_on_dashboard': journal['favorite'],
-                'sequence': journal['sequence']
-            }
-            journal_data.append(vals)
-        return journal_data
-
-    @api.multi
-    def generate_properties(self, acc_template_ref, company):
-        """
-        This method used for creating properties.
-
-        :param self: chart templates for which we need to create properties
-        :param acc_template_ref: Mapping between ids of account templates and real accounts created from them
-        :param company_id: company_id selected from wizard.multi.charts.accounts.
-        :returns: True
-        """
-        self.ensure_one()
-        PropertyObj = self.env['ir.property']
-        todo_list = [
-            ('property_account_receivable_id', 'res.partner', 'account.account'),
-            ('property_account_payable_id', 'res.partner', 'account.account'),
-            ('property_account_expense_categ_id', 'product.category', 'account.account'),
-            ('property_account_income_categ_id', 'product.category', 'account.account'),
-            ('property_account_expense_id', 'product.template', 'account.account'),
-            ('property_account_income_id', 'product.template', 'account.account'),
-        ]
-        for record in todo_list:
-            account = getattr(self, record[0])
-            value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
-            if value:
-                field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
-                vals = {
-                    'name': record[0],
-                    'company_id': company.id,
-                    'fields_id': field.id,
-                    'value': value,
-                }
-                properties = PropertyObj.search([('name', '=', record[0]), ('company_id', '=', company.id)])
-                if properties:
-                    #the property exist: modify it
-                    properties.write(vals)
-                else:
-                    #create the property
-                    PropertyObj.create(vals)
-        stock_properties = [
-            'property_stock_account_input_categ_id',
-            'property_stock_account_output_categ_id',
-            'property_stock_valuation_account_id',
-        ]
-        for stock_property in stock_properties:
-            account = getattr(self, stock_property)
-            value = account and acc_template_ref[account.id] or False
-            if value:
-                company.write({stock_property: value})
-        return True
-
-    @api.multi
-    def _install_template(self, company, code_digits=None, transfer_account_id=None, obj_wizard=None, acc_ref=None, taxes_ref=None):
-        """ Recursively load the template objects and create the real objects from them.
-
-            :param company: company the wizard is running for
-            :param code_digits: number of digits the accounts code should have in the COA
-            :param transfer_account_id: reference to the account template that will be used as intermediary account for transfers between 2 liquidity accounts
-            :param obj_wizard: the current wizard for generating the COA from the templates
-            :param acc_ref: Mapping between ids of account templates and real accounts created from them
-            :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
-            :returns: tuple with a dictionary containing
-                * the mapping between the account template ids and the ids of the real accounts that have been generated
-                  from them, as first item,
-                * a similar dictionary for mapping the tax templates and taxes, as second item,
-            :rtype: tuple(dict, dict, dict)
-        """
-        self.ensure_one()
-        if acc_ref is None:
-            acc_ref = {}
-        if taxes_ref is None:
-            taxes_ref = {}
-        if self.parent_id:
-            tmp1, tmp2 = self.parent_id._install_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, acc_ref=acc_ref, taxes_ref=taxes_ref)
-            acc_ref.update(tmp1)
-            taxes_ref.update(tmp2)
-        tmp1, tmp2 = self._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
-        acc_ref.update(tmp1)
-        taxes_ref.update(tmp2)
-        return acc_ref, taxes_ref
-
-    @api.multi
-    def _load_template(self, company, code_digits=None, transfer_account_id=None, account_ref=None, taxes_ref=None):
-        """ Generate all the objects from the templates
-
-            :param company: company the wizard is running for
-            :param code_digits: number of digits the accounts code should have in the COA
-            :param transfer_account_id: reference to the account template that will be used as intermediary account for transfers between 2 liquidity accounts
-            :param acc_ref: Mapping between ids of account templates and real accounts created from them
-            :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
-            :returns: tuple with a dictionary containing
-                * the mapping between the account template ids and the ids of the real accounts that have been generated
-                  from them, as first item,
-                * a similar dictionary for mapping the tax templates and taxes, as second item,
-            :rtype: tuple(dict, dict, dict)
-        """
-        self.ensure_one()
-        if account_ref is None:
-            account_ref = {}
-        if taxes_ref is None:
-            taxes_ref = {}
-        if not code_digits:
-            code_digits = self.code_digits
-        if not transfer_account_id:
-            transfer_account_id = self.transfer_account_id
-        AccountTaxObj = self.env['account.tax']
-
-        # Generate taxes from templates.
-        generated_tax_res = self.tax_template_ids._generate_tax(company)
-        taxes_ref.update(generated_tax_res['tax_template_to_tax'])
-
-        # Generating Accounts from templates.
-        account_template_ref = self.generate_account(taxes_ref, account_ref, code_digits, company)
-        account_ref.update(account_template_ref)
-
-        # writing account values after creation of accounts
-        company.transfer_account_id = account_template_ref[transfer_account_id.id]
-        for key, value in generated_tax_res['account_dict'].items():
-            if value['refund_account_id'] or value['account_id'] or value['cash_basis_account']:
-                AccountTaxObj.browse(key).write({
-                    'refund_account_id': account_ref.get(value['refund_account_id'], False),
-                    'account_id': account_ref.get(value['account_id'], False),
-                    'cash_basis_account': account_ref.get(value['cash_basis_account'], False),
-                })
-
-        # Create Journals - Only done for root chart template
-        if not self.parent_id:
-            self.generate_journals(account_ref, company)
-
-        # generate properties function
-        self.generate_properties(account_ref, company)
-
-        # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
-        self.generate_fiscal_position(taxes_ref, account_ref, company)
-
-        # Generate account operation template templates
-        self.generate_account_reconcile_model(taxes_ref, account_ref, company)
-
-        return account_ref, taxes_ref
-
-    @api.multi
-    def create_record_with_xmlid(self, company, template, model, vals):
-        # Create a record for the given model with the given vals and 
-        # also create an entry in ir_model_data to have an xmlid for the newly created record
-        # xmlid is the concatenation of company_id and template_xml_id
-        ir_model_data = self.env['ir.model.data']
-        template_xmlid = ir_model_data.search([('model', '=', template._name), ('res_id', '=', template.id)])
-        new_xml_id = str(company.id)+'_'+template_xmlid.name
-        return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
-
-    def _get_account_vals(self, company, account_template, code_acc, tax_template_ref):
-        """ This method generates a dictionnary of all the values for the account that will be created.
-        """
-        self.ensure_one()
-        tax_ids = []
-        for tax in account_template.tax_ids:
-            tax_ids.append(tax_template_ref[tax.id])
-        val = {
-                'name': account_template.name,
-                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
-                'code': code_acc,
-                'user_type_id': account_template.user_type_id and account_template.user_type_id.id or False,
-                'reconcile': account_template.reconcile,
-                'note': account_template.note,
-                'tax_ids': [(6, 0, tax_ids)],
-                'company_id': company.id,
-                'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
-            }
-        return val
-
-    @api.multi
-    def generate_account(self, tax_template_ref, acc_template_ref, code_digits, company):
-        """ This method for generating accounts from templates.
-
-            :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
-            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
-            :param code_digits: number of digits got from wizard.multi.charts.accounts, this is use for account code.
-            :param company_id: company_id selected from wizard.multi.charts.accounts.
-            :returns: return acc_template_ref for reference purpose.
-            :rtype: dict
-        """
-        self.ensure_one()
-        account_tmpl_obj = self.env['account.account.template']
-        acc_template = account_tmpl_obj.search([('nocreate', '!=', True), ('chart_template_id', '=', self.id)], order='id')
-        for account_template in acc_template:
-            code_main = account_template.code and len(account_template.code) or 0
-            code_acc = account_template.code or ''
-            if code_main > 0 and code_main <= code_digits:
-                code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
-            vals = self._get_account_vals(company, account_template, code_acc, tax_template_ref)
-            new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
-            acc_template_ref[account_template.id] = new_account
-        return acc_template_ref
-
-    def _prepare_reconcile_model_vals(self, company, account_reconcile_model, acc_template_ref, tax_template_ref):
-        """ This method generates a dictionnary of all the values for the account.reconcile.model that will be created.
-        """
-        self.ensure_one()
-        return {
-                'name': account_reconcile_model.name,
-                'sequence': account_reconcile_model.sequence,
-                'has_second_line': account_reconcile_model.has_second_line,
-                'company_id': company.id,
-                'account_id': acc_template_ref[account_reconcile_model.account_id.id],
-                'label': account_reconcile_model.label,
-                'amount_type': account_reconcile_model.amount_type,
-                'amount': account_reconcile_model.amount,
-                'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
-                'second_account_id': account_reconcile_model.second_account_id and acc_template_ref[account_reconcile_model.second_account_id.id] or False,
-                'second_label': account_reconcile_model.second_label,
-                'second_amount_type': account_reconcile_model.second_amount_type,
-                'second_amount': account_reconcile_model.second_amount,
-                'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
-            }
-
-    @api.multi
-    def generate_account_reconcile_model(self, tax_template_ref, acc_template_ref, company):
-        """ This method for generating accounts from templates.
-
-            :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
-            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
-            :param company_id: company_id selected from wizard.multi.charts.accounts.
-            :returns: return new_account_reconcile_model for reference purpose.
-            :rtype: dict
-        """
-        self.ensure_one()
-        account_reconcile_models = self.env['account.reconcile.model.template'].search([
-            ('chart_template_id', '=', self.id)
+        current_taxes = self.env['account.tax'].with_context(active_test=False).search([
+            *self.env['account.tax']._check_company_domain(company),
         ])
-        for account_reconcile_model in account_reconcile_models:
-            vals = self._prepare_reconcile_model_vals(company, account_reconcile_model, acc_template_ref, tax_template_ref)
-            self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
-        return True
-
-    @api.multi
-    def _get_fp_vals(self, company, position):
-        return {
-            'company_id': company.id,
-            'sequence': position.sequence,
-            'name': position.name,
-            'note': position.note,
-            'auto_apply': position.auto_apply,
-            'vat_required': position.vat_required,
-            'country_id': position.country_id.id,
-            'country_group_id': position.country_group_id.id,
-            'state_ids': position.state_ids and [(6,0, position.state_ids.ids)] or [],
-            'zip_from': position.zip_from,
-            'zip_to': position.zip_to,
+        unique_tax_name_key = lambda t: (t.name, t.type_tax_use, t.tax_scope, t.company_id)
+        unique_tax_name_keys = set(current_taxes.mapped(unique_tax_name_key))
+        xmlid2tax = {
+            xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax'].browse(record)
+            for record, xml_id in current_taxes.get_external_id().items() if xml_id.startswith('account.')
         }
+        def tax_template_changed(tax, template):
+            template_line_ids = [x for x in template.get('repartition_line_ids', []) if x[0] != Command.CLEAR]
+            return (
+                tax.amount_type != template.get('amount_type', 'percent')
+                or float_compare(tax.amount, template.get('amount', 0), precision_digits=4) != 0
+                # Taxes that don't have repartition lines in their templates get theirs created by default
+                or len(template_line_ids) not in (0, len(tax.repartition_line_ids))
+            )
 
-    @api.multi
-    def generate_fiscal_position(self, tax_template_ref, acc_template_ref, company):
-        """ This method generate Fiscal Position, Fiscal Position Accounts and Fiscal Position Taxes from templates.
+        obsolete_xmlid = set()
+        skip_update = set()
+        for model_name, records in data.items():
+            for xmlid, values in records.items():
+                if model_name == 'account.fiscal.position':
+                    # Only add tax mappings containing new taxes
+                    if old_tax_ids := values.pop('tax_ids', []):
+                        new_tax_ids = []
+                        for element in old_tax_ids:
+                            match element:
+                                case Command.CREATE, _, {'tax_src_id': src_id, 'tax_dest_id': dest_id} if (
+                                    not self.ref(src_id, raise_if_not_found=False)
+                                    or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
+                                ):
+                                    new_tax_ids.append(element)
+                        if new_tax_ids:
+                            values['tax_ids'] = new_tax_ids
 
-            :param chart_temp_id: Chart Template Id.
-            :param taxes_ids: Taxes templates reference for generating account.fiscal.position.tax.
-            :param acc_template_ref: Account templates reference for generating account.fiscal.position.account.
-            :param company_id: company_id selected from wizard.multi.charts.accounts.
-            :returns: True
+                elif model_name == 'account.tax':
+                    # Only update the tags of existing taxes
+                    if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
+                        if self._context.get('force_new_tax_active'):
+                            values['active'] = True
+                        if xmlid in xmlid2tax:
+                            obsolete_xmlid.add(xmlid)
+                            oldtax = xmlid2tax[xmlid]
+                        else:
+                            oldtax = current_taxes.filtered(
+                                lambda t: t.name == values.get('name')\
+                                      and t.type_tax_use == values.get('type_tax_use')\
+                                      and t.tax_scope == values.get('tax_scope', False)
+                            )
+                        uniq_key = unique_tax_name_key(oldtax[0] if len(oldtax) > 1 else oldtax)
+                        matching_names = len(list(filter(lambda t: re.match(fr"^(?:\[old\d*\] |){uniq_key[0]}$", t[0]) and t[1:] == uniq_key[1:], unique_tax_name_keys)))
+                        for index, tax_to_rename in enumerate(oldtax):
+                            rename_idx = index + matching_names
+                            if rename_idx:
+                                tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
+                    else:
+                        repartition_lines = values.get('repartition_line_ids')
+                        values.clear()
+                        if repartition_lines:
+                            values['repartition_line_ids'] = repartition_lines
+                            for element in values.get('repartition_line_ids', []):
+                                match element:
+                                    case int() as command, _, {'tag_ids': tags} as repartition_line_values if command in tuple(Command):
+                                        repartition_line_values.clear()
+                                        repartition_line_values['tag_ids'] = tags or [Command.clear()]
+                elif model_name == 'account.account':
+                    # Point or create xmlid to existing record to avoid duplicate code
+                    account = self.ref(xmlid, raise_if_not_found=False)
+                    normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
+                    if not account or not re.match(f'^{values["code"]}0*$', account.code):
+                        query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
+                        query.add_where("account_account.code SIMILAR TO %s", [f'{values["code"]}0*'])
+                        accounts = self.env['account.account'].browse(query)
+                        existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
+                        if existing_account:
+                            self.env['ir.model.data']._update_xmlids([{
+                                'xml_id': f"account.{company.id}_{xmlid}",
+                                'record': existing_account,
+                                'noupdate': True,
+                            }])
+                            account = existing_account
+
+                    # Prevents overriding user setting & raising a partial reconcile error.
+                    values.pop('reconcile', None)
+                    # on existing accounts, only tag_ids are to be updated using default data
+                    if account and 'tag_ids' in data[model_name][xmlid]:
+                        data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
+                    elif account:
+                        skip_update.add((model_name, xmlid))
+
+        for skip_model, skip_xmlid in skip_update:
+            data[skip_model].pop(skip_xmlid, None)
+
+        if obsolete_xmlid:
+            self.env['ir.model.data'].search([
+                ('name', 'in', [f"{company.id}_{xmlid}" for xmlid in obsolete_xmlid]),
+                ('module', '=', 'account'),
+            ]).unlink()
+
+        custom_fields = {  # Don't alter values that can be changed by the users
+            'account.fiscal.position.tax_ids',
+        }
+        for model_name, records in data.items():
+            _fields = self.env[model_name]._fields
+            for xmlid, values in records.items():
+                x2manyfields = [
+                    fname
+                    for fname in values
+                    if fname in _fields
+                    and f"{model_name}.{fname}" not in custom_fields
+                    and _fields[fname].type in ('one2many', 'many2many')
+                    and isinstance(values[fname], (list, tuple))
+                ]
+                if x2manyfields:
+                    if isinstance(xmlid, int):
+                        rec = self.env[model_name].browse(xmlid).exists()
+                    else:
+                        rec = self.ref(xmlid, raise_if_not_found=False)
+                    if rec:
+                        for fname in x2manyfields:
+                            for i, (line, (command, _id, vals)) in enumerate(zip(rec[fname], values[fname])):
+                                if command == Command.CREATE:  # converts ORM command `create` into `update`
+                                    values[fname][i] = Command.update(line.id, vals)
+
+    def _pre_load_data(self, template_code, company, template_data, data):
+        """Pre-process the data and preload some values.
+
+        Some of the data needs special pre_process before being fed to the database.
+        e.g. the account codes' width must be standardized to the code_digits applied.
+        The fiscal country code must be put in place before taxes are generated.
         """
-        self.ensure_one()
-        positions = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)])
-        for position in positions:
-            fp_vals = self._get_fp_vals(company, position)
-            new_fp = self.create_record_with_xmlid(company, position, 'account.fiscal.position', fp_vals)
-            for tax in position.tax_ids:
-                self.create_record_with_xmlid(company, tax, 'account.fiscal.position.tax', {
-                    'tax_src_id': tax_template_ref[tax.tax_src_id.id],
-                    'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                    'position_id': new_fp
+        if 'account_fiscal_country_id' in data['res.company'][company.id]:
+            fiscal_country = self.ref(data['res.company'][company.id]['account_fiscal_country_id'])
+        else:
+            fiscal_country = company.account_fiscal_country_id
+
+        # Apply template data to the company
+        filter_properties = lambda key: (
+            (not key.startswith("property_") or key.startswith("property_stock_") or key == "additional_properties")
+            and key != 'name'
+            and key in company._fields
+        )
+
+        # Set the currency to the fiscal country's currency
+        vals = {key: val for key, val in template_data.items() if filter_properties(key)}
+        if not company.root_id._existing_accounting():
+            if company.parent_id:
+                vals['currency_id'] = company.parent_id.currency_id.id
+            else:
+                vals['currency_id'] = fiscal_country.currency_id.id
+        if not company.country_id:
+            vals['country_id'] = fiscal_country.id
+
+        # Ensure that we write on 'anglo_saxon_accounting' when changing to a CoA that relies on the default of `False`.
+        vals.setdefault('anglo_saxon_accounting', False)
+
+        # This write method is important because it's overridden and has additional triggers
+        # e.g it activates the currency
+        company.write(vals)
+
+        # Normalize the code_digits of the accounts
+        code_digits = int(template_data.get('code_digits', 6))
+        for key, account_data in data.get('account.account', {}).items():
+            if 'code' in account_data:
+                data['account.account'][key]['code'] = f'{account_data["code"]:<0{code_digits}}'
+
+        for model in ('account.fiscal.position', 'account.reconcile.model'):
+            if model in data:
+                data[model] = data.pop(model)
+
+        # Remove data of unknown fields present in the company template
+        company_data = data.get('res.company')
+        if company_data and not self.env.context.get('l10n_check_fields_complete'):
+            for fname in list(company_data.get(company.id)):
+                if fname not in company._fields:
+                    del data['res.company'][company.id][fname]
+
+        # Translate the untranslatable fields we want to translate anyway
+        untranslatable_model_fields = self._get_untranslatable_fields_to_translate()
+        untranslatable_target_lang = self._get_untranslatable_fields_target_language(template_code, company)
+        for model_name, records in data.items():
+            untranslatable_fields = untranslatable_model_fields.get(model_name, [])
+            if not untranslatable_fields:
+                continue
+            for _xmlid, record in records.items():
+                for field in untranslatable_fields:
+                    if field not in record:
+                        continue
+                    translation = self._get_field_translation(record, field, untranslatable_target_lang)
+                    if translation:
+                        record[field] = translation
+
+        return data
+
+    def _load_data(self, data):
+        """Load all the data linked to the template into the database.
+
+        The data can contain translation values (i.e. `name@fr_FR` to translate the name in French)
+        An xml_id that doesn't contain a `.` will be treated as being linked to `account` and prefixed
+        with the company's id (i.e. `cash` is interpreted as `account.1_cash` if the company's id is 1)
+
+        :param data: Basically all the final data of records to create/update for the chart
+                     of accounts. It is a mapping {model: {xml_id: values}}.
+        :type data: dict[str, dict[(str, int), dict]]
+        """
+        def deref_values(values, model):
+            """Replace xml_id references by database ids in all provided values.
+
+            This allows to define all the data before the records even exist in the database.
+            """
+            fields = ((model._fields[k], k, v) for k, v in values.items() if k in model._fields)
+            for field, fname, value in fields:
+                if not value:
+                    values[fname] = False
+                elif isinstance(value, str) and (
+                    field.type == 'many2one'
+                    or (field.type in ('integer', 'many2one_reference') and not value.isdigit())
+                ):
+                    try:
+                        values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
+                    except ValueError:
+                        if model != self.env['res.company']:
+                            _logger.warning("Failed when trying to recover %s for field=%s", value, field)
+                            raise
+
+                        # We can't find the record referenced in the chart template in our database.
+                        # This might happen when we're creating a branch and the parent company has deleted the
+                        # referenced record and replaced it with something else.
+                        #
+                        # In this case, we try looking for the record already set on the company or its root.
+                        values[fname] = self.env.company[fname] or self.env.company.parent_ids[0][fname] or False
+                elif field.type in ('one2many', 'many2many') and isinstance(value[0], (list, tuple)):
+                    for i, (command, _id, *last_part) in enumerate(value):
+                        if last_part:
+                            last_part = last_part[0]
+                        # (0, 0, {'test': 'account.ref_name'}) -> Command.Create({'test': 13})
+                        if command in (Command.CREATE, Command.UPDATE):
+                            deref_values(last_part, self.env[field.comodel_name])
+                        # (6, 0, ['account.ref_name']) -> Command.Set([13])
+                        elif command == Command.SET:
+                            for subvalue_idx, subvalue in enumerate(last_part):
+                                if isinstance(subvalue, str):
+                                    last_part[subvalue_idx] = self.ref(subvalue).id
+                        elif command == Command.LINK and isinstance(_id, str):
+                            value[i] = Command.link(self.ref(_id).id)
+                elif field.type in ('one2many', 'many2many') and isinstance(value, str):
+                    values[fname] = [Command.set([
+                        self.ref(v).id
+                        for v in value.split(',')
+                        if v
+                    ])]
+            return values
+
+        def delay(all_data):
+            """Defer writing some relations if the related records don't exist yet."""
+
+            def should_delay(created_models, yet_to_be_created_models, model, field_name, field_val, parent_models=None):
+                parent_models = (parent_models or []) + [model]
+                field = self.env[model]._fields.get(field_name)
+                if not field or not field.relational or field.comodel_name in created_models:
+                    return False
+                field_yet_to_be_created = field.comodel_name in parent_models + yet_to_be_created_models
+                if not isinstance(field_val, list | tuple):
+                    return field_yet_to_be_created
+                # Check recursively if there are subfields that should be delayed
+                for element in field_val:
+                    match element:
+                        case Command.CREATE, _, dict() as values:
+                            for subkey, subvalue in values.items():
+                                if should_delay(created_models, yet_to_be_created_models, field.comodel_name, subkey, subvalue, parent_models):
+                                    return True
+                        case int() as command, *_ if command in tuple(Command):
+                            if field_yet_to_be_created:
+                                return True
+                return False
+
+            created_models = set()
+            while all_data:
+                (model, data), *all_data = all_data
+                yet_to_be_created_models = [model for model, _data in all_data]
+                to_delay = defaultdict(dict)
+                for xml_id, vals in data.items():
+                    to_be_removed = []
+                    for field_name, field_val in vals.items():
+                        if should_delay(created_models, yet_to_be_created_models, model, field_name, field_val):
+                            # Default repartition lines will be created when we create account.tax
+                            # If we delay the creation of repartition_line_ids, then we must get rid of the defaults
+                            if (
+                                model == 'account.tax' and 'repartition_line_ids' in field_name
+                                and not self.ref(xml_id, raise_if_not_found=False)
+                                and all(
+                                    isinstance(x, tuple | list) and len(x)
+                                    and isinstance(x[0], Command | int) for x in field_val
+                                )
+                            ):
+                                field_val = [Command.clear()] + field_val
+                            to_be_removed.append(field_name)
+                            to_delay[xml_id][field_name] = field_val
+                    for field_name in to_be_removed:
+                        del vals[field_name]
+                if any(to_delay.values()):
+                    all_data.append((model, to_delay))
+                yield model, data
+                created_models.add(model)
+
+        created_records = {}
+        for model, model_data in delay(list(deepcopy(data).items())):
+            all_records_vals = []
+            for xml_id, record_vals in model_data.items():
+                # Extract the translations from the values
+                for key in list(record_vals):
+                    if '@' in key or key == '__translation_module__':
+                        del record_vals[key]
+
+                # Manage ids given as database id or xml_id
+                if isinstance(xml_id, int):
+                    record_vals['id'] = xml_id
+                    xml_id = False
+                else:
+                    xml_id = f"{('account.' + str(self.env.company.id) + '_') if '.' not in xml_id else ''}{xml_id}"
+
+                all_records_vals.append({
+                    'xml_id': xml_id,
+                    'values': deref_values(record_vals, self.env[model]),
+                    'noupdate': True,
                 })
-            for acc in position.account_ids:
-                self.create_record_with_xmlid(company, acc, 'account.fiscal.position.account', {
-                    'account_src_id': acc_template_ref[acc.account_src_id.id],
-                    'account_dest_id': acc_template_ref[acc.account_dest_id.id],
-                    'position_id': new_fp
-                })
-        return True
+            created_records[model] = self.with_context(lang='en_US').env[model]._load_records(all_records_vals)
+        return created_records
 
+    def _post_load_data(self, template_code, company, template_data):
+        company = (company or self.env.company)
+        additional_properties = template_data.pop('additional_properties', {})
 
-class AccountTaxTemplate(models.Model):
-    _name = 'account.tax.template'
-    _description = 'Templates for Taxes'
-    _order = 'id'
+        self._setup_utility_bank_accounts(template_code, company, template_data)
 
-    chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
+        # Unaffected earnings account on the company (if not present yet)
+        company.get_unaffected_earnings_account()
 
-    name = fields.Char(string='Tax Name', required=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
-        help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
-    tax_adjustment = fields.Boolean(default=False)
-    amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
-        selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
-    active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
-    children_tax_ids = fields.Many2many('account.tax.template', 'account_tax_template_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
-    sequence = fields.Integer(required=True, default=1,
-        help="The sequence field is used to define order in which the tax lines are applied.")
-    amount = fields.Float(required=True, digits=(16, 4))
-    account_id = fields.Many2one('account.account.template', string='Tax Account', ondelete='restrict',
-        help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.", oldname='account_collected_id')
-    refund_account_id = fields.Many2one('account.account.template', string='Tax Account on Refunds', ondelete='restrict',
-        help="Account that will be set on invoice tax lines for refunds. Leave empty to use the expense account.", oldname='account_paid_id')
-    description = fields.Char(string='Display on Invoices')
-    price_include = fields.Boolean(string='Included in Price', default=False,
-        help="Check this if the price you use on the product and invoices includes this tax.")
-    include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
-        help="If set, taxes which are computed after this one will be computed based on the price tax included.")
-    analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
-    tag_ids = fields.Many2many('account.account.tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
-    tax_group_id = fields.Many2one('account.tax.group', string="Tax Group")
-    use_cash_basis = fields.Boolean(
-        'Use Cash Basis',
-        help="Select this if the tax should use cash basis,"
-        "which will create an entry for this tax on a given account during reconciliation")
-    cash_basis_account = fields.Many2one(
-        'account.account.template',
-        string='Tax Received Account',
-        domain=[('deprecated', '=', False)],
-        help='Account use when creating entry for tax cash basis')
+        # Set newly created Cash difference and Suspense accounts to the Cash and Bank journals
+        for journal in [self.ref(kind, raise_if_not_found=False) for kind in ('bank', 'cash')]:
+            if journal:
+                journal.suspense_account_id = journal.suspense_account_id or company.account_journal_suspense_account_id
+                journal.profit_account_id = journal.profit_account_id or company.default_cash_difference_income_account_id
+                journal.loss_account_id = journal.loss_account_id or company.default_cash_difference_expense_account_id
 
-    _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
-    ]
+        # Set newly created journals as defaults for the company
+        if not company.tax_cash_basis_journal_id:
+            company.tax_cash_basis_journal_id = self.ref('caba', raise_if_not_found=False)
+        if not company.currency_exchange_journal_id:
+            company.currency_exchange_journal_id = self.ref('exch', raise_if_not_found=False)
 
-    @api.multi
-    @api.depends('name', 'description')
-    def name_get(self):
-        res = []
-        for record in self:
-            name = record.description and record.description or record.name
-            res.append((record.id, name))
-        return res
+        # Setup default Income/Expense Accounts on Sale/Purchase journals
+        sale_journal = self.ref("sale", raise_if_not_found=False)
+        if sale_journal and template_data.get('property_account_income_categ_id'):
+            sale_journal.default_account_id = self.ref(template_data.get('property_account_income_categ_id'))
+        purchase_journal = self.ref("purchase", raise_if_not_found=False)
+        if purchase_journal and template_data.get('property_account_expense_categ_id'):
+            purchase_journal.default_account_id = self.ref(template_data.get('property_account_expense_categ_id'))
 
-    def _get_tax_vals(self, company, tax_template_to_tax):
-        """ This method generates a dictionnary of all the values for the tax that will be created.
+        # Set default Purchase and Sale taxes on the company
+        if not company.account_sale_tax_id:
+            company.account_sale_tax_id = self.env['account.tax'].search([
+                *self.env['account.tax']._check_company_domain(company),
+                ('type_tax_use', 'in', ('sale', 'all'))], limit=1).id
+        if not company.account_purchase_tax_id:
+            company.account_purchase_tax_id = self.env['account.tax'].search([
+                *self.env['account.tax']._check_company_domain(company),
+                ('type_tax_use', 'in', ('purchase', 'all'))], limit=1).id
+        # Set default taxes on products (only on products having already a tax set in another company, as some flows require no tax at all (e.g TIPS in PoS))
+        # We need to browse the product in sudo to check for the taxes_id and supplier_taxes_id fields regardless of the companies record rules
+        # that would, otherwise, just look empty all the time for the current user/company
+        sudoed_products = self.env['product.template'].sudo().search(self.env['product.template']._check_company_domain(company))
+
+        if company.account_sale_tax_id:
+            sudoed_products_sale = sudoed_products.filtered(
+                lambda p: p.taxes_id and not p.taxes_id.filtered_domain(p.taxes_id._check_company_domain(company)))
+            sudoed_products_sale._force_default_sale_tax(company)
+        if company.account_purchase_tax_id:
+            sudoed_products_purchase = sudoed_products.filtered(
+                lambda p: p.supplier_taxes_id and not p.supplier_taxes_id.filtered_domain(p.taxes_id._check_company_domain(company)))
+            sudoed_products_purchase._force_default_purchase_tax(company)
+
+        # Display caba fields if there are caba taxes
+        if not company.parent_id and self.env['account.tax'].search([('tax_exigibility', '=', 'on_payment')]):
+            company.tax_exigibility = True
+
+        for field, model in {
+            **additional_properties,
+            'property_account_receivable_id': 'res.partner',
+            'property_account_payable_id': 'res.partner',
+            'property_account_expense_categ_id': 'product.category',
+            'property_account_income_categ_id': 'product.category',
+            'property_stock_journal': 'product.category',
+        }.items():
+            value = template_data.get(field)
+            if value and field in self.env[model]._fields:
+                self.env['ir.property']._set_default(field, model, self.ref(value).id, company=company)
+
+    def _get_chart_template_data(self, template_code):
+        template_data = defaultdict(lambda: defaultdict(dict))
+        template_data['res.company']  # ensure it's the first property when iterating
+        translatable_model_fields = self._get_translatable_template_model_fields()
+        untranslatable_model_fields = self._get_untranslatable_fields_to_translate()
+        for code in [None] + self._get_parent_template(template_code):
+            for model, funcs in sorted(
+                self._template_register[code].items(),
+                key=lambda i: TEMPLATE_MODELS.index(i[0]) if i[0] in TEMPLATE_MODELS else 1000
+            ):
+                translatable_fields = translatable_model_fields.get(model, [])
+                untranslatable_fields = untranslatable_model_fields.get(model, [])
+                for func in funcs:
+                    data = func(self, template_code)
+                    if data is not None:
+                        if model == 'template_data':
+                            template_data[model].update(data)
+                        else:
+                            for xmlid, record in data.items():
+                                # Store information about which module each field value originates from (for code translations).
+                                # The final value of different fields may be determined by different functions.
+                                # The last function to modify the record may not modify all or any of the translatable fields.
+                                for field in translatable_fields + untranslatable_fields:
+                                    if field in record:
+                                        record.setdefault('__translation_module__', {})[field] = func._module
+
+                                template_data[model][xmlid].update(record)
+        return template_data
+
+    def _setup_utility_bank_accounts(self, template_code, company, template_data):
+        """Define basic bank accounts for the company.
+
+        - Suspense Account
+        - Outstanding Receipts/Payments Accounts
+        - Cash Difference Gain/Loss Accounts
+        - Liquidity Transfer Account
         """
-        # Compute children tax ids
-        children_ids = []
-        for child_tax in self.children_tax_ids:
-            if tax_template_to_tax.get(child_tax.id):
-                children_ids.append(tax_template_to_tax[child_tax.id])
-        self.ensure_one()
-        val = {
-            'name': self.name,
-            'type_tax_use': self.type_tax_use,
-            'amount_type': self.amount_type,
-            'active': self.active,
-            'company_id': company.id,
-            'sequence': self.sequence,
-            'amount': self.amount,
-            'description': self.description,
-            'price_include': self.price_include,
-            'include_base_amount': self.include_base_amount,
-            'analytic': self.analytic,
-            'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
-            'children_tax_ids': [(6, 0, children_ids)],
-            'tax_adjustment': self.tax_adjustment,
-            'use_cash_basis': self.use_cash_basis,
+        # Create utility bank_accounts
+        bank_prefix = company.bank_account_code_prefix
+        code_digits = int(template_data.get('code_digits', 6))
+        accounts_data = {
+            'account_journal_suspense_account_id': {
+                'name': _("Bank Suspense Account"),
+                'prefix': bank_prefix,
+                'code_digits': code_digits,
+                'account_type': 'asset_current',
+            },
+            'account_journal_payment_debit_account_id': {
+                'name': _("Outstanding Receipts"),
+                'prefix': bank_prefix,
+                'code_digits': code_digits,
+                'account_type': 'asset_current',
+                'reconcile': True,
+            },
+            'account_journal_payment_credit_account_id': {
+                'name': _("Outstanding Payments"),
+                'prefix': bank_prefix,
+                'code_digits': code_digits,
+                'account_type': 'asset_current',
+                'reconcile': True,
+            },
+            'account_journal_early_pay_discount_loss_account_id': {
+                'name': _("Cash Discount Loss"),
+                'code': '999998',
+                'account_type': 'expense',
+            },
+            'account_journal_early_pay_discount_gain_account_id': {
+                'name': _("Cash Discount Gain"),
+                'code': '999997',
+                'account_type': 'income_other',
+            },
+            'default_cash_difference_income_account_id': {
+                'name': _("Cash Difference Gain"),
+                'prefix': '999',
+                'code_digits': code_digits,
+                'account_type': 'income_other',
+                'tag_ids': [(6, 0, self.ref('account.account_tag_investing').ids)],
+            },
+            'default_cash_difference_expense_account_id': {
+                'name': _("Cash Difference Loss"),
+                'prefix': '999',
+                'code_digits': code_digits,
+                'account_type': 'expense',
+                'tag_ids': [(6, 0, self.ref('account.account_tag_investing').ids)],
+            },
+            'transfer_account_id': {
+                'name': _("Liquidity Transfer"),
+                'prefix': company.transfer_account_code_prefix,
+                'code_digits': code_digits,
+                'account_type': 'asset_current',
+                'reconcile': True,
+            },
         }
 
-        if self.tax_group_id:
-            val['tax_group_id'] = self.tax_group_id.id
-        return val
+        for fname in list(accounts_data):
+            if company[fname]:
+                del accounts_data[fname]
+        if company.parent_id:
+            for company_attr_name in accounts_data:
+                company[company_attr_name] = company.parent_ids[0][company_attr_name]
+        else:
+            accounts = self.env['account.account']._load_records([
+                {
+                    'xml_id': f"account.{company.id}_{xml_id}",
+                    'values': values,
+                    'noupdate': True,
+                }
+                for xml_id, values in accounts_data.items()
+            ])
+            for company_attr_name, account in zip(accounts_data.keys(), accounts):
+                company[company_attr_name] = account
 
-    @api.multi
-    def _generate_tax(self, company):
-        """ This method generate taxes from templates.
+    @api.model
+    def _instantiate_foreign_taxes(self, country, company):
+        """Create and configure foreign taxes from the provided country.
 
-            :param company: the company for which the taxes should be created from templates in self
-            :returns: {
-                'tax_template_to_tax': mapping between tax template and the newly generated taxes corresponding,
-                'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
-            }
+        Instantiate the taxes as they would be for the foreign localization only replacing the accounts used by the most
+        probable account we can retrieve from the company's localization.
+        This method is intended as a shortcut for instantiation, accelerating it, not as an out-of-the-box solution 100%
+        correct solution.
         """
-        todo_dict = {}
-        tax_template_to_tax = {}
-        for tax in self:
-            vals_tax = tax._get_tax_vals(company, tax_template_to_tax)
-            new_tax = self.env['account.chart.template'].create_record_with_xmlid(company, tax, 'account.tax', vals_tax)
-            tax_template_to_tax[tax.id] = new_tax
-            # Since the accounts have not been created yet, we have to wait before filling these fields
-            todo_dict[new_tax] = {
-                'account_id': tax.account_id.id,
-                'refund_account_id': tax.refund_account_id.id,
-                'cash_basis_account': tax.cash_basis_account.id,
-            }
+        # Implementation:
+        # - Check if there is any tax for this country and stop the process if yes
+        # - Retrieve the tax group and tax template data
+        # - Try to create accounts at most probable location in the CoA
+        # - Assign those accounts to the data
+        # - Creates tax group and taxes with their ir.model.data
 
-        return {
-            'tax_template_to_tax': tax_template_to_tax,
-            'account_dict': todo_dict
-        }
+        taxes_in_country = self.env['account.tax'].search([
+            *self.env['account.tax']._check_company_domain(company),
+            ('country_id', '=', country.id),
+        ])
+        if taxes_in_country:
+            return
 
-# Fiscal Position Templates
-
-class AccountFiscalPositionTemplate(models.Model):
-    _name = 'account.fiscal.position.template'
-    _description = 'Template for Fiscal Position'
-
-    sequence = fields.Integer()
-    name = fields.Char(string='Fiscal Position Template', required=True)
-    chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
-    account_ids = fields.One2many('account.fiscal.position.account.template', 'position_id', string='Account Mapping')
-    tax_ids = fields.One2many('account.fiscal.position.tax.template', 'position_id', string='Tax Mapping')
-    note = fields.Text(string='Notes')
-    auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
-    vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
-    country_id = fields.Many2one('res.country', string='Country',
-        help="Apply only if delivery or invoicing country match.")
-    country_group_id = fields.Many2one('res.country.group', string='Country Group',
-        help="Apply only if delivery or invocing country match the group.")
-    state_ids = fields.Many2many('res.country.state', string='Federal States')
-    zip_from = fields.Integer(string='Zip Range From', default=0)
-    zip_to = fields.Integer(string='Zip Range To', default=0)
-
-
-class AccountFiscalPositionTaxTemplate(models.Model):
-    _name = 'account.fiscal.position.tax.template'
-    _description = 'Template Tax Fiscal Position'
-    _rec_name = 'position_id'
-
-    position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Position', required=True, ondelete='cascade')
-    tax_src_id = fields.Many2one('account.tax.template', string='Tax Source', required=True)
-    tax_dest_id = fields.Many2one('account.tax.template', string='Replacement Tax')
-
-
-class AccountFiscalPositionAccountTemplate(models.Model):
-    _name = 'account.fiscal.position.account.template'
-    _description = 'Template Account Fiscal Mapping'
-    _rec_name = 'position_id'
-
-    position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Mapping', required=True, ondelete='cascade')
-    account_src_id = fields.Many2one('account.account.template', string='Account Source', required=True)
-    account_dest_id = fields.Many2one('account.account.template', string='Account Destination', required=True)
-
-# ---------------------------------------------------------
-# Account generation from template wizards
-# ---------------------------------------------------------
-
-
-class WizardMultiChartsAccounts(models.TransientModel):
-    """
-    Create a new account chart for a company.
-    Wizards ask for:
-        * a company
-        * an account chart template
-        * a number of digits for formatting code of non-view accounts
-        * a list of bank accounts owned by the company
-    Then, the wizard:
-        * generates all accounts from the template and assigns them to the right company
-        * generates all taxes and tax codes, changing account assignations
-        * generates all accounting properties and assigns them correctly
-    """
-
-    _name = 'wizard.multi.charts.accounts'
-    _inherit = 'res.config'
-
-    company_id = fields.Many2one('res.company', string='Company', required=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', help="Currency as per company's country.", required=True)
-    only_one_chart_template = fields.Boolean(string='Only One Chart Template Available')
-    chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
-    bank_account_ids = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True, oldname="bank_accounts_id")
-    bank_account_code_prefix = fields.Char('Bank Accounts Prefix', oldname="bank_account_code_char")
-    cash_account_code_prefix = fields.Char('Cash Accounts Prefix')
-    code_digits = fields.Integer(string='# of Digits', required=True, help="No. of Digits to use for account code")
-    sale_tax_id = fields.Many2one('account.tax.template', string='Default Sales Tax', oldname="sale_tax")
-    purchase_tax_id = fields.Many2one('account.tax.template', string='Default Purchase Tax', oldname="purchase_tax")
-    sale_tax_rate = fields.Float(string='Sales Tax(%)')
-    use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
-    transfer_account_id = fields.Many2one('account.account.template', required=True, string='Transfer Account',
-        domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
-        help="Intermediary account used when moving money from a liquidity account to another")
-    purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
-    complete_tax_set = fields.Boolean('Complete Set of Taxes',
-        help="This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use "
-            "the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete")
-
-    @api.model
-    def _get_chart_parent_ids(self, chart_template):
-        """ Returns the IDs of all ancestor charts, including the chart itself.
-            (inverse of child_of operator)
-
-            :param BaseModel chart_template: the account.chart.template record
-            :return: the IDS of all ancestor charts, including the chart itself.
-        """
-        result = [chart_template.id]
-        while chart_template.parent_id:
-            chart_template = chart_template.parent_id
-            result.append(chart_template.id)
-        return result
-
-    @api.onchange('sale_tax_rate')
-    def onchange_tax_rate(self):
-        self.purchase_tax_rate = self.sale_tax_rate or False
-
-    @api.onchange('chart_template_id')
-    def onchange_chart_template_id(self):
-        res = {}
-        tax_templ_obj = self.env['account.tax.template']
-        if self.chart_template_id:
-            currency_id = self.chart_template_id.currency_id and self.chart_template_id.currency_id.id or self.env.user.company_id.currency_id.id
-            self.complete_tax_set = self.chart_template_id.complete_tax_set
-            self.currency_id = currency_id
-            if self.chart_template_id.complete_tax_set:
-            # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
-                chart_ids = self._get_chart_parent_ids(self.chart_template_id)
-                base_tax_domain = [('chart_template_id', 'parent_of', chart_ids)]
-                sale_tax_domain = base_tax_domain + [('type_tax_use', '=', 'sale')]
-                purchase_tax_domain = base_tax_domain + [('type_tax_use', '=', 'purchase')]
-                sale_tax = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
-                purchase_tax = tax_templ_obj.search(purchase_tax_domain, order="sequence, id desc", limit=1)
-                self.sale_tax_id = sale_tax.id
-                self.purchase_tax_id = purchase_tax.id
-                res.setdefault('domain', {})
-                res['domain']['sale_tax_id'] = repr(sale_tax_domain)
-                res['domain']['purchase_tax_id'] = repr(purchase_tax_domain)
-            if self.chart_template_id.transfer_account_id:
-                self.transfer_account_id = self.chart_template_id.transfer_account_id.id
-            if self.chart_template_id.code_digits:
-                self.code_digits = self.chart_template_id.code_digits
-            if self.chart_template_id.bank_account_code_prefix:
-                self.bank_account_code_prefix = self.chart_template_id.bank_account_code_prefix
-            if self.chart_template_id.cash_account_code_prefix:
-                self.cash_account_code_prefix = self.chart_template_id.cash_account_code_prefix
-        return res
-
-    @api.model
-    def _get_default_bank_account_ids(self):
-        return [{'acc_name': _('Cash'), 'account_type': 'cash'}, {'acc_name': _('Bank'), 'account_type': 'bank'}]
-
-    @api.model
-    def default_get(self, fields):
-        context = self._context or {}
-        res = super(WizardMultiChartsAccounts, self).default_get(fields)
-        tax_templ_obj = self.env['account.tax.template']
-        account_chart_template = self.env['account.chart.template']
-
-        if 'bank_account_ids' in fields:
-            res.update({'bank_account_ids': self._get_default_bank_account_ids()})
-        if 'company_id' in fields:
-            res.update({'company_id': self.env.user.company_id.id})
-        if 'currency_id' in fields:
-            company_id = res.get('company_id') or False
-            if company_id:
-                company = self.env['res.company'].browse(company_id)
-                currency_id = company.on_change_country(company.country_id.id)['value']['currency_id']
-                res.update({'currency_id': currency_id})
-
-        chart_templates = account_chart_template.search([('visible', '=', True)])
-        if chart_templates:
-            #in order to set default chart which was last created set max of ids.
-            chart_id = max(chart_templates.ids)
-            if context.get("default_charts"):
-                model_data = self.env['ir.model.data'].search_read([('model', '=', 'account.chart.template'), ('module', '=', context.get("default_charts"))], ['res_id'])
-                if model_data:
-                    chart_id = model_data[0]['res_id']
-            chart = account_chart_template.browse(chart_id)
-            chart_hierarchy_ids = self._get_chart_parent_ids(chart)
-            if 'chart_template_id' in fields:
-                res.update({'only_one_chart_template': len(chart_templates) == 1,
-                            'chart_template_id': chart_id})
-            if 'sale_tax_id' in fields:
-                sale_tax = tax_templ_obj.search([('chart_template_id', 'in', chart_hierarchy_ids),
-                                                              ('type_tax_use', '=', 'sale')], limit=1, order='sequence')
-                res.update({'sale_tax_id': sale_tax and sale_tax.id or False})
-            if 'purchase_tax_id' in fields:
-                purchase_tax = tax_templ_obj.search([('chart_template_id', 'in', chart_hierarchy_ids),
-                                                                  ('type_tax_use', '=', 'purchase')], limit=1, order='sequence')
-                res.update({'purchase_tax_id': purchase_tax and purchase_tax.id or False})
-        res.update({
-            'purchase_tax_rate': 15.0,
-            'sale_tax_rate': 15.0,
-        })
-        return res
-
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        context = self._context or {}
-        res = super(WizardMultiChartsAccounts, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
-        cmp_select = []
-        CompanyObj = self.env['res.company']
-
-        companies = CompanyObj.search([])
-        #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
-        self._cr.execute("SELECT company_id FROM account_account WHERE deprecated = 'f' AND name != 'Chart For Automated Tests' AND name NOT LIKE '%(test)'")
-        configured_cmp = [r[0] for r in self._cr.fetchall()]
-        unconfigured_cmp = list(set(companies.ids) - set(configured_cmp))
-        for field in res['fields']:
-            if field == 'company_id':
-                res['fields'][field]['domain'] = [('id', 'in', unconfigured_cmp)]
-                res['fields'][field]['selection'] = [('', '')]
-                if unconfigured_cmp:
-                    cmp_select = [(line.id, line.name) for line in CompanyObj.browse(unconfigured_cmp)]
-                    res['fields'][field]['selection'] = cmp_select
-        return res
-
-    @api.one
-    def _create_tax_templates_from_rates(self, company_id):
-        '''
-        This function checks if the chosen chart template is configured as containing a full set of taxes, and if
-        it's not the case, it creates the templates for account.tax object accordingly to the provided sale/purchase rates.
-        Then it saves the new tax templates as default taxes to use for this chart template.
-
-        :param company_id: id of the company for wich the wizard is running
-        :return: True
-        '''
-        obj_tax_temp = self.env['account.tax.template']
-        all_parents = self._get_chart_parent_ids(self.chart_template_id)
-        # create tax templates from purchase_tax_rate and sale_tax_rate fields
-        if not self.chart_template_id.complete_tax_set:
-            value = self.sale_tax_rate
-            ref_taxs = obj_tax_temp.search([('type_tax_use', '=', 'sale'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
-            ref_taxs.write({'amount': value, 'name': _('Tax %.2f%%') % value, 'description': '%.2f%%' % value})
-            value = self.purchase_tax_rate
-            ref_taxs = obj_tax_temp.search([('type_tax_use', '=', 'purchase'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
-            ref_taxs.write({'amount': value, 'name': _('Tax %.2f%%') % value, 'description': '%.2f%%' % value})
-        return True
-
-    @api.multi
-    def existing_accounting(self, company_id):
-        model_to_check = ['account.move.line', 'account.invoice', 'account.move', 'account.payment', 'account.bank.statement']
-        for model in model_to_check:
-            if len(self.env[model].search([('company_id', '=', company_id.id)])) > 0:
-                return True
-        return False
-
-    @api.multi
-    def execute(self):
-        '''
-        This function is called at the confirmation of the wizard to generate the COA from the templates. It will read
-        all the provided information to create the accounts, the banks, the journals, the taxes, the
-        accounting properties... accordingly for the chosen company.
-        '''
-        if not self.env.user._is_admin():
-            raise AccessError(_("Only administrators can change the settings"))
-
-        existing_accounts = self.env['account.account'].search([('company_id', '=', self.company_id.id)])
-        if existing_accounts:
-            # we tolerate switching from accounting package (localization module) as long as there isn't yet any accounting
-            # entries created for the company.
-            if self.existing_accounting(self.company_id):
-                raise UserError(_('Could not install new chart of account as there are already accounting entries existing'))
-
-            # delete accounting properties
-            prop_values = ['account.account,%s' % (account_id,) for account_id in existing_accounts.ids]
-            existing_journals = self.env['account.journal'].search([('company_id', '=', self.company_id.id)])
-            if existing_journals:
-                prop_values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
-            accounting_props = self.env['ir.property'].search([('value_reference', 'in', prop_values)])
-            if accounting_props:
-                accounting_props.unlink()
-
-            # delete account, journal, tax, fiscal position and reconciliation model
-            models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.journal']
-            for model in models_to_delete:
-                res = self.env[model].search([('company_id', '=', self.company_id.id)])
-                if len(res):
-                    res.unlink()
-            existing_accounts.unlink()
-
-        ir_values_obj = self.env['ir.values']
-        company = self.company_id
-        self.company_id.write({'currency_id': self.currency_id.id,
-                               'accounts_code_digits': self.code_digits,
-                               'anglo_saxon_accounting': self.use_anglo_saxon,
-                               'bank_account_code_prefix': self.bank_account_code_prefix,
-                               'cash_account_code_prefix': self.cash_account_code_prefix,
-                               'chart_template_id': self.chart_template_id.id})
-
-        #set the coa currency to active
-        self.currency_id.write({'active': True})
-
-        # When we install the CoA of first company, set the currency to price types and pricelists
-        if company.id == 1:
-            for reference in ['product.list_price', 'product.standard_price', 'product.list0']:
-                try:
-                    tmp2 = self.env.ref(reference).write({'currency_id': self.currency_id.id})
-                except ValueError:
-                    pass
-
-        # If the floats for sale/purchase rates have been filled, create templates from them
-        self._create_tax_templates_from_rates(company.id)
-
-        # Install all the templates objects and generate the real objects
-        acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits, transfer_account_id=self.transfer_account_id)
-
-        # write values of default taxes for product as super user
-        if self.sale_tax_id and taxes_ref:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], for_all_users=True, company_id=company.id)
-        if self.purchase_tax_id and taxes_ref:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], for_all_users=True, company_id=company.id)
-
-        # Create Bank journals
-        self._create_bank_journals_from_o2m(company, acc_template_ref)
-
-        # Create the current year earning account if it wasn't present in the CoA
-        account_obj = self.env['account.account']
-        unaffected_earnings_xml = self.env.ref("account.data_unaffected_earnings")
-        if unaffected_earnings_xml and not account_obj.search([('company_id', '=', company.id), ('user_type_id', '=', unaffected_earnings_xml.id)]):
-            account_obj.create({
-                'code': '999999',
-                'name': _('Undistributed Profits/Losses'),
-                'user_type_id': unaffected_earnings_xml.id,
-                'company_id': company.id,})
-        return {}
-
-    @api.multi
-    def _create_bank_journals_from_o2m(self, company, acc_template_ref):
-        '''
-        This function creates bank journals and its accounts for each line encoded in the field bank_account_ids of the
-        wizard (which is currently only used to create a default bank and cash journal when the CoA is installed).
-
-        :param company: the company for which the wizard is running.
-        :param acc_template_ref: the dictionary containing the mapping between the ids of account templates and the ids
-            of the accounts that have been generated from them.
-        '''
-        self.ensure_one()
-        # Create the journals that will trigger the account.account creation
-        for acc in self.bank_account_ids:
-            self.env['account.journal'].create({
-                'name': acc.acc_name,
-                'type': acc.account_type,
-                'company_id': company.id,
-                'currency_id': acc.currency_id.id,
-                'sequence': 10
+        def create_foreign_tax_account(existing_account, additional_label):
+            new_code = self.env['account.account']._search_new_account_code(
+                existing_account.company_id,
+                len(existing_account.code),
+                existing_account.code[:-2]
+            )
+            return self.env['account.account'].create({
+                'name': f"{existing_account.name} - {additional_label}",
+                'code': new_code,
+                'account_type': existing_account.account_type,
+                'company_id': existing_account.company_id.id,
             })
 
+        existing_accounts = {'': None, None: None}  # keeps tracks of the created account by foreign xml_id
+        default_company_taxes = company.account_sale_tax_id + company.account_purchase_tax_id
+        chart_template_code = self._guess_chart_template(country=country)
+        tax_group_data = self._get_chart_template_data(chart_template_code)['account.tax.group']
+        tax_data = self._get_chart_template_data(chart_template_code)['account.tax']
 
-class AccountBankAccountsWizard(models.TransientModel):
-    _name = 'account.bank.accounts.wizard'
+        # Populate foreign accounts mapping
+        # Try to create tax group accounts if not mapped
+        field_and_names = (
+            ('tax_payable_account_id', _("Foreign tax account payable (%s)", country.code)),
+            ('tax_receivable_account_id', _("Foreign tax account receivable (%s)", country.code)),
+            ('advance_tax_payment_account_id', _("Foreign tax account advance payment (%s)", country.code)),
+        )
+        for field, account_name in field_and_names:
+            for tax_group in tax_group_data.values():
+                account_template_xml_id = tax_group.get(field)
+                if account_template_xml_id in existing_accounts:
+                    continue
+                local_tax_group = self.env["account.tax.group"].search([
+                    *self.env['account.tax.group']._check_company_domain(company),
+                    ('country_id', '=', company.account_fiscal_country_id.id),
+                    (field, '!=', False),
+                ], limit=1)
+                if local_tax_group:
+                    existing_accounts[account_template_xml_id] = create_foreign_tax_account(local_tax_group[field], account_name).id
 
-    acc_name = fields.Char(string='Account Name.', required=True)
-    bank_account_id = fields.Many2one('wizard.multi.charts.accounts', string='Bank Account', required=True, ondelete='cascade')
-    currency_id = fields.Many2one('res.currency', string='Account Currency',
-        help="Forces all moves for this account to have this secondary currency.")
-    account_type = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')])
+        # Try to create repartition lines account if not mapped
+        for tax_template in tax_data.values():
+            for _command, _id, rep_line in tax_template.get('repartition_line_ids', []):
+                if 'account_id' in rep_line and rep_line['repartition_type'] == 'tax':
+                    type_tax_use, foreign_tax_rep_line = tax_template['type_tax_use'], rep_line
+                    account_template_xml_id = foreign_tax_rep_line['account_id']
+                    if account_template_xml_id in existing_accounts:
+                        continue
 
+                    sign_comparator = '<' if float(foreign_tax_rep_line.get('factor_percent', 100)) < 0 else '>'
+                    minimal_domain = [
+                        *self.env['account.tax.repartition.line']._check_company_domain(company),
+                        ('account_id', '!=', False),
+                        ('factor_percent', sign_comparator, 0),
+                    ]
+                    additional_domain = [
+                        ('tax_id.type_tax_use', '=', type_tax_use),
+                        ('tax_id.country_id', '=', company.account_fiscal_country_id.id),
+                        ('tax_id', 'in', default_company_taxes.ids),
+                    ]
 
-class AccountReconcileModelTemplate(models.Model):
-    _name = "account.reconcile.model.template"
+                    # Trying to find an account being less restrictive on each iteration until the minimum acceptable is
+                    # reached. If nothing is found, don't fill it to avoid setting a wrong account
+                    similar_repartition_line = None
+                    while not similar_repartition_line and additional_domain:
+                        search_domain = minimal_domain + additional_domain
+                        similar_repartition_line = self.env['account.tax.repartition.line'].search(search_domain, limit=1)
+                        additional_domain.pop()
 
-    chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
-    name = fields.Char(string='Button Label', required=True)
-    sequence = fields.Integer(required=True, default=10)
-    has_second_line = fields.Boolean(string='Add a second line', default=False)
-    account_id = fields.Many2one('account.account.template', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
-    label = fields.Char(string='Journal Item Label')
-    amount_type = fields.Selection([
-        ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of balance')
-        ], required=True, default='percentage')
-    amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    tax_id = fields.Many2one('account.tax.template', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
-    second_account_id = fields.Many2one('account.account.template', string='Second Account', ondelete='cascade', domain=[('deprecated', '=', False)])
-    second_label = fields.Char(string='Second Journal Item Label')
-    second_amount_type = fields.Selection([
-        ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of amount')
-        ], string="Second Amount type",required=True, default='percentage')
-    second_amount = fields.Float(string='Second Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
+                    if similar_repartition_line:
+                        local_tax_account = similar_repartition_line.account_id
+                        similar_account_id = create_foreign_tax_account(local_tax_account, _("Foreign tax account (%s)", country.code))
+                        existing_accounts[account_template_xml_id] = similar_account_id.id
+
+        # Try to create cash basis account if not mapped
+        local_cash_basis_tax = self.env["account.tax"].search([
+            *self.env['account.tax']._check_company_domain(company),
+            ('country_id', '=', company.account_fiscal_country_id.id),
+            ('cash_basis_transition_account_id', '!=', False)
+        ], limit=1)
+        for tax_template in tax_data.values():
+            account_xml_id = tax_template.get('cash_basis_transition_account_id')
+            if account_xml_id in existing_accounts:
+                continue
+
+            if local_cash_basis_tax:
+                existing_accounts[account_xml_id] = create_foreign_tax_account(
+                    local_cash_basis_tax.cash_basis_transition_account_id,
+                    _("Cash basis transition account")
+                ).id
+                continue
+
+            account_id = [rep_line['account_id'] for _command, _id, rep_line in tax_template['repartition_line_ids'] if rep_line.get('account_id')]
+            if account_id:
+                local_account = self.env['account.account'].browse(existing_accounts[account_id[0]])
+                existing_accounts[account_xml_id] = create_foreign_tax_account(local_account, _("Cash basis transition account")).id
+                continue
+            existing_accounts[account_xml_id] = None
+
+        # Assign the account based on the map
+        for field, account_name in field_and_names:
+            for tax_group in tax_group_data.values():
+                tax_group[field] = existing_accounts.get(account_template_xml_id)
+
+        for tax_template in tax_data.values():
+            # This is required because the country isn't provided directly by the template
+            tax_template['country_id'] = country.id
+
+            if tax_template.get('tax_group_id'):
+                tax_template['tax_group_id'] = f"{chart_template_code}_{tax_template['tax_group_id']}"
+
+            for _command, _id, rep_line in tax_template.get('repartition_line_ids', []):
+                rep_line['account_id'] = existing_accounts.get(rep_line.get('account_id'))
+
+            account_xml_id = tax_template.get('cash_basis_transition_account_id')
+            tax_template['cash_basis_transition_account_id'] = existing_accounts[account_xml_id]
+
+        data = {
+            'account.tax.group': tax_group_data,
+            'account.tax': tax_data,
+        }
+        # prefix the xml_id with the chart template code to avoid collision
+        # because since 16.2 xml_ids are regrouped under module account
+        data = {
+            model: {
+                f"{chart_template_code}_{xml_id}": template
+                for xml_id, template in templates.items()
+            }
+            for model, templates in data.items()
+        }
+        # add the prefix to the "children_tax_ids" value for group-type taxes
+        for tax_data in data['account.tax'].values():
+            if tax_data.get('amount_type') == 'group':
+                children_taxes = tax_data['children_tax_ids'].split(',')
+                for idx, child_tax in enumerate(children_taxes):
+                    children_taxes[idx] = f"{chart_template_code}_{child_tax}"
+                tax_data['children_tax_ids'] = ','.join(children_taxes)
+        self._load_data(data)
+
+    # --------------------------------------------------------------------------------
+    # Root template functions
+    # --------------------------------------------------------------------------------
+
+    @template(model='account.account')
+    def _get_account_account(self, template_code):
+        return self._parse_csv(template_code, 'account.account')
+
+    @template(model='account.group')
+    def _get_account_group(self, template_code):
+        return self._parse_csv(template_code, 'account.group')
+
+    @template(model='account.tax.group')
+    def _get_account_tax_group(self, template_code):
+        return self._parse_csv(template_code, 'account.tax.group')
+
+    @template(model='account.tax')
+    def _get_account_tax(self, template_code):
+        tax_data = self._parse_csv(template_code, 'account.tax')
+        self._deref_account_tags(template_code, tax_data)
+        return tax_data
+
+    @template(model='account.fiscal.position')
+    def _get_account_fiscal_position(self, template_code):
+        return self._parse_csv(template_code, 'account.fiscal.position')
+
+    @template(model='account.journal')
+    def _get_account_journal(self, template_code):
+        return {
+            "sale": {
+                'name': _('Customer Invoices'),
+                'type': 'sale',
+                'code': _('INV'),
+                'show_on_dashboard': True,
+                'color': 11,
+                'sequence': 5,
+            },
+            "purchase": {
+                'name': _('Vendor Bills'),
+                'type': 'purchase',
+                'code': _('BILL'),
+                'show_on_dashboard': True,
+                'color': 11,
+                'sequence': 6,
+            },
+            "general": {
+                'name': _('Miscellaneous Operations'),
+                'type': 'general',
+                'code': _('MISC'),
+                'show_on_dashboard': True,
+                'sequence': 7,
+            },
+            "exch": {
+                'name': _('Exchange Difference'),
+                'type': 'general',
+                'code': _('EXCH'),
+                'show_on_dashboard': False,
+                'sequence': 9,
+            },
+            "caba": {
+                'name': _('Cash Basis Taxes'),
+                'type': 'general',
+                'code': _('CABA'),
+                'show_on_dashboard': False,
+                'sequence': 10,
+            },
+            "bank": {
+                'name': _('Bank'),
+                'type': 'bank',
+                'show_on_dashboard': True,
+            },
+            "cash": {
+                'name': _('Cash'),
+                'type': 'cash',
+                'show_on_dashboard': True,
+            },
+        }
+
+    @template(model='account.reconcile.model')
+    def _get_account_reconcile_model(self, template_code):
+        return {
+            "reconcile_perfect_match": {
+                "name": _('Invoices/Bills Perfect Match'),
+                "sequence": 1,
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": True,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": True,
+                "payment_tolerance_type": 'percentage',
+                "payment_tolerance_param": 0,
+                "match_partner": True,
+            },
+            "reconcile_partial_underpaid": {
+                "name": _('Invoices/Bills Partial Match if Underpaid'),
+                "sequence": 2,
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": False,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": False,
+                "match_partner": True,
+            }
+        }
+
+    # --------------------------------------------------------------------------------
+    # Tooling
+    # --------------------------------------------------------------------------------
+
+    def ref(self, xmlid, raise_if_not_found=True):
+        if '.' in xmlid:
+            return self.env.ref(xmlid, raise_if_not_found)
+        return (
+            self.env.ref(f"account.{self.env.company.id}_{xmlid}", raise_if_not_found=False)
+            or self.env.ref(f"account.{self.env.company.parent_ids[0].id}_{xmlid}", raise_if_not_found)
+        )
+
+    def _get_parent_template(self, code):
+        parents = []
+        template_mapping = self._get_chart_template_mapping(get_all=True)
+        while template_mapping.get(code):
+            parents.append(code)
+            code = template_mapping.get(code).get('parent')
+        return parents
+
+    def _get_tag_mapper(self, template_code):
+        tags = {x.name: x.id for x in self.env['account.account.tag'].with_context(active_test=False, lang='en_US').search([
+            ('applicability', '=', 'taxes'),
+            ('country_id', '=', self._get_chart_template_mapping()[template_code]['country_id']),
+        ])}
+
+        def mapping_getter(*args):
+            res = []
+            for tag in args:
+                if re.match(r"^\w+\.\w+$", tag):
+                    # xml_id => explicit data, doesn't need to be mapped
+                    res.append(tag)
+                else:
+                    format_tag = re.sub(r'\s+', ' ', tag.strip())
+                    mapped_tag = tags.get(format_tag)
+                    if not mapped_tag:
+                        raise UserError(_('Error while loading the localization. You should probably update your localization app first.'))
+                    res.append(mapped_tag)
+            return res
+        return mapping_getter
+
+    def _deref_account_tags(self, template_code, tax_data):
+        mapper = self._get_tag_mapper(template_code)
+        for tax_values in tax_data.values():
+            for field_name in ('repartition_line_ids', 'invoice_repartition_line_ids', 'refund_repartition_line_ids'):
+                for element in tax_values.get(field_name, []):
+                    match element:
+                        case int() as command, _, {'tag_ids': str() as tags} as values if command in tuple(Command):
+                            values['tag_ids'] = [Command.set(mapper(*tags.split(TAX_TAG_DELIMITER)))]
+
+    def _parse_csv(self, template_code, model, module=None):
+        Model = self.env[model]
+        model_fields = Model._fields
+
+        if module is None:
+            module = self._get_chart_template_mapping().get(template_code)['module']
+        assert re.fullmatch(r"[a-z0-9_]+", module)
+
+        def evaluate(key, value, model_fields):
+            if not value:
+                return value
+            if '@' in key:
+                return value
+            if '/' in key:
+                return []
+            if model_fields:
+                if model_fields[key].type in ('boolean', 'int', 'float'):
+                    return ast.literal_eval(value)
+                if model_fields[key].type == 'char':
+                    return value.strip()
+            return value
+
+        res = {}
+        for template in self._get_parent_template(template_code)[::-1] or ['']:
+            try:
+                with file_open(f"{module}/data/template/{model}{f'-{template}' if template else ''}.csv", 'r') as csv_file:
+                    for row in csv.DictReader(csv_file):
+                        if row['id']:
+                            last_id = row['id']
+                            res[row['id']] = {
+                                key.split('/')[0]: evaluate(key, value, model_fields)
+                                for key, value in row.items()
+                                if key != 'id' and value and ('@' in key or key in model_fields)
+                            }
+                        create_added = set()
+                        for key, value in row.items():
+                            if '/' in key and value:
+                                CurrentModel = Model
+                                sub = res[last_id]
+                                *model_path, fname = key.split('/')
+                                path_str = "/".join(model_path)
+                                for path_component in model_path:
+                                    if path_str not in create_added:
+                                        create_added.add(path_str)
+                                        sub.setdefault(path_component, [])
+                                        sub[path_component].append(Command.create({}))
+                                    sub = sub[path_component][-1][2]
+                                    CurrentModel = self.env[CurrentModel[path_component]._name]
+                                sub[fname] = evaluate(fname, value, CurrentModel._fields)
+
+            except FileNotFoundError:
+                _logger.debug("No file %s found for template '%s'", model, module)
+        return res
+
+    def _get_untranslatable_fields_target_language(self, template_code, company):
+        """Return the code of the language we want to translate the untranslatable fields into.
+        """
+        # Note: In case this function is called during module installation
+        #   * The active user is the super user.
+        #   * There is no 'lang' in the context.
+        return company.partner_id.lang or get_lang(self.env).code
+
+    def _get_untranslatable_fields_to_translate(self):
+        """Return information about the untranslatable fields we want to translate anyway.
+
+        :param langs: The codes of the languages into which we want to translate the records.
+        :type langs: list[str]
+        :param companies: Records belonging to these companies will be considered.
+        :type companies: Model<res.company>
+        :return: Dictionary (model -> list of fields) where the list of fields contains
+                 all the untranslatable fields of the model we want to translate anyway
+        :rtype: dict[str, list[str]]
+        """
+        return {
+            'account.journal': [
+                'code',
+            ],
+        }
+
+    def _get_translatable_template_model_fields(self):
+        return {
+            model: [fieldname for (fieldname, field) in self.env[model]._fields.items() if field.translate]
+            for model in TEMPLATE_MODELS
+        }
+
+    def _get_untranslated_translatable_template_model_records(self, langs, companies):
+        """Return information about the records of any model in TEMPLATE_MODELS (and belonging to companies) that need to be translated.
+        Records are in need of translation if they have a translatable field which is missing a translation (into any of the languages given in langs).
+
+        :param langs: The codes of the languages into which we want to translate the records.
+        :type langs: list[str]
+        :param companies: Records belonging to these companies will be considered.
+        :type companies: Model<res.company>
+        :return: The records which information will be returned are those records that have at least 1 untranslated translatable field.
+                 A field is 'untranslated' if it does not have a translation for all languages in langs.
+                 The returned value is a List of tuples:
+                     (model, xmlid (without module prefix), module, dictionary from name to value for each translatable field)
+        :rtype: list[tuple(str, str, str, dict[str, str])]
+        """
+        if not langs or not companies:
+            return []
+
+        company_ids = tuple(companies.ids)
+
+        translatable_model_fields = self._get_translatable_template_model_fields()
+
+        # Generate a list of queries; exactly 1 per model
+        queries = []
+        for model in TEMPLATE_MODELS:
+            translatable_fields = translatable_model_fields[model]
+            if not translatable_fields:
+                continue
+
+            self.env[model].flush_model(['id', 'company_id'] + translatable_model_fields[model])
+
+            # We only want records that have at least 1 missing translation in any of its translatable fields
+            missing_translation_clauses = [
+                SQL("(%s ->> %s) IS NULL", SQL.identifier('model', field), lang)
+                for field in translatable_fields
+                for lang in langs
+            ]
+
+            translatable_field_column_args = []
+            for field in translatable_fields:
+                translatable_field_column_args.extend((SQL("%s", field), SQL.identifier('model', field)))
+
+            queries.append(SQL(
+                """
+                 SELECT %(model)s AS model,
+                        model_data.name AS xmlid,
+                        model_data.module AS module,
+                        json_build_object(%(translatable_field_column_args)s) AS fields
+                   FROM %(table)s model
+                   JOIN ir_model_data model_data ON model_data.model = %(model)s
+                                                AND model.id = model_data.res_id
+                  WHERE (%(missing_translation_clauses)s)
+                    AND model.company_id IN %(company_ids)s
+                """,
+                model=model,
+                translatable_field_column_args=SQL(", ").join(translatable_field_column_args),
+                table=SQL.identifier(self.env[model]._table),
+                company_ids=company_ids,
+                missing_translation_clauses=SQL(" OR ").join(missing_translation_clauses),
+            ))
+
+        query = (SQL(' UNION ALL ').join(queries))
+        # the queried models have been flushed already as part of the loop building the queries per model
+        self.env['ir.model.data'].flush_model(['res_id', 'model', 'name'])
+
+        self._cr.execute(query)
+        return self._cr.fetchall()
+
+    def _get_field_translation(self, record, fname, lang):
+        """Return the value for language lang for field with fname from record (or None if none exists).
+
+        :param record: record formatted like in the template data (generated by _get_chart_template_data)
+        :type record: dict
+        :param fname: the name of a field (in record) as string
+        :type str
+        :param lang: the code of a res.lang
+        :type str
+        :return record[fname] translated into lang (or None)
+        :rtype str
+        """
+        generic_lang = lang.split('_')[0]  # manage generic locale (i.e. `fr` instead of `fr_BE`)
+        translation_module = record.get('__translation_module__', {}).get(fname, 'account')
+        translation = record.get(f"{fname}@{lang}") or record.get(f"{fname}@{generic_lang}")
+        if translation or fname not in record:
+            return translation
+        else:
+            return (
+                code_translations.get_python_translations(translation_module, lang).get(record[fname])
+                or code_translations.get_python_translations(translation_module, generic_lang).get(record[fname])
+            )
+
+    def _load_translations(self, langs=None, companies=None, template_data=None):
+        """Load the translations of the chart template.
+
+        :param langs: the lang code to load the translations for. If one of the codes is not present,
+                      we are looking for it more generic locale (i.e. `en` instead of `en_US`)
+        :type langs: list[str]
+        :param companies: the companies to load the translations for
+        :type companies: Model<res.company>
+        """
+        langs = langs or [code for code, _name in self.env['res.lang'].get_installed()]
+        available_template_codes = list(self._get_chart_template_mapping(get_all=True))
+        companies = companies or self.env['res.company'].search([('chart_template', 'in', available_template_codes)])
+
+        translation_importer = TranslationImporter(self.env.cr, verbose=False)
+
+        # Gather translations for records that are created from the chart_template data
+        for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
+            chart_template_data = template_data or self.env['account.chart.template']._get_chart_template_data(chart_template)
+            chart_template_data.pop('template_data', None)
+            for mname, data in chart_template_data.items():
+                for _xml_id, record in data.items():
+                    fnames = {fname.split('@')[0] for fname in record if fname != '__translation_module__'}
+                    for lang in langs:
+                        for fname in fnames:
+                            field = self.env[mname]._fields.get(fname)
+                            if not field or not field.translate:
+                                continue
+                            field_translation = self._get_field_translation(record, fname, lang)
+                            if field_translation:
+                                for company in chart_companies:
+                                    xml_id = _xml_id if '.' in _xml_id else f"account.{company.id}_{_xml_id}"
+                                    translation_importer.model_translations[mname][fname][xml_id][lang] = field_translation
+
+        # Gather translations for the TEMPLATE_MODELS records that are not created from the chart_template data
+        translation_langs = [lang for lang in langs if lang != 'en_US']  # there are no code translations for 'en_US' (original language)
+        for (mname, _xml_id, module, fields) in self._get_untranslated_translatable_template_model_records(translation_langs, companies):
+            for (field, value) in fields.items():
+                if not value or 'en_US' not in value:
+                    continue
+                value_en_US = value['en_US']
+                xml_id = f"{module}.{_xml_id}"
+                for lang in [lang for lang in translation_langs if lang not in value]:
+                    if lang in translation_importer.model_translations[mname][field][xml_id]:
+                        continue
+                    value_translated = None
+                    for code_module in ([module, 'account'] if module != 'account' else ['account']):
+                        value_translated = code_translations.get_python_translations(code_module, lang).get(value_en_US)
+                        if not value_translated:  # manage generic locale (i.e. `fr` instead of `fr_BE`)
+                            value_translated = code_translations.get_python_translations(code_module, lang.split('_')[0]).get(value_en_US)
+                        if value_translated:
+                            translation_importer.model_translations[mname][field][xml_id][lang] = value_translated
+                            break
+
+        translation_importer.save(overwrite=False)

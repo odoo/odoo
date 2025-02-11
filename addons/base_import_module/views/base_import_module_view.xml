@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
         <record id="view_base_module_import" model="ir.ui.view">
             <field name="name">base.import.module.form</field>
             <field name="model">base.import.module</field>
             <field name="arch" type="xml">
-                <form string="Import module">
+                <form string="Install the application">
                     <field name="state" invisible="1"/>
-                    <separator string="Import Module" colspan="4"/>
-                    <group states="init" col="4">
-                        <label string="Select module package to import (.zip file):" colspan="4"/>
-                        <field name="module_file" colspan="4"/>
-
-                        <field name="force"/>
+                    <p class="alert alert-warning" role="alert" invisible="state == 'done' or context.get('data_module')">Note: you can only import data modules (.xml files and static assets)</p>
+                    <field name="modules_dependencies" readonly="1" nolabel="1" invisible="state == 'done'"/>
+                    <group invisible="state != 'init'">
+                        <field name="module_file" string="Module file (.zip)" options="{'accepted_file_extensions': '.zip'}" invisible="context.get('data_module')"/>
+                        <field name="force" groups="base.group_no_one"/>
+                        <field name="with_demo" string="Load demo data"/>
                     </group>
-                    <group states="done" col="4">
-                        <field name="import_message" colspan="4" nolabel="1" readonly="1"/>
+                    <group invisible="state != 'done'">
+                        <field name="import_message" nolabel="1" readonly="1"/>
                     </group>
                     <footer>
-                        <div states="init">
-                            <button name="import_module" string="Import App" type="object" class="btn-primary"/>
-                            <button special="cancel" string="Cancel" class="btn-default"/>
+                        <div invisible="state != 'init'">
+                            <button name="import_module" string="Install" type="object" class="btn-primary" data-hotkey="q"/>
+                            <button special="cancel" data-hotkey="x" string="Cancel" class="btn-secondary"/>
                         </div>
-                        <div states="done">
-                            <button name="action_module_open" string="Open Modules" type="object" class="btn-primary"/>
-                            <button special="cancel" string="Close" class="btn-default"/>
+                        <div invisible="state != 'done'">
+                            <button special="cancel" data-hotkey="x" string="Close" class="btn-secondary"/>
                         </div>
                     </footer>
                 </form>
@@ -33,9 +31,7 @@
 
         <record id="action_view_base_module_import" model="ir.actions.act_window">
             <field name="name">Import Module</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.import.module</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
@@ -49,4 +45,3 @@
             sequence="100"/>
 
 </odoo>
-

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="web.SelectMenu">
+        <Dropdown
+            class="`o_select_menu border w-auto rounded-2 overflow-hidden ${props.class || ''}`"
+            togglerClass="`o_select_menu_toggler btn w-100 bg-light ${props.togglerClass || ''} ${canDeselect ? 'o_can_deselect' : ''}`"
+            menuClass="`o_select_menu_menu${props.searchable ? ' py-0' : ''}${props.multiSelect ? ' o_select_menu_multi_select' : ''} border`"
+            position="'bottom-fit'"
+            beforeOpen.bind="onBeforeOpen"
+            onScroll.bind="onScroll"
+            onStateChanged.bind="onStateChanged"
+        >
+            <t t-set-slot="toggler">
+                <t t-if="props.multiSelect">
+                    <div class="text-wrap text-start">
+                        <TagsList tags="multiSelectChoices"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <span class="o_select_menu_toggler_slot text-start text-truncate">
+                        <t t-if="!props.slots or !props.slots.default" t-esc="displayValue" />
+                        <t t-else="" t-slot="default" />
+                    </span>
+                    <span t-if="canDeselect" t-on-click.stop="() => this.props.onSelect(null)" class="o_select_menu_toggler_clear p-0 m-0">
+                        <i class="fa fa-times"></i>
+                    </span>
+                </t>
+                <span class="o_select_menu_toggler_caret p-0 m-0">
+                    <i class="fa fa-caret-down"></i>
+                </span>
+            </t>
+            <input
+                t-if="props.searchable"
+                type="text"
+                class="dropdown-item o_select_menu_sticky px-3 py-3 position-sticky top-0 start-0 border-bottom"
+                t-ref="inputRef"
+                t-on-input="debouncedOnInput"
+                t-on-keydown="onSearchKeydown"
+                t-att-placeholder="props.searchPlaceholder"
+                autocomplete="selectMenuAutocompleteOff"
+                autocorrect="off"
+                spellcheck="false"
+            />
+            <t t-if="state.choices.length === 0">
+                <span class="text-muted fst-italic ms-3">No result found</span>
+            </t>
+            <t t-foreach="state.displayedOptions" t-as="choice" t-key="choice_index">
+                <t t-call="{{ this.constructor.choiceItemTemplate }}">
+                    <t t-set="choice" t-value="choice" />
+                </t>
+            </t>
+            <t t-if="props.slots and props.slots.bottomArea" t-slot="bottomArea" data="state"/>
+        </Dropdown>
+    </t>
+
+    <t t-name="web.SelectMenu.ChoiceItem">
+        <div t-if="choice.isGroup" class="o_select_menu_group sticky-top bg-light px-3 mt-2 fst-italic fw-bolder user-select-none">
+            <span t-esc="choice.label" />
+            <hr class="mt-2 mb-1" />
+        </div>
+        <DropdownItem
+            t-if="!choice.isGroup"
+            onSelected="() => this.onItemSelected(choice.value)"
+            class="getItemClass(choice) + ' d-flex align-items-center'"
+        >
+            <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
+            <t t-else="">
+                <div class="o_select_menu_item_label text-wrap" t-esc="choice.label || choice.value" />
+            </t>
+        </DropdownItem>
+    </t>
+
+</templates>

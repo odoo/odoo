@@ -1,25 +1,33 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (c) 2011 Cubic ERP - Teradata SAC. (http://cubicerp.com).
-
 {
     'name': 'Peru - Accounting',
-    'description': """
-Peruvian accounting chart and tax localization. According the PCGE 2010.
-========================================================================
-
-Plan contable peruano e impuestos de acuerdo a disposiciones vigentes de la
-SUNAT 2011 (PCGE 2010).
-
-    """,
-    'author': ['Cubic ERP'],
-    'website': 'http://cubicERP.com',
-    'category': 'Localization',
-    'depends': ['account'],
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['pe'],
+    'version': '3.0',
+    'category': 'Accounting/Localizations/Account Charts',
+    'author': 'Vauxoo, Odoo S.A.',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/peru.html',
+    'license': 'LGPL-3',
+    'depends': [
+        'base_vat',
+        'base_address_extended',
+        'l10n_latam_base',
+        'l10n_latam_invoice_document',
+        'account_debit_note',
+        'account',
+    ],
     'data': [
-        'data/l10n_pe_chart_data.xml',
-        'data/account_tax_data.xml',
-        'data/account_chart_template_data.yml',
+        'security/ir.model.access.csv',
+        'views/account_tax_view.xml',
+        'data/l10n_latam_document_type_data.xml',
+        'data/res.city.csv',
+        'data/l10n_pe.res.city.district.csv',
+        'data/res_country_data.xml',
+        'data/l10n_latam_identification_type_data.xml',
+        'data/res.bank.csv',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
+        'demo/demo_partner.xml',
     ],
 }

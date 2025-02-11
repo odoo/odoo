@@ -1,474 +1,1021 @@
-odoo.define('website_sale.cart', function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    var base = require('web_editor.base');
-    var core = require('web.core');
-    var _t = core._t;
+import publicWidget from "@web/legacy/js/public/public_widget";
+import VariantMixin from "@website_sale/js/variant_mixin";
+import wSaleUtils from "@website_sale/js/website_sale_utils";
+const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
+import "@website/libs/zoomodoo/zoomodoo";
+import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
+import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
+import { jsonrpc } from "@web/core/network/rpc_service";
+import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { isBrowserFirefox, hasTouch } from "@web/core/browser/feature_detection";
+import { Component } from "@odoo/owl";
 
-    var shopping_cart_link = $('ul#top_menu li a[href$="/shop/cart"]');
-    var shopping_cart_link_counter;
-    shopping_cart_link.popover({
-        trigger: 'manual',
-        animation: true,
-        html: true,
-        title: function () {
-            return _t("My Cart");
-        },
-        container: 'body',
-        placement: 'auto',
-        template: '<div class="popover mycart-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-    }).on("mouseenter",function () {
-        var self = this;
-        clearTimeout(shopping_cart_link_counter);
-        shopping_cart_link.not(self).popover('hide');
-        shopping_cart_link_counter = setTimeout(function(){
-            if($(self).is(':hover') && !$(".mycart-popover:visible").length)
-            {
-                $.get("/shop/cart", {'type': 'popover'})
-                    .then(function (data) {
-                        $(self).data("bs.popover").options.content =  data;
-                        $(self).popover("show");
-                        $(".popover").on("mouseleave", function () {
-                            $(self).trigger('mouseleave');
-                        });
-                    });
-            }
-        }, 100);
-    }).on("mouseleave", function () {
-        var self = this;
-        setTimeout(function () {
-            if (!$(".popover:hover").length) {
-                if(!$(self).is(':hover')) {
-                   $(self).popover('hide');
-                }
-            }
-        }, 1000);
-    });
-});
+export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
+    selector: '.oe_website_sale',
+    events: Object.assign({}, VariantMixin.events || {}, {
+        'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
+        'mouseup .js_publish': '_onMouseupPublish',
+        'touchend .js_publish': '_onMouseupPublish',
+        'change .oe_cart input.js_quantity[data-product-id]': '_onChangeCartQuantity',
+        'click .oe_cart a.js_add_suggested_products': '_onClickSuggestedProduct',
+        'click a.js_add_cart_json': '_onClickAddCartJSON',
+        'click .a-submit': '_onClickSubmit',
+        'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
+        'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
+        'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
+        'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
+        'change select[name="country_id"]': '_onChangeCountry',
+        'change #shipping_use_same': '_onChangeShippingUseSame',
+        'click .toggle_summary': '_onToggleSummary',
+        'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
+        'click input.js_product_change': 'onChangeVariant',
+        'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
+        'change oe_advanced_configurator_modal [data-attribute_exclusions]': 'onChangeVariant',
+        'click .o_product_page_reviews_link': '_onClickReviewsLink',
+        'mousedown .o_wsale_filmstip_wrapper': '_onMouseDown',
+        'mouseleave .o_wsale_filmstip_wrapper': '_onMouseLeave',
+        'mouseup .o_wsale_filmstip_wrapper': '_onMouseUp',
+        'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
+        'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
+        'submit': '_onClickConfirmOrder',
+        "change select[name='state_id']": "_onChangeState",
+    }),
 
-odoo.define('website_sale.website_sale_category', function (require) {
-    "use strict";
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
 
-    var base = require('web_editor.base');
+        this._changeCartQuantity = debounce(this._changeCartQuantity.bind(this), 500);
+        this._changeCountry = debounce(this._changeCountry.bind(this), 500);
 
-    if(!$('#o_shop_collapse_category').length) {
-        return $.Deferred().reject("DOM doesn't contain '#o_shop_collapse_category'");
-    }
+        this.isWebsite = true;
+        this.filmStripStartX = 0;
+        this.filmStripIsDown = false;
+        this.filmStripScrollLeft = 0;
+        this.filmStripMoved = false;
 
-    $('#o_shop_collapse_category').on('click', '.fa-chevron-right',function(){
-        $(this).parent().siblings().find('.fa-chevron-down:first').click();
-        $(this).parents('li').find('ul:first').show('normal');
-        $(this).toggleClass('fa-chevron-down fa-chevron-right');
-    });
+        delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
+        delete this.events['change [data-attribute_exclusions]'];
 
-    $('#o_shop_collapse_category').on('click', '.fa-chevron-down',function(){
-        $(this).parent().find('ul:first').hide('normal');
-        $(this).toggleClass('fa-chevron-down fa-chevron-right');
-    });
-});
+        this.rpc = this.bindService("rpc");
+    },
+    /**
+     * @override
+     */
+    start() {
+        const def = this._super(...arguments);
 
-odoo.define('website_sale.website_sale', function (require) {
-    "use strict";
+        this._applyHashFromSearch();
 
-    var base = require('web_editor.base');
-    var ajax = require('web.ajax');
-    var utils = require('web.utils');
-    var core = require('web.core');
-    var config = require('web.config');
-    var _t = core._t;
-
-    if(!$('.oe_website_sale').length) {
-        return $.Deferred().reject("DOM doesn't contain '.oe_website_sale'");
-    }
-
-    $('.oe_website_sale').each(function () {
-        var oe_website_sale = this;
-
-        $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
-            var product_ids = [];
-            var product_dom = $(".js_product .js_add_cart_variants[data-attribute_value_ids]");
-            var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
-            if (!product_dom.length) {
-                return;
-            }
-            _.each(product_dom, function (prod) {
-                _.each($(prod).data("attribute_value_ids"), function(entry) {
-                    if (product_ids.indexOf(entry[0]) === -1) {
-                        product_ids.push(entry[0]);
-                    }
-                });
-            });
-
-            if ($("#product_detail").length) {
-                // display the reduction from the pricelist in function of the quantity
-                ajax.jsonRpc("/shop/get_unit_price", 'call', {'product_ids': product_ids,'add_qty': parseInt(qty)})
-                .then(function (data) {
-                    _.each(product_dom, function (prod) {
-                        var current = $(prod).data("attribute_value_ids");
-                        for(var j=0; j < current.length; j++){
-                            current[j][2] = data[current[j][0]];
-                        }
-                        $(prod).trigger("change");
-                    });
-                });
-            }
+        this.$("div.js_product")
+            .toArray()
+            .forEach((product) => {
+            $('input.js_product_change', product).first().trigger('change');
         });
 
-        // change for css
-        $(oe_website_sale).on('mouseup touchend', '.js_publish', function (ev) {
-            $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");
-        });
+        // This has to be triggered to compute the "out of stock" feature and the hash variant changes
+        this.triggerVariantChange(this.$el);
 
-        var clickwatch = (function(){
-              var timer = 0;
-              return function(callback, ms){
-                clearTimeout(timer);
-                timer = setTimeout(callback, ms);
-              };
-        })();
+        this.$('select[name="country_id"]').change();
 
-        $(oe_website_sale).on("change", ".oe_cart input.js_quantity[data-product-id]", function () {
-          var $input = $(this);
-            if ($input.data('update_change')) {
-                return;
+        listenSizeChange(() => {
+            if (uiUtils.getSize() === SIZES.XL) {
+                $('.toggle_summary_div').addClass('d-none d-xl-block');
             }
-          var value = parseInt($input.val() || 0, 10);
-          var $dom = $(this).closest('tr');
-          //var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
-          var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
-          var line_id = parseInt($input.data('line-id'),10);
-          var product_ids = [parseInt($input.data('product-id'),10)];
-          clickwatch(function(){
-            $dom_optional.each(function(){
-                $(this).find('.js_quantity').text(value);
-                product_ids.push($(this).find('span[data-product-id]').data('product-id'));
-            });
-            $input.data('update_change', true);
+        })
 
-            ajax.jsonRpc("/shop/cart/update_json", 'call', {
-                'line_id': line_id,
-                'product_id': parseInt($input.data('product-id'), 10),
-                'set_qty': value
-            }).then(function (data) {
-                $input.data('update_change', false);
-                if (value !== parseInt($input.val() || 0, 10)) {
-                    $input.trigger('change');
-                    return;
-                }
-                var $q = $(".my_cart_quantity");
-                if (data.cart_quantity) {
-                    $q.parents('li:first').removeClass("hidden");
-                }
-                else {
-                    $q.parents('li:first').addClass("hidden");
-                    $('a[href^="/shop/checkout"]').addClass("hidden");
-                }
+        this._startZoom();
 
-                $q.html(data.cart_quantity).hide().fadeIn(600);
-                $input.val(data.quantity);
-                $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
-
-                $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
-
-                if (data.warning) {
-                    var cart_alert = $('.oe_cart').parent().find('#data_warning');
-                    if (cart_alert.length === 0) {
-                        $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
-                                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
-                    }
-                    else {
-                        cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning);
-                    }
-                    $input.val(data.quantity);
-                }
-            });
-          }, 500);
+        window.addEventListener('hashchange', () => {
+            this._applyHash();
+            this.triggerVariantChange(this.$el);
         });
 
-        $(oe_website_sale).on("click", ".oe_cart a.js_add_suggested_products", function () {
-            $(this).prev('input').val(1).trigger('change');
-        });
+        // This allows conditional styling for the filmstrip
+        const filmstripContainer = this.el.querySelector('.o_wsale_filmstip_container');
+        const filmstripContainerWidth = filmstripContainer
+            ? filmstripContainer.getBoundingClientRect().width : 0;
+        const filmstripWrapper = this.el.querySelector('.o_wsale_filmstip_wrapper');
+        const filmstripWrapperWidth = filmstripWrapper
+            ? filmstripWrapper.getBoundingClientRect().width : 0;
+        const isFilmstripScrollable = filmstripWrapperWidth < filmstripContainerWidth
+        if (isBrowserFirefox() || hasTouch() || isFilmstripScrollable) {
+            filmstripContainer?.classList.add('o_wsale_filmstip_fancy_disabled');
+        }
 
-        // hack to add and remove from cart with json
-        $(oe_website_sale).on('click', 'a.js_add_cart_json', function (ev) {
+        this.getRedirectOption();
+        return def;
+    },
+    destroy() {
+        this._super.apply(this, arguments);
+        this._cleanupZoom();
+    },
+    /**
+     * The selector is different when using list view of variants.
+     *
+     * @override
+     */
+    getSelectedVariantValues: function ($container) {
+        var combination = $container.find('input.js_product_change:checked')
+            .data('combination');
+
+        if (combination) {
+            return combination;
+        }
+        return VariantMixin.getSelectedVariantValues.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _onMouseDown: function (ev) {
+        this.filmStripIsDown = true;
+        this.filmStripStartX = ev.pageX - ev.currentTarget.offsetLeft;
+        this.filmStripScrollLeft = ev.currentTarget.scrollLeft;
+        this.formerTarget = ev.target;
+        this.filmStripMoved = false;
+    },
+    _onMouseLeave: function (ev) {
+        if (!this.filmStripIsDown) {
+            return;
+        }
+        ev.currentTarget.classList.remove('activeDrag');
+        this.filmStripIsDown = false
+    },
+    _onMouseUp: function (ev) {
+        this.filmStripIsDown = false;
+        ev.currentTarget.classList.remove('activeDrag');
+    },
+    _onMouseMove: function (ev) {
+        if (!this.filmStripIsDown) {
+            return;
+        }
+        ev.preventDefault();
+        ev.currentTarget.classList.add('activeDrag');
+        this.filmStripMoved = true;
+        const x = ev.pageX - ev.currentTarget.offsetLeft;
+        const walk = (x - this.filmStripStartX) * 2;
+        ev.currentTarget.scrollLeft = this.filmStripScrollLeft - walk;
+    },
+    _onClickHandler: function(ev) {
+        if(this.filmStripMoved) {
+            ev.stopPropagation();
             ev.preventDefault();
-            var $link = $(ev.currentTarget);
-            var $input = $link.parent().find("input");
-            var product_id = +$input.closest('*:has(input[name="product_id"])').find('input[name="product_id"]').val();
-            var min = parseFloat($input.data("min") || 0);
-            var max = parseFloat($input.data("max") || Infinity);
-            var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val() || 0, 10);
-            // if they are more of one input for this product (eg: option modal)
-            $('input[name="'+$input.attr("name")+'"]').add($input).filter(function () {
-                var $prod = $(this).closest('*:has(input[name="product_id"])');
-                return !$prod.length || +$prod.find('input[name="product_id"]').val() === product_id;
-            }).val(quantity > min ? (quantity < max ? quantity : max) : min);
-            $input.change();
-            return false;
-        });
-
-        $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function (event) {
-            if (!event.isDefaultPrevented() && !$(this).is(".disabled")) {
-                event.preventDefault();
-                $(this).closest('form').submit();
-            }
-            if ($(this).hasClass('a-submit-disable')){
-                $(this).addClass("disabled");
-            }
-            if ($(this).hasClass('a-submit-loading')){
-                var loading = '<span class="fa fa-cog fa-spin"/>';
-                var fa_span = $(this).find('span[class*="fa"]');
-                if (fa_span.length){
-                    fa_span.replaceWith(loading);
-                }
-                else{
-                    $(this).append(loading);
-                }
-            }
-        });
-        $('form.js_attributes input, form.js_attributes select', oe_website_sale).on('change', function (event) {
-            if (!event.isDefaultPrevented()) {
-                event.preventDefault();
-                $(this).closest("form").submit();
-            }
-        });
-
-        // change price when they are variants
-        $('form.js_add_cart_json label', oe_website_sale).on('mouseup touchend', function () {
-            var $label = $(this);
-            var $price = $label.parents("form:first").find(".oe_price .oe_currency_value");
-            if (!$price.data("price")) {
-                $price.data("price", parseFloat($price.text()));
-            }
-            var value = $price.data("price") + parseFloat($label.find(".badge span").text() || 0);
-
-            var dec = value % 1;
-            $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
-        });
-        // hightlight selected color
-        $('.css_attribute_color input', oe_website_sale).on('change', function () {
-            $('.css_attribute_color').removeClass("active");
-            $('.css_attribute_color:has(input:checked)').addClass("active");
-        });
-
-        function price_to_str(price) {
-            var l10n = _t.database.parameters;
-            var precision = 2;
-
-            if ($(".decimal_precision").length) {
-                precision = parseInt($(".decimal_precision").last().data('precision'));
-            }
-            var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
-            formatted[0] = utils.insert_thousand_seps(formatted[0]);
-            return formatted.join(l10n.decimal_point);
         }
-
-        function update_product_image(event_source, product_id) {
-            if ($('#o-carousel-product').length) {
-                var $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('img.js_variant_img');
-                $img.attr("src", "/web/image/product.product/" + product_id + "/image");
-                $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
-                    .data('oe-model', 'product.product').data('oe-id', product_id);
-
-                var $thumbnail = $(event_source).closest('tr.js_product, .oe_website_sale').find('img.js_variant_img_small');
-                if ($thumbnail.length !== 0) { // if only one, thumbnails are not displayed
-                    $thumbnail.attr("src", "/web/image/product.product/" + product_id + "/image/90x90");
-                    $('.carousel').carousel(0);
+    },
+    _applyHash: function () {
+        const params = new URLSearchParams(window.location.hash.substring(1));
+        if (params.get("attr")) {
+            var attributeIds = params.get("attr").split(',');
+            var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
+            attributeIds.forEach((id) => {
+                var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
+                if ($toSelect.is('input[type="radio"]')) {
+                    $toSelect.prop('checked', true);
+                } else if ($toSelect.is('option')) {
+                    $toSelect.prop('selected', true);
                 }
-            }
-            else {
-                var $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
-                $img.attr("src", "/web/image/product.product/" + product_id + "/image");
-                $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
-                    .data('oe-model', 'product.product').data('oe-id', product_id);
-            }
-            // reset zooming constructs
-            $img.filter('[data-zoom-image]').attr('data-zoom-image', $img.attr('src'));
-            if ($img.data('zoomOdoo') !== undefined) {
-                $img.data('zoomOdoo').isReady = false;
-            }
+            });
+            this._changeAttribute(['.css_attribute_color', '.o_variant_pills']);
         }
+    },
 
-        $(oe_website_sale).on('change', 'input.js_product_change', function () {
-            var self = this;
-            var $parent = $(this).closest('.js_product');
-            $.when(base.ready()).then(function() {
-                $parent.find(".oe_default_price:first .oe_currency_value").html( price_to_str(+$(self).data('lst_price')) );
-                $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(self).data('price')) );
-            });
-            update_product_image(this, +$(this).val());
+    /**
+     * Sets the url hash from the selected product options.
+     *
+     * @private
+     */
+    _setUrlHash: function ($parent) {
+        var $attributes = $parent.find('input.js_variant_change:checked, select.js_variant_change option:selected');
+        if (!$attributes.length) {
+            return;
+        }
+        var attributeIds = $attributes.toArray().map((elem) => $(elem).data("value_id"));
+        window.location.replace('#attr=' + attributeIds.join(','));
+    },
+    /**
+     * Set the checked values active.
+     *
+     * @private
+     * @param {Array} valueSelectors Selectors
+     */
+    _changeAttribute: function (valueSelectors) {
+        valueSelectors.forEach((selector) => {
+            $(selector).removeClass("active").filter(":has(input:checked)").addClass("active");
         });
+    },
+    /**
+     * @private
+     */
+    _changeCartQuantity: function ($input, value, $dom_optional, line_id, productIDs) {
+        $($dom_optional).toArray().forEach((elem) => {
+            $(elem).find('.js_quantity').text(value);
+            productIDs.push($(elem).find('span[data-product-id]').data('product-id'));
+        });
+        $input.data('update_change', true);
 
-        $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change, ul[data-attribute_value_ids]', function (ev) {
-            var $ul = $(ev.target).closest('.js_add_cart_variants');
-            var $parent = $ul.closest('.js_product');
-            var $product_id = $parent.find('.product_id').first();
-            var $price = $parent.find(".oe_price:first .oe_currency_value");
-            var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
-            var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
-            var variant_ids = $ul.data("attribute_value_ids");
-            var values = [];
-            var unchanged_values = $parent.find('div.oe_unchanged_value_ids').data('unchanged_value_ids') || [];
+        this.rpc("/shop/cart/update_json", {
+            line_id: line_id,
+            product_id: parseInt($input.data('product-id'), 10),
+            set_qty: value,
+            display: true,
+        }).then((data) => {
+            $input.data('update_change', false);
+            var check_value = parseInt($input.val() || 0, 10);
+            if (isNaN(check_value)) {
+                check_value = 1;
+            }
+            if (value !== check_value) {
+                $input.trigger('change');
+                return;
+            }
+            if (!data.cart_quantity) {
+                return window.location = '/shop/cart';
+            }
+            $input.val(data.quantity);
+            $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
 
-            $parent.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
-                values.push(+$(this).val());
-            });
-            values =  values.concat(unchanged_values);
+            wSaleUtils.updateCartNavBar(data);
+            wSaleUtils.showWarning(data.notification_info.warning);
+            // Propagating the change to the express checkout forms
+            Component.env.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);
+        });
+    },
+    /**
+     * @private
+     */
+    _changeCountry: function () {
+        if (!$("#country_id").val()) {
+            return;
+        }
+        return this.rpc("/shop/country_infos/" + $("#country_id").val(), {
+            mode: $("#country_id").attr('mode'),
+        }).then(function (data) {
+            // placeholder phone_code
+            $("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
 
-            $parent.find("label").removeClass("text-muted css_not_available");
-
-            var product_id = false;
-            for (var k in variant_ids) {
-                if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
-                    $.when(base.ready()).then(function() {
-                        $price.html(price_to_str(variant_ids[k][2]));
-                        $default_price.html(price_to_str(variant_ids[k][3]));
+            // populate states and display
+            var selectStates = $("select[name='state_id']");
+            // dont reload state at first loading (done in qweb)
+            if (selectStates.data('init')===0 || selectStates.find('option').length===1) {
+                if (data.states.length || data.state_required) {
+                    selectStates.html('');
+                    data.states.forEach((x) => {
+                        var opt = $('<option>').text(x[1])
+                            .attr('value', x[0])
+                            .attr('data-code', x[2]);
+                        selectStates.append(opt);
                     });
-                    if (variant_ids[k][3]-variant_ids[k][2]>0.01) {
-                        $default_price.closest('.oe_website_sale').addClass("discount");
-                        $optional_price.closest('.oe_optional').show().css('text-decoration', 'line-through');
-                        $default_price.parent().removeClass('hidden');
-                    } else {
-                        $optional_price.closest('.oe_optional').hide();
-                        $default_price.parent().addClass('hidden');
-                    }
-                    product_id = variant_ids[k][0];
-                    update_product_image(this, product_id);
-                    break;
+                    selectStates.parent('div').show();
+                } else {
+                    selectStates.val('').parent('div').hide();
                 }
-            }
-
-            $parent.find("input.js_variant_change:radio, select.js_variant_change").each(function () {
-                var $input = $(this);
-                var id = +$input.val();
-                var values = [id];
-
-                $parent.find("ul:not(:has(input.js_variant_change[value='" + id + "'])) input.js_variant_change:checked, select.js_variant_change").each(function () {
-                    values.push(+$(this).val());
-                });
-
-                for (var k in variant_ids) {
-                    if (!_.difference(values, variant_ids[k][1]).length) {
-                        return;
-                    }
-                }
-                $input.closest("label").addClass("css_not_available");
-                $input.find("option[value='" + id + "']").addClass("css_not_available");
-            });
-
-            if (product_id) {
-                $parent.removeClass("css_not_available");
-                $product_id.val(product_id);
-                $parent.find("#add_to_cart").removeClass("disabled");
+                selectStates.data('init', 0);
             } else {
-                $parent.addClass("css_not_available");
-                $product_id.val(0);
-                $parent.find("#add_to_cart").addClass("disabled");
+                selectStates.data('init', 0);
+            }
+
+            // manage fields order / visibility
+            if (data.fields) {
+                if ($.inArray('zip', data.fields) > $.inArray('city', data.fields)){
+                    $(".div_zip").before($(".div_city"));
+                } else {
+                    $(".div_zip").after($(".div_city"));
+                }
+                var all_fields = ["street", "zip", "city", "country_name"]; // "state_code"];
+                all_fields.forEach((field) => {
+                    $(".checkout_autoformat .div_" + field.split('_')[0]).toggle($.inArray(field, data.fields)>=0);
+                });
+            }
+
+            if ($("label[for='zip']").length) {
+                $("label[for='zip']").toggleClass('label-optional', !data.zip_required);
+                $("label[for='zip']").get(0).toggleAttribute('required', !!data.zip_required);
+            }
+            if ($("label[for='zip']").length) {
+                $("label[for='state_id']").toggleClass('label-optional', !data.state_required);
+                $("label[for='state_id']").get(0).toggleAttribute('required', !!data.state_required);
             }
         });
-
-        $('div.js_product', oe_website_sale).each(function () {
-            $('input.js_product_change', this).first().trigger('change');
-        });
-
-        $('.js_add_cart_variants', oe_website_sale).each(function () {
-            $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
-        });
-
-        $('.oe_cart').on('click', '.js_change_shipping', function() {
-          if (!$('body.editor_enable').length) { //allow to edit button text with editor
-            var $old = $('.all_shipping').find('.panel.border_primary');
-            $old.find('.btn-ship').toggle();
-            $old.addClass('js_change_shipping');
-            $old.removeClass('border_primary');
-
-            var $new = $(this).parent('div.one_kanban').find('.panel');
-            $new.find('.btn-ship').toggle();
-            $new.removeClass('js_change_shipping');
-            $new.addClass('border_primary');
-
-            var $form = $(this).parent('div.one_kanban').find('form.hide');
-            $.post($form.attr('action'), $form.serialize()+'&xhr=1');
-          }
-        });
-        $('.oe_cart').on('click', '.js_edit_address', function() {
-            $(this).parent('div.one_kanban').find('form.hide').attr('action', '/shop/address').submit();
-        });
-        $('.oe_cart').on('click', '.js_delete_product', function(e) {
-            e.preventDefault();
-            $(this).closest('tr').find('.js_quantity').val(0).trigger('change');
-        });
-
-        if ($('.oe_website_sale .dropdown_sorty_by').length) {
-            // this method allow to keep current get param from the action, with new search query
-            $('.oe_website_sale .o_website_sale_search').on('submit', function (event) {
-                var $this = $(this);
-                if (!event.isDefaultPrevented() && !$this.is(".disabled")) {
-                    event.preventDefault();
-                    var oldurl = $this.attr('action');
-                    oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
-                    var search = $this.find('input.search-query');
-                    window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
-                }
-            });
+    },
+    /**
+     * This is overridden to handle the "List View of Variants" of the web shop.
+     * That feature allows directly selecting the variant from a list instead of selecting the
+     * attribute values.
+     *
+     * Since the layout is completely different, we need to fetch the product_id directly
+     * from the selected variant.
+     *
+     * @override
+     */
+    _getProductId: function ($parent) {
+        if ($parent.find('input.js_product_change').length !== 0) {
+            return parseInt($parent.find('input.js_product_change:checked').val());
         }
-
-        if ($(".checkout_autoformat").length) {
-            $(oe_website_sale).on('change', "select[name='country_id']", function () {
-                clickwatch(function() {
-                    if ($("#country_id").val()) {
-                        ajax.jsonRpc("/shop/country_infos/" + $("#country_id").val(), 'call', {mode: 'shipping'}).then(
-                            function(data) {
-                                // placeholder phone_code
-                                //$("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
-
-                                // populate states and display
-                                var selectStates = $("select[name='state_id']");
-                                // dont reload state at first loading (done in qweb)
-                                if (selectStates.data('init')===0 || selectStates.find('option').length===1) {
-                                    if (data.states.length) {
-                                        selectStates.html('');
-                                        _.each(data.states, function(x) {
-                                            var opt = $('<option>').text(x[1])
-                                                .attr('value', x[0])
-                                                .attr('data-code', x[2]);
-                                            selectStates.append(opt);
-                                        });
-                                        selectStates.parent('div').show();
-                                    }
-                                    else {
-                                        selectStates.val('').parent('div').hide();
-                                    }
-                                    selectStates.data('init', 0);
-                                }
-                                else {
-                                    selectStates.data('init', 0);
-                                }
-
-                                // manage fields order / visibility
-                                if (data.fields) {
-                                    if ($.inArray('zip', data.fields) > $.inArray('city', data.fields)){
-                                        $(".div_zip").before($(".div_city"));
-                                    }
-                                    else {
-                                        $(".div_zip").after($(".div_city"));
-                                    }
-                                    var all_fields = ["street", "zip", "city", "country_name"]; // "state_code"];
-                                    _.each(all_fields, function(field) {
-                                        $(".checkout_autoformat .div_" + field.split('_')[0]).toggle($.inArray(field, data.fields)>=0);
-                                    });
-                                }
-                            }
-                        );
+        else {
+            return VariantMixin._getProductId.apply(this, arguments);
+        }
+    },
+    _getProductImageLayout: function () {
+        return document.querySelector("#product_detail_main").dataset.image_layout;
+    },
+    _getProductImageWidth: function () {
+        return document.querySelector("#product_detail_main").dataset.image_width;
+    },
+    _getProductImageContainerSelector: function () {
+        return {
+            'carousel': "#o-carousel-product",
+            'grid': "#o-grid-product",
+        }[this._getProductImageLayout()];
+    },
+    _getProductImageContainer: function () {
+        return document.querySelector(this._getProductImageContainerSelector());
+    },
+    _isEditorEnabled() {
+        return document.body.classList.contains("editor_enable");
+    },
+    /**
+     * @private
+     */
+    _startZoom: function () {
+        const salePage = document.querySelector(".o_wsale_product_page");
+        if (!salePage || this._getProductImageWidth() === "none") {
+            return;
+        }
+        this._cleanupZoom();
+        this.zoomCleanup = [];
+        // Zoom on hover (except on mobile)
+        if (salePage.dataset.ecomZoomAuto && !uiUtils.isSmall()) {
+            const images = salePage.querySelectorAll("img[data-zoom]");
+            for (const image of images) {
+                const $image = $(image);
+                const callback = () => {
+                    $image.zoomOdoo({
+                        event: "mouseenter",
+                        attach: this._getProductImageContainerSelector(),
+                        preventClicks: salePage.dataset.ecomZoomClick,
+                        attachToTarget: this._getProductImageLayout() === "grid",
+                    });
+                    image.dataset.zoom = 1;
+                };
+                image.addEventListener('load', callback);
+                this.zoomCleanup.push(() => {
+                    image.removeEventListener('load', callback);
+                    const zoomOdoo = $image.data("zoomOdoo");
+                    if (zoomOdoo) {
+                        zoomOdoo.hide();
+                        $image.unbind();
                     }
-                }, 500);
+                });
+                if (image.complete) {
+                    callback();
+                }
+            }
+        }
+        // Zoom on click
+        if (salePage.dataset.ecomZoomClick) {
+            // In this case we want all the images not just the ones that are "zoomables"
+            const images = salePage.querySelectorAll(".product_detail_img");
+            for (const image of images ) {
+                const handler = () => {
+                    if (salePage.dataset.ecomZoomAuto) {
+                        // Remove any flyout
+                        const flyouts = document.querySelectorAll(".zoomodoo-flyout");
+                        for (const flyout of flyouts) {
+                            flyout.remove();
+                        }
+                    }
+                    this.call("dialog", "add", ProductImageViewer, {
+                        selectedImageIdx: [...images].indexOf(image),
+                        images,
+                    });
+                };
+                image.addEventListener("click", handler);
+                this.zoomCleanup.push(() => {
+                    image.removeEventListener("click", handler);
+                });
+            }
+        }
+    },
+    _cleanupZoom() {
+        if (!this.zoomCleanup || !this.zoomCleanup.length) {
+            return;
+        }
+        for (const cleanup of this.zoomCleanup) {
+            cleanup();
+        }
+        this.zoomCleanup = undefined;
+    },
+    /**
+     * On website, we display a carousel instead of only one image
+     *
+     * @override
+     * @private
+     */
+    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newImages, isCombinationPossible) {
+        let $images = $productContainer.find(this._getProductImageContainerSelector());
+        // When using the web editor, don't reload this or the images won't
+        // be able to be edited depending on if this is done loading before
+        // or after the editor is ready.
+        if ($images.length && !this._isEditorEnabled()) {
+            const $newImages = $(newImages);
+            $images.after($newImages);
+            $images.remove();
+            $images = $newImages;
+            if ($images.attr('id') === 'o-carousel-product') {
+                $images.carousel(0);
+            }
+            this._startZoom();
+            // fix issue with carousel height
+            this.trigger_up('widgets_start_request', {$target: $images});
+        }
+        $images.toggleClass('css_not_available', !isCombinationPossible);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickAdd: function (ev) {
+        ev.preventDefault();
+        var def = () => {
+            this.getCartHandlerOptions(ev);
+            return this._handleAdd($(ev.currentTarget).closest('form'));
+        };
+        if ($('.js_add_cart_variants').children().length) {
+            return this._getCombinationInfo(ev).then(() => {
+                return !$(ev.target).closest('.js_product').hasClass("css_not_available") ? def() : Promise.resolve();
             });
         }
-        $("select[name='country_id']").change();
-    });
+        return def();
+    },
+    /**
+     * Initializes the optional products modal
+     * and add handlers to the modal events (confirm, back, ...)
+     *
+     * @private
+     * @param {$.Element} $form the related webshop form
+     */
+    _handleAdd: function ($form) {
+        var self = this;
+        this.$form = $form;
 
-    // Deactivate image zoom for mobile devices, since it might prevent users to scroll
-    if (config.device.size_class > config.device.SIZES.XS) {
-        $('.ecom-zoomable img[data-zoom]').zoomOdoo({ attach: '#o-carousel-product'});
-    }
+        var productSelector = [
+            'input[type="hidden"][name="product_id"]',
+            'input[type="radio"][name="product_id"]:checked'
+        ];
+
+        var productReady = this.selectOrCreateProduct(
+            $form,
+            parseInt($form.find(productSelector.join(', ')).first().val(), 10),
+            $form.find('.product_template_id').val(),
+            false
+        );
+
+        return productReady.then(function (productId) {
+            $form.find(productSelector.join(', ')).val(productId);
+            self._updateRootProduct($form, productId);
+            return self._onProductReady();
+        });
+    },
+
+    _onProductReady: function () {
+        return this._submitForm();
+    },
+
+    /**
+     * Add custom variant values and attribute values that do not generate variants
+     * in the params to submit form if 'stay on page' option is disabled, or call
+     * '_addToCartInPage' otherwise.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _submitForm: function () {
+        const params = this.rootProduct;
+
+        const $product = $('#product_detail');
+        const productTrackingInfo = $product.data('product-tracking-info');
+        if (productTrackingInfo) {
+            productTrackingInfo.quantity = params.quantity;
+            $product.trigger('add_to_cart_event', [productTrackingInfo]);
+        }
+
+        params.add_qty = params.quantity;
+        params.product_custom_attribute_values = JSON.stringify(params.product_custom_attribute_values);
+        params.no_variant_attribute_values = JSON.stringify(params.no_variant_attribute_values);
+        delete params.quantity;
+        return this.addToCart(params);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickAddCartJSON: function (ev) {
+        this.onClickAddCartJSON(ev);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeAddQuantity: function (ev) {
+        this.onChangeAddQuantity(ev);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onMouseupPublish: function (ev) {
+        $(ev.currentTarget).parents('.thumbnail').toggleClass('disabled');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeCartQuantity: function (ev) {
+        var $input = $(ev.currentTarget);
+        if ($input.data('update_change')) {
+            return;
+        }
+        var value = parseInt($input.val() || 0, 10);
+        if (isNaN(value)) {
+            value = 1;
+        }
+        var $dom = $input.closest('tr');
+        // var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
+        var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
+        var line_id = parseInt($input.data('line-id'), 10);
+        var productIDs = [parseInt($input.data('product-id'), 10)];
+        this._changeCartQuantity($input, value, $dom_optional, line_id, productIDs);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickSuggestedProduct: function (ev) {
+        $(ev.currentTarget).prev('input').val(1).trigger('change');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickSubmit: function (ev, forceSubmit) {
+        if ($(ev.currentTarget).is('#add_to_cart, #products_grid .a-submit') && !forceSubmit) {
+            return;
+        }
+        var $aSubmit = $(ev.currentTarget);
+        if (!ev.isDefaultPrevented() && !$aSubmit.is(".disabled")) {
+            ev.preventDefault();
+            $aSubmit.closest('form').submit();
+        }
+        if ($aSubmit.hasClass('a-submit-disable')) {
+            $aSubmit.addClass("disabled");
+        }
+        if ($aSubmit.hasClass('a-submit-loading')) {
+            var loading = '<span class="fa fa-cog fa-spin"/>';
+            var fa_span = $aSubmit.find('span[class*="fa"]');
+            if (fa_span.length) {
+                fa_span.replaceWith(loading);
+            } else {
+                $aSubmit.append(loading);
+            }
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeAttribute: function (ev) {
+        if (!ev.isDefaultPrevented()) {
+            ev.preventDefault();
+            const productGrid = this.el.querySelector(".o_wsale_products_grid_table_wrapper");
+            if (productGrid) {
+                productGrid.classList.add("opacity-50");
+            }
+            $(ev.currentTarget).closest("form").submit();
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onMouseupAddCartLabel: function (ev) { // change price when they are variants
+        var $label = $(ev.currentTarget);
+        var $price = $label.parents("form:first").find(".oe_price .oe_currency_value");
+        if (!$price.data("price")) {
+            $price.data("price", parseFloat($price.text()));
+        }
+        var value = $price.data("price") + parseFloat($label.find(".badge span").text() || 0);
+
+        var dec = value % 1;
+        $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onSubmitSaleSearch: function (ev) {
+        if (!this.$('.dropdown_sorty_by').length) {
+            return;
+        }
+        var $this = $(ev.currentTarget);
+        if (!ev.isDefaultPrevented() && !$this.is(".disabled")) {
+            ev.preventDefault();
+            var oldurl = $this.attr('action');
+            oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
+            if ($this.find('[name=noFuzzy]').val() === "true") {
+                oldurl += '&noFuzzy=true';
+            }
+            var search = $this.find('input.search-query');
+            window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeCountry: function (ev) {
+        if (!this.$('.checkout_autoformat').length) {
+            return;
+        }
+        return this._changeCountry();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeState: function (ev) {
+        return Promise.resolve();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeShippingUseSame: function (ev) {
+        $('.ship_to_other').toggle(!$(ev.currentTarget).prop('checked'));
+    },
+    /**
+     * Toggles the add to cart button depending on the possibility of the
+     * current combination.
+     *
+     * @override
+     */
+    _toggleDisable: function ($parent, isCombinationPossible) {
+        VariantMixin._toggleDisable.apply(this, arguments);
+        $parent.find("#add_to_cart").toggleClass('disabled', !isCombinationPossible);
+        $parent.find(".o_we_buy_now").toggleClass('disabled', !isCombinationPossible);
+    },
+    /**
+     * Write the properties of the form elements in the DOM to prevent the
+     * current selection from being lost when activating the web editor.
+     *
+     * @override
+     */
+    onChangeVariant: function (ev) {
+        var $component = $(ev.currentTarget).closest('.js_product');
+        $component.find('input').each(function () {
+            var $el = $(this);
+            $el.attr('checked', $el.is(':checked'));
+        });
+        $component.find('select option').each(function () {
+            var $el = $(this);
+            $el.attr('selected', $el.is(':selected'));
+        });
+
+        this._setUrlHash($component);
+
+        return VariantMixin.onChangeVariant.apply(this, arguments);
+    },
+    /**
+     * @private
+     */
+    _onToggleSummary: function () {
+        $('.toggle_summary_div').toggleClass('d-none');
+        $('.toggle_summary_div').removeClass('d-xl-block');
+    },
+    /**
+     * @private
+     */
+    _applyHashFromSearch() {
+        const params =  new URL(window.location).searchParams;
+        if (params.get("attrib")) {
+            const dataValueIds = [];
+            for (const attrib of [].concat(params.get("attrib"))) {
+                const attribSplit = attrib.split('-');
+                const attribValueSelector = `.js_variant_change[name="ptal-${attribSplit[0]}"][value="${attribSplit[1]}"]`;
+                const attribValue = this.el.querySelector(attribValueSelector);
+                if (attribValue !== null) {
+                    dataValueIds.push(attribValue.dataset.value_id);
+                }
+            }
+            if (dataValueIds.length) {
+                window.location.hash = `attr=${dataValueIds.join(',')}`;
+            }
+        }
+        this._applyHash();
+    },
+    /**
+     * @private
+     */
+    _onClickReviewsLink: function () {
+        $('#o_product_page_reviews_content').collapse('show');
+    },
+    /**
+     * Prevent multiclicks on confirm button when the form is submitted
+     *
+     * @private
+     */
+    _onClickConfirmOrder: function () {
+        const submitFormButton = $('form[name="o_wsale_confirm_order"]').find('button[type="submit"]');
+        submitFormButton.attr('disabled', true);
+        setTimeout(() => submitFormButton.attr('disabled', false), 5000);
+    },
+
+    // -------------------------------------
+    // Utils
+    // -------------------------------------
+    /**
+     * Update the root product during an Add process.
+     *
+     * @private
+     * @param {Object} $form
+     * @param {Number} productId
+     */
+    _updateRootProduct($form, productId) {
+        this.rootProduct = {
+            product_id: productId,
+            quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
+            product_custom_attribute_values: this.getCustomVariantValues($form.find('.js_product')),
+            variant_values: this.getSelectedVariantValues($form.find('.js_product')),
+            no_variant_attribute_values: this.getNoVariantAttributeValues($form.find('.js_product'))
+        };
+    },
 });
+
+publicWidget.registry.WebsiteSale = WebsiteSale
+
+publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
+    selector: '.oe_website_sale',
+    disabledInEditableMode: false,
+    events: {
+        'change .o_wsale_apply_layout input': '_onApplyShopLayoutChange',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onApplyShopLayoutChange: function (ev) {
+        const wysiwyg = this.options.wysiwyg;
+        if (wysiwyg) {
+            wysiwyg.odooEditor.observerUnactive('_onApplyShopLayoutChange');
+        }
+        var clickedValue = $(ev.target).val();
+        var isList = clickedValue === 'list';
+        if (!this.editableMode) {
+            jsonrpc('/shop/save_shop_layout_mode', {
+                'layout_mode': isList ? 'list' : 'grid',
+            });
+        }
+
+        const activeClasses = ev.target.parentElement.dataset.activeClasses.split(' ');
+        ev.target.parentElement.querySelectorAll('.btn').forEach((btn) => {
+            activeClasses.map(c => btn.classList.toggle(c));
+        });
+
+        var $grid = this.$('#products_grid');
+        // Disable transition on all list elements, then switch to the new
+        // layout then reenable all transitions after having forced a redraw
+        // TODO should probably be improved to allow disabling transitions
+        // altogether with a class/option.
+        $grid.find('*').css('transition', 'none');
+        $grid.toggleClass('o_wsale_layout_list', isList);
+        void $grid[0].offsetWidth;
+        $grid.find('*').css('transition', '');
+        if (wysiwyg) {
+            wysiwyg.odooEditor.observerActive('_onApplyShopLayoutChange');
+        }
+    },
+});
+
+publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
+    selector: '.oe_website_sale .oe_cart',
+    events: {
+        'click .js_change_billing': '_onClickChangeBilling',
+        'click .js_change_shipping': '_onClickChangeShipping',
+        'click .js_edit_address': '_onClickEditAddress',
+        'click .js_delete_product': '_onClickDeleteProduct',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickChangeBilling: function (ev) {
+        this._onClickChangeAddress(ev, 'all_billing', 'js_change_billing');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickChangeShipping: function (ev) {
+        this._onClickChangeAddress(ev, 'all_shipping', 'js_change_shipping');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickChangeAddress: function (ev, rowAddrClass, cardClass) {
+        var $old = $(`.${rowAddrClass}`).find('.card.border.border-primary');
+        $old.find('.btn-addr').toggle();
+        $old.addClass(cardClass);
+        $old.removeClass('bg-primary border border-primary');
+
+        var $new = $(ev.currentTarget).parent('div.one_kanban').find('.card');
+        $new.find('.btn-addr').toggle();
+        $new.removeClass(cardClass);
+        $new.addClass('bg-primary border border-primary');
+
+        // TODO this should not be a form, but a clean rpc to /shop/cart/update_address
+        var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
+        $.post($form.attr('action'), $form.serialize()+'&xhr=1');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickEditAddress: function (ev) {
+        // Do not trigger _onClickChangeBilling or _onClickChangeShipping when customer
+        // clicks on the pencil to update the address
+        ev.stopPropagation();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickDeleteProduct: function (ev) {
+        ev.preventDefault();
+        $(ev.currentTarget).closest('.o_cart_product').find('.js_quantity').val(0).trigger('change');
+    },
+});
+
+publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
+    selector: '#o-carousel-product',
+    disabledInEditableMode: false,
+    events: {
+        'wheel .o_carousel_product_indicators': '_onMouseWheel',
+    },
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this._updateCarouselPosition();
+        this.throttleOnResize = throttleForAnimation(this._onSlideCarouselProduct.bind(this));
+        extraMenuUpdateCallbacks.push(this._updateCarouselPosition.bind(this));
+        if (this.$el.find('.carousel-indicators').length > 0) {
+            this.$el.on('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
+            $(window).on('resize.carousel_product_slider', this.throttleOnResize);
+            this._updateJustifyContent();
+        }
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$el.css('top', '');
+        this.$el.off('.carousel_product_slider');
+        if (this.throttleOnResize) {
+            this.throttleOnResize.cancel();
+        }
+        this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _updateCarouselPosition() {
+        let size = 5;
+        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
+            size += $(el).outerHeight();
+        }
+        this.$el.css('top', size);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Center the selected indicator to scroll the indicators list when it
+     * overflows.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onSlideCarouselProduct: function (ev) {
+        const isReversed = this.$el.css('flex-direction') === "column-reverse";
+        const isLeftIndicators = this.$el.hasClass('o_carousel_product_left_indicators');
+        const $indicatorsDiv = isLeftIndicators ? this.$el.find('.o_carousel_product_indicators') : this.$el.find('.carousel-indicators');
+        let indicatorIndex = $(ev.relatedTarget).index();
+        indicatorIndex = indicatorIndex > -1 ? indicatorIndex : this.$el.find('li.active').index();
+        const $indicator = $indicatorsDiv.find('[data-bs-slide-to=' + indicatorIndex + ']');
+        const indicatorsDivSize = isLeftIndicators && !isReversed ? $indicatorsDiv.outerHeight() : $indicatorsDiv.outerWidth();
+        const indicatorSize = isLeftIndicators && !isReversed ? $indicator.outerHeight() : $indicator.outerWidth();
+        const indicatorPosition = isLeftIndicators && !isReversed ? $indicator.position().top : $indicator.position().left;
+        const scrollSize = isLeftIndicators && !isReversed ? $indicatorsDiv[0].scrollHeight : $indicatorsDiv[0].scrollWidth;
+        let indicatorsPositionDiff = (indicatorPosition + (indicatorSize/2)) - (indicatorsDivSize/2);
+        indicatorsPositionDiff = Math.min(indicatorsPositionDiff, scrollSize - indicatorsDivSize);
+        this._updateJustifyContent();
+        const indicatorsPositionX = isLeftIndicators && !isReversed ? '0' : '-' + indicatorsPositionDiff;
+        const indicatorsPositionY = isLeftIndicators && !isReversed ? '-' + indicatorsPositionDiff : '0';
+        const translate3D = indicatorsPositionDiff > 0 ? "translate3d(" + indicatorsPositionX + "px," + indicatorsPositionY + "px,0)" : '';
+        $indicatorsDiv.css("transform", translate3D);
+    },
+    /**
+     * @private
+     */
+     _updateJustifyContent: function () {
+        const $indicatorsDiv = this.$el.find('.carousel-indicators');
+        $indicatorsDiv.css('justify-content', 'start');
+        if (uiUtils.getSize() <= SIZES.MD) {
+            if (($indicatorsDiv.children().last().position().left + this.$el.find('li').outerWidth()) < $indicatorsDiv.outerWidth()) {
+                $indicatorsDiv.css('justify-content', 'center');
+            }
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onMouseWheel: function (ev) {
+        ev.preventDefault();
+        if (ev.originalEvent.deltaY > 0) {
+            this.$el.carousel('next');
+        } else {
+            this.$el.carousel('prev');
+        }
+    },
+});
+
+publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend({
+    selector: '#o_product_page_reviews',
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this._updateChatterComposerPosition();
+        extraMenuUpdateCallbacks.push(this._updateChatterComposerPosition.bind(this));
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$el.find('.o_portal_chatter_composer').css('top', '');
+        this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _updateChatterComposerPosition() {
+        let size = 20;
+        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
+            size += $(el).outerHeight();
+        }
+        this.$el.find('.o_portal_chatter_composer').css('top', size);
+    },
+});
+
+export default {
+    WebsiteSale: publicWidget.registry.WebsiteSale,
+    WebsiteSaleLayout: publicWidget.registry.WebsiteSaleLayout,
+    websiteSaleCart: publicWidget.registry.websiteSaleCart,
+    WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
+    WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
+};

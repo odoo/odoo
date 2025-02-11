@@ -7,11 +7,9 @@
             <field name="inherit_id" ref="gamification.view_badge_wizard_grant" />
             <field name="arch" type="xml">
                 <data>
-                    <field name="user_id" position="attributes">
-                        <attribute name="invisible">True</attribute>
-                    </field>
+                    <!--remove in master-->
                     <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="employee_id" nolabel="1" domain="[('user_id', '!=', False),('user_id', '!=', uid)]" />
+                        <field name="employee_id" nolabel="1" invisible="1" domain="[('user_id', '!=', False),('user_id', '!=', uid)]" colspan="2"/>
                     </xpath>
                 </data>
             </field>
@@ -24,25 +22,29 @@
                 <form string="Reward Employee with">
                     What are you thankful for?
                     <group>
-                        <field name="employee_id" invisible="1" />
-                        <field name="user_id" invisible="1" />
-                        <field name="badge_id" nolabel="1" colspan="4" />
-                        <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" />
+                        <group>
+                            <field name="employee_id" invisible="1" />
+                            <field name="user_id" invisible="1" />
+                            <field name="badge_id" nolabel="1" colspan="4" />
+                        </group>
                     </group>
+                    <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" />
                     <footer>
-                        <button string="Reward Employee" type="object" name="action_grant_badge" class="btn-primary" />
-                        <button string="Cancel" special="cancel" class="btn-default"/>
+                        <button string="Reward Employee" type="object" name="action_grant_badge" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" special="cancel" data-hotkey="x" class="btn-secondary"/>
                     </footer>
                 </form>
             </field>
         </record>
 
-        <act_window id="action_reward_wizard" domain="[]"
-            name="Reward Employee"
-            target="new"
-            res_model="gamification.badge.user.wizard"
-            context="{'default_employee_id': active_id, 'employee_id': active_id}"
-            view_type="form" view_mode="form"
-            view_id="view_badge_wizard_reward"/>
+        <record id="action_reward_wizard" model="ir.actions.act_window">
+            <field name="name">Reward Employee</field>
+            <field name="res_model">gamification.badge.user.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_badge_wizard_reward"/>
+            <field name="target">new</field>
+            <field name="domain">[]</field>
+            <field name="context">{'default_employee_id': active_id, 'employee_id': active_id}</field>
+        </record>
 
 </odoo>

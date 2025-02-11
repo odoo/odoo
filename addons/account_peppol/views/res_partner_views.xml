@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_account_peppol" model="ir.ui.view">
+        <field name="name">res.partner.form.account.peppol</field>
+            <field name="model">res.partner</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='ubl_cii_format']" position="before">
+                    <field name="bank_account_count" invisible="1"/>
+                    <div class="alert alert-warning mb-0"
+                         colspan="2"
+                         role="alert"
+                         invisible="country_code != 'BE' or ubl_cii_format in (False, 'facturx') or peppol_eas in (False, '0208')">
+                         The recommended EAS code for Belgium is 0208. The Endpoint should be the Company Registry number.
+                    </div>
+                    <div class="alert alert-warning"
+                         colspan="2"
+                         role="alert"
+                         invisible="not account_peppol_is_endpoint_valid or country_code">
+                         To generate complete electronic invoices, also set a country for this partner.
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='peppol_endpoint']" position="after">
+                    <field name="account_peppol_is_endpoint_valid" invisible="1"/>
+                    <field name="account_peppol_validity_last_check" invisible="1"/>
+                    <field name="is_peppol_edi_format" invisible="1"/>
+                    <label for="account_peppol_verification_label"
+                           invisible="not is_peppol_edi_format or not peppol_endpoint"/>
+                    <div class="row"
+                        invisible="not is_peppol_edi_format or not peppol_endpoint">
+                        <div class="col-4">
+                            <field name="account_peppol_verification_label"/>
+                        </div>
+                        <div class="col-8 pt-0">
+                            <button name="button_account_peppol_check_partner_endpoint"
+                                    class="btn btn-secondary"
+                                    type="object"
+                                    string="Verify"
+                                    help="Verify partner's PEPPOL endpoint"/>
+                        </div>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="res_partner_view_tree" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ubl_cii_format']" position="after">
+                <field name="peppol_eas" string="Peppol EAS" optional="hide"/>
+                <field name="peppol_endpoint" string="Peppol Endpoint" optional="hide"/>
+                <field name="account_peppol_is_endpoint_valid" string="Peppol Validity" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="partner_action_verify_peppol" model="ir.actions.server">
+        <field name="name">Verify Peppol</field>
+        <field name="model_id" ref="account_peppol.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                record.button_account_peppol_check_partner_endpoint()
+        </field>
+    </record>
+</odoo>

@@ -1,36 +1,20 @@
-# -*- coding: utf-8 -*-
-import io
-import requests
-from lxml import etree, objectify
-from xml.etree import ElementTree as ET
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import json
+import logging
+import pprint
+
 from uuid import uuid4
 
-from odoo import _
-from odoo.exceptions import ValidationError, UserError
-from odoo import _
+import requests
 
-XMLNS = 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'
+from odoo.addons.payment import utils as payment_utils
 
-
-def strip_ns(xml, ns):
-    """Strip the provided name from tag names.
-
-    :param str xml: xml document
-    :param str ns: namespace to strip
-
-    :rtype: etree._Element
-    :return: the parsed xml string with the namespace prefix removed
-    """
-    it = ET.iterparse(io.BytesIO(xml))
-    ns_prefix = '{%s}' % XMLNS
-    for _, el in it:
-        if el.tag.startswith(ns_prefix):
-            el.tag = el.tag[len(ns_prefix):]  # strip all Auth.net namespaces
-    return it.root
+_logger = logging.getLogger(__name__)
 
 
-class AuthorizeAPI():
-    """Authorize.net Gateway API integration.
+class AuthorizeAPI:
+    """ Authorize.net Gateway API integration.
 
     This class allows contacting the Authorize.net API with simple operation
     requests. It implements a *very limited* subset of the complete API
@@ -38,97 +22,76 @@ class AuthorizeAPI():
         - Customer Profile/Payment Profile creation
         - Transaction authorization/capture/voiding
     """
-    def __init__(self, acquirer):
-        """Initiate the environment with the acquirer data.
 
-        :param record acquirer: payment.acquirer account that will be contacted
+    AUTH_ERROR_STATUS = '3'
+
+    def __init__(self, provider):
+        """Initiate the environment with the provider data.
+
+        :param recordset provider: payment.provider account that will be contacted
         """
-        if acquirer.environment == 'test':
-            self.url = 'https://apitest.authorize.net/xml/v1/request.api'
-        else:
+        if provider.state == 'enabled':
             self.url = 'https://api.authorize.net/xml/v1/request.api'
-        self.name = acquirer.authorize_login
-        self.transaction_key = acquirer.authorize_transaction_key
+        else:
+            self.url = 'https://apitest.authorize.net/xml/v1/request.api'
 
-    def _authorize_request(self, data):
-        """Encode, send and process the request to the Authorize.net API.
+        self.state = provider.state
+        self.name = provider.authorize_login
+        self.transaction_key = provider.authorize_transaction_key
 
-        Encodes the xml data and process the response. Note that only a basic
-        processing is done at this level (namespace cleanup, basic error management).
+    def _make_request(self, operation, data=None):
+        request = {
+            operation: {
+                'merchantAuthentication': {
+                    'name': self.name,
+                    'transactionKey': self.transaction_key,
+                },
+                **(data or {})
+            }
+        }
+        logged_request = {operation: data or {}}
 
-        :param etree._Element data: etree data to process
-        """
-        data = etree.tostring(data, encoding='utf-8')
-        r = requests.post(self.url, data=data, headers={'Content-Type': 'text/xml'})
-        r.raise_for_status()
-        response = strip_ns(r.content, XMLNS)
-        if response.find('messages/resultCode').text == 'Error':
-            messages = [m.text for m in response.findall('messages/message/text')]
-            raise ValidationError(_('Authorize.net Error Message(s):\n %s') % '\n'.join(messages))
+        _logger.info("sending request to %s:\n%s", self.url, pprint.pformat(logged_request))
+        response = requests.post(self.url, json.dumps(request), timeout=60)
+        response.raise_for_status()
+        response = json.loads(response.content)
+        _logger.info("response received:\n%s", pprint.pformat(response))
+
+        messages = response.get('messages')
+        if messages and messages.get('resultCode') == 'Error':
+            err_msg = messages.get('message')[0]['text']
+
+            tx_errors = response.get('transactionResponse', {}).get('errors')
+            if tx_errors:
+                if err_msg:
+                    err_msg += '\n'
+                err_msg += '\n'.join([e.get('errorText', '') for e in tx_errors])
+
+            return {
+                'err_code': messages.get('message')[0].get('code'),
+                'err_msg': err_msg,
+            }
+
         return response
 
-    def _base_tree(self, requestType):
-        """Create a basic tree containing authentication information.
-
-        Create a etree Element of type requestType and appends the Authorize.net
-        credentials (they are always required).
-        :param str requestType: the type of request to send to Authorize.net
-                                See http://developer.authorize.net/api/reference
-                                for available types.
-        :return: basic etree Element of the requested type
-                               containing credentials information
-        :rtype: etree._Element
-        """
-        root = etree.Element(requestType, xmlns=XMLNS)
-        auth = etree.SubElement(root, "merchantAuthentication")
-        etree.SubElement(auth, "name").text = self.name
-        etree.SubElement(auth, "transactionKey").text = self.transaction_key
-        return root
+    def _format_response(self, response, operation):
+        if response and response.get('err_code'):
+            return {
+                'x_response_code': self.AUTH_ERROR_STATUS,
+                'x_response_reason_text': response.get('err_msg')
+            }
+        else:
+            tx_response = response.get('transactionResponse', {})
+            return {
+                'x_response_code': tx_response.get('responseCode'),
+                'x_trans_id': tx_response.get('transId'),
+                'x_type': operation,
+                'payment_method_code': tx_response.get('accountType'),
+            }
 
     # Customer profiles
-    def create_customer_profile(self, partner, cardnumber, expiration_date, card_code):
-        """Create a payment and customer profile in the Authorize.net backend.
-
-        Creates a customer profile for the partner/credit card combination and links
-        a corresponding payment profile to it. Note that a single partner in the Odoo
-        database can have multiple customer profiles in Authorize.net (i.e. a customer
-        profile is created for every res.partner/payment.token couple).
-
-        :param record partner: the res.partner record of the customer
-        :param str cardnumber: cardnumber in string format (numbers only, no separator)
-        :param str expiration_date: expiration date in 'YYYY-MM' string format
-        :param str card_code: three- or four-digit verification number
-
-        :return: a dict containing the profile_id and payment_profile_id of the
-                 newly created customer profile and payment profile
-        :rtype: dict
-        """
-        root = self._base_tree('createCustomerProfileRequest')
-        profile = etree.SubElement(root, "profile")
-        etree.SubElement(profile, "merchantCustomerId").text = 'ODOO-%s-%s' % (partner.id, uuid4().hex[:8])
-        etree.SubElement(profile, "email").text = partner.email
-        payment_profile = etree.SubElement(profile, "paymentProfiles")
-        etree.SubElement(payment_profile, "customerType").text = 'business' if partner.is_company else 'individual'
-        billTo = etree.SubElement(payment_profile, "billTo")
-        etree.SubElement(billTo, "address").text = (partner.street or '' + (partner.street2 if partner.street2 else '')) or None
-        etree.SubElement(billTo, "city").text = partner.city
-        etree.SubElement(billTo, "state").text = partner.state_id.name or None
-        etree.SubElement(billTo, "zip").text = partner.zip
-        etree.SubElement(billTo, "country").text = partner.country_id.name or None
-        payment = etree.SubElement(payment_profile, "payment")
-        creditCard = etree.SubElement(payment, "creditCard")
-        etree.SubElement(creditCard, "cardNumber").text = cardnumber
-        etree.SubElement(creditCard, "expirationDate").text = expiration_date
-        etree.SubElement(creditCard, "cardCode").text = card_code
-        etree.SubElement(root, "validationMode").text = 'liveMode'
-        response = self._authorize_request(root)
-        res = dict()
-        res['profile_id'] = response.find('customerProfileId').text
-        res['payment_profile_id'] = response.find('customerPaymentProfileIdList/numericString').text
-        return res
-
-    def create_customer_profile_from_tx(self, partner, transaction_id):
-        """Create an Auth.net payment/customer profile from an existing transaction.
+    def create_customer_profile(self, partner, transaction_id):
+        """ Create an Auth.net payment/customer profile from an existing transaction.
 
         Creates a customer profile for the partner/credit card combination and links
         a corresponding payment profile to it. Note that a single partner in the Odoo
@@ -136,7 +99,7 @@ class AuthorizeAPI():
         profile is created for every res.partner/payment.token couple).
 
         Note that this function makes 2 calls to the authorize api, since we need to
-        obtain a partial cardnumber to generate a meaningful payment.token name.
+        obtain a partial card number to generate a meaningful payment.token name.
 
         :param record partner: the res.partner record of the customer
         :param str transaction_id: id of the authorized transaction in the
@@ -147,114 +110,175 @@ class AuthorizeAPI():
                  last digits of the card number
         :rtype: dict
         """
-        root = self._base_tree('createCustomerProfileFromTransactionRequest')
-        etree.SubElement(root, "transId").text = transaction_id
-        customer = etree.SubElement(root, "customer")
-        etree.SubElement(customer, "merchantCustomerId").text = 'ODOO-%s-%s' % (partner.id, uuid4().hex[:8])
-        etree.SubElement(customer, "email").text = partner.email or ''
-        response = self._authorize_request(root)
-        res = dict()
-        res['profile_id'] = response.find('customerProfileId').text
-        res['payment_profile_id'] = response.find('customerPaymentProfileIdList/numericString').text
-        root_profile = self._base_tree('getCustomerPaymentProfileRequest')
-        etree.SubElement(root_profile, "customerProfileId").text = res['profile_id']
-        etree.SubElement(root_profile, "customerPaymentProfileId").text = res['payment_profile_id']
-        response_profile = self._authorize_request(root_profile)
-        res['name'] = response_profile.find('paymentProfile/payment/creditCard/cardNumber').text
+        response = self._make_request('createCustomerProfileFromTransactionRequest', {
+            'transId': transaction_id,
+            'customer': {
+                'merchantCustomerId': ('ODOO-%s-%s' % (partner.id, uuid4().hex[:8]))[:20],
+                'email': partner.email or ''
+            }
+        })
+
+        if not response.get('customerProfileId'):
+            _logger.warning(
+                "unable to create customer payment profile, data missing from transaction with "
+                "id %(tx_id)s, partner id: %(partner_id)s",
+                {
+                    'tx_id': transaction_id,
+                    'partner_id': partner,
+                },
+            )
+            return False
+
+        res = {
+            'profile_id': response.get('customerProfileId'),
+            'payment_profile_id': response.get('customerPaymentProfileIdList')[0]
+        }
+
+        response = self._make_request('getCustomerPaymentProfileRequest', {
+            'customerProfileId': res['profile_id'],
+            'customerPaymentProfileId': res['payment_profile_id'],
+        })
+
+        payment = response.get('paymentProfile', {}).get('payment', {})
+        if 'creditCard' in payment:
+            # Authorize.net pads the card and account numbers with X's.
+            res['payment_details'] = payment.get('creditCard', {}).get('cardNumber')[-4:]
+        else:
+            res['payment_details'] = payment.get('bankAccount', {}).get('accountNumber')[-4:]
         return res
 
-    def credit(self, token, amount, transaction_id):
-        """ Refund a payment for the given amount.
+    def delete_customer_profile(self, profile_id):
+        """Delete a customer profile
 
-        :param record token: the payment.token record that must be refunded.
-        :param str amount: transaction amount
-        :param str transaction_id: the reference of the transacation that is going to be refunded.
+        :param str profile_id: the id of the customer profile in the Authorize.net backend
 
+        :return: a dict containing the response code
+        :rtype: dict
+        """
+        response = self._make_request("deleteCustomerProfileRequest", {'customerProfileId': profile_id})
+        return self._format_response(response, 'deleteCustomerProfile')
+
+    #=== Transaction management ===#
+    def _prepare_authorization_transaction_request(self, transaction_type, tx_data, tx):
+        # The billTo parameter is required for new ACH transactions (transactions without a payment.token),
+        # but is not allowed for transactions with a payment.token.
+        bill_to = {}
+        if 'profile' not in tx_data:
+            if tx.partner_id.is_company:
+                split_name = '', tx.partner_name
+            else:
+                split_name = payment_utils.split_partner_name(tx.partner_name)
+            # max lengths are defined by the Authorize API
+            bill_to = {
+                'billTo': {
+                    'firstName': split_name[0][:50],
+                    'lastName': split_name[1][:50],  # lastName is always required
+                    'company': tx.partner_name[:50] if tx.partner_id.is_company else '',
+                    'address': tx.partner_address,
+                    'city': tx.partner_city,
+                    'state': tx.partner_state_id.name or '',
+                    'zip': tx.partner_zip,
+                    'country': tx.partner_country_id.name or '',
+                }
+            }
+
+        # These keys have to be in the order defined in
+        # https://apitest.authorize.net/xml/v1/schema/AnetApiSchema.xsd
+        return {
+            'transactionRequest': {
+                'transactionType': transaction_type,
+                'amount': str(tx.amount),
+                **tx_data,
+                'order': {
+                    'invoiceNumber': tx.reference[:20],
+                    'description': tx.reference[:255],
+                },
+                'customer': {
+                    'email': tx.partner_email or '',
+                },
+                **bill_to,
+                'customerIP': payment_utils.get_customer_ip_address(),
+            }
+        }
+
+    def authorize(self, tx, token=None, opaque_data=None):
+        """ Authorize (without capture) a payment for the given amount.
+
+        :param recordset tx: The transaction of the payment, as a `payment.transaction` record
+        :param recordset token: The token of the payment method to charge, as a `payment.token`
+                                record
+        :param dict opaque_data: The payment details obfuscated by Authorize.Net
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        root = self._base_tree('createTransactionRequest')
-        tx = etree.SubElement(root, "transactionRequest")
-        etree.SubElement(tx, "transactionType").text = "refundTransaction"
-        etree.SubElement(tx, "amount").text = str(amount)
-        payment = etree.SubElement(tx, "payment")
-        credit_card = etree.SubElement(payment, "creditCard")
-        idx = token.name.find(' - ')
-        etree.SubElement(credit_card, "cardNumber").text = token.name[idx-4:idx] # shitty hack, but that's the only way to get the 4 last digits
-        etree.SubElement(credit_card, "expirationDate").text = "XXXX"
-        etree.SubElement(tx, "refTransId").text = transaction_id
-        response = self._authorize_request(root)
-        res = dict()
-        res['x_response_code'] = response.find('transactionResponse/responseCode').text
-        res['x_trans_id'] = transaction_id
-        res['x_type'] = 'refund'
-        return res
+        tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
+        response = self._make_request(
+            'createTransactionRequest',
+            self._prepare_authorization_transaction_request('authOnlyTransaction', tx_data, tx)
+        )
+        return self._format_response(response, 'auth_only')
 
-    # Transaction management
-    def auth_and_capture(self, token, amount, reference):
+    def auth_and_capture(self, tx, token=None, opaque_data=None):
         """Authorize and capture a payment for the given amount.
 
         Authorize and immediately capture a payment for the given payment.token
         record for the specified amount with reference as communication.
 
+        :param recordset tx: The transaction of the payment, as a `payment.transaction` record
         :param record token: the payment.token record that must be charged
-        :param str amount: transaction amount (up to 15 digits with decimal point)
-        :param str reference: used as "invoiceNumber" in the Authorize.net backend
+        :param str opaque_data: the transaction opaque_data obtained from Authorize.net
 
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        root = self._base_tree('createTransactionRequest')
-        tx = etree.SubElement(root, "transactionRequest")
-        etree.SubElement(tx, "transactionType").text = "authCaptureTransaction"
-        etree.SubElement(tx, "amount").text = str(amount)
-        profile = etree.SubElement(tx, "profile")
-        etree.SubElement(profile, "customerProfileId").text = token.authorize_profile
-        payment_profile = etree.SubElement(profile, "paymentProfile")
-        etree.SubElement(payment_profile, "paymentProfileId").text = token.acquirer_ref
-        order = etree.SubElement(tx, "order")
-        etree.SubElement(order, "invoiceNumber").text = reference
-        response = self._authorize_request(root)
-        res = dict()
-        res['x_response_code'] = response.find('transactionResponse/responseCode').text
-        res['x_trans_id'] = response.find('transactionResponse/transId').text
-        res['x_type'] = 'auth_capture'
-        return res
+        tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
+        response = self._make_request(
+            'createTransactionRequest',
+            self._prepare_authorization_transaction_request('authCaptureTransaction', tx_data, tx)
+        )
 
-    def authorize(self, token, amount, reference):
-        """Authorize a payment for the given amount.
+        result = self._format_response(response, 'auth_capture')
+        errors = response.get('transactionResponse', {}).get('errors')
+        if errors:
+            result['x_response_reason_text'] = '\n'.join([e.get('errorText') for e in errors])
+        return result
 
-        Authorize (without capture) a payment for the given payment.token
-        record for the specified amount with reference as communication.
+    def _prepare_tx_data(self, token=None, opaque_data=False):
+        """
+        :param token: The token of the payment method to charge, as a `payment.token` record
+        :param dict opaque_data: The payment details obfuscated by Authorize.Net
+        """
+        assert (token or opaque_data) and not (token and opaque_data), "Exactly one of token or opaque_data must be specified"
+        if token:
+            token.ensure_one()
+            return {
+                'profile': {
+                    'customerProfileId': token.authorize_profile,
+                    'paymentProfile': {
+                        'paymentProfileId': token.provider_ref,
+                    }
+                },
+            }
+        else:
+            return {
+                'payment': {
+                    'opaqueData': opaque_data,
+                }
+            }
 
-        :param record token: the payment.token record that must be charged
-        :param str amount: transaction amount (up to 15 digits with decimal point)
-        :param str reference: used as "invoiceNumber" in the Authorize.net backend
+    def get_transaction_details(self, transaction_id):
+        """ Return detailed information about a specific transaction. Useful to issue refunds.
 
-        :return: a dict containing the response code, transaction id and transaction type
+        :param str transaction_id: transaction id
+        :return: a dict containing the transaction details
         :rtype: dict
         """
-        root = self._base_tree('createTransactionRequest')
-        tx = etree.SubElement(root, "transactionRequest")
-        etree.SubElement(tx, "transactionType").text = "authOnlyTransaction"
-        etree.SubElement(tx, "amount").text = str(amount)
-        profile = etree.SubElement(tx, "profile")
-        etree.SubElement(profile, "customerProfileId").text = token.authorize_profile
-        payment_profile = etree.SubElement(profile, "paymentProfile")
-        etree.SubElement(payment_profile, "paymentProfileId").text = token.acquirer_ref
-        order = etree.SubElement(tx, "order")
-        etree.SubElement(order, "invoiceNumber").text = reference
-        response = self._authorize_request(root)
-        res = dict()
-        res['x_response_code'] = response.find('transactionResponse/responseCode').text
-        res['x_trans_id'] = response.find('transactionResponse/transId').text
-        res['x_type'] = 'auth_only'
-        return res
+        return self._make_request('getTransactionDetailsRequest', {'transId': transaction_id})
 
     def capture(self, transaction_id, amount):
         """Capture a previously authorized payment for the given amount.
 
-        Capture a previsouly authorized payment. Note that the amount is required
+        Capture a previously authorized payment. Note that the amount is required
         even though we do not support partial capture.
 
         :param str transaction_id: id of the authorized transaction in the
@@ -264,48 +288,71 @@ class AuthorizeAPI():
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        root = self._base_tree('createTransactionRequest')
-        tx = etree.SubElement(root, "transactionRequest")
-        etree.SubElement(tx, "transactionType").text = "priorAuthCaptureTransaction"
-        etree.SubElement(tx, "amount").text = str(amount)
-        etree.SubElement(tx, "refTransId").text = transaction_id
-        response = self._authorize_request(root)
-        res = dict()
-        res['x_response_code'] = response.find('transactionResponse/responseCode').text
-        res['x_trans_id'] = response.find('transactionResponse/transId').text
-        res['x_type'] = 'prior_auth_capture'
-        return res
+        response = self._make_request('createTransactionRequest', {
+            'transactionRequest': {
+                'transactionType': 'priorAuthCaptureTransaction',
+                'amount': str(amount),
+                'refTransId': transaction_id,
+            }
+        })
+        return self._format_response(response, 'prior_auth_capture')
 
     def void(self, transaction_id):
         """Void a previously authorized payment.
 
         :param str transaction_id: the id of the authorized transaction in the
                                    Authorize.net backend
-
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        root = self._base_tree('createTransactionRequest')
-        tx = etree.SubElement(root, "transactionRequest")
-        etree.SubElement(tx, "transactionType").text = "voidTransaction"
-        etree.SubElement(tx, "refTransId").text = transaction_id
-        response = self._authorize_request(root)
-        res = dict()
-        res['x_response_code'] = response.find('transactionResponse/responseCode').text
-        res['x_trans_id'] = response.find('transactionResponse/transId').text
-        res['x_type'] = 'void'
-        return res
+        response = self._make_request('createTransactionRequest', {
+            'transactionRequest': {
+                'transactionType': 'voidTransaction',
+                'refTransId': transaction_id
+            }
+        })
+        return self._format_response(response, 'void')
+
+    def refund(self, transaction_id, amount, tx_details):
+        """Refund a previously authorized payment. If the transaction is not settled
+            yet, it will be voided.
+
+        :param str transaction_id: the id of the authorized transaction in the
+                                   Authorize.net backend
+        :param float amount: transaction amount to refund
+        :param dict tx_details: The transaction details from `get_transaction_details()`.
+        :return: a dict containing the response code, transaction id and transaction type
+        :rtype: dict
+        """
+        card = tx_details.get('transaction', {}).get('payment', {}).get('creditCard', {}).get('cardNumber')
+        response = self._make_request('createTransactionRequest', {
+            'transactionRequest': {
+                'transactionType': 'refundTransaction',
+                'amount': str(amount),
+                'payment': {
+                    'creditCard': {
+                        'cardNumber': card,
+                        'expirationDate': 'XXXX',
+                    }
+                },
+                'refTransId': transaction_id,
+            }
+        })
+        return self._format_response(response, 'refund')
+
+    # Provider configuration: fetch authorize_client_key & currencies
+    def merchant_details(self):
+        """ Retrieves the merchant details and generate a new public client key if none exists.
+
+        :return: Dictionary containing the merchant details
+        :rtype: dict"""
+        return self._make_request('getMerchantDetailsRequest')
 
     # Test
     def test_authenticate(self):
-        """Test Authorize.net communication with a simple credentials check.
+        """ Test Authorize.net communication with a simple credentials check.
 
-        :return: True if authentication was successful, else False (or throws an error)
-        :rtype: bool
+        :return: The authentication results
+        :rtype: dict
         """
-        test_auth = self._base_tree('authenticateTestRequest')
-        response = self._authorize_request(test_auth)
-        root = objectify.fromstring(response)
-        if root.find('{ns}messages/{ns}resultCode'.format(ns='{%s}' % XMLNS)) == 'Ok':
-            return True
-        return False
+        return self._make_request('authenticateTestRequest')

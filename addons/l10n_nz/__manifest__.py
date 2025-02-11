@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (C) 2015 Willow IT Pty Ltd (<http://www.willowit.com.au>).
-
 {
     'name': 'New Zealand - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['nz'],
     'version': '1.1',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 New Zealand Accounting Module
 =============================
@@ -17,17 +15,20 @@ Also:
     - activates a number of regional currencies.
     - sets up New Zealand taxes.
     """,
-    'author': 'Richard deMeester - Willow IT',
-    'website': 'http://www.willowit.com',
-    'depends': ['account'],
+    'author': 'Odoo S.A., Richard deMeester - Willow IT',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
+    'depends': [
+        'account',
+    ],
     'data': [
-             'data/l10n_nz_chart_data.xml',
-             'data/account.account.template.csv',
-             'data/account_chart_template_data.xml',
-             'data/account.account.tag.csv',
-             'data/account.tax.template.csv',
-             'data/account_fiscal_position_tax_template_data.xml',
-             'data/account_chart_template_data.yml',
-             'data/res_currency_data.xml',
-             ],
+        'data/account_tax_report_data.xml',
+        'data/res_currency_data.xml',
+        'views/report_invoice.xml',
+        'views/res_company_views.xml',
+        'views/res_partner_views.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

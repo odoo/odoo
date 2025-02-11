@@ -1,59 +1,89 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from math import copysign
-
+from odoo.exceptions import ValidationError
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
-    _order = 'date desc'
 
-    amount = fields.Monetary(currency_field='company_currency_id')
-    product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
-    product_id = fields.Many2one('product.product', string='Product')
-    general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict', readonly=True, 
-                                         related='move_id.account_id', store=True, domain=[('deprecated', '=', False)])
-    move_id = fields.Many2one('account.move.line', string='Move Line', ondelete='cascade', index=True)
+    product_id = fields.Many2one(
+        'product.product',
+        string='Product',
+        check_company=True,
+    )
+    general_account_id = fields.Many2one(
+        'account.account',
+        string='Financial Account',
+        ondelete='restrict',
+        domain="[('deprecated', '=', False)]",
+        check_company=True,
+        compute='_compute_general_account_id', store=True, readonly=False
+    )
+    journal_id = fields.Many2one(
+        'account.journal',
+        string='Financial Journal',
+        check_company=True,
+        readonly=True,
+        related='move_line_id.journal_id',
+        store=True,
+    )
+    partner_id = fields.Many2one(
+        readonly=False,
+        compute="_compute_partner_id",
+        store=True,
+    )
+    move_line_id = fields.Many2one(
+        'account.move.line',
+        string='Journal Item',
+        ondelete='cascade',
+        index=True,
+        check_company=True,
+    )
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
-    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True,
-        help='Utility field to express amount currency')
-    currency_id = fields.Many2one('res.currency', related='move_id.currency_id', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True)
-    amount_currency = fields.Monetary(related='move_id.amount_currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
-    analytic_amount_currency = fields.Monetary(string='Amount Currency', compute="_get_analytic_amount_currency", help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
-    partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True, readonly=True)
+    category = fields.Selection(selection_add=[('invoice', 'Customer Invoice'), ('vendor_bill', 'Vendor Bill')])
 
-    def _get_analytic_amount_currency(self):
+    @api.depends('move_line_id')
+    def _compute_general_account_id(self):
         for line in self:
-            line.analytic_amount_currency = abs(line.amount_currency) * copysign(1, line.amount)
+            line.general_account_id = line.move_line_id.account_id
 
-    @api.v8
+    @api.constrains('move_line_id', 'general_account_id')
+    def _check_general_account_id(self):
+        for line in self:
+            if line.move_line_id and line.general_account_id != line.move_line_id.account_id:
+                raise ValidationError(_('The journal item is not linked to the correct financial account'))
+
+    @api.depends('move_line_id')
+    def _compute_partner_id(self):
+        for line in self:
+            line.partner_id = line.move_line_id.partner_id or line.partner_id
+
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
         if not self.product_id:
             return {}
 
-        result = 0.0
-        prod_accounts = self.product_id.product_tmpl_id._get_product_accounts()
+        prod_accounts = self.product_id.product_tmpl_id.with_company(self.company_id)._get_product_accounts()
         unit = self.product_uom_id
         account = prod_accounts['expense']
         if not unit or self.product_id.uom_po_id.category_id.id != unit.category_id.id:
             unit = self.product_id.uom_po_id
 
         # Compute based on pricetype
-        amount_unit = self.product_id.price_compute('standard_price', uom=unit)[self.product_id.id]
+        amount_unit = self.product_id._price_compute('standard_price', uom=unit)[self.product_id.id]
         amount = amount_unit * self.unit_amount or 0.0
-        result = self.currency_id.round(amount) * -1
+        result = (self.currency_id.round(amount) if self.currency_id else round(amount, 2)) * -1
         self.amount = result
         self.general_account_id = account
         self.product_uom_id = unit
 
     @api.model
     def view_header_get(self, view_id, view_type):
-        context = (self._context or {})
-        header = False
-        if context.get('account_id', False):
-            analytic_account = self.env['account.analytic.account'].search([('id', '=', context['account_id'])], limit=1)
-            header = _('Entries: ') + (analytic_account.name or '')
-        return header
+        if self.env.context.get('account_id'):
+            return _(
+                "Entries: %(account)s",
+                account=self.env['account.analytic.account'].browse(self.env.context['account_id']).name
+            )
+        return super().view_header_get(view_id, view_type)

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.auth.oauth</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <div id="msg_module_auth_oauth" position="replace">
+                    <div class="content-group" invisible="not module_auth_oauth">
+                        <div class="mt8">
+                            <button type="action" name="%(auth_oauth.action_oauth_provider)d" string="OAuth Providers" icon="oi-arrow-right" class="btn-link"/>
+                        </div>
+                    </div>
+                </div>
+                <setting id="module_auth_oauth" position="after">
+                    <setting id="signin_google_setting" string="Google Authentication" help="Allow users to sign in with their Google account" documentation="/applications/general/auth/google.html" invisible="not module_auth_oauth">
+                        <field name="auth_oauth_google_enabled"/>
+                        <div class="content-group" invisible="not auth_oauth_google_enabled">
+                            <div class="row mt16">
+                                <label for="auth_oauth_google_client_id" string="Client ID:" class="col-lg-3 o_light_label"/>
+                                <field name="auth_oauth_google_client_id" placeholder="e.g. 1234-xyz.apps.googleusercontent.com"/>
+                            </div>
+                            <a href="https://www.odoo.com/documentation/17.0/applications/general/auth/google.html" target="_blank"><i class="oi oi-fw oi-arrow-right"/>Tutorial</a>
+                        </div>
+                    </setting>
+                </setting>
+            </field>
+        </record>
+</odoo>

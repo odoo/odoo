@@ -6,48 +6,125 @@
             <field name="name">mrp.routing.workcenter.tree</field>
             <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
-                <tree string="Routing Work Centers">
-                    <field name="sequence" widget="handle"/>
+                <tree string="Routing Work Centers" multi_edit="1">
+                    <field name="active" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/>
+                    <field name="time_cycle_manual" column_invisible="True"/>
                     <field name="name"/>
+                    <field name="bom_id"/>
                     <field name="workcenter_id"/>
-                    <field name="time_cycle" widget="float_time"/>
-                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="time_mode" optional="show"/>
+                    <field name="time_computed_on" optional="hide"/>
+                    <field name="time_cycle" widget="float_time" string="Duration (minutes)"/>
+                    <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+                    <field name="possible_bom_product_template_attribute_value_ids" column_invisible="True"/>
+                    <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                    <field name="blocked_by_operation_ids" widget="many2many_tags" optional="hide" groups="mrp.group_mrp_workorder_dependencies"/>
                 </tree>
             </field>
         </record>
+
+        <record id="mrp_routing_workcenter_bom_tree_view" model="ir.ui.view">
+            <field name="name">mrp.routing.workcenter.bom.tree</field>
+            <field name="model">mrp.routing.workcenter</field>
+            <field name="inherit_id" ref="mrp_routing_workcenter_tree_view"/>
+            <field name="priority">1000</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="delete">0</attribute>
+                </xpath>
+                <xpath expr="//tree" position="inside">
+                    <control>
+                        <create string="Add a line"/>
+                        <button name="copy_existing_operations" class="btn-link" type="object" string="Copy Existing Operations" context="{'bom_id': parent.id}"/>
+                    </control>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="sequence" widget="handle"/>
+                </xpath>
+                <xpath expr="//field[@name='bom_id']" position="replace"/>
+                <xpath expr="//field[@name='time_cycle']" position="attributes">
+                    <attribute name="sum">Total Duration</attribute>
+                </xpath>
+                <xpath expr="//field[@name='bom_product_template_attribute_value_ids']" position="attributes">
+                    <attribute name="column_invisible">parent.product_id</attribute>
+                </xpath>
+                <xpath expr="//field[@name='bom_product_template_attribute_value_ids']" position="after">
+                    <button name="action_archive" class="float-end" type="object" string="Archive Operation" invisible="context.get('parent_production_id')"/>
+                </xpath>
+                <xpath expr="//field[@name='blocked_by_operation_ids']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="bom_id" column_invisible="True"/>
+                    <field name="blocked_by_operation_ids" widget="many2many_tags" optional="hide" column_invisible="not parent.allow_operation_dependencies"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mrp_routing_workcenter_copy_to_bom_tree_view" model="ir.ui.view">
+            <field name="name">mrp.routing.workcenter.copy_to_bom.tree</field>
+            <field name="model">mrp.routing.workcenter</field>
+            <field name="inherit_id" ref="mrp_routing_workcenter_tree_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="create">0</attribute>
+                    <attribute name="delete">0</attribute>
+                    <attribute name="export_xlsx">0</attribute>
+                    <attribute name="multi_edit">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="before">
+                    <header>
+                        <button name="copy_to_bom" type="object" string="Copy selected operations"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
         <record id="mrp_routing_workcenter_form_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.form</field>
             <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
                 <form string="Routing Work Centers">
                     <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
                             <group name="description">
+                                <field name="active" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
                                 <field name="name"/>
-                                <field name="workcenter_id"/>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                <field name="sequence" groups="base.group_no_one"/>
+                                <field name="bom_id" invisible="context.get('bom_id_invisible', False)" domain="[]" readonly="context.get('default_bom_id', False)"/>
+                                <field name="workcenter_id" context="{'default_company_id': company_id}"/>
+                                <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
+                                <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                                <field name="allow_operation_dependencies" invisible="1"/>
+                                <field name="blocked_by_operation_ids" widget="many2many_tags" context="{'default_bom_id':bom_id}" invisible="not allow_operation_dependencies"/>
                             </group><group name="workorder">
                                 <field name="workorder_count" invisible="1"/>
                                 <field name="time_mode" widget="radio"/>
-                                <label for="time_mode_batch" attrs="{'invisible': [('time_mode', '=', 'manual')]}"/>
-                                <div attrs="{'invisible': [('time_mode', '=', 'manual')]}">
+                                <label for="time_mode_batch" invisible="time_mode == 'manual'"/>
+                                <div invisible="time_mode == 'manual'">
                                     last
                                     <field name="time_mode_batch" class="oe_inline"/>
                                     work orders
                                 </div>
-                                <label for="time_cycle_manual" attrs="{'invisible': [('time_mode', '=', 'auto'), ('workorder_count', '!=' , 0)]}" string="Default Duration"/>
-                                <div attrs="{'invisible':  [('time_mode', '=', 'auto'), ('workorder_count', '!=' , 0)]}">
+                                <label for="time_cycle_manual" invisible="time_mode == 'auto' and workorder_count != 0" string="Default Duration"/>
+                                <div invisible="time_mode == 'auto' and workorder_count != 0">
                                     <field name="time_cycle_manual" widget="float_time" class="oe_inline"/> minutes
                                 </div>
+                                <field name="time_cycle" invisible="1"/>
+                                <field name="company_id" groups="base.group_multi_company" />
                             </group>
                         </group>
                         <notebook>
-                            <page string="Description">
-                                <field name="note"/>
-                            </page>
-                            <page string="Work Sheet">
-                                <field name="worksheet" widget="pdf_viewer"/>
+                            <page string="Work Sheet" name="worksheet">
+                                <group>
+                                    <field name="worksheet_type" widget="radio"/>
+                                    <field name="worksheet" help="Upload your PDF file." widget="pdf_viewer" invisible="worksheet_type != 'pdf'" required="worksheet_type == 'pdf'"/>
+                                    <field name="worksheet_google_slide" placeholder="Google Slide Link" widget="embed_viewer" invisible="worksheet_type != 'google_slide'" required="worksheet_type == 'google_slide'"/>
+                                    <field name="note" invisible="worksheet_type != 'text'"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
@@ -55,127 +132,44 @@
             </field>
         </record>
 
-
-        <!-- Routings -->
-        <record id="mrp_routing_form_view" model="ir.ui.view">
-            <field name="name">mrp.routing.form</field>
-            <field name="model">mrp.routing</field>
-            <field name="arch" type="xml">
-                <form string="Routing">
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="%(action_mrp_routing_time)d" type="action" class="oe_stat_button" icon="fa-clock-o">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_text">Time<br/> Analysis</span>
-                                </div>
-                            </button>
-                            <button class="oe_stat_button" name="toggle_active" type="object" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
-                        <div class="oe_title">
-                            <h1>
-                                <field name="code"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group>
-                                <field name="name"/>
-                            </group>
-                            <group>
-                                <field name="location_id" groups="stock.group_adv_location"/>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                           </group>
-                        </group>
-                        <notebook>
-                            <page string="Work Center Operations">
-                                <field name="operation_ids"/>
-                            </page>
-                            <page string="Notes">
-                                <field name="note"/>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
+        <record id="mrp_routing_action" model="ir.actions.act_window">
+            <field name="name">Operations</field>
+            <field name="res_model">mrp.routing.workcenter</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="mrp_routing_workcenter_tree_view"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new operation
+              </p><p>
+                Operation define that need to be done to realize a Work Order.
+                Each operation is done at a specific Work Center and has a specific duration.
+              </p>
             </field>
+            <field name="domain">['|', ('bom_id', '=', False), ('bom_id.active', '=', True)]</field>
         </record>
-        <record id="mrp_routing_tree_view" model="ir.ui.view">
-            <field name="name">mrp.routing.tree</field>
-            <field name="model">mrp.routing</field>
+
+        <record id="mrp_routing_workcenter_filter" model="ir.ui.view">
+            <field name="name">mrp.routing.workcenter.filter</field>
+            <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
-                <tree string="Routing">
-                    <field name="code"/>
+                <search string="Operations Search Filters">
                     <field name="name"/>
-                    <field name="active" invisible="1"/>
-                    <field name="location_id" groups="stock.group_adv_location"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="mrp_routing_kanban_view" model="ir.ui.view">
-            <field name="name">mrp.routing.kanban</field>
-            <field name="model">mrp.routing</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
-                    <field name="code"/>
-                    <field name="name"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-xs-7">
-                                        <strong><span><t t-esc="record.name.value"/></span></strong>
-                                    </div>
-                                    <div class="col-xs-5 pull-right text-right">
-                                        <span class="badge"><field name="code"/></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
-        <record id="mrp_routing_search_view" model="ir.ui.view">
-            <field name="name">mrp.routing.search</field>
-            <field name="model">mrp.routing</field>
-            <field name="arch" type="xml">
-                <search string="Routing">
-                    <field name="name" string="Routing" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <field name="location_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Production Location" domain="[]" context="{'group_by':'location_id'}"/>
+                    <field name="bom_id"/>
+                    <field name="workcenter_id"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group>
+                        <filter string="Bill of Material" name="bom" context="{'group_by': 'bom_id'}"/>
+                        <filter string="Workcenter" name="workcenter" context="{'group_by': 'workcenter_id'}"/>
                     </group>
                 </search>
             </field>
         </record>
-        <record id="mrp_routing_action" model="ir.actions.act_window">
-            <field name="name">Routings</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.routing</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="mrp_routing_tree_view"/>
-            <field name="search_view_id" ref="mrp_routing_search_view"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to create a new Routing. 
-              </p><p>
-                Routings define the successive operations that need to be
-                done to realize a Manufacturing Order. Each operation from
-                a Routing is done at a specific Work Center and has a specific duration.
-              </p>
-            </field>
-        </record>
+
         <menuitem id="menu_mrp_routing_action"
           action="mrp_routing_action"
-          parent="menu_mrp_bom"
+          parent="menu_mrp_configuration"
           groups="group_mrp_routings"
-          sequence="50"/>
+          sequence="100"/>
+
     </data>
 </odoo>

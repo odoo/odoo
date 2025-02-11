@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ActivityMarkAsDone">
+        <div class="o-mail-ActivityMarkAsDone">
+            <h6 t-if="props.hasHeader" class="p-2 fw-bolder bg-200 border-bottom">Mark Done</h6>
+            <div class="py-2 px-3">
+                <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model="props.activity.feedback" t-ref="textarea"/>
+                <div class="mt-2">
+                    <button type="button" class="btn btn-sm btn-primary" aria-label="Done and Schedule Next" t-on-click="onClickDoneAndScheduleNext">
+                        Done &amp; Schedule Next
+                    </button>
+                    <button t-if="isSuggested" type="button" class="btn btn-sm btn-primary mx-2" aria-label="Done" t-on-click="onClickDone">
+                        Done
+                    </button>
+                    <button type="button" class="btn btn-sm btn-link" t-on-click="props.close">
+                        Discard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

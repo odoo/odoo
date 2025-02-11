@@ -1,214 +1,262 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data noupdate="1">
+<odoo>
+    <data noupdate="0">
 
         <!-- Account Tags -->
         <record id="account_tag_1" model="account.account.tag">
-            <field name="name">Lonen &amp; Salarissen</field>
+            <field name="name">Wages and salaries</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
         <record id="account_tag_2" model="account.account.tag">
-            <field name="name">Huisvestingkosten</field>
+            <field name="name">Accommodation costs</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
         </record>
         <record id="account_tag_3" model="account.account.tag">
-            <field name="name">Afschrijvingen machines, installaties en machines</field>
+            <field name="name">Financial fixed assets</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
         </record>
         <record id="account_tag_4" model="account.account.tag">
-            <field name="name">Gas, water en electriciteit</field>
+            <field name="name">Stocks</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
         <record id="account_tag_5" model="account.account.tag">
-            <field name="name">Kantoor</field>
+            <field name="name">Office costs</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
         <record id="account_tag_6" model="account.account.tag">
-            <field name="name">Auto</field>
+            <field name="name">Transport costs</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
         <record id="account_tag_7" model="account.account.tag">
-            <field name="name">Verkoopkosten</field>
+            <field name="name">Cost of sales</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
         <record id="account_tag_8" model="account.account.tag">
-            <field name="name">Algemen kosten</field>
+            <field name="name">General expenses</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
         <record id="account_tag_9" model="account.account.tag">
-            <field name="name">Afschrijvingen</field>
+            <field name="name">Shareholders' equity</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
         </record>
         <record id="account_tag_10" model="account.account.tag">
-            <field name="name">Kostprijs</field>
+            <field name="name">Cost of Goods Sold</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
         <record id="account_tag_11" model="account.account.tag">
-            <field name="name">Omzet</field>
+            <field name="name">Net turnover</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
         </record>
         <record id="account_tag_12" model="account.account.tag">
-            <field name="name">Resultaat</field>
+            <field name="name">Result on other assets</field>
             <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_13" model="account.account.tag">
+            <field name="name">Other current liabilities</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_14" model="account.account.tag">
+            <field name="name">Provisions</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_15" model="account.account.tag">
+            <field name="name">Non-current liabilities</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_16" model="account.account.tag">
+            <field name="name">Other operating income</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_17" model="account.account.tag">
+            <field name="name">Intangible assets</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_18" model="account.account.tag">
+            <field name="name">Social charges</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_19" model="account.account.tag">
+            <field name="name">Other personnel costs</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_20" model="account.account.tag">
+            <field name="name">Pension charges</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_21" model="account.account.tag">
+            <field name="name">Depreciation of property, plant and equipment</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_22" model="account.account.tag">
+            <field name="name">Amortisation of intangible assets</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_23" model="account.account.tag">
+            <field name="name">Property, plant and equipment</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_24" model="account.account.tag">
+            <field name="name">Securities</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_25" model="account.account.tag">
+            <field name="name">Cash at bank and in hand</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_26" model="account.account.tag">
+            <field name="name">Distribution costs</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_27" model="account.account.tag">
+            <field name="name">Receivables</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_28" model="account.account.tag">
+            <field name="name">Suspense accounts</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_29" model="account.account.tag">
+            <field name="name">Error account</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_30" model="account.account.tag">
+            <field name="name">Interest income</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_31" model="account.account.tag">
+            <field name="name">Interest and other financial charges</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_32" model="account.account.tag">
+            <field name="name">Taxes &#38; social charges</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_33" model="account.account.tag">
+            <field name="name">Taxes</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
 
-        <!-- Tax Tags -->
-        <record id="tag_nl_01" model="account.account.tag">
-            <field name="name">Gegevens omzet</field>
-            <field name="applicability">taxes</field>
+        <!-- Tags for BS tags report -->
+        <record id="account_tag_immat" model="account.account.tag">
+            <field name="name">Intangible Fixed Asset</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_02" model="account.account.tag">
-            <field name="name">Rubriek 1: Prestaties binnenland</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_fin" model="account.account.tag">
+            <field name="name">Financial Fixed Active</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_03" model="account.account.tag">
-            <field name="name">1a. Leveringen/diensten belast met hoog tarief (omzet)</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_cap" model="account.account.tag">
+            <field name="name">Paid-up and Called-up Capital</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_04" model="account.account.tag">
-            <field name="name">Leveringen/diensten belast met hoog tarief (omzet)</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_premium" model="account.account.tag">
+            <field name="name">Premium</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_05" model="account.account.tag">
-            <field name="name">1b. Leveringen/diensten belast met laag tarief (omzet)</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_revaluation_res" model="account.account.tag">
+            <field name="name">Revaluation reserve</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_06" model="account.account.tag">
-            <field name="name">1c. Leveringen/diensten belast met overige tarieven behalve 0% (omzet)</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_legal_res" model="account.account.tag">
+            <field name="name">Legal and Statutory Reserves</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_07" model="account.account.tag">
-            <field name="name">1d. Privégebruik (omzet)</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_other_res" model="account.account.tag">
+            <field name="name">Other Reserves</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_08" model="account.account.tag">
-            <field name="name">1e. Leveringen/diensten belast met 0% of niet bij u belast (omzet)</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_undist_profit" model="account.account.tag">
+            <field name="name">Undistributed Profit</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_09" model="account.account.tag">
-            <field name="name">Rubriek 2: Verleggingsregelingen binnenland (omzet)</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_prev_years_earnings" model="account.account.tag">
+            <field name="name">Previous Years Profit</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_10" model="account.account.tag">
-            <field name="name">2a. Leveringen/diensten waarbij de heffing van omzetbelasting naar u is verlegd (omzet)</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_long_debt" model="account.account.tag">
+            <field name="name">Long-term liabilities</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_11" model="account.account.tag">
-            <field name="name">Rubriek 3: Prestaties naar of in het buitenland (omzet)</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_sh_debt" model="account.account.tag">
+            <field name="name">Current Liabilities</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
-        <record id="tag_nl_12" model="account.account.tag">
-            <field name="name">3a. Leveringen naar landen buiten de EU (uitvoer) (omzet)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_13" model="account.account.tag">
-            <field name="name">3b. Leveringen naar/diensten in landen binnen de EU (omzet)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_14" model="account.account.tag">
-            <field name="name">3c. Installatie/afstandsverkopen binnen de EU (omzet)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_15" model="account.account.tag">
-            <field name="name">Rubriek 4: Prestaties vanuit het buitenland aan u verricht (omzet)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_16" model="account.account.tag">
-            <field name="name">4a. Leveringen/diensten uit landen buiten de EU (invoer) (omzet)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_17" model="account.account.tag">
-            <field name="name">4b. Leveringen/diensten uit landen binnen de EU (omzet)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_18" model="account.account.tag">
-            <field name="name">Gegevens omzetbelasting (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_19" model="account.account.tag">
-            <field name="name">Rubriek 1: Prestaties binnenland (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_20" model="account.account.tag">
-            <field name="name">1a. Leveringen/diensten belast met 21% (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_21" model="account.account.tag">
-            <field name="name">Leveringen/diensten belast met hoog tarief (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_22" model="account.account.tag">
-            <field name="name">1b. Leveringen/diensten belast met laag tarief (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_23" model="account.account.tag">
-            <field name="name">1c. Leveringen/diensten belast met overige tarieven behalve 0% (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_24" model="account.account.tag">
-            <field name="name">1d. Privégebruik (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_25" model="account.account.tag">
-            <field name="name">1e. Leveringen/diensten belast met 0% of niet bij u belast (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_26" model="account.account.tag">
-            <field name="name">Rubriek 2: Verleggingsregelingen binnenland (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_27" model="account.account.tag">
-            <field name="name">2a. Leveringen/diensten waarbij de heffing van Heffing van omzetbelasting naar u is verlegd (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_28" model="account.account.tag">
-            <field name="name">Rubriek 4: Prestaties vanuit het buitenland aan u verricht (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_29" model="account.account.tag">
-            <field name="name">4a. Leveringen/diensten uit landen buiten de EU (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_30" model="account.account.tag">
-            <field name="name">4b. Leveringen/diensten uit landen binnen de EU (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_31" model="account.account.tag">
-            <field name="name">Rubriek 5: Voorbelasting, kleineondernemersregeling en totaal (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_32" model="account.account.tag">
-            <field name="name">5a. Verschuldigde omzetbelasting (rubrieken 1a t/m 4b) (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_33" model="account.account.tag">
-            <field name="name">5b. Voorbelasting (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_34" model="account.account.tag">
-            <field name="name">Voorbelasting (BTW) bis</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_35" model="account.account.tag">
-            <field name="name">5c. Subtotaal (rubriek 5a min 5b) (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_36" model="account.account.tag">
-            <field name="name">5d. Vermindering volgens de kleineondernemersregeling (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_37" model="account.account.tag">
-            <field name="name">5e. Schatting vorige aangifte(n) (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_38" model="account.account.tag">
-            <field name="name">5f. Schatting deze aangifte (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_39" model="account.account.tag">
-            <field name="name">5g. Totaal te betalen/terug te vragen (BTW)</field>
-            <field name="applicability">taxes</field>
+        <record id="account_tag_cred" model="account.account.tag">
+            <field name="name">Creditors</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
         </record>
 
+        <!-- Tags for PL tags report -->
+        <record id="account_tag_net" model="account.account.tag">
+            <field name="name">Net sales</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_hous" model="account.account.tag">
+            <field name="name">Housing costs</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_reso" model="account.account.tag">
+            <field name="name">Result other assets</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
     </data>
-</openerp>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_cl_latam_document_type_view" model="ir.ui.view">
+        <field name="name">l10n.cl.latam.document.type.view</field>
+        <field name="model">l10n_latam.document.type</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_form"/>
+        <field name="arch" type="xml">
+            <field name="internal_type" position="before">
+                <field name="l10n_cl_active" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_cl_latam_document_type_view_tree" model="ir.ui.view">
+        <field name="name">l10n_cl_latam_document_type_view_tree</field>
+        <field name="model">l10n_latam.document.type</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_tree"/>
+        <field name="arch" type="xml">
+            <field name="sequence" position="attributes">
+                <attribute name="widget">handle</attribute>
+            </field>
+            <field name="active" position="before">
+                <field name="l10n_cl_active" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

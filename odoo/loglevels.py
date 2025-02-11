@@ -17,6 +17,7 @@ def get_encodings(hint_encoding='utf-8'):
     fallbacks = {
         'latin1': 'latin9',
         'iso-8859-1': 'iso8859-15',
+        'iso-8859-8-i': 'iso8859-8',
         'cp1252': '1252',
     }
     if hint_encoding:
@@ -46,7 +47,7 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
     for decoding `value`, and defaults to 'utf-8' first.
 
     :param value: the value to convert
-    :param hint_encoding: an optional encoding that was detecte
+    :param hint_encoding: an optional encoding that was detected
         upstream and should be tried first to decode ``value``.
     :param str errors: optional `errors` flag to pass to the unicode
         built-in to indicate how illegal character values should be
@@ -95,7 +96,7 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
 
 
 def exception_to_unicode(e):
-    if hasattr(e, 'args'):
+    if getattr(e, 'args', ()):
         return "\n".join((ustr(a) for a in e.args))
     try:
         return text_type(e)

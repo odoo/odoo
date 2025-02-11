@@ -9,5 +9,10 @@ class SaleReport(models.Model):
 
     margin = fields.Float('Margin')
 
-    def _select(self):
-        return super(SaleReport, self)._select() + ", SUM(l.margin / COALESCE(cr.rate, 1.0)) AS margin"
+    def _select_additional_fields(self):
+        res = super()._select_additional_fields()
+        res['margin'] = f"""SUM(l.margin
+            / {self._case_value_or_one('s.currency_rate')}
+            * {self._case_value_or_one('currency_table.rate')})
+        """
+        return res

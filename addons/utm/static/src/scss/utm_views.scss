@@ -1,0 +1,12 @@
+.o_utm_kanban .o_kanban_renderer {
+    --KanbanRecord-width: #{380px - 2 * ($grid-gutter-width * .25)};
+    --KanbanGroup-padding-h: #{$grid-gutter-width * .25};
+    --KanbanGroup-padding-bottom: #{$grid-gutter-width};
+
+    #o_utm_actions {
+        > a {
+            padding: var(--KanbanRecord-gap-inner-v) var(--KanbanRecord-padding-h);
+            white-space: nowrap;
+        }
+    }
+}

@@ -13,10 +13,12 @@ Shows you a list of applications features to install from.
     """,
     'depends': ['base', 'web'],
     'data': [
-        'views/base_config_settings_views.xml',
+        'data/base_setup_data.xml',
+        'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
-    ],
-    'demo': [],
+        ],
+    'auto_install': True,
     'installable': True,
-    'auto_install': False,
+
+    'license': 'LGPL-3',
 }

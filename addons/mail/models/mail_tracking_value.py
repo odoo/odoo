@@ -3,48 +3,84 @@
 
 from datetime import datetime
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, _
 
 
 class MailTracking(models.Model):
     _name = 'mail.tracking.value'
     _description = 'Mail Tracking Value'
+    _rec_name = 'field_id'
+    _order = 'id DESC'
 
-    # TDE CLEANME: why not a m2o to ir model field ?
-    field = fields.Char('Changed Field', required=True, readonly=1)
-    field_desc = fields.Char('Field Description', required=True, readonly=1)
-    field_type = fields.Char('Field Type')
+    field_id = fields.Many2one(
+        'ir.model.fields', required=False, readonly=True,
+        index=True, ondelete='set null')
+    field_info = fields.Json('Removed field information')
+    field_groups = fields.Char(compute='_compute_field_groups')
 
-    old_value_integer = fields.Integer('Old Value Integer', readonly=1)
-    old_value_float = fields.Float('Old Value Float', readonly=1)
-    old_value_monetary = fields.Float('Old Value Monetary', readonly=1)
-    old_value_char = fields.Char('Old Value Char', readonly=1)
-    old_value_text = fields.Text('Old Value Text', readonly=1)
-    old_value_datetime = fields.Datetime('Old Value DateTime', readonly=1)
+    old_value_integer = fields.Integer('Old Value Integer', readonly=True)
+    old_value_float = fields.Float('Old Value Float', readonly=True)
+    old_value_char = fields.Char('Old Value Char', readonly=True)
+    old_value_text = fields.Text('Old Value Text', readonly=True)
+    old_value_datetime = fields.Datetime('Old Value DateTime', readonly=True)
 
-    new_value_integer = fields.Integer('New Value Integer', readonly=1)
-    new_value_float = fields.Float('New Value Float', readonly=1)
-    new_value_monetary = fields.Float('New Value Monetary', readonly=1)
-    new_value_char = fields.Char('New Value Char', readonly=1)
-    new_value_text = fields.Text('New Value Text', readonly=1)
-    new_value_datetime = fields.Datetime('New Value Datetime', readonly=1)
+    new_value_integer = fields.Integer('New Value Integer', readonly=True)
+    new_value_float = fields.Float('New Value Float', readonly=True)
+    new_value_char = fields.Char('New Value Char', readonly=True)
+    new_value_text = fields.Text('New Value Text', readonly=True)
+    new_value_datetime = fields.Datetime('New Value Datetime', readonly=True)
+
+    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True, ondelete='set null',
+        help="Used to display the currency when tracking monetary values")
 
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
-    @api.model
-    def create_tracking_values(self, initial_value, new_value, col_name, col_info):
-        tracked = True
-        values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type']}
+    @api.depends('mail_message_id', 'field_id')
+    def _compute_field_groups(self):
+        for tracking in self:
+            field = None
+            if tracking.field_id:
+                model = self.env[tracking.field_id.model]
+                field = model._fields.get(tracking.field_id.name)
+            tracking.field_groups = field.groups if field else 'base.group_system'
 
-        if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
+    @api.model
+    def _create_tracking_values(self, initial_value, new_value, col_name, col_info, record):
+        """ Prepare values to create a mail.tracking.value. It prepares old and
+        new value according to the field type.
+
+        :param initial_value: field value before the change, could be text, int,
+          date, datetime, ...;
+        :param new_value: field value after the change, could be text, int,
+          date, datetime, ...;
+        :param str col_name: technical field name, column name (e.g. 'user_id);
+        :param dict col_info: result of fields_get(col_name);
+        :param <record> record: record on which tracking is performed, used for
+          related computation e.g. finding currency of monetary fields;
+
+        :return: a dict values valid for 'mail.tracking.value' creation;
+        """
+        field = self.env['ir.model.fields']._get(record._name, col_name)
+        if not field:
+            raise ValueError(f'Unknown field {col_name} on model {record._name}')
+
+        values = {'field_id': field.id}
+
+        if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:
             values.update({
-                'old_value_%s' % col_info['type']: initial_value,
-                'new_value_%s' % col_info['type']: new_value
+                f'old_value_{col_info["type"]}': initial_value,
+                f'new_value_{col_info["type"]}': new_value
+            })
+        elif col_info['type'] == 'monetary':
+            values.update({
+                'currency_id': record[col_info['currency_field']].id,
+                'old_value_float': initial_value,
+                'new_value_float': new_value
             })
         elif col_info['type'] == 'date':
             values.update({
-                'old_value_datetime': initial_value and datetime.strftime(datetime.combine(datetime.strptime(initial_value, tools.DEFAULT_SERVER_DATE_FORMAT), datetime.min.time()), tools.DEFAULT_SERVER_DATETIME_FORMAT) or False,
-                'new_value_datetime': new_value and datetime.strftime(datetime.combine(datetime.strptime(new_value, tools.DEFAULT_SERVER_DATE_FORMAT), datetime.min.time()), tools.DEFAULT_SERVER_DATETIME_FORMAT) or False,
+                'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
+                'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
             })
         elif col_info['type'] == 'boolean':
             values.update({
@@ -53,54 +89,138 @@ class MailTracking(models.Model):
             })
         elif col_info['type'] == 'selection':
             values.update({
-                'old_value_char': initial_value and dict(col_info['selection'])[initial_value] or '',
+                'old_value_char': initial_value and dict(col_info['selection']).get(initial_value, initial_value) or '',
                 'new_value_char': new_value and dict(col_info['selection'])[new_value] or ''
             })
         elif col_info['type'] == 'many2one':
             values.update({
-                'old_value_integer': initial_value and initial_value.id or 0,
-                'new_value_integer': new_value and new_value.id or 0,
-                'old_value_char': initial_value and initial_value.name_get()[0][1] or '',
-                'new_value_char': new_value and new_value.name_get()[0][1] or ''
+                'old_value_integer': initial_value.id if initial_value else 0,
+                'new_value_integer': new_value.id if new_value else 0,
+                'old_value_char': initial_value.display_name if initial_value else '',
+                'new_value_char': new_value.display_name if new_value else ''
+            })
+        elif col_info['type'] in {'one2many', 'many2many'}:
+            values.update({
+                'old_value_char': ', '.join(initial_value.mapped('display_name')) if initial_value else '',
+                'new_value_char': ', '.join(new_value.mapped('display_name')) if new_value else '',
             })
         else:
-            tracked = False
+            raise NotImplementedError(f'Unsupported tracking on field {field.name} (type {col_info["type"]}')
 
-        if tracked:
-            return values
-        return {}
+        return values
 
-    @api.multi
-    def get_display_value(self, type):
-        assert type in ('new', 'old')
+    def _tracking_value_format(self):
+        """ Return structure and formatted data structure to be used by chatter
+        to display tracking values. Order it according to asked display, aka
+        ascending sequence (and field name).
+
+        :return list: for each tracking value in self, their formatted display
+          values given as a dict;
+        """
+        model_map = {}
+        for tracking in self:
+            model = tracking.field_id.model or tracking.mail_message_id.model
+            model_map.setdefault(model, self.browse())
+            model_map[model] += tracking
+        formatted = []
+        for model, trackings in model_map.items():
+            formatted += trackings._tracking_value_format_model(model)
+        return formatted
+
+    def _tracking_value_format_model(self, model):
+        """ Return structure and formatted data structure to be used by chatter
+        to display tracking values. Order it according to asked display, aka
+        ascending sequence (and field name).
+
+        :return list: for each tracking value in self, their formatted display
+          values given as a dict;
+        """
+        if not self:
+            return []
+
+        # fetch model-based information
+        if model:
+            TrackedModel = self.env[model]
+            tracked_fields = TrackedModel.fields_get(self.field_id.mapped('name'), attributes={'string', 'type'})
+            model_sequence_info = dict(TrackedModel._mail_track_order_fields(tracked_fields)) if model else {}
+        else:
+            tracked_fields, model_sequence_info = {}, {}
+
+        # generate sequence of trackings
+        fields_sequence_map = dict(
+            {
+                tracking.field_info['name']: tracking.field_info.get('sequence', 100)
+                for tracking in self.filtered('field_info')
+            },
+            **model_sequence_info,
+        )
+        # generate dict of field information, if available
+        fields_col_info = (
+            tracked_fields.get(tracking.field_id.name) or {
+                'string': tracking.field_info['desc'] if tracking.field_info else _('Unknown'),
+                'type': tracking.field_info['type'] if tracking.field_info else 'char',
+            } for tracking in self
+        )
+
+        formatted = [
+            {
+                'changedField': col_info['string'],
+                'id': tracking.id,
+                'fieldName': tracking.field_id.name or (tracking.field_info['name'] if tracking.field_info else 'unknown'),
+                'fieldType': col_info['type'],
+                'newValue': {
+                    'currencyId': tracking.currency_id.id,
+                    'value': tracking._format_display_value(col_info['type'], new=True)[0],
+                },
+                'oldValue': {
+                    'currencyId': tracking.currency_id.id,
+                    'value': tracking._format_display_value(col_info['type'], new=False)[0],
+                },
+            }
+            for tracking, col_info in zip(self, fields_col_info)
+        ]
+        formatted.sort(
+            key=lambda info: (fields_sequence_map.get(info['fieldName'], 100), info['fieldName']),
+            reverse=False,
+        )
+        return formatted
+
+    def _format_display_value(self, field_type, new=True):
+        """ Format value of 'mail.tracking.value', according to the field type.
+
+        :param str field_type: Odoo field type;
+        :param bool new: if True, display the 'new' value. Otherwise display
+          the 'old' one.
+        """
+        field_mapping = {
+            'boolean': ('old_value_integer', 'new_value_integer'),
+            'date': ('old_value_datetime', 'new_value_datetime'),
+            'datetime': ('old_value_datetime', 'new_value_datetime'),
+            'char': ('old_value_char', 'new_value_char'),
+            'float': ('old_value_float', 'new_value_float'),
+            'integer': ('old_value_integer', 'new_value_integer'),
+            'monetary': ('old_value_float', 'new_value_float'),
+            'text': ('old_value_text', 'new_value_text'),
+        }
+
         result = []
         for record in self:
-            if record.field_type in ['integer', 'float', 'char', 'text', 'monetary']:
-                result.append(getattr(record, '%s_value_%s' % (type, record.field_type)))
-            elif record.field_type == 'datetime':
-                if record['%s_value_datetime' % type]:
-                    new_datetime = getattr(record, '%s_value_datetime' % type)
-                    result.append('%sZ' % new_datetime)
+            value_fname = field_mapping.get(
+                field_type, ('old_value_char', 'new_value_char')
+            )[bool(new)]
+            value = record[value_fname]
+
+            if field_type in {'integer', 'float', 'char', 'text', 'monetary'}:
+                result.append(value)
+            elif field_type in {'date', 'datetime'}:
+                if not record[value_fname]:
+                    result.append(value)
+                elif field_type == 'date':
+                    result.append(fields.Date.to_string(value))
                 else:
-                    result.append(record['%s_value_datetime' % type])
-            elif record.field_type == 'date':
-                if record['%s_value_datetime' % type]:
-                    new_date = datetime.strptime(record['%s_value_datetime' % type], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-                    result.append(new_date.strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
-                else:
-                    result.append(record['%s_value_datetime' % type])
-            elif record.field_type == 'boolean':
-                result.append(bool(record['%s_value_integer' % type]))
+                    result.append(f'{value}Z')
+            elif field_type == 'boolean':
+                result.append(bool(value))
             else:
-                result.append(record['%s_value_char' % type])
+                result.append(value)
         return result
-
-    @api.multi
-    def get_old_display_value(self):
-        # grep : # old_value_integer | old_value_datetime | old_value_char
-        return self.get_display_value('old')
-
-    @api.multi
-    def get_new_display_value(self):
-        # grep : # new_value_integer | new_value_datetime | new_value_char
-        return self.get_display_value('new')

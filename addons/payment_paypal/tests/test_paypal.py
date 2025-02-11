@@ -1,191 +1,129 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.payment.models.payment_acquirer import ValidationError
-from odoo.addons.payment.tests.common import PaymentAcquirerCommon
-from odoo.addons.payment_paypal.controllers.main import PaypalController
+from unittest.mock import patch
+
 from werkzeug import urls
 
-from odoo.tools import mute_logger
+from odoo.exceptions import ValidationError
+from odoo.tests import tagged
+from odoo.tools import float_repr, mute_logger
 
-from lxml import objectify
-
-
-class PaypalCommon(PaymentAcquirerCommon):
-
-    def setUp(self):
-        super(PaypalCommon, self).setUp()
-
-        self.paypal = self.env.ref('payment.payment_acquirer_paypal')
-
-        # some CC
-        self.amex = (('378282246310005', '123'), ('371449635398431', '123'))
-        self.amex_corporate = (('378734493671000', '123'))
-        self.autralian_bankcard = (('5610591081018250', '123'))
-        self.dinersclub = (('30569309025904', '123'), ('38520000023237', '123'))
-        self.discover = (('6011111111111117', '123'), ('6011000990139424', '123'))
-        self.jcb = (('3530111333300000', '123'), ('3566002020360505', '123'))
-        self.mastercard = (('5555555555554444', '123'), ('5105105105105100', '123'))
-        self.visa = (('4111111111111111', '123'), ('4012888888881881', '123'), ('4222222222222', '123'))
-        self.dankord_pbs = (('76009244561', '123'), ('5019717010103742', '123'))
-        self.switch_polo = (('6331101999990016', '123'))
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_paypal.controllers.main import PaypalController
+from odoo.addons.payment_paypal.tests.common import PaypalCommon
 
 
-class PaypalForm(PaypalCommon):
+@tagged('post_install', '-at_install')
+class PaypalTest(PaypalCommon, PaymentHttpCommon):
 
-    def test_10_paypal_form_render(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        # be sure not to do stupid things
-        self.paypal.write({'paypal_email_account': 'tde+paypal-facilitator@odoo.com', 'fees_active': False})
-        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
-
-        # ----------------------------------------
-        # Test: button direct rendering
-        # ----------------------------------------
-
-        # render the button
-        res = self.paypal.render(
-            'test_ref0', 0.01, self.currency_euro.id,
-            values=self.buyer_values)
-
-        form_values = {
-            'cmd': '_xclick',
-            'business': 'tde+paypal-facilitator@odoo.com',
-            'item_name': 'YourCompany: test_ref0',
-            'item_number': 'test_ref0',
-            'first_name': 'Norbert',
-            'last_name': 'Buyer',
-            'amount': '0.01',
-            'currency_code': 'EUR',
+    def _get_expected_values(self):
+        return_url = self._build_url(PaypalController._return_url)
+        cancel_url = self._build_url(PaypalController._cancel_url)
+        cancel_url_params = {
+            'tx_ref': self.reference,
+            'return_access_tkn': self._generate_test_access_token(self.reference),
+        }
+        return {
             'address1': 'Huge Street 2/543',
+            'amount': str(self.amount),
+            'business': self.paypal.paypal_email_account,
+            'cancel_return': f'{cancel_url}?{urls.url_encode(cancel_url_params)}',
             'city': 'Sin City',
-            'zip': '1000',
+            'cmd': '_xclick',
             'country': 'BE',
+            'currency_code': self.currency.name,
             'email': 'norbert.buyer@example.com',
-            'return': urls.url_join(base_url, PaypalController._return_url),
-            'notify_url': urls.url_join(base_url, PaypalController._notify_url),
-            'cancel_return': urls.url_join(base_url, PaypalController._cancel_url),
+            'first_name': 'Norbert',
+            'item_name': f'{self.paypal.company_id.name}: {self.reference}',
+            'item_number': self.reference,
+            'last_name': 'Buyer',
+            'lc': 'en_US',
+            'no_shipping': '1',
+            'notify_url': self._build_url(PaypalController._webhook_url),
+            'return': return_url,
+            'rm': '2',
+            'zip': '1000',
         }
 
-        # check form result
-        tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://www.sandbox.paypal.com/cgi-bin/webscr', 'paypal: wrong form POST url')
-        for form_input in tree.input:
-            if form_input.get('name') in ['submit']:
-                continue
-            self.assertEqual(
-                form_input.get('value'),
-                form_values[form_input.get('name')],
-                'paypal: wrong value for input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
-            )
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def test_redirect_form_values(self):
+        tx = self._create_transaction(flow='redirect')
+        with patch(
+            'odoo.addons.payment.utils.generate_access_token', new=self._generate_test_access_token
+        ):
+            processing_values = tx._get_processing_values()
 
-    def test_11_paypal_form_with_fees(self):
-        # be sure not to do stupid things
-        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
+        form_info = self._extract_values_from_html_form(processing_values['redirect_form_html'])
+        self.assertEqual(
+            form_info['action'],
+            'https://www.sandbox.paypal.com/cgi-bin/webscr')
 
-        # update acquirer: compute fees
-        self.paypal.write({
-            'fees_active': True,
-            'fees_dom_fixed': 1.0,
-            'fees_dom_var': 0.35,
-            'fees_int_fixed': 1.5,
-            'fees_int_var': 0.50,
-        })
+        expected_values = self._get_expected_values()
+        self.assertDictEqual(
+            expected_values,
+            form_info['inputs'],
+            "Paypal: invalid inputs specified in the redirect form.",
+        )
 
-        # render the button
-        res = self.paypal.render(
-            'test_ref0', 12.50, self.currency_euro.id,
-            values=self.buyer_values)
-
-        # check form result
-        handling_found = False
-        tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://www.sandbox.paypal.com/cgi-bin/webscr', 'paypal: wrong form POST url')
-        for form_input in tree.input:
-            if form_input.get('name') in ['handling']:
-                handling_found = True
-                self.assertEqual(form_input.get('value'), '1.57', 'paypal: wrong computed fees')
-        self.assertTrue(handling_found, 'paypal: fees_active did not add handling input in rendered form')
-
-    @mute_logger('odoo.addons.payment_paypal.models.payment', 'ValidationError')
-    def test_20_paypal_form_management(self):
-        # be sure not to do stupid things
-        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
-
-        # typical data posted by paypal after client has successfully paid
-        paypal_post_data = {
-            'protection_eligibility': u'Ineligible',
-            'last_name': u'Poilu',
-            'txn_id': u'08D73520KX778924N',
-            'receiver_email': u'dummy',
-            'payment_status': u'Pending',
-            'payment_gross': u'',
-            'tax': u'0.00',
-            'residence_country': u'FR',
-            'address_state': u'Alsace',
-            'payer_status': u'verified',
-            'txn_type': u'web_accept',
-            'address_street': u'Av. de la Pelouse, 87648672 Mayet',
-            'handling_amount': u'0.00',
-            'payment_date': u'03:21:19 Nov 18, 2013 PST',
-            'first_name': u'Norbert',
-            'item_name': u'test_ref_2',
-            'address_country': u'France',
-            'charset': u'windows-1252',
-            'custom': u'',
-            'notify_version': u'3.7',
-            'address_name': u'Norbert Poilu',
-            'pending_reason': u'multi_currency',
-            'item_number': u'test_ref_2',
-            'receiver_id': u'dummy',
-            'transaction_subject': u'',
-            'business': u'dummy',
-            'test_ipn': u'1',
-            'payer_id': u'VTDKRZQSAHYPS',
-            'verify_sign': u'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AVoiUf-3478q3vrSmqh08IouiYpM',
-            'address_zip': u'75002',
-            'address_country_code': u'FR',
-            'address_city': u'Paris',
-            'address_status': u'unconfirmed',
-            'mc_currency': u'EUR',
-            'shipping': u'0.00',
-            'payer_email': u'tde+buyer@odoo.com',
-            'payment_type': u'instant',
-            'mc_gross': u'1.95',
-            'ipn_track_id': u'866df2ccd444b',
-            'quantity': u'1'
-        }
-
-        # should raise error about unknown tx
+    def test_feedback_processing(self):
+        # Unknown transaction
         with self.assertRaises(ValidationError):
-            self.env['payment.transaction'].form_feedback(paypal_post_data, 'paypal')
+            self.env['payment.transaction']._handle_notification_data('paypal', self.notification_data)
 
-        # create tx
-        tx = self.env['payment.transaction'].create({
-            'amount': 1.95,
-            'acquirer_id': self.paypal.id,
-            'currency_id': self.currency_euro.id,
-            'reference': 'test_ref_2',
-            'partner_name': 'Norbert Buyer',
-            'partner_country_id': self.country_france.id})
+        # Confirmed transaction
+        tx = self._create_transaction('redirect')
+        self.env['payment.transaction']._handle_notification_data('paypal', self.notification_data)
+        self.assertEqual(tx.state, 'done')
+        self.assertEqual(tx.provider_reference, self.notification_data['txn_id'])
 
-        # validate it
-        tx.form_feedback(paypal_post_data, 'paypal')
-        # check
-        self.assertEqual(tx.state, 'pending', 'paypal: wrong state after receiving a valid pending notification')
-        self.assertEqual(tx.state_message, 'multi_currency', 'paypal: wrong state message after receiving a valid pending notification')
-        self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertFalse(tx.date_validate, 'paypal: validation date should not be updated whenr receiving pending notification')
+        # Pending transaction
+        self.reference = 'Test Transaction 2'
+        tx = self._create_transaction('redirect')
+        payload = dict(
+            self.notification_data,
+            item_number=self.reference,
+            payment_status='Pending',
+            pending_reason='multi_currency',
+        )
+        self.env['payment.transaction']._handle_notification_data('paypal', payload)
+        self.assertEqual(tx.state, 'pending')
+        self.assertEqual(tx.state_message, payload['pending_reason'])
 
-        # update tx
-        tx.write({
-            'state': 'draft',
-            'acquirer_reference': False})
+    def test_parsing_pdt_validation_response_returns_notification_data(self):
+        """ Test that the notification data are parsed from the content of a validation response."""
+        response_content = 'SUCCESS\nkey1=val1\nkey2=val+2\n'
+        notification_data = PaypalController._parse_pdt_validation_response(response_content)
+        self.assertDictEqual(notification_data, {'key1': 'val1', 'key2': 'val 2'})
 
-        # update notification from paypal
-        paypal_post_data['payment_status'] = 'Completed'
-        # validate it
-        tx.form_feedback(paypal_post_data, 'paypal')
-        # check
-        self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
-        self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertEqual(tx.date_validate, '2013-11-18 11:21:19', 'paypal: wrong validation date')
+    def test_fail_to_parse_pdt_validation_response_if_not_successful(self):
+        """ Test that no notification data are returned from parsing unsuccessful PDT validation."""
+        response_content = 'FAIL\ndoes-not-matter'
+        notification_data = PaypalController._parse_pdt_validation_response(response_content)
+        self.assertIsNone(notification_data)
+
+    @mute_logger('odoo.addons.payment_paypal.controllers.main')
+    def test_webhook_notification_confirms_transaction(self):
+        """ Test the processing of a webhook notification. """
+        tx = self._create_transaction('redirect')
+        url = self._build_url(PaypalController._webhook_url)
+        with patch(
+            'odoo.addons.payment_paypal.controllers.main.PaypalController'
+            '._verify_webhook_notification_origin'
+        ):
+            self._make_http_post_request(url, data=self.notification_data)
+        self.assertEqual(tx.state, 'done')
+
+    @mute_logger('odoo.addons.payment_paypal.controllers.main')
+    def test_webhook_notification_triggers_origin_check(self):
+        """ Test that receiving a webhook notification triggers an origin check. """
+        self._create_transaction('redirect')
+        url = self._build_url(PaypalController._webhook_url)
+        with patch(
+            'odoo.addons.payment_paypal.controllers.main.PaypalController'
+            '._verify_webhook_notification_origin'
+        ) as origin_check_mock, patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._handle_notification_data'
+        ):
+            self._make_http_post_request(url, data=self.notification_data)
+            self.assertEqual(origin_check_mock.call_count, 1)

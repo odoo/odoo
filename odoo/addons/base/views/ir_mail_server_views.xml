@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- ir.mail.server -->
+        <record model="ir.ui.view" id="ir_mail_server_form">
+            <field name="model">ir.mail_server</field>
+            <field name="arch" type="xml">
+                <form string="Outgoing Mail Servers">
+                    <header>
+                        <button string="Test Connection" type="object"
+                            name="test_smtp_connection" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
+                        <group>
+                            <group>
+                                <field name="name" placeholder="e.g. My Outgoing Server"/>
+                                <field name="from_filter" placeholder="e.g. email@domain.com, domain.com"/>
+                            </group>
+                            <group>
+                                <field name="sequence"/>
+                                <field name="active" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="smtp_authentication" widget="radio"/>
+                            </group>
+                            <group>
+                                <div class="text-muted fst-italic" role="alert" colspan="2"
+                                    invisible="not smtp_authentication_info">
+                                    <field name="smtp_authentication_info"/>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook colspan="4"
+                            invisible="smtp_authentication == 'cli'">
+                            <page name="connection" string="Connection">
+                                <group>
+                                    <group>
+                                        <field name="smtp_encryption" widget="radio"/>
+                                        <field name="smtp_debug" groups="base.group_no_one"/>
+                                        <field name="smtp_host"
+                                            required="smtp_authentication != 'cli'"/>
+                                        <field name="smtp_port" options="{'format': false}"
+                                            required="smtp_authentication != 'cli'"/>
+                                    </group>
+                                    <group>
+                                        <field name="smtp_user" invisible="smtp_authentication == 'certificate'" force_save="1"/>
+                                        <field name="smtp_pass" invisible="smtp_authentication != 'login'" password="True" force_save="1"/>
+                                        <field name="smtp_ssl_certificate" invisible="smtp_authentication != 'certificate'" force_save="1"/>
+                                        <field name="smtp_ssl_private_key" invisible="smtp_authentication != 'certificate'" force_save="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ir_mail_server_list">
+            <field name="model">ir.mail_server</field>
+            <field name="arch" type="xml">
+                <tree string="Outgoing Mail Servers">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="smtp_host"/>
+                    <field name="smtp_user"/>
+                    <field name="smtp_encryption"/>
+                    <field name="from_filter" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_ir_mail_server_search" model="ir.ui.view">
+            <field name="model">ir.mail_server</field>
+            <field name="arch" type="xml">
+                <search string="Outgoing Mail Servers">
+                    <field name="name"
+                        filter_domain="['|', '|',
+                                        ('name', 'ilike', self),
+                                        ('smtp_host', 'ilike', self),
+                                        ('smtp_user', 'ilike', self)]"
+                        string="Outgoing Mail Server"/>
+                    <field name="smtp_encryption"/>
+                    <field name="from_filter"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_ir_mail_server_list">
+            <field name="name">Outgoing Mail Servers</field>
+            <field name="res_model">ir.mail_server</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="ir_mail_server_list" />
+            <field name="search_view_id" ref="view_ir_mail_server_search"/>
+        </record>
+
+        <menuitem id="menu_mail_servers" parent="menu_email" action="action_ir_mail_server_list" sequence="5" groups="base.group_no_one"/>
+</odoo>

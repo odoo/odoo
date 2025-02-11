@@ -4,24 +4,30 @@
             <field name="name">crm.lead.lost.form</field>
             <field name="model">crm.lead.lost</field>
             <field name="arch" type="xml">
-                <form string="Lost Reason">
-                    <group class="oe_title">
-                        <field name="lost_reason_id"/>
+                <form string="Lost Lead">
+                    <field name="lead_ids" invisible="1"></field>
+                    <group>
+                        <field name="lost_reason_id" options="{'no_create_edit': True}" />
+                        <field name="lost_feedback" placeholder="What went wrong?"/>
                     </group>
                     <footer>
-                        <button name="action_lost_reason_apply" string="Submit" type="object" class="btn btn-sm btn-primary"/>
-                        <button string="Cancel" class="btn btn-sm btn-default" special="cancel"/>
+                        <button name="action_lost_reason_apply" string="Mark as Lost" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
             </field>
         </record>
- 
+
         <record id="crm_lead_lost_action" model="ir.actions.act_window">
-            <field name="name">Lost Reason</field>
-            <field name="type">ir.actions.act_window</field>
+            <field name="name">Mark Lost</field>
             <field name="res_model">crm.lead.lost</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="crm_lead_lost_view_form"/>
             <field name="target">new</field>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
+            <field name="context">{
+                'dialog_size' : 'medium',
+                'default_lead_ids': active_ids,
+            }</field>
         </record>
 </odoo>

@@ -1,195 +1,163 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * board
-#
+# 	* board
+# 
 # Translators:
+# Martin Trigaux, 2023
+# Yihya Hugirat <hugirat@gmail.com>, 2023
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
+# Jonathan Spier, 2023
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+# Ha Ketem <haketem@gmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-23 16:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
-"Language: he\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2024\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: he\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:24
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:407
-#, python-format
-msgid "'%s' added to dashboard"
+msgid ""
+"\"Add to\n"
+"                  Dashboard\""
 msgstr ""
+"\"הוספה ל\n"
+"                  לוח בקרה\""
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid "<b>Your personal dashboard is empty.</b>"
-msgstr ""
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:70
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
 msgid "Add"
 msgstr "הוסף"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:64
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
-msgid "Add to my Dashboard"
-msgstr ""
+msgid "Add to my dashboard"
+msgstr "הוסף ללוח הבקרה שלי"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:139
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.js:0
 #, python-format
-msgid "Are you sure you want to remove this item ?"
-msgstr ""
+msgid "Are you sure that you want to remove this item?"
+msgstr "בטוח שברצונך להסיר פריט זה?"
 
 #. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_view.js:0
 #: model:ir.model,name:board.model_board_board
+#, python-format
 msgid "Board"
-msgstr ""
+msgstr "לוח"
 
 #. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr ""
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_name
-msgid "Board Name"
-msgstr ""
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Cancel"
-msgstr "בטל"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Change Layout"
-msgstr ""
+msgstr "שנה פריסה"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
-#, python-format
-msgid "Change Layout.."
-msgstr ""
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:36
-#, python-format
-msgid "Choose dashboard layout"
-msgstr ""
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:409
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
 #, python-format
 msgid "Could not add filter to dashboard"
-msgstr ""
+msgstr "לא היה ניתן להוסיף מסנן ללוח הבקרה"
 
 #. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create"
-msgstr "צור"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr ""
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create New Dashboard"
-msgstr ""
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_uid
-msgid "Created by"
-msgstr "נוצר על ידי"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_date
-msgid "Created on"
-msgstr "נוצר ב-"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_display_name
-#: model:ir.model.fields,field_description:board.field_board_create_display_name
-msgid "Display Name"
-msgstr "השם המוצג"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:94
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
-msgid "Edit Layout"
-msgstr ""
+msgid "Dashboard"
+msgstr "לוח בקרה"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_id
-#: model:ir.model.fields,field_description:board.field_board_create_id
+#: model:ir.model.fields,field_description:board.field_board_board__id
 msgid "ID"
 msgstr "מזהה"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board___last_update
-#: model:ir.model.fields,field_description:board.field_board_create___last_update
-msgid "Last Modified on"
-msgstr "תאריך שינוי אחרון"
+#. odoo-javascript
+#: code:addons/board/static/src/board_action.xml:0
+#, python-format
+msgid "Invalid action"
+msgstr "פעולה שגויה"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_uid
-msgid "Last Updated by"
-msgstr "עודכן לאחרונה על ידי"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_date
-msgid "Last Updated on"
-msgstr "עודכן לאחרונה על"
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
+msgid "Layout"
+msgstr "עיצוב"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
-#: model:ir.ui.view,arch_db:board.board_my_dash_view
+#: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
 msgid "My Dashboard"
-msgstr ""
+msgstr "לוח הבקרה שלי"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
-msgid "Parent Menu"
-msgstr "תפריט שותף"
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "Please refresh your browser for the changes to take effect."
+msgstr "רענן את הדפדפן שלך כדי שהשינויים ייכנסו לתוקף."
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
 msgid ""
 "To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options."
+"                  menu, switch to list or graph view, and click"
 msgstr ""
+"כדי להוסיף את הדוח הראשון שלך ללוח הבקרה הזה, יש ללחוץ על אחד התפריטים, "
+"לעבור לתצוגה רשימה או גרף, וללחוץ"
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
 msgid ""
 "You can filter and group data before inserting into the\n"
-"                    dashboard using the search options."
+"                  dashboard using the search options."
+msgstr ""
+"אפשר לסנן ולקבץ נתונים לפני הוספה\n"
+"ללוח הבקרה באמצעות אפשרויות החיפוש"
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
+msgid "Your personal dashboard is empty"
+msgstr "לוח הבקרה האישי שלך ריק"
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
+msgid "in the extended search options."
+msgstr "באפשרויות החיפוש המורחבות."
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "“%s” added to dashboard"
 msgstr ""

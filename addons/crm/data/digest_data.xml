@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="1">
+        <record id="digest.digest_digest_default" model="digest.digest">
+            <field name="kpi_crm_lead_created">True</field>
+            <field name="kpi_crm_opportunities_won">True</field>
+        </record>
+    </data>
+
+    <data>
+        <record id="digest_tip_crm_0" model="digest.tip">
+            <field name="name">Tip: Convert incoming emails into opportunities</field>
+            <field name="sequence">200</field>
+            <field name="group_id" ref="sales_team.group_sale_salesman_all_leads"/>
+            <field name="tip_description" type="html">
+<div>
+    <t t-set="record" t-value="object.env['crm.team'].search([('alias_name', '!=', 'False')], limit=1)" />
+    <p class="tip_title">Tip: Convert incoming emails into opportunities</p>
+    <t t-if="record.alias_email">
+        <p class="tip_content">Did you know emails sent to <t t-out="record.alias_email"></t> generate opportunities in your pipeline?<br/>
+        <a t-attf-href="mailto:{{record.alias_email}}" target="_blank">Try sending an email</a> to your CRM. This email address is configurable by sales team members.</p>
+    </t>
+    <t t-else="">
+        <p class="tip_content">Did you know emails sent to a Sales Team alias generate opportunities in your pipeline?</p>
+    </t>
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_crm_1" model="digest.tip">
+            <field name="name">Tip: Did you know Odoo has built-in lead mining?</field>
+            <field name="sequence">1500</field>
+            <field name="group_id" ref="sales_team.group_sale_salesman_all_leads"/>
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Did you know Odoo has built-in lead mining?</p>
+    <p class="tip_content">For a sales team, there is nothing worse than being dry on leads. Fortunately, in just a few clicks, you can generate leads specifically targeted to your needs: company size, industry, etc. To help you test the feature, we offer you 200 credits for free.</p>
+    <img src="https://download.odoocdn.com/digests/crm/static/src/img/milk-generate-leads.gif" width="540" class="illustration_border" />
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_crm_2" model="digest.tip">
+            <field name="name">Tip: Opportunity win rate is predicted with AI</field>
+            <field name="sequence">1700</field>
+            <field name="group_id" ref="sales_team.group_sale_salesman_all_leads"/>
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Opportunity win rate is predicted with AI</p>
+    <p class="tip_content">Odoo's artificial intelligence engine predicts the success rate of each opportunity based on your history. You can always update the success rate manually, but if you let Odoo do the job the score is updated while the opportunity moves forward in your sales cycle.</p>
+    <img src="https://download.odoocdn.com/digests/crm/static/src/img/milk-probability-rate.gif" width="540" class="illustration_border" />
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_crm_3" model="digest.tip">
+            <field name="name">Tip: Manage your pipeline</field>
+            <field name="sequence">2600</field>
+            <field name="group_id" ref="sales_team.group_sale_salesman_all_leads"/>
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Manage your pipeline</p>
+    <p class="tip_content">A great tip to boost sales efficiency is to always define a next step on each opportunity. To manage ongoing activities, click on any status of the progress bar to filter opportunities based on their next activities' status. Click on the grey area of the progress bar to see all opportunities that have no next activity.</p>
+    <img src="https://download.odoocdn.com/digests/crm/static/src/img/milk-pipeline-progress.gif" width="540" class="illustration_border" />
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_crm_4" model="digest.tip">
+            <field name="name">Tip: Do not waste time recording customers' data</field>
+            <field name="sequence">2800</field>
+            <field name="group_id" ref="sales_team.group_sale_salesman_all_leads"/>
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Do not waste time recording customers' data</p>
+    <p class="tip_content">Did you know you can search a company by name or VAT number to instantly fill in all its data? Odoo autocompletes everything for you: logo, address, company size, business information, social media accounts, etc.</p>
+    <img src="https://download.odoocdn.com/digests/crm/static/src/img/milk-autofill.gif" width="540" class="illustration_border" />
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_crm_5" model="digest.tip">
+            <field name="name">Tip: Turn a selection of opportunities into a map</field>
+            <field name="sequence">3000</field>
+            <field name="group_id" ref="sales_team.group_sale_salesman_all_leads"/>
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Turn a selection of opportunities into a map</p>
+    <p class="tip_content">Did you know you can turn a list of opportunities into a map view, using the top-right map icon? A lot of screens in Odoo can be turned into a map: tasks, contacts, delivery orders, etc.</p>
+    <img src="https://download.odoocdn.com/digests/crm/static/src/img/milk-mapview-toggle.gif" width="540" class="illustration_border" />
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

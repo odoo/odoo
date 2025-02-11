@@ -1,12 +1,10 @@
-#-*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (C) 2012 Michael Telahun Makonnen <mmakonnen@gmail.com>.
-
 {
     'name': 'Ethiopia - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['et'],
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Base Module for Ethiopian Localization
 ======================================
@@ -17,18 +15,16 @@ This is the latest Ethiopian Odoo localization and consists of:
     - Withholding tax structure
     - Regional State listings
     """,
-    'author':'Michael Telahun Makonnen <mmakonnen@gmail.com>',
-    'website':'http://miketelahun.wordpress.com',
+    'author': 'Michael Telahun Makonnen <mmakonnen@gmail.com>',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
     ],
     'data': [
-        'data/l10n_et_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/account_chart_template_data.xml',
-        'data/account_account_tag_data.xml',
-        'data/account.tax.template.csv',
-        'data/account_chart_template_data.yml',
-        'data/res.country.state.csv',
+        'data/account_tax_report_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

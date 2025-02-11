@@ -9,40 +9,35 @@ class BaseImportModule(models.TransientModel):
     _name = "base.import.module"
     _description = "Import Module"
 
-    module_file = fields.Binary(string='Module .ZIP file', required=True)
+    module_file = fields.Binary(string='Module .ZIP file', required=True, attachment=False)
     state = fields.Selection([('init', 'init'), ('done', 'done')], string='Status', readonly=True, default='init')
-    import_message = fields.Char()
+    import_message = fields.Text()
     force = fields.Boolean(string='Force init', help="Force init mode even if installed. (will update `noupdate='1'` records)")
+    with_demo = fields.Boolean(string='Import demo data of module')
+    modules_dependencies = fields.Text()
 
-    @api.multi
     def import_module(self):
         self.ensure_one()
         IrModule = self.env['ir.module.module']
-        zip_data = base64.decodestring(self.module_file)
+        zip_data = base64.decodebytes(self.module_file)
         fp = BytesIO()
         fp.write(zip_data)
-        res = IrModule.import_zipfile(fp, force=self.force)
-        self.write({'state': 'done', 'import_message': res[0]})
-        context = dict(self.env.context, module_name=res[1])
-        # Return wizard otherwise it will close wizard and will not show result message to user.
+        res = IrModule._import_zipfile(fp, force=self.force, with_demo=self.with_demo)
         return {
-            'name': 'Import Module',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'target': 'new',
-            'res_id': self.id,
-            'res_model': 'base.import.module',
-            'type': 'ir.actions.act_window',
-            'context': context,
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': '/web',
         }
 
-    @api.multi
+    def get_dependencies_to_install_names(self):
+        module_ids, _not_found = self.env['ir.module.module']._get_missing_dependencies_modules(base64.decodebytes(self.module_file))
+        return module_ids.mapped('name')
+
     def action_module_open(self):
         self.ensure_one()
         return {
             'domain': [('name', 'in', self.env.context.get('module_name', []))],
             'name': 'Modules',
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'ir.module.module',
             'view_id': False,

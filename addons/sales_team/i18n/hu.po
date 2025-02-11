@@ -1,20 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sales_team
+# 	* sales_team
 # 
 # Translators:
-# Oregional <geza.nagy@oregional.hu>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Kovács Tibor <kovika@gmail.com>, 2016
+# f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2023
+# Tamás Dombos, 2023
+# Ákos Nagy <akos.nagy@oregional.hu>, 2023
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2023
+# Martin Trigaux, 2023
+# Tamás Németh <ntomasz81@gmail.com>, 2023
+# krnkris, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,261 +27,244 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:91
-#, python-format
-msgid "3 exp. closing"
-msgstr "3 várh. zárás"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:139
-#, python-format
-msgid "35,029.39€"
-msgstr "35,029.39€"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
+msgid "<span class=\"text-bg-danger\">Archived</span>"
+msgstr "<span class=\"text-bg-danger\">Archivált</span>"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:125
-#, python-format
-msgid "78,140.03€"
-msgstr "78,140.03€"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:171
-#, python-format
-msgid "80.000€"
-msgstr "80.000€"
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>New</span>"
 msgstr "<span>Új</span>"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>Reporting</span>"
-msgstr "<span>Jelentés</span>"
+msgstr "<span>Kimutatások</span>"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>View</span>"
 msgstr "<span>Nézet</span>"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_account_accountant
-msgid "Accounting"
-msgstr "Könyvelés"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction
+msgid "Action Needed"
+msgstr "Akció szükséges"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_active
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__active
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__active
 msgid "Active"
 msgstr "Aktív"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:114
-#, python-format
-msgid "Activities Done"
-msgstr "Tevékenységek elvégezve"
+#: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
+msgid "Activity Types"
+msgstr "Tevékenység típusok"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
+msgid "Add a Team Member"
+msgstr "Csapattag hozzáadása"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
+msgid ""
+"Add members to automatically assign their documents to this sales team."
+msgstr ""
+"Tagok hozzáadásával automatikusan hozzárendelésre kerülnek a dokumentumaik "
+"ehhez az értékesítési csapathoz"
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current team"
+" %(team_name)s."
+msgstr ""
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+#, python-format
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current "
+"teams %(team_names)s."
+msgstr ""
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid ""
+"Adding %(user_names)s in this team would remove them from their current "
+"teams (%(team_names)s)."
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Administrator"
+msgstr "Adminisztrátor"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Archived"
 msgstr "Archivált"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_action_res_partner_bank_form
-#: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
-msgid "Bank Accounts"
-msgstr "Bankszámlák"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_attachment_count
+msgid "Attachment Count"
+msgstr "Mellékletek száma"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_action_res_bank_form
-msgid "Banks"
-msgstr "Bankok"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Avatar"
+msgstr "Avatár"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_type:0
-msgid "Bar"
-msgstr ""
-
-#. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:235
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Big Pretty Button :)"
-msgstr ""
+msgstr "Szép nagy gomb :)"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_crm
-msgid "CRM"
-msgstr "CRM"
+#: model:ir.model,name:sales_team.model_crm_tag
+msgid "CRM Tag"
+msgstr "CRM címke"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
-msgid "Cancel"
-msgstr "Mégse"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
-msgid "Channel Leader"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
-msgid "Channel Members"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_team_type
-msgid "Channel Type"
-msgstr "Csatorna típus"
-
-#. module: sales_team
-#: model:ir.actions.act_window,help:sales_team.crm_team_act
-#: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
-#: model:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Click here to define a new sales channel."
-msgstr ""
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:150
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:154
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:163
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:167
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:176
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:180
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:184
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
 #, python-format
-msgid "Click to set"
-msgstr "Beállításhoz kattintson"
+msgid "Cannot delete default team \"%s\""
+msgstr "\"%s\" alapértelmezett csapat nem törölhető"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_color
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
+msgid "Color"
+msgstr "Szín"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__color
 msgid "Color Index"
-msgstr "Szín jegyzék"
+msgstr "Szín index"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_company_id
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_company_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__company_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__company_id
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Company"
 msgstr "Vállalat"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_sale_config
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "Configuration"
-msgstr "Beállítások"
+msgstr "Konfiguráció"
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.action_sale_config
-#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
-msgid "Configure Sales"
-msgstr "Értékesítés beállításai"
+#: model:crm.tag,name:sales_team.categ_oppor7
+msgid "Consulting"
+msgstr "Tanácsadás"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_partner_category_form
-msgid "Contact Tags"
-msgstr "Kapcsolat címkék"
+#: model:ir.model,name:sales_team.model_res_partner
+msgid "Contact"
+msgstr "Kapcsolat"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_partner_title_contact
-msgid "Contact Titles"
-msgstr "Kapcsolattartó megszólítások"
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
+msgid "Create CRM Tags"
+msgstr "CRM címkék létrehozása"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_config_address_book
-msgid "Contacts"
-msgstr "Kapcsolattartók"
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
+msgid "Create a Sales Team"
+msgstr "Értékesítési csapat létrehozása"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_model
-msgid "Content"
-msgstr "Tartalom"
+#: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
+msgid "Create an Activity Type"
+msgstr "Tevékenység típus létrehozása"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_country_partner
-msgid "Countries"
-msgstr "Országok"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_country_group
-msgid "Country Group"
-msgstr "Ország csoport"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:219
-#, python-format
-msgid "Create a few opportunities in it."
-msgstr "Hozzon létre egy pár lehetőséget ezzel."
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__create_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr "Létrehozta"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr "Létrehozva"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_action_currency_form
-msgid "Currencies"
-msgstr "Pénznemek"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_currency_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__currency_id
 msgid "Currency"
 msgstr "Pénznem"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_partner_form
-msgid "Customers"
-msgstr "Vásárlók"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:18
-#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
-#: model:ir.ui.menu,name:sales_team.menu_sales_team_act
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
-#, python-format
-msgid "Dashboard"
-msgstr "Műszerfal"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_button_name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_data
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
 msgstr ""
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
-msgid "Day"
-msgstr "Nap"
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
+msgid "Define a new sales team"
+msgstr "Új értékesítési csapat összeállítása"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_display_name
+#: model:crm.tag,name:sales_team.categ_oppor5
+msgid "Design"
+msgstr "Tervezés"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_country_state_partner
-msgid "Fed. States"
-msgstr "Szövetségi Államok"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__email
+msgid "Email"
+msgstr "E-mail"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
+msgid "Favorite Members"
+msgstr "Kedvenc tagok"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
+msgid ""
+"Favorite teams to display them in the dashboard and access them easily."
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
@@ -285,472 +273,448 @@ msgstr ""
 "események nyomon követéséhez."
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Graph"
-msgstr "Grafikon"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_follower_ids
+msgid "Followers"
+msgstr "Követők"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:218
-#, python-format
-msgid "Great sales journeys start with a clean pipeline."
-msgstr ""
-"Nagyszerű értékesítési útkiosztáshoz induljon el egy tiszta folyamattal."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Követők (Partnerek)"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
+msgid "Group By"
+msgstr "Csoportosítás"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Group By..."
 msgstr "Csoportosítás..."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_group
-msgid "Group by"
-msgstr "Csoportosítás..."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__has_message
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__has_message
+msgid "Has Message"
+msgstr "Van üzenet"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_helpdesk
-msgid "Helpdesk"
-msgstr "Helpdesk"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:217
-#, python-format
-msgid "Hi there!"
-msgstr "Légy üdvözölve!"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_group
-msgid "How this channel's dashboard graph will group the results."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_id
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
-#: model:ir.model.fields,help:sales_team.field_res_users_team_id
+#: model:ir.model.fields,help:sales_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__is_membership_multi
 msgid ""
-"If set, this sales channel will be used for sales and assignations related "
-"to this partner"
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_active
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+"Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_partner__team_id
+#: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
-"If the active field is set to false, it will allow you to hide the sales "
-"channel without removing it."
+"If set, this Sales Team will be used for sales and assignments related to "
+"this partner"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
-msgid "Integrations"
+#: model:ir.model.fields,help:sales_team.field_crm_team__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:142
-#, python-format
-msgid "Invoiced"
-msgstr "Számlázott"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
+msgid "Image"
+msgstr "Kép"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0
-msgid "Invoices"
-msgstr "Számlák"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
+msgid "Image (128)"
+msgstr "Kép (128)"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings___last_update
-msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+#: model:crm.tag,name:sales_team.categ_oppor4
+msgid "Information"
+msgstr "Információ"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:190
-#, python-format
-msgid "Last Month"
-msgstr "Utolsó hónap"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_is_follower
+msgid "Is Follower"
+msgstr "Követő"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr "Frissítette"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr "Frissítve"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_type:0
-msgid "Line"
-msgstr "Sor"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_localisation
-msgid "Localization"
-msgstr "Lokalizáció"
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
-msgid "Manage leads, opportunities, meetings and activities"
+#: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_sale_contract
-msgid "Manage subscriptions and recurring invoicing"
-msgstr "Kezelje a feliratkozásokat és ismétlődő számlázást"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
+msgid "Member Company"
+msgstr "Tag vállalat"
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-msgid "Manager"
-msgstr "Igazgató"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
+msgid "Member Warning"
+msgstr "Tag figyelmeztetés"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:25
-#, python-format
-msgid "Meetings"
-msgstr "Találkozók"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Members"
+msgstr "Tagok"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
-msgid "Month"
-msgstr "Hónap"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
+msgid "Membership Issue Warning"
+msgstr "Tagság figyelmeztetés"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
-msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "Tovább <i class=\"fa fa-caret-down\"/>"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_error
+msgid "Message Delivery error"
+msgstr "Üzenetkézbesítési hiba"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:220
-#, python-format
-msgid "My Pipeline"
-msgstr "Folyamatom"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_ids
+msgid "Messages"
+msgstr "Üzenetek"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-msgid "My Salesteams"
-msgstr "Értékesítési csoportom"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__mobile
+msgid "Mobile"
+msgstr "Mobil"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:50
-#, python-format
-msgid "Next 7 days"
-msgstr "Következő 7 nap"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
+msgid "Multiple Memberships Allowed"
+msgstr "Többszörös tagság engedélyezett"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:38
-#, python-format
-msgid "Next Activities"
-msgstr "Következő tevékenységek"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
+msgid "Name"
+msgstr "Név"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:65
-#, python-format
-msgid "Only Integer Value should be valid."
-msgstr "Kizárólag egész érték lehet érvényes."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Akciók száma"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_error_counter
+msgid "Number of errors"
+msgstr "Hibák száma"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:102
-#, python-format
-msgid "Performance"
-msgstr "Teljesítmény"
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_period
-msgid "Period"
-msgstr "Időszak"
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0
-msgid "Pipeline"
-msgstr "Folyamat"
+#: model:crm.tag,name:sales_team.categ_oppor8
+msgid "Other"
+msgstr "Egyéb"
 
 #. module: sales_team
-#: selection:crm.team,team_type:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__phone
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
 msgstr "Értékesítési pont"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
-msgid "Recommended Apps"
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Pre-Sales"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_reply_to
-msgid "Reply-To"
-msgstr "Válaszcím"
+#: model:crm.tag,name:sales_team.categ_oppor1
+msgid "Product"
+msgstr "Termék"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_sale_report
-msgid "Reporting"
-msgstr "Riport készítés"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__rating_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__rating_ids
+msgid "Ratings"
+msgstr "Értékelések"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
-msgid "Sale Pricelist"
-msgstr "Eladási árlista"
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0
 #: model:crm.team,name:sales_team.team_sales_department
-#: selection:crm.team,team_type:0
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_sale
-#: model:ir.ui.menu,name:sales_team.menu_base_partner
-#: model:ir.ui.menu,name:sales_team.menu_sales
 msgid "Sales"
 msgstr "Értékesítések"
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_tree
+msgid "Sales Men"
+msgstr "Értékesítők"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
+msgid "Sales Person"
+msgstr "Értékesítő"
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_name
-#: model:ir.model.fields,field_description:sales_team.field_res_partner_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users_sale_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users_team_id
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
-msgid "Sales Channel"
-msgstr "Értékesítési csatorna"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__crm_team_id
+#: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
+#: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
+msgid "Sales Team"
+msgstr "Értékesítési csapat"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
-msgid ""
-"Sales Channel the user is member of. Used to compute the members of a sales "
-"channel through the inverse one2many"
+#: model:ir.model,name:sales_team.model_crm_team_member
+msgid "Sales Team Member"
+msgstr "Értékesítési csapattag"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
+#: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
+msgid "Sales Team Members"
+msgstr "Értékesítés csapattagok"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
+msgid "Sales Team Members (incl. inactive)"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_team_act
-#: model:ir.actions.act_window,name:sales_team.sales_team_config_action
-#: model:ir.ui.menu,name:sales_team.sales_team_config
-msgid "Sales Channels"
-msgstr ""
+#: model:ir.actions.act_window,name:sales_team.crm_team_action_config
+#: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
+#: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
+msgid "Sales Teams"
+msgstr "Értékesítési csapatok"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_id
 msgid "Salesperson"
 msgstr "Értékesítő"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Salesteam name..."
-msgstr "Értékesítési csoport neve..."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
+msgid "Salespersons"
+msgstr "Értékesítők"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Salesteams Search"
-msgstr "Értékesítési csoportok keresése"
+msgstr "Értékesítési csapatok keresése"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
-msgid "Save"
-msgstr "Mentés"
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
-msgid "Sell recurring services with automated billing"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
-msgid "Send quotations and manage invoicing"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
-msgid "Send, sign and approve documents online"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_sale_general_settings
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
-msgid "Settings"
-msgstr "Beállítások"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:148
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
 #, python-format
-msgid "Target"
-msgstr "Cél"
+msgid "Sample data"
+msgstr "Minta adat"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
+msgid "Sequence"
+msgstr "Sorszám"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor3
+msgid "Services"
+msgstr "Szolgáltatások"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
+msgid "Show on dashboard"
+msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor2
+msgid "Software"
+msgstr "Szoftver"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
+msgid "Tag Name"
+msgstr "Címke neve"
+
+#. module: sales_team
+#: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
+msgid "Tag name already exists!"
+msgstr "A címke név már létezik!"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
+#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
+msgid "Tags"
+msgstr "Címkék"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Team Details"
+msgstr "Csapat részletek"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Team Leader"
-msgstr "Csoportvezető"
+msgstr "Csapatvezető"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model:ir.actions.act_window,name:sales_team.crm_team_member_action
 msgid "Team Members"
-msgstr "Csoport tag"
+msgstr "Csapat tagjai"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_color
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
+msgid "Team Members are salespersons assigned to specific teams."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
+msgid "Teams"
+msgstr "Csapatok"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
-msgstr ""
+msgstr "A csatorna színe"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__company_id
+msgid "The default company for this user."
+msgstr "A felhasználó alapértelmezett vállalata."
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid ""
-"The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this sales channel"
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_model
-msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_period
-msgid "The time period this channel's dashboard graph will consider."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_type
-msgid "The type of graph this channel will display in the dashboard."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_team_type
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
 msgid ""
-"The type of this channel, it will define the resources this channel uses."
+"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
+"settings."
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:102
-#: selection:crm.team,dashboard_graph_period:0
-#, python-format
-msgid "This Month"
-msgstr "Ebben a hónapban"
+#: model:crm.tag,name:sales_team.categ_oppor6
+msgid "Training"
+msgstr "Képzés"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_period:0
-msgid "This Week"
-msgstr "Ezen a héten"
-
-#. module: sales_team
-#: selection:crm.team,dashboard_graph_period:0
-msgid "This Year"
-msgstr "Tárgyév"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_users_property_product_pricelist
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
 msgid ""
-"This pricelist will be used, instead of the default one, for sales to the "
-"current partner"
-msgstr ""
-"A jelenlegi partnernek történő értékesítéseknél a rendszer az "
-"alapértelmezett helyett ezt az árlistát fogja használni."
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:29
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:61
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:76
-#, python-format
-msgid "To Activities"
-msgstr "Tevékenységekhez"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:105
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:191
-#, python-format
-msgid "To Activity Report"
-msgstr "Tevékenységek kimutatás jelentéseihez"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:16
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:51
-#, python-format
-msgid "To Calendar"
-msgstr "Naptárhoz"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:132
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:202
-#, python-format
-msgid "To Invoice Report"
-msgstr "Számlázás kimutatás jelentéséhez"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:86
-#, python-format
-msgid "To Opportunities"
-msgstr "Lehetőségekhez"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:118
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:196
-#, python-format
-msgid "To Opportunity Report"
-msgstr "Lehetőségek kimutatás jelentéséhez"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:13
-#, python-format
-msgid "To do"
-msgstr "Tennivaló"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:13
-#, python-format
-msgid "Today"
-msgstr "Ma"
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
-msgid "Track after-sales tickets"
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_type
-msgid "Type"
-msgstr "Típus"
-
-#. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:122
-#: code:addons/sales_team/models/crm_team.py:125
-#, python-format
-msgid "Undefined graph model for Sales Channel: %s"
+#: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
+#: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
+msgid "UX: Limit to team company or all if no company"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.actions.act_window,help:sales_team.crm_team_act
-#: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
-#: model:ir.actions.act_window,help:sales_team.sales_team_config_action
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid "Undefined graph model for Sales Team: %s"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid ""
-"Use sales channels to organize your sales departments. \n"
-"                    Each channel will work with a separate pipeline."
+"Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
+msgid ""
+"Use Sales Teams to organize your sales departments.\n"
+"                Each team will work with a separate pipeline."
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_res_users
+msgid "User"
+msgstr "Felhasználó"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
+msgid "User Company"
+msgstr "Felhasználó vállalata"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
+msgid "User In Teams"
+msgstr "Felhasználó csapatai"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
+msgid "User Sales Team"
+msgstr "Felhasználó értékesítési csapat"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -763,58 +727,39 @@ msgid "User: Own Documents Only"
 msgstr "Felhasználó: Csak a saját dokumentumok"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_res_users
-msgid "Users"
-msgstr "Felhasználók"
+#: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
+msgid "Users assigned to this team."
+msgstr "Csapathoz rendelt felhasználók"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
-#: selection:crm.team,team_type:0
 msgid "Website"
 msgstr "Weboldal"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_group:0
-msgid "Week"
-msgstr "Hét"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:128
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
 #, python-format
-msgid "Won in Opportunities"
-msgstr "Megnyert a Lehetőségen"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:65
-#, python-format
-msgid "Wrong value entered!"
-msgstr "Rosszérték lett megadva!"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_website_sign
-msgid "eSign"
+msgid ""
+"You are trying to create duplicate membership(s). We found that "
+"%(duplicates)s already exist(s)."
 msgstr ""
+"Duplikált tagságot próbál létrehozni. Lézető rekordok: %(duplicates)s."
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:89
-#, python-format
-msgid "exp. closing"
-msgstr "exp. closing"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "e.g. North America"
+msgstr "pld: Észak-Amerika"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
-#, python-format
-msgid "overdue"
-msgstr "lejárt"
+#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
+msgid "e.g. Services"
+msgstr "pld: szolgáltatások"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
+#: model:crm.team,name:sales_team.ebay_sales_team
+msgid "eBay"
+msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
@@ -829,7 +774,7 @@ msgstr ""
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
 msgstr ""
-"a felhasználónak be kell lépnie a saját adataihoz, az értékesítés "
+"a felhasználónak hozzáférése lesz saját adataihoz az értékesítés "
 "alkalmazásban."
 
 #. module: sales_team
@@ -838,5 +783,5 @@ msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
 msgstr ""
-"a felhasználónak hozzáférése lesz az Értékesítés konfigurálásához, valamint "
-"a statikus kimutatásokhoz."
+"a felhasználónak hozzáférése lesz az értékesítés konfigurálásához és a "
+"statikus riportokhoz."

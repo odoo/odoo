@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FileViewer">
+        <div class="d-flex justify-content-center" t-att-class="{ 'modal fixed-top bottom-0': props.modal }">
+            <div class="o-FileViewer flex-column align-items-center d-flex w-100 h-100" tabindex="0" t-ref="autofocus" t-on-keydown.stop="(ev) => this.onKeydown(ev)">
+                <div class="o-FileViewer-header position-absolute top-0 d-flex w-100 bg-black-75 text-400" t-on-click.stop="">
+                    <div t-if="isViewable" class="d-flex align-items-center ms-4 me-2">
+                        <i t-if="state.file.isImage" class="fa fa-picture-o" role="img" title="Image"/>
+                        <i t-if="state.file.isPdf" class="fa fa-file-text" role="img" title="PDF file"/>
+                        <i t-if="state.file.isText" class="fa fa-file-text" role="img" title="Text file"/>
+                        <i t-if="state.file.isVideo" class="fa fa-video-camera" role="img" title="Video"/>
+                    </div>
+                    <div class="d-flex align-items-center mx-2 overflow-auto">
+                        <span class="text-truncate" t-out="state.file.displayName"/>
+                    </div>
+                    <div class="flex-grow-1"/>
+                    <div class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download" t-on-click.stop="">
+                        <a t-att-href="state.file.downloadUrl" class="text-reset" download="">
+                            <i class="fa fa-download fa-fw" role="img"/>
+                            <span>Download</span>
+                        </a>
+                    </div>
+
+                    <div t-on-click.stop="close" class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
+                        <i class="fa fa-fw fa-times" role="img"/>
+                    </div>
+                </div>
+                <div t-on-click.stop="close" t-on-mousemove="onMousemoveView" class="o-FileViewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': state.file.isImage }">
+                    <div t-if="state.file.isImage" class="o-FileViewer-zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="zoomer">
+                        <div t-if="!state.imageLoaded" class="position-absolute">
+                            <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin text-white" role="img" title="Loading"/>
+                        </div>
+                        <img t-on-click.stop="" t-on-load="onImageLoaded" t-on-wheel="onWheelImage" t-on-mousedown.stop="onMousedownImage" t-on-mouseup.stop="onMouseupImage" class="o-FileViewer-view o-FileViewer-viewImage mw-100 mh-100 transition-base" t-att-src="state.file.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
+                    </div>
+                    <iframe t-if="state.file.isPdf" class="o-FileViewer-view w-75 h-100 border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': ui.isSmall }" t-att-src="state.file.defaultSource"/>
+                    <iframe t-if="state.file.isText" class="o-FileViewer-view o-isText o_text w-75 h-100 border-0" t-att-src="state.file.defaultSource"/>
+                    <iframe t-if="state.file.isUrlYoutube" allow="autoplay; encrypted-media" class="o-FileViewer-view w-75 h-100 border-0" t-att-src="state.file.defaultSource" height="315" width="560"/>
+                    <video t-if="state.file.isVideo" class="o-FileViewer-view w-75 h-75" t-att-class="{ 'w-100 h-100': ui.isSmall }" t-on-click.stop="" controls="controls">
+                        <source t-att-data-type="state.file.mimetype" t-att-src="state.file.defaultSource"/>
+                    </video>
+                </div>
+                <div t-if="state.file.isImage" class="position-absolute bottom-0 d-flex" role="toolbar">
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="zoomIn" title="Zoom In (+)" role="button">
+                        <i class="fa fa-fw fa-plus" role="img"/>
+                    </div>
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': state.scale === 1 }" t-on-click.stop="resetZoom" role="button" title="Reset Zoom (0)">
+                        <i class="fa fa-fw fa-search" role="img"/>
+                    </div>
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': state.scale === minScale }" t-on-click.stop="zoomOut" title="Zoom Out (-)" role="button">
+                        <i class="fa fa-fw fa-minus" role="img"/>
+                    </div>
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="rotate" title="Rotate (r)" role="button">
+                        <i class="fa fa-fw fa-repeat" role="img"/>
+                    </div>
+                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="onClickPrint" title="Print" role="button">
+                        <i class="fa fa-fw fa-print" role="img"/>
+                    </div>
+                    <div class="o-FileViewer-download o-FileViewer-toolbarButton p-3 rounded-0 cursor-pointer" title="Download" role="button" t-on-click.stop="">
+                        <a t-att-href="state.file.downloadUrl" class="text-reset" download="">
+                            <i class="fa fa-download fa-fw" role="img"/>
+                        </a>
+                    </div>
+                </div>
+                <t t-if="props.files.length > 1">
+                    <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle bg-dark text-white" t-on-click.stop="previous" title="Previous (Left-Arrow)" aria-label="Previous" role="button">
+                        <span class="oi oi-chevron-left" role="img"/>
+                    </div>
+                    <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle bg-dark text-white" t-on-click.stop="next" title="Next (Right-Arrow)" aria-label="Next" role="button">
+                        <span class="oi oi-chevron-right" role="img"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

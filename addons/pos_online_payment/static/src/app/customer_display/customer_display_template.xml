@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_online_payment.CustomerFacingDisplayHead" t-inherit="point_of_sale.CustomerFacingDisplayHead" t-inherit-mode="extension">
+        <xpath expr="//div[@class='resources']" position="inside">
+            <link rel="stylesheet" type="text/css" href="/pos_online_payment/static/src/css/customer_facing_display.css" />
+        </xpath>
+    </t>
+
+    <t t-name="pos_online_payment.CustomerFacingDisplayMainContainer" t-inherit="point_of_sale.CustomerFacingDisplayMainContainer" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='point_of_sale.CustomerFacingDisplayOrderLines']" position="replace">
+            <t t-if="order.get_current_screen_data().name === 'PaymentScreen' and order.uiState.PaymentScreen?.onlinePaymentData">
+                <div class="online-payment">
+                    <div class="instructions">
+                        <p>Please scan the QR code to open the payment page</p>
+                        <div class="spacer"/>
+                        <div class="qr-code" alt="QR Code to pay" t-attf-style="background-image: url('{{order.uiState.PaymentScreen.onlinePaymentData.qrCode}}');" />
+                        <div class="spacer"/>
+                    </div>
+                    <div class="info">
+                        <div>
+                            <span>Amount: </span>
+                            <span class="amount" t-esc="pos.env.utils.formatCurrency(order.uiState.PaymentScreen.onlinePaymentData.amount)" />
+                        </div>
+                        <div>
+                            <span>Order reference: </span>
+                            <span t-esc="order.name" />
+                        </div>
+                        <div>
+                            <span>Order id: </span>
+                            <span t-esc="order.server_id" />
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-call="point_of_sale.CustomerFacingDisplayOrderLines" />
+            </t>
+        </xpath>
+    </t>
+
+</templates>

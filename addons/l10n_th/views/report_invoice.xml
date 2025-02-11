@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//div[@name='address_not_same_as_shipping']//span[@t-field='o.partner_id.vat']" position="after">
+            <span t-esc="o.partner_id.l10n_th_branch_name"/>
+        </xpath>
+
+        <xpath expr="//div[@name='address_same_as_shipping']//span[@t-field='o.partner_id.vat']" position="after">
+            <span t-esc="o.partner_id.l10n_th_branch_name"/>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']//span[@t-field='o.partner_id.vat']" position="after">
+            <span t-esc="o.partner_id.l10n_th_branch_name"/>
+        </xpath>
+        <xpath expr="//h2/span[contains(@t-if, 'posted')]" position="replace">
+            <t t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
+                <span t-if="o.company_id.account_fiscal_country_id.code == 'TH' and not commercial_invoice">Tax Invoice</span>
+                <span t-else="">Invoice</span>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="report_commercial_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="account.report_invoice_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_commercial_invoice" model="ir.actions.report">
+        <field name="name">Commercial Invoice</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_th.report_commercial_invoice</field>
+        <field name="report_file">l10n_th.report_commercial_invoice</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_th.report_invoice_document'"
+               t-call="l10n_th.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

@@ -1,22 +1,36 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Contact Form',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 54,
-    'website': 'https://www.odoo.com/page/website-builder',
-    'summary': 'Create Leads From Contact Form',
-    'version': '2.0',
+    'summary': 'Generate leads from a contact form',
+    'version': '2.1',
     'description': """
-Odoo Contact Form
-====================
+Add capability to your website forms to generate leads or opportunities in the CRM app.
+Forms has to be customized inside the *Website Builder* in order to generate leads.
 
-        """,
-    'depends': ['website_form', 'website_partner', 'crm'],
+This module includes contact phone and mobile numbers validation.""",
+    'depends': ['website', 'crm'],
     'data': [
-        'data/website_crm_data.xml',
-        'views/website_crm_templates.xml',
-        'views/website_crm_config_settings_views.xml',
+        'security/ir.model.access.csv',
+        'data/crm_lead_merge_template.xml',
+        'data/ir_actions_data.xml',
+        'data/ir_model_data.xml',
+        'views/crm_lead_views.xml',
+        'views/website_visitor_views.xml',
+        'views/website_templates_contactus.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': True,
+    'assets': {
+        'website.assets_wysiwyg': [
+            'website_crm/static/src/js/website_crm_editor.js',
+        ],
+        'web.assets_tests': [
+            'website_crm/static/tests/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

@@ -1,0 +1,26 @@
+.o_document_layout .o_group {
+    display: flex;
+    .o_document_layout_company {
+        flex: 5;
+
+        img {
+            max-height: 100px;
+        }
+        .o_custom_colors {
+            .o-checkbox {
+                @include o-position-absolute(0, 0, 0, 0);
+                width: 100%;
+            }
+        }
+
+        select.o_input {
+            height: 25px;
+        }
+    }
+}
+
+@media (max-width: 620px) {
+    .o_document_layout .o_group {
+        flex-direction: column;
+    }
+}

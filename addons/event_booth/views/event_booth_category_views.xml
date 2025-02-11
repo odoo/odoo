@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_booth_category_view_form" model="ir.ui.view">
+        <field name="name">event.booth.category.view.form</field>
+        <field name="model">event.booth.category</field>
+        <field name="arch" type="xml">
+            <form string="Booth Type">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+                    <div class="oe_title">
+                        <label for="name" string="Booth Category"/>
+                        <h1><field name="name" placeholder="e.g. Premium Booth"/></h1>
+                    </div>
+                    <group name="main">
+                        <field name="active" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder='e.g. "Those stands will be place near the entrance and..."'/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_booth_category_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.category.view.tree</field>
+        <field name="model">event.booth.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="event_booth_category_view_search" model="ir.ui.view">
+        <field name="name">event.booth.category.view.search</field>
+        <field name="model">event.booth.category</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_booth_category_action" model="ir.actions.act_window">
+        <field name="name">Booth Category</field>
+        <field name="res_model">event.booth.category</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Booth Category
+            </p>
+            <p>
+                Booth categories are used to represent the different types of booths you rent (Premium Booth, Table and Chairs, ...)
+            </p>
+        </field>
+    </record>
+
+</data></odoo>

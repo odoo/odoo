@@ -5,8 +5,7 @@
     'version': '1.0',
     'sequence': 160,
     'category': 'Human Resources',
-    'website' : 'https://www.odoo.com/page/gamification',
-    'depends': ['mail', 'web_kanban_gauge'],
+    'depends': ['mail'],
     'description': """
 Gamification process
 ====================
@@ -23,14 +22,27 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
     'data': [
         'wizard/update_goal.xml',
         'wizard/grant_badge.xml',
-        'views/badge.xml',
-        'views/challenge.xml',
-        'views/goal.xml',
-        'data/cron.xml',
+        'views/res_users_views.xml',
+        'views/gamification_karma_rank_views.xml',
+        'views/gamification_karma_tracking_views.xml',
+        'views/gamification_badge_views.xml',
+        'views/gamification_badge_user_views.xml',
+        'views/gamification_goal_views.xml',
+        'views/gamification_goal_definition_views.xml',
+        'views/gamification_challenge_views.xml',
+        'views/gamification_challenge_line_views.xml',
+        'views/gamification_menus.xml',
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
-        'data/goal_base.xml',
-        'data/badge.xml',
-        'views/gamification.xml',
+        'data/ir_cron_data.xml',
+        'data/mail_template_data.xml',  # keep before to populate challenge reports
+        'data/gamification_badge_data.xml',
+        'data/gamification_challenge_data.xml',
+        'data/gamification_karma_rank_data.xml',
     ],
+    'demo': [
+        'data/gamification_karma_rank_demo.xml',
+        'data/gamification_karma_tracking_demo.xml',
+    ],
+    'license': 'LGPL-3',
 }

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_tree_l10n_it" model="ir.ui.view">
+        <field name="name">res.partner.tree.l10n.it</field>
+        <field name="mode">primary</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_it_codice_fiscale"/>
+                <field name="l10n_it_pa_index"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_form_l10n_it" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n.it</field>
+        <field name="model">res.partner</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="l10n_it_pec_email" invisible="'IT' not in fiscal_country_codes or parent_id"/>
+                <field name="l10n_it_codice_fiscale" invisible="'IT' not in fiscal_country_codes or parent_id"/>
+                <field name="l10n_it_pa_index" invisible="'IT' not in fiscal_country_codes or parent_id"/>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="res_company_form_l10n_it" model="ir.ui.view">
+        <field name="name">res.company.form.l10n.it</field>
+        <field name="model">res.company</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_it_codice_fiscale" invisible="country_code != 'IT'"/>
+                <field name="l10n_it_tax_system" invisible="country_code != 'IT'"/>
+            </xpath>
+            <xpath expr="//page" position="after">
+                <page string="Electronic Invoicing" name="electronic_invoicing" invisible="country_code != 'IT'">
+                    <group>
+                        <separator string="Economic and Administrative Index" colspan="4"/>
+                        <div colspan="4">
+                            The seller/provider is a company listed on the register of companies and as
+                            such must also indicate the registration data on all documents (art. 2250, Italian
+                            Civil Code)
+                        </div>
+                        <group>
+                            <field name="l10n_it_has_eco_index" string="Company listed on the register of companies"/>
+                            <field name="l10n_it_eco_index_office" invisible="not l10n_it_has_eco_index"/>
+                            <field name="l10n_it_eco_index_number" invisible="not l10n_it_has_eco_index"/>
+                            <field name="l10n_it_eco_index_share_capital" invisible="not l10n_it_has_eco_index"/>
+                            <field name="l10n_it_eco_index_sole_shareholder" invisible="not l10n_it_has_eco_index"/>
+                            <field name="l10n_it_eco_index_liquidation_state" invisible="not l10n_it_has_eco_index"/>
+                        </group>
+                    </group>
+                    <group>
+                        <separator string="Tax representative" colspan="4"/>
+                        <div colspan="4">
+                            The seller/provider is a non-resident subject which carries out transactions in Italy
+                            with relevance for VAT purposes and which takes avail of a tax representative in Italy
+                        </div>
+                        <group>
+                            <field name="l10n_it_has_tax_representative" string="Company have a tax representative"/>
+                            <field name="l10n_it_tax_representative_partner_id" invisible="not l10n_it_has_tax_representative"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="l10n_it_edi_transaction" optional="hide"/>
+                <field name="l10n_it_edi_attachment_id" optional="hide"/>
+                <field name="l10n_it_edi_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='journal_id']" position="after">
+                <field name="l10n_it_edi_transaction" groups="base.group_no_one"/>
+                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one"/>
+                <field name="l10n_it_edi_state" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_invoice_form_l10n_it" model="ir.ui.view">
+        <field name="name">account.move.form.l10n.it</field>
+        <field name="model">account.move</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//header" position="inside">
+                    <button name="action_l10n_it_edi_send"
+                            type="object"
+                            string="Send Tax Integration"
+                            invisible="state != 'posted' or not l10n_it_edi_is_self_invoice or is_move_sent or country_code != 'IT'"
+                            data-hotkey="y"/>
+                </xpath>
+                <xpath expr="//sheet" position="before">
+                    <field name="l10n_it_edi_is_self_invoice" invisible="1"/>
+                    <field name="l10n_it_edi_attachment_id" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                        invisible="not l10n_it_edi_header 
+                                   or state == 'draft'
+                                   or l10n_it_edi_state in ('forwarded', 'accepted_by_pa_partner', 'accepted_by_pa_partner_after_expiry', 'forward_failed')">
+                        <div class="p-0 m-0"><i class='fa fa-warning' role="img" title="EDI (Italy)"/><span class="mx-1">E-invoicing (Italy)</span></div>
+                        <field name="l10n_it_edi_header"/>
+                    </div>
+                </xpath>
+                <xpath expr="//button[@name='action_invoice_sent']" position="before">
+                    <button
+                        name="action_check_l10n_it_edi"
+                        type="object"
+                        string="Check Sending"
+                        class="oe_highlight"
+                        data-hotkey="shift+K"
+                        invisible="l10n_it_edi_state not in ('being_sent', 'processing', 'forward_attempt')"
+                    />
+                </xpath>
+                <xpath expr="//page[@name='other_info']" position="after">
+                    <page string="Electronic Invoicing"
+                        name="electronic_invoicing"
+                        invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or country_code != 'IT'">
+                        <group>
+                            <group>
+                                <field name="l10n_it_edi_transaction" groups="base.group_no_one" readonly="1"/>
+                                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one" readonly="1"/>
+                                <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
+                                <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                            </group>
+                            <field name="l10n_it_partner_pa" invisible="1"/>
+                            <group invisible="not l10n_it_partner_pa">
+                                <field name="l10n_it_origin_document_type" readonly="state != 'draft'"/>
+                                <field name="l10n_it_origin_document_name" readonly="state != 'draft'"/>
+                                <field name="l10n_it_origin_document_date" readonly="state != 'draft'"/>
+                                <field name="l10n_it_cig" readonly="state != 'draft'"/>
+                                <field name="l10n_it_cup" readonly="state != 'draft'"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//div[@name='journal_div']" position="after">
+                    <label for="l10n_it_edi_state" invisible="not l10n_it_edi_state"/>
+                    <div name="l10n_it_edi_div" class="d-flex" invisible="not l10n_it_edi_state">
+                        <field name="l10n_it_edi_state" class="oe_inline"/>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="l10n_it_ddt" model="ir.ui.view">
+        <field name="name">ddt.form.l10n.it</field>
+        <field name="model">l10n_it.ddt</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="date"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_it_ddt_list_view" model="ir.ui.view">
+      <field name="name">l10n_it.ddt.list.view</field>
+      <field name="model">l10n_it.ddt</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="date"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="action_ddt_account" model="ir.actions.act_window">
+        <field name="name">Transport Document</field>
+        <field name="res_model">l10n_it.ddt</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="l10n_it_ddt_list_view"/>
+    </record>
+
+    <menuitem
+            name="DDT"
+            parent="account.account_account_menu"
+            action="action_ddt_account"
+            id="menu_action_ddt_account"
+            sequence="15"
+            groups="base.group_no_one"/>
+</odoo>

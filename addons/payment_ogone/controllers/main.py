@@ -1,111 +1,92 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import hmac
 import logging
 import pprint
-import werkzeug
+import re
+
+from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.payment.models.payment_acquirer import ValidationError
 
 _logger = logging.getLogger(__name__)
 
 
 class OgoneController(http.Controller):
-    _accept_url = '/payment/ogone/test/accept'
-    _decline_url = '/payment/ogone/test/decline'
-    _exception_url = '/payment/ogone/test/exception'
-    _cancel_url = '/payment/ogone/test/cancel'
-
-    @http.route([
+    _return_url = '/payment/ogone/return'
+    _backward_compatibility_urls = [
         '/payment/ogone/accept', '/payment/ogone/test/accept',
         '/payment/ogone/decline', '/payment/ogone/test/decline',
         '/payment/ogone/exception', '/payment/ogone/test/exception',
         '/payment/ogone/cancel', '/payment/ogone/test/cancel',
-    ], type='http', auth='none')
-    def ogone_form_feedback(self, **post):
-        """ Ogone contacts using GET, at least for accept """
-        _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
-        request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
-        return werkzeug.utils.redirect(post.pop('return_url', '/'))
-
-    @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
-    def ogone_s2s_create_json(self, **kwargs):
-        new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
-        return new_id.id
-
-    @http.route(['/payment/ogone/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
-    def ogone_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
-        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
-
-        if not token:
-            res = {
-                'result': False,
-            }
-            return res
-
-        res = {
-            'result': True,
-            'id': token.id,
-            'short_name': token.short_name,
-            '3d_secure': False,
-            'verified': False,
-        }
-
-        if verify_validity != False:
-            baseurl = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            params = {
-                'accept_url': baseurl + '/payment/ogone/validate/accept',
-                'decline_url': baseurl + '/payment/ogone/validate/decline',
-                'exception_url': baseurl + '/payment/ogone/validate/exception',
-                'return_url': kwargs.get('return_url', baseurl)
-                }
-            tx = token.validate(**params)
-            res['verified'] = token.verified
-
-            if tx and tx.html_3ds:
-                res['3d_secure'] = tx.html_3ds
-
-        return res
-
-    @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False)
-    def ogone_s2s_create(self, **post):
-        error = ''
-        acq = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
-        try:
-            token = acq.s2s_process(post)
-        except Exception as e:
-            # synthax error: 'CHECK ERROR: |Not a valid date\n\n50001111: None'
-            token = False
-            error = str(e).splitlines()[0].split('|')[-1] or ''
-
-        if token and post.get('verify_validity'):
-            baseurl = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            params = {
-                'accept_url': baseurl + '/payment/ogone/validate/accept',
-                'decline_url': baseurl + '/payment/ogone/validate/decline',
-                'exception_url': baseurl + '/payment/ogone/validate/exception',
-                'return_url': post.get('return_url', baseurl)
-                }
-            tx = token.validate(**params)
-            if tx and tx.html_3ds:
-                return tx.html_3ds
-        return werkzeug.utils.redirect(post.get('return_url', '/') + (error and '#error=%s' % werkzeug.url_quote(error) or ''))
-
-    @http.route([
         '/payment/ogone/validate/accept',
         '/payment/ogone/validate/decline',
         '/payment/ogone/validate/exception',
-    ], type='http', auth='none')
-    def ogone_validation_form_feedback(self, **post):
-        """ Feedback from 3d secure for a bank card validation """
-        request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
-        return werkzeug.utils.redirect(werkzeug.url_unquote(post.pop('return_url', '/')))
+    ]  # Facilitates the migration of users who registered the URLs in Ogone's backend prior to 14.3
 
-    @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
-    def feedback(self, **kwargs):
-        try:
-            tx = request.env['payment.transaction'].sudo()._ogone_form_get_tx_from_data(kwargs)
-            tx._ogone_s2s_validate()
-        except ValidationError:
-            return 'ko'
-        return 'ok'
+    @http.route(
+        [_return_url] + _backward_compatibility_urls, type='http', auth='public',
+        methods=['GET', 'POST'], csrf=False
+    )  # Redirect are made with GET requests only. Webhook notifications can be set to GET or POST.
+    def ogone_return_from_checkout(self, **raw_data):
+        """ Process the notification data sent by Ogone after redirection from checkout.
+
+        This route can also accept S2S notifications from Ogone if it is configured as a webhook in
+        Ogone's backend. The user can choose between GET or POST for the webhook notifications.
+
+        :param dict raw_data: The un-formatted notification data
+        """
+        _logger.info("handling redirection from Ogone with data:\n%s", pprint.pformat(raw_data))
+        data = self._normalize_data_keys(raw_data)
+
+        # Check the integrity of the notification
+        received_signature = data.get('SHASIGN')
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            'ogone', data
+        )
+        self._verify_notification_signature(raw_data, received_signature, tx_sudo)
+
+        # Handle the notification data
+        tx_sudo._handle_notification_data('ogone', data)
+        return request.redirect('/payment/status')
+
+    @staticmethod
+    def _normalize_data_keys(data):
+        """ Set all keys of a dictionary to upper-case.
+
+        The keys received from Ogone APIs have inconsistent formatting and must be homogenized to
+        allow re-using the same methods. We reformat them to follow a unified nomenclature inspired
+        by Ogone Directlink API.
+
+        Formatting steps:
+        1) Uppercase key strings: 'Something' -> 'SOMETHING', 'something' -> 'SOMETHING'
+        2) Remove the prefix: 'CARD.SOMETHING' -> 'SOMETHING', 'ALIAS.SOMETHING' -> 'SOMETHING'
+
+        :param dict data: The data whose keys to normalize
+        :return: The normalized data
+        :rtype: dict
+        """
+        return {re.sub(r'.*\.', '', k.upper()): v for k, v in data.items()}
+
+    @staticmethod
+    def _verify_notification_signature(notification_data, received_signature, tx_sudo):
+        """ Check that the received signature matches the expected one.
+
+        :param dict notification_data: The notification data
+        :param str received_signature: The signature received with the notification data
+        :param recordset tx_sudo: The sudoed transaction referenced by the notification data, as a
+                                  `payment.transaction` record
+        :return: None
+        :raise: :class:`werkzeug.exceptions.Forbidden` if the signatures don't match
+        """
+        # Check for the received signature
+        if not received_signature:
+            _logger.warning("received notification with missing signature")
+            raise Forbidden()
+
+        # Compare the received signature with the expected signature computed from the data
+        expected_signature = tx_sudo.provider_id._ogone_generate_signature(notification_data)
+        if not hmac.compare_digest(received_signature, expected_signature.upper()):
+            _logger.warning("received notification with invalid signature")
+            raise Forbidden()

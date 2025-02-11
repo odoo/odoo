@@ -4,21 +4,25 @@
 {
     'name': 'Check Printing Base',
     'version': '1.0',
-    'category': 'Accounting',
-    'summary': 'Check printing commons',
+    'category': 'Accounting/Accounting',
+    'summary': 'Check printing basic features',
     'description': """
 This module offers the basic functionalities to make payments by printing checks.
 It must be used as a dependency for modules that provide country-specific check templates.
 The check settings are located in the accounting journals configuration page.
     """,
-    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account'],
     'data': [
+        'security/ir.model.access.csv',
         'data/account_check_printing_data.xml',
         'views/account_journal_views.xml',
+        'views/account_move_views.xml',
         'views/account_payment_views.xml',
+        'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
         'wizard/print_prenumbered_checks_views.xml'
     ],
     'installable': True,
-    'auto_install': False,
+    'post_init_hook': 'create_check_sequence_on_bank_journals',
+    'license': 'LGPL-3',
 }

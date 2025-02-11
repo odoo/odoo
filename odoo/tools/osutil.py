@@ -4,56 +4,67 @@
 """
 Some functions related to the os and os.path module
 """
-
-from contextlib import contextmanager
 import os
-from os.path import join as opj
-import shutil
-import tempfile
+import re
+import warnings
 import zipfile
 
-if os.name == 'nt':
-    import ctypes
-    import win32service as ws
-    import win32serviceutil as wsu
+from os.path import join as opj
 
+
+WINDOWS_RESERVED = re.compile(r'''
+    ^
+    # forbidden stems: reserved keywords
+    (:?CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])
+    # even with an extension this is recommended against
+    (:?\..*)?
+    $
+''', flags=re.IGNORECASE | re.VERBOSE)
+def clean_filename(name, replacement=''):
+    """ Strips or replaces possibly problematic or annoying characters our of
+    the input string, in order to make it a valid filename in most operating
+    systems (including dropping reserved Windows filenames).
+
+    If this results in an empty string, results in "Untitled" (localized).
+
+    Allows:
+
+    * any alphanumeric character (unicode)
+    * underscore (_) as that's innocuous
+    * dot (.) except in leading position to avoid creating dotfiles
+    * dash (-) except in leading position to avoid annoyance / confusion with
+      command options
+    * brackets ([ and ]), while they correspond to shell *character class*
+      they're a common way to mark / tag files especially on windows
+    * parenthesis ("(" and ")"), a more natural though less common version of
+      the former
+    * space (" ")
+
+    :param str name: file name to clean up
+    :param str replacement:
+        replacement string to use for sequences of problematic input, by default
+        an empty string to remove them entirely, each contiguous sequence of
+        problems is replaced by a single replacement
+    :rtype: str
+    """
+    if WINDOWS_RESERVED.match(name):
+        return "Untitled"
+    return re.sub(r'[^\w_.()\[\] -]+', replacement, name).lstrip('.-') or "Untitled"
 
 def listdir(dir, recursive=False):
-    """Allow to recursively get the file listing"""
+    """Allow to recursively get the file listing following symlinks, returns
+    paths relative to the provided `dir` except completely broken if the symlink
+    it follows leaves `dir`...
+    """
+    assert recursive, "use `os.listdir` or `pathlib.Path.iterdir`"
+    warnings.warn("Since 16.0, use os.walk or a recursive glob", DeprecationWarning, stacklevel=2)
     dir = os.path.normpath(dir)
-    if not recursive:
-        return os.listdir(dir)
 
     res = []
-    for root, dirs, files in walksymlinks(dir):
-        root = root[len(dir)+1:]
-        res.extend([opj(root, f) for f in files])
+    for root, _, files in os.walk(dir, followlinks=True):
+        r = os.path.relpath(root, dir)
+        yield from (opj(r, f) for f in files)
     return res
-
-def walksymlinks(top, topdown=True, onerror=None):
-    """
-    same as os.walk but follow symlinks
-    attention: all symlinks are walked before all normals directories
-    """
-    for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
-        if topdown:
-            yield dirpath, dirnames, filenames
-
-        symlinks = (dirname for dirname in dirnames if os.path.islink(os.path.join(dirpath, dirname)))
-        for s in symlinks:
-            for x in walksymlinks(os.path.join(dirpath, s), topdown, onerror):
-                yield x
-
-        if not topdown:
-            yield dirpath, dirnames, filenames
-
-@contextmanager
-def tempdir():
-    tmpdir = tempfile.mkdtemp()
-    try:
-        yield tmpdir
-    finally:
-        shutil.rmtree(tmpdir)
 
 def zip_dir(path, stream, include_dir=True, fnct_sort=None):      # TODO add ignore list
     """
@@ -79,42 +90,10 @@ def zip_dir(path, stream, include_dir=True, fnct_sort=None):      # TODO add ign
 
 
 if os.name != 'nt':
-    getppid = os.getppid
     is_running_as_nt_service = lambda: False
 else:
-    # based on http://mail.python.org/pipermail/python-win32/2007-June/006174.html
-    _TH32CS_SNAPPROCESS = 0x00000002
-    class _PROCESSENTRY32(ctypes.Structure):
-        _fields_ = [("dwSize", ctypes.c_ulong),
-                    ("cntUsage", ctypes.c_ulong),
-                    ("th32ProcessID", ctypes.c_ulong),
-                    ("th32DefaultHeapID", ctypes.c_ulong),
-                    ("th32ModuleID", ctypes.c_ulong),
-                    ("cntThreads", ctypes.c_ulong),
-                    ("th32ParentProcessID", ctypes.c_ulong),
-                    ("pcPriClassBase", ctypes.c_ulong),
-                    ("dwFlags", ctypes.c_ulong),
-                    ("szExeFile", ctypes.c_char * 260)]
-
-    def getppid():
-        CreateToolhelp32Snapshot = ctypes.windll.kernel32.CreateToolhelp32Snapshot
-        Process32First = ctypes.windll.kernel32.Process32First
-        Process32Next = ctypes.windll.kernel32.Process32Next
-        CloseHandle = ctypes.windll.kernel32.CloseHandle
-        hProcessSnap = CreateToolhelp32Snapshot(_TH32CS_SNAPPROCESS, 0)
-        current_pid = os.getpid()
-        try:
-            pe32 = _PROCESSENTRY32()
-            pe32.dwSize = ctypes.sizeof(_PROCESSENTRY32)
-            if not Process32First(hProcessSnap, ctypes.byref(pe32)):
-                raise OSError('Failed getting first process.')
-            while True:
-                if pe32.th32ProcessID == current_pid:
-                    return pe32.th32ParentProcessID
-                if not Process32Next(hProcessSnap, ctypes.byref(pe32)):
-                    return None
-        finally:
-            CloseHandle(hProcessSnap)
+    import win32service as ws
+    import win32serviceutil as wsu
 
     from contextlib import contextmanager
     from odoo.release import nt_service_name
@@ -131,10 +110,6 @@ else:
             with close_srv(ws.OpenSCManager(None, None, ws.SC_MANAGER_ALL_ACCESS)) as hscm:
                 with close_srv(wsu.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
                     info = ws.QueryServiceStatusEx(hs)
-                    return info['ProcessId'] == getppid()
+                    return info['ProcessId'] == os.getppid()
         except Exception:
             return False
-
-if __name__ == '__main__':
-    from pprint import pprint as pp
-    pp(listdir('../report', True))

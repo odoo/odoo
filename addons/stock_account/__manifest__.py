@@ -19,27 +19,32 @@ Dashboard / Reports for Warehouse Management includes:
 ------------------------------------------------------
 * Stock Inventory Value at given date (support dates in the past)
     """,
-    'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['stock', 'account'],
     'category': 'Hidden',
     'sequence': 16,
-    'demo': [
-        'data/stock_account_demo.yml'
-    ],
     'data': [
         'security/stock_account_security.xml',
         'security/ir.model.access.csv',
-        'wizard/stock_change_standard_price_views.xml',
-        'wizard/wizard_valuation_history_views.xml',
-        'views/product_views.xml',
-        'views/stock_account_views.xml',
-        'views/stock_config_settings_views.xml',
-        'data/product_data.xml',
         'data/stock_account_data.xml',
-        'data/stock_account_data_post_install.yml',
-    ],
-    'test': [
+        'views/stock_account_views.xml',
+        'views/res_config_settings_views.xml',
+        'data/product_data.xml',
+        'views/report_invoice.xml',
+        'views/stock_valuation_layer_views.xml',
+        'views/stock_quant_views.xml',
+        'views/product_views.xml',
+        'wizard/stock_request_count.xml',
+        'wizard/stock_valuation_layer_revaluation_views.xml',
+        'wizard/stock_quantity_history.xml',
+        'report/account_invoice_report_view.xml',
     ],
     'installable': True,
     'auto_install': True,
+    'post_init_hook': '_configure_journals',
+    'assets': {
+        'web.assets_backend': [
+            'stock_account/static/src/stock_account_forecasted/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

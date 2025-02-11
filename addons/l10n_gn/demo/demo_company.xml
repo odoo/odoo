@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_gn" model="res.partner">
+        <field name="name">GN Company</field>
+        <field name="vat"></field>
+        <field name="street"></field>
+        <field name="city"></field>
+        <field name="country_id" ref="base.gn"/>
+
+        <field name="zip"></field>
+        <field name="phone">+224 624 41 22 10</field>
+        <field name="email">info@company.guineaexample.com</field>
+        <field name="website">www.guineaexample.com</field>
+    </record>
+
+    <record id="demo_company_gn" model="res.company">
+        <field name="name">GN Company</field>
+        <field name="partner_id" ref="partner_demo_company_gn"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_gn')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_gn.demo_company_gn'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>gn</value>
+        <value model="res.company" eval="obj().env.ref('l10n_gn.demo_company_gn')"/>
+    </function>
+</odoo>

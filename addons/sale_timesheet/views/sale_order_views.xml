@@ -3,37 +3,26 @@
         <record id="view_order_form_inherit_sale_timesheet" model="ir.ui.view">
             <field name="name">sale.order.form.sale.timesheet</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="inherit_id" ref="sale_project.view_order_form_inherit_sale_project"/>
             <field name="arch" type="xml">
                 <data>
-                   <xpath expr="//button[@name='action_view_invoice']" position="before">
-                       <button type="object"
+                    <xpath expr="//button[@name='action_view_task']" position="after">
+                        <field name="timesheet_count" invisible="1"/>
+                        <field name="show_hours_recorded_button" invisible="1"/>
+                        <button type="object"
                            name="action_view_timesheet"
                            class="oe_stat_button"
                            icon="fa-clock-o"
-                           attrs="{'invisible': [('timesheet_count', '=', 0)]}" groups="base.group_user">
-                           <field name="timesheet_count" widget="statinfo" string="Timesheets"/>
-                       </button>
-                    </xpath>
-                    <xpath expr="//button[@name='action_view_invoice']" position="before">
-                       <field name="project_project_id" invisible="1"/>
-                       <button type="object"
-                           name="action_view_project_project"
-                           class="oe_stat_button"
-                           icon="fa-puzzle-piece"
-                           string="Project"
-                           attrs="{'invisible': [('project_project_id', '=', False)]}" groups="base.group_user">
-                       </button>
-                    </xpath>
-                    <xpath expr="//button[@name='action_view_invoice']" position="before">
-                       <field name="tasks_ids" invisible="1"/>
-                       <button type="object"
-                           name="action_view_task"
-                           class="oe_stat_button"
-                           icon="fa-tasks"
-                           attrs="{'invisible': [('tasks_count', '=', 0)]}" groups="base.group_user">
-                           <field name="tasks_count" widget="statinfo" string="Tasks"/>
-                       </button>
+                           invisible="not show_hours_recorded_button"
+                           groups="hr_timesheet.group_hr_timesheet_user">
+                           <div class="o_stat_info">
+                               <span class="o_stat_value">
+                                    <field name="timesheet_total_duration" class="mr4"/>
+                                    <field name="timesheet_encode_uom_id" options="{'no_open': True}"/>
+                                </span>
+                                <span class="o_stat_text">Recorded</span>
+                           </div>
+                        </button>
                     </xpath>
                 </data>
            </field>

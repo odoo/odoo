@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_tax_form_l10n_it" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n.it</field>
+        <field name="model">account.tax</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='advanced_options']" position="inside">
+                <group invisible="country_code != 'IT'">
+                    <group>
+                        <field name="l10n_it_exempt_reason"/>
+                        <field name="l10n_it_law_reference"/>
+                    </group>
+                </group>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+</odoo>

@@ -6,45 +6,36 @@
         <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='source_id']" position="after">
-                <field name="survey_id" invisible="1"/>
-                <field name="response_id" invisible="1"/>
+                <field name="survey_id" column_invisible="True"/>
+                <field name="response_ids" column_invisible="True"/>
             </xpath>
         </field>
     </record>
 
-    <record id="crm_case_form_view_job_inherit" model="ir.ui.view">
+    <record id="hr_applicant_view_form_inherit" model="ir.ui.view">
         <field name="name">hr.applicant.form.inherit</field>
         <field name="model">hr.applicant</field>
-        <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='archive_applicant']" position="before">
+                <button name="action_send_survey" string="Send Interview" type="object" invisible="not active or not survey_id"/>
+            </xpath>
             <xpath expr="//button[@name='action_makeMeeting']" position="after">
-                <button name="action_start_survey"
-                    class="oe_stat_button"
-                    icon="fa-user"
-                    type="object"
-                    help="Answer related job question"
-                    context="{'survey_id': survey_id}"
-                    attrs="{'invisible':[('survey_id','=',False)]}">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_text">Start</span>
-                        <span class="o_stat_text">Interview</span>
-                    </div>
-                </button>
                 <button name="action_print_survey"
                     class="oe_stat_button"
-                    icon="fa-print"
+                    icon="fa-pencil-square-o"
                     type="object"
-                    help="Print interview report"
-                    attrs="{'invisible':[('survey_id','=',False)]}">
+                    help="See interview report"
+                    invisible="not survey_id or not response_ids">
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_text">Print</span>
+                        <span class="o_stat_text">Consult</span>
                         <span class="o_stat_text">Interview</span>
                     </div>
                 </button>
             </xpath>
             <xpath expr="//field[@name='job_id']" position="before">
                 <field name="survey_id" invisible="1"/>
-                <field name="response_id" invisible="1"/>
+                <field name="response_ids" invisible="1"/>
             </xpath>
         </field>
     </record>

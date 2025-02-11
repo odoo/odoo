@@ -5,23 +5,25 @@
 {
     'name': 'Point of Sale Discounts',
     'version': '1.0',
-    'category': 'Point of Sale',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Simple Discounts in the Point of Sale ',
     'description': """
 
-This module allows the cashier to quickly give a percentage
-sale discount to a customer.
+This module allows the cashier to quickly give percentage-based
+discount to a customer.
 
 """,
     'depends': ['point_of_sale'],
     'data': [
-        'views/pos_discount_views.xml',
-        'views/pos_discount_templates.xml'
-    ],
-    'qweb': [
-        'static/src/xml/discount_templates.xml',
-    ],
+        'views/res_config_settings_views.xml',
+        'views/pos_config_views.xml',
+        ],
     'installable': True,
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'assets': {
+        'point_of_sale._assets_pos': [
+            'pos_discount/static/src/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

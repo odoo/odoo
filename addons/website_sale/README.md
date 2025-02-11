@@ -3,7 +3,7 @@ Odoo e-Commerce
 
 ### Optimize sales with an awesome online store.
 
-Odoo is an <a href="https://www.odoo.com/page/e-commerce">Open Source eCommerce</a>
+Odoo is an <a href="https://www.odoo.com/app/ecommerce">Open Source eCommerce</a>
 unlike anything you have ever seen before. Get an awesome catalog of products
 and great product description pages.
 
@@ -57,8 +57,8 @@ of your website (a new blog post, a page modification, product descriptions,
 Fine Tune Your Catalog
 ----------------------
 
-Get a full control on how you display your products in the catalog page:
-promotional ribbons, related sized of products, discounts, variants, grid/list
+Get full control on how you display your products in the catalog page:
+promotional ribbons, related size of products, discounts, variants, grid/list
 view, etc.
 
 Edit any product inline to make your website evolve with your customer need.
@@ -77,7 +77,7 @@ efficiently in Google.
 Leverage Social Media
 ---------------------
 
-Create new landing pages easily with the Odoo inline edition feature. Send
+Create new landing pages easily with the Odoo inline editing feature. Send
 visitors of your different marketing campaigns to specific landing pages to
 optimize conversions.
 
@@ -144,7 +144,7 @@ Fully Integrated With Other Apps
 
 Easily create awesome websites with no technical knowledge required.
 
-### Blogs
+### Blog
 
 Write news, attract new visitors, build customer loyalty.
 

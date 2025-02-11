@@ -1,7 +1,7 @@
 Odoo Human Resources
 --------------------
 
-With Odoo <a href="https://www.odoo.com/page/employees">Human Resources</a>,
+With Odoo <a href="https://www.odoo.com/app/employees">Human Resources</a>,
 manage the most important asset in your company: People
 
 Get all your HR operations managed easily: knowledge sharing, recruitments,
@@ -21,7 +21,7 @@ Record employee contracts and get alerts when they have to be renewed.
 Streamline Your Recruitment Process
 -----------------------------------
 
-Index resumes, track applicants, search profiles with <a href="https://www.odoo.com/page/employees">Odoo HR</a>.
+Index resumes, track applicants, search profiles with <a href="https://www.odoo.com/app/employees">Odoo HR</a>.
 
 Post job offers and keep track of each application received. Follow applicants
 in your recruitment process with the smart kanban view.
@@ -45,11 +45,11 @@ Keep track of the time spent by project, client or task. It's easy to record
 timesheets or check attendances for each employee. Get your analytic accounting
 posted automatically based on time spent on your projects.
 
-Leaves Management
+Time Off Management
 -----------------
 
 Keep track of the vacation days accrued by each employee. Employees enter their
-requests (paid holidays, sick leave, etc), for managers to approve and
+requests (paid time off, sick time off, etc), for managers to approve and
 validate. It's all done in just a few clicks. The agenda of each employee is
 updated accordingly.
 
@@ -80,7 +80,7 @@ performers to the entire channel and publicly recognize a job well done.
 
 ### Leaderboards
 
-Promote leaders and competition amongst sales channel with performance ratios.
+Promote leaders and competition amongst Sales Team with performance ratios.
 
 ### Personal Objectives
 

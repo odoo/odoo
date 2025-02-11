@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Mercury Payment Services',
+    'name': 'Vantiv Payment Services',
     'version': '1.0',
-    'category': 'Point of Sale',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Credit card support for Point Of Sale',
     'description': """
@@ -12,8 +12,8 @@ Allow credit card POS payments
 ==============================
 
 This module allows customers to pay for their orders with credit
-cards. The transactions are processed by Mercury (developed by Wells
-Fargo Bank). A Mercury merchant account is necessary. It allows the
+cards. The transactions are processed by Vantiv (developed by Wells
+Fargo Bank). A Vantiv merchant account is necessary. It allows the
 following:
 
 * Fast payment by just swiping a credit card while on the payment screen
@@ -22,11 +22,9 @@ following:
 * Supported cards: Visa, MasterCard, American Express, Discover
     """,
     'depends': ['web', 'barcodes', 'point_of_sale'],
-    'website': '',
     'data': [
         'data/pos_mercury_data.xml',
         'security/ir.model.access.csv',
-        'views/pos_mercury_templates.xml',
         'views/pos_mercury_views.xml',
         'views/pos_mercury_transaction_templates.xml',
         'views/pos_config_setting_views.xml',
@@ -34,9 +32,11 @@ following:
     'demo': [
         'data/pos_mercury_demo.xml',
     ],
-    'qweb': [
-        'static/src/xml/pos_mercury.xml',
-    ],
     'installable': True,
-    'auto_install': False,
+    'assets': {
+        'point_of_sale._assets_pos': [
+            'pos_mercury/static/src/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

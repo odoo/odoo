@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="crm_menu_resellers"
+              name="Resellers"
+              parent="crm.crm_menu_config"
+              sequence="16"/>
+
+    <menuitem id="menu_res_partner_grade_action"
+              action="res_partner_grade_action"
+              parent="crm_menu_resellers"
+              sequence="1"/>
+
+    <menuitem id="res_partner_activation_config_mi"
+              parent="crm_menu_resellers"
+              action="res_partner_activation_act"
+              sequence="2"/>
+
+</odoo>

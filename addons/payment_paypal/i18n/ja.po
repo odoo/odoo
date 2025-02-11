@@ -1,146 +1,110 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_paypal
-#
+# 	* payment_paypal
+# 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-30 06:57+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
-"Language: ja\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_paypal
-#: model:payment.acquirer,cancel_msg:payment_paypal.payment_acquirer_paypal
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__code
+msgid "Code"
+msgstr "コード"
 
 #. module: payment_paypal
-#: model:payment.acquirer,done_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
+msgid "Email"
+msgstr "メール"
 
 #. module: payment_paypal
-#: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-
-#. module: payment_paypal
-#: model:payment.acquirer,pending_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
-msgid "Access Token"
-msgstr "アクセストークン"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
-msgid "Access Token Validity"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model,name:payment_paypal.model_res_company
-msgid "Companies"
-msgstr "会社"
-
-#. module: payment_paypal
-#: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "How to configure your paypal account?"
 msgstr "PayPalアカウントをどのように設定すればよいですか？"
 
 #. module: payment_paypal
-#: model:ir.model,name:payment_paypal.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr ""
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
+msgstr " txn_id (%(txn_id)s) または txn_type (%(txn_type)s)用の欠損値"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "参照に一致する取引が見つかりません%s。"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_pdt_token
+msgid "PDT Identity Token"
+msgstr "PDTIDトークン"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
+msgid "PayPal Transaction Type"
+msgstr "PayPalトランザクションタイプ"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_provider
+msgid "Payment Provider"
+msgstr "決済プロバイダー"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "決済トランザクション"
 
 #. module: payment_paypal
-#: model:payment.acquirer,name:payment_paypal.payment_acquirer_paypal
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
 msgid "Paypal"
 msgstr "PayPal"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
-msgid "Paypal Email ID"
-msgstr "PayPal EメールID"
-
-#. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_use_ipn
-msgid "Paypal Instant Payment Notification"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
-msgid "Paypal Merchant ID"
-msgstr "PayPalマーチャントID"
-
-#. module: payment_paypal
-#: model:ir.ui.view,arch_db:payment_paypal.transaction_form_paypal
-msgid "Paypal TX Details"
-msgstr ""
-
-#. module: payment_paypal
-#: code:addons/payment_paypal/models/paypal.py:183
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
-msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr ""
+msgid "Received data with invalid payment status: %s"
+msgstr "無効な支払ステータスのデータを受信しました: %s"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
-msgid "Rest API Password"
-msgstr ""
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "The customer left the payment page."
+msgstr "顧客が支払ページを去りました。"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_username
-msgid "Rest API Username"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_seller_account
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
 msgid ""
-"The Merchant ID is used to ensure communications coming from Paypal are "
-"valid and secured."
-msgstr ""
+"The public business email solely used to identify the account with PayPal"
+msgstr "Paypalのアカウントを識別するためにのみ使用される公開ビジネスEメール"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
-msgid "Transaction type"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_use_ipn
-msgid "Use IPN"
-msgstr "IPNを使用"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
-msgid "Use Rest API"
-msgstr ""
-
-#. module: payment_paypal
-#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
+#. odoo-python
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
 msgid ""
-"You will be redirected to the Paypal website after clicking on the payment "
-"button."
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the 'Payment data transfer' option is not enabled on the PayPal "
+"dashboard."
 msgstr ""
+"参照 %(ref)sの取引ステータスが同期されなかったのは、PayPalダッシュボードで'支払いデータ転送'オプションが有効になっていないためです。"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "この決済プロバイダーのテクニカルコード。"

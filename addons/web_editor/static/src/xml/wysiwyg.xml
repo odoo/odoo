@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web_editor.Wysiwyg">
+        <div style="display: contents;" t-ref="toolbar">
+            <Toolbar t-props="this.state.toolbarProps" t-if="this.state.showToolbar"/>
+        </div>
+        <div style="display: contents;" t-ref="imageCrop">
+            <ImageCrop t-props="this.imageCropProps"/>
+        </div>
+        <div t-ref="el"/>
+    </t>
+
+    <!--=================-->
+    <!-- Edition Dialogs -->
+    <!--=================-->
+
+    <!-- Link Dialog (allows to choose a style and content for a link on the page) -->
+    <div t-name="web_editor.LinkDialog">
+        <t t-set="title">Insert a Link / Button</t>
+        <Dialog size="'xl'" title="title">
+            <div  class="o_link_dialog">
+                <div class="row" t-ref="linkComponentWrapper">
+                    <form class="col-lg-8">
+                        <div t-attf-class="mb-3 row#{props.needLabel ? '' : ' d-none'}">
+                            <label class="col-form-label col-md-3" for="o_link_dialog_label_input">Link Label</label>
+                            <div class="col-md-9">
+                                <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-ref="inputText"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="mb-3 row o_url_input#{state.isButton ? ' d-none' : ''}">
+                            <label class="col-form-label col-md-3" for="o_link_dialog_url_input">URL or Email</label>
+                            <div class="col-md-9">
+                                <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required" t-ref="inputUrl"/>
+                                <div class="form-check o_strip_domain d-none">
+                                    <input type="checkbox" id="o_link_dialog_url_strip_domain" checked="checked" class="form-check-input"/>
+                                    <label for="o_link_dialog_url_strip_domain" class="form-check-label fw-normal">
+                                        Autoconvert to relative link
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-form-label col-md-3">Type</label>
+                            <div class="col-md-9 d-flex align-items-center">
+                                <div t-attf-class="#{this.colorCombinationClass ? ('p-2 ' + this.colorCombinationClass) : ''}">
+                                    <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
+                                        <label role="button" class="m-0 me-2" t-if="colorData.type !== 'custom'">
+                                            <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData.type"/>
+                                            <span t-esc="colorData.label"
+                                                    t-attf-class="o_btn_preview btn btn-sm btn-#{colorData.btnPreview} #{colorData.type ? '' : 'px-0'}"/>
+                                        </label>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="o_link_dialog_button_opts_collapse" class="collapse">
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-md-3">Size</label>
+                                <div class="col-md-9">
+                                    <select name="link_style_size" class="form-select link-style">
+                                        <option value="sm">Small</option>
+                                        <option value="" selected="selected">Medium</option>
+                                        <option value="lg">Large</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-md-3">Style</label>
+                                <div class="col-md-9">
+                                    <select name="link_style_shape" class="form-select link-style">
+                                        <option value="" selected="selected">Default</option>
+                                        <option value="rounded-circle">Default + Rounded</option>
+                                        <option value="outline">Outline</option>
+                                        <option value="outline,rounded-circle">Outline + Rounded</option>
+                                        <option value="fill">Fill</option>
+                                        <option value="fill,rounded-circle">Fill + Rounded</option>
+                                        <option value="flat">Flat</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row" t-if="!state.isButton and !props.forceNewWindow">
+                            <div class="offset-md-3 col-md-9">
+                                <label class="o_switch">
+                                    <input type="checkbox" name="is_new_window" t-att-checked="this.initialNewWindow ? 'checked' : undefined"/>
+                                    <span/>
+                                    Open in new window
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="col-lg-4 o_link_dialog_preview">
+                        <div class="mb-3 text-center">
+                            <label>Preview</label>
+                            <div t-attf-class="#{this.colorCombinationClass ? ('p-2 ' + this.colorCombinationClass) : ''}"
+                                style="overflow-x: auto; max-width: 100%; max-height: 200px;">
+                                <a href="#" id="link-preview" aria-label="Preview" title="Preview"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary" t-on-click="this.onSave">Insert</button>
+                    <button class="btn btn-secondary" t-on-click="this.onDiscard">Discard</button>
+                </t>
+            </div>
+        </Dialog>
+    </div>
+
+    <we-customizeblock-option t-name="web_editor.LinkTools">
+        <div style="display: contents" t-ref="linkComponentWrapper">
+            <we-row id="url_row" t-attf-class="#{state.isButton ? ' d-none' : ''}">
+                <we-input class="o_we_user_value_widget o_we_sublevel_1">
+                    <we-title class="o_short_title"></we-title>
+                    <div class="o_url_input">
+                        <input name="url" id="o_link_dialog_url_input" type="text" placeholder="Your URL"/>
+                    </div>
+                </we-input>
+            </we-row>
+            <we-row class="o_strip_domain d-none" t-attf-class="#{state.isButton ? ' d-none' : ''}">
+                <we-button class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 active">
+                    <we-title class="o_long_title">Autoconvert to relative link</we-title>
+                        <div class="o_switch">
+                            <we-checkbox name="do_strip_domain"/>
+                        </div>
+                </we-button>
+            </we-row>
+            <we-row t-attf-class="o_we_sublevel_1 {{props.needLabel ? '' : 'd-none'}}">
+                <we-title>Label</we-title>
+                <we-input class="o_we_user_value_widget">
+                    <div>
+                        <input name="label" id="o_link_dialog_label_input" type="text"/>
+                    </div>
+                </we-input>
+            </we-row>
+            <we-row>
+                <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                    <we-title>Style</we-title>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" data-bs-toggle="dropdown" tabindex="-1" aria-expanded="false">
+                            <we-toggler title="Link Style"/>
+                        </button>
+                        <we-selection-items class="dropdown-menu" name="link_style_color">
+                            <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
+                                <we-button class="dropdown-item" href="#" t-att-data-value="colorData.type">
+                                    <t t-esc="colorData.label"/>
+                                </we-button>
+                            </t>
+                        </we-selection-items>
+                        <span class="o_we_dropdown_caret"></span>
+                    </div>
+                </we-select>
+            </we-row>
+            <we-row class="link-custom-color link-custom-color-text" t-att-class="{'d-none': !state.showLinkCustomColor}">
+                <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette o_we_sublevel_2">
+                    <we-title>Text Color</we-title>
+                    <div class="dropdown">
+                        <span data-bs-toggle="dropdown" data-css-property="color" class="o_we_color_preview"></span>
+                        <we-selection-items class="dropdown-menu" name="link_text_color">
+                            <ColorPalette
+                                selectedColor="colorpickerProps['color'].selectedColor"
+                                excluded="['transparent_grayscale']"
+                                document="this.props.wysiwyg.options.document"
+                                onSetColorNames="(colorNames) => this._onColorpaletteSetColorNames('color', colorNames)"
+                                onColorHover="(params) => this._colorpaletteApply('color', params)"
+                                onColorLeave="(params) => this._colorpaletteApply('color', params)"
+                                onColorPicked="(params) => this._onColorpaletteColorPicked('color', params)"
+                                onCustomColorPicked="(params) => this._onColorpaletteColorPicked('color', params)"
+                                getTemplate="this.props.getColorpickerTemplate"
+                                />
+                        </we-selection-items>
+                    </div>
+                </we-select>
+            </we-row>
+            <we-row class="link-custom-color link-custom-color-fill" t-att-class="{'d-none': !state.showLinkCustomColor}">
+                <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette o_we_sublevel_2">
+                    <we-title>Fill Color</we-title>
+                    <div class="dropdown">
+                        <span data-bs-toggle="dropdown" data-css-property="background-color" class="o_we_color_preview"></span>
+                        <we-selection-items class="dropdown-menu" name="link_fill_color">
+                            <ColorPalette
+                                selectedColor="colorpickerProps['background-color'].selectedColor"
+                                excluded="['transparent_grayscale']"
+                                document="this.props.wysiwyg.options.document"
+                                withGradients="true"
+                                onSetColorNames="(colorNames) => this._onColorpaletteSetColorNames('background-color', colorNames)"
+                                onColorHover="(params) => this._colorpaletteApply('background-color', params)"
+                                onColorLeave="(params) => this._colorpaletteApply('background-color', params)"
+                                onColorPicked="(params) => this._onColorpaletteColorPicked('background-color', params)"
+                                onCustomColorPicked="(params) => this._onColorpaletteColorPicked('background-color', params)"
+                                getTemplate="this.props.getColorpickerTemplate"
+                                />
+                        </we-selection-items>
+                    </div>
+                </we-select>
+            </we-row>
+            <we-row class="link-custom-color link-custom-color-border o_we_sublevel_2" t-att-class="{'d-none': !state.showLinkCustomColor}">
+                <we-title>Border</we-title>
+                <div>
+                    <we-input class="o_we_user_value_widget" title="Border Width">
+                        <div class="o_custom_border_width_input">
+                            <input name="custom_border_width" type="number" class="text-end" size="2"/>
+                            <span>px</span>
+                        </div>
+                    </we-input>
+                    <we-select class="o_we_user_value_widget" title="Border Style">
+                        <div class="dropdown">
+                            <button class="dropdown-toggle"
+                                data-bs-toggle="dropdown" title="" tabindex="-1"
+                                data-bs-original-title="Link Border Style" aria-expanded="false">
+                                <we-toggler/>
+                            </button>
+                            <we-selection-items class="dropdown-menu" name="link_border_style">
+                                <we-button title="Solid" class="dropdown-item" data-value="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
+                                <we-button title="Dashed" class="dropdown-item" data-value="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
+                                <we-button title="Dotted" class="dropdown-item" data-value="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
+                                <we-button title="Double" class="dropdown-item" data-value="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
+                            </we-selection-items>
+                        </div>
+                    </we-select>
+                    <we-select title="Border Color" class="o_we_user_value_widget o_we_so_color_palette">
+                        <div class="dropdown">
+                            <span data-bs-toggle="dropdown" data-css-property="border-color" class="o_we_color_preview"></span>
+                            <we-selection-items class="dropdown-menu" name="link_border_color">
+                                <ColorPalette
+                                    selectedColor="colorpickerProps['border-color'].selectedColor"
+                                    excluded="['transparent_grayscale']"
+                                    document="this.props.wysiwyg.options.document"
+                                    onSetColorNames="(colorNames) => this._onColorpaletteSetColorNames('border-color', colorNames)"
+                                    onColorHover="(params) => this._colorpaletteApply('border-color', params)"
+                                    onColorLeave="(params) => this._colorpaletteApply('border-color', params)"
+                                    onColorPicked="(params) => this._onColorpaletteColorPicked('border-color', params)"
+                                    onCustomColorPicked="(params) => this._onColorpaletteColorPicked('border-color', params)"
+                                    getTemplate="this.props.getColorpickerTemplate"
+                                    />
+                            </we-selection-items>
+                        </div>
+                    </we-select>
+                </div>
+            </we-row>
+            <we-row class="link-size-row" t-att-class="{'d-none': !state.showLinkSizeRow}">
+                <we-select class="o_we_user_value_widget o_we_sublevel_2">
+                    <we-title>Size</we-title>
+                    <div>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle" data-bs-toggle="dropdown" title="" tabindex="-1" aria-expanded="false">
+                                <we-toggler title="Link Size">
+                                    Medium
+                                </we-toggler>
+                            </button>
+                            <we-selection-items name="link_style_size" class="dropdown-menu link-style">
+                                <we-button class="dropdown-item" href="#" data-value="sm">
+                                    Small
+                                </we-button>
+                                <we-button class="dropdown-item active" href="#" data-value="">
+                                    Medium
+                                </we-button>
+                                <we-button class="dropdown-item" href="#" data-value="lg">
+                                    Large
+                                </we-button>
+                            </we-selection-items>
+                            <span class="o_we_dropdown_caret"></span>
+                        </div>
+                    </div>
+                </we-select>
+            </we-row>
+            <we-row class="link-shape-row"  t-att-class="{'d-none': !state.showLinkShapeRow}">
+                <we-select class="o_we_user_value_widget o_we_sublevel_2">
+                    <we-title>Shape</we-title>
+                    <div>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle" data-bs-toggle="dropdown" tabindex="-1" aria-expanded="false">
+                                <we-toggler title="Link Shape">
+                                    Default
+                                </we-toggler>
+                            </button>
+                            <we-selection-items name="link_style_shape" class="dropdown-menu link-style">
+                                <we-button class="dropdown-item active" data-value="">Default</we-button>
+                                <we-button class="dropdown-item" data-value="rounded-circle">Default + Rounded</we-button>
+                                <we-button class="dropdown-item" data-value="outline">Outline</we-button>
+                                <we-button class="dropdown-item" data-value="outline,rounded-circle">Outline + Rounded</we-button>
+                                <we-button class="dropdown-item" data-value="fill">Fill</we-button>
+                                <we-button class="dropdown-item" data-value="fill,rounded-circle">Fill + Rounded</we-button>
+                                <we-button class="dropdown-item" data-value="flat">Flat</we-button>
+                            </we-selection-items>
+                        </div>
+                    </div>
+                </we-select>
+            </we-row>
+            <we-row  t-if="!state.isButton and !props.forceNewWindow">
+                <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 #{this.initialNewWindow ? 'active' : ''}">
+                    <we-title class="o_long_title">Open in new window</we-title>
+                        <div class="o_switch">
+                            <we-checkbox name="is_new_window" t-att-checked="this.initialNewWindow ? 'checked' : undefined"/>
+                        </div>
+                </we-button>
+            </we-row>
+        </div>
+    </we-customizeblock-option>
+
+    <!-- ImageCrop controls (allows to crop images on the page) -->
+    <div t-name="web_editor.ImageCrop" class="o_we_crop_widget" contenteditable="false"
+        t-att-class="this.state.active ? '' : 'd-none'"
+        t-ref="el"
+       >
+        <div class="o_we_cropper_wrapper">
+            <img class="o_we_cropper_img"/>
+            <div class="o_we_crop_buttons text-center mt16 o_we_no_overlay" contenteditable="false">
+                <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-bs-toggle="buttons">
+                    <t t-foreach="this.aspectRatios" t-as="ratio" t-key="ratio">
+                        <t t-set="is_active" t-value="ratio === this.aspectRatio"/>
+                        <label t-attf-class="btn #{is_active and 'active' or ''}" data-action="ratio" t-att-data-value="ratio">
+                            <input type="radio" /><t t-esc="ratio_value.label"/>
+                        </label>
+                    </t>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Zoom In" data-action="zoom" data-value="0.1"><i class="fa fa-fw fa-search-plus"/></button>
+                    <button type="button" title="Zoom Out" data-action="zoom" data-value="-0.1"><i class="fa fa-fw fa-search-minus"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Rotate Left" data-action="rotate" data-value="-90"><i class="fa fa-fw fa-rotate-left"/></button>
+                    <button type="button" title="Rotate Right" data-action="rotate" data-value="90"><i class="fa fa-fw fa-rotate-right"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Flip Horizontal" data-action="flip" data-scale-direction="scaleX"><i class="oi oi-fw oi-arrows-h"/></button>
+                    <button type="button" title="Flip Vertical" data-action="flip" data-scale-direction="scaleY"><i class="oi oi-fw oi-arrows-v"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Reset Image" data-action="reset"><i class="fa fa-refresh"/> Reset Image</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Apply" data-action="apply" class="btn btn-primary"><i class="fa fa-check"/> Apply</button>
+                    <button type="button" title="Discard" data-action="discard" class="btn btn-danger"><i class="fa fa-times"/> Discard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</templates>

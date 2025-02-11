@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="offboarding_fleet" model="mail.activity.plan.template">
+            <field name="summary">Take Back Fleet</field>
+            <field name="responsible_type">fleet_manager</field>
+            <field name="plan_id" ref="hr.offboarding_plan"/>
+        </record>
+
+    </data>
+</odoo>

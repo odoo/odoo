@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_account_audit_trail" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.account.audit.trail</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <app name="account" position="inside">
+                <block title="Audit Trail" name="audit_trail_setting_container">
+                    <setting string="Audit Trail" company_dependent="1" help="Activate Audit Trail">
+                        <field name="check_account_audit_trail"/>
+                        <button name="%(account_audit_trail.action_account_audit_trail_report)d"
+                                type="action"
+                                string="Go to Audit Trail"
+                                class="oe_highlight"
+                                invisible="check_account_audit_trail == False"/>
+                    </setting>
+                </block>
+            </app>
+        </field>
+    </record>
+</odoo>

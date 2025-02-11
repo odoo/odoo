@@ -1,167 +1,291 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from markupsafe import Markup
+from unittest.mock import patch
 
-import base64
-import datetime
+from odoo.addons.mail.tests.common import MailCommon
+from odoo.exceptions import AccessError, ValidationError, UserError
+from odoo.tests import Form, HttpCase, tagged, users
+from odoo.tools import convert_file
 
-from odoo.addons.mail.tests.common import TestMail
-from odoo.tools import mute_logger
+
+@tagged('mail_template')
+class TestMailTemplate(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailTemplate, cls).setUpClass()
+        # Enable the Jinja rendering restriction
+        cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        cls.user_employee.groups_id -= cls.env.ref('mail.group_mail_template_editor')
+
+        cls.mail_template = cls.env['mail.template'].create({
+            'name': 'Test template',
+            'subject': '{{ 1 + 5 }}',
+            'body_html': '<t t-out="4 + 9"/>',
+            'lang': '{{ object.lang }}',
+            'auto_delete': True,
+            'model_id': cls.env.ref('base.model_res_partner').id,
+        })
+
+    @users('employee')
+    def test_mail_compose_message_content_from_template(self):
+        form = Form(self.env['mail.compose.message'])
+        form.template_id = self.mail_template
+        mail_compose_message = form.save()
+
+        self.assertEqual(mail_compose_message.subject, '6', 'We must trust mail template values')
+
+    @users('employee')
+    def test_mail_compose_message_content_from_template_mass_mode(self):
+        mail_compose_message = self.env['mail.compose.message'].create({
+            'composition_mode': 'mass_mail',
+            'model': 'res.partner',
+            'template_id': self.mail_template.id,
+            'subject': '{{ 1 + 5 }}',
+        })
+
+        values = mail_compose_message._prepare_mail_values(self.partner_employee.ids)
+
+        self.assertEqual(values[self.partner_employee.id]['subject'], '6', 'We must trust mail template values')
+        self.assertIn('13', values[self.partner_employee.id]['body_html'], 'We must trust mail template values')
+
+    @users('admin')
+    def test_mail_template_abstract_model(self):
+        """Check abstract models cannot be set on templates."""
+        # create
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.env['mail.template'].create({
+                'name': 'Test abstract template',
+                'model_id': self.env['ir.model']._get('mail.thread').id, # abstract model
+            })
+        # write
+        template = self.env['mail.template'].create({
+            'name': 'Test abstract template',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            template.write({
+                'name': 'Test abstract template',
+                'model_id': self.env['ir.model']._get('mail.thread').id,
+            })
+
+    def test_mail_template_acl(self):
+        # Sanity check
+        self.assertTrue(self.user_admin.has_group('mail.group_mail_template_editor'))
+        self.assertTrue(self.user_admin.has_group('base.group_sanitize_override'))
+        self.assertFalse(self.user_employee.has_group('mail.group_mail_template_editor'))
+        self.assertFalse(self.user_employee.has_group('base.group_sanitize_override'))
+
+        # Group System can create / write / unlink mail template
+        mail_template = self.env['mail.template'].with_user(self.user_admin).create({'name': 'Test template'})
+        self.assertEqual(mail_template.name, 'Test template')
+
+        mail_template.with_user(self.user_admin).name = 'New name'
+        self.assertEqual(mail_template.name, 'New name')
+
+        # Standard employee can create and edit non-dynamic templates
+        employee_template = self.env['mail.template'].with_user(self.user_employee).create({'body_html': '<p>foo</p>'})
+
+        employee_template.with_user(self.user_employee).body_html = '<p>bar</p>'
+
+        employee_template = self.env['mail.template'].with_user(self.user_employee).create({'email_to': 'foo@bar.com'})
+
+        employee_template.with_user(self.user_employee).email_to = 'bar@foo.com'
+
+        # Standard employee cannot create and edit templates with dynamic qweb
+        with self.assertRaises(AccessError):
+            self.env['mail.template'].with_user(self.user_employee).create({'body_html': '<p t-esc="\'foo\'"></p>'})
+
+        # Standard employee cannot edit templates from another user, non-dynamic and dynamic
+        with self.assertRaises(AccessError):
+            mail_template.with_user(self.user_employee).body_html = '<p>foo</p>'
+        with self.assertRaises(AccessError):
+            mail_template.with_user(self.user_employee).body_html = '<p t-esc="\'foo\'"></p>'
+
+        # Standard employee can edit his own templates if not dynamic
+        employee_template.with_user(self.user_employee).body_html = '<p>foo</p>'
+
+        # Standard employee cannot create and edit templates with dynamic inline fields
+        with self.assertRaises(AccessError):
+            self.env['mail.template'].with_user(self.user_employee).create({'email_to': '{{ object.partner_id.email }}'})
+
+        # Standard employee cannot edit his own templates if dynamic
+        with self.assertRaises(AccessError):
+            employee_template.with_user(self.user_employee).body_html = '<p t-esc="\'foo\'"></p>'
+
+        with self.assertRaises(AccessError):
+            employee_template.with_user(self.user_employee).email_to = '{{ object.partner_id.email }}'
+
+    def test_mail_template_acl_translation(self):
+        ''' Test that a user that doenn't have the group_mail_template_editor cannot create / edit
+        translation with dynamic code if he cannot write dynamic code on the related record itself.
+        '''
+
+        self.env.ref('base.lang_fr').sudo().active = True
+
+        employee_template = self.env['mail.template'].with_user(self.user_employee).create({
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'subject': 'The subject',
+            'body_html': '<p>foo</p>',
+        })
+
+        ### check qweb dynamic
+        # write on translation for template without dynamic code is allowed
+        employee_template.with_context(lang='fr_FR').body_html = 'non-qweb'
+
+        # cannot write dynamic code on mail_template translation for employee without the group mail_template_editor.
+        with self.assertRaises(AccessError):
+            employee_template.with_context(lang='fr_FR').body_html = '<t t-esc="foo"/>'
+
+        employee_template.with_context(lang='fr_FR').sudo().body_html = '<t t-esc="foo"/>'
+
+        # reset the body_html to static
+        employee_template.body_html = False
+        employee_template.body_html = '<p>foo</p>'
+
+        ### check qweb inline dynamic
+        # write on translation for template without dynamic code is allowed
+        employee_template.with_context(lang='fr_FR').subject = 'non-qweb'
+
+        # cannot write dynamic code on mail_template translation for employee without the group mail_template_editor.
+        with self.assertRaises(AccessError):
+            employee_template.with_context(lang='fr_FR').subject = '{{ object.foo }}'
+
+        employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.foo }}'
+
+    def test_mail_template_parse_partner_to(self):
+        for partner_to, expected in [
+            ('1', [1]),
+            ('1,2,3', [1, 2, 3]),
+            ('1, 2,  3', [1, 2, 3]),  # remove spaces
+            ('[1, 2, 3]', [1, 2, 3]),  # %r of a list
+            ('(1, 2, 3)', [1, 2, 3]),  # %r of a tuple
+            ('1,[],2,"3"', [1, 2, 3]),  # type tolerant
+            ('(1, "wrong", 2, "partner_name", "3")', [1, 2, 3]),  # fault tolerant
+            ('res.partner(1, 2, 3)', [2]),  # invalid input but avoid crash
+        ]:
+            with self.subTest(partner_to=partner_to):
+                parsed = self.mail_template._parse_partner_to(partner_to)
+                self.assertListEqual(parsed, expected)
+
+    def test_server_archived_usage_protection(self):
+        """ Test the protection against using archived server (servers used cannot be archived) """
+        IrMailServer = self.env['ir.mail_server']
+        server = IrMailServer.create({
+            'name': 'Server',
+            'smtp_host': 'archive-test.smtp.local',
+        })
+        self.mail_template.mail_server_id = server.id
+        with self.assertRaises(UserError, msg='Server cannot be archived because it is used'):
+            server.action_archive()
+        self.assertTrue(server.active)
+        self.mail_template.mail_server_id = IrMailServer
+        server.action_archive()  # No more usage -> can be archived
+        self.assertFalse(server.active)
 
 
-class TestMailTemplate(TestMail):
+@tagged('mail_template')
+class TestMailTemplateReset(MailCommon):
 
-    def setUp(self):
-        super(TestMailTemplate, self).setUp()
+    def _load(self, module, filepath):
+        # pylint: disable=no-value-for-parameter
+        convert_file(self.env, module='mail',
+                     filename=filepath,
+                     idref={}, mode='init', noupdate=False, kind='test')
 
-        self._attachments = [{
-            'name': '_Test_First',
-            'datas_fname':
-            'first.txt',
-            'datas': base64.b64encode(b'My first attachment'),
-            'res_model': 'res.partner',
-            'res_id': self.user_admin.partner_id.id
-        }, {
-            'name': '_Test_Second',
-            'datas_fname': 'second.txt',
-            'datas': base64.b64encode(b'My second attachment'),
-            'res_model': 'res.partner',
-            'res_id': self.user_admin.partner_id.id
-        }]
+    def test_mail_template_reset(self):
+        self._load('mail', 'tests/test_mail_template.xml')
 
-        self.email_1 = 'test1@example.com'
-        self.email_2 = 'test2@example.com'
-        self.email_3 = self.partner_1.email
-        self.email_template = self.env['mail.template'].create({
-            'model_id': self.env['ir.model']._get('mail.test').id,
-            'name': 'Pigs Template',
-            'subject': '${object.name}',
-            'body_html': '${object.description}',
-            'user_signature': False,
-            'attachment_ids': [(0, 0, self._attachments[0]), (0, 0, self._attachments[1])],
-            'partner_to': '%s,%s' % (self.partner_2.id, self.user_employee.partner_id.id),
-            'email_to': '%s, %s' % (self.email_1, self.email_2),
-            'email_cc': '%s' % self.email_3})
+        mail_template = self.env.ref('mail.mail_template_test').with_context(lang=self.env.user.lang)
 
-    def test_composer_template_onchange(self):
-        composer = self.env['mail.compose.message'].with_context({
-            'default_composition_mode': 'comment',
-            'default_model': 'mail.test',
-            'default_res_id': self.test_pigs.id,
-            'default_use_template': False,
-            'default_template_id': False
-        }).create({'subject': 'Forget me subject', 'body': 'Dummy body'})
+        mail_template.write({
+            'body_html': '<div>Hello</div>',
+            'name': 'Mail: Mail Template',
+            'subject': 'Test',
+            'email_from': 'admin@example.com',
+            'email_to': 'user@example.com',
+            'attachment_ids': False,
+        })
 
-        values = composer.onchange_template_id(self.email_template.id, 'comment', 'mail.test', self.test_pigs.id)['value']
-        # use _convert_to_cache to return a browse record list from command list or id list for x2many fields
-        values = composer._convert_to_record(composer._convert_to_cache(values))
-        recipients = values['partner_ids']
-        attachments = values['attachment_ids']
+        context = {'default_template_ids': mail_template.ids}
+        mail_template_reset = self.env['mail.template.reset'].with_context(context).create({})
+        reset_action = mail_template_reset.reset_template()
+        self.assertTrue(reset_action)
 
-        test_recipients = self.env['res.partner'].search([('email', 'in', ['test1@example.com', 'test2@example.com'])]) | self.partner_1 | self.partner_2 | self.user_employee.partner_id
-        test_attachments = self.env['ir.attachment'].search([('name', 'in', ['_Test_First', '_Test_Second'])])
-        self.assertEqual(values['subject'], self.test_pigs.name)
-        self.assertEqual(values['body'], '<p>%s</p>' % self.test_pigs.description)
-        self.assertEqual(recipients, test_recipients)
-        self.assertEqual(set(recipients.mapped('email')), set([self.email_1, self.email_2, self.partner_1.email, self.partner_2.email, self.user_employee.email]))
-        self.assertEqual(attachments, test_attachments)
-        self.assertEqual(set(attachments.mapped('res_model')), set(['res.partner']))
-        self.assertEqual(set(attachments.mapped('res_id')), set([self.user_admin.partner_id.id]))
+        self.assertEqual(mail_template.body_html.strip(), Markup('<div>Hello Odoo</div>'))
+        self.assertEqual(mail_template.name, 'Mail: Test Mail Template')
+        self.assertEqual(
+            mail_template.email_from,
+            '"{{ object.company_id.name }}" <{{ (object.company_id.email or user.email) }}>'
+        )
+        self.assertEqual(mail_template.email_to, '{{ object.email_formatted }}')
+        self.assertEqual(mail_template.attachment_ids, self.env.ref('mail.mail_template_test_attachment'))
 
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_composer_template_send(self):
-        self.test_pigs.with_context(use_template=False).message_post_with_template(self.email_template.id, composition_mode='comment')
+        # subject is not there in the data file template, so it should be set to False
+        self.assertFalse(mail_template.subject, "Subject should be set to False")
 
-        message = self.test_pigs.message_ids[0]
-        test_recipients = self.env['res.partner'].search([('email', 'in', ['test1@example.com', 'test2@example.com'])]) | self.partner_1 | self.partner_2 | self.user_employee.partner_id
-        self.assertEqual(message.subject, self.test_pigs.name)
-        self.assertEqual(message.body, '<p>%s</p>' % self.test_pigs.description)
-        self.assertEqual(message.partner_ids, test_recipients)
-        self.assertEqual(set(message.attachment_ids.mapped('res_model')), set(['mail.test']))
-        self.assertEqual(set(message.attachment_ids.mapped('res_id')), set([self.test_pigs.id]))
-        # self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
-        #     'mail.message attachment name / data incorrect')
+    def test_mail_template_reset_translation(self):
+        """ Test if a translated value can be reset correctly when its translation exists/doesn't exist in the po file of the directory """
+        self._load('mail', 'tests/test_mail_template.xml')
 
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_composer_template_mass_mailing(self):
-        composer = self.env['mail.compose.message'].with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_notify': True,
-            'default_model': 'mail.test',
-            'default_res_id': self.test_pigs.id,
-            'default_template_id': self.email_template.id,
-            'active_ids': [self.test_pigs.id, self.test_public.id]
-        }).create({})
-        values = composer.onchange_template_id(self.email_template.id, 'mass_mail', 'mail.test', self.test_pigs.id)['value']
-        composer.write(values)
-        composer.send_mail()
+        self.env['res.lang']._activate_lang('en_UK')
+        self.env['res.lang']._activate_lang('fr_FR')
+        mail_template = self.env.ref('mail.mail_template_test').with_context(lang='en_US')
+        mail_template.write({
+            'body_html': '<div>Hello</div>',
+            'name': 'Mail: Mail Template',
+        })
 
-        message_1 = self.test_pigs.message_ids[0]
-        message_2 = self.test_public.message_ids[0]
+        mail_template.with_context(lang='en_UK').write({
+            'body_html': '<div>Hello UK</div>',
+            'name': 'Mail: Mail Template UK',
+        })
 
-        self.assertEqual(message_1.subject, self.test_pigs.name, 'mail.message subject on Pigs incorrect')
-        self.assertEqual(message_2.subject, self.test_public.name, 'mail.message subject on Bird incorrect')
-        self.assertIn(self.test_pigs.description, message_1.body, 'mail.message body on Pigs incorrect')
-        self.assertIn(self.test_public.description, message_2.body, 'mail.message body on Bird incorrect')
-        # todo for JDC: ! (False -> <p>False</p>)
+        context = {'default_template_ids': mail_template.ids, 'lang': 'fr_FR'}
 
-    def test_mail_template(self):
-        mail_id = self.email_template.send_mail(self.test_pigs.id)
-        mail = self.env['mail.mail'].browse(mail_id)
-        self.assertEqual(mail.subject, self.test_pigs.name)
-        self.assertEqual(mail.email_to, self.email_template.email_to)
-        self.assertEqual(mail.email_cc, self.email_template.email_cc)
-        self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_employee.partner_id)
+        def fake_load_file(translation_importer, filepath, lang, xmlids=None):
+            """ a fake load file to mimic the use case when
+            translations for fr_FR exist in the fr.po of the directory and
+            no en.po in the directory
+            """
+            if lang == 'fr_FR':  # fr_FR has translations
+                translation_importer.model_translations['mail.template'] = {
+                    'body_html': {'mail.mail_template_test': {'fr_FR': '<div>Hello Odoo FR</div>'}},
+                    'name':  {'mail.mail_template_test': {'fr_FR': "Mail: Test Mail Template FR"}},
+                }
 
-    def test_message_compose_template_save(self):
-        self.env['mail.compose.message'].with_context(
-            {'default_composition_mode': 'comment',
-            'default_model': 'mail.test',
-            'default_res_id': self.test_pigs.id,
-            'active_ids': [self.test_pigs.id, self.test_public.id]
-        }).create({
-            'subject': 'Forget me subject',
-            'body': '<p>Dummy body</p>'
-        }).with_context({'default_model': 'mail.test'}).save_as_template()
-        # Test: email_template subject, body_html, model
-        last_template = self.env['mail.template'].search([('model', '=', 'mail.test'), ('subject', '=', 'Forget me subject')], limit=1)
-        self.assertEqual(last_template.body_html, '<p>Dummy body</p>', 'email_template incorrect body_html')
+        with patch('odoo.tools.translate.TranslationImporter.load_file', fake_load_file):
+            mail_template_reset = self.env['mail.template.reset'].with_context(context).create({})
+            reset_action = mail_template_reset.reset_template()
+        self.assertTrue(reset_action)
 
-    def test_add_context_action(self):
-        self.email_template.create_action()
+        self.assertEqual(mail_template.body_html.strip(), Markup('<div>Hello Odoo</div>'))
+        self.assertEqual(mail_template.with_context(lang='en_UK').body_html.strip(), Markup('<div>Hello Odoo</div>'))
+        self.assertEqual(mail_template.with_context(lang='fr_FR').body_html.strip(), Markup('<div>Hello Odoo FR</div>'))
 
-        # check template act_window and ir_values has been updated
-        self.assertTrue(bool(self.email_template.ref_ir_act_window))
-        self.assertTrue(bool(self.email_template.ref_ir_value))
+        self.assertEqual(mail_template.name, 'Mail: Test Mail Template')
+        self.assertEqual(mail_template.with_context(lang='en_UK').name, 'Mail: Test Mail Template')
+        self.assertEqual(mail_template.with_context(lang='fr_FR').name, 'Mail: Test Mail Template FR')
 
-        # check those records
-        action = self.email_template.ref_ir_act_window
-        self.assertEqual(action.name, 'Send Mail (%s)' % self.email_template.name)
-        value = self.email_template.ref_ir_value
-        self.assertEqual(value.name, 'Send Mail (%s)' % self.email_template.name)
 
-    def test_set_scheduled_date_on_a_template(self):
-        self.email_template_in_2_days = self.email_template.copy()
-        self.email_template_in_2_days.write({'scheduled_date': "${(datetime.datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')}"})
+@tagged("mail_template", "-at_install", "post_install")
+class TestMailTemplateUI(HttpCase):
 
-        mail_now_id = self.email_template.send_mail(self.test_pigs.id)
-        mail_in_2_days_id = self.email_template_in_2_days.send_mail(self.test_pigs.id)
+    def test_mail_template_dynamic_placeholder_tour(self):
+        self.start_tour("/web", 'mail_template_dynamic_placeholder_tour', login="admin")
 
-        mail_now = self.env['mail.mail'].browse(mail_now_id)
-        mail_in_2_days = self.env['mail.mail'].browse(mail_in_2_days_id)
 
-        # assert scheduled date are correct
-        self.assertEqual(bool(mail_now.scheduled_date), False)
-        scheduled_date = datetime.datetime.strptime(mail_in_2_days.scheduled_date, '%Y-%m-%d %H:%M')
-        date_in_2_days = datetime.datetime.today() + datetime.timedelta(days = 2)
-        self.assertEqual(scheduled_date.day, date_in_2_days.day)
-        self.assertEqual(scheduled_date.month, date_in_2_days.month)
-        self.assertEqual(scheduled_date.year, date_in_2_days.year)
+@tagged("mail_template", "-at_install", "post_install")
+class TestTemplateConfigRestrictEditor(MailCommon):
 
-        # Launch the scheduler on the first mail, it should be reported in self.mails
-        # and the mail_mail is now deleted
-        self.env['mail.mail'].process_email_queue(ids=[mail_now.id])
-        self.assertTrue(len(self._mails) > 0)
-        
-        # Launch the scheduler on the first mail, it's still in 'outgoing' state
-        self.env['mail.mail'].process_email_queue(ids=[mail_in_2_days.id])
-        self.assertEqual(mail_in_2_days.state, 'outgoing')
+    def test_switch_icp_value(self):
+        # Sanity check
+        self.assertTrue(self.user_employee.has_group('mail.group_mail_template_editor'))
+        self.assertFalse(self.user_employee.has_group('base.group_system'))
+
+        self.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        self.assertFalse(self.user_employee.has_group('mail.group_mail_template_editor'))
+
+        self.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', False)
+        self.assertTrue(self.user_employee.has_group('mail.group_mail_template_editor'))

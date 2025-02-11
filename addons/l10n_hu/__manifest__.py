@@ -1,35 +1,24 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (C) 2014 InnOpen Group Kft (<http://www.innopen.eu>).
-
 {
-    'name': 'Hungarian - Accounting',
-    'version': '2.0',
-    'category': 'Localization',
+    'name': 'Hungary - Accounting',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['hu'],
+    'version': '3.0',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
-
-Base module for Hungarian localization
-==========================================
-
-This module consists :
-
- - Generic Hungarian chart of accounts
- - Hungarian taxes
- - Hungarian Bank information
- """,
-    'author': 'InnOpen Group Kft',
-    'website': 'http://www.innopen.eu',
-    'depends': ['account'],
-    'data': [
-        'data/l10n_hu_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/account.account.tag.csv',
-        'data/account.tax.template.csv',
-        'data/account.fiscal.position.template.csv',
-        'data/account.fiscal.position.tax.template.csv',
-        'data/res.bank.csv',
-        'data/account_chart_template_data.xml',
-        'data/account_chart_template_data.yml',
+Accounting chart and localization for Hungary
+    """,
+    'depends': [
+        'account',
+        'base_vat',
     ],
+    'data': [
+        'data/account_tax_report_data.xml',
+        'data/res.bank.csv',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

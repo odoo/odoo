@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//div[@id='informations']" position="before">
+            <t t-set="forced_vat" t-value="o.company_id.vat"/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('page')]/h2" position="replace">
+            <h2>
+                <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">VAT Invoice</span>
+                <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft VAT Invoice</span>
+                <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled VAT Invoice</span>
+                <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">Credit Note</span>
+                <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">Draft Credit Note</span>
+                <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">Cancelled Credit Note</span>
+                <span t-elif="o.move_type == 'in_refund'">Vendor Credit Note</span>
+                <span t-elif="o.move_type == 'in_invoice'">Vendor Bill</span>
+                <span t-if="o.name != '/'" t-field="o.name"/>
+            </h2>
+        </xpath>
+
+        <xpath expr="//div[@name='address_not_same_as_shipping']//t[@t-set='address']" position="inside">
+            <span t-field="o.partner_id.company_registry"/>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']//t[@t-set='address']" position="inside">
+            <span t-field="o.partner_id.company_registry"/>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']//t[@t-set='address']" position="inside">
+            <span t-field="o.partner_id.company_registry"/>
+        </xpath>
+
+        <xpath expr="//div[@id='total']" position="after">
+            <div t-if="o.currency_id.id != o.company_id.currency_id.id" class="ms-1">
+                <t t-set="rate" t-value="round(o.env['res.currency']._get_conversion_rate(o.company_id.currency_id, o.currency_id, o.company_id, o.invoice_date), 8)"/>
+                <strong>Exchange Rate</strong>: 1 <span t-esc="o.company_id.currency_id.name"/> = <span t-esc="rate"/> <span t-esc="o.currency_id.name"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_mu_account.report_invoice_document'"
+               t-call="l10n_mu_account.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

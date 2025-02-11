@@ -1,17 +1,26 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Stripe Payment Acquirer',
-    'category': 'Hidden',
-    'summary': 'Payment Acquirer: Stripe Implementation',
-    'version': '1.0',
-    'description': """Stripe Payment Acquirer""",
+    'name': 'Payment Provider: Stripe',
+    'version': '2.0',
+    'category': 'Accounting/Payment Providers',
+    'sequence': 350,
+    'summary': "An Irish-American payment provider covering the US and many others.",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
-        'views/payment_views.xml',
+        'views/payment_provider_views.xml',
         'views/payment_stripe_templates.xml',
-        'data/payment_acquirer_data.xml',
+        'views/payment_templates.xml',  # Only load the SDK on pages with a payment form.
+
+        'data/payment_provider_data.xml',  # Depends on views/payment_stripe_templates.xml
     ],
-    'images': ['static/description/icon.png'],
-    'installable': True,
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
+    'assets': {
+        'web.assets_frontend': [
+            'payment_stripe/static/src/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

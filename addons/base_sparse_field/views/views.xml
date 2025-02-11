@@ -10,7 +10,7 @@
                 <field name="related" position="before">
                     <field name="serialization_field_id"
                         domain="[('ttype','=','serialized'), ('model_id','=',parent.model)]"
-                        attrs="{'readonly': [('state','=','base')]}"/>
+                        readonly="state == 'base'"/>
                 </field>
             </field>
         </record>
@@ -22,8 +22,8 @@
             <field name="arch" type="xml">
                 <field name="related" position="before">
                     <field name="serialization_field_id"
-                        domain="[('ttype','=','serialized'), ('model_id','=',model_id)]"
-                        attrs="{'readonly': [('state','=','base')]}"/>
+                        context="{'default_model_id': model_id, 'default_ttype': 'serialized'}"
+                        readonly="state == 'base'"/>
                 </field>
             </field>
         </record>

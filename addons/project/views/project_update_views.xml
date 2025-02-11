@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_update_view_search" model="ir.ui.view">
+        <field name="name">project.update.view.search</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <search string="Search Update">
+                <field name="name"/>
+                <field name="project_id" invisible="1"/>
+                <field name="user_id"/>
+                <field name="description"/>
+                <field name="status"/>
+                <filter string="My Updates" name="my_updates" domain="[('user_id', '=', uid)]"/>
+                <filter string="Followed Updates" name="followed_updates" domain="[('message_is_follower', '=', True)]"/>
+                <separator/>
+                <filter string="On Track" name="on_track" domain="[('status', '=', 'on_track')]"/>
+                <filter string="At Risk" name="at_risk" domain="[('status', '=', 'at_risk')]"/>
+                <filter string="Off Track" name="off_track" domain="[('status', '=', 'off_track')]"/>
+                <filter string="On Hold" name="on_hold" domain="[('status', '=', 'on_hold')]"/>
+                <separator/>
+                <filter name="date" string="Date" date="date"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_update_view_form" model="ir.ui.view">
+        <field name="name">project.update.view.form</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <form string="Project Update" js_class="form_description_expander">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" class="o_text_overflow" placeholder="e.g. Monthly review"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" invisible="1"/>
+                            <field name="color" invisible="1"/>
+                            <field name="status" widget="status_with_color"/>
+                            <field name="progress" widget="progressbar" options="{'editable': true}"/>
+                        </group>
+                        <group>
+                            <field name="user_id" widget="many2one_avatar_user" readonly="1"/>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                    <separator/>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" nolabel="1" class="o_project_update_description" options="{'resizable': false, 'collaborative': true}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" options="{'post_refresh':True}" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_update_view_kanban" model="ir.ui.view">
+        <field name="name">project.update.view.kanban</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" js_class="project_update_kanban">
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + record.color.raw_value : ''}} oe_kanban_global_click o_pupdate_kanban_card">
+                            <!-- Project Update Kanban View is always ungrouped - see js_class -->
+                            <div class="o_kanban_detail_ungrouped row">
+                                <div class="col-sm-4 col-6 o_pupdate_name">
+                                    <b><field name="name_cropped"/></b>
+                                    <div class="d-flex gap-1">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                        <t t-esc="record.user_id.value"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2 text-sm-start col-6 align-end">
+                                    <field name="color" invisible="1"/>
+                                    <b><field name="status" readonly="1" widget="status_with_color"/></b>
+                                </div>
+                                <div class="col-sm-2 col-6 pb-0">
+                                    <b><field name="progress_percentage" widget="percentage"/></b>
+                                    <div>Progress</div>
+                                </div>
+                                <div class="col-sm-2 col-6 pb-0">
+                                    <b id="tasks_stats">
+                                        <field name="closed_task_count"/> / <field name="task_count"/> Tasks<span invisible="not task_count"> (<field name="closed_task_percentage"/>%)</span>
+                                    </b>
+                                </div>
+                                <div class="col-sm-2 col-6 pb-0 pt-2">
+                                    <b><field name="date"/></b>
+                                    <div>Date</div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="project_update_view_tree" model="ir.ui.view">
+        <field name="name">project.update.view.tree</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <tree sample="1" js_class="project_update_list">
+                <field name="name"/>
+                <field name="user_id" widget="many2one_avatar_user" class="fw-bold" optional="show"/>
+                <field name="date" optional="show"/>
+                <field name="progress" string="Progress" widget="progressbar" optional="show"/>
+                <field name="color" column_invisible="True"/>
+                <field name="status" widget="status_with_color"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_update_all_action" model="ir.actions.act_window">
+        <field name="name">Project Updates</field>
+        <field name="res_model">project.update</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="search_view_id" ref="project_update_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            No updates found. Let's create one!
+            </p><p>
+            Get a snapshot of the status of your project and share its progress with key stakeholders.
+            </p>
+        </field>
+    </record>
+</odoo>

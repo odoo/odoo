@@ -1,408 +1,590 @@
-odoo.define('website_links.website_links', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var ajax = require('web.ajax');
-var core = require('web.core');
-var rpc = require('web.rpc');
-var Widget = require('web.Widget');
-var base = require('web_editor.base');
-var website = require('website.website');
+import { _t } from "@web/core/l10n/translation";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import { browser } from "@web/core/browser/browser";
+import { KeepLast } from "@web/core/utils/concurrency";
 
-var qweb = core.qweb;
-var _t = core._t;
-var ZeroClipboard = window.ZeroClipboard;
+var SelectBox = publicWidget.Widget.extend({
+    events: {
+        'change': '_onChange',
+    },
 
-var exports = {};
+    /**
+     * @constructor
+     * @param {Object} parent
+     * @param {Object} obj
+     * @param {String} placeholder
+     */
+    init: function (parent, obj, placeholder) {
+        this._super.apply(this, arguments);
+        this.obj = obj;
+        this.placeholder = placeholder;
 
-if(!$('.o_website_links_create_tracked_url').length) {
-    return $.Deferred().reject("DOM doesn't contain '.o_website_links_create_tracked_url'");
-}
+        this.orm = this.bindService("orm");
+        this.keepLast = new KeepLast();
 
-    var SelectBox = Widget.extend({
-        init: function(obj) {
-            this.obj = obj;
-        },
-        start: function(element, placeholder) {
-            var self = this;
-            this.element = element;
-            this.placeholder = placeholder;
+        // TODO remove in master, contained the whole list of preloaded entries.
+        // Now we lazy load results based on the user search. We still save them
+        // in this array each time so that the "Create" feature works and so
+        // that potential custo may still make sense, or at least do not crash.
+        this.objects = [];
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        this.$el.select2({
+            placeholder: self.placeholder,
+            allowClear: true,
+            formatNoMatches: false,
+            createSearchChoice: function (term) {
+                if (self._objectExists(term)) {
+                    return null;
+                }
+                return { id: term, text: `Create '${term}'` };
+            },
+            createSearchChoicePosition: 'bottom',
+            multiple: false,
+            ajax: {
+                dataType: 'json',
+                data: term => term,
+                transport: (params, success, failure) => {
+                    // Do not search immediately: wait for the user to stop
+                    // typing (basically, this is a debounce).
+                    clearTimeout(this._loadDataTimeout);
+                    this._loadDataTimeout = setTimeout(() => {
+                        // We want to search with a limit and not care about any
+                        // pagination implementation. To make this work, we
+                        // display the exact match first though, which requires
+                        // an extra RPC (could be refactored into a new
+                        // controller in master but... see TODO).
+                        // TODO at some point this whole app will be moved as a
+                        // backend screen, with real m2o fields etc... in which
+                        // case the "exact match" feature should be handled by
+                        // the ORM somehow ?
+                        const limit = 100;
+                        const searchReadParams = [
+                            ['id', 'name'],
+                            {
+                                limit: limit,
+                                order: 'name, id desc', // Allows to have exact match first
+                            },
+                        ];
+                        const proms = [];
+                        proms.push(this.orm.searchRead(
+                            this.obj,
+                            // Exact match + results that start with the search
+                            [['name', '=ilike', `${params.data}%`]],
+                            ...searchReadParams
+                        ));
+                        proms.push(this.orm.searchRead(
+                            this.obj,
+                            // Results that contain the search but do not start
+                            // with it
+                            [['name', '=ilike', `%_${params.data}%`]],
+                            ...searchReadParams
+                        ));
+                        // Keep last is there in case a RPC takes longer than
+                        // the debounce delay + next rpc delay for some reason.
+                        this.keepLast.add(Promise.all(proms)).then(([startingMatches, endingMatches]) => {
+                            // We loaded max a 2 * limit amount of records but
+                            // ensure that we do not display "ending matches" if
+                            // we may not have loaded all "starting matches".
+                            if (startingMatches.length < limit) {
+                                const startingMatchesId = startingMatches.map((value) => value.id);
+                                const extraEndingMatches = endingMatches.filter(
+                                    (value) => !startingMatchesId.includes(value.id)
+                                );
+                                return startingMatches.concat(extraEndingMatches);
+                            }
+                            // In that case, we made one RPC too much but this
+                            // was chosen over not making them go in parallel.
+                            // We don't want to display "ending matches" if not
+                            // all "starting matches" have been loaded.
+                            return startingMatches;
+                        })
+                        .then(params.success)
+                        .catch(params.error);
+                    }, 400);
+                },
+                results: data => {
+                    this.objects = data.map(x => ({
+                        id: x.id,
+                        text: x.name,
+                    }));
+                    return {
+                        results: this.objects,
+                    };
+                },
+            },
+        });
+    },
 
-            this.fetch_objects().then(function(results) {
-                self.objects = results;
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-                element.select2({
-                    placeholder: self.placeholder,
-                    allowClear: true,
-                    createSearchChoice:function(term) {
-                        if(self.object_exists(term)) { return null; }
+    /**
+     * @private
+     * @param {String} query
+     */
+    _objectExists: function (query) {
+        return this.objects.find(val => val.text.toLowerCase() === query.toLowerCase()) !== undefined;
+    },
+    /**
+     * @private
+     * @param {String} name
+     */
+    _createObject: function (name) {
+        var args = {
+            name: name
+        };
+        if (this.obj === "utm.campaign") {
+            args.is_auto_campaign = true;
+        }
+        return this.orm.create(this.obj, [args]).then(record => {
+            this.$el.attr('value', record);
+        });
+    },
 
-                        return {id:term, text:_.str.sprintf("Create '%s'", term)};
-                    },
-                    createSearchChoicePosition: 'bottom',
-                    multiple: false,
-                    data: self.objects,
-                });
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
-                element.on('change', function(e) {
-                    self.on_change(e);
-                });
+    /**
+     * @private
+     * @param {Object} ev
+     */
+    _onChange: function (ev) {
+        if (!ev.added || typeof ev.added.id !== "string") {
+            return;
+        }
+        this._createObject(ev.added.id);
+    },
+});
+
+var RecentLinkBox = publicWidget.Widget.extend({
+    template: 'website_links.RecentLink',
+    events: {
+        'click .btn_shorten_url_clipboard': '_toggleCopyButton',
+        'click .o_website_links_edit_code': '_editCode',
+        'click .o_website_links_ok_edit': '_onLinksOkClick',
+        'click .o_website_links_cancel_edit': '_onLinksCancelClick',
+        'submit #o_website_links_edit_code_form': '_onSubmitCode',
+    },
+
+    /**
+     * @constructor
+     * @param {Object} parent
+     * @param {Object} obj
+     */
+    init: function (parent, obj) {
+        this._super.apply(this, arguments);
+        this.link_obj = obj;
+        this.animating_copy = false;
+        this.rpc = this.bindService("rpc");
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _toggleCopyButton: async function () {
+        await browser.navigator.clipboard.writeText(this.link_obj.short_url);
+
+        if (this.animating_copy) {
+            return;
+        }
+
+        var self = this;
+        this.animating_copy = true;
+        var top = this.$('.o_website_links_short_url').position().top;
+        this.$('.o_website_links_short_url').clone()
+            .css('position', 'absolute')
+            .css('left', 15)
+            .css('top', top - 2)
+            .css('z-index', 2)
+            .removeClass('o_website_links_short_url')
+            .addClass('animated-link')
+            .insertAfter(this.$('.o_website_links_short_url'))
+            .animate({
+                opacity: 0,
+                top: '-=20',
+            }, 500, function () {
+                self.$('.animated-link').remove();
+                self.animating_copy = false;
             });
-        },
-        fetch_objects: function() {
-            return rpc.query({
-                    model: this.obj,
-                    method: 'search_read',
-                })
-                .then(function(result) {
-                    return _.map(result, function(val) {
-                        return {id: val.id, text:val.name};
-                    });
-                });
-        },
-        object_exists: function(query) {
-            return _.find(this.objects, function(val) {
-                return val.text.toLowerCase() === query.toLowerCase();
-            }) !== undefined;
-        },
-        on_change: function(e) {
-            if(e.added && _.isString(e.added.id)) {
-                this.create_object(e.added.id);
-            }
-        },
-        create_object: function(name) {
-            var self = this;
+    },
+    /**
+     * @private
+     * @param {String} message
+     */
+    _notification: function (message) {
+        this.$('.notification').append('<strong>' + message + '</strong>');
+    },
+    /**
+     * @private
+     */
+    _editCode: function () {
+        var initCode = this.$('#o_website_links_code').html();
+        this.$('#o_website_links_code').html('<form style="display:inline;" id="o_website_links_edit_code_form"><input type="hidden" id="init_code" value="' + initCode + '"/><input type="text" id="new_code" value="' + initCode + '"/></form>');
+        this.$('.o_website_links_edit_code').hide();
+        this.$('.copy-to-clipboard').hide();
+        this.$('.o_website_links_edit_tools').show();
+    },
+    /**
+     * @private
+     */
+    _cancelEdit: function () {
+        this.$('.o_website_links_edit_code').show();
+        this.$('.copy-to-clipboard').show();
+        this.$('.o_website_links_edit_tools').hide();
+        this.$('.o_website_links_code_error').hide();
 
-            return rpc.query({
-                    model: this.obj,
-                    method: 'create',
-                    args: [{name:name}],
-                })
-                .then(function(record) {
-                    self.element.attr('value', record);
-                    self.objects.push({'id': record, 'text': name});
-                });
-        },
-    });
-    
-    var RecentLinkBox = Widget.extend({
-        template: 'website_links.RecentLink',
-        events: {
-            'click .btn_shorten_url_clipboard':'toggle_copy_button',
-            'click .o_website_links_edit_code':'edit_code',
-            'click .o_website_links_ok_edit':function(e) {
-                e.preventDefault();
-                this.submit_code();
-            },
-            'click .o_website_links_cancel_edit':function(e) {
-                e.preventDefault();
-                this.cancel_edit();
-            },
-            'submit #o_website_links_edit_code_form':function(e) {
-                e.preventDefault();
-                this.submit_code();
-            },
-        },
-        init: function(parent, link_obj) {
-            this._super(parent);
-            this.link_obj = link_obj;
-            this.animating_copy = false;
-        },
-        start: function() {
-            new ZeroClipboard(this.$('.btn_shorten_url_clipboard'));
-        },
-        toggle_copy_button: function() {
-            var self = this;
+        var oldCode = this.$('#o_website_links_edit_code_form #init_code').val();
+        this.$('#o_website_links_code').html(oldCode);
 
-            if(!this.animating_copy) {
-                this.animating_copy = true;
-                var top = this.$('.o_website_links_short_url').position().top;
-                this.$('.o_website_links_short_url').clone()
-                    .css('position', 'absolute')
-                    .css('left', 15)
-                    .css('top', top-2)
-                    .css('z-index', 2)
-                    .removeClass('o_website_links_short_url')
-                    .addClass('animated-link')
-                    .insertAfter(this.$('.o_website_links_short_url'))
-                    .animate({
-                        opacity: 0,
-                        top: "-=20",
-                    }, 500, function() {
-                        self.$('.animated-link').remove();
-                        self.animating_copy = false;
-                    });
-            }
-        },
-        remove: function() {
-            this.getParent().remove_link(this);
-        },
-        notification: function(message) {
-            this.$('.notification').append('<strong>' + message + '</strong>');
-        },
-        edit_code: function() {
-            var init_code = this.$('#o_website_links_code').html();
+        this.$('#code-error').remove();
+        this.$('#o_website_links_code form').remove();
+    },
+    /**
+     * @private
+     */
+    _submitCode: function () {
+        var self = this;
 
-            this.$('#o_website_links_code').html("<form style='display:inline;' id='o_website_links_edit_code_form'><input type='hidden' id='init_code' value='" + init_code + "'/><input type='text' id='new_code' value='" + init_code + "'/></form>");
-            this.$('.o_website_links_edit_code').hide();
-            this.$('.copy-to-clipboard').hide();
-            this.$('.o_website_links_edit_tools').show();
-        },
-        cancel_edit: function() {
-            this.$('.o_website_links_edit_code').show();
-            this.$('.copy-to-clipboard').show();
-            this.$('.o_website_links_edit_tools').hide();
-            this.$('.o_website_links_code_error').hide();
+        var initCode = this.$('#o_website_links_edit_code_form #init_code').val();
+        var newCode = this.$('#o_website_links_edit_code_form #new_code').val();
 
-            var old_code = this.$('#o_website_links_edit_code_form #init_code').val();
-            this.$('#o_website_links_code').html(old_code);
+        if (newCode === '') {
+            self.$('.o_website_links_code_error').html(_t("The code cannot be left empty"));
+            self.$('.o_website_links_code_error').show();
+            return;
+        }
 
-            this.$('#code-error').remove();
-            this.$('#o_website_links_code form').remove();
-        },
-        submit_code: function() {
-            var self = this;
+        function showNewCode(newCode) {
+            self.$('.o_website_links_code_error').html('');
+            self.$('.o_website_links_code_error').hide();
 
-            var init_code = this.$('#o_website_links_edit_code_form #init_code').val();
-            var new_code = this.$('#o_website_links_edit_code_form #new_code').val();
+            self.$('#o_website_links_code form').remove();
 
-            if(new_code === '') {
-                self.$('.o_website_links_code_error').html("The code cannot be left empty");
+            // Show new code
+            var host = self.$('#o_website_links_host').html();
+            self.$('#o_website_links_code').html(newCode);
+
+            // Update button copy to clipboard
+            self.$('.btn_shorten_url_clipboard').attr('data-clipboard-text', host + newCode);
+
+            // Show action again
+            self.$('.o_website_links_edit_code').show();
+            self.$('.copy-to-clipboard').show();
+            self.$('.o_website_links_edit_tools').hide();
+        }
+
+        if (initCode === newCode) {
+            showNewCode(newCode);
+        } else {
+            this.rpc('/website_links/add_code', {
+                init_code: initCode,
+                new_code: newCode,
+            }).then(function (result) {
+                showNewCode(result[0].code);
+            }, function () {
                 self.$('.o_website_links_code_error').show();
-                return;
-            }
+                self.$('.o_website_links_code_error').html(_t("This code is already taken"));
+            });
+        }
+    },
 
-            function show_new_code(new_code) {
-                self.$('.o_website_links_code_error').html('');
-                self.$('.o_website_links_code_error').hide();
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
-                self.$('#o_website_links_code form').remove();
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onLinksOkClick: function (ev) {
+        ev.preventDefault();
+        this._submitCode();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onLinksCancelClick: function (ev) {
+        ev.preventDefault();
+        this._cancelEdit();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onSubmitCode: function (ev) {
+        ev.preventDefault();
+        this._submitCode();
+    },
+});
 
-                // Show new code
-                var host = self.$('#o_website_links_host').html();
-                self.$('#o_website_links_code').html(new_code);
+var RecentLinks = publicWidget.Widget.extend({
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
 
-                // Update button copy to clipboard
-                self.$('.btn_shorten_url_clipboard').attr('data-clipboard-text', host + new_code);
-                
-                // Show action again
-                self.$('.o_website_links_edit_code').show();
-                self.$('.copy-to-clipboard').show();
-                self.$('.o_website_links_edit_tools').hide();
-            }
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-            if(init_code == new_code) {
-                show_new_code(new_code);
-            }
-            else {
-                ajax.jsonRpc('/website_links/add_code', 'call', {'init_code':init_code, 'new_code':new_code})
-                    .then(function(result) {
-                        show_new_code(result[0].code);
-                    })
-                    .fail(function() {
-                        self.$('.o_website_links_code_error').show();
-                        self.$('.o_website_links_code_error').html("This code is already taken");
-                    }) ;
-            }
-        },
-    });
+    /**
+     * @private
+     */
+    getRecentLinks: function (filter) {
+        var self = this;
+        return this.rpc('/website_links/recent_links', {
+            filter: filter,
+            limit: 20,
+        }).then(function (result) {
+            result.reverse().forEach((link) => {
+                self._addLink(link);
+            });
+            self._updateNotification();
+        }, function () {
+            var message = _t("Unable to get recent links");
+            self.$el.append('<div class="alert alert-danger">' + message + '</div>');
+        });
+    },
+    /**
+     * @private
+     */
+    _addLink: function (link) {
+        var nbLinks = this.getChildren().length;
+        var recentLinkBox = new RecentLinkBox(this, link);
+        recentLinkBox.prependTo(this.$el);
+        $('.link-tooltip').tooltip();
 
-    var RecentLinks = Widget.extend({
-        init: function() {
-            this._super();
-        },
-        get_recent_links: function(filter) {
-            var self = this;
+        if (nbLinks === 0) {
+            this._updateNotification();
+        }
+    },
+    /**
+     * @private
+     */
+    removeLinks: function () {
+        this.getChildren().forEach((child) => {
+            child.destroy();
+        });
+    },
+    /**
+     * @private
+     */
+    _updateNotification: function () {
+        if (this.getChildren().length === 0) {
+            var message = _t("You don't have any recent links.");
+            $('.o_website_links_recent_links_notification').html('<div class="alert alert-info">' + message + '</div>');
+        } else {
+            $('.o_website_links_recent_links_notification').empty();
+        }
+    },
+});
 
-            ajax.jsonRpc('/website_links/recent_links', 'call', {'filter':filter, 'limit':20})
-                .then(function(result) {
-                    _.each(result.reverse(), function(link) {
-                        self.add_link(link);
-                    });
+publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
+    selector: '.o_website_links_create_tracked_url',
+    events: {
+        'click #filter-newest-links': '_onFilterNewestLinksClick',
+        'click #filter-most-clicked-links': '_onFilterMostClickedLinksClick',
+        'click #filter-recently-used-links': '_onFilterRecentlyUsedLinksClick',
+        'click #generated_tracked_link a': '_onGeneratedTrackedLinkClick',
+        'keyup #url': '_onUrlKeyUp',
+        'click #btn_shorten_url': '_onShortenUrlButtonClick',
+        'submit #o_website_links_link_tracker_form': '_onFormSubmit',
+    },
 
-                    self.update_notification();
-                })
-                .fail(function() {
-                    var message = _t("Unable to get recent links");
-                    self.$el.append("<div class='alert alert-danger'>" + message + "</div>");
-                });            
-        },
-        add_link: function(link) {
-            var nb_links = this.getChildren().length;
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
 
-            var recent_link_box = new RecentLinkBox(this, link);
-            recent_link_box.prependTo(this.$el);
-            $('.link-tooltip').tooltip();
-
-            if(nb_links === 0) {
-                this.update_notification();
-            }
-        },
-        remove_links: function() {
-            _.invoke(this.getChildren(), 'remove');
-        },
-        remove_link: function(link) {
-            link.destroy();
-        },
-        update_notification: function() {
-            if(this.getChildren().length === 0) {
-                var message = _t("You don't have any recent links.");
-                $('.o_website_links_recent_links_notification').html("<div class='alert alert-info'>" + message + "</div>");
-            }
-            else {
-                $('.o_website_links_recent_links_notification').empty();
-            }
-        },
-    });
-
-    ajax.loadXML('/website_links/static/src/xml/recent_link.xml', qweb);
-
-    base.ready().done(function() {
-
-        ZeroClipboard.config({swfPath: location.origin + "/website_links/static/lib/zeroclipboard/ZeroClipboard.swf" });
+    /**
+     * @override
+     */
+    start: async function () {
+        var defs = [this._super.apply(this, arguments)];
 
         // UTMS selects widgets
-        var campaign_select = new SelectBox('utm.campaign');
-        campaign_select.start($("#campaign-select"), _t('e.g. Promotion of June, Winter Newsletter, ..'));
+        const campaignSelect = new SelectBox(this, "utm.campaign", _t("e.g. June Sale, Paris Roadshow, ..."));
+        defs.push(campaignSelect.attachTo($('#campaign-select')));
 
-        var medium_select = new SelectBox('utm.medium');
-        medium_select.start($("#channel-select"), _t('e.g. Newsletter, Social Network, ..'));
+        const mediumSelect = new SelectBox(this, "utm.medium", _t("e.g. InMails, Ads, Social, ..."));
+        defs.push(mediumSelect.attachTo($('#channel-select')));
 
-        var source_select = new SelectBox('utm.source');
-        source_select.start($("#source-select"), _t('e.g. Search Engine, Website page, ..'));
+        const sourceSelect = new SelectBox(this, "utm.source", _t("e.g. LinkedIn, Facebook, Leads, ..."));
+        defs.push(sourceSelect.attachTo($('#source-select')));
 
         // Recent Links Widgets
-        var recent_links = new RecentLinks();
-            recent_links.appendTo($("#o_website_links_recent_links"));
-            recent_links.get_recent_links('newest');
+        this.recentLinks = new RecentLinks(this);
+        defs.push(this.recentLinks.appendTo($('#o_website_links_recent_links')));
+        this.recentLinks.getRecentLinks('newest');
 
-        $('#filter-newest-links').click(function() {
-            recent_links.remove_links();
-            recent_links.get_recent_links('newest');
-        });
+        this.url_copy_animating = false;
 
-        $('#filter-most-clicked-links').click(function() {
-            recent_links.remove_links();
-            recent_links.get_recent_links('most-clicked');
-        });
+        $('[data-bs-toggle="tooltip"]').tooltip();
 
-        $('#filter-recently-used-links').click(function() {
-            recent_links.remove_links();
-            recent_links.get_recent_links('recently-used');
-        });
-        
-        // Clipboard Library
-        var client = new ZeroClipboard($("#btn_shorten_url"));
+        return Promise.all(defs);
+    },
 
-        $("#generated_tracked_link a").click(function() {
-            $("#generated_tracked_link a").text("Copied").removeClass("btn-primary").addClass("btn-success");
-            setTimeout(function() {
-                $("#generated_tracked_link a").text("Copy").removeClass("btn-success").addClass("btn-primary");
-            }, '5000');
-        });
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
-        $('#url').on('keyup', function(e) {
-            if($('#btn_shorten_url').hasClass('btn-copy') && e.which != 13) {
-                $('#btn_shorten_url').removeClass('btn-success btn-copy').addClass('btn-primary').html('Get tracked link');
-                $('#generated_tracked_link').css('display', 'none');
-                $('.o_website_links_utm_forms').show();
-            }
-        });
+    /**
+     * @private
+     */
+    _onFilterNewestLinksClick: function () {
+        this.recentLinks.removeLinks();
+        this.recentLinks.getRecentLinks('newest');
+    },
+    /**
+     * @private
+     */
+    _onFilterMostClickedLinksClick: function () {
+        this.recentLinks.removeLinks();
+        this.recentLinks.getRecentLinks('most-clicked');
+    },
+    /**
+     * @private
+     */
+    _onFilterRecentlyUsedLinksClick: function () {
+        this.recentLinks.removeLinks();
+        this.recentLinks.getRecentLinks('recently-used');
+    },
+    /**
+     * @private
+     */
+    _onGeneratedTrackedLinkClick: function () {
+        $('#generated_tracked_link a').text(_t("Copied")).removeClass('btn-primary').addClass('btn-success');
+        setTimeout(function () {
+            $('#generated_tracked_link a').text(_t("Copy")).removeClass('btn-success').addClass('btn-primary');
+        }, 5000);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onUrlKeyUp: function (ev) {
+        if (!$('#btn_shorten_url').hasClass('btn-copy') || ev.key === "Enter") {
+            return;
+        }
 
-        var url_copy_animating = false;
-        $('#btn_shorten_url').click(function() {
-            if($('#btn_shorten_url').hasClass('btn-copy')) {
-                if(!url_copy_animating) {
-                    url_copy_animating = true;
+        $('#btn_shorten_url').removeClass('btn-success btn-copy').addClass('btn-primary').html('Get tracked link');
+        $('#generated_tracked_link').css('display', 'none');
+        $('.o_website_links_utm_forms').show();
+    },
+    /**
+     * @private
+     */
+    _onShortenUrlButtonClick: async function (ev) {
+        const textValue = ev.target.dataset.clipboardText;
+        await browser.navigator.clipboard.writeText(textValue);
 
-                    $('#generated_tracked_link').clone()
-                        .css('position', 'absolute')
-                        .css('left', '78px')
-                        .css('bottom', '8px')
-                        .css('z-index', 2)
-                        .removeClass('#generated_tracked_link')
-                        .addClass('url-animated-link')
-                        .appendTo($('#generated_tracked_link'))
-                        .animate({
-                            opacity: 0,
-                            bottom: "+=20",
-                        }, 500, function() {
-                            $('.url-animated-link').remove();
-                            url_copy_animating = false;
-                        });
+        if (!$('#btn_shorten_url').hasClass('btn-copy') || this.url_copy_animating) {
+            return;
+        }
+
+        var self = this;
+        this.url_copy_animating = true;
+        $('#generated_tracked_link').clone()
+            .css('position', 'absolute')
+            .css('left', '78px')
+            .css('bottom', '8px')
+            .css('z-index', 2)
+            .removeClass('#generated_tracked_link')
+            .addClass('url-animated-link')
+            .appendTo($('#generated_tracked_link'))
+            .animate({
+                opacity: 0,
+                bottom: '+=20',
+            }, 500, function () {
+                $('.url-animated-link').remove();
+                self.url_copy_animating = false;
+            });
+    },
+    /**
+     * Add the RecentLinkBox widget and send the form when the user generate the link
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onFormSubmit: function (ev) {
+        var self = this;
+        ev.preventDefault();
+
+        if ($('#btn_shorten_url').hasClass('btn-copy')) {
+            return;
+        }
+
+        ev.stopPropagation();
+
+        // Get URL and UTMs
+        var campaignID = $('#campaign-select').attr('value');
+        var mediumID = $('#channel-select').attr('value');
+        var sourceID = $('#source-select').attr('value');
+
+        var params = {};
+        params.url = $('#url').val();
+        if (campaignID !== '') {
+            params.campaign_id = parseInt(campaignID);
+        }
+        if (mediumID !== '') {
+            params.medium_id = parseInt(mediumID);
+        }
+        if (sourceID !== '') {
+            params.source_id = parseInt(sourceID);
+        }
+
+        $('#btn_shorten_url').text(_t("Generating link..."));
+
+        this.rpc('/website_links/new', params).then(function (result) {
+            if ('error' in result) {
+                // Handle errors
+                if (result.error === 'empty_url') {
+                    $('.notification').html('<div class="alert alert-danger">The URL is empty.</div>');
+                } else if (result.error === 'url_not_found') {
+                    $('.notification').html('<div class="alert alert-danger">URL not found (404)</div>');
+                } else {
+                    $('.notification').html('<div class="alert alert-danger">An error occur while trying to generate your link. Try again later.</div>');
                 }
+            } else {
+                // Link generated, clean the form and show the link
+                var link = result[0];
+
+                $('#btn_shorten_url').removeClass('btn-primary').addClass('btn-success btn-copy').html('Copy');
+                $('#btn_shorten_url').attr('data-clipboard-text', link.short_url);
+
+                $('.notification').html('');
+                $('#generated_tracked_link').html(link.short_url);
+                $('#generated_tracked_link').css('display', 'inline');
+
+                self.recentLinks._addLink(link);
+
+                // Clean URL and UTM selects
+                $('#campaign-select').select2('val', '');
+                $('#channel-select').select2('val', '');
+                $('#source-select').select2('val', '');
+
+                $('.o_website_links_utm_forms').hide();
             }
         });
-        
-        // Add the RecentLinkBox widget and send the form when the user generate the link
-        $("#o_website_links_link_tracker_form").submit(function(event) {
-
-            if($('#btn_shorten_url').hasClass('btn-copy')) {
-                event.preventDefault();
-                return;
-            }
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            // Get URL and UTMs
-            var url = $("#url").val();
-            var campaign_id = $('#campaign-select').attr('value');
-            var medium_id = $('#channel-select').attr('value');
-            var source_id = $('#source-select').attr('value');
-
-            var params = {};
-            params.url = $("#url").val();
-            if(campaign_id !== '') { params.campaign_id = parseInt(campaign_id); }
-            if(medium_id !== '') { params.medium_id = parseInt(medium_id); }
-            if(source_id !== '') { params.source_id = parseInt(source_id); }
-
-            $('#btn_shorten_url').text(_t('Generating link...'));
-
-            ajax.jsonRpc("/website_links/new", 'call', params)
-                .then(function (result) {
-                    if('error' in result) {
-                        // Handle errors
-                        if(result.error === 'empty_url')  {
-                            $('.notification').html("<div class='alert alert-danger'>The URL is empty.</div>");
-                        }
-                        else if(result.error == 'url_not_found') {
-                            $('.notification').html("<div class='alert alert-danger'>URL not found (404)</div>");
-                        }
-                        else {
-                            $('.notification').html("<div class='alert alert-danger'>An error occur while trying to generate your link. Try again later.</div>");
-                        }
-                    }
-                    else {
-                        // Link generated, clean the form and show the link
-                        var link = result[0];
-
-                        $('#btn_shorten_url').removeClass('btn-primary').addClass('btn-success btn-copy').html('Copy');
-                        $('#btn_shorten_url').attr('data-clipboard-text', link.short_url);
-
-                        $('.notification').html('');
-                        $('#generated_tracked_link').html(link.short_url);
-                        $('#generated_tracked_link').css('display', 'inline');
-
-                        recent_links.add_link(link);
-
-                        // Clean URL and UTM selects
-                        $('#campaign-select').select2('val', '');
-                        $('#channel-select').select2('val', '');
-                        $('#source-select').select2('val', '');
-
-                        $('.o_website_links_utm_forms').hide();
-                    }
-                });
-        });
-
-        $(function () {
-          $('[data-toggle="tooltip"]').tooltip();
-        });
-    });
-
-    exports.SelectBox = SelectBox;
-    exports.RecentLinkBox = RecentLinkBox;
-    exports.RecentLinks = RecentLinks;
-
-return exports;
+    },
 });
+
+export default {
+    SelectBox: SelectBox,
+    RecentLinkBox: RecentLinkBox,
+    RecentLinks: RecentLinks,
+};

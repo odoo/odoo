@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-#    Coded by: Alejandro Negrin anegrin@vauxoo.com,
-#    Planified by: Alejandro Negrin, Humberto Arocha, Moises Lopez
-#    Finance by: Vauxoo.
-#    Audited by: Humberto Arocha (hbto@vauxoo.com) y Moises Lopez (moylop260@vauxoo.com)
-
 {
-    "name": "Mexico - Accounting",
-    "version": "2.0",
-    "author": "Vauxoo",
-    'category': 'Localization',
-    "description": """
+    'name': 'Mexico - Accounting',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/mexico.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['mx'],
+    'version': '2.2',
+    'author': 'Vauxoo',
+    'category': 'Accounting/Localizations/Account Charts',
+    'description': """
 Minimal accounting configuration for Mexico.
 ============================================
 
@@ -30,16 +26,22 @@ With this module you will have:
 
 .. _SAT: http://www.sat.gob.mx/
     """,
-    "depends": [
-        "account",
+    'depends': [
+        'account',
     ],
-    "data": [
-        "data/account_tag_data.xml",
-        "data/l10n_mx_chart_data.xml",
-        "data/account_data.xml",
-        "data/account_tax_data.xml",
-        "data/fiscal_position_data.xml",
-        "data/account_chart_template_data.yml",
-        "views/account_config_settings_views.xml",
+    'data': [
+        'data/account.account.tag.csv',
+        'data/account_report_diot.xml',
+        'data/res_bank_data.xml',
+        'views/partner_view.xml',
+        'views/res_bank_view.xml',
+        'views/res_config_settings_views.xml',
+        'views/account_views.xml',
+        'views/account_tax_view.xml',
+        "data/l10n_mx_uom.xml",
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

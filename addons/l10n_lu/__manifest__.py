@@ -1,14 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (C) 2011 Thamini S.à.R.L (<http://www.thamini.com>)
-# Copyright (C) 2011 ADN Consultants S.à.R.L (<http://www.adn-luxembourg.com>)
-#    Copyright (C) 2014 ACSONE SA/NV (<http://acsone.eu>)
-
 {
     'name': 'Luxembourg - Accounting',
-    'version': '2.0',
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/luxembourg.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['lu'],
+    'version': '2.2',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Luxembourg.
 ======================================================================
@@ -23,24 +20,23 @@ Notes:
       see the first sheet of tax.xls for details of coverage
     * to update the chart of tax template, update tax.xls and run tax2csv.py
 """,
-    'author': 'OpenERP SA, ADN, ACSONE SA/NV',
+    'author': 'Odoo S.A., ADN, ACSONE SA/NV',
     'depends': [
         'account',
         'base_iban',
         'base_vat',
     ],
     'data': [
-        # basic accounting data
-        'data/account_financial_report_data.xml',
-        'data/account_financial_report_abr_data.xml',
-        'data/l10n_lu_chart_data.xml',
-        'data/account.account.template-2011.csv',
         'data/account.account.tag.csv',
-        'data/account.tax.template-2015.csv',
-        'data/account.fiscal.position.template-2011.csv',
-        'data/account.fiscal.position.tax.template-2015.csv',
-        # configuration wizard, views, reports...
-        'data/account.chart.template.csv',
-        'data/account_chart_template_data.yml',
+        'data/l10n_lu_chart_data.xml',
+        'data/tax_report/section_1.xml',
+        'data/tax_report/section_2.xml',
+        'data/tax_report/sections_34.xml',
+        'data/tax_report/tax_report.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'post_init_hook': '_post_init_hook',
+    'license': 'LGPL-3',
 }

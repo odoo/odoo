@@ -1,0 +1,62 @@
+<templates id="template" xml:space="preserve">
+
+    <!-- Widget PortalComposer (standalone)
+        required many options: token, res_model, res_id, ...
+    -->
+    <t t-name="project.ChatterComposer">
+        <div t-if="props.allowComposer" class="o_portal_chatter_composer">
+            <t t-if="props.displayComposer">
+                <div t-if="state.displayError" class="alert alert-danger mb8 o_portal_chatter_composer_error" role="alert">
+                    Oops! Something went wrong. Try to reload the page and log in.
+                </div>
+
+                <div class="d-flex">
+                    <img t-if="!props.isUserPublic or props.token"
+                         alt="Avatar"
+                         class="o_portal_chatter_avatar o_object_fit_cover align-self-start"
+                         t-attf-src="/web/image/res.partner/{{ props.partnerId }}/avatar_128"
+                    />
+                    <div class="flex-grow-1">
+                        <div class="o_portal_chatter_composer_input">
+                            <div class="o_portal_chatter_composer_body mb32">
+                                <textarea
+                                    class="o_input"
+                                    placeholder="Write a message..."
+                                    rows="4"
+                                    value="state.message"
+                                    t-on-input="update"
+                                    t-ref="textarea"
+                                />
+                                <ChatterAttachmentsViewer
+                                    attachments="state.attachments"
+                                    canDelete="true"
+                                    delete.bind="deleteAttachment"
+                                />
+                                <div class="mt8">
+                                    <button name="send_message" t-on-click="sendMessage" class="btn btn-primary me-1" type="submit" t-att-disabled="state.loading">
+                                        Send
+                                    </button>
+                                    <PortalAttachDocument
+                                        resModel="props.resModel"
+                                        resId="props.resId"
+                                        token="props.token"
+                                        multiUpload="true"
+                                        onUpload.bind="onFileUpload"
+                                        beforeOpen.bind="beforeUploadFile"
+                                    >
+                                        <i class="fa fa-paperclip"/>
+                                    </PortalAttachDocument>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <h4>Leave a comment</h4>
+                <p>You must be <a t-attf-href="/web/login?redirect={{ discussionUrl }}">logged in</a> to post a comment.</p>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,12 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import print_function
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import argparse
 import glob
 import itertools
 import os
 import sys
+from pathlib import Path
 
+import odoo
 from . import Command
 from .server import main
 from odoo.modules.module import get_module_root, MANIFEST_NAMES
@@ -14,7 +14,7 @@ from odoo.service.db import _create_empty_database, DatabaseExists
 
 
 class Start(Command):
-    """Quick start the Odoo server for your project"""
+    """ Quickly start the odoo server with default options """
 
     def get_module_list(self, path):
         mods = itertools.chain.from_iterable(
@@ -24,9 +24,10 @@ class Start(Command):
         return [mod.split(os.path.sep)[-2] for mod in mods]
 
     def run(self, cmdargs):
+        odoo.tools.config.parser.prog = f'{Path(sys.argv[0]).name} {self.name}'
         parser = argparse.ArgumentParser(
-            prog="%s start" % sys.argv[0].split(os.path.sep)[-1],
-            description=self.__doc__
+            prog=f'{Path(sys.argv[0]).name} {self.name}',
+            description=self.__doc__.strip(),
         )
         parser.add_argument('--path', default=".",
             help="Directory where your project's modules are stored (will autodetect from current dir)")
@@ -60,6 +61,7 @@ class Start(Command):
         # TODO: forbid some database names ? eg template1, ...
         try:
             _create_empty_database(args.db_name)
+            odoo.tools.config['init']['base'] = True
         except DatabaseExists as e:
             pass
         except Exception as e:

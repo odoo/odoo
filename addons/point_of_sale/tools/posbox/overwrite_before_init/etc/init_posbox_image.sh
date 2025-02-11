@@ -8,52 +8,211 @@ __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
 
-# Since we are emulating, the real /boot is not mounted, 
-# leading to mismatch between kernel image and modules.
-mount /dev/sda1 /boot
-
-# Recommends: antiword, graphviz, ghostscript, postgresql, python-gevent, poppler-utils
+# Recommends: antiword, graphviz, ghostscript, python-gevent, poppler-utils
 export DEBIAN_FRONTEND=noninteractive
-echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 
+# set locale to en_US
+echo "set locale to en_US"
+echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+locale-gen
+# Environment variables
+echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
+echo "export LANG=en_US.UTF-8" >> ~/.bashrc
+echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
+echo "export DISPLAY=:0" | tee -a ~/.bashrc /home/pi/.bashrc
+echo "export XAUTHORITY=/run/lightdm/pi/xauthority" >> /home/pi/.bashrc
+echo "export XAUTHORITY=/run/lightdm/root/:0" >> ~/.bashrc
+# Aliases
+echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf --load=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo_logs='less +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias read_mode='sudo mount -o remount,ro / && sudo mount -o remount,ro /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias install='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks; sudo chroot /root_bypass_ramdisks/; mount -t proc proc /proc'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias blackbox='ls /dev/serial/by-path/'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias nano='write_mode; nano -l'" | tee -a /home/pi/.bashrc
+echo  "alias vim='write_mode; sudo vim'" | tee -a /home/pi/.bashrc
+echo  "alias odoo_luxe='printf \" ______\n< Luxe >\n ------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\ \n                ||----w |\n                ||     ||\n\"'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo_start='sudo systemctl start odoo'" >> /home/pi/.bashrc
+echo  "alias odoo_stop='sudo systemctl stop odoo'" >> /home/pi/.bashrc
+echo  "alias odoo_restart='sudo systemctl restart odoo'" >> /home/pi/.bashrc
+echo "
+odoo_help() {
+  echo 'Welcome to Odoo IoTBox tools'
+  echo 'odoo                Starts/Restarts Odoo server manually (not through odoo.service)'
+  echo 'odoo_logs           Displays Odoo server logs in real time'
+  echo 'odoo_conf           Displays Odoo configuration file content'
+  echo 'write_mode          Enables system write mode'
+  echo 'read_mode           Switches system to read-only mode'
+  echo 'install             Bypasses ramdisks to allow package installation'
+  echo 'blackbox            Lists all serial connected devices'
+  echo 'odoo_start          Starts Odoo service'
+  echo 'odoo_stop           Stops Odoo service'
+  echo 'odoo_restart        Restarts Odoo service'
+  echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
+}
+
+odoo_dev() {
+  if [ -z \"\$1\" ]; then
+    odoo_help
+    return
+  fi
+  write_mode
+  pwd=\$(pwd)
+  cd /home/pi/odoo
+  git remote add dev https://github.com/odoo-dev/odoo.git
+  git fetch dev \$1 --depth=1 --prune
+  git reset --hard dev/\$1
+  cd \$pwd
+}
+
+pip() {
+  if [[ -z \"\$1\" || -z \"\$2\" ]]; then
+    odoo_help
+    return 1
+  fi
+  additional_arg=\"\"
+  if [ \"\$1\" == \"install\" ]; then
+    additional_arg=\"--user\"
+  fi
+  pip3 \"\$1\" \"\$2\" --break-system-package \"\$additional_arg\"
+}
+" | tee -a ~/.bashrc /home/pi/.bashrc
+
+source ~/.bashrc
+source /home/pi/.bashrc
+
+# copy the odoo.conf file to the overwrite directory
+mv -v "/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "/home/pi/"
+chown pi:pi "/home/pi/odoo.conf"
 
 apt-get update
-apt-get -y dist-upgrade
-# Do not be too fast to upgrade to more recent firmware and kernel than 4.38
-# Firmware 4.44 seems to prevent the LED mechanism from working
 
-PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data lightdm xserver-xorg-video-fbdev xserver-xorg-input-evdev iceweasel xdotool unclutter x11-utils openbox python-netifaces rpi-update"
+# At the first start it is necessary to configure a password
+# This will be modified by a unique password on the first start of Odoo
+password="$(openssl rand -base64 12)"
+echo "pi:${password}" | chpasswd
 
+PKGS_TO_INSTALL="
+    chromium-browser \
+    console-data \
+    cups \
+    cups-ipp-utils \
+    dbus \
+    dbus-x11 \
+    dnsmasq \
+    firefox-esr \
+    fswebcam \
+    git \
+    hostapd \
+    iw \
+    kpartx \
+    libcups2-dev \
+    libpq-dev \
+    libffi-dev \
+    lightdm \
+    localepurge \
+    nginx-full \
+    openbox \
+    printer-driver-all \
+    python3 \
+    python3-cups \
+    python3-babel \
+    python3-dateutil \
+    python3-dbus \
+    python3-decorator \
+    python3-dev \
+    python3-docutils \
+    python3-geoip2 \
+    python3-jinja2 \
+    python3-ldap \
+    python3-libsass \
+    python3-libcamera \
+    python3-lxml \
+    python3-mako \
+    python3-mock \
+    python3-netifaces \
+    python3-passlib \
+    python3-pil \
+    python3-pip \
+    python3-psutil \
+    python3-psycopg2 \
+    python3-pydot \
+    python3-qrcode \
+    python3-reportlab \
+    python3-requests \
+    python3-serial \
+    python3-stdnum \
+    python3-tz \
+    python3-vobject \
+    rsync \
+    screen \
+    swig \
+    unclutter \
+    vim \
+    x11-utils \
+    xdotool \
+    xinput \
+    xserver-xorg-input-evdev \
+    xserver-xorg-video-dummy \
+    xserver-xorg-video-fbdev"
+
+echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
-apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes install ${PKGS_TO_INSTALL}
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PKGS_TO_INSTALL}
+apt-get -y autoremove
 
 apt-get clean
 localepurge
-rm -rf /usr/share/doc
+rm -rfv /usr/share/doc
 
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
-# this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspbian
-# so we install the latest pyusb that works with this libusb
-pip install pyusb==1.0.0b1
-pip install qrcode
-pip install evdev
+# this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspios
+# so we install the latest pyusb that works with this libusb.
+# Even in stretch, we had an error with langid (but worked otherwise)
+# We fixe the version of evdev to 1.2.0 because in 1.3.0 we have a RuntimeError in 'get_event_loop()'
+PIP_TO_INSTALL="
+    evdev==1.6.0 \
+    gatt \
+    polib \
+    pycups \
+    pyusb \
+    v4l2 \
+    pysmb==1.2.9.1 \
+    cryptocode==0.1 \
+    PyKCS11 \
+    vcgencmd \
+    RPi.GPIO \
+    rjsmin==1.1.0 \
+    websocket-client==1.6.3 \
+    PyPDF2==1.26.0 \
+    Werkzeug==2.0.2 \
+    urllib3==1.26.5 \
+    pyOpenssl==22.0.0 \
+    cryptography==36.0.2 \
+    screeninfo==0.8.1 \
+    zeep==4.2.1 \
+    num2words==0.5.13 \
+    freezegun==1.2.1 \
+    schedule==1.2.1"
 
-# --upgrade because websocket_client in wheezy is bad:
-# https://github.com/docker/compose/issues/1288
-pip install --upgrade websocket_client
+pip3 install ${PIP_TO_INSTALL} --break-system-package
+
+# Dowload MPD server and library for Six terminals
+wget 'https://nightly.odoo.com/master/iotbox/eftdvs' -P /usr/local/bin/
+chmod +x /usr/local/bin/eftdvs
+wget 'https://nightly.odoo.com/master/iotbox/eftapi.so' -P /usr/lib/
 
 groupadd usbusers
 usermod -a -G usbusers pi
 usermod -a -G lp pi
 usermod -a -G input lightdm
-
-sudo -u postgres createuser -s pi
-mkdir /var/log/odoo
+mkdir -v /var/log/odoo
 chown pi:pi /var/log/odoo
 chown pi:pi -R /home/pi/odoo/
-chmod 770 -R /home/pi/odoo/
 
 # logrotate is very picky when it comes to file permissions
 chown -R root:root /etc/logrotate.d/
@@ -64,29 +223,20 @@ chmod 644 /etc/logrotate.conf
 echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
 
 update-rc.d -f hostapd remove
-update-rc.d -f isc-dhcp-server remove
+update-rc.d -f nginx remove
+update-rc.d -f dnsmasq remove
 
-systemctl daemon-reload
 systemctl enable ramdisks.service
+systemctl enable led-status.service
 systemctl disable dphys-swapfile.service
 systemctl enable ssh
-
-# USER PI AUTO LOGIN (from nano raspi-config)
-# We take the whole algorithm from raspi-config in order to stay compatible with raspbian infrastructure
-if command -v systemctl > /dev/null && systemctl | grep -q '\-\.mount'; then
-        SYSTEMD=1
-elif [ -f /etc/init.d/cron ] && [ ! -h /etc/init.d/cron ]; then
-        SYSTEMD=0
-else
-        echo "Unrecognised init system"
-        return 1
-fi
-if [ $SYSTEMD -eq 1 ]; then
-    systemctl set-default graphical.target
-    ln -fs /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
-else
-    update-rc.d lightdm enable 2
-fi
+systemctl set-default graphical.target
+systemctl disable getty@tty1.service
+systemctl enable systemd-timesyncd.service
+systemctl unmask hostapd.service
+systemctl disable hostapd.service
+systemctl disable cups-browsed.service
+systemctl enable odoo.service
 
 # disable overscan in /boot/config.txt, we can't use
 # overwrite_after_init because it's on a different device
@@ -95,19 +245,21 @@ fi
 # cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
 echo "disable_overscan=1" >> /boot/config.txt
 
-# https://www.raspberrypi.org/forums/viewtopic.php?p=79249
-# to not have "setting up console font and keymap" during boot take ages
-setupcon
+# Use the fkms driver instead of the legacy one (RPI3 requires this)
+sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' /boot/config.txt
+
+# exclude /drivers folder from git info to be able to load specific drivers
+echo "addons/hw_drivers/iot_devices/" > /home/pi/odoo/.git/info/exclude
 
 # create dirs for ramdisks
 create_ramdisk_dir () {
-    mkdir "${1}_ram"
+    mkdir -v "${1}_ram"
 }
 
 create_ramdisk_dir "/var"
 create_ramdisk_dir "/etc"
 create_ramdisk_dir "/tmp"
-mkdir /root_bypass_ramdisks
-umount /dev/sda1
+mkdir -v /root_bypass_ramdisks
 
-reboot
+echo "password"
+echo ${password}

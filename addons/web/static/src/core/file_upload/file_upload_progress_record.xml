@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="web.FileUploadProgressKanbanRecord">
+        <t t-set="progressTexts" t-value="getProgressTexts()"/>
+        <div class="o_kanban_record d-flex flex-grow-1 flex-md-shrink-1 flex-shrink-0">
+            <div class="o_kanban_progress_card o_kanban_attachment position-relative p-0 cursor-pointer">
+                <div class="o_kanban_image">
+                    <div class="o_kanban_image_wrapper">
+                        <div class="o_image o_image_thumbnail" t-att-data-mimetype="props.fileUpload.type"/>
+                    </div>
+                </div>
+                <div class="o_kanban_details">
+                    <div class="o_kanban_details_wrapper">
+                        <div t-att-title="props.fileUpload.title" t-att-aria-label="props.fileUpload.title" class="o_kanban_record_title">
+                            <span t-esc="props.fileUpload.title"/>
+                        </div>
+                        <div class="o_kanban_record_body"/>
+                        <div class="o_kanban_record_bottom">
+                            <div class="oe_kanban_bottom_left">
+                                <div class="o_file_upload_progress_text_left" t-esc="progressTexts.left"/>
+                            </div>
+                            <div class="oe_kanban_bottom_right">
+                                <span class="o_file_upload_progress_text_right" t-esc="progressTexts.right"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <FileUploadProgressBar fileUpload="props.fileUpload"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.FileUploadProgressDataRow">
+        <t t-set="progressTexts" t-value="getProgressTexts()"/>
+        <div class="o_data_row o_list_progress_card position-relative align-middle p-0">
+            <span class="o_file_upload_upload_title" t-esc="props.fileUpload.title"/>
+            <span class="o_file_upload_progress_text_left" t-esc="progressTexts.left"/>
+            <span class="o_file_upload_progress_text_right" t-esc="progressTexts.right"/>
+            <FileUploadProgressBar fileUpload="props.fileUpload"/>
+        </div>
+    </t>
+
+</templates>

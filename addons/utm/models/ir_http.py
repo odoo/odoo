@@ -1,6 +1,7 @@
-# -*- coding: utf-8 -*-
-from odoo.http import request
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models
+from odoo.http import request, Response
 
 
 class IrHttp(models.AbstractModel):
@@ -11,17 +12,15 @@ class IrHttp(models.AbstractModel):
         return request.httprequest.host
 
     @classmethod
-    def _dispatch(cls):
-        cookies_to_set = []
-        for var, dummy, cook in request.env['utm.mixin'].tracking_fields():
-            if var in request.params and request.httprequest.cookies.get(var) != request.params[var]:
-                cookies_to_set.append((cook, request.params[var], cls.get_utm_domain_cookies()))
+    def _set_utm(cls, response):
+        # Make sure response is an odoo Response.
+        response = Response.load(response)
+        domain = cls.get_utm_domain_cookies()
+        for url_parameter, __, cookie_name in request.env['utm.mixin'].tracking_fields():
+            if url_parameter in request.params and request.httprequest.cookies.get(cookie_name) != request.params[url_parameter]:
+                response.set_cookie(cookie_name, request.params[url_parameter], max_age=31 * 24 * 3600, domain=domain, cookie_type='optional')
 
-        response = super(IrHttp, cls)._dispatch()
-        if isinstance(response, Exception):
-            return response
-
-        for cookie_to_set in cookies_to_set:
-            response.set_cookie(cookie_to_set[0], cookie_to_set[1], domain=cookie_to_set[2])
-
-        return response
+    @classmethod
+    def _post_dispatch(cls, response):
+        cls._set_utm(response)
+        super()._post_dispatch(response)

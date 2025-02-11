@@ -3,10 +3,10 @@
 
 {
     'name': 'Calendar',
-    'version': '1.0',
-    'sequence': 130,
-    'depends': ['base', 'mail'],
-    'summary': 'Personal & Shared Calendar',
+    'version': '1.1',
+    'sequence': 165,
+    'depends': ['base', 'mail', 'onboarding'],
+    'summary': "Schedule employees' meetings",
     'description': """
 This is a full-featured calendar system.
 ========================================
@@ -18,8 +18,7 @@ It supports:
 
 If you need to manage your meetings, you should install the CRM module.
     """,
-    'category': 'Extra Tools',
-    'website': 'https://www.odoo.com/page/crm',
+    'category': 'Productivity/Calendar',
     'demo': [
         'data/calendar_demo.xml'
     ],
@@ -27,12 +26,32 @@ If you need to manage your meetings, you should install the CRM module.
         'security/ir.model.access.csv',
         'security/calendar_security.xml',
         'data/calendar_cron.xml',
+        'data/mail_template_data.xml',
         'data/calendar_data.xml',
+        'data/calendar_onboarding_data.xml',
+        'data/mail_activity_type_data.xml',
+        'data/mail_message_subtype_data.xml',
+        'views/mail_activity_views.xml',
         'views/calendar_templates.xml',
         'views/calendar_views.xml',
+        'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
+        'wizard/calendar_provider_config.xml',
+        'wizard/calendar_popover_delete_wizard.xml',
+        'wizard/mail_activity_schedule_views.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'application': True,
-    'auto_install': False,
+    'assets': {
+        'web.assets_backend': [
+            'calendar/static/src/**/*',
+        ],
+        'web.qunit_suite_tests': [
+            'calendar/static/tests/**/*',
+        ],
+        'web.assets_tests': [
+            'calendar/static/tests/tours/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

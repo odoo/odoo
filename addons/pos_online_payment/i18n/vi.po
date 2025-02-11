@@ -1,0 +1,640 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_online_payment
+# 
+# Translators:
+# Wil Odoo, 2023
+# Thi Huong Nguyen, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "<strong>Error:</strong> The currency is missing or invalid."
+msgstr "<strong>Lỗi:</strong> Đơn vị tiền tệ bị thiếu hoặc không hợp lệ."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid ""
+"<strong>Error:</strong> There was a problem during the payment process."
+msgstr "<strong>Lỗi:</strong> Đã xảy ra sự cố trong quá trình thanh toán. "
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid ""
+"<strong>No suitable payment method could be found.</strong>\n"
+"                            <br/>\n"
+"                            If you believe that it is an error, please contact the website administrator."
+msgstr ""
+"<strong>Không tìm thấy phương thức thanh toán phù hợp.</strong>\n"
+"                               <br/>\n"
+"                              Nếu bạn cho rằng đó là lỗi, vui lòng liên hệ với quản trị viên trang web."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_config.py:0
+#, python-format
+msgid "A POS config cannot have more than one online payment method."
+msgstr ""
+"Cấu hình POS không thể có nhiều hơn một phương thức thanh toán online."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "A payment option must be specified."
+msgstr "Phải chỉ định một tùy chọn thanh toán."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid ""
+"A validation payment cannot be used for a Point of Sale online payment."
+msgstr ""
+"Thanh toán xác thực không thể được sử dụng cho thanh toán online tại Điểm "
+"bán hàng."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "All available providers"
+msgstr "Tất cả nhà cung cấp khả dụng"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"All payment providers configured for an online payment method must use the "
+"same currency as the Sales Journal, or the company currency if that is not "
+"set, of the POS config."
+msgstr ""
+"Tất cả nhà cung cấp thanh toán được cấu hình cho một phương thức thanh toán "
+"online phải sử dùng cùng đơn vị tiền tệ với Sổ nhật ký bán hàng, hoặc đơn vị"
+" tiền tệ công ty nếu chưa thiết lập sổ, của cấu hình POS. "
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
+msgid "Allowed Providers"
+msgstr "Nhà cung cấp được phép"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Amount"
+msgstr "Số tiền"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Amount:"
+msgstr "Số tiền:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "Cancel payment"
+msgstr "Huỷ thanh toán"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid "Cannot create a POS online payment without an accounting payment."
+msgstr "Không thể tạo thanh toán POS online mà không có thanh toán kế toán."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid ""
+"Cannot create a POS payment with a not online payment method and an online "
+"accounting payment."
+msgstr ""
+"Không thể tạo thanh toán POS online mà không có phương thức thanh toán "
+"online và thanh toán kế toán online."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid "Cannot edit a POS online payment essential data."
+msgstr "Không thể chỉnh sửa dữ liệu cần thiết của thanh toán online POS."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Could not create an online payment method (company_id=%d, pos_config_id=%d)"
+msgstr ""
+"Không thể tạo một phương thức thanh toán online (company_id=%d, "
+"pos_config_id=%d)"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
+msgid "Has An Online Payment Provider"
+msgstr "Có một nhà cung cấp thanh toán online"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Invalid online payment"
+msgstr "Thanh toán online không hợp lệ"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Invalid online payments"
+msgstr "Thanh toán online không hợp lệ"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Invite your customer to scan the QR code to pay:"
+msgstr "Mời khách hàng quét mã QR để thanh toán:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Invoice could not be generated"
+msgstr "Không thể tạo hóa đơn"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
+msgid "Next online payment amount to pay"
+msgstr "Số tiền tiếp theo cần thanh toán online"
+
+#. module: pos_online_payment
+#: model:ir.model.fields.selection,name:pos_online_payment.selection__pos_payment_method__type__online
+msgid "Online"
+msgstr "Trực tuyến"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
+#, python-format
+msgid "Online Payment"
+msgstr "Thanh toán online"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
+msgid "Online Payment Method"
+msgstr "Phương thức thanh toán online"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
+msgid "Online accounting payment"
+msgstr "Online accounting payment"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Online payment unavailable"
+msgstr "Thanh toán online không khả dụng"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Online payments cannot have a negative amount (%s: %s)."
+msgstr "Số tiền thanh toán online không thể nhỏ hơn 0 (%s: %s)."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Order ID"
+msgstr "ID đơn hàng"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "Order ID:"
+msgstr "ID đơn hàng:"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Order Reference"
+msgstr "Mã đơn hàng"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Order id:"
+msgstr "ID đơn hàng:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Order reference:"
+msgstr "Mã đơn hàng:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Order saving issue"
+msgstr "Sự cố lưu đơn hàng"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/account_payment.py:0
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__pos_order_id
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__pos_order_id
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.payment_transaction_form
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
+#, python-format
+msgid "POS Order"
+msgstr "Đơn hàng POS"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "Payment Providers"
+msgstr "Nhà cung cấp dịch vụ thanh toán"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Giao dịch thanh toán"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_account_payment
+msgid "Payments"
+msgstr "Thanh toán"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#, python-format
+msgid "Please scan the QR code to open the payment page"
+msgstr "Vui lòng quét mã QR để mở trang thanh toán"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Cấu hình điểm bán hàng"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Đơn hàng điểm bán hàng"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Phương thức thanh toán điểm bán hàng"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Thanh toán điểm bán hàng"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Phiên POS"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Processed by"
+msgstr "Xử lý bởi"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "QR Code to pay"
+msgstr "Mã QR cần thanh toán"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Scan to Pay"
+msgstr "Quét để thanh toán"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Server error"
+msgstr "Lỗi máy chủ"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, python-format
+msgid "The POS online payment (tx.id=%d) could not be saved correctly"
+msgstr "Không thể lưu chính xác thanh toán online POS (tx.id=%d)"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The POS online payment (tx.id=%d) could not be saved correctly because the "
+"online payment method could not be found"
+msgstr ""
+"Không thể lưu chính xác thanh toán online POS (tx.id=%d) vì không tìm thấy "
+"phương thức thanh toán online"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The POS session is not opened."
+msgstr "Phiên POS không mở."
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
+msgid "The Point of Sale order linked to the payment transaction"
+msgstr "Đơn hàng Điểm bán hàng liên kết với giao dịch thanh toán"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
+msgid "The Point of Sale order linked to this payment"
+msgstr "Đơn hàng Điểm bán hàng liên kết với thanh toán này"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The QR Code for paying could not be generated."
+msgstr "Không thể tạo mã QR dùng cho thanh toán."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The amount to pay has changed. Please refresh the page."
+msgstr "Số tiền cần thanh toán đã thay đổi. Vui lòng tải lại trang."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The currency is invalid."
+msgstr "Đơn vị tiền tệ không hợp lệ."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The invoice could not be generated."
+msgstr "Không thể tạo hóa đơn."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr "Đơn đặt hàng đã bị hủy."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The order has not been saved correctly on the server."
+msgstr "Đơn hàng chưa được lưu chính xác trên máy chủ."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_session.py:0
+#, python-format
+msgid "The partner of the POS online payment (id=%d) could not be found"
+msgstr "Không tìm thấy đối tác của thanh toán online POS (id=%d)"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The payment provider is invalid."
+msgstr "Nhà cung cấp thanh toán không hợp lệ."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid ""
+"The payment should either be direct, with redirection, or made by a token."
+msgstr ""
+"Thanh toán phải được thực hiện trực tiếp, có chuyển hướng, hoặc được thực "
+"hiện bằng token."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The payment token is invalid."
+msgstr "Token thanh toán không hợp lệ."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, python-format
+msgid "The payment transaction (%d) has a negative amount."
+msgstr "Số tiền của giao dịch thanh toán (%d) nhỏ hơn 0."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The provided order or access token is invalid."
+msgstr "Đơn hàng hoặc token đã cung cấp không hợp lệ."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The provided partner_id is different than expected."
+msgstr "partner_id được cung cấp khác với dự kiến."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The saved order could not be retrieved."
+msgstr "Không thể truy xuất đơn hàng đã lưu."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"The total amount of remaining online payments to execute (%s) doesn't "
+"correspond to the remaining unpaid amount of the order (%s)."
+msgstr ""
+"Tổng số tiền thanh toán online còn lại cần thực hiện (%s) không tương ứng "
+"với số tiền còn lại chưa thanh toán của đơn hàng. (%s)."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "There are online payments that were missing in your view."
+msgstr "Thiếu một số khoản thanh toán online trong chế độ xem của bạn."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"There is a problem with the server. The order cannot be saved and therefore "
+"the online payment is not possible."
+msgstr ""
+"Máy chủ gặp sự cố. Không thể lưu đơn hàng và do đó không thể thanh toán trực"
+" tuyến."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"There is a problem with the server. The order online payment status cannot "
+"be retrieved."
+msgstr ""
+"Máy chủ gặp sự cố. Không thể truy xuất trạng thái thanh toán online của đơn "
+"hàng."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"There is a problem with the server. The order online payment status cannot "
+"be retrieved. Are you sure there is no online payment for this order ?"
+msgstr ""
+"Máy chủ gặp sự cố. Không thể truy xuất trạng thái thanh toán online của đơn "
+"hàng. Bạn có chắc chắn không có thanh toán online nào cho đơn hàng này?"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid ""
+"There is no online payment method configured for this Point of Sale order."
+msgstr ""
+"Không có phương thức thanh toán online nào được cấu hình cho đơn hàng Điểm "
+"bán hàng này."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "There is nothing to pay for this order."
+msgstr "Không có gì để thanh toán cho đơn hàng này."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "There is nothing to pay."
+msgstr "Không có gì cần thanh toán. "
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "To Pay"
+msgstr "Cần thanh toán"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_config.py:0
+#, python-format
+msgid ""
+"To use an online payment method in a POS config, it must have at least one "
+"published payment provider supporting the currency of that POS config."
+msgstr ""
+"Để sử dụng một phương thức thanh toán online trong cấu hình POS, phải có ít "
+"nhất một nhà cung cấp dịch vụ thanh toán hợp lệ hỗ trợ đơn vị tiền tệ của "
+"cấu hình POS đó."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "Tokenization is not available for logged out customers."
+msgstr "Việc sử dụng token không khả dụng cho khách hàng đã đăng xuất."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Transaction Reference"
+msgstr "Mã giao dịch"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Try again"
+msgstr "Thử lại"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__type
+msgid "Type"
+msgstr "Loại"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Updated online payments"
+msgstr "Thanh toán online đã được cập nhật"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
+msgid ""
+"Use this payment method for online payments (payments made on a web page "
+"with online payment providers)"
+msgstr ""
+"Sử dụng phương thức thanh toán này để thanh toán online (thanh toán được "
+"thực hiện trên trang web với nhà cung cấp dịch vụ thanh toán online)"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Yes"
+msgstr "Có"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "You have not activated any"
+msgstr "Bạn chưa kích hoạt"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "payment provider"
+msgstr "nhà cung cấp dịch vụ thanh toán"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "to allow online payments."
+msgstr "để cho phép thanh toán online."

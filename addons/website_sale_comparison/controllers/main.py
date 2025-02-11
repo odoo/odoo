@@ -1,13 +1,14 @@
-# -*- coding: utf-8 -*-
-from odoo import http, _
-from odoo.http import request
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import json
+
+from odoo.http import request, route
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class WebsiteSaleProductComparison(WebsiteSale):
 
-    @http.route('/shop/compare/', type='http', auth="public", website=True)
+    @route('/shop/compare', type='http', auth='public', website=True, sitemap=False)
     def product_compare(self, **post):
         values = {}
         product_ids = [int(i) for i in post.get('products', '').split(',') if i.isdigit()]
@@ -16,37 +17,25 @@ class WebsiteSaleProductComparison(WebsiteSale):
         # use search to check read access on each record/ids
         products = request.env['product.product'].search([('id', 'in', product_ids)])
         values['products'] = products.with_context(display_default_code=False)
-
-        res = {}
-        for num, product in enumerate(products):
-            for var in product.attribute_line_ids:
-                cat_name = var.attribute_id.category_id.name or _('Uncategorized')
-                att_name = var.attribute_id.name
-                if not product.attribute_value_ids: # create_variant = False
-                    continue
-                res.setdefault(cat_name, {}).setdefault(att_name, [' - '] * len(products))
-                val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)
-                res[cat_name][att_name][num] = val[0].name
-        values['specs'] = res
-        values['compute_currency'] = self._get_compute_currency_and_context()[0]
         return request.render("website_sale_comparison.product_compare", values)
 
-    @http.route(['/shop/get_product_data'], type='json', auth="public", website=True)
+    @route('/shop/get_product_data', type='json', auth='public', website=True)
     def get_product_data(self, product_ids, cookies=None):
         ret = {}
-        compute_currency, pricelist_context, _ = self._get_compute_currency_and_context()
-        prods = request.env['product.product'].with_context(pricelist_context, display_default_code=False).search([('id', 'in', product_ids)])
+
+        website = request.env['website'].get_current_website()
+        products = request.env['product.product'].search([('id', 'in', product_ids)])
 
         if cookies is not None:
             ret['cookies'] = json.dumps(request.env['product.product'].search([('id', 'in', list(set(product_ids + cookies)))]).ids)
 
-        prods.mapped('name')
-        for prod in prods:
-            ret[prod.id] = {
-                'render': request.env['ir.ui.view'].render_template(
+        products = products.with_context(display_default_code=False)
+        for product in products:
+            ret[product.id] = {
+                'render': request.env['ir.ui.view']._render_template(
                     "website_sale_comparison.product_product",
-                    {'compute_currency': compute_currency, 'product': prod, 'website': request.website}
+                    {'product': product, 'website': website}
                 ),
-                'product': dict(id=prod.id, name=prod.name, display_name=prod.display_name),
+                'product': dict(id=product.id, name=product.name, display_name=product.display_name),
             }
         return ret

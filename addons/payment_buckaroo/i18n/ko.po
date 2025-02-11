@@ -1,114 +1,102 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_buckaroo
-#
+# 	* payment_buckaroo
+# 
 # Translators:
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-19 08:17+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:150
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
-msgid "; multiple order found"
-msgstr ""
-
-#. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:148
-#, python-format
-msgid "; no order found"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,cancel_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,done_msg:payment_buckaroo.payment_acquirer_buckaroo
 msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
+"An error occurred during processing of your payment (code %s). Please try "
+"again."
+msgstr "결제를 처리하는 중 오류가 발생했습니다. (코드 %s) 다시 시도해 주세요."
 
 #. module: payment_buckaroo
-#: model:payment.acquirer,error_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,pending_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,name:payment_buckaroo.payment_acquirer_buckaroo
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_provider__code__buckaroo
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:158
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_secret_key
+msgid "Buckaroo Secret Key"
+msgstr "Buckaroo 보안 키"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__code
+msgid "Code"
+msgstr "코드"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
-msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
+msgid "No transaction found matching reference %s."
+msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:146
-#, python-format
-msgid "Buckaroo: received data for reference %s"
-msgstr ""
-
-#. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:140
-#, python-format
-msgid ""
-"Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
-"shasign (%s)"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
-msgid "How to configure your Buckaroo account?"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:ir.model,name:payment_buckaroo.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "결제 완료자"
+#: model:ir.model,name:payment_buckaroo.model_payment_provider
+msgid "Payment Provider"
+msgstr "결제대행업체"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "결제 처리"
+msgstr "지불 거래"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
-msgid "SecretKey"
-msgstr "비밀키"
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing transaction keys"
+msgstr "트랜잭션 키가 누락된 데이터가 수신되었습니다."
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
-msgid "WebsiteKey"
-msgstr "웹사이트키"
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_provider_form
+msgid "Secret Key"
+msgstr "비밀 키"
 
 #. module: payment_buckaroo
-#: model:payment.acquirer,pre_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid ""
-"You will be redirected to the Buckaroo website after clicking on the payment "
-"button."
-msgstr ""
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__buckaroo_website_key
+msgid "The key solely used to identify the website with Buckaroo"
+msgstr "Buckaroo에서 웹사이트를 식별하는 데 사용되는 키입니다."
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "이 결제대행업체의 기술 코드입니다."
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Unknown status code: %s"
+msgstr "알 수 없는 상태 코드: %s"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_website_key
+msgid "Website Key"
+msgstr "웹사이트 키"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Your payment was refused (code %s). Please try again."
+msgstr "결제가 승인되지 않았습니다. (코드 %s). 다시 시도해 주세요."

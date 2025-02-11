@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="partner_demo_bilbao_es" model="res.partner">
+            <field name="is_company" eval="True"/>
+            <field name="name">Ayuntamiento De Bilbao</field>
+            <field name="street">Plaza Ernesto Erkoreka, 1</field>
+            <field name="city">Bilbao</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="state_id" ref="base.state_es_bi"/>
+            <field name="zip">48007</field>
+            <field name="vat">P4802400D</field>
+            <field name="email">info@bilbao.example.com</field>
+            <field name="website">www.bilbao.eus</field>
+            <field name="customer_rank" eval="1"/>
+        </record>
+
+        <record id="partner_demo_bilbao_ac_es" model="res.partner">
+            <field name="type">facturae_ac</field>
+            <field name="name">Departamento de Contabilidad</field>
+            <field name="street">Plaza Ernesto Erkoreka, 1</field>
+            <field name="city">Bilbao</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="state_id" ref="base.state_es_bi"/>
+            <field name="zip">28701</field>
+            <field name="email">info@bilbao.example.com</field>
+            <field name="customer_rank" eval="1"/>
+            <field name="l10n_es_edi_facturae_ac_center_code">L01480209</field>
+            <field
+                name="l10n_es_edi_facturae_ac_role_type_ids"
+                eval="[(4, ref('l10n_es_edi_facturae_adm_centers.ac_role_type_01'), 0), (4, ref('l10n_es_edi_facturae_adm_centers.ac_role_type_02'), 0), (4, ref('l10n_es_edi_facturae_adm_centers.ac_role_type_03'), 0)]"
+            />
+            <field name="parent_id" ref="l10n_es_edi_facturae_adm_centers.partner_demo_bilbao_es"/>
+        </record>
+    </data>
+</odoo>

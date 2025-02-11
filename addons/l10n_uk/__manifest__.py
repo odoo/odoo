@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (C) 2011 Smartmode LTD (<http://www.smartmode.co.uk>).
-
 {
-    'name': 'UK - Accounting',
-    'version': '1.0',
-    'category': 'Localization',
+    'name': 'United Kingdom - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['gb'],
+    'version': '1.1',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the latest UK Odoo localisation necessary to run Odoo accounting for UK SME's with:
 =================================================================================================
@@ -15,7 +13,7 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
     - InfoLogic UK counties listing
     - a few other adaptations""",
     'author': 'SmartMode LTD',
-    'website': 'http://www.smartmode.co.uk',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/united_kingdom.html',
     'depends': [
         'account',
         'base_iban',
@@ -23,12 +21,11 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
     ],
     'data': [
         'data/l10n_uk_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/account.chart.template.csv',
-        'data/account.account.tag.csv',
-        'data/account.tax.template.csv',
-        'data/res.country.state.csv',
-        'data/account_chart_template_data.yml',
+        'data/account_tax_report_data.xml',
     ],
-    'demo' : ['demo/l10n_uk_demo.xml'],
+    'demo': [
+        'demo/l10n_uk_demo.xml',
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

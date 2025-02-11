@@ -1,29 +1,28 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # Copyright (C) 2004-2008 PC Solutions (<http://pcsol.be>). All Rights Reserved
-from odoo import fields, models, api
-
+from odoo import fields, models, api, _
+from odoo.exceptions import ValidationError
 
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
-    journal_user = fields.Boolean('Use in Point of Sale',
-        help="Check this box if this journal define a payment method that can be used in a point of sale.")
-    amount_authorized_diff = fields.Float('Amount Authorized Difference',
-        help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
-             "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
-             "the closing of his session saying that he needs to contact his manager.")
+    pos_payment_method_ids = fields.One2many('pos.payment.method', 'journal_id', string='Point of Sale Payment Methods')
 
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        session_id = self.env.context.get('pos_session_id', False)
-        if session_id:
-            session = self.env['pos.session'].browse(session_id)
-            if session:
-                args += [('id', 'in', session.config_id.journal_ids.ids)]
-        return super(AccountJournal, self).search(args=args, offset=offset, limit=limit, order=order, count=count)
+    def action_archive(self):
+        if self.pos_payment_method_ids:
+            raise ValidationError(_("This journal is associated with a payment method. You cannot archive it"))
+        return super().action_archive()
 
-    @api.onchange('type')
-    def onchange_type(self):
-        if self.type not in ['bank', 'cash']:
-            self.journal_user = False
+    @api.constrains('type')
+    def _check_type(self):
+        methods = self.env['pos.payment.method'].sudo().search([("journal_id", "in", self.ids)])
+        if methods:
+            raise ValidationError(_("This journal is associated with a payment method. You cannot modify its type"))
+
+    def _get_journal_inbound_outstanding_payment_accounts(self):
+        res = super()._get_journal_inbound_outstanding_payment_accounts()
+        account_ids = set(res.ids)
+        for payment_method in self.sudo().pos_payment_method_ids:
+            account_ids.add(payment_method.outstanding_account_id.id or self.company_id.account_journal_payment_debit_account_id.id)
+        return self.env['account.account'].browse(account_ids)

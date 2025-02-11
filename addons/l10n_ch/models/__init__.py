@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from . import account_config_settings
+from . import template_ch
 from . import account_invoice
-from . import mail_compose_message
-from . import mail_template
+from . import account_journal
 from . import res_bank
-from . import res_company
+from . import ir_actions_report
+from . import account_payment

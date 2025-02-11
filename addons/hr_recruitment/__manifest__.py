@@ -2,43 +2,55 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Recruitment Process',
-    'version': '1.0',
-    'category': 'Human Resources',
+    'name': 'Recruitment',
+    'version': '1.1',
+    'category': 'Human Resources/Recruitment',
     'sequence': 90,
-    'summary': 'Jobs, Recruitment, Applications, Job Interviews',
-    'description': """
-Manage job positions and the recruitment process
-================================================
-
-This application allows you to easily keep track of jobs, vacancies, applications, interviews...
-
-It is integrated with the mail gateway to automatically fetch email sent to <jobs@yourcompany.com> in the list of applications. It's also integrated with the document management system to store and search in the CV base and find the candidate that you are looking for. Similarly, it may integrated with the survey module to allow you to define interviews for different jobs.		
-You can define the different phases of interviews and easily rate the applicant from the kanban view.
-""",
-    'website': 'https://www.odoo.com/page/recruitment',
+    'summary': 'Track your recruitment pipeline',
+    'website': 'https://www.odoo.com/app/recruitment',
     'depends': [
         'hr',
         'calendar',
-        'fetchmail',
         'utm',
-        'document',
+        'attachment_indexation',
         'web_tour',
+        'digest',
     ],
     'data': [
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
+        'data/digest_data.xml',
+        'data/mail_message_subtype_data.xml',
+        'data/mail_template_data.xml',
+        'data/mail_templates.xml',
         'data/hr_recruitment_data.xml',
-        'views/hr_recruitment_views.xml',
-        'views/hr_recruitment_config_settings_views.xml',
-        'views/hr_recruitment_templates.xml',
+        'views/hr_recruitment_degree_views.xml',
+        'views/hr_recruitment_source_views.xml',
+        'views/hr_recruitment_stage_views.xml',
+        'views/ir_attachment_views.xml',
+        'views/hr_applicant_category_views.xml',
+        'views/hr_applicant_refuse_reason_views.xml',
+        'views/hr_applicant_views.xml',
+        'views/res_config_settings_views.xml',
         'views/hr_department_views.xml',
         'views/hr_job_views.xml',
+        'views/mail_activity_views.xml',
+        'views/digest_views.xml',
+        'wizard/applicant_refuse_reason_views.xml',
+        'wizard/applicant_send_mail_views.xml',
     ],
     'demo': [
         'data/hr_recruitment_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'hr_recruitment/static/src/**/*.js',
+            'hr_recruitment/static/src/**/*.scss',
+            'hr_recruitment/static/src/**/*.xml',
+            'hr_recruitment/static/src/js/tours/hr_recruitment.js',
+        ],
+    },
+    'license': 'LGPL-3',
 }

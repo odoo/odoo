@@ -1,199 +1,154 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * board
-#
+# 	* board
+# 
 # Translators:
-#, fuzzy
+# Jakub Smolka, 2023
+# Ivana Bartonkova, 2023
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-23 14:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
-"Language: cs\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:24
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:407
-#, python-format
-msgid "'%s' added to dashboard"
+msgid ""
+"\"Add to\n"
+"                  Dashboard\""
 msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid "<b>Your personal dashboard is empty.</b>"
-msgstr ""
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:70
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
 msgid "Add"
 msgstr "Přidat"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:64
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
-msgid "Add to my Dashboard"
+msgid "Add to my dashboard"
+msgstr "Přidat na můj dashboard"
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.js:0
+#, python-format
+msgid "Are you sure that you want to remove this item?"
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:139
-#, python-format
-msgid "Are you sure you want to remove this item ?"
-msgstr "Opravdu chcete tuto položku odstranit?"
-
-#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_view.js:0
 #: model:ir.model,name:board.model_board_board
+#, python-format
 msgid "Board"
-msgstr "Tabule"
+msgstr "Dashboard"
 
 #. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "Vytvoření nástěnky"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_name
-msgid "Board Name"
-msgstr "Název"
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Cancel"
-msgstr "Zrušit"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Change Layout"
-msgstr "Změnit uspořádání"
+msgstr "Změnit rozložení"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
-#, python-format
-msgid "Change Layout.."
-msgstr "Můžete změnit uspořádání sestav na nástěnce..."
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:36
-#, python-format
-msgid "Choose dashboard layout"
-msgstr "Vyberte uspořádání nástěnky"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:409
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
 #, python-format
 msgid "Could not add filter to dashboard"
-msgstr ""
+msgstr "Nelze přidat filtr do ovládacího panelu"
 
 #. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create"
-msgstr "Vytvořit"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Vytvořit nástěnku"
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create New Dashboard"
-msgstr "Vytvořit novou nástěnku"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_uid
-msgid "Created by"
-msgstr "Vytvořil(a)"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_date
-msgid "Created on"
-msgstr "Vytvořeno"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_display_name
-#: model:ir.model.fields,field_description:board.field_board_create_display_name
-msgid "Display Name"
-msgstr "Zobrazovaný název"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:94
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
-msgid "Edit Layout"
-msgstr "Upravit uspořádání"
+msgid "Dashboard"
+msgstr "Dashboard"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_id
-#: model:ir.model.fields,field_description:board.field_board_create_id
+#: model:ir.model.fields,field_description:board.field_board_board__id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board___last_update
-#: model:ir.model.fields,field_description:board.field_board_create___last_update
-msgid "Last Modified on"
-msgstr "Naposled upraveno"
+#. odoo-javascript
+#: code:addons/board/static/src/board_action.xml:0
+#, python-format
+msgid "Invalid action"
+msgstr "Neplatná akce"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_uid
-msgid "Last Updated by"
-msgstr "Naposled upraveno"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_date
-msgid "Last Updated on"
-msgstr "Naposled upraveno"
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
+msgid "Layout"
+msgstr "Rozvržení"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
-#: model:ir.ui.view,arch_db:board.board_my_dash_view
+#: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
 msgid "My Dashboard"
-msgstr "Osobní nástěnka"
+msgstr "Můj dashboard"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
-msgid "Parent Menu"
-msgstr "Nadřazené menu"
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "Please refresh your browser for the changes to take effect."
+msgstr "Obnovte svůj prohlížeč, aby se změny projevily."
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
 msgid ""
 "To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options."
+"                  menu, switch to list or graph view, and click"
 msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
 msgid ""
 "You can filter and group data before inserting into the\n"
-"                    dashboard using the search options."
+"                  dashboard using the search options."
+msgstr ""
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
+msgid "Your personal dashboard is empty"
+msgstr "Váš osobní dashboard je prázdný"
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
+msgid "in the extended search options."
+msgstr "v rozšířených možnostech vyhledávání."
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "“%s” added to dashboard"
 msgstr ""

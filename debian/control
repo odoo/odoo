@@ -3,55 +3,67 @@ Section: net
 Priority: optional
 Maintainer: Odoo S.A. <info@odoo.com>
 Uploaders: Aaron Bohy <aab@odoo.com>, Simon Lejeune <sle@odoo.com>
-Build-Depends: debhelper (>= 9.0), python, rsync
-X-Python-Version: 2.7
-Standards-Version: 3.9.5.0
+Build-Depends: debhelper-compat (= 12), dh-python, python3, rsync, python3-setuptools
+Standards-Version: 4.5.0
 Homepage: http://www.odoo.com/
 Vcs-Git: https://github.com/odoo/odoo
+Vcs-Browser: https://github.com/odoo/odoo
 
 Package: odoo
 Architecture: all
 Depends:
  ${misc:Depends},
+ ${python3:Depends},
  adduser,
- node-less,
+# support for multilingual fonts
+ fonts-dejavu-core | fonts-freefont-ttf | fonts-freefont-otf | fonts-noto-core,
+ fonts-inconsolata,
+ fonts-font-awesome,
+ fonts-roboto-unhinted,
+ gsfonts,
+ libjs-underscore,
+ lsb-base,
  postgresql-client,
- python,
- python-babel,
- python-dateutil,
- python-decorator,
- python-docutils,
- python-feedparser,
- python-imaging,
- python-jinja2,
- python-ldap,
- python-libxslt1,
- python-lxml,
- python-mako,
- python-mock,
- python-openid,
- python-passlib,
- python-psutil,
- python-psycopg2,
- python-pychart,
- python-pydot,
- python-pyparsing,
- python-pypdf2,
- python-reportlab,
- python-requests,
- python-suds,
- python-tz,
- python-vatnumber,
- python-vobject,
- python-werkzeug,
- python-xlsxwriter,
- python-xlwt,
- python-yaml,
+ python3-babel,
+ python3-chardet,
+ python3-dateutil,
+ python3-decorator,
+ python3-docutils,
+ python3-freezegun,
+ python3-geoip2,
+ python3-pil,
+ python3-jinja2,
+ python3-libsass,
+# After lxml 5.2, lxml-html-clean is in a separate package
+ python3-lxml-html-clean | python3-lxml,
+ python3-num2words,
+ python3-ofxparse,
+ python3-passlib,
+ python3-polib,
+ python3-psutil,
+ python3-psycopg2,
+ python3-pydot,
+ python3-openssl,
+ python3-pypdf2,
+ python3-rjsmin,
+ python3-qrcode,
+ python3-renderpm,
+ python3-reportlab,
+ python3-requests,
+ python3-stdnum,
+ python3-tz,
+ python3-vobject,
+ python3-werkzeug,
+ python3-xlsxwriter,
+ python3-xlrd,
+ python3-zeep,
+Pre-Depends: ${misc:Pre-Depends}
 Conflicts: tinyerp-server, openerp-server, openerp-web, openerp
 Replaces: tinyerp-server, openerp-server, openerp-web, openerp
 Recommends:
+ ${python3:Recommends},
  postgresql,
- python-gevent,
+ python3-ldap,
 Description: Open Source Apps To Grow Your Business
  Odoo, formerly known as OpenERP, is a suite of open-source business apps
  written in Python and released under the LGPLv3 license. This suite of

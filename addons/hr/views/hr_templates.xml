@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <template id="assets_backend" name="hr assets" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/hr/static/src/less/hr.less"/>
-        </xpath>
+    <template id="hr_employee_plan_activity_summary">
+        <div class="d-flex flex-column flex-grow">
+            <t t-foreach="activity_ids" t-as="activity">
+                <span><i t-attf-class="fa #{activity.icon}"/> <t t-esc="activity.summary"/> (<t t-esc="activity.user_id.name"/>)</span>
+                <span><i class="fa fa-clock-o"/> <span t-field="activity.date_deadline"/></span>
+            </t>
+        </div>
     </template>
-
 </odoo>

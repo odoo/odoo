@@ -1,40 +1,18 @@
-
-.oe_kanban_project_avatars img {
-    width: 30px;
-    border-radius: 2px;
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-.oe_form_gantt_avatars:after {
-  font-family: "mnmliconsRegular" !important;
-  font-size: 21px;
-  font-weight: 300 !important;
-  content: "y";
-  top: 3px;
-  position: relative;
+.o_kanban_project_tasks .oe_kanban_align.badge, .o_project_kanban .oe_kanban_align.badge {
+  background: inherit;
+  color: inherit;
+  border: 1px solid var(--success);
 }
 
-.openerp .oe_kanban_view .oe_kanban_project {
-  width: 250px;
-  min-height: 160px !important;
-  cursor: default;
+.o_kanban_project_tasks .o_field_one2many_sub_task {
+  margin-top:2px;
+  margin-right: 6px;
 }
 
-.openerp .oe_percent strong:after {
-  content: "%";
+.o_form_project_project  .o_setting_box {
+  padding-left: 1.5rem;
 }
 
-.openerp .oe_margin_top_8 {
-  margin-top: 8px;
-}
-.openerp .oe_kanban_project .oe_kanban_project_list .col-md-6 a{
-  margin-left: 5px;
-}
-
-/* Kanban status as label in project stage form view */
-.openerp label.oe_project_kanban_legend {
-  min-width: inherit !important;
-  margin-top: 6px;
-  margin-right: 8px;
+.o_many2many_avatar_user_no_wrap div {
+   flex-wrap: nowrap !important;
 }

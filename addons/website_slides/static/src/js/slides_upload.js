@@ -1,381 +1,807 @@
-/*global $, _, PDFJS */
-odoo.define('website_slides.upload', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var ajax = require('web.ajax');
-var core = require('web.core');
-var Widget = require('web.Widget');
-var base = require('web_editor.base');
-var slides = require('website_slides.slides');
-var website = require('website.website');
+import { uniqueId } from '@web/core/utils/functions';
+import { renderToElement } from "@web/core/utils/render";
+import { getDataURLFromFile } from "@web/core/utils/urls";
+import Dialog from '@web/legacy/js/core/dialog';
+import publicWidget from '@web/legacy/js/public/public_widget';
+import wUtils from '@website/js/utils';
+import { _t } from "@web/core/l10n/translation";
 
-var qweb = core.qweb;
-var _t = core._t;
+var SlideUploadDialog = Dialog.extend({
+    template: 'website.slide.upload.modal',
+    events: Object.assign({}, Dialog.prototype.events, {
+        'click .o_wslides_js_upload_install_button': '_onClickInstallModule',
+        'click .o_wslides_select_category': '_onClickSlideCategoryIcon',
+        'change input#upload': '_onChangeSlideUpload',
+        'change input#video_url': '_onChangeVideoUrl',
+        'change input#image_google_url': '_onChangeImageUrl',
+        'change input#document_google_url': '_onChangeDocumentUrl',
+        'change input[name="source_type"]': '_onChangeSourceType',
+    }),
 
-if(!$('.oe_slide_js_upload').length) {
-    return $.Deferred().reject("DOM doesn't contain '.oe_slide_js_upload'");
-}
+    /**
+     * @override
+     * @param {Object} parent
+     * @param {Object} options holding channelId and optionally upload and publish control parameters
+     * @param {Object} options.modulesToInstall: list of additional modules to
+     *      install {id: module ID, name: module short description}
+     */
+    init: function (parent, options) {
+        options = Object.assign(
+            {
+                _title: _t("Add Content"),
+                get title() {
+                    return this._title;
+                },
+                set title(value) {
+                    this._title = value;
+                },
+                size: "medium",
+            },
+            options || {}
+        );
+        this._super(parent, options);
+        this._setup();
 
-ajax.loadXML('/website_slides/static/src/xml/website_slides.xml', qweb);
+        this.channelID = parseInt(options.channelId, 10);
+        this.defaultCategoryID = parseInt(options.categoryId, 10);
+        this.canUpload = options.canUpload === 'True';
+        this.canPublish = options.canPublish === 'True';
+        this.modulesToInstall = options.modulesToInstall ? JSON.parse(options.modulesToInstall.replace(/'/g, '"')) : null;
+        this.modulesToInstallStatus = null;
 
-var SlideDialog = Widget.extend({
-    template: 'website.slide.upload',
-    events: {
-        'hidden.bs.modal': 'destroy',
-        'click button.save': 'save',
-        'click button[data-dismiss="modal"]': 'cancel',
-        'change input#upload': 'slide_upload',
-        'change input#url': 'slide_url',
-        'click .list-group-item': function (ev) {
-            this.$('.list-group-item').removeClass('active');
-            $(ev.target).closest('li').addClass('active');
+        if (options.openModal && options.openModal in this.slide_category_data) {
+            // Sets the appropriate category's upload template if one has to be opened on load.
+            this.set('state', options.openModal);
+            this.set('defaultTemplate', this.slide_category_data[options.openModal]['template']);
+        } else {
+            this.set('state', '_select');
+            this.set('defaultTemplate', 'website.slide.upload.modal.select');
         }
-    },
-    init: function (el, channel_id) {
-        this._super(el, channel_id);
-        this.channel_id = parseInt(channel_id, 10);
+        this.on('change:state', this, this._onChangeType);
+        this.set('can_submit_form', false);
+        this.on('change:can_submit_form', this, this._onChangeCanSubmitForm);
+
         this.file = {};
-        this.index_content = "";
+        this.isValidUrl = true;
+
+        this.rpc = this.bindService("rpc");
+        this.orm = this.bindService("orm");
     },
     start: function () {
-        this.$el.modal({
-            backdrop: 'static'
-        });
-        this.set_category_id();
-        this.set_tag_ids();
-    },
-    slide_url: function (ev) {
-        var self = this,
-            value = {
-                'url': $(ev.target).val(),
-                'channel_id': self.channel_id
-            };
-        this.$('.alert-warning').remove();
-        this.is_valid_url = false;
-        this.$('.save').button('loading');
-        ajax.jsonRpc('/slides/dialog_preview/', 'call', value).then(function (data) {
-            self.$('.save').button('reset');
-            if (data.error) {
-                self.display_alert(data.error);
-            } else {
-                self.$("#slide-image").attr("src", data.url_src);
-                self.$('#name').val(data.title);
-                self.$('#description').val(data.description);
-                self.is_valid_url = true;
-            }
-        });
-    },
-    check_unique_slide: function (file_name) {
         var self = this;
-        return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
-            model: 'slide.slide',
-            method: 'search_count',
-            args: [[['channel_id', '=', self.channel_id], ['name', '=', file_name]]],
-            kwargs: {}
+        return this._super.apply(this, arguments).then(function () {
+            if (self.get('state') !== '_select') {
+                self.$modal.find('.modal-dialog').addClass('modal-lg');
+            }
+            self._bindSelect2Dropdown();
+            self._resetModalButton();
         });
     },
-    slide_upload: function (ev) {
-        var self = this,
-            file = ev.target.files[0],
-            is_image = /^image\/.*/.test(file.type),
-            loaded = false;
-        this.file.name = file.name;
-        this.file.type = file.type;
-        if (!(is_image || this.file.type === 'application/pdf')) {
-            this.display_alert(_t("Invalid file type. Please select pdf or image file"));
-            this.reset_file();
-            return;
-        }
-        if (file.size / 1024 / 1024 > 25) {
-            this.display_alert(_t("File is too big. File size cannot exceed 25MB"));
-            this.reset_file();
-            return;
-        }
-        this.$('.alert-warning').remove();
-        var BinaryReader = new FileReader();
-        // file read as DataURL
-        BinaryReader.readAsDataURL(file);
-        BinaryReader.onloadend = function (upload) {
-            var buffer = upload.target.result;
-            if (is_image) {
-                self.$("#slide-image").attr("src", buffer);
-            }
-            buffer = buffer.split(',')[1];
-            self.file.data = buffer;
-        };
 
-        if (file.type === 'application/pdf') {
-            var ArrayReader = new FileReader();
-            this.$('.save').button('loading');
-            // file read as ArrayBuffer for PDFJS get_Document API
-            ArrayReader.readAsArrayBuffer(file);
-            ArrayReader.onload = function (evt) {
-                var buffer = evt.target.result;
-                var passwordNeeded = function () {
-                    self.display_alert(_t("You can not upload password protected file."));
-                    self.reset_file();
-                    self.$('.save').button('reset');
-                };
-                PDFJS.getDocument(new Uint8Array(buffer), null, passwordNeeded).then(function getPdf(pdf) {
-                    pdf.getPage(1).then(function getFirstPage(page) {
-                        var scale = 1;
-                        var viewport = page.getViewport(scale);
-                        var canvas = document.getElementById('data_canvas');
-                        var context = canvas.getContext('2d');
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        // Render PDF page into canvas context
-                        page.render({
-                            canvasContext: context,
-                            viewport: viewport
-                        }).then(function () {
-                            var image_data = self.$('#data_canvas')[0].toDataURL();
-                            self.$("#slide-image").attr("src", image_data);
-                            if (loaded) {
-                                self.$('.save').button('reset');
-                            }
-                            loaded = true;
+    /**
+     * Dirty hack to de-activate the "focustrap" from Bootstrap.
+     * Indeed, it prevents typing into our "select2" elements.
+     *
+     * Note that this is removed in saas-17.2 as dialog is owlified.
+     */
+    on_attach_callback: function () {
+        const bootstrapModal = Modal.getInstance(this.$modal[0]);
+        if (bootstrapModal) {
+            bootstrapModal._focustrap.deactivate();
+        }
+    },
 
-                        });
-                    });
-                    var maxPages = pdf.pdfInfo.numPages;
-                    var page, j;
-                    self.index_content = "";
-                    for (j = 1; j <= maxPages; j += 1) {
-                        page = pdf.getPage(j);
-                        page.then(function (page_obj) {
-                            var page_number = page_obj.pageIndex + 1;
-                            page_obj.getTextContent().then(function (data) {
-                                var page_content = '';
-                                _.each(data.items, function (obj) {
-                                    page_content = page_content + obj.str + " ";
-                                });
-                                self.index_content = self.index_content + page_number + ". " + page_content + '\n';
-                                if (maxPages === page_number) {
-                                    if (loaded) {
-                                        self.$('.save').button('reset');
-                                    }
-                                    loaded = true;
-                                }
-                            });
-                        });
-                    }
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} message
+     */
+    _alertDisplay: function (message, alertClass='alert-warning') {
+        this._alertRemove();
+        $('<div/>', {
+            "class": 'alert ' + alertClass,
+            id: 'upload-alert',
+            role: 'alert'
+        }).text(message).insertBefore(this.$('form'));
+    },
+    _alertRemove: function () {
+        this.$('#upload-alert').remove();
+    },
+    /**
+     * Section and tags management from select2
+     *
+     * @private
+     */
+    _bindSelect2Dropdown: function () {
+        var self = this;
+        this.$('#category_id').select2(this._select2Wrapper(_t('Section'), false,
+            function () {
+                return self.rpc('/slides/category/search_read', {
+                    fields: ['name'],
+                    domain: [['channel_id', '=', self.channelID]],
                 });
-            };
-        }
-
-        var input = file.name;
-        var input_val = input.substr(0, input.lastIndexOf('.')) || input;
-        this.check_unique_slide(input_val).then(function (exist) {
-            if (exist) {
-                var message = _t("Channel contains the given title, please change before Save or Publish.");
-                self.display_alert(message);
-            }
-            self.$('#name').val(input_val);
+            })
+        );
+        this.$('#tag_ids').select2(this._select2Wrapper(_t('Tags'), true, function () {
+            return self.rpc('/slides/tag/search_read', {
+                fields: ['name'],
+                domain: [],
+            });
+        }));
+    },
+    _fetchUrlPreview: function (url, slideCategory) {
+        return this.rpc('/slides/prepare_preview/', {
+            'url': url,
+            'slide_category': slideCategory,
+            'channel_id': this.channelID
         });
     },
-    reset_file: function () {
+    _formSetFieldValue: function (fieldId, value) {
+        var $formField = this.$('form').find('#'+fieldId);
+        if (!$formField.val()) {  // update only if the user did not assign a value manually
+            $formField.val(value);
+        }
+    },
+    _formGetFieldValue: function (fieldId) {
+        return this.$('#'+fieldId).val();
+    },
+    _formValidate: function () {
+        var form = this.$("form");
+        form.addClass('was-validated');
+        return form[0].checkValidity() && this.isValidUrl;
+    },
+    /**
+     * Extract values to submit from form, force the slide_category according to
+     * filled values.
+     *
+     * @private
+     */
+    _formValidateGetValues: async function (forcePublished) {
+        var slideCategory = 'document';
+        // default slide_category (for article for instance)
+        if (Object.keys(this.slide_category_data).includes(this.get("state"))) {
+            slideCategory = this.get('state');
+        }
+
+        var sourceType = 'local_file';
+        if (slideCategory === 'video') {
+            sourceType = 'external';  // force external for videos
+        } else {
+            sourceType = this.$('input[name="source_type"]:checked').data('value');
+        }
+        var values = Object.assign({
+            'channel_id': this.channelID,
+            'description': this._formGetFieldValue('description'),
+            'document_google_url': this._formGetFieldValue('document_google_url'),
+            'duration': this._formGetFieldValue('duration'),
+            'image_google_url': this._formGetFieldValue('image_google_url'),
+            'is_published': forcePublished,
+            'name': this._formGetFieldValue('name'),
+            'slide_category': slideCategory,
+            'source_type': sourceType,
+            'video_url': this._formGetFieldValue('video_url'),
+        }, this._getSelect2DropdownValues()); // add tags and category
+
+        var canvas = this.$('#data_canvas')[0];
+        if (this.file.type === 'application/pdf') {
+            Object.assign(values, {
+                'image_1920': canvas.toDataURL().split(',')[1],
+                'slide_category': 'document',
+                'binary_content': this.file.data
+            });
+        } else if (values['slide_category'] === 'article') {
+            Object.assign(values, {
+                'image_1920': this.file.type === 'image/svg+xml' ? await this._svgToPng() : this.file.data,
+            });
+        } else if (/^image\/.*/.test(this.file.type)) {
+            Object.assign(values, {
+                'slide_category': 'infographic',
+                'binary_content': this.file.type === 'image/svg+xml' ? await this._svgToPNG() : this.file.data,
+            });
+        }
+        return values;
+    },
+    /**
+     * @private
+     */
+    _fileReset: function () {
         var control = this.$('#upload');
         control.replaceWith(control = control.clone(true));
         this.file.name = false;
     },
-    display_alert: function (message) {
-        this.$('.alert-warning').remove();
-        $('<div class="alert alert-warning" role="alert">' + message + '</div>').insertBefore(this.$('form'));
+
+    _getModalButtons: function () {
+        var btnList = [];
+        var state = this.get('state');
+        if (state === '_select') {
+            btnList.push({text: _t("Cancel"), classes: 'o_w_slide_cancel', close: true});
+        } else if (state === '_import') {
+            if (! this.modulesToInstallStatus.installing) {
+                btnList.push({text: this.modulesToInstallStatus.failed ? _t("Retry") : _t("Install"), classes: 'btn-primary', click: this._onClickInstallModuleConfirm.bind(this)});
+            }
+            btnList.push({text: _t("Back"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
+        } else if (state !== '_upload') { // no button when uploading
+            if (this.canUpload) {
+                if (this.canPublish) {
+                    btnList.push({text: _t("Save & Publish"), classes: 'btn-primary o_w_slide_upload o_w_slide_upload_published', click: this._onClickFormSubmit.bind(this)});
+                    btnList.push({text: _t("Save"), classes: 'o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
+                } else {
+                    btnList.push({text: _t("Save"), classes: 'btn-primary o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
+                }
+            }
+            btnList.push({text: _t("Back"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
+        }
+        return btnList;
     },
-
     /**
-        Wrapper for select2 load data from server at once and store it.
-
-        @param {String} Placeholder for element.
-        @param {bool}  true for multiple selection box, false for single selection
-        @param {Function} Function to fetch data from remote location should return $.deferred object
-        resolved data should be array of object with id and name. eg. [{'id': id, 'name': 'text'}, ...]
-        @returns {Object} select2 wrapper object
+     * Get value for category_id and tag_ids (ORM cmd) to send to server
+     *
+     * @private
+     */
+    _getSelect2DropdownValues: function () {
+        var result = {};
+        var self = this;
+        // tags
+        var tagValues = [];
+        this.$('#tag_ids').select2('data').forEach((val) => {
+            if (val.create) {
+                tagValues.push([0, 0, {'name': val.text}]);
+            } else {
+                tagValues.push([4, val.id]);
+            }
+        });
+        if (tagValues) {
+            result['tag_ids'] = tagValues;
+        }
+        // category
+        if (!self.defaultCategoryID) {
+            var categoryValue = this.$('#category_id').select2('data');
+            if (categoryValue && categoryValue.create) {
+                result['category_id'] = [0, {'name': categoryValue.text}];
+            } else if (categoryValue) {
+                result['category_id'] = [categoryValue.id];
+                this.categoryID = categoryValue.id;
+            }
+        } else {
+            result['category_id'] = [self.defaultCategoryID];
+            this.categoryID = self.defaultCategoryID;
+        }
+        return result;
+    },
+    /**
+     * Reset the footer buttons, according to current state of modal
+     *
+     * @private
+     */
+    _resetModalButton: function () {
+        this.set_buttons(this._getModalButtons());
+    },
+    /**
+     * Wrapper for select2 load data from server at once and store it.
+     *
+     * @private
+     * @param {String} Placeholder for element.
+     * @param {bool}  true for multiple selection box, false for single selection
+     * @param {Function} Function to fetch data from remote location should return a Promise
+     * resolved data should be array of object with id and name. eg. [{'id': id, 'name': 'text'}, ...]
+     * @param {String} [nameKey='name'] (optional) the name key of the returned record
+     *   ('name' if not provided)
+     * @returns {Object} select2 wrapper object
     */
-    select2_wrapper: function (tag, multi, fetch_fnc) {
-        return {
+    _select2Wrapper: function (tag, multi, fetchFNC, nameKey) {
+        nameKey = nameKey || 'name';
+
+        var values = {
             width: '100%',
             placeholder: tag,
             allowClear: true,
             formatNoMatches: false,
-            multiple: multi,
             selection_data: false,
-            fetch_rpc_fnc : fetch_fnc,
-            formatSelection: function (data) {
+            fetch_rpc_fnc: fetchFNC,
+            formatSelection: function (data, container, fmt) {
                 if (data.tag) {
                     data.text = data.tag;
                 }
-                return data.text;
+                return fmt(data.text);
             },
-            createSearchChoice: function(term, data) {
-                var added_tags = $(this.opts.element).select2('data');
-                if (_.filter(_.union(added_tags, data), function(tag) {
+            createSearchChoice: function (term, data) {
+                var addedTags = $(this.opts.element).select2('data') || [];
+                addedTags = Array.isArray(addedTags) ? addedTags : [addedTags];
+                if (addedTags.concat(data || []).filter(tag => {
                     return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
                 }).length === 0) {
-                    return {
-                        id: _.uniqueId('tag_'),
-                        create: true,
-                        tag: term,
-                        text: _.str.sprintf(_t("Create new tag '%s'"), term),
-                    };
+                    if (this.opts.can_create) {
+                        return {
+                            id: uniqueId("tag_"),
+                            create: true,
+                            tag: term,
+                            text: _t("Create new %s '%s'", tag, term),
+                        };
+                    } else {
+                        return undefined;
+                    }
                 }
             },
             fill_data: function (query, data) {
-                var that = this,
+                var self = this,
                     tags = {results: []};
-                _.each(data, function (obj) {
-                    if (that.matcher(query.term, obj.name)) {
-                        tags.results.push({id: obj.id, text: obj.name });
+                data.forEach((obj) => {
+                    if (self.matcher(query.term, obj[nameKey])) {
+                        tags.results.push({id: obj.id, text: obj[nameKey]});
                     }
                 });
                 query.callback(tags);
             },
             query: function (query) {
-                var that = this;
+                var self = this;
                 // fetch data only once and store it
                 if (!this.selection_data) {
                     this.fetch_rpc_fnc().then(function (data) {
-                        that.fill_data(query, data);
-                        that.selection_data = data;
+                        self.can_create = data.can_create;
+                        self.fill_data(query, data.read_results);
+                        self.selection_data = data.read_results;
                     });
                 } else {
                     this.fill_data(query, this.selection_data);
                 }
             }
         };
-    },
-    // Category management from select2
-    set_category_id: function () {
-        var self =  this;
-        $('#category_id').select2(this.select2_wrapper(_t('Category'), false,
-            function () {
-                return ajax.jsonRpc("/web/dataset/call_kw", 'call', {
-                    model: 'slide.category',
-                    method: 'search_read',
-                    args: [],
-                    kwargs: {
-                        fields: ['name'],
-                        domain: [['channel_id', '=', self.channel_id]],
-                        context: base.get_context()
-                    }
-                });
-            }));
-    },
-    get_category_id: function () {
-        var value = $('#category_id').select2('data');
-        if (value && value.create) {
-            return [0, {'name': value.text}];
+
+        if (multi) {
+            values['multiple'] = true;
         }
-        return [value ? value.id : null];
-    },
-    // Tags management from select2
-    set_tag_ids: function () {
-        $('#tag_ids').select2(this.select2_wrapper(_t('Tags'), true, function () {
-            return ajax.jsonRpc("/web/dataset/call_kw", 'call', {
-                model: 'slide.tag',
-                method: 'search_read',
-                args: [],
-                kwargs: {
-                    fields: ['name'],
-                    context: base.get_context()
-                }
-            });
-        }));
-    },
-    get_tag_ids: function () {
-        var res = [];
-        _.each($('#tag_ids').select2('data'),
-            function (val) {
-                if (val.create) {
-                    res.push([0, 0, {'name': val.text}]);
-                } else {
-                    res.push([4, val.id]);
-                }
-            });
-        return res;
-    },
-    //Python PIL does not support SVG, so converting SVG to PNG
-    svg_to_png: function() {
-        var img = this.$el.find("img#slide-image")[0];
-        var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.getContext("2d").drawImage(img, 0, 0);
-        return canvas.toDataURL("image/png").split(',')[1];
-    },
-    // Values and save
-    get_value: function () {
-        var canvas = this.$('#data_canvas')[0],
-            values = {
-                'channel_id': this.channel_id || '',
-                'name': this.$('#name').val(),
-                'url': this.$('#url').val(),
-                'description': this.$('#description').val(),
-                'tag_ids': this.get_tag_ids(),
-                'category_id': this.get_category_id()
-            };
-        if (this.file.type === 'application/pdf') {
-            _.extend(values, {
-                'image': canvas.toDataURL().split(',')[1],
-                'index_content': this.index_content,
-                'slide_type': canvas.height > canvas.width ? 'document' : 'presentation',
-                'mime_type': this.file.type,
-                'datas': this.file.data
-            });
-        }
-        if (/^image\/.*/.test(this.file.type)) {
-            _.extend(values, {
-                'slide_type': 'infographic',
-                'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
-                'datas': this.file.type === 'image/svg+xml' ? this.svg_to_png() : this.file.data
-            });
-        }
+
         return values;
     },
-    validate: function () {
-        this.$('.form-group').removeClass('has-error');
-        if (!this.$('#name').val()) {
-            this.$('#name').closest('.form-group').addClass('has-error');
-            return false;
-        }
-        var url = this.$('#url').val() ? this.is_valid_url : false;
-        if (!(this.file.name || url)) {
-            this.$('#url').closest('.form-group').addClass('has-error');
-            return false;
-        }
-        return true;
-    },
-    save: function (ev) {
-        var self = this;
-        if (this.validate()) {
-            var values = this.get_value();
-            if ($(ev.target).data('published')) {
-                values.website_published = true;
+    /**
+     * Init the data relative to the support slide category to upload
+     *
+     * @private
+     */
+    _setup: function () {
+        this.slide_category_data = {
+            document: {
+                icon: 'fa-file-pdf-o',
+                label: _t('Document'),
+                template: 'website.slide.upload.modal.document',
+            },
+            infographic: {
+                icon: 'fa-file-image-o',
+                label: _t('Image'),
+                template: 'website.slide.upload.modal.infographic',
+            },
+            article: {
+                icon: 'fa-file-text',
+                label: _t('Article'),
+                template: 'website.slide.upload.modal.article',
+            },
+            video: {
+                icon: 'fa-file-video-o',
+                label: _t('Video'),
+                template: 'website.slide.upload.modal.video',
+            },
+            quiz: {
+                icon: 'fa-question-circle',
+                label: _t('Quiz'),
+                template: 'website.slide.upload.quiz'
             }
-            this.$('.oe_slides_upload_loading').show();
-            this.$('.modal-footer, .modal-body').hide();
-            ajax.jsonRpc("/slides/add_slide", 'call', values).then(function (data) {
-                if (data.error) {
-                    self.display_alert(data.error);
-                    self.$('.oe_slides_upload_loading').hide();
-                    self.$('.modal-footer, .modal-body').show();
+        };
+    },
+    /**
+     * Show the preview
+     * @private
+     */
+    _showPreviewColumn: function () {
+        this.$('.o_slide_tutorial').addClass('d-none');
+        this.$('.o_slide_preview').removeClass('d-none');
+    },
+    /**
+     * Hide the preview
+     * @private
+     */
+    _hidePreviewColumn: function () {
+        this.$('.o_slide_tutorial').removeClass('d-none');
+        this.$('.o_slide_preview').addClass('d-none');
+    },
+    /**
+     * TODO: Remove this part, as now SVG support in image resize tools is
+     * included?
+     * Python PIL does not support SVG, so converting SVG to PNG.
+     *
+     * @returns {Promise<string>}
+     */
+    _svgToPNG: async function () {
+        const imgEl = this.$el.find('img#slide-image')[0];
+        const png = await wUtils.svgToPNG(imgEl);
+        return png.split(',')[1];
+    },
 
+    /**
+     * When the URL changes for slides of categories infographic, document and video, we attempt to fetch
+     * some metadata on YouTube / Google Drive (such as a name, a title, a duration, ...).
+     *
+     * @param {string} url
+     * @param {string} slideCategory
+     */
+    _updateSlideMetadata: function (url, slideCategory) {
+        var self = this;
+        this._alertRemove();
+        this.isValidUrl = false;
+        this.set('can_submit_form', false);
+        this._setModalLoading(true);
+        this._fetchUrlPreview(url, slideCategory).then(function (data) {
+            self.set('can_submit_form', true);
+            if (data.error) {
+                self._alertDisplay(data.error);
+                self._hidePreviewColumn();
+            } else {
+                if (data.info) {
+                    self._alertDisplay(data.info, 'alert-info');
                 } else {
-                    window.location = data.url;
+                    self._alertRemove();
                 }
+
+                self.isValidUrl = true;
+
+                if (data.name) {
+                    self._formSetFieldValue('name', data.name);
+                    self.$('#slide-video-title')
+                        .text(data.name)
+                        .removeClass('d-none');
+                } else {
+                    self.$('#slide-video-title').addClass('d-none');
+                }
+
+                if (data.description) {
+                    self._formSetFieldValue('description', data.description);
+                }
+                if (data.completion_time) {
+                    // hours to minutes conversion
+                    self._formSetFieldValue('duration', Math.round(data.completion_time * 60));
+                }
+                if (data.image_url) {
+                    self.$('#slide-image').attr('src', data.image_url);
+                }
+
+                if (!data.name && !data.description && !data.image_url) {
+                    self._hidePreviewColumn();
+                } else {
+                    self._showPreviewColumn();
+                }
+            }
+
+            self._setModalLoading(false);
+        });
+    },
+
+    /**
+     * Typically used when loading slide metadata.
+     * Since the request result will change form values, it's better to wait for the return of the
+     * request to avoid having the user type text that will be overridden (such as the slide name
+     * for example).
+     *
+     * @param {boolean} loading true to mask the modal with a loading screen, false to remove it
+     */
+    _setModalLoading: function (loading) {
+        if (loading) {
+            this.$el.closest('.modal-content').append(renderToElement('website.slide.upload.modal.loading'));
+        } else {
+            this.$el.closest('.modal-content').find('.o_wslides_slide_upload_loading').remove();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handler
+    //--------------------------------------------------------------------------
+
+    _onChangeType: function () {
+        var currentType = this.get('state');
+        var tmpl;
+        this.$modal.find('.modal-dialog').removeClass('modal-lg');
+        if (currentType === '_select') {
+            tmpl = 'website.slide.upload.modal.select';
+        } else if (currentType === '_upload') {
+            tmpl = 'website.slide.upload.modal.uploading';
+        } else if (currentType === '_import') {
+            tmpl = 'website.slide.upload.modal.import';
+        } else {
+            tmpl = this.slide_category_data[currentType]['template'];
+            this.$modal.find('.modal-dialog').addClass('modal-lg');
+        }
+        this.$('.o_w_slide_upload_modal_container').empty();
+        this.$('.o_w_slide_upload_modal_container').append(renderToElement(tmpl, {widget: this}));
+
+        this._resetModalButton();
+
+        if (currentType === '_import') {
+            this.set_title(_t("New Certification"));
+        } else {
+            this.set_title(_t("Add Content"));
+        }
+    },
+    _onChangeCanSubmitForm: function (ev) {
+        if (this.get('can_submit_form')) {
+            this.$('.o_w_slide_upload').button('reset');
+        } else {
+            this.$('.o_w_slide_upload').button('loading');
+        }
+    },
+    /**
+     * When the user selects 'local_file' or 'external' as source type, we display the 'upload'
+     * field or the 'document_google_url' / 'image_google_url' fields respectively.
+     * We also toggle the 'required' attribute the same way.
+     *
+     * @param {Event} ev the onchange event
+     */
+    _onChangeSourceType: function (ev) {
+        if (this.$('#source_type_local_file').is(':checked')) {
+            this.$('.o_wslides_js_slide_upload_local_file').removeClass('d-none');
+            this.$('.o_wslides_js_slide_upload_external').addClass('d-none');
+
+            this.$('#upload').attr('required', 'required');
+            this.$('#document_google_url, #image_google_url').removeAttr('required');
+        } else if (this.$('#source_type_external').is(':checked')) {
+            this.$('.o_wslides_js_slide_upload_external').removeClass('d-none');
+            this.$('.o_wslides_js_slide_upload_local_file').addClass('d-none');
+
+            this.$('#document_google_url, #image_google_url').attr('required', 'required');
+            this.$('#upload').removeAttr('required');
+        }
+    },
+    _onChangeSlideUpload: function (ev) {
+        var self = this;
+        this._alertRemove();
+
+        var $input = $(ev.currentTarget);
+        var preventOnchange = $input.data('preventOnchange');
+
+        var file = ev.target.files[0];
+        if (!file) {
+            this.$('#slide-image').attr('src', '/website_slides/static/src/img/document.png');
+            this._hidePreviewColumn();
+            return;
+        }
+        var isImage = /^image\/.*/.test(file.type);
+        var loaded = false;
+        this.file.name = file.name;
+        this.file.type = file.type;
+        if (!(isImage || this.file.type === 'application/pdf')) {
+            this._alertDisplay(_t("Invalid file type. Please select pdf or image file"));
+            this._fileReset();
+            this._hidePreviewColumn();
+            return;
+        }
+        if (file.size / 1024 / 1024 > 25) {
+            this._alertDisplay(_t("File is too big. File size cannot exceed 25MB"));
+            this._fileReset();
+            this._hidePreviewColumn();
+            return;
+        }
+
+        const preview = document.getElementById("slide-image");
+        if (file.type !== 'application/pdf') {
+            getDataURLFromFile(file).then(dataURL => {
+                if (isImage) {
+                    preview.src = dataURL;
+                }
+                this.file.data = dataURL.split(',', 2)[1];
+                this._showPreviewColumn();
+            });
+        } else {
+            this.set('can_submit_form', false);
+            getDataURLFromFile(file).then(async dataURL => {
+                this.file.data = dataURL.split(',', 2)[1];
+                /**
+                 * The following line fixes pdfjsLib 'Util' global variable.
+                 * This is (most likely) related to #32181 which lazy loads most assets.
+                 *
+                 * That caused an issue where the global 'Util' variable from pdfjsLib can be
+                 * (depending of which libraries load first) overridden by the global 'Util'
+                 * variable of bootstrap.
+                 * (See 'lib/bootstrap/js/util.js' and 'web/static/lib/pdfjs/build/pdfjs.js')
+                 *
+                 * This commit ensures that the global 'Util' variable is set to the one of pdfjsLib
+                 * right before it's used.
+                 *
+                 * Eventually, we should update or get rid of one of the two libraries since they're
+                 * not compatible together, or make a wrapper that makes them compatible.
+                 * In the mean time, this small fix allows not refactoring all of this and can not
+                 * cause much harm.
+                 */
+                window.Util = window.pdfjsLib.Util;
+                // pdf is stored in file.data in base64 and converted in binary (atob) to generate the preview
+                const pdfTask = window.pdfjsLib.getDocument({ data: atob(this.file.data) });
+                pdfTask.onPassword = () => {
+                    this._alertDisplay(_t("You can not upload password protected file."));
+                    this._fileReset();
+                    this.set('can_submit_form', true);
+                    // fixme: throw?
+                };
+                const pdf = await pdfTask.promise;
+
+                self._formSetFieldValue('duration', (pdf.numPages || 0) * 5);
+                const page = await pdf.getPage(1);
+                var viewport = page.getViewport({scale: 1});
+                var canvas = document.getElementById('data_canvas');
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                // Render PDF page into canvas context
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+                preview.src = canvas.toDataURL();
+                if (loaded) {
+                    self.set('can_submit_form', true);
+                }
+                loaded = true;
+                self._showPreviewColumn();
             });
         }
+
+        if (!preventOnchange) {
+            var input = file.name;
+            var inputVal = input.substr(0, input.lastIndexOf('.')) || input;
+            if (this._formGetFieldValue('name') === "") {
+                this._formSetFieldValue('name', inputVal);
+            }
+        }
     },
-    cancel: function () {
-        this.trigger("cancel");
-    }
+    _onChangeDocumentUrl: function (ev) {
+        this._updateSlideMetadata($(ev.target).val(), 'document');
+    },
+    _onChangeImageUrl: function (ev) {
+        this._updateSlideMetadata($(ev.target).val(), 'infographic');
+    },
+    _onChangeVideoUrl: function (ev) {
+        this._updateSlideMetadata($(ev.target).val(), 'video');
+    },
+    _onClickInstallModule: function (ev) {
+        var $btn = $(ev.currentTarget);
+        var moduleId = $btn.data('moduleId');
+        if (this.modulesToInstallStatus) {
+            this.set('state', '_import');
+            if (this.modulesToInstallStatus.installing) {
+                this.$('#o_wslides_install_module_text')
+                    .text(_t('Already installing "%s".', this.modulesToInstallStatus.name));
+            } else if (this.modulesToInstallStatus.failed) {
+                this.$('#o_wslides_install_module_text')
+                    .text(_t('Failed to install "%s".', this.modulesToInstallStatus.name));
+            }
+        } else {
+            this.modulesToInstallStatus = Object.assign({}, this.modulesToInstall.find( function (item) { return item.id === moduleId; }));
+            this.set('state', '_import');
+            this.$('#o_wslides_install_module_text')
+                .text(_t('Do you want to install the "%s" app?', this.modulesToInstallStatus.name));
+        }
+    },
+
+    _onClickInstallModuleConfirm: function () {
+        var self = this;
+        var $el = this.$('#o_wslides_install_module_text');
+        $el.text(_t('Installing "%s".', this.modulesToInstallStatus.name));
+        this.modulesToInstallStatus.installing = true;
+        this._resetModalButton();
+        this.orm.call("ir.module.module", "button_immediate_install", [
+            [this.modulesToInstallStatus.id],
+        ]).then(
+            function () {
+            let redirectUrl = window.location.origin + window.location.pathname + '?enable_slide_upload';
+            if (self.modulesToInstallStatus.default_slide_category) {
+                redirectUrl += '=';
+                redirectUrl += self.modulesToInstallStatus.default_slide_category;
+            }
+            window.location.href = redirectUrl;
+        }, function () {
+            $el.text(_t('Failed to install "%s".', self.modulesToInstallStatus.name));
+            self.modulesToInstallStatus.installing = false;
+            self.modulesToInstallStatus.failed = true;
+            self._resetModalButton();
+        });
+    },
+
+    _onClickGoBack: function () {
+        this.set('state', '_select');
+        this.isValidUrl = true;
+        if (this.modulesToInstallStatus && !this.modulesToInstallStatus.installing) {
+            this.modulesToInstallStatus = null;
+        }
+    },
+    /**
+     * @private
+     * @returns {Promise}
+     */
+    _onClickFormSubmit: async function (ev) {
+        if (!this._formValidate()) {
+            return;
+        }
+
+        // Get info before changing state
+        const forcePublished = $(ev.currentTarget).hasClass('o_w_slide_upload_published');
+        const values = await this._formValidateGetValues(forcePublished);
+
+        var oldType = this.get('state');
+        this.set('state', '_upload');
+
+        const data = await this.rpc('/slides/add_slide', values);
+        this._onFormSubmitDone(data, oldType);
+    },
+
+    _onFormSubmitDone: function (data, oldType) {
+        if (data.error) {
+            this.set('state', oldType);
+            this._alertDisplay(data.error);
+        } else {
+            if (data.url.indexOf('enable_editor') >= 0) {
+                // If we need to enter edit mode, it should be done to the top
+                // window so that we endup refreshing the backend client action
+                // in edit mode.
+                window.top.location = data.url;
+            } else {
+                window.location = data.url;
+            }
+        }
+    },
+
+    _onClickSlideCategoryIcon: function (ev) {
+        var $elem = this.$(ev.currentTarget);
+        var slideCategory = $elem.data('slideCategory');
+        this.set('state', slideCategory);
+
+        this._bindSelect2Dropdown();  // rebind select2 at each modal body rendering
+    },
 });
 
-    // bind the event to the button
-    $('.oe_slide_js_upload').on('click', function () {
-        var channel_id = $(this).attr('channel_id');
-        slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
-    });
+publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
+    selector: '.o_wslides_js_slide_upload',
+    events: {
+        'click': '_onUploadClick',
+    },
 
+    /**
+     * Automatically opens the upload dialog if requested from query string.
+     * If openModal is defined ( === '' ), opens the category selection dialog.
+     * If openModal is a category name, opens the category's upload dialog.
+     *
+     * @override
+     */
+    start: function () {
+        if ('openModal' in this.$el.data()) {
+            this._openDialog(this.$el);
+            this.$el.data('openModal', false);
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _openDialog: function ($element) {
+        return new SlideUploadDialog(this, $element.data()).open();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onUploadClick: function (ev) {
+        ev.preventDefault();
+        this._openDialog($(ev.currentTarget));
+    },
 });
+
+export default {
+    SlideUploadDialog: SlideUploadDialog,
+    websiteSlidesUpload: publicWidget.registry.websiteSlidesUpload
+};

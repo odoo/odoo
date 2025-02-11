@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import unittest
-from odoo.addons.website.models.website import slugify, unslug
+from odoo.addons.http_routing.models.ir_http import slugify, unslug
+from odoo.tests.common import BaseCase
 
 
-class TestUnslug(unittest.TestCase):
+class TestUnslug(BaseCase):
 
     def test_unslug(self):
         tests = {
@@ -21,13 +21,18 @@ class TestUnslug(unittest.TestCase):
             '--1': (None, None),
             'foo---1': (None, None),
             'foo1': (None, None),
+            # qs & anchor & trailing slash
+            'foo-1/': ('foo', 1),
+            'foo-1/?qs=1': ('foo', 1),
+            'foo-1/#anchor': ('foo', 1),
+            'foo-1?qs=1': ('foo', 1),
+            'foo-1#anchor': ('foo', 1),
         }
 
         for slug, expected in tests.items():
-            self.assertEqual(unslug(slug), expected)
+            self.assertEqual(unslug(slug), expected, "%r case failed" % slug)
 
-
-class TestTitleToSlug(unittest.TestCase):
+class TestTitleToSlug(BaseCase):
     """
     Those tests should pass with or without python-slugify
     See website/models/website.py slugify method
@@ -60,7 +65,7 @@ class TestTitleToSlug(unittest.TestCase):
     def test_special_chars(self):
         self.assertEqual(
             "o-d-o-o",
-            slugify(u"o!#d{|\o/@~o&%^?")
+            slugify(r"o!#d{|\o/@~o&%^?")
         )
 
     def test_str_to_unicode(self):

@@ -1,0 +1,142 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_stripe
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "Complete the Stripe onboarding for company %s."
+msgstr "完成公司%s的 Stripe 新手簡介。"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "Do not have access to fetch token from Stripe"
+msgstr "沒有權限從Stripe獲取權杖"
+
+#. module: pos_stripe
+#: model_terms:ir.ui.view,arch_db:pos_stripe.pos_payment_method_view_form_inherit_pos_stripe
+msgid ""
+"Don't forget to complete Stripe connect before using this payment method."
+msgstr "在使用這種付款方式之前，請不要忘記完成 Stripe 連接。"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Failed to discover: %s"
+msgstr "未能發現：%s"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
+msgstr "載入資源失敗：net::ERR_INTERNET_DISCONNECTED."
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "No available Stripe readers."
+msgstr "沒有可用的 Stripe 閱讀器。"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Payment canceled because not reader connected"
+msgstr "因未有連接讀卡器，付款取消"
+
+#. module: pos_stripe
+#: model:ir.model,name:pos_stripe.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "POS付款條件"
+
+#. module: pos_stripe
+#: model:ir.model,name:pos_stripe.model_pos_session
+msgid "Point of Sale Session"
+msgstr "POS營業點"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Reader disconnected"
+msgstr "讀卡器連線中斷"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Stripe Error"
+msgstr "Stripe 錯誤"
+
+#. module: pos_stripe
+#: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__stripe_serial_number
+msgid "Stripe Serial Number"
+msgstr "Stripe 序列號碼"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "Stripe payment provider for company %s is missing"
+msgstr "缺少%s公司的 Stripe 付款服務商"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Stripe readers %s not listed in your account"
+msgstr "Stripe讀卡器%s未在你的帳戶中列出"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used on payment method %s."
+msgstr "終端 %s 已用於付款方式 %s."
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "There are some issues between us and Stripe, try again later."
+msgstr "我們和Stripe之間發生一些問題，請稍後再試。"
+
+#. module: pos_stripe
+#: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
+msgid "[Serial number of the stripe terminal], for example: WSC513105011295"
+msgstr "[Stripe終端機的序列號碼]，例如：WSC513105011295"

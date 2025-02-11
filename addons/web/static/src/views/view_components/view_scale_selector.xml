@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ViewScaleSelector">
+        <Dropdown t-if="Object.keys(props.scales).length > 1" class="`btn-group o_view_scale_selector ${props.dropdownClass || ''}`" togglerClass="'btn btn-secondary scale_button_selection'" hotkey="'v'" showCaret="true">
+            <t t-set-slot="toggler">
+                <t t-esc="props.scales[props.currentScale].description" />
+            </t>
+            <t t-foreach="scales" t-as="scale" t-key="scale.key">
+                <DropdownItem
+                    class="`o_scale_button_${scale.key} ${scale.key === props.currentScale ? 'active' : ''}`"
+                    hotkey="scale.hotkey or scale.key[0]"
+                    onSelected="() => this.props.setScale(scale.key)"
+                >
+                    <t t-esc="scale.description" />
+                </DropdownItem>
+            </t>
+            <div t-if="this.props.isWeekendVisible !== undefined" class="dropdown-divider" role="separator"/>
+            <DropdownItem
+                    t-if="this.props.isWeekendVisible !== undefined"
+                    class="`${props.isWeekendVisible ? 'active' : ''}`"
+                    onSelected="props.toggleWeekendVisibility"
+                >
+                Show weekends
+            </DropdownItem>
+        </Dropdown>
+    </t>
+
+</templates>

@@ -1,16 +1,21 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Paypal Payment Acquirer',
-    'category': 'Accounting',
-    'summary': 'Payment Acquirer: Paypal Implementation',
-    'version': '1.0',
-    'description': """Paypal Payment Acquirer""",
+    'name': 'Payment Provider: Paypal',
+    'version': '2.0',
+    'category': 'Accounting/Payment Providers',
+    'sequence': 350,
+    'summary': "An American payment provider for online payments all over the world.",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
-        'views/payment_views.xml',
         'views/payment_paypal_templates.xml',
-        'data/payment_acquirer_data.xml',
+        'views/payment_provider_views.xml',
+        'views/payment_transaction_views.xml',
+
+        'data/payment_provider_data.xml',
     ],
-    'installable': True,
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
+    'license': 'LGPL-3',
 }

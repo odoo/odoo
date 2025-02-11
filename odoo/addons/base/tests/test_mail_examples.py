@@ -20,42 +20,42 @@ test12</font></div><div><font color="#1f1f1f" face="monospace" size="2"><br></fo
 """
 
 EDI_LIKE_HTML_SOURCE = u"""<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
-    <p>Hello ${object.partner_id.name},</p>
+    <p>Hello {{ object.partner_id.name }},</p>
     <p>A new invoice is available for you: </p>
     <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
-       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />
-       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />
-       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />
-       &nbsp;&nbsp;Order reference: ${object.origin}<br />
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}">${object.user_id.name}</a>
+       &nbsp;&nbsp;Invoice number: <strong>{{ object.number }}</strong><br />
+       &nbsp;&nbsp;Invoice total: <strong>{{ object.amount_total }} {{ object.currency_id.name }}</strong><br />
+       &nbsp;&nbsp;Invoice date: {{ object.invoice_date }}<br />
+       &nbsp;&nbsp;Order reference: {{ object.origin }}<br />
+       &nbsp;&nbsp;Your contact: <a href="mailto:{{ object.user_id.email or '' }}?subject=Invoice%20{{ object.number }}">{{ object.user_id.name }}</a>
     </p>
     <br/>
     <p>It is also possible to directly pay with Paypal:</p>
-    <a style="margin-left: 120px;" href="${object.paypal_url}">
+    <a style="margin-left: 120px;" href="{{ object.paypal_url }}">
         <img class="oe_edi_paypal_button" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
     </a>
     <br/>
     <p>If you have any question, do not hesitate to contact us.</p>
-    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>
+    <p>Thank you for choosing {{ object.company_id.name or 'us' }}!</p>
     <br/>
     <br/>
     <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
         <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
-            <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
+            <strong style="text-transform:uppercase;">{{ object.company_id.name }}</strong></h3>
     </div>
     <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
         <span style="color: #222; margin-bottom: 5px; display: block; ">
-        ${object.company_id.street}<br/>
-        ${object.company_id.street2}<br/>
-        ${object.company_id.zip} ${object.company_id.city}<br/>
-        ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>
+        {{ object.company_id.street }}<br/>
+        {{ object.company_id.street2 }}<br/>
+        {{ object.company_id.zip }} {{ object.company_id.city }}<br/>
+        {{ object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or '' }} {{ object.company_id.country_id.name or '' }}<br/>
         </span>
         <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
-            Phone:&nbsp; ${object.company_id.phone}
+            Phone:&nbsp; {{ object.company_id.phone }}
         </div>
         <div>
-            Web :&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
+            Web :&nbsp;<a href="{{ object.company_id.website }}">{{ object.company_id.website }}</a>
         </div>
     </div>
 </div></body></html>"""
@@ -175,6 +175,59 @@ QUOTE_HOTMAIL_HTML_OUT = [
     u"""<hr id="stopSpelling" data-o-mail-quote="1">""",
     u"""<div dir="ltr" data-o-mail-quote="1"><b data-o-mail-quote="1"><i data-o-mail-quote="1">Test reply. The suite.</i></b>"""]
 
+
+QUOTE_OUTLOOK_HTML = """
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=3Diso-8859-=
+         1">
+      <style type="text/css" style="display:none;"> P {margin-top:0;margin-bo=
+         ttom:0;}
+      </style>
+   </head>
+   <body dir="ltr">
+      <div id="mail_body">
+         Reply from outlook
+      </div>
+      <div style="font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
+         color: rgb(0, 0, 0);">
+         <br>
+      </div>
+         <div class="elementToProof" id="Signature">John</div>
+         <div id="appendonsend"></div>
+         <div style="font-family:Calibri,Helvetica,sans-serif; font-size:12pt; col=
+            or:rgb(0,0,0)">
+            <br>
+         </div>
+         <hr tabindex="-1" style="display:inline-block; width:98%">
+         <div id="divRplyFwdMsg" dir="ltr">
+            <font face="Calibri, sans-serif" color="#000000" style="font-size:11pt"><b>De :</b> test@example.com<br>
+            <b>=C0 :</b> test@example.com &lt;test@example.com&gt;<br>
+            <b>Objet :</b> Parent message</font>
+            <div>&nbsp;</div>
+         </div>
+         <div>
+            <div dir="ltr">Parent email body</div>
+         </div>
+   </body>
+</html>
+"""
+
+QUOTE_OUTLOOK_HTML_IN = [
+    """Reply from outlook""",
+    """<div id="mail_body">""",
+]
+QUOTE_OUTLOOK_HTML_OUT = [
+    """<div class="elementToProof" id="Signature" data-o-mail-quote-container="1" data-o-mail-quote="1">John</div>""",
+    """<div id="appendonsend" data-o-mail-quote-container="1" data-o-mail-quote="1"></div>""",  # quoted when empty in case there's a signature before
+    """<hr tabindex="-1" style="display:inline-block; width:98%" data-o-mail-quote="1">""",
+    """<div data-o-mail-quote-container="1" data-o-mail-quote="1">
+            <div dir="ltr" data-o-mail-quote="1">Parent email body</div>
+         </div>""",
+    """<div id="divRplyFwdMsg" dir="ltr" data-o-mail-quote-container="1" data-o-mail-quote="1">""",
+]
+
+
 QUOTE_THUNDERBIRD_1 = u"""<div>On 11/08/2012 05:29 PM,
       <a href="mailto:dummy@example.com">dummy@example.com</a> wrote:<br></div>
     <blockquote>
@@ -186,7 +239,7 @@ QUOTE_THUNDERBIRD_1 = u"""<div>On 11/08/2012 05:29 PM,
           <li>9.45 AM: summary</li>
           <li>10 AM: meeting with Fabien to present our app</li>
         </ul></div>
-      <div>Is everything ok for you ?</div>
+      <div>Is everything ok for you?</div>
       <div>
         <p>--<br>
           Administrator</p>
@@ -197,7 +250,7 @@ QUOTE_THUNDERBIRD_1 = u"""<div>On 11/08/2012 05:29 PM,
       </div>
     </blockquote>
     Ok for me. I am replying directly below your mail, using Thunderbird, with a signature.<br><br>
-    Did you receive my email about my new laptop, by the way ?<br><br>
+    Did you receive my email about my new laptop, by the way?<br><br>
     Raoul.<br><pre>-- 
 Raoul Grosbedonn&#233;e
 </pre>"""
@@ -210,12 +263,48 @@ QUOTE_THUNDERBIRD_1_OUT = [u"""--
 Raoul Grosbedonnée
 """]
 
+QUOTE_YAHOO_HTML = """
+<html>
+   <head></head>
+   <body>
+      <div class="ydpf6e951dcyahoo-style-wrap">
+      <div></div>
+      <div dir="ltr" data-setdir="false">Reply from Yahoo</div>
+      </div>
+      <div id="yahoo_quoted_8820595126" class="yahoo_quoted">
+         <div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;color:#26282a;">
+            =20
+            <div>
+               Bob a dit:
+            </div>
+            <div><br></div>
+            <div><br></div>
+            <div>
+               <div id="yiv3215395356">
+                  <div dir="ltr">Parent email body</div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
+"""
+
+QUOTE_YAHOO_HTML_IN = [
+    """Reply from Yahoo""",
+    """<div dir="ltr" data-setdir="false">""",
+    """<div class="ydpf6e951dcyahoo-style-wrap">""",
+]
+QUOTE_YAHOO_HTML_OUT = [
+    """<div id="yahoo_quoted_8820595126" class="yahoo_quoted" data-o-mail-quote="1">""",
+]
+
 
 TEXT_1 = u"""I contact you about our meeting tomorrow. Here is the schedule I propose:
 9 AM: brainstorming about our new amazing business app
 9.45 AM: summary
 10 AM: meeting with Ignasse to present our app
-Is everything ok for you ?
+Is everything ok for you?
 --
 MySignature"""
 
@@ -223,7 +312,7 @@ TEXT_1_IN = [u"""I contact you about our meeting tomorrow. Here is the schedule 
 9 AM: brainstorming about our new amazing business app
 9.45 AM: summary
 10 AM: meeting with Ignasse to present our app
-Is everything ok for you ?"""]
+Is everything ok for you?"""]
 TEXT_1_OUT = [u"""
 --
 MySignature"""]
@@ -272,14 +361,36 @@ TEXT_2_OUT = [u"""
 
 # MISC
 
-GMAIL_1 = u"""Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, without signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br><div>On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br><blockquote><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
-<li>9.45 AM: summary</li><li>10 AM: meeting with Fabien to present our app</li></ul></div><div>Is everything ok for you ?</div>
+GMAIL_1 = u"""Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, with signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br>
+<div class="gmail_quote">
+<div dir="ltr" class="gmail_attr">On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br>
+<blockquote class="gmail_quote"><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
+<li>9.45 AM: summary</li><li>10 AM: meeting with Fabien to present our app</li></ul></div><div>Is everything ok for you?</div>
 <div><p>-- <br>Administrator</p></div>
 
 <div><p>Log in our portal at: <a href="http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo">http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo</a></p></div>
-</blockquote></div><br></div>"""
+</blockquote>
+<div><br clear="all"></div>
+<div><br></div>
+<span class="gmail_signature_prefix">-- </span><br>
+<div dir="ltr" class="gmail_signature">
+    <div dir="ltr">
+        This is a test signature
+        <div><br></div>
+        <div>123</div>
+    </div>
+</div>
+</div><br></div>"""
 
-GMAIL_1_IN = [u'Ok for me. I am replying directly in gmail, without signature.', '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">']
+GMAIL_1_IN = [
+    u'Ok for me. I am replying directly in gmail, with signature.',
+    '<div class="gmail_quote" data-o-mail-quote-container="1" data-o-mail-quote="1">',
+    '<div dir="ltr" class="gmail_attr" data-o-mail-quote="1">On Thu, Nov 8, 2012 at 5:29 PM',
+    '<blockquote class="gmail_quote" data-o-mail-quote-container="1" data-o-mail-quote="1" data-o-mail-quote-node="1">',
+    # blank spaces between signature and reply quote should be quoted too
+    '<div data-o-mail-quote="1"><br clear="all" data-o-mail-quote="1"></div>\n'
+    '<div data-o-mail-quote="1"><br data-o-mail-quote="1"></div>',
+]
 GMAIL_1_OUT = []
 
 HOTMAIL_1 = u"""<div>
@@ -298,7 +409,7 @@ HOTMAIL_1 = u"""<div>
             <br>
             You indicated that you wish to use OpenERP in your own company.
             We would like to know more about your your business needs and requirements, and see how
-            we can help you. When would you be available to discuss your project ?<br>
+            we can help you. When would you be available to discuss your project?<br>
             Best regards,<br>
             <pre>
                 <a href="http://openerp.com" target="_blank">http://openerp.com</a>
@@ -502,7 +613,7 @@ REMOVE_CLASS = u"""
                     <h4 class="modal-title">Odoo Error<span class="o_subtitle text-muted"></span></h4>
                 </div>
                 <div class="o_error_detail modal-body">
-                    <pre>An error occured in a modal and I will send you back the html to try opening one on your end</pre>
+                    <pre>An error occurred in a modal and I will send you back the html to try opening one on your end</pre>
                 </div>
             </div>
         </div>
@@ -510,8 +621,8 @@ REMOVE_CLASS = u"""
 </div>
 """
 REMOVE_CLASS_IN = [
-    u'<div style="font-size: 12pt; font-family: \'Times New Roman\'; color: #000000">',
-    u'An error occured in a modal and I will send you back the html to try opening one on your end']
+    u'<div style="font-size:12pt; font-family:\'Times New Roman\'; color:#000000">',
+    u'An error occurred in a modal and I will send you back the html to try opening one on your end']
 REMOVE_CLASS_OUT = [
     u'<div class="modal-backdrop in">',
     u'<div class="modal-content openerp">',

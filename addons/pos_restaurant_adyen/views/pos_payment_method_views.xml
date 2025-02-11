@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_restaurant_adyen" model="ir.ui.view">
+      <field name="name">pos.payment.method.form.inherit.restaurant.adyen</field>
+      <field name="model">pos.payment.method</field>
+      <field name="inherit_id" ref="pos_adyen.pos_payment_method_view_form_inherit_pos_adyen"/>
+      <field name="arch" type="xml">
+          <xpath expr="//field[@name='adyen_terminal_identifier']" position="after">
+                <field name="adyen_merchant_account" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'"/>
+          </xpath>
+      </field>
+    </record>
+</odoo>

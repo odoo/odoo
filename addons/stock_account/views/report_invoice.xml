@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="stock_account_report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='right-elements']" position="after">
+          <t groups="stock_account.group_lot_on_invoice">
+            <t t-set="lot_values" t-value="o._get_invoiced_lot_values()"/>
+            <div t-if="not lot_values" class="oe_structure">&#8203;</div>
+            <table t-else="" class="table table-sm mt-2" style="width: 50%;" name="invoice_snln_table">
+                <thead>
+                    <tr>
+                        <th><span>Product</span></th>
+                        <th class="text-end"><span>Quantity</span></th>
+                        <th class="text-end"><span>SN/LN</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="lot_values" t-as="snln_line">
+                        <td><t t-esc="snln_line['product_name']">Bacon</t></td>
+                        <td class="text-end">
+                            <t t-esc="snln_line['quantity']">6.00</t>
+                            <t t-esc="snln_line['uom_name']" groups="uom.group_uom">units</t>
+                        </td>
+                        <td><t class="text-end" t-esc="snln_line['lot_name']">BC46282798</t></td>
+                    </tr>
+                </tbody>
+            </table>
+          </t>
+        </xpath>
+    </template>
+</odoo>

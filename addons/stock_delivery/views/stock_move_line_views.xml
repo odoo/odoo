@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_location_route_view_form_inherit_stock_delivery" model="ir.ui.view">
+        <field name="name">stock.route.form</field>
+        <field name="model">stock.route</field>
+        <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='route_selector']/group" position="inside">
+                <field name="shipping_selectable" string="Shipping Methods"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="stock_move_line_view_search_delivery">
+        <field name="name">stock.move.line.search.delivery</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_id']" position="after">
+                <field name="carrier_id" invisible="1" string="Carrier name"/>
+            </xpath>
+            <xpath expr="//group[@name='groupby']" position="inside">
+                <filter string="Carrier" name="by_carrier" context="{'group_by': 'carrier_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

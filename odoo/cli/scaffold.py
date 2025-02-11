@@ -1,10 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import print_function
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import argparse
 import os
 import re
 import sys
+from pathlib import Path
 
 import jinja2
 
@@ -16,7 +15,7 @@ class Scaffold(Command):
     def run(self, cmdargs):
         # TODO: bash completion file
         parser = argparse.ArgumentParser(
-            prog="%s scaffold" % sys.argv[0].split(os.path.sep)[-1],
+            prog=f'{Path(sys.argv[0]).name} {self.name}',
             description=self.__doc__,
             epilog=self.epilog(),
         )
@@ -33,10 +32,20 @@ class Scaffold(Command):
             sys.exit(parser.print_help())
         args = parser.parse_args(args=cmdargs)
 
+        if args.template.id == 'l10n_payroll':
+            name_split = args.name.split('-')
+            params = {
+                'name': name_split[0],
+                'code': name_split[1]
+            }
+        else:
+            params = {'name': args.name}
+
         args.template.render_to(
             snake(args.name),
             directory(args.dest, create=True),
-            {'name': args.name})
+            params=params,
+        )
 
     def epilog(self):
         return "Built-in templates available are: %s" % ', '.join(
@@ -63,7 +72,7 @@ def snake(s):
 def pascal(s):
     return ''.join(
         ss.capitalize()
-        for ss in re.sub('[_\s]+', ' ', s).split()
+        for ss in re.sub(r'[_\s]+', ' ', s).split()
     )
 
 def directory(p, create=False):
@@ -110,11 +119,14 @@ class template(object):
         """
         # overwrite with local
         for path, content in self.files():
+            path = env.from_string(path).render(params)
             local = os.path.relpath(path, self.path)
             # strip .template extension
             root, ext = os.path.splitext(local)
             if ext == '.template':
                 local = root
+            if self.id == "l10n_payroll":
+                modname = f"l10n_{params['code']}_hr_payroll"
             dest = os.path.join(directory, modname, local)
             destdir = os.path.dirname(dest)
             if not os.path.exists(destdir):
@@ -127,6 +139,7 @@ class template(object):
                     env.from_string(content.decode('utf-8'))\
                        .stream(params or {})\
                        .dump(f, encoding='utf-8')
+                    f.write(b'\n')
 
 def die(message, code=1):
     print(message, file=sys.stderr)

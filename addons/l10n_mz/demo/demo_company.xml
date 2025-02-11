@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_mz" model="res.partner">
+        <field name="name">MZ Company</field>
+        <field name="vat">530781296</field>
+        <field name="street">692 Eileen Knoll</field>
+        <field name="city">Niassa Province</field>
+        <field name="country_id" ref="base.mz"/>
+        
+        <field name="zip">6343</field>
+        <field name="phone">+258 78 123 45 67</field>
+        <field name="email">info@example.mz</field>
+        <field name="website">www.example.mz</field>
+    </record>
+
+    <record id="demo_company_mz" model="res.company">
+        <field name="name">MZ Company</field>
+        <field name="partner_id" ref="partner_demo_company_mz"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_mz')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_mz.demo_company_mz'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>mz</value>
+        <value model="res.company" eval="obj().env.ref('l10n_mz.demo_company_mz')"/>
+    </function>
+</odoo>

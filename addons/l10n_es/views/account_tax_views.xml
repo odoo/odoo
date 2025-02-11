@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_tax_form_inherit_l10n_es_edi" model="ir.ui.view">
+            <field name="name">account.tax.form.inherit.l10n_es_edi</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_scope']" position="after">
+                    <field name="l10n_es_type"
+                           invisible="country_code != 'ES'"/>
+                    <field name="l10n_es_exempt_reason"
+                           invisible="country_code != 'ES' and l10n_es_type != 'exento'"
+                           required="l10n_es_type == 'exento' and type_tax_use == 'sale'"/>
+                    <field name="l10n_es_bien_inversion"
+                           invisible="country_code != 'ES' and l10n_es_type != 'exento'"
+                           required="l10n_es_type == 'exento' and type_tax_use == 'sale'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

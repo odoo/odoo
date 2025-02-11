@@ -1,81 +1,51 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_sips
-#
+# 	* payment_sips
+# 
 # Translators:
-# Carson Tsai <Ra661tCat@gmail.com>, 2016
+# Tony Ng, 2024
+# Wil Odoo, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-02-10 09:38+0000\n"
-"Last-Translator: Carson Tsai <Ra661tCat@gmail.com>\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:163
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__code
+msgid "Code"
+msgstr "程式碼"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_version
+msgid "Interface Version"
+msgstr "接口版本"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_merchant_id
+msgid "Merchant ID"
+msgstr "商戶ID"
+
+#. module: payment_sips
+#. odoo-python
+#: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
-msgid "; multiple order found"
-msgstr "; 發現多張訂單"
+msgid "No transaction found matching reference %s."
+msgstr "沒有找到匹配參考 %s 的交易。"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:161
-#, python-format
-msgid "; no order found"
-msgstr "; 未發現訂單"
-
-#. module: payment_sips
-#: model:payment.acquirer,cancel_msg:payment_sips.payment_acquirer_sips
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>取消,</i> 您的付款已取消.</span>"
-
-#. module: payment_sips
-#: model:payment.acquirer,done_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr "<span><i>完成,</i> 您的在線付款已成功進行. 感謝您的訂單.</span>"
-
-#. module: payment_sips
-#: model:payment.acquirer,error_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>錯誤,</i> 交易時發生錯誤. 訂單成立但無法支付. 如對您的訂單狀態有疑問"
-"請聯繫我們.</span>"
-
-#. module: payment_sips
-#: model:payment.acquirer,pending_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr "<span><i>暫停,</i> 您的在線付款已成功進行. 但您的訂單尚未驗證.</span>"
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:84
-#, python-format
-msgid "Currency not supported by Wordline"
-msgstr "非 Wordline 支援貨幣"
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:65
-#, python-format
-msgid "Incorrect payment acquirer provider"
-msgstr "錯誤的付款讓受方提供者"
-
-#. module: payment_sips
-#: model:ir.model,name:payment_sips.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "付款讓受方"
+#: model:ir.model,name:payment_sips.model_payment_provider
+msgid "Payment Provider"
+msgstr "付款服務商"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
@@ -83,28 +53,48 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_merchant_id
-msgid "SIPS API User Password"
-msgstr "SIPS API 使用者密碼"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_prod_url
+msgid "Production URL"
+msgstr "正式運行網址"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_secret
-msgid "SIPS Secret"
-msgstr "SIPS 金鑰"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_secret
+msgid "SIPS Secret Key"
+msgstr "SIPS 秘密密鑰"
 
 #. module: payment_sips
-#: model:payment.acquirer,name:payment_sips.payment_acquirer_sips
+#: model_terms:ir.ui.view,arch_db:payment_sips.payment_provider_form
+msgid "Secret Key"
+msgstr "密鑰"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_key_version
+msgid "Secret Key Version"
+msgstr "秘密密鑰版本"
+
+#. module: payment_sips
+#: model:ir.model.fields.selection,name:payment_sips.selection__payment_provider__code__sips
 msgid "Sips"
-msgstr "SIPS"
+msgstr "Sips"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:159
+#: model:ir.model.fields,field_description:payment_sips.field_payment_provider__sips_test_url
+msgid "Test URL"
+msgstr "測試網址"
+
+#. module: payment_sips
+#: model:ir.model.fields,help:payment_sips.field_payment_provider__sips_merchant_id
+msgid "The ID solely used to identify the merchant account with Sips"
+msgstr "只用於向 Sips 識別該商戶的識別碼"
+
+#. module: payment_sips
+#: model:ir.model.fields,help:payment_sips.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "此付款服務商的技術代碼。"
+
+#. module: payment_sips
+#. odoo-python
+#: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
-msgid "Sips: received data for reference %s"
-msgstr "SIPS: 參照 %s 所接收的資料"
-
-#. module: payment_sips
-#: model:payment.acquirer,pre_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"You will be redirected to the Sips website after clicking on payment button."
-msgstr "按下付款鈕後您將被導向至 SIPS 網站."
+msgid "Unrecognized response received from the payment provider."
+msgstr "從支付機構收到的未被識別的響應。"

@@ -20,13 +20,12 @@ import odoo
 odoo.multi_process = True # Nah!
 
 # Equivalent of --load command-line option
-odoo.conf.server_wide_modules = ['web']
+odoo.conf.server_wide_modules = ['base', 'web']
 conf = odoo.tools.config
 
 # Path to the OpenERP Addons repository (comma-separated for
 # multiple locations)
-
-conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
+#conf['addons_path'] = './odoo/addons,./addons'
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'
@@ -38,7 +37,7 @@ conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
 #----------------------------------------------------------
 # Generic WSGI handlers application
 #----------------------------------------------------------
-application = odoo.service.wsgi_server.application
+application = odoo.http.root
 
 odoo.service.server.load_server_wide_modules()
 

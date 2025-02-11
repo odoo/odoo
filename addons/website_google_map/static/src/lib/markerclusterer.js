@@ -1190,7 +1190,7 @@ ClusterIcon.prototype.setSums = function(sums) {
 
 
 /**
- * Sets the icon to the the styles.
+ * Sets the icon to the styles.
  */
 ClusterIcon.prototype.useStyle = function() {
   var index = Math.max(0, this.sums_.index - 1);

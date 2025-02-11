@@ -4,6 +4,7 @@ _build/
 # dotfiles
 .*
 !.gitignore
+!.github
 !.mailmap
 # compiled python files
 *.py[co]
@@ -19,10 +20,25 @@ status
 odoo/filestore
 # maintenance migration scripts
 odoo/addons/base/maintenance
+# window installation config file
+/odoo.conf
 
 # generated for windows installer?
 install/win32/*.bat
 install/win32/meta.py
+
+# needed only when building for win32
+setup/win32/static/less/
+setup/win32/static/wkhtmltopdf/
+setup/win32/static/postgresql*.exe
+
+# js tooling
+node_modules
+jsconfig.json
+tsconfig.json
+package-lock.json
+package.json
+.husky
 
 # various virtualenv
 /bin/

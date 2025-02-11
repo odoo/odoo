@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
-from odoo.addons.mail.controllers.main import MailController
+from odoo.addons.mail.controllers.mail import MailController
 from odoo import http
+from odoo.http import request
+
+_logger = logging.getLogger(__name__)
 
 
 class CrmController(http.Controller):
@@ -12,8 +16,9 @@ class CrmController(http.Controller):
         comparison, record, redirect = MailController._check_token_and_record_or_redirect('crm.lead', int(res_id), token)
         if comparison and record:
             try:
-                record.case_mark_won()
+                record.action_set_won_rainbowman()
             except Exception:
+                _logger.exception("Could not mark crm.lead as won")
                 return MailController._redirect_to_messaging()
         return redirect
 
@@ -22,8 +27,9 @@ class CrmController(http.Controller):
         comparison, record, redirect = MailController._check_token_and_record_or_redirect('crm.lead', int(res_id), token)
         if comparison and record:
             try:
-                record.case_mark_lost()
+                record.action_set_lost()
             except Exception:
+                _logger.exception("Could not mark crm.lead as lost")
                 return MailController._redirect_to_messaging()
         return redirect
 
@@ -32,7 +38,8 @@ class CrmController(http.Controller):
         comparison, record, redirect = MailController._check_token_and_record_or_redirect('crm.lead', int(res_id), token)
         if comparison and record:
             try:
-                record.convert_opportunity(record.partner_id.id)
+                record.convert_opportunity(record.partner_id)
             except Exception:
+                _logger.exception("Could not convert crm.lead to opportunity")
                 return MailController._redirect_to_messaging()
         return redirect

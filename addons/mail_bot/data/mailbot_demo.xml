@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Disable odoobot on admin so that devs don't hate it -->
+        <record id="base.user_admin" model="res.users">
+            <field name="odoobot_state">disabled</field>
+        </record>
+    </data>
+</odoo>

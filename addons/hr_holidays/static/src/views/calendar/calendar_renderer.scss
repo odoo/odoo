@@ -1,0 +1,36 @@
+.o_timeoff_calendar {
+    background-color: $o-view-background-color;
+    flex-grow: 1;
+    flex-basis: fit-content;
+
+    .o_calendar_renderer .o_calendar_widget {
+        .hr_mandatory_day {
+            .fc-day-number {
+                font-weight: 600;
+            }
+        }
+
+        > .fc-view-container {
+            > .fc-dayGridYear-view .hr_mandatory_day:not(.fc-disabled-day):not(.fc-today):not(:hover),
+            > .fc-dayGridMonth-view .hr_mandatory_day:not(.fc-disabled-day):not(.fc-today) {
+                .fc-day-number {
+                    color: var(--mandatory-day-color) !important;
+                }
+            }
+        }
+
+        .fc-bgevent {
+            border-radius: $border-radius-pill;
+        }
+
+        @for $size from 1 through length($o-colors) {
+            .hr_mandatory_day_top_#{$size - 1} {
+                --mandatory-day-color: #{nth($o-colors, $size)};
+            }
+
+            .fc-day-top.fc-today.hr_mandatory_day_top_#{$size - 1} {
+                --o-cw-bg: var(--mandatory-day-color);
+            }
+        }
+    }
+}

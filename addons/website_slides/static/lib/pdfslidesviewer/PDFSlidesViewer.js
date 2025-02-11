@@ -5,50 +5,32 @@
     DOC : http://mozilla.github.io/pdf.js/api/draft/api.js.html
 */
 
-// !!!!!!!!! use window.PDFJS and not PDFJS
+// !!!!!!!!! use window.pdfjsLib and not pdfjsLib
 
 var PDFSlidesViewer = (function(){
-
-    function PDFSlidesViewer(pdf_url, $canvas, disableWorker){
+    function PDFSlidesViewer(pdf_url, $canvas) {
         // pdf variables
         this.pdf = null;
-        this.pdf_url = pdf_url || false;
-        this.pdf_scale = 1.5;
+        this.pdf_url = pdf_url;
         this.pdf_page_total = 0;
         this.pdf_page_current = 1; // default is the first page
+        this.pdf_zoom = 1; // 1 = scale to fit to available space
         // promise business
         this.pageRendering = false;
         this.pageNumPending = null;
         //canvas
         this.canvas = $canvas;
         this.canvas_context = $canvas.getContext('2d');
-        // PDF JS business
-        /**
-         * Disable the web worker and run all code on the main thread. This will happen
-         * automatically if the browser doesn't support workers or sending typed arrays
-         * to workers.
-         * @var {boolean}
-         *
-         * disableWorker should be 'true' if the document came from another origin than the
-         * page (typically the 'embed case').
-         * @see http://en.wikipedia.org/wiki/Cross-origin_resource_sharing.
-         * this is equivalent to the use_cors option in openerpframework.js
-         */
-        window.PDFJS.disableWorker = disableWorker || false;
-    };
+    }
 
     /**
      * Load the PDF document
-     * @param (optional) url : the url of the document to load
      */
-    PDFSlidesViewer.prototype.loadDocument = function(url) {
-        var self = this;
-        var pdf_url = url || this.pdf_url;
-        return window.PDFJS.getDocument(pdf_url).then(function (file_content) {
-            self.pdf = file_content;
-            self.pdf_page_total = file_content.numPages;
-            return file_content;
-        });
+    PDFSlidesViewer.prototype.loadDocument = async function() {
+        const file_content = await window.pdfjsLib.getDocument(this.pdf_url).promise;
+        this.pdf = file_content;
+        this.pdf_page_total = file_content.numPages;
+        return file_content;
     };
 
     /**
@@ -60,7 +42,10 @@ var PDFSlidesViewer = (function(){
         this.pageRendering = true;
         return this.pdf.getPage(page_number).then(function(page) {
             // Each PDF page has its own viewport which defines the size in pixels and initial rotation.
-            var viewport = page.getViewport(self.pdf_scale);
+            // We provide the scale at which to render it (relative to the natural size of the document)
+            var scale = self.getScaleToFit(page) * self.pdf_zoom;
+            var viewport = page.getViewport({ scale: scale });
+            // important to match, otherwise the browser will scale the rendered output and it will be ugly
             self.canvas.height = viewport.height;
             self.canvas.width = viewport.width;
             // Render PDF page into canvas context
@@ -72,9 +57,13 @@ var PDFSlidesViewer = (function(){
             // Wait for rendering to finish
             return renderTask.promise.then(function () {
                 self.pageRendering = false;
+                if (self.pdf_zoom === 1 && scale > self.getScaleToFit(page)) {
+                    // if the scale has changed (because we just added scrollbars) and we no longer fit the space
+                    return self.renderPage(page_number);
+                }
                 if (self.pageNumPending !== null) {
                     // New page rendering is pending
-                    renderPage(self.pageNumPending);
+                    self.renderPage(self.pageNumPending);
                     self.pageNumPending = null;
                 }
                 self.pdf_page_current = page_number;
@@ -118,6 +107,17 @@ var PDFSlidesViewer = (function(){
         return this.queueRenderPage(this.pdf_page_current);
     };
 
+    /*
+     * Calculate a scale to fit the document on the available space.
+     */
+    PDFSlidesViewer.prototype.getScaleToFit = function(page) {
+        var maxWidth = this.canvas.parentNode.clientWidth;
+        var maxHeight = this.canvas.parentNode.clientHeight;
+        var hScale = maxWidth / page.view[2];
+        var vScale = maxHeight / page.view[3];
+        return Math.min(hScale, vScale);
+    };
+
     /**
      * Displays the given page.
      */
@@ -147,12 +147,15 @@ var PDFSlidesViewer = (function(){
 
     PDFSlidesViewer.prototype.toggleFullScreenFooter = function(){
         if(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-            $('div#PDFViewer > div.navbar-fixed-bottom').toggleClass('oe_show_footer');
+            var $navBarFooter = $('div#PDFViewer div.oe_slides_panel_footer').parent();
+            $navBarFooter.toggleClass('oe_show_footer');
+            $navBarFooter.toggle();
         }
     }
 
     PDFSlidesViewer.prototype.toggleFullScreen = function(){
-        var el = this.canvas.parentNode;
+        // The canvas and the navigation bar needs to be fullscreened
+        var el = this.canvas.parentNode.parentNode;
 
         var isFullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled || false;
         if(isFullscreenAvailable){ // Full screen supported

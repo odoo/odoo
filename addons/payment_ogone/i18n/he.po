@@ -1,157 +1,77 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_ogone
-#
+# 	* payment_ogone
+# 
 # Translators:
+# Martin Trigaux, 2023
+# ExcaliberX <excaliberx@gmail.com>, 2023
+# Ha Ketem <haketem@gmail.com>, 2023
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+# or balmas, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-19 08:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
-"Language: he\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: or balmas, 2025\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: he\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:241
-#, python-format
-msgid "; multiple order found"
-msgstr ""
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:239
-#, python-format
-msgid "; no order found"
-msgstr ""
-
-#. module: payment_ogone
-#: model:payment.acquirer,cancel_msg:payment_ogone.payment_acquirer_ogone
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
-
-#. module: payment_ogone
-#: model:payment.acquirer,done_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-
-#. module: payment_ogone
-#: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-
-#. module: payment_ogone
-#: model:payment.acquirer,pending_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
 msgid "API User ID"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_password
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_password
 msgid "API User Password"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_alias_usage
-msgid "Alias Usage"
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__code
+msgid "Code"
+msgstr "קוד"
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "לא הצלחנו להתחבר ל-API."
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
+msgid "Hash function"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "CVC"
-msgstr ""
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "לא נמצאה עסקה המתאימה למספר האסמכתא %s."
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Card number"
-msgstr "מספר הכרטיס"
-
-#. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Expires"
-msgstr "תוקף"
-
-#. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
-msgid "How to configure your Ogone account?"
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer_ogone_alias_usage
-msgid ""
-"If you want to use Ogone Aliases,\n"
-"                                                                this default "
-"Alias Usage will be presented to\n"
-"                                                                the customer "
-"as the reason you want to\n"
-"                                                                keep his "
-"payment data"
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "MM / YY"
-msgstr "MM / YY"
-
-#. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Name"
-msgstr "שם"
-
-#. module: payment_ogone
-#: model:payment.acquirer,name:payment_ogone.payment_acquirer_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__code__ogone
+#: model:payment.provider,name:payment_ogone.payment_provider_ogone
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:249
-#, python-format
-msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:237
-#, python-format
-msgid "Ogone: received data for reference %s"
-msgstr ""
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:230
-#, python-format
-msgid ""
-"Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
-"(%s)"
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_pspid
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_pspid
 msgid "PSPID"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "תשלום נקלט"
+#: model:ir.model,name:payment_ogone.model_payment_provider
+msgid "Payment Provider"
+msgstr "ספק תשלום"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
@@ -159,23 +79,104 @@ msgid "Payment Transaction"
 msgstr "עסקת תשלום"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_in
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr "התקבלו נתונים עם סטטוס תשלום לא תקין: %s"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
 msgid "SHA Key IN"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_out
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_out
 msgid "SHA Key OUT"
 msgstr ""
 
 #. module: payment_ogone
-#: model:payment.acquirer,pre_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"You will be redirected to the Ogone website after clicking on the payment "
-"button."
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha1
+msgid "SHA1"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_method
-msgid "payment.method"
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha256
+msgid "SHA256"
 msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha512
+msgid "SHA512"
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Storing your payment details is necessary for future use."
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
+msgid "The ID solely used to identify the API user with Ogone"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
+msgid "The ID solely used to identify the account with Ogone"
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
+#, python-format
+msgid "The communication with the API failed."
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The payment has been declined: %s"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Stripe</strong>."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been authorized."
+msgstr "התשלום שלך אושר."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,cancel_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been cancelled."
+msgstr "התשלום שלך בוטל."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,pending_msg:payment_ogone.payment_provider_ogone
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "התשלום שלך עבר עיבוד בהצלחה אך הוא ממתין לאישור."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been successfully processed."
+msgstr "התשלום שלך עובד בהצלחה."

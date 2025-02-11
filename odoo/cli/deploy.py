@@ -1,12 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import print_function
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import argparse
 import os
 import requests
 import sys
 import tempfile
 import zipfile
+from pathlib import Path
 
 from . import Command
 
@@ -18,40 +17,30 @@ class Deploy(Command):
 
     def deploy_module(self, module_path, url, login, password, db='', force=False):
         url = url.rstrip('/')
-        csrf_token = self.authenticate(url, login, password, db)
         module_file = self.zip_module(module_path)
         try:
-            return self.upload_module(url, module_file, force=force, csrf_token=csrf_token)
+            return self.login_upload_module(module_file, url, login, password, db, force=force)
         finally:
             os.remove(module_file)
 
-    def upload_module(self, server, module_file, force=False, csrf_token=None):
+    def login_upload_module(self, module_file, url, login, password, db, force=False):
         print("Uploading module file...")
-        url = server + '/base_import_module/upload'
-
-        post_data = {'force': '1' if force else ''}
-        if csrf_token: post_data['csrf_token'] = csrf_token
-
+        self.session.get(f'{url}/web/login?db={db}', allow_redirects=False)  # this set the db in the session
+        endpoint = url + '/base_import_module/login_upload'
+        post_data = {
+            'login': login,
+            'password': password,
+            'db': db,
+            'force': '1' if force else '',
+        }
         with open(module_file, 'rb') as f:
-            res = self.session.post(url, files={'mod_file': f}, data=post_data)
-        res.raise_for_status()
+            res = self.session.post(endpoint, files={'mod_file': f}, data=post_data)
 
-        return res.text
-
-    def authenticate(self, server, login, password, db=''):
-        print("Authenticating on server '%s' ..." % server)
-
-        # Fixate session with a given db if any
-        self.session.get(server + '/web/login', params=dict(db=db))
-
-        args = dict(login=login, password=password, db=db)
-        res = self.session.post(server + '/base_import_module/login', args)
         if res.status_code == 404:
-            raise Exception("The server '%s' does not have the 'base_import_module' installed." % server)
-        elif res.status_code != 200:
-            raise Exception(res.text)
-
-        return res.headers.get('x-csrf-token')
+            raise Exception(
+                "The server '%s' does not have the 'base_import_module' installed or is not up-to-date." % url)
+        res.raise_for_status()
+        return res.text
 
     def zip_module(self, path):
         path = os.path.abspath(path)
@@ -73,7 +62,7 @@ class Deploy(Command):
 
     def run(self, cmdargs):
         parser = argparse.ArgumentParser(
-            prog="%s deploy" % sys.argv[0].split(os.path.sep)[-1],
+            prog=f'{Path(sys.argv[0]).name} {self.name}',
             description=self.__doc__
         )
         parser.add_argument('path', help="Path of the module to deploy")

@@ -1,52 +1,49 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, tools, _
+
+from typing import List, Tuple
+
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError, UserError
+
 
 class PosCategory(models.Model):
     _name = "pos.category"
-    _description = "Public Category"
+    _description = "Point of Sale Category"
     _order = "sequence, name"
 
     @api.constrains('parent_id')
     def _check_category_recursion(self):
         if not self._check_recursion():
-            raise ValueError(_('Error ! You cannot create recursive categories.'))
+            raise ValidationError(_('Error! You cannot create recursive categories.'))
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(string='Category Name', required=True, translate=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
     child_id = fields.One2many('pos.category', 'parent_id', string='Children Categories')
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.")
-    # NOTE: there is no 'default image', because by default we don't show
-    # thumbnails for categories. However if we have a thumbnail for at least one
-    # category, then we display a default image on the other, so that the
-    # buttons have consistent styling.
-    image = fields.Binary(attachment=True,
-        help="This field holds the image used as image for the cateogry, limited to 1024x1024px.")
-    image_medium = fields.Binary(string="Medium-sized image", attachment=True,
-        help="Medium-sized image of the category. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
-    image_small = fields.Binary(string="Small-sized image", attachment=True,
-        help="Small-sized image of the category. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
+    image_128 = fields.Image("Image", max_width=128, max_height=128)
 
-    @api.model
-    def create(self, vals):
-        tools.image_resize_images(vals)
-        return super(PosCategory, self).create(vals)
+    # During loading of data, the image is not loaded so we expose a lighter
+    # field to determine whether a pos.category has an image or not.
+    has_image = fields.Boolean(compute='_compute_has_image')
 
-    @api.multi
-    def write(self, vals):
-        tools.image_resize_images(vals)
-        return super(PosCategory, self).write(vals)
+    def _get_hierarchy(self) -> List[str]:
+        """ Returns a list representing the hierarchy of the categories. """
+        self.ensure_one()
+        return (self.parent_id._get_hierarchy() if self.parent_id else []) + [(self.name or '')]
 
-    @api.multi
-    def name_get(self):
-        def get_names(cat):
-            res = []
-            while cat:
-                res.append(cat.name)
-                cat = cat.parent_id
-            return res
-        return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self]
+    @api.depends('parent_id')
+    def _compute_display_name(self):
+        for cat in self:
+            cat.display_name = " / ".join(cat._get_hierarchy())
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_session_open(self):
+        if self.search_count([('id', 'in', self.ids)]):
+            if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
+                raise UserError(_('You cannot delete a point of sale category while a session is still opened.'))
+
+    @api.depends('has_image')
+    def _compute_has_image(self):
+        for category in self:
+            category.has_image = bool(category.image_128)

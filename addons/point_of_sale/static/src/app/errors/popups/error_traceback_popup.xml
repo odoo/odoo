@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.ErrorTracebackPopup">
+            <div class="popup popup-error">
+                <div class="modal-header">
+                    <h4 class="modal-title title">
+                        <t t-esc="props.title" />
+                    </h4>
+                </div>
+                <main class="modal-body body traceback">
+                    <t t-esc="props.body" />
+                </main>
+                <footer class="footer modal-footer justify-content-between">
+                    <div class="d-flex gap-1">
+                        <a t-att-download="tracebackFilename" t-att-href="tracebackUrl">
+                            <div class="button icon download btn btn-lg btn-secondary">
+                                <i class="fa fa-download" role="img" aria-label="Download error traceback" title="Download error traceback"></i>
+                            </div>
+                        </a>
+                        <div class="button icon email btn btn-lg btn-secondary" t-on-click="emailTraceback">
+                            <i class="fa fa-paper-plane" role="img" aria-label="Send by email" title="Send by email"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <div t-if="!props.exitButtonIsShown" class="button cancel btn btn-lg btn-primary" t-on-click="confirm">
+                            <t t-esc="props.confirmText" />
+                        </div>
+                        <div t-if="props.exitButtonIsShown" class="button cancel btn btn-lg btn-secondary" t-on-click="() => this.pos.closePos()">
+                            <t t-esc="props.exitButtonText" />
+                        </div>
+                    </div>
+                </footer>
+            </div>
+    </t>
+
+</templates>

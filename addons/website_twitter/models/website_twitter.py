@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
 import logging
 
 import requests
-import werkzeug
 from odoo import api, fields, models
 
 API_ENDPOINT = 'https://api.twitter.com'
@@ -21,8 +19,8 @@ _logger = logging.getLogger(__name__)
 class WebsiteTwitter(models.Model):
     _inherit = 'website'
 
-    twitter_api_key = fields.Char(string='Twitter API key', help='Twitter API Key')
-    twitter_api_secret = fields.Char(string='Twitter API secret', help='Twitter API Secret')
+    twitter_api_key = fields.Char(string='Twitter API key', help='Twitter API Key', groups='base.group_system')
+    twitter_api_secret = fields.Char(string='Twitter API secret', help='Twitter API Secret', groups='base.group_system')
     twitter_screen_name = fields.Char(string='Get favorites from this screen name')
 
     @api.model
@@ -47,12 +45,11 @@ class WebsiteTwitter(models.Model):
         _logger.debug("Refreshing tweets for website IDs: %r", website.ids)
         website.fetch_favorite_tweets()
 
-    @api.multi
     def fetch_favorite_tweets(self):
         WebsiteTweets = self.env['website.twitter.tweet']
         tweet_ids = []
         for website in self:
-            if not all((website.twitter_api_key, website.twitter_api_secret, website.twitter_screen_name)):
+            if not all((website.sudo().twitter_api_key, website.sudo().twitter_api_secret, website.twitter_screen_name)):
                 _logger.debug("Skip fetching favorite tweets for unconfigured website %s", website)
                 continue
             params = {'screen_name': website.twitter_screen_name}
@@ -80,14 +77,13 @@ class WebsiteTwitter(models.Model):
 
     def _get_access_token(self, website):
         """Obtain a bearer token."""
-        bearer_token_cred = '%s:%s' % (website.twitter_api_key, website.twitter_api_secret)
-        encoded_cred = base64.b64encode(bearer_token_cred)
-        request = Request(REQUEST_TOKEN_URL)
-        request.add_header('Content-Type',
-                           'application/x-www-form-urlencoded;charset=UTF-8')
-        request.add_header('Authorization',
-                           'Basic %s' % encoded_cred)
-        request.add_data('grant_type=client_credentials')
-        data = json.load(urlopen(request, timeout=URLOPEN_TIMEOUT))
+        r = requests.post(
+            REQUEST_TOKEN_URL,
+            data={'grant_type': 'client_credentials',},
+            auth=(website.sudo().twitter_api_key, website.sudo().twitter_api_secret),
+            timeout=URLOPEN_TIMEOUT,
+        )
+        r.raise_for_status()
+        data = r.json()
         access_token = data['access_token']
         return access_token

@@ -1,4 +1,2 @@
-# coding: utf-8
-# Copyright 2016 iterativo (https://www.iterativo.do) <info@iterativo.do>
-
-from . import chart_template
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from . import template_do

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_payment_method_form" model="ir.ui.view">
+        <field name="name">l10n_ec.sri.payment.form</field>
+        <field name="model">l10n_ec.sri.payment</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Payment Method" create="0" edit="0">
+                <sheet>
+                    <group>
+                          <field name="code"/>
+                          <field name="name"/>
+                          <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_payment_method_tree" model="ir.ui.view" >
+        <field name="name">l10n_ec.sri.payment.tree</field>
+        <field name="model">l10n_ec.sri.payment</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Method" create="0" edit="0">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_account_l10n_ec_sri_payment_tree" model="ir.actions.act_window">
+        <field name="name">Payment Methods SRI</field>
+        <field name="res_model">l10n_ec.sri.payment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_payment_method_tree"/>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_action_account_l10n_ec_sri_payment" action="action_account_l10n_ec_sri_payment_tree"
+              groups="account.group_account_manager" parent="l10n_ec.sri_menu" sequence="3"/>
+</odoo>

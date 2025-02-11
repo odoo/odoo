@@ -1,102 +1,64 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_buckaroo
-#
+# 	* payment_buckaroo
+# 
 # Translators:
-# Ahmet Altınışık <aaltinisik@altinkaya.com.tr>, 2016
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2023
+# Murat Kaplan <muratk@projetgrup.com>, 2023
+# Ediz Duman <neps1192@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Umur Akın <umura@projetgrup.com>, 2023
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-09 19:00+0000\n"
-"Last-Translator: Ahmet Altınışık <aaltinisik@altinkaya.com.tr>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:150
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
-msgid "; multiple order found"
-msgstr "; birden çok sipariş bulundu"
-
-#. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:148
-#, python-format
-msgid "; no order found"
-msgstr "; hiç sipariş bulunmadı"
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,cancel_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>İptal,</i> Ödemeniz iptal edildi.</span>"
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,done_msg:payment_buckaroo.payment_acquirer_buckaroo
 msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-"<span><i>Done,</i> Çevrimiçi ödeme başarıyla işlendi. Siparişiniz için "
-"teşekkür ederiz.</span>"
+"An error occurred during processing of your payment (code %s). Please try "
+"again."
+msgstr "Ödemeniz işlenirken bir hata oluştu (code %s). Lütfen tekrar deneyin."
 
 #. module: payment_buckaroo
-#: model:payment.acquirer,error_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>Hata,</i> İşlem sırasında bir hata oluştuğunu lüfen bilin. Sipariş "
-"onaylanmış olup ödeme yapılmayacaktır. Siparişinizin durumu hakkında "
-"herhangi bir sorunuz olursa bizimle iletişim kurmakta  lütfen tereddüt "
-"etmeyiniz..</span>"
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,pending_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,name:payment_buckaroo.payment_acquirer_buckaroo
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_provider__code__buckaroo
 msgid "Buckaroo"
 msgstr "Buckaroo"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:158
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_secret_key
+msgid "Buckaroo Secret Key"
+msgstr "Buckaroo Gizli Anahtar"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__code
+msgid "Code"
+msgstr "Kod"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
-msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
+msgid "No transaction found matching reference %s."
+msgstr "Referans %s eşleşen bir işlem bulunamadı."
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:146
-#, python-format
-msgid "Buckaroo: received data for reference %s"
-msgstr ""
-
-#. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:140
-#, python-format
-msgid ""
-"Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
-"shasign (%s)"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
-msgid "How to configure your Buckaroo account?"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:ir.model,name:payment_buckaroo.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Ödeme Alıcısı"
+#: model:ir.model,name:payment_buckaroo.model_payment_provider
+msgid "Payment Provider"
+msgstr "Ödeme Sağlayıcı"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
@@ -104,18 +66,42 @@ msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
-msgid "SecretKey"
-msgstr "GizliAnahtar"
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing transaction keys"
+msgstr "İşlem anahtarları eksik olan alınan veriler"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
-msgid "WebsiteKey"
-msgstr "WebsiteAnahtarı"
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_provider_form
+msgid "Secret Key"
+msgstr "Gizli Şifre"
 
 #. module: payment_buckaroo
-#: model:payment.acquirer,pre_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid ""
-"You will be redirected to the Buckaroo website after clicking on the payment "
-"button."
-msgstr ""
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__buckaroo_website_key
+msgid "The key solely used to identify the website with Buckaroo"
+msgstr "Yalnızca web sitesini Buckaroo ile tanımlamak için kullanılan anahtar"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Bu ödeme sağlayıcısının teknik kodu."
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Unknown status code: %s"
+msgstr "Bilinmeyen durum kodu: %s"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_website_key
+msgid "Website Key"
+msgstr "Web Site Anahtarı"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Your payment was refused (code %s). Please try again."
+msgstr "Ödemeniz reddedildi (code %s). Lütfen tekrar deneyin."

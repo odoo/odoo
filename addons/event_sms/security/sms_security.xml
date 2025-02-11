@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_rule_sms_template_event_manager" model="ir.rule">
+        <field name="name">SMS Template: event manager CUD on event / registrations templates</field>
+        <field name="model_id" ref="sms.model_sms_template"/>
+        <field name="groups" eval="[(4, ref('event.group_event_manager'))]"/>
+        <field name="domain_force">[('model_id.model', 'in', ('event.event', 'event.registration'))]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+</odoo>

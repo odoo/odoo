@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ComboConfiguratorPopup">
+        <div class="popup popup-text popup-med combo-configurator-popup">
+            <header class="modal-header h2" t-esc="props.product.display_name"/>
+            <main class="body">
+                <div t-foreach="props.product.combo_ids" t-as="combo_id" t-key="combo_id"
+                    class="d-flex flex-column m-3 mb-4">
+                    <t t-set="combo" t-value="pos.db.combo_by_id[combo_id]"/>
+                    <h3 class="me-auto mb-3" t-esc="combo.name"/>
+                    <div class="product-list d-grid gap-1">
+                        <div t-foreach="combo.combo_line_ids" t-as="combo_line_id" t-key="combo_line_id">
+                            <t t-set="combo_line" t-value="pos.db.combo_line_by_id[combo_line_id]"/>
+                            <t t-set="product" t-value="pos.db.product_by_id[combo_line.product_id[0]]"/>
+                            <input 
+                                type="radio" 
+                                t-attf-name="combo-{{combo_id}}" 
+                                t-attf-id="combo-{{combo_id}}-combo_line-{{combo_line_id}}"
+                                t-attf-value="{{combo_line_id}}" 
+                                t-model="state.combo[combo_id]"
+                                t-att-class="{ 'selected': state.combo[combo_id] == combo_line_id }"
+                                />
+                            <label t-attf-for="combo-{{combo_id}}-combo_line-{{combo_line_id}}" class="combo-line h-100 w-100 rounded cursor-pointer transition-base">
+                                <ProductCard
+                                    class="'flex-column h-100 border'"
+                                    name="product.display_name"
+                                    productId="product.id"
+                                    price="formattedComboPrice(combo_line)"
+                                    imageUrl="product.getImageUrl()"
+                                    onClick="(ev) => this.onClickProduct({ product, combo_line }, ev)"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="footer footer-flex modal-footer">
+                <t t-set="_allSelected" t-value="areAllCombosSelected()" />
+                <button class="button highlight confirm btn btn-lg btn-primary"
+                    t-att-disabled="!_allSelected"
+                    t-on-click="confirm">
+                        Add to order
+                </button>
+                <button class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
+                        Discard
+                </button>
+                <div class="ms-auto">
+                    <!-- TODO: Restore the feature the shows the price of the selection. -->
+                    <t t-if="!_allSelected">
+                        Complete the selection to proceed
+                    </t>
+                </div>
+            </footer>
+        </div>
+    </t>
+</templates>

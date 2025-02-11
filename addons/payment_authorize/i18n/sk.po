@@ -1,83 +1,174 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_authorize
-#
+# 	* payment_authorize
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-03-07 21:27+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: payment_authorize
-#: model:payment.acquirer,cancel_msg:payment_authorize.payment_acquirer_authorize
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Zruśiť,</i> Vaša platba bola zrušená.</span>"
-
-#. module: payment_authorize
-#: model:payment.acquirer,done_msg:payment_authorize.payment_acquirer_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Personal Checking</option>\n"
+"                        <option value=\"savings\">Personal Savings</option>\n"
+"                        <option value=\"businessChecking\">Business Checking</option>\n"
+"                    </select>"
 msgstr ""
-"<span><i>Hotovo,</i> Vaša online platba bola úspešne spracovaná. Ďakujeme za "
-"objednávku.</span>"
 
 #. module: payment_authorize
-#: model:payment.acquirer,error_msg:payment_authorize.payment_acquirer_authorize
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "ABA Routing Number"
 msgstr ""
-"<span><i>Chyba,</i> Upozorňujeme, že počas transakcie došlo k chybe. "
-"Objednávka bola potvrdená ale nebude zaplatená. Neváhajte nás kontaktovať ak "
-"máte otázky ohľadom stavu vašej objednávky.</span>"
 
 #. module: payment_authorize
-#: model:payment.acquirer,pending_msg:payment_authorize.payment_acquirer_authorize
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
+msgid "API Client Key"
 msgstr ""
-"<span><i>Čakajúce,</i> Vaša online platba bola úspešne spracovaná. Ale vaša "
-"objednávka nebola ešte potvrdená.</span>"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_login
-msgid "API Login Id"
-msgstr "API prihlasovacie Id"
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
+msgid "API Login ID"
+msgstr ""
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
+msgid "API Signature Key"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
 msgid "API Transaction Key"
 msgstr "API kľúč transakcie"
 
 #. module: payment_authorize
-#: model:payment.acquirer,name:payment_authorize.payment_acquirer_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Account Number"
+msgstr "Číslo účtu"
+
+#. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
 msgid "Authorize.Net"
 msgstr "Authorize.Net "
 
 #. module: payment_authorize
-#: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
-msgid ""
-"How to configure your Authorize.Net account (look for Getting Started "
-"Guide) ?"
-msgstr "Ako nakonfigurovať váš Authorize.Net účet (hľadať príručku Začíname) ?"
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
+msgid "Authorize.Net Profile ID"
+msgstr ""
 
 #. module: payment_authorize
-#: model:ir.model,name:payment_authorize.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Nadobúdateľ platby "
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Account Type"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Name"
+msgstr "Názov banky"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Card Code"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Card Number"
+msgstr "Číslo karty"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__code
+msgid "Code"
+msgstr "Kód"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+#, python-format
+msgid ""
+"Could not fetch merchant details:\n"
+"%s"
+msgstr ""
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"Could not retrieve the transaction details. (error code: %s; error_details: "
+"%s)"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Expiration"
+msgstr "Expirácia"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+#, python-format
+msgid ""
+"Failed to authenticate.\n"
+"%s"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Generate Client Key"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "How to get paid with Authorize.Net"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "MM"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Name On Account"
+msgstr ""
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr ""
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+#, python-format
+msgid "Only one currency can be selected by Authorize.Net account."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_provider
+msgid "Payment Provider"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_token
+msgid "Payment Token"
+msgstr "Platobný token"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_transaction
@@ -85,9 +176,79 @@ msgid "Payment Transaction"
 msgstr "Platobná transakcia"
 
 #. module: payment_authorize
-#: model:payment.acquirer,pre_msg:payment_authorize.payment_acquirer_authorize
-msgid ""
-"You will be redirected to the Authorize website after clicking on the "
-"payment button."
+#. odoo-javascript
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#, python-format
+msgid "Payment processing failed"
 msgstr ""
-"Budete presmerovaný na autorizačnú webstránku po kliknutí na tlačidlo platby."
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgstr ""
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/controllers/main.py:0
+#, python-format
+msgid "Received tampered payment request data."
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Set Account Currency"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
+msgid "The ID solely used to identify the account with Authorize.Net"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
+msgid ""
+"The public client key. To generate directly from Odoo or from Authorize.Net "
+"backend."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The transaction is not in a status to be refunded. (status: %s, details: %s)"
+msgstr ""
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
+msgid ""
+"The unique reference for the partner/token combination in the Authorize.net "
+"backend."
+msgstr ""
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+#, python-format
+msgid "This action cannot be performed while the provider is disabled."
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "YY"
+msgstr ""

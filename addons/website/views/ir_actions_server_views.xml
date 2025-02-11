@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_server_action_form_website">
+            <field name="name">ir.actions.server.form.website</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group[@groups='base.group_no_one']" position="inside">
+                        <group>
+                            <field name="website_published"
+                                invisible="state != 'code'"/>
+                            <field name="xml_id" invisible="1"/>
+                            <field name="website_path"
+                                invisible="not website_published or state != 'code'"/>
+                            <field name="website_url" widget="url"
+                                readonly="1"
+                                invisible="not website_published or state != 'code'"/>
+                        </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_server_action_tree_website">
+            <field name="name">ir.actions.server.tree.website</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_id']" position="after">
+                    <field name="website_url"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_server_action_search_website">
+            <field name="name">ir.actions.server.search.website</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <filter string="Website" name="website"
+                        domain="[('website_published', '=', True), ('state', '=', 'code')]"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

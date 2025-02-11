@@ -1,16 +1,20 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Buckaroo Payment Acquirer',
-    'category': 'Accounting',
-    'summary': 'Payment Acquirer: Buckaroo Implementation',
-    'version': '1.0',
-    'description': """Buckaroo Payment Acquirer""",
+    'name': 'Payment Provider: Buckaroo',
+    'version': '2.0',
+    'category': 'Accounting/Payment Providers',
+    'sequence': 350,
+    'summary': "A Dutch payment provider covering several countries in Europe.",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
-        'views/payment_views.xml',
         'views/payment_buckaroo_templates.xml',
-        'data/payment_acquirer_data.xml',
+        'views/payment_provider_views.xml',
+
+        'data/payment_provider_data.xml',
     ],
-    'installable': True,
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
+    'license': 'LGPL-3',
 }

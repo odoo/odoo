@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website.website_loader">
+    <div t-if="state.isVisible" class="o_website_loader_container position-fixed fixed-top fixed-left
+        h-100 w-100 d-flex flex-column align-items-center fw-bold text-center">
+        <div t-if="state.showWaitingMessages" t-out="currentWaitingMessage.title"/>
+        <div t-elif="state.title" t-out="state.title"/>
+        <div t-elif="state.showTips">Building your website...</div>
+        <p t-if="state.showWaitingMessages" t-out="currentWaitingMessage.description"
+            class="o_website_loader_tip w-25"/>
+        <div class="o_website_loader"/>
+        <p class="o_website_loader_tip w-25">
+            <t t-if="state.showTips">
+                TIP: Once loaded, follow the
+                <span class="o_tour_pointer o_bottom position-absolute ms-2">
+                    <span class="o_tour_pointer_tip position-absolute"></span>
+                </span>
+                <br/>pointer to build the perfect page in 7 steps.
+            </t>
+        </p>
+        <div class="o_website_loader_progress progress rounded-pill mt-3">
+            <div role="progressbar"
+                 aria-label="Installing your features"
+                 class="progress-bar bg-success progress-bar-striped progress-bar-animated rounded-pill"
+                 t-att-aria-valuemax="100"
+                 t-att-aria-valuenow="state.progressPercentage"
+                 t-attf-style="width: #{state.progressPercentage}%"/>
+        </div>
+    </div>
+</t>
+</templates>

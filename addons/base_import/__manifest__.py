@@ -22,12 +22,22 @@ Re-implement Odoo's file import system:
   need or want an online import can avoid it being available to users.
 """,
     'depends': ['web'],
-    'category': 'Extra Tools',
+    'version': '2.0',
+    'category': 'Hidden/Tools',
     'installable': True,
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
-        'views/base_import_templates.xml',
     ],
-    'qweb': ['static/src/xml/base_import.xml'],
+    'assets': {
+        'web.assets_backend': [
+            'base_import/static/src/**/*.scss',
+            'base_import/static/src/**/*.js',
+            'base_import/static/src/**/*.xml',
+        ],
+        'web.qunit_suite_tests': [
+            'base_import/static/tests/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

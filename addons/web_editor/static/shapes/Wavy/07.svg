@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1400 1400">
+	<filter id="drop-shadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+            <feOffset dx="0" dy="3" result="offsetblur"/>
+            <feFlood flood-color="rgba(0,0,0,0.3)"/>
+            <feComposite in2="offsetblur" operator="in"/>
+            <feMerge>
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+    <path d="M0,134.2C283.4,274.6,559.7,27.7,1066,2c175.6-8.9,333.1,36.9,334,37.2V-10H0V134.2z" style="fill: #f6f6f6; filter: url(#drop-shadow);"/>
+</svg>

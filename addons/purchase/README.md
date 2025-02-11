@@ -2,7 +2,7 @@ Odoo Supply Chain
 -----------------
 
 Automate requisition-to-pay, control invoicing with the Odoo
-<a href="https://www.odoo.com/page/purchase">Open Source Supply Chain</a>.
+<a href="https://www.odoo.com/app/purchase">Open Source Supply Chain</a>.
 
 Automate procurement propositions, launch request for quotations, track
 purchase orders, manage vendors' information, control products reception and

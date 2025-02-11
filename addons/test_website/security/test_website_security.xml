@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_category_test_website" model="ir.module.category">
+        <field name="name">Test website</field>
+        <field name="sequence" eval="200" />
+    </record>
+
+    <record id="test_website.group_test_website_admin" model="res.groups">
+        <field name="name">Test Administrator</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.NewContentElement">
+    <div class="o_new_content_element col-md-4 mb8" t-att-name="props.name">
+        <a href="#"
+                t-on-click="onClick"
+                t-att-class="props.status === MODULE_STATUS.NOT_INSTALLED ? 'o_uninstalled_module' : ''"
+                t-att-title="props.title"
+                t-att-aria-label="props.title"
+                t-att-data-module-xml-id="props.moduleXmlId">
+            <t t-slot="default"/>
+        </a>
+    </div>
+</t>
+
+<t t-name="website.NewContentModal">
+    <div id="o_new_content_menu_choices">
+        <div class="container pt32 pb32">
+            <div class="row">
+                <NewContentElement t-if="isDesigner"
+                        name="'New Page'"
+                        onClick="() => this.createNewPage()"
+                        title="'New Page'">
+                    <i class="fa fa-file-o"/>
+                    <p>Page</p>
+                </NewContentElement>
+
+                <t t-foreach="sortedNewContentElements" t-as="element" t-key="element.moduleXmlId" t-if="'isDisplayed' in element ? element.isDisplayed : isSystem ">
+                    <NewContentElement onClick="() => this.onClickNewContent(element)"
+                        status="element.status"
+                        title="element.title"
+                        moduleXmlId="element.moduleXmlId">
+                        <t t-call="{{ element.icon }}"/>
+                        <p><t t-esc="element.title"/></p>
+                    </NewContentElement>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.NewContentSystray">
+    <div class="o_menu_systray_item o_new_content_container d-none d-md-block" t-on-click="onClick">
+        <a href="#" accesskey="c" class="o_nav_entry"><span class="fa fa-plus me-1"/>New</a>
+        <NewContentModal t-if="websiteContext.showNewContentModal"/>
+    </div>
+</t>
+
+<t t-name="website.InstallModuleDialog">
+    <WebsiteDialog close="props.close"
+        title="props.title"
+        primaryTitle="installButton"
+        primaryClick="() => this.onClickInstall()">
+        <t t-esc="props.installationText"/>
+    </WebsiteDialog>
+</t>
+</templates>

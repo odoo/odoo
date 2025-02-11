@@ -6,11 +6,11 @@
       <TranType><t t-esc='transaction_type'/></TranType>
       <TranCode><t t-esc='transaction_code'/></TranCode>
       <InvoiceNo><t t-esc='invoice_no'/></InvoiceNo>
-      <Frequency>OneTime</Frequency>
+      <Frequency t-translation="off">OneTime</Frequency>
     </template>
 
     <template id='mercury_transaction'>
-      <TStream>
+      <TStream t-translation="off">
         <Transaction>
           <t t-call='pos_mercury.mercury_common'/>
           <OperatorID><t t-esc='operator_id'/></OperatorID>
@@ -24,21 +24,21 @@
             <EncryptedFormat>MagneSafe</EncryptedFormat>
           </Account>
           <Amount>
-            <Purchase><t t-esc='"%.2f" % purchase'/></Purchase> <!-- format required by Mercury -->
+            <Purchase><t t-esc='"%.2f" % purchase'/></Purchase> <!-- format required by Vantiv -->
           </Amount>
         </Transaction>
       </TStream>
     </template>
 
     <template id='mercury_voidsale'>
-      <TStream>
+      <TStream t-translation="off">
         <Transaction>
           <t t-call='pos_mercury.mercury_common'/>
           <RefNo><t t-esc='ref_no'/></RefNo>
           <RecordNo><t t-esc='record_no'/></RecordNo>
           <Memo><t t-esc='memo'/></Memo>
           <Amount>
-            <Purchase><t t-esc='"%.2f" % authorize'/></Purchase> <!-- format required by Mercury -->
+            <Purchase><t t-esc='"%.2f" % authorize'/></Purchase> <!-- format required by Vantiv -->
           </Amount>
           <TranInfo>
             <AuthCode><t t-esc='auth_code'/></AuthCode>
@@ -52,7 +52,7 @@
     </template>
 
     <template id='mercury_return'>
-      <TStream>
+      <TStream t-translation="off">
         <Transaction>
           <t t-call='pos_mercury.mercury_common'/>
           <OperatorID><t t-esc='operator_id'/></OperatorID>

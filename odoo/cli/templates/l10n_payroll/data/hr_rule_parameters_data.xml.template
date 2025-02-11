@@ -1,0 +1,51 @@
+{%- set countryPascal = name|pascal -%}
+{%- set codeUpper = code|upper -%}
+<odoo>
+    <record id="l10n_{{code}}_rule_parameter_social_employee_rate" model="hr.rule.parameter">
+        <field name="name">{{countryPascal}}: Pension Contribution Employee Rate</field>
+        <field name="code">l10n_{{code}}_social_employee_rate</field>
+        <field name="country_id" ref="base.{{code}}"/>
+    </record>
+    <record id="l10n_{{code}}_rule_parameter_social_employee_rate_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">-9.76</field>
+        <field name="rule_parameter_id" ref="l10n_{{code}}_rule_parameter_social_employee_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_{{code}}_rule_parameter_social_employer_rate" model="hr.rule.parameter">
+        <field name="name">{{countryPascal}}: Pension Contribution Employer Rate</field>
+        <field name="code">l10n_{{code}}_social_employer_rate</field>
+        <field name="country_id" ref="base.{{code}}"/>
+    </record>
+    <record id="l10n_{{code}}_rule_parameter_social_employer_rate_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">9.76</field>
+        <field name="rule_parameter_id" ref="l10n_{{code}}_rule_parameter_social_employer_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_{{code}}_rule_parameter_tax_brackets" model="hr.rule.parameter">
+        <field name="name">{{countryPascal}}: Tax Brackets</field>
+        <field name="code">l10n_{{code}}_tax_brackets</field>
+        <field name="country_id" ref="base.{{code}}"/>
+    </record>
+    <record id="l10n_{{code}}_rule_parameter_tax_brackets_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (    0, 10000,    0, 5),
+            (10000, 30000,  500, 10),
+            (30000, 'inf', 2000, 5),
+        ]</field>
+        <field name="rule_parameter_id" ref="l10n_{{code}}_rule_parameter_tax_brackets"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_{{code}}_rule_parameter_childcare_relief" model="hr.rule.parameter">
+        <field name="name">{{countryPascal}}: Chilcare Relief</field>
+        <field name="code">l10n_{{code}}_childcare_relief</field>
+        <field name="country_id" ref="base.{{code}}"/>
+    </record>
+    <record id="l10n_{{code}}_rule_parameter_childcare_relief_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">[92.67, 92.67, 166.67, 225]</field>
+        <field name="rule_parameter_id" ref="l10n_{{code}}_rule_parameter_childcare_relief"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+</odoo>

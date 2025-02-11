@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_packagingbarcode">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <div class="oe_structure"></div>
+                    <t t-foreach="docs" t-as="packaging">
+                        <div class="col-4" style="padding:0;">
+                            <div class="oe_structure"></div>
+                            <table class="table table-condensed" style="border-bottom: 0px solid white !important;width: 3in;">
+                                <tr>
+                                    <th style="text-align: left;">
+                                        <strong><span t-field="packaging.name">Package Type A</span></strong>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong><span t-field="packaging.product_id.display_name">Eco-friendly Wooden Chair</span></strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="o_row">
+                                            <strong>Qty: </strong>
+                                            <strong><span t-field="packaging.qty">10</span></strong>
+                                            <strong><span t-field="packaging.product_uom_id" groups="uom.group_uom">Units</span></strong>
+                                        </div>
+                                    </td>
+                                </tr>
+                                  <t t-if="packaging.barcode">
+                                    <tr>
+                                    <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                        <div t-field="packaging.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 600, 'height': 150, 'img_style': 'width:100%;height:20%;'}"/>
+                                        <span t-field="packaging.barcode">123456789012</span>
+                                    </td>
+                                </tr>
+                              </t>
+                            </table>
+                            <div class="oe_structure"></div>
+                        </div>
+                    </t>
+                    <div class="oe_structure"></div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

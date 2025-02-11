@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_import
+# 	* base_import
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,510 +23,823 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:599
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "(%d more)"
-msgstr "(%d meer)"
+msgid "%s at multiple rows"
+msgstr "%s op meerdere rijen"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:376
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+#, python-format
+msgid "%s records successfully imported"
+msgstr "%s records succesvol geïmporteerd"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
-"is incorrect"
+"is incorrect."
 msgstr ""
-"In het bestand is een enkele kolom gevonden. Dit betekent meestal dat het "
+"Een enkele kolom is gevonden in het bestand. Dit betekent meestal dat het "
 "scheidingsteken niet juist is."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:89
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 #, python-format
-msgid "Cancel"
-msgstr "Annuleer"
+msgid "Additional Fields"
+msgstr "Extra velden"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:600
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Advanced"
+msgstr "Geavanceerd"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Allow matching with subfields"
+msgstr "Matching met subvelden toestaan"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"Er is een onbekend probleem opgetreden tijdens het importeren (mogelijk "
+"verloren verbinding, datalimiet overschreden of geheugenlimieten "
+"overschreden). Probeer het opnieuw als het probleem van voorbijgaande aard "
+"is. Als het probleem zich blijft voordoen, probeer het bestand te splitsen "
+"in plaats van het in één keer te importeren."
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base
+msgid "Base"
+msgstr "Basis"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_import
+msgid "Base Import"
+msgstr "Basis import functionaliteit"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_mapping
+msgid "Base Import Mapping"
+msgstr "Basis importconfiguratie"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "Batch"
+msgstr "Batch"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Batch Import"
+msgstr "Batch-import"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Batch limit"
+msgstr "Batch limiet"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Click 'Resume' to proceed with the import, resuming at line %s."
+msgstr ""
+"Klik op 'Hervatten' om door te gaan met het importeren, hervat op regel %s."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr "Kolom %s bevat een incorrecte waarde (waarde: %s)"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:620
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
 msgstr "Kolom %s bevat  incorrecte waarde. Fout in regel %d: %s"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:245
-#: code:addons/base_import/static/src/js/base_import.js:256
-#: code:addons/base_import/static/src/js/base_import.js:263
-#: code:addons/base_import/static/src/js/base_import.js:275
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
+msgid "Column Name"
+msgstr "Kolom naam"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Comma"
 msgstr "Komma"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_uid
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "Comments"
+msgstr "Opmerkingen"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
+msgstr ""
+"Kon URL niet ophalen: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Create new values"
+msgstr "Nieuwe waarden maken"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:152
-#: code:addons/base_import/models/base_import.py:157
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
 msgstr "Database ID"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:125
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Date Format:"
 msgstr "Datumnotatie:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:126
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Datetime Format:"
-msgstr "Datumnotatie:"
+msgstr "Datum-Tijdnotatie:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:128
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "Decimal Separator:"
+msgid "Decimals Separator:"
 msgstr "Decimaal scheidingsteken:"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:420
-#, python-format
-msgid "Don't import"
-msgstr "Niet importeren"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:264
-#: code:addons/base_import/static/src/js/base_import.js:282
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Dot"
 msgstr "Punt"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:120
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Download"
+msgstr "Downloaden"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Encoding:"
 msgstr "Codering:"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:622
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Fout bij maken datum [%s:L%d]: %s"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:234
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr "Foute cel gevonden bij het inlezen van het XLS/XLSX-bestand: %s"
+msgid "Error at row %s: \"%s\""
+msgstr "Foutmelding op rij %s: \"%s\""
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:576
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+"Fout bij het importeren van records: Tekstscheidingsteken moet een enkel "
+"teken zijn."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Fout bij het importeren van records: alle rijen moeten even groot zijn, maar"
+" de titelrij heeft %d invoeren terwijl de eerste rij er %d heeft. Mogelijk "
+"moet je het scheidingsteken wijzigen."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "Estimated time left:"
+msgstr "Geschatte resterende tijd:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Everything seems valid."
 msgstr "Alle velden lijken geldig."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:117
-#: code:addons/base_import/models/base_import.py:151
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Excel files are recommended as formatting is automatic."
+msgstr "Excel-bestanden worden aanbevolen omdat de opmaak automatisch is."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
 msgstr "Externe ID"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_file
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
+msgid "Field Name"
+msgstr "Veldnaam"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file
 msgid "File"
 msgstr "Bestand"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_file_name
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "File Column"
+msgstr "Bestandskolom"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
 msgstr "Bestandsnaam"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_file_type
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
 msgstr "Bestandstype"
 
 #. module: base_import
-#: model:ir.model.fields,help:base_import.field_base_import_import_file
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "Bestand is groter dan de maximum grootte (%s bytes)"
+
+#. module: base_import
+#: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
 msgstr "Te controleren en/of te importeren bestand, raw binair (niet base64)"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:115
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
-msgid "For CSV files, the issue could be an incorrect encoding."
+msgid "Finalizing current batch before interrupting..."
+msgstr "De huidige batch voltooien voordat deze wordt onderbroken..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "For CSV files, you may need to select the correct separator."
 msgstr ""
-"Bij CSV bestanden kan het probleem te wijten zijn aan een onjuiste codering."
+"Voor CSV bestanden, moet je wellicht de correcte scheidingstekens kiezen."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:623
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
-msgid "Get all possible values"
-msgstr "Alle positieve waardes ophalen"
+msgid "Formatting"
+msgstr "Opmaak"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:11
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+"Foutieve afbeelding data gevonden, afbeeldingen moeten geïmporteerd worden "
+"als URL's of base64-geëncodeerde data."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Go to Import FAQ"
+msgstr "Ga naar Veelgestelde vragen over importeren"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Help"
 msgstr "Help"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:610
-#, python-format
-msgid "Here are the possible values:"
-msgstr "Hier de mogelijke waarden."
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:116
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
 msgstr "Hier is de start van het bestand welke we niet konden importeren:"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_id
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:73
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid ""
 "If the file contains\n"
-"                the column names, Odoo can try auto-detecting the\n"
-"                field corresponding to the column. This makes imports\n"
-"                simpler especially when the file has many columns."
+"                    the column names, Odoo can try auto-detecting the\n"
+"                    field corresponding to the column. This makes imports\n"
+"                    simpler especially when the file has many columns."
 msgstr ""
-"Als het bestand kolomnamen bevat, \n"
-"                kan Odoo proberen automatisch het bijbehorende\n"
-"                veld proberen te vinden. Hiermee wordt het importeren\n"
-"                eenvoudiger, zeker als er veel kolommen zijn."
+"Als het bestand bevat\n"
+"                    de kolomnamen, kan Odoo proberen de . automatisch te detecteren\n"
+"                    veld dat overeenkomt met de kolom. Dit maakt invoer\n"
+"                    eenvoudiger, vooral wanneer het bestand veel kolommen heeft."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:60
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid ""
-"If the model uses openchatter, history tracking                             "
-"will set up subscriptions and send notifications"
-"                             during the import, but lead to a slower import."
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
 msgstr ""
-"Als het model gebruik maakt van de chatter functionaliteit zal de historie "
-"traceerder volgers instellen en notificaties opzetten tijdens het "
-"importeren. Dit zal leiden tot een tragere import."
+"Als het model openchatter gebruikt, historische tracking zal abonnementen "
+"instellen en meldingen verzenden tijdens het importeren, maar dit leidt tot "
+"een langzamere import."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:88
-#: code:addons/base_import/static/src/xml/base_import.xml:147
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"Afbeeldingsgrootte te groot, geïmporteerde afbeeldingen moeten kleiner zijn "
+"dan 42 miljoen pixels"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Import"
 msgstr "Importeren"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:182
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Import FAQ"
+msgstr "Import FAQ"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "Import a File"
 msgstr "Een bestand importeren"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:114
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Import preview failed due to:"
-msgstr "Import voorbeeld mislukt omdat:"
+msgid "Import file has no content or is corrupt"
+msgstr "Importbestand heeft geen inhoud of is beschadigd"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview___last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "Import preview failed due to: \""
+msgstr "Importvoorbeeld mislukt omwille van: \""
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_write_uid
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_records/import_records.xml:0
+#, python-format
+msgid "Import records"
+msgstr "Records importeren"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Imported file"
+msgstr "Geïmporteerd bestand"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+#, python-format
+msgid "Importing"
+msgstr "Importeren"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
+msgstr "Foutieve celwaarde op rij %(row)s, kolom %(col)s: %(cell_value)s"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:19
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Load File"
 msgstr "Laad bestand"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:56
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
-msgid "Map your columns to import"
-msgstr "Map uw kolommen om te importeren"
+msgid "Loading file..."
+msgstr "Bestand laden..."
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_block_ui.xml:0
+#, python-format
+msgid "Loading..."
+msgstr "Laden..."
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
 msgstr "Model"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_name
-msgid "Name"
-msgstr "Naam"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:15
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
-msgid "No file chosen..."
-msgstr "Geen bestand gekozen..."
+msgid "Multiple errors occurred"
+msgstr "Er zijn meerdere fouten opgetreden"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:486
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
-msgid "Normal Fields"
-msgstr "Normale velden"
+msgid "Need Help?"
+msgstr "Hulp nodig?"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:30
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "Options…"
-msgstr "Opties..."
+msgid "No Separator"
+msgstr "Geen scheidingsteken"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_othervalue
-msgid "Other Variable"
-msgstr "Andere variabele"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "No matching records found for the following name"
+msgstr "Geen overeenkomende records gevonden voor de volgende naam"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
-msgid "Parent"
-msgstr "Bovenliggend"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "Odoo Field"
+msgstr "Odoo-veld"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:487
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Prevent import"
+msgstr "Import voorkomen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "Preview"
+msgstr "Voorbeeld"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "Progress bar"
+msgstr "Voortgangsbalk"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Reimport"
+msgstr "Herimporteren"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 #, python-format
 msgid "Relation Fields"
-msgstr "Relatie velden"
+msgstr "Relatievelden"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:24
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
+msgid "Res Model"
+msgstr "Res Model"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
-msgid "Reload File"
-msgstr "Opnieuw laden bestand"
+msgid "Resume"
+msgstr "Hervatten"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:11
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 #, python-format
-msgid "Select a CSV or Excel file to import."
-msgstr "Selecteer CSV of Excel bestand voor importeren."
+msgid "Search a field..."
+msgstr "Zoek een veld..."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:246
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "See possible values"
+msgstr "Bekijk mogelijke waardes"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Selected Sheet:"
+msgstr "Geselecteerd blad:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Semicolon"
 msgstr "Puntkomma"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:121
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Separator:"
 msgstr "Scheidingsteken:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:72
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
-msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgid "Set to: %s"
+msgstr "Instellen op : %s"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
-msgid "Some Value"
-msgstr "Zelfde waarde"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Set to: False"
+msgstr "Instellen op: Onwaar"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:248
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Set to: True"
+msgstr "Instellen op: Waar"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Set value as empty"
+msgstr "Stel waarde in als leeg"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Sheet:"
+msgstr "Tabblad:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Skip record"
+msgstr "Record overslaan"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Space"
 msgstr "Spatie"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:247
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#, python-format
+msgid "Standard Fields"
+msgstr "Standaardvelden"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Start at line"
+msgstr "Start vanaf regel"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "Stop Import"
+msgstr "Importeren stoppen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#, python-format
+msgid "Suggested Fields"
+msgstr "Voorgestelde velden"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Tab"
 msgstr "Tab"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:122
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Test"
+msgstr "Test"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+#, python-format
+msgid "Testing"
+msgstr "Testen"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Text Delimiter:"
 msgstr "Tekstscheidingsteken:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:68
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid ""
-"The first row\n"
-"                 contains the label of the column"
-msgstr ""
-"De eerste rij\n"
-"bevat de kop"
+msgid "The file contains blocking errors (see below)"
+msgstr "Het bestand bevat blokkerende fouten (zie hieronder)"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:127
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "The file will be imported by batches"
+msgstr "Het bestand wordt in batches geïmporteerd"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "This column will be concatenated in field"
+msgstr "Deze kolom wordt samengevoegd met het veld"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Thousands Separator:"
-msgstr "Scheidingsteken voor duizendtallen:"
+msgstr "Duizend scheidingsteken:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:62
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "To import multiple values, separate them by a comma."
+msgstr "Om meerdere waarden te importeren, scheidt je ze door een komma."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "To import, select a field..."
+msgstr "Selecteer een veld om te importeren..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Track history during import"
 msgstr "Volg geschiedenis tijdens importeren"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:199
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
@@ -534,7 +847,8 @@ msgstr ""
 " vereist Python."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:200
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
@@ -543,114 +857,164 @@ msgstr ""
 "worden bij het importeren ondersteund."
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:86
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
-msgid "Validate"
-msgstr "Valideer"
+msgid "Untitled"
+msgstr "Geen titel"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_value
-msgid "Value"
-msgstr "Waarde"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Upload File"
+msgstr "Bestand uploaden"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:538
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Upload an Excel or CSV file to import"
+msgstr "Upload een Excel- of CSV-bestand om te importeren"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided."
+" Leave empty to let Odoo guess the format (recommended)"
+msgstr ""
+"Gebruik UU voor uren in een 24-uurssysteem, gebruik II in samenhang met 'p' "
+"voor een 12-uurssysteem. Je kan een gepersonaliseerd formaat gebruiken "
+"bovenop de voorgestelde suggesties. Laat leeg om Odoo het formaat te laten "
+"raden (aanbevolen)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include"
+" separators such as a dot, forward slash or dash. You can use a custom "
+"format in addition to the suggestions provided. Leave empty to let Odoo "
+"guess the format (recommended)"
+msgstr ""
+"Gebruik JJJJ voor het jaartal, MM voor de maand en DD voor de dag. Gebruik "
+"scheidingstekens zoals een punt, schuine streep of streepje. Je kan een "
+"gepersonaliseerd formaat gebruiken bovenop de voorgestelde suggesties. Laat "
+"leeg om Odoo het formaat te laten raden (aanbevolen)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Use first row as header"
+msgstr "Gebruik de eerste rij als kop"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_res_users
+msgid "User"
+msgstr "Gebruiker"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Waarschuwing: negeert de labelsregel, lege regels en regels die alleen uit "
+"lege cellen bestaan"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
+#, python-format
+msgid "When a value cannot be matched:"
+msgstr "Wanneer een waarde niet kan worden gevonden:"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"Je kunt geen afbeeldingen importen via een URL, neem contact op met je "
+"administrator of ondersteuningsdienst voor de reden."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "You can test or reload your file before resuming the import."
+msgstr ""
+"Je kunt een bestand niet testen of opnieuw laden voordat de import hervat "
+"is."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "U dient minstens een veld te confituren om te importeren"
+msgstr "Je dient minstens een veld te configureren om te importeren"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:593
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
-msgid "at row %d"
-msgstr "op regel %d"
+msgid "at multiple rows"
+msgstr "op meerdere rijen"
 
 #. module: base_import
-#: model:ir.model,name:base_import.model_base_import_import
-msgid "base_import.import"
-msgstr "base_import.import"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char
-msgid "base_import.tests.models.char"
-msgstr "base_import.tests.models.char"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
-msgid "base_import.tests.models.char.noreadonly"
-msgstr "base_import.tests.models.char.noreadonly"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
-msgid "base_import.tests.models.char.readonly"
-msgstr "base_import.tests.models.char.readonly"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_required
-msgid "base_import.tests.models.char.required"
-msgstr "base_import.tests.models.char.required"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_states
-msgid "base_import.tests.models.char.states"
-msgstr "base_import.tests.models.char.states"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
-msgid "base_import.tests.models.char.stillreadonly"
-msgstr "base_import.tests.models.char.stillreadonly"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o
-msgid "base_import.tests.models.m2o"
-msgstr "base_import.tests.models.m2o"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
-msgid "base_import.tests.models.m2o.related"
-msgstr "base_import.tests.models.m2o.related"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
-msgid "base_import.tests.models.m2o.required"
-msgstr "base_import.tests.models.m2o.required"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
-msgid "base_import.tests.models.m2o.required.related"
-msgstr "base_import.tests.models.m2o.required.related"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_o2m
-msgid "base_import.tests.models.o2m"
-msgstr "base_import.tests.models.o2m"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
-msgid "base_import.tests.models.o2m.child"
-msgstr "base_import.tests.models.o2m.child"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_preview
-msgid "base_import.tests.models.preview"
-msgstr "base_import.tests.models.preview"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:595
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
-msgid "between rows %d and %d"
-msgstr "Tussen regel %d en %d"
+msgid "at row"
+msgstr "op rij"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "in field"
+msgstr "in het veld"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "minutes"
+msgstr "minuten"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "more"
+msgstr "meer"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "out of"
+msgstr "uit"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "seconds"
+msgstr "seconden"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "unknown error code %s"
+msgstr "Onbekende fout code %s"

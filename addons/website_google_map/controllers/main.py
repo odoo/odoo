@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import json
-
 from odoo import http
 from odoo.http import request
-from odoo.tools import html_escape as escape
+from odoo.tools.json import scriptsafe
 
 
 class GoogleMap(http.Controller):
@@ -24,7 +22,7 @@ class GoogleMap(http.Controller):
     directives ``width`` and ``height``.
     '''
 
-    @http.route(['/google_map'], type='http', auth="public", website=True)
+    @http.route(['/google_map'], type='http', auth="public", website=True, sitemap=False)
     def google_map(self, *arg, **post):
         clean_ids = []
         for partner_id in post.get('partner_ids', "").split(","):
@@ -38,24 +36,23 @@ class GoogleMap(http.Controller):
             "counter": len(partners),
             "partners": []
         }
-        for partner in partners.with_context({'show_address': True}):
-            # TODO in master, do not use `escape` but `t-esc` in the qweb template.
+        for partner in partners.with_context(show_address=True):
             partner_data["partners"].append({
                 'id': partner.id,
-                'name': escape(partner.name),
-                'address': escape('\n'.join(partner.name_get()[0][1].split('\n')[1:])),
-                'latitude': escape(str(partner.partner_latitude)),
-                'longitude': escape(str(partner.partner_longitude)),
+                'name': partner.name,
+                'address': '\n'.join(partner.display_name.split('\n')[1:]),
+                'latitude': str(partner.partner_latitude) if partner.partner_latitude else False,
+                'longitude': str(partner.partner_longitude) if partner.partner_longitude else False,
             })
         if 'customers' in post.get('partner_url', ''):
             partner_url = '/customers/'
         else:
             partner_url = '/partners/'
 
-        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
+        google_maps_api_key = request.website.google_maps_api_key
         values = {
             'partner_url': partner_url,
-            'partner_data': json.dumps(partner_data),
+            'partner_data': scriptsafe.dumps(partner_data),
             'google_maps_api_key': google_maps_api_key,
         }
         return request.render("website_google_map.google_map", values)

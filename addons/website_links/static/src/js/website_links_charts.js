@@ -1,271 +1,323 @@
-odoo.define('website_links.charts', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var rpc = require('web.rpc');
-var Widget = require('web.Widget');
-var base = require('web_editor.base');
-var core = require('web.core');
-var website = require('website.website');
+import { loadBundle } from "@web/core/assets";
+import { _t } from "@web/core/l10n/translation";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import { browser } from "@web/core/browser/browser";
+const { DateTime } = luxon;
 
-var _t = core._t;
-var exports = {};
+var BarChart = publicWidget.Widget.extend({
+    /**
+     * @constructor
+     * @param {Object} parent
+     * @param {Object} beginDate
+     * @param {Object} endDate
+     * @param {Object} dates
+     */
+    init: function (parent, beginDate, endDate, dates) {
+        this._super.apply(this, arguments);
+        this.beginDate = beginDate.startOf("day");
+        this.endDate = endDate.startOf("day");
+        if (this.beginDate.toISO() === this.endDate.toISO()) {
+            this.endDate = this.endDate.plus({ days: 1 });
+        }
+        this.number_of_days = this.endDate.diff(this.beginDate).as("days");
+        this.dates = dates;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        // Fill data for each day (with 0 click for days without data)
+        var clicksArray = [];
+        for (var i = 0; i <= this.number_of_days; i++) {
+            var dateKey = this.beginDate.toFormat("yyyy-MM-dd");
+            clicksArray.push([dateKey, (dateKey in this.dates) ? this.dates[dateKey] : 0]);
+            this.beginDate = this.beginDate.plus({ days: 1 });
+        }
 
-if(!$('.o_website_links_chart').length) {
-    return $.Deferred().reject("DOM doesn't contain '.o_website_links_chart'");
-}
-
-    var BarChart = Widget.extend({
-        init: function($element, begin_date, end_date, dates) {
-            this.$element = $element;
-            this.begin_date = begin_date;
-            this.end_date = end_date;
-            this.number_of_days = this.end_date.diff(this.begin_date, 'days') + 2;
-            this.dates = dates;
-        },
-        start: function() {
-            var self = this;
-
-            // Accessor functions
-            function getDate(d) { return new Date(d[0]); }
-            function getNbClicks(d) { return d[1]; }
-
-            // Prune tick values for visibility purpose
-            function getPrunedTickValues(ticks, nb_desired_ticks) {
-                var nb_values = ticks.length;
-                var keep_one_of = Math.max(1, Math.floor(nb_values / nb_desired_ticks));
-
-                return _.filter(ticks, function(d, i) {
-                    return i % keep_one_of === 0;
-                });
-            }
-
-            // Fill data for each day (with 0 click for days without data)
-            var clicks_array = [];
-            var begin_date_copy = this.begin_date;
-            for(var i = 0 ; i < this.number_of_days ; i++) {
-                var date_key = begin_date_copy.format('YYYY-MM-DD');
-                clicks_array.push([date_key, (date_key in this.dates) ? this.dates[date_key] : 0]);
-                begin_date_copy.add(1, 'days');
-            }
-
-            // Set title
-            var nb_clicks = _.reduce(clicks_array, function(total, val) { return total + val[1] ; }, 0);
-            $(this.$element + ' .title').html(nb_clicks + _t(' clicks'));
-
-            // Fit data into the NVD3 scheme
-            var chart_data = [{}];
-                chart_data[0]['key'] = _t('# of clicks');
-                chart_data[0]['values'] = clicks_array;
-
-            nv.addGraph(function() {
-                var chart = nv.models.lineChart()
-                    .x(function(d) { return getDate(d); })
-                    .y(function(d) { return getNbClicks(d); })
-                    .showYAxis(true)
-                    .showXAxis(true);
-
-                // Reduce the number of labels on the X axis for visibility
-                var tick_values = getPrunedTickValues(chart_data[0]['values'], 10);
-
-                chart.xAxis
-                    .tickFormat(function(d) { return d3.time.format("%d/%m/%y")(new Date(d)); })
-                    .tickValues(_.map(tick_values, function(d) { return getDate(d).getTime(); }))
-                    .rotateLabels(55);
-
-                chart.yAxis
-                    .tickFormat(d3.format("d"))
-                    .ticks(chart_data[0]['values'].length - 1);
-
-                d3.select(self.$element + ' svg')
-                    .datum(chart_data)
-                    .call(chart);
-
-                return self.chart = chart;
-            });
-        },
-    });
-
-    var PieChart = Widget.extend({
-        init: function($element, data) {
-            this.data = data;
-            this.$element = $element;
-        },
-        start: function() {
-            var self = this;
-
-            // Process country data to fit into the NVD3 scheme
-            var processed_data = [];
-            for(var i = 0 ; i < this.data.length ; i++) {
-                var country_name = this.data[i]['country_id'] ? this.data[i]['country_id'][1] : _t('Undefined');
-                processed_data.push({'label':country_name + ' (' + this.data[i]['country_id_count'] + ')', 'value':this.data[i]['country_id_count']});
-            }
-
-            // Set title
-            $(this.$element + ' .title').html(this.data.length + _t(' countries'));
-
-            nv.addGraph(function() {
-                var chart = nv.models.pieChart()
-                    .x(function(d) { return d.label; })
-                    .y(function(d) { return d.value; })
-                    .showLabels(false);
-
-                d3.select(self.$element + ' svg')
-                    .datum(processed_data)
-                    .transition().duration(1200)
-                    .call(chart);
-
-                return self.chart = chart;
-            });
-        },
-    });
-
-    base.ready().done(function() {
-        // Resize the chart when a tab is opened, because NVD3 automatically reduce the size
-        // of the chart to 5px width when the bootstrap tab is closed.
-        var charts = {};
-        $(".graph-tabs li a").click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-            _.chain(charts).pluck('chart').invoke('update'); // Force NVD3 to redraw the chart
+        var nbClicks = 0;
+        var data = [];
+        var labels = [];
+        clicksArray.forEach(function (pt) {
+            labels.push(pt[0]);
+            nbClicks += pt[1];
+            data.push(pt[1]);
         });
+
+        this.$('.title').html(nbClicks + _t(' clicks'));
+
+        var config = {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    fill: 'start',
+                    label: _t('# of clicks'),
+                    backgroundColor: '#ebf2f7',
+                    borderColor: '#6aa1ca',
+
+                }],
+            },
+        };
+        var canvas = this.$('canvas')[0];
+        var context = canvas.getContext('2d');
+        new Chart(context, config);
+    },
+    willStart: async function () {
+        await loadBundle("web.chartjs_lib");
+    },
+});
+
+var PieChart = publicWidget.Widget.extend({
+    /**
+     * @override
+     * @param {Object} parent
+     * @param {Object} data
+     */
+    init: function (parent, data) {
+        this._super.apply(this, arguments);
+        this.data = data;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+
+        // Process country data to fit into the ChartJS scheme
+        var labels = [];
+        var data = [];
+        for (var i = 0; i < this.data.length; i++) {
+            var countryName = this.data[i]['country_id'] ? this.data[i]['country_id'][1] : _t('Undefined');
+            labels.push(countryName + ' (' + this.data[i]['country_id_count'] + ')');
+            data.push(this.data[i]['country_id_count']);
+        }
+
+        // Set title
+        this.$('.title').html(this.data.length + _t(' countries'));
+
+        var config = {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    label: this.data.length > 0 ? this.data[0].key : _t('No data'),
+                }]
+            },
+            options: {
+                aspectRatio: 2,
+            },
+        };
+
+        var canvas = this.$('canvas')[0];
+        var context = canvas.getContext('2d');
+        new Chart(context, config);
+    },
+    willStart: async function () {
+        await loadBundle("web.chartjs_lib");
+    },
+});
+
+publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
+    selector: '.o_website_links_chart',
+    events: {
+        'click .copy-to-clipboard': '_onCopyToClipboardClick',
+    },
+
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
+    /**
+     * @override
+     */
+    start: async function () {
+        var self = this;
+        this.charts = {};
 
         // Get the code of the link
-        var link_id = $('#link_id').val();
+        var linkID = parseInt($('#link_id').val());
+        this.links_domain = ['link_id', '=', linkID];
 
-        var links_domain = ['link_id', '=', parseInt(link_id)];
+        var defs = [];
+        defs.push(this._totalClicks());
+        defs.push(this._clicksByDay());
+        defs.push(this._clicksByCountry());
+        defs.push(this._lastWeekClicksByCountry());
+        defs.push(this._lastMonthClicksByCountry());
+        defs.push(this._super.apply(this, arguments));
 
-        var total_clicks = function() {
-            return rpc.query({
-                    model: 'link.tracker.click',
-                    method: 'search_count',
-                    args: [[links_domain]],
-                });
-        };
+        this.animating_copy = false;
 
-        var clicks_by_day = function() {
-            return rpc.query({
-                    model: 'link.tracker.click',
-                    method: 'read_group',
-                    args: [[links_domain], ['create_date']],
-                    kwargs: {groupby:'create_date:day'},
-                });
-        };
+        return Promise.all(defs).then(function (results) {
+            var _totalClicks = results[0];
+            var _clicksByDay = results[1];
+            var _clicksByCountry = results[2];
+            var _lastWeekClicksByCountry = results[3];
+            var _lastMonthClicksByCountry = results[4];
 
-        var clicks_by_country = function() {
-            return rpc.query({
-                    model: 'link.tracker.click',
-                    method: 'read_group',
-                    args: [[links_domain], ['country_id']],
-                    kwargs: {groupby:'country_id'},
-                });
-        };
-
-        var last_week_clicks_by_country = function() {
-            var interval = moment().subtract(7, 'days').format("YYYY-MM-DD");
-            return rpc.query({
-                    model: 'link.tracker.click',
-                    method: 'read_group',
-                    args: [[links_domain, ['create_date', '>', interval]], ['country_id']],
-                    kwargs: {groupby:'country_id'},
-                });
-        };
-
-        var last_month_clicks_by_country = function() {
-            var interval = moment().subtract(30, 'days').format("YYYY-MM-DD");
-            return rpc.query({
-                    model: 'link.tracker.click',
-                    method: 'read_group',
-                    args: [[links_domain, ['create_date', '>', interval]], ['country_id']],
-                    kwargs: {groupby: 'country_id'},
-                });
-        };
-
-        $.when(total_clicks(), 
-               clicks_by_day(),
-               clicks_by_country(),
-               last_week_clicks_by_country(),
-               last_month_clicks_by_country())
-        .done(function(total_clicks, clicks_by_day, clicks_by_country, last_week_clicks_by_country, last_month_clicks_by_country) {
-
-            if(total_clicks) {
-                var formatted_clicks_by_day = {};
-                var begin_date, end_date;
-                for(var i = 0 ; i < clicks_by_day.length ; i++) {
-                    var date = moment(clicks_by_day[i]['create_date:day'], "DD MMMM YYYY");
-                    if (i === 0) { begin_date = date; }
-                    if (i == clicks_by_day.length - 1) { end_date = date; }
-                    formatted_clicks_by_day[date.format("YYYY-MM-DD")] = clicks_by_day[i]['create_date_count'];
-                }
-
-                // Process all time line chart data
-                var now = moment();
-
-                charts.all_time_bar = new BarChart('#all_time_clicks_chart', begin_date, now, formatted_clicks_by_day);
-
-                // Process month line chart data
-                begin_date = moment().subtract(30, 'days');
-                charts.last_month_bar = new BarChart('#last_month_clicks_chart', begin_date, now, formatted_clicks_by_day);
-
-                // Process week line chart data
-                begin_date = moment().subtract(7, 'days');
-                charts.last_week_bar = new BarChart('#last_week_clicks_chart', begin_date, now, formatted_clicks_by_day);
-
-                // Process pie charts
-                charts.all_time_pie = new PieChart('#all_time_countries_charts', clicks_by_country);
-                charts.last_month_pie = new PieChart('#last_month_countries_charts', last_month_clicks_by_country);
-                charts.last_week_pie = new PieChart('#last_week_countries_charts', last_week_clicks_by_country);
-
-                var row_width = $('#all_time_countries_charts').parent().width();
-                var charts_svg = $('#all_time_countries_charts,last_month_countries_charts,last_week_countries_charts').find('svg');
-                charts_svg.css('height', Math.max(clicks_by_country.length * (row_width > 750 ? 1 : 2), 20) + 'em');
-
-                _.invoke(charts, 'start');
-
-                nv.utils.windowResize(function () {
-                    _.chain(charts).pluck('chart').invoke('update');
-                });
+            if (!_totalClicks) {
+                $('#all_time_charts').prepend(_t("There is no data to show"));
+                $('#last_month_charts').prepend(_t("There is no data to show"));
+                $('#last_week_charts').prepend(_t("There is no data to show"));
+                return;
             }
-            else {
-                $('#all_time_charts').prepend(_t('There is no data to show'));
-                $('#last_month_charts').prepend(_t('There is no data to show'));
-                $('#last_week_charts').prepend(_t('There is no data to show'));
-            }
-        });
 
-        // Copy to clipboard link
-        ZeroClipboard.config({swfPath: location.origin + "/website_links/static/lib/zeroclipboard/ZeroClipboard.swf" });
-        new ZeroClipboard($('.copy-to-clipboard'));
-
-        var animating_copy = false;
-
-        $('.copy-to-clipboard').on('click', function(e) {
-
-            e.preventDefault();
-
-            if(!animating_copy) {
-                animating_copy = true;
-
-                $('.o_website_links_short_url').clone()
-                    .css('position', 'absolute')
-                    .css('left', '15px')
-                    .css('bottom', '10px')
-                    .css('z-index', 2)
-                    .removeClass('.o_website_links_short_url')
-                    .addClass('animated-link')
-                    .appendTo($('.o_website_links_short_url'))
-                    .animate({
-                        opacity: 0,
-                        bottom: "+=20",
-                    }, 500, function() {
-                        $('.animated-link').remove();
-                        animating_copy = false;
-                    });
+            var formattedClicksByDay = {};
+            var beginDate;
+            for (var i = 0; i < _clicksByDay.length; i++) {
+                // This is a trick to get the date without the local formatting.
+                // We can't simply do .locale("en") because some Odoo languages
+                // are not supported by moment.js (eg: Arabic Syria).
+                // FIXME this now uses luxon, check if this is still needed? Probably can be replaced by deserializeDate
+                const date = DateTime.fromFormat(
+                    _clicksByDay[i]["__domain"].find((el) => el.length && el.includes(">="))[2]
+                        .split(" ")[0], "yyyy-MM-dd"
+                );
+                if (i === 0) {
+                    beginDate = date;
                 }
+                formattedClicksByDay[date.setLocale("en").toFormat("yyyy-MM-dd")] =
+                    _clicksByDay[i]["create_date_count"];
+            }
+
+            // Process all time line chart data
+            var now = DateTime.now();
+            self.charts.all_time_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
+            self.charts.all_time_bar.attachTo($('#all_time_clicks_chart'));
+
+            // Process month line chart data
+            beginDate = DateTime.now().minus({ days: 30 });
+            self.charts.last_month_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
+            self.charts.last_month_bar.attachTo($('#last_month_clicks_chart'));
+
+            // Process week line chart data
+            beginDate = DateTime.now().minus({ days: 7 });
+            self.charts.last_week_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
+            self.charts.last_week_bar.attachTo($('#last_week_clicks_chart'));
+
+            // Process pie charts
+            self.charts.all_time_pie = new PieChart(self, _clicksByCountry);
+            self.charts.all_time_pie.attachTo($('#all_time_countries_charts'));
+
+            self.charts.last_month_pie = new PieChart(self, _lastMonthClicksByCountry);
+            self.charts.last_month_pie.attachTo($('#last_month_countries_charts'));
+
+            self.charts.last_week_pie = new PieChart(self, _lastWeekClicksByCountry);
+            self.charts.last_week_pie.attachTo($('#last_week_countries_charts'));
+
+            var rowWidth = $('#all_time_countries_charts').parent().width();
+            var $chartCanvas = $('#all_time_countries_charts,last_month_countries_charts,last_week_countries_charts').find('canvas');
+            $chartCanvas.height(Math.max(_clicksByCountry.length * (rowWidth > 750 ? 1 : 2), 20) + 'em');
+
         });
-    });
+    },
 
-    exports.BarChart = BarChart;
-    exports.PieChart = PieChart;
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-return exports;
+    /**
+     * @private
+     */
+    _totalClicks: function () {
+        return this.orm.searchCount("link.tracker.click", [this.links_domain]);
+    },
+    /**
+     * @private
+     */
+    _clicksByDay: function () {
+        return this.orm.readGroup(
+            "link.tracker.click",
+            [this.links_domain],
+            ["create_date"],
+            ["create_date:day"]
+        );
+    },
+    /**
+     * @private
+     */
+    _clicksByCountry: function () {
+        return this.orm.readGroup(
+            "link.tracker.click",
+            [this.links_domain],
+            ["country_id"],
+            ["country_id"]
+        );
+    },
+    /**
+     * @private
+     */
+    _lastWeekClicksByCountry: function () {
+        // 7 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds.
+        const aWeekAgoDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        // get the date in the format YYYY-MM-DD.
+        const aWeekAgoString = aWeekAgoDate.toISOString().split("T")[0];
+        return this.orm.readGroup(
+            "link.tracker.click",
+            [this.links_domain, ["create_date", ">", aWeekAgoString]],
+            ["country_id"],
+            ["country_id"]
+        );
+    },
+    /**
+     * @private
+     */
+    _lastMonthClicksByCountry: function () {
+        // 30 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds.
+        const aMonthAgoDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        // get the date in the format YYYY-MM-DD.
+        const aMonthAgoString = aMonthAgoDate.toISOString().split("T")[0];
+        return this.orm.readGroup(
+            "link.tracker.click",
+            [this.links_domain, ["create_date", ">", aMonthAgoString]],
+            ["country_id"],
+            ["country_id"]
+        );
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onCopyToClipboardClick: async function (ev) {
+        ev.preventDefault();
+
+        const textValue = ev.target.dataset.clipboardText;
+        await browser.navigator.clipboard.writeText(textValue);
+
+        if (this.animating_copy) {
+            return;
+        }
+
+        this.animating_copy = true;
+
+        $('.o_website_links_short_url').clone()
+            .css('position', 'absolute')
+            .css('left', '15px')
+            .css('bottom', '10px')
+            .css('z-index', 2)
+            .removeClass('.o_website_links_short_url')
+            .addClass('animated-link')
+            .appendTo($('.o_website_links_short_url'))
+            .animate({
+                opacity: 0,
+                bottom: '+=20',
+            }, 500, function () {
+                $('.animated-link').remove();
+                this.animating_copy = false;
+            });
+    },
 });
+
+export default {
+    BarChart: BarChart,
+    PieChart: PieChart,
+};

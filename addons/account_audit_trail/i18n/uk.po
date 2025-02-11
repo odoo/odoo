@@ -1,0 +1,230 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_audit_trail
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2023-12-23 23:00+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_account_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_account_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Account"
+msgstr "Рахунок"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_display_name
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_display_name
+msgid "Account Audit Log Display Name"
+msgstr "Відображення назви журналу аудиту рахунку"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Activate Audit Trail"
+msgstr "Активувати аудит"
+
+#. module: account_audit_trail
+#: model:ir.actions.act_window,name:account_audit_trail.action_account_audit_trail_report
+#: model:ir.model.fields,field_description:account_audit_trail.field_res_company__check_account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_res_config_settings__check_account_audit_trail
+#: model:ir.ui.menu,name:account_audit_trail.account_audit_trail_menu
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Audit Trail"
+msgstr "Аудит"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Рядок банківської виписки"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/res_config_settings.py:0
+#, python-format
+msgid "Can't disable audit trail when there are existing records."
+msgstr "Неможливо вимкнути аудит, якщо є наявні записи."
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Changed"
+msgstr "Змінено"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_res_company
+msgid "Companies"
+msgstr "Компанії"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Company"
+msgstr "Компанія"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_company_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_company_id
+msgid "Company "
+msgstr "Компанія"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налаштування"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Create Only"
+msgstr "Лише створення"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Date"
+msgstr "Дата"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_preview
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_preview
+msgid "Description"
+msgstr "Опис"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Go to Audit Trail"
+msgstr "Перейти до аудиту"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Group By"
+msgstr "Групувати за"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_move
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_move_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_move_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Journal Entry"
+msgstr "Запис у журналі"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_tracking_value
+msgid "Mail Tracking Value"
+msgstr "Значення відслідковування листа"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Помічник злиття партнерів"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_message
+msgid "Message"
+msgstr "Повідомлення"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Messages Search"
+msgstr "Пошук повідомлень"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log
+msgid "Name"
+msgstr "Назва"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Операція не підтримується"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_partner_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_partner_id
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Partners"
+msgstr "Партнери"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Record"
+msgstr "Запис"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__show_audit_log
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__show_audit_log
+msgid "Show Audit Log"
+msgstr "Показати записи аудиту"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_tax_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_tax_id
+msgid "Tax"
+msgstr "Податок"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Taxes"
+msgstr "Податки"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/account_move.py:0
+#, python-format
+msgid ""
+"To keep the audit trail, you can not delete journal entries once they have been posted.\n"
+"Instead, you can cancel the journal entry."
+msgstr ""
+"Щоб зберегти аудит, ви не можете видаляти записи журналу після їх опублікування.\n"
+"Натомість ви можете скасувати запис у журналі."
+
+#. module: account_audit_trail
+#: model_terms:ir.actions.act_window,help:account_audit_trail.action_account_audit_trail_report
+msgid ""
+"To see the audit log you have to enable the audit trail option from settings"
+msgstr ""
+"Щоб переглянути записи аудиту, потрібно ввімкнути параметр аудиту в "
+"налаштуваннях"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Update Only"
+msgstr "Лише оновити"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Updated"
+msgstr "Оновлено"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid ""
+"You cannot remove parts of the audit trail. Archive the record instead."
+msgstr ""
+"Ви не можете видалити частини відстеження аудиту. Натомість заархівуйте "
+"запис."

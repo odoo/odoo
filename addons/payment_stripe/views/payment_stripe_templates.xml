@@ -1,66 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <template id="stripe_acquirer_button">
-            <form t-if="acquirer" method="post" target="_self">
-                <script src="https://checkout.stripe.com/checkout.js"></script>
-                <input type='hidden' name='stripe_image' t-att-value="acquirer.stripe_image_url"/>
-                <input type='hidden' name='merchant' t-att-value='acquirer.company_id.name'/>
-                <input type='hidden' name='amount' t-att-value="amount"/>
-                <input type="hidden" name='return_url' t-att-value='returndata'/>
-                <!--Order Information -->
-                <input type='hidden' name='invoice_num' t-att-value='reference'/>
-                <input type='hidden' name='currency' t-att-value='currency'/>
-                <input type='hidden' name='currency_id' t-att-value='currency_id'/>
-                <!-- Billing Information-->
-                <input type='hidden' name='name' t-att-value='name'/>
-                <input type='hidden' name='address_line1' t-att-value='address_line1'/>
-                <input type='hidden' name='address_city' t-att-value='address_city'/>
-                <input type='hidden' name='address_zip' t-att-value='address_zip'/>
-                <input type='hidden' name='address_country' t-att-value='address_country'/>
-                <input type='hidden' name='phone' t-att-value='phone'/>
-                <input type='hidden' name='email' t-att-value='email'/>
-                <input id="acquirer_stripe" type='hidden' name="acquirer" t-att-value="acquirer.id"/>
-                <input type='hidden' name="stripe_key" t-att-value="acquirer.stripe_publishable_key"/>
-                <!-- Submit-->
-                <button id="pay_stripe" width="100px" t-att-class="submit_class">
-                    <img t-if="not submit_txt" src="/payment_stripe/static/src/img/stripe_icon.png"/>
-                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
-                </button>
-                <script type="text/javascript" src="/payment_stripe/static/src/js/stripe.js"></script>
-            </form>
-        </template>
 
-        <template id="stripe_s2s_form">
-            <input type="hidden" name="data_set" data-create-route="/payment/stripe/s2s/create_json_3ds"/>
-            <div class="mt8">
-                <div t-att-class="'form-group col-md-12' if bootstrap_formatting else 'form-group'">
-                    <input type="tel" name="cc_number" id="cc_number" class="form-control" placeholder="Card number"/>
-                    <div class="card_placeholder"></div>
-                    <div class="visa"></div>
-                    <input type="hidden" name="cc_brand" value=""/>
-                </div>
-                <div t-att-class="'form-group col-md-5' if bootstrap_formatting else 'form-group'">
-                    <input type="text" name="cc_holder_name" id="cc_holder_name" class="form-control" placeholder="Cardholder name"/>
-                </div>
-                <div t-att-class="'form-group col-md-3' if bootstrap_formatting else 'form-group'">
-                    <input type="text" name="cc_expiry" id="cc_expiry" class="form-control" maxlength="7" placeholder="Expires (MM / YY)"/>
-                </div>
-                <div t-att-class="'form-group col-md-4' if bootstrap_formatting else 'form-group'">
-                    <input type="text" name="cvc" id="cvc" class="form-control" maxlength="4" placeholder="CVC"/>
-                </div>
-                <input type="hidden" name="acquirer_id" t-att-value="id"/>
-                <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
-                <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <div class="clearfix"/>
-            </div>
-        </template>
+    <template id="inline_form">
+        <t t-set="inline_form_values"
+           t-value="provider_sudo._stripe_get_inline_form_values(
+                        amount,
+                        currency,
+                        partner_id,
+                        mode == 'validation',
+                        payment_method_sudo=pm_sudo,
+                        sale_order_id=sale_order_id,
+                    )"
+        />
+        <div name="o_stripe_element_container"
+             t-att-data-stripe-inline-form-values="inline_form_values"
+        />
+    </template>
 
-        <template id="payment_stripe_redirect" name="Payment Stripe">
-            <script type="text/javascript">
-                window.location.href = '<t t-esc="return_url"/>';
-            </script>
-        </template>
-    </data>
+    <template id="express_checkout_form">
+        <div name="o_express_checkout_container"
+             t-attf-id="o_stripe_express_checkout_container_{{provider_sudo.id}}"
+             t-att-data-provider-id="provider_sudo.id"
+             t-att-data-provider-code="provider_sudo.code"
+             t-att-data-stripe-publishable-key="provider_sudo._stripe_get_publishable_key()"
+             t-att-data-country-code="provider_sudo._stripe_get_country(provider_sudo.company_id.country_id.code)"
+             class="w-100 mt-2"
+        />
+    </template>
+
 </odoo>

@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 {
     'name': 'Canada - Accounting',
-    'author': 'Savoir-faire Linux',
-    'website': 'https://www.savoirfairelinux.com',
-    'category': 'Localization',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ca'],
+    'author': 'Savoir-faire Linux (https://www.savoirfairelinux.com); Odoo SA',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the module to manage the Canadian accounting chart in Odoo.
 ===========================================================================================
@@ -36,16 +36,16 @@ position.
     'depends': [
         'account',
         'base_iban',
-        'l10n_multilang',
     ],
     'data': [
-        'data/account_chart_template_data.xml',
-        'data/l10n_ca_chart_data.xml',
-        'data/account_chart_template_after_data.xml',
-        'data/account_tax_data.xml',
-        'data/fiscal_templates_data.xml',
-        'data/account_chart_template_data.yml',
-        'data/res_company_data.xml',
+        'data/tax_report.xml',
+        'views/res_partner_view.xml',
+        'views/res_company_view.xml',
+        'views/report_invoice.xml',
+        'views/report_template.xml',
     ],
-    'post_init_hook': 'load_translations',
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

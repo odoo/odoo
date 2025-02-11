@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet_edition.FilterValue"
+       >
+        <div class="o-filter-value d-flex align-items-start w-100">
+            <div t-if="filter.type === 'text'" class="w-100">
+                <TextFilterValue
+                    value="filterValue"
+                    label="filter.label"
+                    options="textAllowedValues"
+                    onValueChanged="(value) => this.onTextInput(filter.id, value)"
+                />
+            </div>
+            <span t-if="filter.type === 'relation'" class="w-100">
+                <MultiRecordSelector
+                    placeholder="' ' + translate(filter.label)"
+                    resModel="filter.modelName"
+                    resIds="filterValue || []"
+                    update="(resIds) => this.onTagSelected(filter.id, resIds)" />
+            </span>
+            <div t-if="filter.type === 'date'" class="w-100">
+                <select t-if="filter.rangeType === 'relative'"
+                    t-on-change="(e) => this.onDateInput(filter.id, e.target.value || undefined)"
+                    class="date_filter_values o_input me-3"
+                    required="true">
+                    <option value="">Select period...</option>
+                    <t t-foreach="relativeDateRangesTypes"
+                        t-as="range"
+                        t-key="range.type">
+                        <option t-att-selected="range.type === filterValue"
+                            t-att-value="range.type">
+                            <t t-esc="range.description"/>
+                        </option>
+                    </t>
+                </select>
+                <DateFromToValue t-elif="filter.rangeType === 'from_to'"
+                    from="filterValue?.from"
+                    to="filterValue?.to"
+                    onFromToChanged="(value) => this.onDateInput(filter.id, value)"/>
+
+                <DateFilterValue t-else=""
+                    period="filterValue?.period"
+                    yearOffset="filterValue?.yearOffset"
+                    disabledPeriods="filter.disabledPeriods"
+                    onTimeRangeChanged="(value) => this.onDateInput(filter.id, value)"/>
+            </div>
+            <i t-if="getters.isGlobalFilterActive(filter.id)"
+                class="fa fa-times btn btn-link text-muted o_side_panel_filter_icon ms-1"
+                title="Clear"
+                t-on-click="() => this.clear(filter.id)"/>
+        </div>
+    </t>
+</templates>

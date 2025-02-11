@@ -2,9 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo import Command
 
 
 class test_search(TransactionCase):
+
+    def patch_order(self, model, order):
+        self.patch(self.registry[model], '_order', order)
 
     def test_00_search_order(self):
         # Create 6 partners with a given name, and a given creation order to
@@ -56,6 +60,80 @@ class test_search(TransactionCase):
         id_desc_active_desc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active desc")
         self.assertEqual([e, ab, b, a, d, c], list(id_desc_active_desc), "Search with 'ID DESC, ACTIVE DESC' order failed.")
 
+        a.ref = "ref1"
+        c.ref = "ref2"
+        ids = (a | b | c).ids
+        for order, result in [
+            ('ref', a | c | b),
+            ('ref desc', b | c | a),
+            ('ref asc nulls first', b | a | c),
+            ('ref asc nulls last', a | c | b),
+            ('ref desc nulls first', b | c | a),
+            ('ref desc nulls last', c | a | b)
+        ]:
+            with self.subTest(order):
+                self.assertEqual(
+                    Partner.search([('id', 'in', ids)], order=order).mapped('name'),
+                    result.mapped('name'))
+
+        # sorting by an m2o should alias to the natural order of the m2o
+        self.patch_order('res.country', 'phone_code')
+        a.country_id, c.country_id = self.env['res.country'].create([{
+            'name': "Country 1",
+            'code': 'C1',
+            'phone_code': '01',
+        }, {
+            'name': 'Country 2',
+            'code': 'C2',
+            'phone_code': '02'
+        }])
+
+        for order, result in [
+            ('country_id', a | c | b),
+            ('country_id desc', b | c | a),
+            ('country_id asc nulls first', b | a | c),
+            ('country_id asc nulls last', a | c | b),
+            ('country_id desc nulls first', b | c | a),
+            ('country_id desc nulls last', c | a | b)
+        ]:
+            with self.subTest(order):
+                self.assertEqual(
+                    Partner.search([('id', 'in', ids)], order=order).mapped('name'),
+                    result.mapped('name'))
+
+        # NULLS applies to the m2o itself, not its sub-fields, so a null `phone_code`
+        # will sort normally (larger than non-null codes)
+        b.country_id = self.env['res.country'].create({'name': "Country X", 'code': 'C3'})
+
+        for order, result in [
+            ('country_id', a | c | b),
+            ('country_id desc', b | c | a),
+            ('country_id asc nulls first', a | c | b),
+            ('country_id asc nulls last', a | c | b),
+            ('country_id desc nulls first', b | c | a),
+            ('country_id desc nulls last', b | c | a)
+        ]:
+            with self.subTest(order):
+                self.assertEqual(
+                    Partner.search([('id', 'in', ids)], order=order).mapped('name'),
+                    result.mapped('name'))
+
+        # a field DESC should reverse the nested behaviour (and thus the inner
+        # NULLS clauses), but the outer NULLS clause still has no effect
+        self.patch_order('res.country', 'phone_code NULLS FIRST')
+        for order, result in [
+            ('country_id', b | a | c),
+            ('country_id desc', c | a | b),
+            ('country_id asc nulls first', b | a | c),
+            ('country_id asc nulls last', b | a | c),
+            ('country_id desc nulls first', c | a | b),
+            ('country_id desc nulls last', c | a | b)
+        ]:
+            with self.subTest(order):
+                self.assertEqual(
+                    Partner.search([('id', 'in', ids)], order=order).mapped('name'),
+                    result.mapped('name'))
+
     def test_10_inherits_m2order(self):
         Users = self.env['res.users']
 
@@ -68,13 +146,13 @@ class test_search(TransactionCase):
         states_us = country_us.state_ids[:2]
 
         # Create test users
-        u = Users.create({'name': '__search', 'login': '__search', 'groups_id': [(6, 0, [group_employee.id])]})
+        u = Users.create({'name': '__search', 'login': '__search', 'groups_id': [Command.set([group_employee.id])]})
         a = Users.create({'name': '__test_A', 'login': '__test_A', 'country_id': country_be.id, 'state_id': country_be.id})
         b = Users.create({'name': '__test_B', 'login': '__a_test_B', 'country_id': country_us.id, 'state_id': states_us[1].id})
         c = Users.create({'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us.id, 'state_id': states_us[0].id})
 
         # Search as search user
-        Users = Users.sudo(u)
+        Users = Users.with_user(u)
 
         # Do: search on res.users, order on a field on res.partner to try inherits'd fields, then res.users
         expected_ids = [u.id, a.id, c.id, b.id]
@@ -137,14 +215,72 @@ class test_search(TransactionCase):
         self.patch_order('res.partner', 'create_uid, name')
         self.patch_order('res.users', 'partner_id, login desc')
 
-        kw = dict(groups_id=[(6, 0, [self.ref('base.group_system'),
+        kw = dict(groups_id=[Command.set([self.ref('base.group_system'),
                                      self.ref('base.group_partner_manager')])])
 
         u1 = Users.create(dict(name='Q', login='m', **kw)).id
-        u2 = Users.sudo(user=u1).create(dict(name='B', login='f', **kw)).id
+        u2 = Users.with_user(u1).create(dict(name='B', login='f', **kw)).id
         u3 = Users.create(dict(name='C', login='c', **kw)).id
-        u4 = Users.sudo(user=u2).create(dict(name='D', login='z', **kw)).id
+        u4 = Users.with_user(u2).create(dict(name='D', login='z', **kw)).id
 
         expected_ids = [u2, u4, u3, u1]
         found_ids = Users.search([('id', 'in', expected_ids)]).ids
         self.assertEqual(found_ids, expected_ids)
+
+    def test_20_x_active(self):
+        """Check the behaviour of the x_active field."""
+        # test that a custom field x_active filters like active
+        # we take the model res.country as a test model as it is included in base and does
+        # not have an active field
+        model_country = self.env['res.country']
+        self.assertNotIn('active', model_country._fields)  # just in case someone adds the active field in the model
+        self.env['ir.model.fields'].create({
+            'name': 'x_active',
+            'model_id': self.env.ref('base.model_res_country').id,
+            'ttype': 'boolean',
+        })
+        self.assertEqual('x_active', model_country._active_name)
+        country_ussr = model_country.create({'name': 'USSR', 'x_active': False, 'code': 'ZV'})
+        ussr_search = model_country.search([('name', '=', 'USSR')])
+        self.assertFalse(ussr_search)
+        ussr_search = model_country.with_context(active_test=False).search([('name', '=', 'USSR')])
+        self.assertIn(country_ussr, ussr_search, "Search with active_test on a custom x_active field failed")
+        ussr_search = model_country.search([('name', '=', 'USSR'), ('x_active', '=', False)])
+        self.assertIn(country_ussr, ussr_search, "Search with active_test on a custom x_active field failed")
+        # test that a custom field x_active on a model with the standard active
+        # field does not interfere with the standard behaviour
+        # use res.bank since it has an active field and is simple to use
+        model_bank = self.env['res.bank']
+        self.env['ir.model.fields'].create({
+            'name': 'x_active',
+            'model_id': self.env.ref('base.model_res_bank').id,
+            'ttype': 'boolean',
+        })
+        self.assertEqual('active', model_bank._active_name)
+        bank_credit_communal = model_bank.create({'name': 'Crédit Communal', 'x_active': False, 'active': True})
+        cc_search = model_bank.search([('name', '=', 'Crédit Communal')])
+        self.assertIn(bank_credit_communal, cc_search, "Search for active record with x_active set to False has failed")
+        bank_credit_communal.write({
+            'active': False,
+            'x_active': True,
+        })
+        cc_search = model_bank.search([('name', '=', 'Crédit Communal')])
+        self.assertNotIn(bank_credit_communal, cc_search, "Search for inactive record with x_active set to True has failed")
+
+    def test_21_search_count(self):
+        Partner = self.env['res.partner']
+        count_partner_before = Partner.search_count([])
+        partners = Partner.create([
+            {'name': 'abc'},
+            {'name': 'zer'},
+            {'name': 'christope'},
+            {'name': 'runbot'},
+        ])
+        self.assertEqual(len(partners) + count_partner_before, Partner.search_count([]))
+        self.assertEqual(3, Partner.search_count([], limit=3))
+
+    def test_22_large_domain(self):
+        """ Ensure search and its unerlying SQL mechanism is able to handle large domains"""
+        N = 9500
+        domain = ['|'] * (N - 1) + [('login', '=', 'admin')] * N
+        self.env['res.users'].search(domain)

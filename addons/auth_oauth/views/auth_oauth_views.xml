@@ -11,6 +11,7 @@
                             <field name="client_id" />
                             <field name="enabled" />
                             <field name="body" />
+                            <field name="css_class" groups="base.group_no_one" />
                         </group>
                         <group>
                             <field name="auth_endpoint" />
@@ -27,6 +28,7 @@
             <field name="model">auth.oauth.provider</field>
             <field name="arch" type="xml">
                 <tree string="arch">
+                    <field name="sequence" widget="handle"/>
                     <field name="name" />
                     <field name="client_id" />
                     <field name="enabled" />
@@ -36,7 +38,6 @@
         <record id="action_oauth_provider" model="ir.actions.act_window">
             <field name="name">Providers</field>
             <field name="res_model">auth.oauth.provider</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem id="menu_oauth_providers" name="OAuth Providers"

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="calendar.AttendeeTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_avatar_backdrop')]" position="attributes">
+            <attribute name="class" remove="opacity-100-hover" separator=" "/>
+        </xpath>
+
+        <xpath expr="//img[hasclass('o_m2m_avatar')]" position="replace">
+            <div class="o_attendee_tags_list">
+                <img t-if="tag.img"
+                    t-att-src="tag.img"
+                    class="o_avatar o_m2m_avatar position-relative rounded"
+                    t-att-class="tag.imageClass"/>
+                <div t-if="tag.status &amp;&amp; tag.statusIcon" t-attf-class="attendee_tag_status o_attendee_status_{{tag.status}} fa fa-fw {{tag.statusIcon}} rounded-circle"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//span[hasclass('o_m2m_avatar_empty')]" position="attributes">
+            <attribute name="class" remove="text-center" separator=" "/>
+        </xpath>
+    </t>
+</templates>

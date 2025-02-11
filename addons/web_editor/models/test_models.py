@@ -6,6 +6,7 @@ from odoo import models, fields
 
 class ConverterTest(models.Model):
     _name = 'web_editor.converter.test'
+    _description = 'Web Editor Converter Test'
 
     # disable translation export for those brilliant field labels and values
     _translate = False
@@ -15,15 +16,9 @@ class ConverterTest(models.Model):
     float = fields.Float()
     numeric = fields.Float(digits=(16, 2))
     many2one = fields.Many2one('web_editor.converter.test.sub')
-    binary = fields.Binary()
+    binary = fields.Binary(attachment=False)
     date = fields.Date()
     datetime = fields.Datetime()
-    selection = fields.Selection([
-        (1, "réponse A"),
-        (2, "réponse B"),
-        (3, "réponse C"),
-        (4, "réponse <D>"),
-    ])
     selection_str = fields.Selection([
         ('A', "Qu'il n'est pas arrivé à Toronto"),
         ('B', "Qu'il était supposé arriver à Toronto"),
@@ -37,5 +32,6 @@ class ConverterTest(models.Model):
 
 class ConverterTestSub(models.Model):
     _name = 'web_editor.converter.test.sub'
+    _description = 'Web Editor Converter Subtest'
 
     name = fields.Char()

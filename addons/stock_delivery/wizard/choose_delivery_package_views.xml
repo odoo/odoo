@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="choose_delivery_package_view_form" model="ir.ui.view">
+        <field name="name">choose.delivery.package.form</field>
+        <field name="model">choose.delivery.package</field>
+        <field name="arch" type="xml">
+            <form string="Package">
+                <field name="picking_id" invisible="1"/>
+                <group>
+                    <field name="delivery_package_type_id"  domain="[('package_carrier_type', '=', context.get('current_package_carrier_type', 'none'))]"
+                      context="{'form_view_ref':'stock.stock_package_type_form'}"/>
+                    <label for="shipping_weight" invisible="not delivery_package_type_id"/>
+                    <div class="o_row" invisible="not delivery_package_type_id" name="package_weight">
+                        <field name="shipping_weight"/>
+                        <field name="weight_uom_name"/>
+                    </div>
+                </group>
+                <footer>
+                    <button name="action_put_in_pack" type="object" string="Save" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" data-hotkey="x" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

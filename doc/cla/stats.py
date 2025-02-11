@@ -2,6 +2,7 @@
 #
 # Runme From the repo toplevel directory
 #
+from __future__ import print_function
 import subprocess
 import glob
 import re
@@ -27,7 +28,7 @@ def blamestat(ext='py'):
     kol = []
     p = subprocess.Popen("git ls-tree -r -z --name-only HEAD | grep -z '.%s$' | xargs -0 -n1 git blame --line-porcelain HEAD |grep  '^author-mail ' |sort |uniq -c|sort -nr" % ext, shell=True, stdout = subprocess.PIPE)
     for i in p.stdout.read().split('\n'):
-        mo = re.search('(\d+) author-mail <([^ @<]+@[^ @<]+)>',i)
+        mo = re.search(r'(\d+) author-mail <([^ @<]+@[^ @<]+)>',i)
         if mo:
             lines = int(mo.group(1))
             email = mo.group(2)
@@ -37,18 +38,18 @@ def blamestat(ext='py'):
             else:
                 ko += lines
                 kol.append(i)
-    print '-'*60
-    print 'Stats for ',ext
-    print '-'*60
-    print "\nCLA SIGNED %s/%s (%.0f%%)" % (ok, ok+ko, ok*100.0/(ok+ko))
+    print('-'*60)
+    print('Stats for ', ext)
+    print('-'*60)
+    print("\nCLA SIGNED %s/%s (%.0f%%)" % (ok, ok+ko, ok*100.0/(ok+ko)))
     for i in okl:
-        print i
+        print(i)
 
-    print "\nCLA MISSING %s/%s (%.0f%%)\n" % (ko, ok+ko, ko*100.0/(ok+ko))
+    print("\nCLA MISSING %s/%s (%.0f%%)\n" % (ko, ok+ko, ko*100.0/(ok+ko)))
     for i in kol:
-        print i
-    print
-    print
+        print(i)
+    print()
+    print()
 
 blamestat('md')
 blamestat('rst')

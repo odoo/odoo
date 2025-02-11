@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 {
     'name': 'Italy - Accounting',
-    'version': '0.2',
+    'countries': ['it'],
+    'version': '0.7',
     'depends': [
         'account',
         'base_iban',
@@ -16,14 +15,24 @@ Piano dei conti italiano di un'impresa generica.
 
 Italian accounting chart and localization.
     """,
-    'category': 'Localization',
-    'website': 'http://www.openerp-italia.org/',
+    'category': 'Accounting/Localizations/Account Charts',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/italy.html',
     'data': [
-        'data/l10n_it_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/account.tax.template.csv',
-        'data/account.fiscal.position.template.csv',
-        'data/account.chart.template.csv',
-        'data/account_chart_template_data.yml',
-        ],
+        'data/account_account_tag.xml',
+        'data/tax_report/account_monthly_tax_report_data.xml',
+        'data/tax_report/annual_report_sections/va.xml',
+        'data/tax_report/annual_report_sections/ve.xml',
+        'data/tax_report/annual_report_sections/vf.xml',
+        'data/tax_report/annual_report_sections/vh.xml',
+        'data/tax_report/annual_report_sections/vj.xml',
+        'data/tax_report/annual_report_sections/vl.xml',
+        'data/tax_report/account_annual_tax_report_data.xml',
+        'data/account_tax_report_data.xml',
+        'data/report_invoice.xml',
+        'views/account_tax_views.xml'
+    ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }
