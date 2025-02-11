@@ -19,7 +19,7 @@ from odoo.tools.mail import (
     prepend_html_content,
 )
 
-from . import test_mail_examples
+from . import mail_examples
 
 
 @tagged('mail_sanitize')
@@ -120,7 +120,7 @@ class TestSanitizer(BaseCase):
         self.assertEqual(html_sanitize(content, silent=False), '')
 
     def test_html(self):
-        sanitized_html = html_sanitize(test_mail_examples.MISC_HTML_SOURCE)
+        sanitized_html = html_sanitize(mail_examples.MISC_HTML_SOURCE)
         for tag in ['<div', '<b', '<i', '<u', '<strike', '<li', '<blockquote', '<a href']:
             self.assertIn(tag, sanitized_html, 'html_sanitize stripped too much of original html')
         for attr in ['javascript']:
@@ -209,21 +209,21 @@ class TestSanitizer(BaseCase):
         self.assertEqual(new_html, u'<span>Coin coin </span>')
 
     def test_style_class(self):
-        html = html_sanitize(test_mail_examples.REMOVE_CLASS, sanitize_attributes=True, sanitize_style=True, strip_classes=True)
-        for ext in test_mail_examples.REMOVE_CLASS_IN:
+        html = html_sanitize(mail_examples.REMOVE_CLASS, sanitize_attributes=True, sanitize_style=True, strip_classes=True)
+        for ext in mail_examples.REMOVE_CLASS_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.REMOVE_CLASS_OUT:
+        for ext in mail_examples.REMOVE_CLASS_OUT:
             self.assertNotIn(ext, html,)
 
     def test_style_class_only(self):
-        html = html_sanitize(test_mail_examples.REMOVE_CLASS, sanitize_attributes=False, sanitize_style=True, strip_classes=True)
-        for ext in test_mail_examples.REMOVE_CLASS_IN:
+        html = html_sanitize(mail_examples.REMOVE_CLASS, sanitize_attributes=False, sanitize_style=True, strip_classes=True)
+        for ext in mail_examples.REMOVE_CLASS_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.REMOVE_CLASS_OUT:
+        for ext in mail_examples.REMOVE_CLASS_OUT:
             self.assertNotIn(ext, html,)
 
     def test_edi_source(self):
-        html = html_sanitize(test_mail_examples.EDI_LIKE_HTML_SOURCE)
+        html = html_sanitize(mail_examples.EDI_LIKE_HTML_SOURCE)
         self.assertIn(
             'font-family: \'Lucida Grande\', Ubuntu, Arial, Verdana, sans-serif;', html,
             'html_sanitize removed valid styling')
@@ -233,51 +233,51 @@ class TestSanitizer(BaseCase):
         self.assertNotIn('</body></html>', html, 'html_sanitize did not remove extra closing tags')
 
     def test_quote_blockquote(self):
-        html = html_sanitize(test_mail_examples.QUOTE_BLOCKQUOTE)
-        for ext in test_mail_examples.QUOTE_BLOCKQUOTE_IN:
+        html = html_sanitize(mail_examples.QUOTE_BLOCKQUOTE)
+        for ext in mail_examples.QUOTE_BLOCKQUOTE_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.QUOTE_BLOCKQUOTE_OUT:
+        for ext in mail_examples.QUOTE_BLOCKQUOTE_OUT:
             self.assertIn(u'<span data-o-mail-quote="1">%s' % misc.html_escape(ext), html)
 
     def test_quote_thunderbird(self):
-        html = html_sanitize(test_mail_examples.QUOTE_THUNDERBIRD_1)
-        for ext in test_mail_examples.QUOTE_THUNDERBIRD_1_IN:
+        html = html_sanitize(mail_examples.QUOTE_THUNDERBIRD_1)
+        for ext in mail_examples.QUOTE_THUNDERBIRD_1_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.QUOTE_THUNDERBIRD_1_OUT:
+        for ext in mail_examples.QUOTE_THUNDERBIRD_1_OUT:
             self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_hotmail_html(self):
-        html = html_sanitize(test_mail_examples.QUOTE_HOTMAIL_HTML)
-        for ext in test_mail_examples.QUOTE_HOTMAIL_HTML_IN:
+        html = html_sanitize(mail_examples.QUOTE_HOTMAIL_HTML)
+        for ext in mail_examples.QUOTE_HOTMAIL_HTML_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.QUOTE_HOTMAIL_HTML_OUT:
+        for ext in mail_examples.QUOTE_HOTMAIL_HTML_OUT:
             self.assertIn(ext, html)
 
-        html = html_sanitize(test_mail_examples.HOTMAIL_1)
-        for ext in test_mail_examples.HOTMAIL_1_IN:
+        html = html_sanitize(mail_examples.HOTMAIL_1)
+        for ext in mail_examples.HOTMAIL_1_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.HOTMAIL_1_OUT:
+        for ext in mail_examples.HOTMAIL_1_OUT:
             self.assertIn(ext, html)
 
     def test_quote_outlook_html(self):
-        html = html_sanitize(test_mail_examples.QUOTE_OUTLOOK_HTML)
-        for ext in test_mail_examples.QUOTE_OUTLOOK_HTML_IN:
+        html = html_sanitize(mail_examples.QUOTE_OUTLOOK_HTML)
+        for ext in mail_examples.QUOTE_OUTLOOK_HTML_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.QUOTE_OUTLOOK_HTML_OUT:
+        for ext in mail_examples.QUOTE_OUTLOOK_HTML_OUT:
             self.assertIn(ext, html)
 
     def test_quote_thunderbird_html(self):
-        html = html_sanitize(test_mail_examples.QUOTE_THUNDERBIRD_HTML)
-        for ext in test_mail_examples.QUOTE_THUNDERBIRD_HTML_IN:
+        html = html_sanitize(mail_examples.QUOTE_THUNDERBIRD_HTML)
+        for ext in mail_examples.QUOTE_THUNDERBIRD_HTML_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.QUOTE_THUNDERBIRD_HTML_OUT:
+        for ext in mail_examples.QUOTE_THUNDERBIRD_HTML_OUT:
             self.assertIn(ext, html)
 
     def test_quote_yahoo_html(self):
-        html = html_sanitize(test_mail_examples.QUOTE_YAHOO_HTML)
-        for ext in test_mail_examples.QUOTE_YAHOO_HTML_IN:
+        html = html_sanitize(mail_examples.QUOTE_YAHOO_HTML)
+        for ext in mail_examples.QUOTE_YAHOO_HTML_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.QUOTE_YAHOO_HTML_OUT:
+        for ext in mail_examples.QUOTE_YAHOO_HTML_OUT:
             self.assertIn(ext, html)
 
     def test_quote_basic_text(self):
@@ -342,30 +342,30 @@ class TestSanitizer(BaseCase):
         self.assertEqual(sanitized_twice, expected_result)
 
     def test_quote_gmail(self):
-        html = html_sanitize(test_mail_examples.GMAIL_1)
-        for ext in test_mail_examples.GMAIL_1_IN:
+        html = html_sanitize(mail_examples.GMAIL_1)
+        for ext in mail_examples.GMAIL_1_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.GMAIL_1_OUT:
+        for ext in mail_examples.GMAIL_1_OUT:
             self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_text(self):
-        html = html_sanitize(test_mail_examples.TEXT_1)
-        for ext in test_mail_examples.TEXT_1_IN:
+        html = html_sanitize(mail_examples.TEXT_1)
+        for ext in mail_examples.TEXT_1_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.TEXT_1_OUT:
+        for ext in mail_examples.TEXT_1_OUT:
             self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
-        html = html_sanitize(test_mail_examples.TEXT_2)
-        for ext in test_mail_examples.TEXT_2_IN:
+        html = html_sanitize(mail_examples.TEXT_2)
+        for ext in mail_examples.TEXT_2_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.TEXT_2_OUT:
+        for ext in mail_examples.TEXT_2_OUT:
             self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_bugs(self):
-        html = html_sanitize(test_mail_examples.BUG1)
-        for ext in test_mail_examples.BUG_1_IN:
+        html = html_sanitize(mail_examples.BUG1)
+        for ext in mail_examples.BUG_1_IN:
             self.assertIn(ext, html)
-        for ext in test_mail_examples.BUG_1_OUT:
+        for ext in mail_examples.BUG_1_OUT:
             self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_misc(self):
@@ -388,10 +388,10 @@ class TestSanitizer(BaseCase):
 
     # ms office is currently not supported, have to find a way to support it
     # def test_30_email_msoffice(self):
-    #     new_html = html_sanitize(test_mail_examples.MSOFFICE_1, remove=True)
-    #     for ext in test_mail_examples.MSOFFICE_1_IN:
+    #     new_html = html_sanitize(mail_examples.MSOFFICE_1, remove=True)
+    #     for ext in mail_examples.MSOFFICE_1_IN:
     #         self.assertIn(ext, new_html)
-    #     for ext in test_mail_examples.MSOFFICE_1_OUT:
+    #     for ext in mail_examples.MSOFFICE_1_OUT:
     #         self.assertNotIn(ext, new_html)
 
 
