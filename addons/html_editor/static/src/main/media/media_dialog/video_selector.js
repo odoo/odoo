@@ -122,13 +122,9 @@ export class VideoSelector extends Component {
                         this.props.media.getAttribute("src")) ||
                     "";
                 if (src) {
-                    this.state.urlInput = src;
+                    this.state.urlInput = "https:" + src;
                     await this.updateVideo();
-
-                    this.state.options = this.state.options.map((option) => {
-                        const { urlParameter } = this.OPTIONS[option.id];
-                        return { ...option, value: src.indexOf(urlParameter) >= 0 };
-                    });
+                    this.syncOptionsWithUrl();
                 }
             }
         });
@@ -152,7 +148,10 @@ export class VideoSelector extends Component {
 
         useAutofocus();
 
-        this.onChangeUrl = debounce((ev) => this.updateVideo(ev.target.value), 500);
+        this.onChangeUrl = debounce((ev) => {
+            this.syncOptionsWithUrl();
+            this.updateVideo();
+        }, 500);
 
         this.onChangeStartAt = debounce(async (ev, optionId) => {
             // Regular expression for HH:MM:SS format
@@ -172,6 +171,7 @@ export class VideoSelector extends Component {
                 return option;
             });
             await this.updateVideo();
+            this.state.urlInput = "https:" + this.state.src;
         }, 1000);
 
     }
@@ -194,6 +194,7 @@ export class VideoSelector extends Component {
             return option;
         });
         await this.updateVideo();
+        this.state.urlInput = "https:" + this.state.src;
     }
 
     async onClickSuggestion(src) {
@@ -300,5 +301,21 @@ export class VideoSelector extends Component {
             div.querySelector("iframe").src = video.src;
             return div;
         });
+    }
+
+    /**
+     * Utility method, called to make options and urlInput state consistent with state of component.
+     */
+    async syncOptionsWithUrl() {
+        if (URL.canParse(this.state.urlInput)) {
+            const urlParams = new URLSearchParams(new URL(this.state.urlInput).search);
+            this.state.options = this.state.options.map((option) => {
+                const urlParameter = this.OPTIONS[option.id].urlParameter();
+                if (urlParameter === "#t=") {
+                    return { ...option, value: this.state.urlInput.split("#t=")[1] };
+                }
+                return { ...option, value: urlParams.get(urlParameter) || this.state.urlInput.includes(urlParameter) };
+            });
+        }
     }
 }
