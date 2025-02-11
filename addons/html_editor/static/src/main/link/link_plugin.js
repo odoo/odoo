@@ -138,7 +138,7 @@ export class LinkPlugin extends Plugin {
         "color",
     ];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
-    static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
+    static shared = ["createLink", "insertLink", "getPathAsUrlCommand", "closeOverlay"];
     resources = {
         user_commands: [
             {
@@ -791,6 +791,10 @@ export class LinkPlugin extends Plugin {
         blockToSplit = targetNode;
         splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
         return true;
+    }
+
+    closeOverlay() {
+        this.overlay?.close();
     }
 }
 
