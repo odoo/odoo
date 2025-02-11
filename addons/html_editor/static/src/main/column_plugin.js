@@ -85,6 +85,7 @@ export class ColumnPlugin extends Plugin {
         unremovable_node_predicates: isUnremovableColumn,
         power_buttons_visibility_predicates: ({ anchorNode }) =>
             !closestElement(anchorNode, ".o_text_columns"),
+        move_node_whitelist_selectors: ".o_text_columns",
     };
 
     columnize({ numberOfColumns, addParagraphAfter = true } = {}) {

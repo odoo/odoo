@@ -9,8 +9,7 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
 
-const ALLOWED_ELEMENTS =
-    "h1, h2, h3, p, hr, pre, blockquote, ul, ol, table, [data-embedded], .o_text_columns, .o_editor_banner, .oe_movable";
+const ALLOWED_ELEMENTS = "h1, h2, h3, p, hr, pre, blockquote";
 
 export class MoveNodePlugin extends Plugin {
     static id = "movenode";
@@ -191,8 +190,14 @@ export class MoveNodePlugin extends Plugin {
             closestElement(
                 newAnchorWidget,
                 (node) =>
-                    isNodeMovable(node) &&
-                    node.matches([ALLOWED_ELEMENTS, baseContainerGlobalSelector].join(", "))
+                    this.isNodeMovable(node) &&
+                    node.matches(
+                        [
+                            ALLOWED_ELEMENTS,
+                            baseContainerGlobalSelector,
+                            ...this.getResource("move_node_whitelist_selectors"),
+                        ].join(", ")
+                    )
             );
         // Retrive the first list container from the ancestors.
         const listContainer =
@@ -208,9 +213,13 @@ export class MoveNodePlugin extends Plugin {
     getMovableElements() {
         const elems = [];
         for (const el of this.editable.querySelectorAll(
-            [ALLOWED_ELEMENTS, baseContainerGlobalSelector].join(", ")
+            [
+                ALLOWED_ELEMENTS,
+                baseContainerGlobalSelector,
+                ...this.getResource("move_node_whitelist_selectors"),
+            ].join(", ")
         )) {
-            if (isNodeMovable(el)) {
+            if (this.isNodeMovable(el)) {
                 elems.push(el);
             }
         }
@@ -435,15 +444,12 @@ export class MoveNodePlugin extends Plugin {
             this.removeMoveWidget();
         }
     }
-}
-
-function isNodeMovable(node) {
-    return (
-        node.parentElement?.getAttribute("contentEditable") === "true" &&
-        !node.parentElement.closest(".o_editor_banner") &&
-        // TODO: create resource and put this in `content_expandable_plugin`
-        !closestElement(node, ".o_mail_reply_container")
-    );
+    isNodeMovable(node) {
+        return (
+            node.parentElement?.getAttribute("contentEditable") === "true" &&
+            !node.matches(this.getResource("move_node_blacklist_selectors").join(", "))
+        );
+    }
 }
 
 function isPointInside(rect, x, y) {
