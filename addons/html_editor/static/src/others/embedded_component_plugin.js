@@ -22,6 +22,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
         attribute_change_processors: this.onChangeAttribute.bind(this),
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        move_node_whitelist_selectors: "[data-embedded]",
     };
 
     setup() {
