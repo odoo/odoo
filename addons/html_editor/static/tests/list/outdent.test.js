@@ -336,134 +336,146 @@ describe("with selection collapsed", () => {
         });
     });
 
-    test("should outdent a list inside a nav-item list", async () => {
-        await testEditor({
-            contentBefore: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <ul>
-                            <li>a[]b</li>
-                        </ul>
-                    </li>
-                </ul>
-            `),
-            stepFunction: keydownShiftTab,
-            contentAfter: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <p>a[]b</p>
-                    </li>
-                </ul>
-            `),
-        });
-        await testEditor({
-            contentBefore: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <ol>
-                            <li>a[]b</li>
-                        </ol>
-                    </li>
-                </ul>
-            `),
-            stepFunction: keydownShiftTab,
-            contentAfter: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <p>a[]b</p>
-                    </li>
-                </ul>
-            `),
-        });
-        await testEditor({
-            contentBefore: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <ul class="o_checklist">
-                            <li>a[]b</li>
-                        </ul>
-                    </li>
-                </ul>
-            `),
-            stepFunction: keydownShiftTab,
-            contentAfter: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <p>a[]b</p>
-                    </li>
-                </ul>
-            `),
-        });
-        await testEditor({
-            contentBefore: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <div>
+    describe("should outdent a list inside a nav-item list", () => {
+        test("should outdent a list inside a nav-item list (1)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li class="nav-item">
                             <ul>
                                 <li>a[]b</li>
                             </ul>
-                        </div>
-                    </li>
-                </ul>
-            `),
-            stepFunction: keydownShiftTab,
-            contentAfter: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <div>
+                        </li>
+                    </ul>
+                `),
+                stepFunction: keydownShiftTab,
+                contentAfter: unformat(`
+                    <ul>
+                        <li class="nav-item">
                             <p>a[]b</p>
-                        </div>
-                    </li>
-                </ul>
-            `),
+                        </li>
+                    </ul>
+                `),
+            });
         });
-        await testEditor({
-            contentBefore: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <div>
+        test("should outdent a list inside a nav-item list (2)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li class="nav-item">
                             <ol>
-                                <li>
-                                    <h1>a[]b</h1>
-                                </li>
+                                <li>a[]b</li>
                             </ol>
-                        </div>
-                    </li>
-                </ul>
-            `),
-            stepFunction: keydownShiftTab,
-            contentAfter: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <div>
-                            <h1>a[]b</h1>
-                        </div>
-                    </li>
-                </ul>
-            `),
+                        </li>
+                    </ul>
+                `),
+                stepFunction: keydownShiftTab,
+                contentAfter: unformat(`
+                    <ul>
+                        <li class="nav-item">
+                            <p>a[]b</p>
+                        </li>
+                    </ul>
+                `),
+            });
         });
-        await testEditor({
-            contentBefore: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <div>
+        test("should outdent a list inside a nav-item list (3)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li class="nav-item">
                             <ul class="o_checklist">
                                 <li>a[]b</li>
                             </ul>
-                        </div>
-                    </li>
-                </ul>
-            `),
-            stepFunction: keydownShiftTab,
-            contentAfter: unformat(`
-                <ul>
-                    <li class="nav-item">
-                        <div>
+                        </li>
+                    </ul>
+                `),
+                stepFunction: keydownShiftTab,
+                contentAfter: unformat(`
+                    <ul>
+                        <li class="nav-item">
                             <p>a[]b</p>
-                        </div>
-                    </li>
-                </ul>
-            `),
+                        </li>
+                    </ul>
+                `),
+            });
+        });
+        test("should outdent a list inside a nav-item list (4)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li class="nav-item">
+                            <div>
+                                <ul>
+                                    <li>a[]b</li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                `),
+                stepFunction: keydownShiftTab,
+                contentAfter: unformat(`
+                    <ul>
+                        <li class="nav-item">
+                            <div>
+                                <p>a[]b</p>
+                            </div>
+                        </li>
+                    </ul>
+                `),
+            });
+        });
+        test("should outdent a list inside a nav-item list (5)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li class="nav-item">
+                            <div>
+                                <ol>
+                                    <li>
+                                        <h1>a[]b</h1>
+                                    </li>
+                                </ol>
+                            </div>
+                        </li>
+                    </ul>
+                `),
+                stepFunction: keydownShiftTab,
+                contentAfter: unformat(`
+                    <ul>
+                        <li class="nav-item">
+                            <div>
+                                <h1>a[]b</h1>
+                            </div>
+                        </li>
+                    </ul>
+                `),
+            });
+        });
+        test("should outdent a list inside a nav-item list (6)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li class="nav-item">
+                            <div>
+                                <ul class="o_checklist">
+                                    <li>a[]b</li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                `),
+                stepFunction: keydownShiftTab,
+                contentAfter: unformat(`
+                    <ul>
+                        <li class="nav-item">
+                            <div>
+                                <p>a[]b</p>
+                            </div>
+                        </li>
+                    </ul>
+                `),
+            });
         });
     });
     test("should outdent a list item with blocks", async () => {
