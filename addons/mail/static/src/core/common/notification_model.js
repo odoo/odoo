@@ -31,6 +31,8 @@ export class Notification extends Record {
     notification_status;
     /** @type {string} */
     notification_type;
+    /** @type {string} */
+    email;
     failure = Record.one("Failure", {
         inverse: "notifications",
         /** @this {import("models").Notification} */
@@ -57,6 +59,25 @@ export class Notification extends Record {
     /** @type {string} */
     failure_type;
     persona = Record.one("Persona");
+
+    /**
+     * Get the translate string of the failure type only
+     * when it corresponds to a failure type
+     * that is automatically cancelled before sending.
+     *
+     * @returns {string}
+     */
+    get autoCanceledFailureType() {
+        switch (this.failure_type) {
+            case "mail_bl":
+                return _t("Blacklisted Address");
+            case "mail_dup":
+                return _t("Duplicated Email");
+            case "mail_optout":
+                return _t("Opted Out");
+        }
+        return "";
+    }
 
     get isFailure() {
         return ["exception", "bounce"].includes(this.notification_status);
@@ -88,6 +109,9 @@ export class Notification extends Record {
             case "ready":
                 return "fa fa-send-o";
             case "canceled":
+                if (this.autoCanceledFailureType) {
+                    return "fa fa-remove";
+                }
                 return "fa fa-trash-o";
         }
         return "";
@@ -108,7 +132,7 @@ export class Notification extends Record {
             case "ready":
                 return _t("Ready");
             case "canceled":
-                return _t("Cancelled");
+                return this.autoCanceledFailureType || _t("Cancelled");
         }
         return "";
     }

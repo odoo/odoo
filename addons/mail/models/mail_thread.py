@@ -8,6 +8,7 @@ import email
 import email.policy
 import hashlib
 import hmac
+import itertools
 import json
 import lxml
 import logging
@@ -818,11 +819,13 @@ class MailThread(models.AbstractModel):
             if bounced_record and not bounced_record_done and isinstance(bounced_record, self.pool['mail.thread']):
                 bounced_record._message_receive_bounce(bounced_email, bounced_partner)
 
-            if bounced_partner and bounced_message:
+            if bounced_message:
                 self.env['mail.notification'].sudo().search([
                     ('mail_message_id', '=', bounced_message.id),
-                    ('res_partner_id', 'in', bounced_partner.ids)]
-                ).write({
+                    '|',
+                    ('res_partner_id', 'in', bounced_partner.ids),
+                    ('email', '=', bounced_email),
+                ]).write({
                     'failure_reason': html2plaintext(message_dict.get('body') or ''),
                     'failure_type': 'mail_bounce',
                     'notification_status': 'bounce',
@@ -3396,6 +3399,7 @@ class MailThread(models.AbstractModel):
             notif_create_values = [
                 {
                     "author_id": message.author_id.id,
+                    "email": False,  # avoid pointless fetch for the compute
                     "mail_message_id": message.id,
                     "notification_status": "sent",
                     "notification_type": "inbox",
@@ -3456,13 +3460,13 @@ class MailThread(models.AbstractModel):
         :param bool send_after_commit: if force_send, tells to send emails after
           the transaction has been committed using a post-commit hook;
         """
-        partners_data = [r for r in recipients_data if r['notif'] == 'email']
-        if not partners_data:
+        recipients_data = [r for r in recipients_data if r['notif'] == 'email']
+        if not recipients_data:
             return True
 
         base_mail_values = self._notify_by_email_get_base_mail_values(
             message,
-            partners_data,
+            recipients_data,
             additional_values={'auto_delete': mail_auto_delete}
         )
 
@@ -3483,7 +3487,7 @@ class MailThread(models.AbstractModel):
         notif_create_values = []
         for _lang, render_values, recipients_group in self._notify_get_classified_recipients_iterator(
             message,
-            partners_data,
+            recipients_data,
             msg_vals=msg_vals,
             model_description=model_description,
             force_email_company=force_email_company,
@@ -3497,40 +3501,52 @@ class MailThread(models.AbstractModel):
                 msg_vals=msg_vals,
                 render_values=render_values,
             )
-            recipients_ids = recipients_group['recipients_ids']
+
+            partner_iter = zip(itertools.repeat('pids'), split_every(gen_batch_size, recipients_group.get('recipients_ids', [])))
+            emails_iter = zip(itertools.repeat('emails'), split_every(gen_batch_size, recipients_group.get('recipients_emails', [])))
 
             # create email
-            for recipients_ids_chunk in split_every(gen_batch_size, recipients_ids):
+            for recipient_type, recipients_chunk in itertools.chain(partner_iter, emails_iter):
+                partners_chunk = recipients_chunk if recipient_type == 'pids' else []
+                emails_chunk = recipients_chunk if recipient_type == 'emails' else []
                 mail_values = self._notify_by_email_get_final_mail_values(
-                    recipients_ids_chunk,
+                    partners_chunk,
+                    emails_chunk,
                     base_mail_values,
                     additional_values={'body_html': mail_body}
                 )
                 new_email = SafeMail.create(mail_values)
 
-                if new_email and recipients_ids_chunk:
-                    tocreate_recipient_ids = list(recipients_ids_chunk)
+                if new_email and recipients_chunk:
+                    tocreate_recipient_ids = partners_chunk
+                    tocreate_emails = emails_chunk
                     if resend_existing:
                         existing_notifications = self.env['mail.notification'].sudo().search([
                             ('mail_message_id', '=', message.id),
                             ('notification_type', '=', 'email'),
-                            ('res_partner_id', 'in', tocreate_recipient_ids)
+                            '|',
+                            ('res_partner_id', 'in', tocreate_recipient_ids),
+                            ('email', 'in', tocreate_emails),
                         ])
                         if existing_notifications:
-                            tocreate_recipient_ids = [rid for rid in recipients_ids_chunk if rid not in existing_notifications.mapped('res_partner_id.id')]
+                            tocreate_recipient_ids = [rid for rid in tocreate_recipient_ids if rid not in existing_notifications.res_partner_id.ids]
+                            tocreate_emails = [email for email in tocreate_emails if email not in existing_notifications.mapped('email')]
                             existing_notifications.write({
                                 'notification_status': 'ready',
                                 'mail_mail_id': new_email.id,
                             })
-                    notif_create_values += [{
+                    notif_base_values = {
                         'author_id': message.author_id.id,
                         'is_read': True,  # discard Inbox notification
                         'mail_mail_id': new_email.id,
                         'mail_message_id': message.id,
                         'notification_status': 'ready',
                         'notification_type': 'email',
-                        'res_partner_id': recipient_id,
-                    } for recipient_id in tocreate_recipient_ids]
+                    }
+                    notif_create_values += [
+                        notif_base_values | {'res_partner_id': recipient_id}
+                        for recipient_id in tocreate_recipient_ids
+                    ] + [notif_base_values | {'email': email} for email in tocreate_emails]
                 emails += new_email
 
         if notif_create_values:
@@ -3858,13 +3874,14 @@ class MailThread(models.AbstractModel):
             base_mail_values['headers'] = repr(headers)
         return base_mail_values
 
-    def _notify_by_email_get_final_mail_values(self, recipient_ids, mail_values,
+    def _notify_by_email_get_final_mail_values(self, partner_recipients, email_recipients, mail_values,
                                                additional_values=None):
         """ Perform final formatting of values to create notification emails.
-        Basic method just set the recipient partners as mail_mail recipients.
-        Override to generate other mail values like email_to or email_cc.
+        Basic method just set the recipient partners as mail_mail recipients and/or email_to.
+        Override to generate other mail values like email_cc.
 
-        :param list recipient_ids: res.partner IDs to notify;
+        :param list[int] partner_recipients: res.partner IDs to notify;
+        :param list[str] email_recipients: email addresses to notify;
         :param dict mail_values: notification mail values;
         :param dict additional_values: optional additional values to add (ease
           custom calls and inheritance);
@@ -3872,7 +3889,8 @@ class MailThread(models.AbstractModel):
         :return: a new dictionary of values suitable for a <mail.mail> create;
         """
         final_mail_values = dict(mail_values)
-        final_mail_values['recipient_ids'] = [Command.link(pid) for pid in recipient_ids]
+        final_mail_values['recipient_ids'] = [Command.link(pid) for pid in partner_recipients]
+        final_mail_values['email_to'] = ','.join(email for email in email_recipients)
         if additional_values:
             final_mail_values.update(additional_values)
         return final_mail_values
@@ -4202,6 +4220,7 @@ class MailThread(models.AbstractModel):
             group_data.setdefault('notification_group_name', group_name)
             group_data.setdefault('recipients_data', [])
             group_data.setdefault('recipients_ids', [])
+            group_data.setdefault('recipients_emails', [])
             group_button_access = group_data.setdefault('button_access', {})
             group_button_access.setdefault('url', access_link)
             group_button_access.setdefault('title', view_title)
@@ -4257,8 +4276,10 @@ class MailThread(models.AbstractModel):
             for _group_name, group_func, group_data in groups:
                 if group_data['active'] and group_func(recipient_data):
                     group_data['recipients_data'].append(recipient_data)
-                    if recipient_data['id']:
+                    if recipient_data.get('id'):
                         group_data['recipients_ids'].append(recipient_data['id'])
+                    elif recipient_data.get('email'):
+                        group_data['recipients_emails'].append(recipient_data['email'])
                     break
 
         # filter out groups without recipients
