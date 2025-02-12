@@ -76,8 +76,8 @@
                 </t>
             </div>
             <div class="px-2">
-                <button t-attf-style="background-image: {{ getCurrentGradientColor() }};" class="w-50 border btn" title="Define a custom gradient">Custom</button>
-                <GradientPicker onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>
+                <button t-attf-style="background-image: {{ getCurrentGradientColor() }};" class="w-50 border btn mb-2" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">Custom</button>
+                <GradientPicker t-if="state.showGradientPicker" onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>
             </div>
         </t>
     </div>
