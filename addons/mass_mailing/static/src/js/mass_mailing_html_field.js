@@ -550,7 +550,7 @@ export class MassMailingHtmlField extends HtmlField {
             $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
         }
 
-        if (this.env.mailingFilterTemplates && this.wysiwyg) {
+        if (this.wysiwyg) {
             this._hideIrrelevantTemplates(this.props.record);
         }
         this.wysiwyg.odooEditor.activateContenteditable();
