@@ -145,9 +145,7 @@ export const accountTaxHelpers = {
                 if (!special_mode || special_mode === "total_included") {
                     if (!batch.include_base_amount) {
                         for (const other_batch of batches_after) {
-                            if (other_batch._original_price_include) {
-                                add_extra_base(other_batch, tax_data, -1);
-                            }
+                            add_extra_base(other_batch, tax_data, -1);
                         }
                     }
                     for (const other_batch of batches_before) {
