@@ -218,3 +218,82 @@ class TestReportSession(TestPoSCommon):
         self.config.current_session_id.action_pos_session_closing_control()
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
         self.assertEqual(report['products'][0]['products'][0]['quantity'], 74.6, "Quantity of product should be 74.6, as we want the sum of the quantity of the two orders")
+
+    def test_report_bank_expected_different_than_counted(self):
+        """
+        Test that in the pos session report, the difference between the expected and counted bank payment is correct.
+        Test both with a default outstanding account on the payment and without.
+        """
+        self.tax1 = self.env['account.tax'].create({
+            'name': 'Tax 1',
+            'amount': 10,
+            'price_include_override': 'tax_included',
+        })
+        self.product1 = self.create_product('Product A', self.categ_basic, 100, self.tax1.id)
+
+        self.bank_pm1.outstanding_account_id = self.outstanding_bank.id
+        self.config.open_ui()
+
+        session1_id = self.config.current_session_id.id
+        order1 = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session1_id,
+            'partner_id': self.partner_a.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product1.id,
+                'price_unit': 100,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, [self.tax1.id]]],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            })],
+            'pricelist_id': self.config.pricelist_id.id,
+            'amount_paid': 100.0,
+            'amount_total': 100.0,
+            'amount_tax': 10.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+        })
+
+        self.make_payment(order1, self.bank_pm1, 100)
+
+        self.config.current_session_id.action_pos_session_closing_control(
+            bank_payment_method_diffs={self.bank_pm1.id: -20})
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session1_id])
+        self.assertEqual(report['payments'][1]['money_difference'], -20)
+
+        self.bank_pm1.outstanding_account_id = False
+        self.config.open_ui()
+
+        session2_id = self.config.current_session_id.id
+        order2 = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session2_id,
+            'partner_id': self.partner_a.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product1.id,
+                'price_unit': 100,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, [self.tax1.id]]],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            })],
+            'pricelist_id': self.config.pricelist_id.id,
+            'amount_paid': 100.0,
+            'amount_total': 100.0,
+            'amount_tax': 10.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+        })
+
+        self.make_payment(order2, self.bank_pm1, 100)
+
+        self.config.current_session_id.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_pm1.id: -20})
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session2_id])
+        self.assertEqual(report['payments'][1]['money_difference'], -20)
