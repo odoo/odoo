@@ -31,20 +31,23 @@ export function getReportUrl(action, type, userContext) {
 }
 
 // messages that might be shown to the user dependening on the state of wkhtmltopdf
-function getWKHTMLTOPDF_MESSAGES(status) {
-    const link = '<br><br><a href="http://wkhtmltopdf.org/" target="_blank">wkhtmltopdf.org</a>'; // FIXME missing markup
+function getPdfEngineStatusMessage(status, engine) {
+    let link = '';
+    if (engine === 'wkhtmltopdf') {
+        link = '<br><br><a href="http://wkhtmltopdf.org/" target="_blank">wkhtmltopdf.org</a>'; // FIXME missing markup
+    }
     const _status = {
         broken: _t(
-            "Your installation of Wkhtmltopdf seems to be broken. The report will be shown in html.%(link)s",
-            { link }
+            "Your installation of %(engine)s seems to be broken. The report will be shown in html.%(link)s",
+            { engine, link }
         ),
         install: _t(
-            "Unable to find Wkhtmltopdf on this system. The report will be shown in html.%(link)s",
-            { link }
+            "Unable to find %(engine)s on this system. The report will be shown in html.%(link)s",
+            { engine, link }
         ),
         upgrade: _t(
-            "You should upgrade your version of Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as support for table-breaking between pages.%(link)s",
-            { link }
+            "You should upgrade your version of %(engine)s to at least 0.12.0 in order to get a correct display of headers and footers as well as support for table-breaking between pages.%(link)s",
+            { engine, link }
         ),
         workers: _t(
             "You need to start Odoo with at least two workers to print a pdf version of the reports."
@@ -64,12 +67,12 @@ function getWKHTMLTOPDF_MESSAGES(status) {
  */
 export async function downloadReport(rpc, action, type, userContext) {
     let message;
-    if (type === "pdf") {
+    if (type.startsWith("pdf")) {
         // Cache the wkhtml status on the function. In prod this means is only
         // checked once, but we can reset it between tests to test multiple statuses.
-        downloadReport.wkhtmltopdfStatusProm ||= rpc("/report/check_wkhtmltopdf");
-        const status = await downloadReport.wkhtmltopdfStatusProm;
-        message = getWKHTMLTOPDF_MESSAGES(status);
+        downloadReport.pdfEngineStatusProm ||= rpc("/report/check_pdf_engine", {subtype: type});
+        const {engine, status} = await downloadReport.pdfEngineStatusProm;
+        message = getPdfEngineStatusMessage(status, engine);
         if (!["upgrade", "ok"].includes(status)) {
             return { success: false, message };
         }
