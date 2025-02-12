@@ -151,7 +151,8 @@ class PortalWizardUser(models.TransientModel):
         if not user_sudo:
             # create a user if necessary and make sure it is in the portal group
             company = self.partner_id.company_id or self.env.company
-            user_sudo = self.sudo().with_company(company.id)._create_user()
+            email_notification = {'default_notification_type': 'email'}
+            user_sudo = self.sudo().with_company(company.id).with_context(email_notification)._create_user()
 
         if not user_sudo.active or not self.is_portal:
             user_sudo.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
