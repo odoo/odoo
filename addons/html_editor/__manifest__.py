@@ -17,7 +17,8 @@ This addon provides an extensible, maintainable editor.
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            ('include', 'html_editor.assets_media_dialog')
+            ('include', 'html_editor.assets_media_dialog'),
+            ('include', 'html_editor.assets_frontend_editor')
         ],
         'web.assets_backend': [
             'html_editor/static/src/**/*',
@@ -25,12 +26,19 @@ This addon provides an extensible, maintainable editor.
             ('remove', 'html_editor/static/src/components/history_dialog/history_dialog.dark.scss'),
             ('remove', 'html_editor/static/src/main/movenode.dark.scss'),
             ('remove', 'html_editor/static/src/main/toolbar/toolbar.dark.scss'),
+            ('remove', 'html_editor/static/src/public/**/*'),
         ],
         'html_editor.assets_media_dialog': [
             # Bundle to use the media dialog in the backend and the frontend
             'html_editor/static/src/main/media/media_dialog/**/*',
             'html_editor/static/src/utils/**/*',
 
+        ],
+        'html_editor.assets_frontend_editor': [
+            'html_editor/static/src/public/**/*',
+            'html_editor/static/src/fields/html_viewer.*',
+            'html_editor/static/src/others/embedded_component_utils.js',
+            'html_editor/static/src/others/embedded_components/core/**/*',
         ],
         "web.assets_web_dark": [
             'html_editor/static/src/components/history_dialog/history_dialog.dark.scss',
