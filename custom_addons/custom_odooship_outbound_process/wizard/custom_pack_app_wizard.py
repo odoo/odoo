@@ -271,6 +271,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
                     "incoterm_location": line.incoterm_location or "N/A",
                     "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
+                    "carrier":line.picking_id.sale_id.carrier or "N/A",
                 }
 
             grouped_lines[sku_code]["quantity"] += line.quantity
@@ -323,6 +324,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
                     "incoterm_location": line.incoterm_location or "N/A",
                     "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
+                    "carrier": line.picking_id.sale_id.carrier or "N/A",
                 })
 
             payloads.append({
