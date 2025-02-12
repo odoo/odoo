@@ -34,6 +34,10 @@ export class BackgroundVideo extends Interaction {
         },
     };
 
+    assetLibs = [
+        "website.assets_widget_xml",
+    ];
+
     setup() {
         this.hideVideoContainer = false;
         this.videoSrc = this.el.dataset.bgVideoSrc;

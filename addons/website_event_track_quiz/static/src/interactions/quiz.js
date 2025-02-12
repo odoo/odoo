@@ -35,6 +35,10 @@ export class Quiz extends Interaction {
         },
     };
 
+    assetLibs = [
+        "website_event_track_quiz.assets_widget_xml",
+    ];
+
     setup() {
         const questions = this.extractQuestionsAndAnswers();
         const data = this.el.querySelector(".o_quiz_js_quiz").dataset;

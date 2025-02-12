@@ -2,6 +2,7 @@ import { renderToFragment } from "@web/core/utils/render";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { INITIAL_VALUE, SKIP_IMPLICIT_UPDATE } from "./colibri";
 import { makeAsyncHandler, makeButtonHandler } from "./utils";
+import { loadBundle } from '@web/core/assets';
 
 /**
  * This is the base class to describe interactions. The Interaction class
@@ -99,6 +100,13 @@ export class Interaction {
     dynamicContent = {};
 
     /**
+     *Load static XML of interaction when interaction is initiated.
+     *
+     * @type {null|string[]}
+     */
+    assetLibs = null;
+
+    /**
      * The constructor is not supposed to be defined in a subclass. Use setup
      * instead
      *
@@ -141,7 +149,17 @@ export class Interaction {
      * be done here. The website framework will wait for this method to complete
      * before applying the dynamic content (event handlers, ...)
      */
-    async willStart() {}
+    async willStart() {
+        if (this.assetLibs) {
+            for (const bundleName of this.assetLibs || []) {
+                if (typeof bundleName === "string") {
+                    await loadBundle(bundleName);
+                } else {
+                    await Promise.all(bundleName.map(loadBundle));
+                }
+            }
+        }
+    }
 
     /**
      * The start function when we need to execute some code after the interaction

@@ -18,13 +18,13 @@
         'web.assets_frontend': [
             'google_address_autocomplete/static/src/google_places_session.js',
             'website_sale_autocomplete/static/src/interactions/address_form.js',
-            'website_sale_autocomplete/static/src/xml/autocomplete.xml',
+            # 'website_sale_autocomplete/static/src/xml/autocomplete.xml',
         ],
         'web.assets_tests': [
             'website_sale_autocomplete/static/tests/**/*.js'
         ],
         'website_sale_autocomplete.assets_widget_xml': [
-            # 'website_sale_autocomplete/static/src/xml/autocomplete.xml', interaction
+            'website_sale_autocomplete/static/src/xml/autocomplete.xml',
         ],
     },
     'auto_install': True,

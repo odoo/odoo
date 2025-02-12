@@ -29,7 +29,7 @@ Display your booths on your website for the users to register.
             '/website_event_booth/static/src/xml/event_booth_registration_templates.xml',
         ],
         'website_event_booth.assets_widget_xml': [
-            # 'website_event_booth/static/src/xml/event_booth_registration_templates.xml', interaction
+            # 'website_event_booth/static/src/xml/event_booth_registration_templates.xml', To investigate
         ],
     },
     'author': 'Odoo S.A.',
