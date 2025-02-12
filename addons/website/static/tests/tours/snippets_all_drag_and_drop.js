@@ -34,6 +34,7 @@ if (searchParams) {
 const dropInOnlySnippets = {
     's_button': '.btn',
     's_video': '.media_iframe_video',
+    's_inner_text': 'p',
 };
 let steps = [];
 let n = 0;
