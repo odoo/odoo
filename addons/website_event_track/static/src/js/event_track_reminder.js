@@ -11,7 +11,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
     selector: ".o_wetrack_js_reminder",
     events: {
         "click .o_wetrack_js_reminder_bell": "_onReminderToggleClick",
-        "click .o_form_button_cancel": "_modalEmailReminderRemove",
+        "click .o_form_button_cancel": "_modalReminderCancel",
         "submit #o_wetrack_email_reminder_form": "_modalEmailReminderSubmit",
         "mouseover i": "_onMouseEventUpdateIcon",
         "mouseout i": "_onMouseEventUpdateIcon",
@@ -35,7 +35,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onReminderToggleClick: function (ev) {
+    _onReminderToggleClick: async function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         var trackLink = ev.target;
@@ -51,47 +51,80 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
 
         var trackId = parseInt(trackLink.dataset.trackId);
 
+        await this.toggleReminder(trackLink);
+
         if (reminderOnValue) {
             this._checkEmailReminder(trackId);
         }
-        else {
-            this._removeReminder(trackId);
-        }
     },
 
-    _addReminder: function (trackId) {
-        rpc("/event/track/toggle_reminder", {
-            track_id: trackId,
-            set_reminder_on: true,
+//    _addReminder: function (trackId) {
+//        rpc("/event/track/toggle_reminder", {
+//            track_id: trackId,
+//            set_reminder_on: true,
+//        }).then((result) => {
+//            this.reminderOn = true;
+//            this._updateDisplay();
+//            this.favoriteInfo = "Track successfully added to your favorites.";
+//            Component.env.bus.trigger("open_notification_request", [
+//                "add_track_to_favorite",
+//                {
+//                    title: _t("Allow push notifications?"),
+//                    body: _t("You have to enable push notifications to get reminders for your favorite tracks."),
+//                    delay: 0,
+//                },
+//            ]);
+//        });
+//    },
+//
+//    _removeReminder: function (trackId) {
+//        rpc("/event/track/toggle_reminder", {
+//            track_id: trackId,
+//            set_reminder_on: false,
+//        }).then((result) => {
+//            this.reminderOn = false;
+//            this._updateDisplay();
+//            this.notification.add(_t("Talk removed from your Favorites"), {
+//                type: "info",
+//            });
+//        });
+//    },
+
+    _toggleReminder: function (trackLink) {
+        rpc('/event/track/toggle_reminder', {
+            track_id: trackLink.dataset.trackId,
+            set_reminder_on: this.reminderOnValue,
         }).then((result) => {
-            this.reminderOn = true;
-            this._updateDisplay();
-            Component.env.bus.trigger("open_notification_request", [
-                "add_track_to_favorite",
-                {
-                    title: _t("Allow push notifications?"),
-                    body: _t("You have to enable push notifications to get reminders for your favorite tracks."),
-                    delay: 0,
-                },
-            ]);
-        });
+            if (result.error && result.error === 'ignored') {
+                this.notification.add(_t('Talk already in your Favorites'), {
+                    type: 'info',
+                    title: _t('Error'),
+                });
+            } else {
+                var reminderText = this.reminderOn ? _t('Favorite On') : _t('Set Favorite');
+                this.$('.o_wetrack_js_reminder_text').text(reminderText);
+                self._updateDisplay();
+                if (this.reminderOn) {
+                    this.favoriteInfo = _("Track successfully added to your favorites.");
+                    Component.env.bus.trigger('open_notification_request', [
+                        'add_track_to_favorite',
+                        {
+                            title: _t('Allow push notifications?'),
+                            body: _t('You have to enable push notifications to get reminders for your favorite tracks.'),
+                            delay: 0
+                        },
+                    ]);
+                } else {
+                    this.notification.add(_t('Talk removed from your Favorites'), {
+                        type: 'info',
+                    });
+                }
+            }
+        }
     },
 
     _getInitialOpacity: function (){
         return window.getComputedStyle(this.opacityManagerElement).getPropertyValue("opacity");
-    },
-
-    _removeReminder: function (trackId) {
-        rpc("/event/track/toggle_reminder", {
-            track_id: trackId,
-            set_reminder_on: false,
-        }).then((result) => {
-            this.reminderOn = false;
-            this._updateDisplay();
-            this.notification.add(_t("Talk removed from your Favorites"), {
-                type: "info",
-            });
-        });
     },
 
     _sendEmailReminder: async function (trackId, emailTo) {
@@ -100,11 +133,9 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
             email_to: emailTo
         }).then(async (result) => {
             if (result.success || result.error == "missing_template"){
-                await this._addReminder(trackId);
-                const favoritesInfo = _t("Track successfully added to your favorites.");
                 const emailSentInfo = result.error != "missing_template" ? _t("Check your email to add them to your agenda.") : "";
                 this.notification.add(
-                    `${favoritesInfo} ${emailSentInfo}`,
+                    `${this.favoriteInfo} ${emailSentInfo}`,
                     {
                         type: "info",
                         className: "o_send_email_reminder_success"
@@ -119,6 +150,13 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
     _modalEmailReminderRemove: function () {
         this.el.querySelector(".o_wetrack_js_modal_email_reminder").remove();
         this.opacityManagerElement.style.opacity = this.initialOpacity;
+    },
+
+    _modalReminderCancel: function () {
+        this._modalEmailReminderRemove();
+        if (this.favoriteInfo) {
+            this.notification.add(this.favoriteInfo + "from remove", {type: "info"});
+        }
     },
 
     _isEmailReminderFormValid: function (data) {
