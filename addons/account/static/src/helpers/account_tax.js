@@ -360,10 +360,13 @@ export const accountTaxHelpers = {
             if (manual_tax_amounts && "base_amount_currency" in manual_tax_amounts[tax.id]) {
                 base = manual_tax_amounts[tax.id].base_amount_currency;
             } else {
-                const total_tax_amount = taxes_data[tax.id].batch.reduce(
+                let total_tax_amount = taxes_data[tax.id].batch.reduce(
                     (sum, other_tax) => sum + taxes_data[other_tax.id].tax_amount,
                     0
                 );
+                total_tax_amount += Object.values(taxes_data[tax.id].batch)
+                    .filter(other_tax => other_tax.has_negative_factor)
+                    .reduce((sum, other_tax) => sum + reverse_charge_taxes_data[other_tax.id].tax_amount, 0);
                 base = raw_base + taxes_data[tax.id].extra_base_for_base;
                 if (
                     tax_data.price_include &&
