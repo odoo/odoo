@@ -58,7 +58,7 @@ class CardCampaign(models.Model):
     post_suggestion = fields.Text(help="Description below the card and default text when sharing on X")
     preview_record_ref = fields.Reference(string="Preview Record", selection="_selection_preview_record_ref")
     preview_record_url = fields.Char('Preview Record Link', compute="_compute_preview_record_url")
-    reward_message = fields.Html(string='Thanks to You Message')
+    reward_message = fields.Html(string='Thank You Message')
     reward_target_url = fields.Char(string='Reward Link')
     tag_ids = fields.Many2many('card.campaign.tag', string='Tags')
     target_url = fields.Char(string='Shared Link')
