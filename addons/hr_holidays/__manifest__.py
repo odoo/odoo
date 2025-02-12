@@ -62,6 +62,11 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'demo': [
         'data/hr_holidays_demo.xml',
     ],
+    'test': {
+        'common': [
+            'data/test/common.xml',
+        ],
+    },
     'installable': True,
     'application': True,
     'assets': {

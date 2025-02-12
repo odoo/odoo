@@ -47,8 +47,12 @@
     </rng:define>
 
     <rng:define name="function">
-        <rng:element name="function">
-            <rng:attribute name="model" />
+        <rng:element>
+            <rng:choice>
+                <rng:name>function</rng:name>
+                <rng:name>test_setup_function</rng:name>
+            </rng:choice>
+            <rng:optional><rng:attribute name="model" /></rng:optional>
             <rng:attribute name="name" />
             <rng:ref name="env"/>
             <rng:optional>

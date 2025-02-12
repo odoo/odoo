@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.uom.tests.common import UomCommon
+from odoo.tests.common import tagged
 
 
+@tagged('-at_install', 'post_install')
 class TestUom(UomCommon):
 
     def test_10_conversion(self):

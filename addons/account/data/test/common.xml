@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="base_common_bundle_company" model="res.company">
+        <field name="name">company_1_data</field>
+    </record>
+    <test_setup_function name="setup_chart_template">
+        <value name="company" model="res.company" eval="obj(ref('account.base_common_bundle_company'))"/>
+    </test_setup_function>
+    <function model="ir.model.data" name="_update_xmlids">
+        <value model="ir.model.data" eval="[{'xml_id': 'base.base_common_bundle_company', 'record': obj().env['res.company'].browse(ref('account.base_common_bundle_company'))}]"/>
+    </function>
+    <test_setup_function name="new_test_user">
+        <value name="name">Because I am accountman!</value>
+        <value name="login">accountman</value>
+        <value name="password">accountman</value>
+        <value name="email">accountman@test.com</value>
+        <value model="res.groups" name="groups_id" eval="(obj().env['res.users']._default_groups() | obj().env.ref('base.group_system') | obj().env.ref('account.group_account_manager') | obj().env.ref('account.group_account_user')).ids"/>
+        <value name="xml_id">base.base_common_bundle_user</value>
+        <value name="company_id" eval="ref('base.base_common_bundle_company')"/>
+    </test_setup_function>
+</odoo>

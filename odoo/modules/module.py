@@ -82,7 +82,7 @@ _DEFAULT_MANIFEST = {
     'pre_init_hook': '',
     'sequence': 100,
     'summary': '',
-    'test': [],
+    'test': {},
     'update_xml': [],
     'uninstall_hook': '',
     'version': '1.0',

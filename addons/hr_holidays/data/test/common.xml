@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="test_company" model="res.company">
+        <field name="name">Test Company</field>
+    </record>
+
+    <odoo context="{'allowed_company_ids': [ref('hr_holidays.test_company')]}">
+        <record id="test_leave_type" model="hr.leave.type">
+            <field name="name">Test Leave Type</field>
+            <field name="requires_allocation">no</field>
+            <field name="request_unit">day</field>
+        </record>
+
+        <test_setup_function name="new_test_user">
+            <value name="login">armande</value>
+            <value name="groups">base.group_user,hr_holidays.group_hr_holidays_user</value>
+            <value name="tz">Europe/Brussels</value>
+            <value name="company_id" eval="ref('hr_holidays.test_company')"/>
+            <value name="xml_id">hr_holidays.test_user_hruser</value>
+        </test_setup_function>
+
+        <test_setup_function name="new_test_user">
+            <value name="login">bastien</value>
+            <value name="groups">base.group_user,hr_holidays.group_hr_holidays_manager</value>
+            <value name="tz">Europe/Brussels</value>
+            <value name="company_id" eval="ref('hr_holidays.test_company')"/>
+            <value name="xml_id">hr_holidays.test_user_hrmanager</value>
+        </test_setup_function>
+
+        <test_setup_function name="new_test_user">
+            <value name="login">enguerran</value>
+            <value name="groups">base.group_user</value>
+            <value name="company_id" eval="ref('hr_holidays.test_company')"/>
+            <value name="tz">Europe/Brussels</value>
+            <value name="xml_id">hr_holidays.test_user_employee</value>
+        </test_setup_function>
+
+        <record id="hr_dept" model="hr.department" context="{'tracking_disable': True}">
+            <field name="name">Human Resources</field>
+        </record>
+
+        <record id="rd_dept" model="hr.department" context="{'tracking_disable': True}">
+            <field name="name">Research and devlopment</field>
+        </record>
+
+        <record id="employee_emp" model="hr.employee">
+            <field name="name">David Employee</field>
+            <field name="user_id" eval="ref('hr_holidays.test_user_employee')"/>
+            <field name="department_id" eval="ref('hr_holidays.rd_dept')"/>
+        </record>
+
+        <record id="employee_hruser" model="hr.employee">
+            <field name="name">Armande HrUser</field>
+            <field name="user_id" eval="ref('hr_holidays.test_user_hruser')"/>
+            <field name="department_id" eval="ref('hr_holidays.rd_dept')"/>
+        </record>
+
+        <record id="employee_hrmanager" model="hr.employee">
+            <field name="name">Bastien HrManager</field>
+            <field name="user_id" eval="ref('hr_holidays.test_user_hrmanager')"/>
+            <field name="department_id" eval="ref('hr_holidays.hr_dept')"/>
+            <field name="parent_id" eval="ref('hr_holidays.employee_hruser')"/>
+        </record>
+
+        <record id="rd_dept" model="hr.department">
+            <field name="manager_id" eval="ref('hr_holidays.employee_hrmanager')"/>
+        </record>
+    </odoo>
+</odoo>

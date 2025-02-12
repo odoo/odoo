@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo
+    uid="ref('base.base_common_bundle_user', raise_if_not_found=False) or None"
+    context="{'allowed_company_ids': [ref('base.base_common_bundle_company', raise_if_not_found=False) or env.company.id]}"
+>
+    <record id="test_uom_dunit" model="uom.uom">
+        <field name="name">DeciUnit</field>
+        <field name="relative_factor">10.0</field>
+        <field name="relative_uom_id" eval="ref('uom.product_uom_unit')"/>
+    </record>
+    <record id="test_product_extended_1" model="product.product">
+        <field name="name">Courage</field>
+        <field name="type">consu</field>
+        <field name="default_code">PROD-1</field>
+        <field name="uom_id" eval="ref('product.test_uom_dunit')"/>
+    </record>
+    <record id="test_product_extended_2" model="product.product">
+        <field name="name">Wood</field>
+    </record>
+</odoo>

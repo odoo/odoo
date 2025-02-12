@@ -39,7 +39,7 @@ class TestEnv(common.TransactionCase):
                     model="test_convert.usered",
                     id="test_convert.testing"
                 ),
-                uid="base.default_user"
+                uid="'base.default_user'"
             )
         )
 
@@ -47,6 +47,57 @@ class TestEnv(common.TransactionCase):
         self.assertEqual(r.name, 'a')
         self.assertEqual(r.create_uid, self.env.ref('base.default_user'))
         self.assertEqual(r.user_id, self.env.ref('base.default_user'))
+
+    def test_uid_data_record_eval(self):
+        self.importer(
+            odoo(
+                record(
+                    field("a", name="name"),
+                    model="test_convert.usered",
+                    id="test_convert.testing"
+                ),
+                uid="ref('base.default_user')"
+            )
+        )
+
+        r = self.env.ref('test_convert.testing')
+        self.assertEqual(r.name, 'a')
+        self.assertEqual(r.create_uid, self.env.ref('base.default_user'))
+        self.assertEqual(r.user_id, self.env.ref('base.default_user'))
+
+    def test_uid_data_record_eval_none(self):
+        self.importer(
+            odoo(
+                record(
+                    field("a", name="name"),
+                    model="test_convert.usered",
+                    id="test_convert.testing"
+                ),
+                uid="None"
+            )
+        )
+
+        r = self.env.ref('test_convert.testing')
+        self.assertEqual(r.name, 'a')
+        self.assertEqual(r.create_uid, self.env.user)
+        self.assertEqual(r.user_id, self.env.user)
+
+    def test_uid_data_record_eval_env_user(self):
+        self.importer(
+            odoo(
+                record(
+                    field("a", name="name"),
+                    model="test_convert.usered",
+                    id="test_convert.testing"
+                ),
+                uid="env.uid"
+            )
+        )
+
+        r = self.env.ref('test_convert.testing')
+        self.assertEqual(r.name, 'a')
+        self.assertEqual(r.create_uid, self.env.user)
+        self.assertEqual(r.user_id, self.env.user)
 
     def test_uid_data_function(self):
         self.importer(
@@ -56,7 +107,7 @@ class TestEnv(common.TransactionCase):
                     name="create",
                     eval="[[{'name': 'b'}]]",
                 ),
-                uid="base.default_user"
+                uid="'base.default_user'"
             )
         )
 
@@ -72,9 +123,9 @@ class TestEnv(common.TransactionCase):
                     field('c', name="name"),
                     model="test_convert.usered",
                     id="test_convert.testing",
-                    uid="base.default_user"
+                    uid="'base.default_user'"
                 ),
-                uid="base.user_root"
+                uid="'base.user_root'"
             )
         )
 
@@ -90,10 +141,10 @@ class TestEnv(common.TransactionCase):
                 function(
                     model="test_convert.usered",
                     name="create",
-                    uid="base.default_user",
+                    uid="'base.default_user'",
                     eval="[[{'name': 'd'}]]"
                 ),
-                uid="base.user_root"
+                uid="'base.user_root'"
             )
         )
         r = self.env['test_convert.usered'].search([])

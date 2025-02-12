@@ -46,6 +46,11 @@
     'demo': [
         'data/hr_demo.xml'
     ],
+    'test': {
+        'common': [
+            'data/test/common.xml',
+        ],
+    },
     'installable': True,
     'application': True,
     'post_init_hook': '_install_hr_localization',
