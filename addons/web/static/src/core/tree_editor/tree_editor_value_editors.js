@@ -139,7 +139,8 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                 isSupported: (value) => Array.isArray(value) && value.length === 2,
                 defaultValue: () => {
                     const { defaultValue } = editorInfo;
-                    return [defaultValue(), defaultValue()];
+                    const value = defaultValue(operator);
+                    return typeof value === "object" ? [value.start, value.end] : [value, value];
                 },
             };
         }
@@ -192,7 +193,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     startEmpty: params.startEmpty,
                 }),
                 isSupported: () => true,
-                defaultValue: () => 1,
+                defaultValue: (operator) => (operator === "between" ? { start: 1, end: 1 } : 1),
                 shouldResetValue: (value) => parseValue(formatType, value) === value,
             };
         }
@@ -208,13 +209,33 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     type,
                     onApply: (value) => {
                         if (!params.startEmpty || value) {
-                            update(genericSerializeDate(type, value || DateTime.local()));
+                            update(
+                                genericSerializeDate(
+                                    type,
+                                    value ||
+                                        DateTime.local().set({ seconds: 0, minute: 0, hour: 0 })
+                                )
+                            );
                         }
                     },
                 }),
-                isSupported: (value) =>
-                    value === false || (typeof value === "string" && isParsable(type, value)),
-                defaultValue: () => genericSerializeDate(type, DateTime.local()),
+                isSupported: (value) => typeof value === "string" && isParsable(type, value),
+                defaultValue: (operator) => {
+                    const defaultValue = genericSerializeDate(
+                        type,
+                        DateTime.local().set({ hour: 0, minute: 0, seconds: 0 })
+                    );
+                    if (operator === "between") {
+                        return {
+                            start: defaultValue,
+                            end: genericSerializeDate(
+                                type,
+                                DateTime.local().set({ hour: 23, minute: 59, seconds: 59 })
+                            ),
+                        };
+                    }
+                    return defaultValue;
+                },
                 stringify: (value) => {
                     if (value === false) {
                         return _t("False");
