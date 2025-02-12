@@ -163,6 +163,14 @@
                             <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
                             <field name='invoice_ids' invisible="1"/>
                         </button>
+                        <button type="object"  name="action_purchase_comparison"
+                            class="oe_stat_button" invisible="not show_comparison"
+                            icon="fa-dollar">
+                            <div class="o_field_statinfo">
+                                <span class="o_stat_text">Price Comparison</span>
+                            </div>
+                            <field name="show_comparison" invisible="1"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <span class="o_form_label" invisible="state not in ('draft', 'sent')">Request for Quotation </span>
@@ -257,7 +265,6 @@
                                         widget="many2one_uom"
                                         force_save="1" optional="show"/>
                                     <field name="price_unit" readonly="qty_invoiced != 0"/>
-                                    <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" invisible="not id"/>
                                     <field name="tax_ids" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" readonly="is_downpayment"/>
                                     <field name="discount" string="Disc.%" width="50px" readonly="qty_invoiced != 0" optional="hide"/>
                                     <field name="price_subtotal" string="Amount"/>
@@ -775,7 +782,9 @@
         <field name="name">purchase.history.list</field>
         <field name="model">purchase.order.line</field>
         <field name="arch" type="xml">
-            <list create="false" default_order="order_id asc" action="action_open_order" type="object">
+            <list create="false" default_order="order_id asc"
+                    decoration-info="order_id == context.get('active_id')"
+                    action="action_open_order" type="object">
                 <field name="currency_id" column_invisible="True"/>
                 <field name="order_id" widget="many2one"/>
                 <field name="date_approve"/>
@@ -816,9 +825,8 @@
         <field name="view_mode">list,pivot,graph</field>
         <field name="view_id" ref="purchase.purchase_history_tree"/>
         <field name="context">{
-                'search_default_purchase_state': 1,
                 'search_default_order_date_last_year': 1,
-                'search_default_groupby_supplier': 1,
+                'search_default_groupby_product': 1,
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
