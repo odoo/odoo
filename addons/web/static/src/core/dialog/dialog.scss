@@ -52,21 +52,15 @@
         }
 
         @include media-breakpoint-down(sm) {
-            .btn {
+            > .btn {
                 width: 100%;
+                padding-top: map-get($spacers, 2);
+                padding-bottom: map-get($spacers, 2);
             }
 
-            // // Has either one or 2 buttons
-            &:where([data-buttons-count="1"]), &:where([data-buttons-count="2"]) {
-                .btn {
-                    padding-top: map-get($spacers, 2);
-                    padding-bottom: map-get($spacers, 2);
-                }
-            }
-
-            // // Has exactly 2 buttons
-            &:where([data-buttons-count="2"]) {
-                .btn {
+            // // Has exactly 2 or 4 buttons
+            &:where([data-buttons-count="2"]), &:where([data-buttons-count="4"]) {
+                > .btn {
                     flex: 0 1 calc(50% - #{map-get($spacers, 2)});
                 }
             }
@@ -109,11 +103,11 @@
                 animation: modalIn .4s $o-easing-enter forwards;
             }
         }
-        @include media-breakpoint-down(sm) {
-            .modal-content {
-                animation: confirmInSM .4s $o-easing-enter forwards;
-            }
-        }
+        // @include media-breakpoint-down(sm) {
+        //     .modal-content {
+        //         animation: confirmInSM .4s $o-easing-enter forwards;
+        //     }
+        // }
     }
 
     @include media-breakpoint-down(sm) {
@@ -132,14 +126,19 @@
             .modal-header {
                 padding: 0;
 
-                .oi-arrow-left[data-bs-dismiss="modal"] {
+                .modal-title {
                     padding: var(--modal-header-padding);
-
-                    + .modal-title {
-                        padding: var(--modal-header-padding);
-                        padding-left: 0;
-                    }
+                    padding-right: 0;
                 }
+
+                .btn-close, .oi-arrow-left[data-bs-dismiss="modal"] {
+                    padding: var(--modal-header-padding);
+                }
+
+                .oi-arrow-left[data-bs-dismiss="modal"] + .modal-title {
+                    padding-left: 0;
+                }
+
             }
 
             .modal-body {

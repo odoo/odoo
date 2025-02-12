@@ -156,7 +156,7 @@ export class Dialog extends Component {
             this.state.buttonCount = 0;
             return;
         }
-        this.state.buttonCount = [...this.modalRef.el.querySelectorAll('.modal-footer .btn')]
+        this.state.buttonCount = [...this.modalRef.el.querySelectorAll('.modal-footer > .btn')]
             .filter(btn => btn.offsetWidth > 0 && btn.offsetHeight > 0)
             .length;
     }
