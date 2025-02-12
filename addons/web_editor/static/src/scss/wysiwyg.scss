@@ -765,11 +765,18 @@ textarea.o_codeview {
 button.o-message-insert {
     line-height: 1;
 }
-.o-chatgpt-message > div > *:last-child, .o-chatgpt-alternative > *:last-child {
+.o-chatgpt-message > div > *:last-child, .o-chatgpt-alternative-content > *:last-child {
     margin-bottom: 0;
 }
 .o-message-error {
     color: #d44c59;
     font-weight: bold;
     --bg-opacity: 0.25;
+}
+.o-chatgpt-alternative-content {
+    padding: 0;
+    margin: 0;
+    & > *:first-child:not(:has(~ *)) {
+        padding-left: 0 !important;
+    }
 }
