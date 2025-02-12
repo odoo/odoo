@@ -29,7 +29,8 @@ class StockPickingType(models.Model):
     sequence_id = fields.Many2one(
         'ir.sequence', 'Reference Sequence',
         check_company=True, copy=False)
-    sequence_code = fields.Char('Sequence Prefix', required=True)
+    sequence_code = fields.Char('Sequence Code', required=True)
+    sequence_prefix = fields.Char('Sequence Prefix', related='sequence_id.prefix', readonly=False)
     default_location_src_id = fields.Many2one(
         'stock.location', 'Source Location', compute='_compute_default_location_src_id',
         check_company=True, store=True, readonly=False, precompute=True, required=True,
@@ -158,15 +159,17 @@ class StockPickingType(models.Model):
                     wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
                     vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
                         'name': _('%(warehouse)s Sequence %(code)s', warehouse=wh.name, code=vals['sequence_code']),
-                        'prefix': wh.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
+                        'padding': 5,
                         'company_id': wh.company_id.id,
                     }).id
+                    vals['sequence_prefix'] = wh.code + '/' + vals['sequence_code'] + '/'
                 else:
                     vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
                         'name': _('Sequence %(code)s', code=vals['sequence_code']),
-                        'prefix': vals['sequence_code'], 'padding': 5,
+                        'padding': 5,
                         'company_id': vals.get('company_id') or self.env.company.id,
                     }).id
+                    vals['sequence_prefix'] = vals['sequence_code']
         return super().create(vals_list)
 
     def copy_data(self, default=None):
