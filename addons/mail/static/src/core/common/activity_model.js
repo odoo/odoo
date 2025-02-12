@@ -80,7 +80,7 @@ export class Activity extends Record {
     write_uid;
 
     serialize() {
-        return JSON.parse(JSON.stringify(this.toData()));
+        return JSON.parse(JSON.stringify(this.toData(["persona"])));
     }
 }
 

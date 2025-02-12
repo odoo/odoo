@@ -1,4 +1,4 @@
-import { Store as BaseStore, fields, makeStore, Record } from "@mail/core/common/record";
+import { Store as BaseStore, fields, makeStore, storeInsertFns } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 
@@ -13,6 +13,7 @@ import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { browser } from "@web/core/browser/browser";
 import { loader } from "@web/core/emoji_picker/emoji_picker";
+import { patch } from "@web/core/utils/patch";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -35,6 +36,23 @@ export const addFieldsByPyModel = {
     "res.partner": { type: "partner" },
     "website.visitor": { type: "visitor" },
 };
+
+patch(storeInsertFns, {
+    makeContext() {
+        return { pyModels: Object.values(pyToJsModels) };
+    },
+    getActualModelName(ctx, pyOrJsModelName) {
+        if (ctx.pyModels.includes(pyOrJsModelName)) {
+            console.warn(
+                `store.insert() should receive the python model name instead of “${pyOrJsModelName}”.`
+            );
+        }
+        return pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
+    },
+    getExtraFieldsFromModel(pyOrJsModelName) {
+        return addFieldsByPyModel[pyOrJsModelName];
+    },
+});
 
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
@@ -307,59 +325,6 @@ export class Store extends BaseStore {
             { fetch_params: fetchParams, context: user.context },
             { silent: this.fetchSilent }
         );
-    }
-
-    /**
-     * @template T
-     * @param {T} [dataByModelName={}]
-     * @param {Object} [options={}]
-     * @returns {{ [K in keyof T]: import("models").Models[K][] }}
-     */
-    insert(dataByModelName = {}, options = {}) {
-        const store = this;
-        const pyModels = Object.values(pyToJsModels);
-        return Record.MAKE_UPDATE(function storeInsert() {
-            const res = {};
-            const recordsDataToDelete = [];
-            for (const [pyOrJsModelName, data] of Object.entries(dataByModelName)) {
-                if (pyModels.includes(pyOrJsModelName)) {
-                    console.warn(
-                        `store.insert() should receive the python model name instead of “${pyOrJsModelName}”.`
-                    );
-                }
-                const modelName = pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
-                if (!store[modelName]) {
-                    console.warn(`store.insert() received data for unknown model “${modelName}”.`);
-                    continue;
-                }
-                const insertData = [];
-                for (const vals of Array.isArray(data) ? data : [data]) {
-                    const extraFields = addFieldsByPyModel[pyOrJsModelName];
-                    if (extraFields) {
-                        Object.assign(vals, extraFields);
-                    }
-                    if (vals._DELETE) {
-                        delete vals._DELETE;
-                        recordsDataToDelete.push([modelName, vals]);
-                    } else {
-                        insertData.push(vals);
-                    }
-                }
-                const records = store[modelName].insert(insertData, options);
-                if (!res[modelName]) {
-                    res[modelName] = records;
-                } else {
-                    const knownRecordIds = new Set(res[modelName].map((r) => r.localId));
-                    res[modelName].push(...records.filter((r) => !knownRecordIds.has(r.localId)));
-                }
-            }
-            // Delete after all inserts to make sure a relation potentially registered before the
-            // delete doesn't re-add the deleted record by mistake.
-            for (const [modelName, vals] of recordsDataToDelete) {
-                store[modelName].get(vals)?.delete();
-            }
-            return res;
-        });
     }
 
     async startMeeting() {
