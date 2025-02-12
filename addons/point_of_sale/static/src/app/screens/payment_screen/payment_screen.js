@@ -260,6 +260,14 @@ export class PaymentScreen extends Component {
         if (!this.check_cash_rounding_has_been_well_applied()) {
             return;
         }
+        const linesToRemove = this.currentOrder.lines.filter((line) => {
+            const rounding = line.product_id.uom_id.rounding;
+            const decimals = Math.max(0, Math.ceil(-Math.log10(rounding)));
+            return floatIsZero(line.qty, decimals);
+        });
+        for (const line of linesToRemove) {
+            this.currentOrder.removeOrderline(line);
+        }
         if (await this._isOrderValid(isForceValidate)) {
             // remove pending payments before finalizing the validation
             const toRemove = [];

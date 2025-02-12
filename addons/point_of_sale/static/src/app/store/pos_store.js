@@ -1269,7 +1269,7 @@ export class PosStore extends Reactive {
                 context,
             });
             const missingRecords = await this.data.missingRecursive(data);
-            const newData = this.models.loadData(missingRecords, [], false, true);
+            const newData = this.models.loadData(missingRecords, [], false);
 
             for (const line of newData["pos.order.line"]) {
                 const refundedOrderLine = line.refunded_orderline_id;

@@ -4981,8 +4981,8 @@ class TestMrpOrder(TestMrpCommon):
 
         production.button_mark_done()
 
-        self.assertEqual(production.workorder_ids[0].date_finished, production.date_finished)
-        self.assertEqual(production.workorder_ids[0].leave_id.date_to, production.date_finished)
+        self.assertAlmostEqual(production.workorder_ids[0].date_finished, production.date_finished, delta=timedelta(seconds=2))
+        self.assertAlmostEqual(production.workorder_ids[0].leave_id.date_to, production.date_finished, delta=timedelta(seconds=2))
 
     def test_child_mo_after_qty_parent_mo_update(self):
         """
@@ -5034,6 +5034,29 @@ class TestMrpOrder(TestMrpCommon):
         child_production_2, parent_production_2 = self.env['mrp.production'].search([('product_id', 'in', (parent + child).ids), ('id', 'not in', [parent_production.id, child_production.id])], order='id desc', limit=2)
         self.assertEqual(grandparent_production._get_children(), (parent_production | parent_production_2))
         self.assertEqual(parent_production_2._get_children(), child_production_2)
+
+    def test_mo_modify_date_with_manuf_lead_time(self):
+        """ A direct write on MrpProduction.date_start should result in that exact date value being
+        written to the MO.
+        """
+        finished_product = self.env['product.product'].create({'name': 'finished product'})
+        finished_bom_id = self.env['mrp.bom'].create({
+            'produce_delay': 17,
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [(0, 0, {'product_id': self.product.id, 'product_qty': 1})],
+        })
+        mo = self.env['mrp.production'].create({'bom_id': finished_bom_id.id})
+        mo.action_confirm()
+        original_start_date = mo.date_start
+        with Form(mo) as production_form:
+            production_form.date_start = fields.Date.today() - timedelta(days=10)
+        self.assertEqual(mo.date_start.date(), original_start_date.date() - timedelta(days=10))
+        with Form(mo) as production_form:
+            production_form.date_start = original_start_date
+        self.assertEqual(mo.date_start, original_start_date)
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):

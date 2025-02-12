@@ -6,10 +6,13 @@ import { patch } from "@web/core/utils/patch";
 patch(PosOrder.prototype, {
     setup() {
         super.setup(...arguments);
-        this.uiState = {
-            ...this.uiState,
-            lineChanges: {},
-        };
+
+        if (!this.uiState.lineChanges) {
+            this.uiState = {
+                ...this.uiState,
+                lineChanges: {},
+            };
+        }
     },
     get unsentLines() {
         return this.lines.filter(
