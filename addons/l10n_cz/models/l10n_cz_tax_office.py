@@ -5,7 +5,7 @@ class L10nCzTaxOffice(models.Model):
     _name = 'l10n_cz.tax_office'
     _description = 'Tax office in Czech Republic'
     _order = 'workplace_code ASC'
-    _rec_names_search = ['workplace_code', 'tax_office_name']
+    _rec_names_search = ['workplace_code', 'name']
 
     workplace_code = fields.Integer(string="Territorial Office", required=True, aggregator=False)
     code = fields.Integer(string="Code", required=True, aggregator=False)
