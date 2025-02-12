@@ -292,7 +292,7 @@ class BaseDocumentLayout(models.TransientModel):
         Simply copied and adapted slightly
         """
 
-        def scss_importer(path, prev):
+        def scss_importer(path, *args):
             *parent_path, file = os.path.split(path)
             try:
                 parent_path = file_path(os.path.join(*parent_path))
