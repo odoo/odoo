@@ -952,13 +952,63 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     store.Message.get("2").delete();
     store.Team.get("Discuss").delete();
     expect(toRaw(store.Person.records[p.localId])).toBe(undefined);
-    const p2 = store.Person.insert(data);
+    const p2 = store.Person.insert(data.Person[0]);
     // Same assertions as before
     expect(p2.names).toEqual(["John", "Marc"]);
     expect(p2.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
     expect(p2.team.name).toBe("Discuss");
     expect(toRaw(store.Person.records[p2.localId])).toBe(toRaw(p2));
     expect(serializeDateTime(p2.due_datetime)).toBe("2024-08-28 10:19:44");
+});
+
+test("record.toData() returns flat data", async () => {
+    (class Person extends Record {
+        static id = "id";
+        id;
+        names = Record.attr([]);
+        due_datetime = Record.attr(undefined, { type: "datetime" });
+        messages = Record.many("Message");
+        team = Record.one("Team");
+    }).register(localRegistry);
+    (class Message extends Record {
+        static id = "id";
+        id;
+        body = Record.attr("");
+    }).register(localRegistry);
+    (class Team extends Record {
+        static id = "id";
+        id;
+        name;
+        leader = Record.one("Person");
+    }).register(localRegistry);
+    const store = await start();
+    const p = store.Person.insert({
+        id: 1,
+        due_datetime: "2024-08-28 10:19:44",
+        names: ["John", "Marc"],
+        messages: [
+            { id: 1, body: "1" },
+            { id: 2, body: "2" },
+        ],
+        team: { id: 1, name: "Discuss", leader: { id: 1 } },
+    });
+    const data = p.toData();
+    expect(data).toEqual({
+        Person: [
+            {
+                id: 1,
+                due_datetime: "2024-08-28 10:19:44",
+                names: ["John", "Marc"],
+                messages: [{ id: 1 }, { id: 2 }],
+                team: { id: 1 },
+            },
+        ],
+        Message: [
+            { id: 1, body: "1" },
+            { id: 2, body: "2" },
+        ],
+        Team: [{ id: 1, name: "Discuss", leader: { id: 1 } }],
+    });
 });
 
 test("Methods are bound to records", async () => {
