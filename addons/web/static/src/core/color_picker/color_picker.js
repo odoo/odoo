@@ -70,6 +70,7 @@ export class ColorPicker extends Component {
         this.state = useState({
             activeTab: this.props.state.defaultTab,
             currentCustomColor: this.props.state.selectedColor,
+            showGradientPicker: false,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
     }
@@ -127,6 +128,10 @@ export class ColorPicker extends Component {
         if (isColorGradient(this.props.state.selectedColor)) {
             return this.props.state.selectedColor;
         }
+    }
+
+    toggleGradientPicker() {
+        this.state.showGradientPicker = !this.state.showGradientPicker;
     }
 }
 
