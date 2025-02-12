@@ -255,7 +255,8 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         // Apply data-oe-readonly on nested data.
         $(this.websiteService.pageDocument).find(savableSelector)
             .filter(':has(' + savableSelector + ')')
-            .attr('data-oe-readonly', true);
+            .attr('data-oe-readonly', true)
+            .removeAttr('contenteditable');
 
         const styleEl = document.createElement('style');
         styleEl.id = "translate-stylesheet";
