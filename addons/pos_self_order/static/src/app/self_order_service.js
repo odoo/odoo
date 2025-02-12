@@ -722,34 +722,6 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    changeOrderState(access_token, state) {
-        const order = this.orders.filter((o) => o.access_token === access_token);
-        let message = _t("Your order status has been changed");
-
-        if (order.length === 0) {
-            this.handleErrorNotification(new Error("Warning, no order with this access_token"));
-        } else if (order.length !== 1) {
-            this.handleErrorNotification(
-                new Error("Warning, two orders with the same access_token")
-            );
-        } else {
-            order[0].state = state;
-        }
-
-        if (state === "paid") {
-            this.selectedOrderUuid = null;
-            message = _t("Your order has been paid");
-        } else if (state === "cancel") {
-            this.selectedOrderUuid = null;
-            message = _t("Your order has been cancelled");
-        }
-
-        this.notification.add(message, {
-            type: "success",
-        });
-        this.router.navigate("default");
-    }
-
     updateOrderFromServer(order) {
         this.currentOrder.updateDataFromServer(order);
     }
