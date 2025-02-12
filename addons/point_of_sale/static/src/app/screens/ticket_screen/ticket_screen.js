@@ -649,9 +649,6 @@ export class TicketScreen extends Component {
     }
 
     async _setOrder(order) {
-        if (this.pos.config.isShareable) {
-            await this.pos.syncAllOrders();
-        }
         this.pos.setOrder(order);
         this.closeTicketScreen();
     }

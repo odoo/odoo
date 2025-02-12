@@ -664,7 +664,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         '''Returns a dict mapping uuid to its created pos.order record.'''
         result = {}
         order_data = [self.create_ui_order_data(**params) for params in order_data_params]
-        order_ids = [order['id'] for order in self.env['pos.order'].sync_from_ui(order_data)['pos.order']]
+        order_ids = [order['id'] for order in self.env['pos.order'].create(order_data)['pos.order']]
         for order_id in self.env["pos.order"].browse(order_ids):
             result[order_id.uuid] = order_id
         return result

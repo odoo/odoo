@@ -1,6 +1,5 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
-import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
@@ -14,7 +13,6 @@ patch(PosStore.prototype, {
      */
     async setup() {
         this.isEditMode = false;
-        this.tableSyncing = false;
         this.tableSelectorState = false;
         await super.setup(...arguments);
     },
@@ -75,7 +73,6 @@ patch(PosStore.prototype, {
             return false;
         }
         currentOrder.setCustomerCount(guestCount);
-        this.addPendingOrder([currentOrder.id]);
         return true;
     },
     async sendOrderInPreparationUpdateLastChange(order, cancelled = false) {
@@ -341,32 +338,6 @@ patch(PosStore.prototype, {
             this.showScreen("FloorScreen");
         }
     },
-    async closingSessionNotification(data) {
-        await super.closingSessionNotification(...arguments);
-        this.computeTableCount(data);
-    },
-    computeTableCount(data) {
-        const tableIds = data?.table_ids;
-        const tables = tableIds
-            ? this.models["restaurant.table"].readMany(tableIds)
-            : this.models["restaurant.table"].getAll();
-        const orders = this.getOpenOrders();
-        for (const table of tables) {
-            const tableOrders = orders.filter(
-                (order) => order.table_id?.id === table.id && !order.finalized
-            );
-            const qtyChange = tableOrders.reduce(
-                (acc, order) => {
-                    const quantityChange = this.getOrderChanges(order);
-                    acc.changed += quantityChange.count;
-                    return acc;
-                },
-                { changed: 0 }
-            );
-            table.uiState.orderCount = tableOrders.length;
-            table.uiState.changeCount = qtyChange.changed;
-        }
-    },
     get categoryCount() {
         const orderChanges = this.getOrderChanges();
         const linesChanges = orderChanges.orderlines;
@@ -454,12 +425,6 @@ patch(PosStore.prototype, {
         this.restoreSampleDataState();
         return data;
     },
-    //@override
-    addNewOrder(data = {}) {
-        const order = super.addNewOrder(...arguments);
-        this.addPendingOrder([order.id]);
-        return order;
-    },
     createOrderIfNeeded(data) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
             let order = this.models["pos.order"].find((order) => order.isDirectSale);
@@ -496,18 +461,6 @@ patch(PosStore.prototype, {
         }
 
         return result;
-    },
-    async getServerOrders() {
-        if (this.config.module_pos_restaurant) {
-            const tableIds = [].concat(
-                ...this.models["restaurant.floor"].map((floor) =>
-                    floor.table_ids.map((table) => table.id)
-                )
-            );
-            await this.syncAllOrders({ table_ids: tableIds });
-        }
-        //Need product details from backand to UI for urbanpiper
-        return await super.getServerOrders();
     },
     getDefaultSearchDetails() {
         if (this.config.module_pos_restaurant) {
@@ -587,36 +540,25 @@ patch(PosStore.prototype, {
         return false;
     },
     async setTableFromUi(table, orderUuid = null) {
-        try {
-            if (!orderUuid && this.getOrder()?.isFilledDirectSale) {
-                this.transferOrder(this.getOrder().uuid, table);
-                return;
+        if (!orderUuid && this.getOrder()?.isFilledDirectSale) {
+            this.transferOrder(this.getOrder().uuid, table);
+            return;
+        }
+        if (table.parent_id) {
+            table = table.getParent();
+        }
+        await this.setTable(table, orderUuid);
+        const orders = this.getTableOrders(table.id);
+        if (orders.length > 0) {
+            this.setOrder(orders[0]);
+            const props = {};
+            if (orders[0].getScreenData().name === "PaymentScreen") {
+                props.orderUuid = orders[0].uuid;
             }
-            this.tableSyncing = true;
-            if (table.parent_id) {
-                table = table.getParent();
-            }
-            await this.setTable(table, orderUuid);
-        } catch (e) {
-            if (!(e instanceof ConnectionLostError)) {
-                throw e;
-            }
-            // Reject error in a separate stack to display the offline popup, but continue the flow
-            Promise.reject(e);
-        } finally {
-            this.tableSyncing = false;
-            const orders = this.getTableOrders(table.id);
-            if (orders.length > 0) {
-                this.setOrder(orders[0]);
-                const props = {};
-                if (orders[0].getScreenData().name === "PaymentScreen") {
-                    props.orderUuid = orders[0].uuid;
-                }
-                this.showScreen(orders[0].getScreenData().name, props);
-            } else {
-                this.addNewOrder({ table_id: table });
-                this.showScreen("ProductScreen");
-            }
+            this.showScreen(orders[0].getScreenData().name, props);
+        } else {
+            this.addNewOrder({ table_id: table });
+            this.showScreen("ProductScreen");
         }
     },
     getTableOrders(tableId) {
@@ -626,12 +568,6 @@ patch(PosStore.prototype, {
         const order = this.getOrder();
         if (order && !order.isBooked) {
             this.removeOrder(order);
-        } else if (order) {
-            if (!this.isOrderTransferMode) {
-                this.syncAllOrders({ orders: [order] });
-            } else if (order && this.previousScreen !== "ReceiptScreen") {
-                await this.syncAllOrders({ orders: [order] });
-            }
         }
     },
     getActiveOrdersOnTable(table) {
@@ -678,7 +614,6 @@ patch(PosStore.prototype, {
         if (!this.tableHasOrders(destinationTable)) {
             order.table_id = destinationTable;
             this.setOrder(order);
-            this.addPendingOrder([order.id]);
             return false;
         }
         return true;
