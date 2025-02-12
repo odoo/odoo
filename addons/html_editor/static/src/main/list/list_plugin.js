@@ -129,7 +129,7 @@ export class ListPlugin extends Plugin {
         format_selection_overrides: this.applyFormatToListItem.bind(this),
         set_tag_overrides: this.handleListStylePosition.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
-        move_node_whitelist_selectors: "ol, ul",
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
     };
 
     setup() {
@@ -878,6 +878,19 @@ export class ListPlugin extends Plugin {
         }
 
         return true;
+    }
+
+    /**
+     * @param {DocumentFragment} clonedContents
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     */
+    processContentForClipboard(clonedContents, selection) {
+        if (clonedContents.firstChild.nodeName === "LI") {
+            const list = selection.commonAncestorContainer.cloneNode();
+            list.replaceChildren(...childNodes(clonedContents));
+            clonedContents = list;
+        }
+        return clonedContents;
     }
 
     // --------------------------------------------------------------------------
