@@ -93,6 +93,7 @@ export class DomPlugin extends Plugin {
             }
         },
         normalize_handlers: this.normalize.bind(this),
+        content_for_clipboard_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
     };
     contentEditableToRemove = new Set();
 

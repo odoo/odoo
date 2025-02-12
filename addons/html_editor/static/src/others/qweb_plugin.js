@@ -48,6 +48,7 @@ export class QWebPlugin extends Plugin {
         unremovable_node_predicates: (node) =>
             node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
         unsplittable_node_predicates: isUnsplittableQWebElement,
+        content_for_clipboard_processors: this.clearDataAttributes.bind(this),
     };
 
     setup() {
