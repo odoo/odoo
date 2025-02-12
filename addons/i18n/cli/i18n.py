@@ -1,3 +1,7 @@
+"""
+    Import, export, setup internationalization files.
+"""
+
 import csv
 import logging
 from itertools import product
@@ -6,31 +10,6 @@ from pathlib import Path
 import odoo
 from odoo.cli.command import Command, SubcommandsMixin, Subcommand
 from odoo.tools.translate import trans_export, load_language
-
-
-"""
-    Import, export, setup internationalization files
-
-    alias o="odoo/odoo-bin --addons-path=odoo,odoo/odoo,enterprise $*"
-
-    export:
-        o i18n export \
-          --database='temp_i18n' # if not specified, use a tempdb and delete after \
-          --format=[po,tgz,csv]  # default po \
-          --community / --enterprise / --all / [MODULE,...]
-    example:
-        o i18n export --community
-        o i18n export --enterprise
-        o i18n export --all 
-        o i18n export l10n_it_edi
-
-    import:
-        o i18n import \
-          --database=odoodb \
-          --files 
-          --community / --enterprise / --all / [MODULE,...]
-
-"""
 
 
 _logger = logging.getLogger(__name__)
@@ -54,10 +33,17 @@ def _get_language_files(env, module_names, language_codes, export_pot=False):
             yield (module, code, filepath)
 
 
-# Command and Subcommands
+# Subcommands
 # -------------------------------------------------------------------------------- 
 
 class I18nList(Subcommand):
+    """
+    List all modules that can be exported, given user constraints.
+
+    Example:
+    ./odoo-bin <addons> i18n list <db> --l10n --delimiter=',' \
+         | xargs ./odoo-bin <addons> <db> server -i
+    """
     description = "List i18n-exportable modules"
     excluded = (r'%\_test', r'%\_tests', r'test\_%', r'hw\_%', 'l10n_be_codabox')
 
@@ -103,7 +89,14 @@ class I18nList(Subcommand):
             Command.die(f"Error retrieving modules: {e}")
 
 
-class I18nAddLang(Subcommand):
+class I18nLoadLang(Subcommand):
+    """
+    Load a language
+
+    Example:
+    ./odoo-bin <addons> i18n list <db> --l10n --delimiter=',' \
+         | xargs ./odoo-bin <addons> <db> server -i
+    """
     description = 'Install languages'
 
     def __init__(self, *args, **kwargs):
@@ -138,9 +131,17 @@ class I18nAddLang(Subcommand):
         with self.build_env(parsed_args.db_name) as env:
             for language in _get_languages(env, parsed_args.languages):
                 load_language(env.cr, language.code)
+            env.cr.commit()
 
 
 class I18nImport(Subcommand):
+    """ Import i18n files
+
+        Example:
+        ls ./odoo/addons/base/i18n/*.po \
+                | xargs readlink -f \
+                | xargs ./odoo-bin <addons> i18n import <db>
+    """
     description = 'Import i18n files'
 
     def __init__(self, *args, **kwargs):
@@ -148,11 +149,15 @@ class I18nImport(Subcommand):
         self.parser.add_argument(
             '--database', '-d', dest='db_name', required=True,
             help='Specify the database name')
-        self.parser.add_argument(
-            '--files', '-f', dest='files', metavar='FILE,...', nargs='*', required=True,
-            help=("Files to import"))
         self.parser.add_argument('--only-new', '-n', dest='only_new', action='store_true',
             help=("Overwrite"))
+        self.parser.add_argument(
+            '--format', '-f', dest='format', default='po', choices=('po', 'tgz', 'csv'),
+            help=("Export format, default 'po'"))
+        self.parser.add_argument(
+            '--lang', '-l', dest='lang',
+            help=("Language ISO codes to be imported"))
+        self.parser.add_argument('files', nargs='*', help=("Files to import"))
 
     def run(self, cmdargs):
         parsed_args, _unknown = self.parser.parse_known_args(args=cmdargs)
@@ -162,15 +167,31 @@ class I18nImport(Subcommand):
             # quite sufficient to import images to store in attachment. 500MiB is a
             # bit overkill, but better safe than sorry
             csv.field_size_limit(500 << 20)
+        if parsed_args.format in ('tgz', 'csv') and not parsed_args.lang:
+            Command.die("Language must be specified when '*.tgz' and '*.csv' files are imported.")
 
         with self.build_env(parsed_args.db_name) as env:
             translation_importer = odoo.tools.translate.TranslationImporter(env.cr)
             for filename in parsed_args.files:
-                translation_importer.load_file(filename, parsed_args.lang)
+                if parsed_args.format == 'pot':
+                    lang = parsed_args.lang
+                elif Path(filename).suffixes[-1:] == ['.po']:
+                    code = Path(filename).stem
+                    lang = env['res.lang'].search([
+                        '|',
+                        ('code', '=', code),
+                        ('code', 'ilike', f'{code}%')
+                    ], limit=1).code
+                translation_importer.load_file(filename, lang)
             translation_importer.save(overwrite=not parsed_args.only_new)
 
 
 class I18nExport(Subcommand):
+    """ Export i18n files
+
+        Example:
+        ./odoo-bin <addons> i18n export <db>
+    """
     description = "Export i18n files"
 
     def __init__(self, *args, **kwargs):
@@ -241,7 +262,10 @@ class I18nExport(Subcommand):
             trans_export(lang_code, [module.name], outfile, fmt, env.cr)
 
 
+# Command
+# -------------------------------------------------------------------------------- 
+
 
 class I18n(Command, SubcommandsMixin):
     """ Import, export, setup languages and internationalization files """
-    subcommands = I18nExport, I18nImport, I18nAddLang, I18nList
+    subcommands = I18nExport, I18nImport, I18nLoadLang, I18nList

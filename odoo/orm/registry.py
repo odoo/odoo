@@ -157,7 +157,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
         try:
             registry.setup_signaling()
-<<<<<<< HEAD
             # This should be a method on Registry
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
             try:
@@ -173,17 +172,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             except Exception:
                 reset_modules_state(db_name)
                 raise
-||||||| parent of b9298b514e1 ([WIP])
-            registry.try_load_modules(db_name, force_demo, update_module)
-=======
-            # This should be a method on Registry
-            from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
-            try:
-                load_modules(registry, force_demo, update_module=update_module)
-            except Exception:
-                reset_modules_state(db_name)
-                raise
->>>>>>> b9298b514e1 ([WIP])
         except Exception:
             _logger.error('Failed to load registry')
             del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
