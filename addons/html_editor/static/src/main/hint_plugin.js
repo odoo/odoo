@@ -15,7 +15,7 @@ export class HintPlugin extends Plugin {
             this.clearHints();
             this.updateHints();
         },
-        clean_handlers: this.clearHints.bind(this),
+        normalize_handlers: this.normalize.bind(this),
         clean_for_save_handlers: ({ root }) => this.clearHints(root),
         content_updated_handlers: this.updateHints.bind(this),
 
@@ -50,6 +50,12 @@ export class HintPlugin extends Plugin {
     destroy() {
         super.destroy();
         this.clearHints();
+    }
+
+    normalize() {
+        this.hint = null;
+        this.clearHints();
+        this.updateHints();
     }
 
     /**
