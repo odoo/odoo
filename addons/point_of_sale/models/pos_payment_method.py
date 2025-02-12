@@ -61,6 +61,10 @@ class PosPaymentMethod(models.Model):
         help='Type of QR-code to be generated for this payment method.',
     )
     hide_qr_code_method = fields.Boolean(compute='_compute_hide_qr_code_method')
+    terminal_identifier = fields.Char(string="Terminal Identifier", help = "[Terminal ID, e.g., 16002169] or [Terminal model]-[Serial number], e.g., P400-Plus-123456789", copy=False)
+    terminal_merchant_key = fields.Char(string="Merchant ID/Account", help="Used when connecting to Payment Terminal", copy=False)
+    terminal_api_key = fields.Char(string="API Key", help="Api Key for authorize Payment Terminal", copy=False)
+    test_mode = fields.Boolean(string="Test Mode", help="Run transactions in the test environment.", groups="base.group_erp_manager")
 
     @api.model
     def get_provider_status(self, modules_list):
@@ -74,7 +78,7 @@ class PosPaymentMethod(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr']
+        return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr', 'terminal_identifier']
 
     @api.depends('type', 'payment_method_type')
     def _compute_hide_use_payment_terminal(self):
