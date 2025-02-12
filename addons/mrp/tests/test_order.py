@@ -26,8 +26,8 @@ class TestMrpOrder(TestMrpCommon):
         man_order_form.product_id = self.product_4
         man_order_form.product_qty = 5.0
         man_order_form.bom_id = self.bom_1
-        man_order_form.location_src_id = self.location_1
-        man_order_form.location_dest_id = self.warehouse_1.wh_output_stock_loc_id
+        man_order_form.location_src_id = self.shelf_1
+        man_order_form.location_dest_id = self.output_location
         man_order = man_order_form.save()
         man_order.action_confirm()
         man_order.action_cancel()
@@ -40,8 +40,8 @@ class TestMrpOrder(TestMrpCommon):
         man_order_form.product_id = self.product_4
         man_order_form.product_qty = 5.0
         man_order_form.bom_id = self.bom_1
-        man_order_form.location_src_id = self.location_1
-        man_order_form.location_dest_id = self.warehouse_1.wh_output_stock_loc_id
+        man_order_form.location_src_id = self.shelf_1
+        man_order_form.location_dest_id = self.output_location
         man_order = man_order_form.save()
         man_order.action_confirm()
         man_order.action_cancel()
@@ -72,8 +72,8 @@ class TestMrpOrder(TestMrpCommon):
         man_order_form.product_uom_id = self.product_4.uom_id
         man_order_form.product_qty = test_quantity
         man_order_form.date_start = date_start
-        man_order_form.location_src_id = self.location_1
-        man_order_form.location_dest_id = self.warehouse_1.wh_output_stock_loc_id
+        man_order_form.location_src_id = self.shelf_1
+        man_order_form.location_dest_id = self.output_location
         man_order = man_order_form.save()
 
         self.assertEqual(man_order.state, 'draft', "Production order should be in draft state.")
@@ -152,7 +152,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_2.id,
             'inventory_quantity': 2.0,
-            'location_id': self.stock_location_14.id
+            'location_id': self.shelf_1.id
         }).action_apply_inventory()
 
         production_2.action_assign()
@@ -163,7 +163,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_2.id,
             'inventory_quantity': 5.0,
-            'location_id': self.stock_location_14.id
+            'location_id': self.shelf_1.id
         }).action_apply_inventory()
 
         production_2.action_assign()
@@ -676,9 +676,6 @@ class TestMrpOrder(TestMrpCommon):
         not tracked, when creating a manufacturing order for 1 finished product and reserving, the
         reserved lines are displayed. Then, over-consume by creating new line.
         """
-        self.stock_shelf_1 = self.stock_location_components
-
-        self.stock_shelf_2 = self.stock_location_14
         mo, _, p_final, p1, p2 = self.generate_mo(tracking_base_1='lot', qty_base_1=10, qty_final=1)
 
         # Required for `lot_producing_id` to be visible in the view
@@ -701,8 +698,8 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': p_final.id,
         })
 
-        self.env['stock.quant']._update_available_quantity(p1, self.stock_shelf_1, 3, lot_id=first_lot_for_p1)
-        self.env['stock.quant']._update_available_quantity(p1, self.stock_shelf_2, 3, lot_id=first_lot_for_p1)
+        self.env['stock.quant']._update_available_quantity(p1, self.shelf_1, 3, lot_id=first_lot_for_p1)
+        self.env['stock.quant']._update_available_quantity(p1, self.shelf_2, 3, lot_id=first_lot_for_p1)
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 8, lot_id=second_lot_for_p1)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
 
@@ -734,8 +731,8 @@ class TestMrpOrder(TestMrpCommon):
         # 2/2 lot 1 shelf 2
         # 2/0 lot 1 other
         # 5/4 lot 2
-        ml_to_shelf_1 = move_1.move_line_ids.filtered(lambda ml: ml.lot_id == first_lot_for_p1 and ml.location_id == self.stock_shelf_1)
-        ml_to_shelf_2 = move_1.move_line_ids.filtered(lambda ml: ml.lot_id == first_lot_for_p1 and ml.location_id == self.stock_shelf_2)
+        ml_to_shelf_1 = move_1.move_line_ids.filtered(lambda ml: ml.lot_id == first_lot_for_p1 and ml.location_id == self.shelf_1)
+        ml_to_shelf_2 = move_1.move_line_ids.filtered(lambda ml: ml.lot_id == first_lot_for_p1 and ml.location_id == self.shelf_2)
 
         self.assertEqual(sum(ml_to_shelf_1.mapped('quantity')), 3.0, '3 units should be took from shelf1 as reserved.')
         self.assertEqual(sum(ml_to_shelf_2.mapped('quantity')), 3.0, '3 units should be took from shelf2 as reserved.')
@@ -747,12 +744,10 @@ class TestMrpOrder(TestMrpCommon):
     def test_product_produce_4(self):
         """ Possibility to produce with a given raw material in multiple locations. """
         # FIXME sle: how is it possible to consume before producing in the interface?
-        self.stock_shelf_1 = self.stock_location_components
-        self.stock_shelf_2 = self.stock_location_14
         mo, _, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=5)
 
-        self.env['stock.quant']._update_available_quantity(p1, self.stock_shelf_1, 2)
-        self.env['stock.quant']._update_available_quantity(p1, self.stock_shelf_2, 3)
+        self.env['stock.quant']._update_available_quantity(p1, self.shelf_1, 2)
+        self.env['stock.quant']._update_available_quantity(p1, self.shelf_2, 3)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 1)
 
         mo.action_assign()
@@ -2152,7 +2147,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_tmpl_id': product_final.product_tmpl_id.id,
             'product_uom_id': uom_L.id,
             'product_qty': 1.0,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
             'type': 'normal',
             'bom_line_ids': [(0, 0, {
                 'product_id': product_comp.id,
@@ -2212,7 +2207,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': p_final.id,
             'product_uom_id': self.uom_unit.id,
             'production_id': mo.id,
-            'location_id': self.stock_location_14.id,
+            'location_id': self.shelf_1.id,
             'lot_id': sn2.id
         })
 
@@ -2226,8 +2221,7 @@ class TestMrpOrder(TestMrpCommon):
         """ Checks that in an MO tracked by Lot the reservations of the raws are not
         modified if a LOT is assigned manually in the Form.
         """
-        warehouse = self.warehouse_1
-        mo, _, p_final, comp1, comp2 = self.generate_mo(tracking_final='lot', tracking_base_1='serial', qty_base_1=1, qty_final=1, picking_type_id=warehouse.manu_type_id)
+        mo, _, p_final, comp1, comp2 = self.generate_mo(tracking_final='lot', tracking_base_1='serial', qty_base_1=1, qty_final=1, picking_type_id=self.picking_type_manu)
         self.assertEqual(len(mo), 1, 'MO should have been created')
         lot1, sn1 = self.env['stock.lot'].create([
             {
@@ -2242,8 +2236,8 @@ class TestMrpOrder(TestMrpCommon):
             },
         ])
         # make a reservation on the raw moves
-        self.env['stock.quant']._update_available_quantity(comp1, warehouse.lot_stock_id, 1, lot_id=sn1)
-        self.env['stock.quant']._update_available_quantity(comp2, warehouse.lot_stock_id, 1)
+        self.env['stock.quant']._update_available_quantity(comp1, self.stock_location, 1, lot_id=sn1)
+        self.env['stock.quant']._update_available_quantity(comp2, self.stock_location, 1)
         mo.action_assign()
         self.assertEqual(mo.qty_producing, 0.0)
         self.assertRecordValues(mo.move_raw_ids, [
@@ -2423,7 +2417,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_tmpl_id': self.product_4.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
             'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
@@ -3518,7 +3512,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_tmpl_id': self.product_7_template.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 250.0,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': self.product_2.id, 'product_qty': 1.0, 'product_uom_id': self.box250.id}),
@@ -4604,7 +4598,7 @@ class TestMrpOrder(TestMrpCommon):
         mo = self.env['mrp.production'].create({
             'product_id': tracked_product.id,
             'product_uom_qty': 5.0,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
         })
         mo.action_confirm()
         mo.action_generate_serial()
@@ -4956,8 +4950,7 @@ class TestMrpOrder(TestMrpCommon):
             - If the picking is not validated, the extra quantity updates the existing move within the picking.
             - If the picking is validated, a new picking is created for that extra quantity.
         """
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
-        warehouse.write({'manufacture_steps': 'pbm'})
+        self.warehouse_1.manufacture_steps = 'pbm'
 
         product = self.env['product.product'].create({
             'name': 'Product',

@@ -14,7 +14,6 @@ class TestMrpProductionBackorder(TestMrpCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
-        cls.warehouse = cls.warehouse_1
 
     def test_no_tracking_1(self):
         """Create a MO for 4 product. Produce 4. The backorder button should
@@ -85,10 +84,10 @@ class TestMrpProductionBackorder(TestMrpCommon):
         """
         # Required for `manufacture_steps` to be visible in the view
         self.env.user.group_ids += self.env.ref("stock.group_adv_location")
-        with Form(self.warehouse) as warehouse:
+        with Form(self.warehouse_1) as warehouse:
             warehouse.manufacture_steps = 'pbm'
 
-        production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.warehouse.manu_type_id)
+        production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.picking_type_manu)
 
         move_raw_ids = production.move_raw_ids
         self.assertEqual(len(move_raw_ids), 2)
@@ -130,9 +129,9 @@ class TestMrpProductionBackorder(TestMrpCommon):
         """
         # Required for `manufacture_steps` to be visible in the view
         self.env.user.group_ids += self.env.ref("stock.group_adv_location")
-        with Form(self.warehouse) as warehouse:
+        with Form(self.warehouse_1) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
-        production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.warehouse.manu_type_id)
+        production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.picking_type_manu)
 
         move_raw_ids = production.move_raw_ids
         self.assertEqual(len(move_raw_ids), 2)
@@ -295,7 +294,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
             'product_id': product_finished.id,
             'product_tmpl_id': product_finished.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': 'flexible',
@@ -436,7 +435,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
             backorder.save().action_backorder()
             return mo.procurement_group_id.mrp_production_ids[-1]
 
-        mo_sequence = self.warehouse_1.manu_type_id.sequence_id
+        mo_sequence = self.picking_type_manu.sequence_id
         initial_mo_name = mo_sequence.prefix + str(mo_sequence.number_next_actual).zfill(mo_sequence.padding)
         production = self.generate_mo(qty_final=5)[0]
         self.assertEqual(production.name, initial_mo_name)
@@ -558,7 +557,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
                 'location_id': self.stock_location.id,
             })._apply_inventory()
 
-        default_picking_type = self.warehouse_1.manu_type_id
+        default_picking_type = self.picking_type_manu
 
         # make sure generated MO will auto-assign
         default_picking_type.reservation_method = 'at_confirm'
@@ -693,11 +692,11 @@ class TestMrpProductionBackorder(TestMrpCommon):
             'product_qty': product_qty,
             'bom_id': self.bom_1.id,
             'priority': '1',
-            'picking_type_id': picking_type_id or self.warehouse.manu_type_id.id,
+            'picking_type_id': picking_type_id or self.picking_type_manu.id,
         })
-        picking_type_always = self.warehouse.manu_type_id.copy({'name': "Always BO", 'sequence_code': "always", 'create_backorder': "always"})
-        picking_type_ask = self.warehouse.manu_type_id.copy({'name': "Ask BO", 'sequence_code': "ask", 'create_backorder': "ask"})
-        picking_type_never = self.warehouse.manu_type_id.copy({'name': "Never BO", 'sequence_code': "never", 'create_backorder': "never"})
+        picking_type_always = self.picking_type_manu.copy({'name': "Always BO", 'sequence_code': "always", 'create_backorder': "always"})
+        picking_type_ask = self.picking_type_manu.copy({'name': "Ask BO", 'sequence_code': "ask", 'create_backorder': "ask"})
+        picking_type_never = self.picking_type_manu.copy({'name': "Never BO", 'sequence_code': "never", 'create_backorder': "never"})
 
         # always + ask (backorder=yes) => both are backordered in the end
         mo_produce_all = create_mo()

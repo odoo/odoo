@@ -50,14 +50,13 @@ class TestStockCommon(TestProductCommon):
             [cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_suppliers')]
         )[0]
         cls.stock_location = cls.warehouse_1.lot_stock_id
-        if not cls.stock_location.child_ids:
-            cls.StockLocationObj.create([{
-                'name': 'Shelf 1',
-                'location_id': cls.stock_location.id,
-            }, {
-                'name': 'Shelf 2',
-                'location_id': cls.stock_location.id,
-            }])
+        cls.shelf_1, cls.shelf_2 = cls.StockLocationObj.create([{
+            'name': 'Shelf 1',
+            'location_id': cls.stock_location.id,
+        }, {
+            'name': 'Shelf 2',
+            'location_id': cls.stock_location.id,
+        }])
 
         pack_location = cls.warehouse_1.wh_pack_stock_loc_id
         pack_location.active = True
@@ -112,13 +111,6 @@ class TestStockCommon(TestProductCommon):
             groups='stock.group_stock_manager',
         )
 
-        # Locations
-        cls.location_1 = cls.env['stock.location'].create({
-            'name': 'TestLocation1',
-            'posx': 3,
-            'location_id': cls.stock_location.id,
-        })
-
         # Partner
         cls.partner_1 = cls.env['res.partner'].create({
             'name': 'Julia Agrolait',
@@ -134,7 +126,7 @@ class TestStockCommon(TestProductCommon):
         # Existing data
         cls.existing_inventories = cls.StockQuantObj.search([('inventory_quantity', '!=', 0.0)])
         cls.existing_quants = cls.StockQuantObj.search([])
-        cls.env.ref('stock.route_warehouse0_mto').rule_ids.procure_method = "make_to_order"
+        cls.warehouse_1.mto_pull_id.route_id.rule_ids.procure_method = "make_to_order"
 
     def url_extract_rec_id_and_model(self, url):
         # Extract model and record ID

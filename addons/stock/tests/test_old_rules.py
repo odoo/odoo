@@ -139,9 +139,9 @@ class TestOldRules(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.productA, self.warehouse_3_steps.lot_stock_id, 4.0)
 
         # We alter one rule and we set it to 'mts_else_mto'
-        self.warehouse_3_steps.delivery_route_id.rule_ids.filtered(lambda r: r.procure_method == "make_to_order").write({
-            'procure_method': 'mts_else_mto',
-        })
+        self.warehouse_3_steps.delivery_route_id.rule_ids.filtered(
+            lambda r: r.procure_method == "make_to_order"
+        ).procure_method = 'mts_else_mto'
 
         pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mto'})
 
@@ -193,9 +193,7 @@ class TestOldRules(TestStockCommon):
         # We alter one rule and we set it to 'mts_else_mto'
         self.warehouse_3_steps.delivery_route_id.rule_ids.filtered(
             lambda r: r.procure_method == "make_to_order"
-        ).write({
-            'procure_method': 'mts_else_mto',
-        })
+        ).procure_method = 'mts_else_mto'
 
         pg1 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-1'})
         pg2 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-2'})

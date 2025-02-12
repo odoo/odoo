@@ -528,7 +528,7 @@ class TestUnbuild(TestMrpCommon):
             'product_tmpl_id': finshed_product.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': component1.id, 'product_qty': 1}),
@@ -652,7 +652,7 @@ class TestUnbuild(TestMrpCommon):
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = finished
-        mo_form.picking_type_id = self.warehouse_1.manu_type_id
+        mo_form.picking_type_id = self.picking_type_manu
         with mo_form.move_raw_ids.new() as line:
             line.product_id = compo
             line.product_uom_qty = 1
@@ -744,10 +744,11 @@ class TestUnbuild(TestMrpCommon):
     def test_compute_location_id(self):
         order = self.env['mrp.unbuild'].create({
             'product_id': self.product_4.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
         })
-        warehouse = self.env.ref('stock.warehouse0')
-        self.assertEqual(order.location_id, warehouse.lot_stock_id)
-        self.assertEqual(order.location_dest_id, warehouse.lot_stock_id)
+        self.assertEqual(order.location_id, self.stock_location)
+        self.assertEqual(order.location_dest_id, self.stock_location)
 
     def test_use_unbuilt_sn_in_mo(self):
         """
@@ -850,7 +851,7 @@ class TestUnbuild(TestMrpCommon):
             'product_id': finished_product.id,
             'product_tmpl_id': finished_product.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [

@@ -120,7 +120,7 @@ class TestVirtualAvailable(TestStockCommon):
         self.env['stock.quant'].create({
             'product_id': product.id,
             'product_uom_id': self.uom_unit.id,
-            'location_id': self.location_1.id,
+            'location_id': self.shelf_1.id,
             'quantity': 7,
             'reserved_quantity': 0,
         })
@@ -177,7 +177,7 @@ class TestVirtualAvailable(TestStockCommon):
         self.env['stock.quant'].create({
             'product_id': product.id,
             'product_uom_id': self.uom_unit.id,
-            'location_id': self.location_1.id,
+            'location_id': self.shelf_1.id,
             'quantity': 5,
         })
         # Creates a quant for vendor location.
