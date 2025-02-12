@@ -232,3 +232,25 @@ class TestLinkPreview(MailCommon):
                 [("message_id", "=", message.id)]
             )
             self.assertEqual(link_preview_count, 1)
+
+    def test_link_preview_throttle(self):
+        self.env['ir.config_parameter'].sudo().set_param('mail.link_preview_throttle', 1)
+        with patch.object(requests.Session, "get", self._patch_with_og_properties), patch.object(
+            requests.Session, "head", self._patch_head_html
+        ):
+            message = self.test_partner.message_post(
+                body=Markup(f'<a href="{self.source_url}">Nothing link</a>'),
+            )
+            self.env["mail.link.preview"]._create_from_message_and_notify(message)
+            link_preview = self.env["mail.message.link.preview"].search(
+                [("message_id", "=", message.id)]
+            ).link_preview_id
+
+            message = self.test_partner.message_post(
+                body=Markup(f'<a href="{self.source_url}/test">Nothing link</a>'),
+            )
+            self.env["mail.link.preview"]._create_from_message_and_notify(message)
+            link_preview_count = self.env["mail.message.link.preview"].search_count(
+                [("link_preview_id", "=", link_preview.id)]
+            )
+            self.assertEqual(link_preview_count, 1)

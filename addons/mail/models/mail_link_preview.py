@@ -4,6 +4,9 @@ import re
 import requests
 
 from lxml import html
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from urllib.parse import urlparse
 
 from odoo import api, models, fields, tools
 from odoo.tools.misc import OrderedSet
@@ -62,8 +65,9 @@ class MailLinkPreview(models.Model):
                 preview = link_previews_by_url.pop(url)
                 link_previews += preview
                 continue
-            if preview := get_link_preview_from_url(url, requests_session):
-                link_preview_values.append(preview)
+            if not self._is_domain_thottled(url):
+                if preview := get_link_preview_from_url(url, requests_session):
+                    link_preview_values.append(preview)
             if len(link_preview_values) + len(link_previews) > 5:
                 break
         self.env["mail.message.link.preview"].search([
@@ -87,11 +91,23 @@ class MailLinkPreview(models.Model):
         link_preview_throttle = int(self.env['ir.config_parameter'].sudo().get_param('mail.link_preview_throttle', 99))
         return link_preview_throttle > 0
 
+    def _is_domain_thottled(self, url):
+        domain = urlparse(url).netloc
+        date_interval = fields.Datetime.to_string((datetime.now() - relativedelta(seconds=10)))
+        call_counter = self.env["mail.message.link.preview"].search_count([
+            ('link_preview_id.source_url', 'ilike', domain),
+            ('create_date', '>', date_interval),
+        ])
+        link_preview_throttle = int(self.env['ir.config_parameter'].get_param('mail.link_preview_throttle', 99))
+        return call_counter > link_preview_throttle
+
     @api.model
     def _search_or_create_from_url(self, url):
         """Return the URL preview, first from the database if available otherwise make the request."""
         preview = self.env['mail.link.preview'].search([('source_url', '=', url)])
         if not preview:
+            if self._is_domain_thottled(url):
+                return self.env["mail.link.preview"]
             preview_values = get_link_preview_from_url(url)
             if not preview_values:
                 return self.env["mail.link.preview"]
