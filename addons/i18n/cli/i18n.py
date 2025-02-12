@@ -22,7 +22,7 @@ from odoo.tools.translate import trans_export, load_language
         o i18n export --community
         o i18n export --enterprise
         o i18n export --all 
-        o i18n export --modules l10n_it_edi
+        o i18n export l10n_it_edi
 
     import:
         o i18n import \
@@ -35,9 +35,6 @@ from odoo.tools.translate import trans_export, load_language
 
 _logger = logging.getLogger(__name__)
 
-
-# Helpers
-# -------------------------------------------------------------------------------- 
 
 def _get_languages(env, lang):
     if lang == '*':
@@ -62,6 +59,7 @@ def _get_language_files(env, module_names, language_codes, export_pot=False):
 
 class I18nList(Subcommand):
     description = "List i18n-exportable modules"
+    excluded = (r'%\_test', r'%\_tests', r'test\_%', r'hw\_%', 'l10n_be_codabox')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -91,11 +89,7 @@ class I18nList(Subcommand):
         try:
             with self.build_env(parsed_args.db_name) as env:
                 logging.disable(logging.NOTSET)
-                domain = [
-                    ('name', 'not =ilike', r'%\_test'),
-                    ('name', 'not =ilike', r'test\_%'),
-                    ('name', 'not =ilike', r'hw\_%'),
-                ]
+                domain = [('name', 'not =ilike', pattern) for pattern in self.excluded]
                 if parsed_args.community:
                     domain += [('license', '=', 'LGPL-3')]
                 elif parsed_args.enterprise:
@@ -198,10 +192,6 @@ class I18nExport(Subcommand):
     def _parse_args(self, cmdargs):
         parsed_args, _unknown = self.parser.parse_known_args(args=cmdargs)
 
-        # Parsing modules arguments
-        # parsed_args.modules = self._parse_args_modules(parsed_args)
-
-        # Report configuration
         _logger.info("Modules selected: %s", parsed_args.modules)
         _logger.info("Languages selected: %s", parsed_args.lang)
         _logger.info("Connecting to database '%s'" % parsed_args.db_name)
@@ -235,12 +225,20 @@ class I18nExport(Subcommand):
             self._export_module(env, module, filepath, lang_code, exp_format)
 
     def _export_module(self, env, module, filepath, lang_code, fmt):
-        if module and module.state == 'installed':
-            _logger.info("Exporting %s", filepath)
-            with open(filepath, 'wb') as outfile:
-                trans_export(lang_code, [module.name], outfile, fmt, env.cr)
-        else:
+        if not module or module.state != 'installed':
             _logger.info("Module %s is not installed, skipping", module)
+            return
+        _logger.info("Exporting %s", filepath)
+        i18n_path = Path(filepath).parent
+        if not i18n_path.exists():
+            _logger.info(
+                "Module '%s' has no i18n folder, skipping. "
+                "Create one if you want to export.",
+                module.name,
+            )
+            return
+        with open(filepath, 'wb') as outfile:
+            trans_export(lang_code, [module.name], outfile, fmt, env.cr)
 
 
 
