@@ -74,7 +74,7 @@ class ResPartner(models.Model):
         # VAT number and country code
         normalized_vat = self.vat
         normalized_country = self.country_code
-        has_vat = self.vat and not self.vat in ['/', 'NA']
+        has_vat = self.vat and self.vat not in ['/', 'NA']
         if has_vat:
             normalized_vat = self.vat.replace(' ', '')
             if in_eu:
