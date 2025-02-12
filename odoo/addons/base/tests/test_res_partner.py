@@ -348,6 +348,12 @@ class TestPartnerAddressCompany(TransactionCase):
             'type': 'contact',
         })
         p1 = res_partner.browse(res_partner.name_create('Denis Bladesmith <denis.bladesmith@ghoststep.com>')[0])
+        p2 = res_partner.create({
+            'name': 'Isen Hardearth',
+            'email': 'isen.hardearth@ghoststep.com',
+            'type': 'contact',
+            'parent_id': ghoststep.id,
+        })
         self.assertEqual(p1.type, 'contact', 'Default type must be "contact"')
         p1phone = '123456789#34'
         p1.write({'phone': p1phone,
@@ -363,6 +369,7 @@ class TestPartnerAddressCompany(TransactionCase):
                   'type': 'invoice'})
         self.assertEqual(p1.street, p1street, 'Address fields must not be synced after turning sync off')
         self.assertNotEqual(ghoststep.street, p1street, 'Parent address must never be touched')
+        self.assertNotEqual(p2.street, p1street, 'Sibling address must never be touched')
 
         # turn on sync again
         p1.write({'type': 'contact'})
@@ -380,7 +387,8 @@ class TestPartnerAddressCompany(TransactionCase):
 
         p1street = 'My Street, 11'
         p1.write({'street': p1street})
-        self.assertEqual(ghoststep.street, ghoststreet, 'Touching contact should never alter parent')
+        self.assertEqual(ghoststep.street, p1street, 'Address fields must be synced automatically')
+        self.assertEqual(p2.street, p1street, 'Address fields must be synced automatically')
 
     def test_address_first_contact_sync(self):
         """ Test initial creation of company/contact pair where contact address gets copied to
