@@ -39,10 +39,10 @@
             <t t-call-assets="point_of_sale.assets_debug" />
         </t>
         <t t-if="request.cookies.get('pos_color_scheme') == 'dark'">
-            <t t-call-assets="point_of_sale.assets_prod_dark" media="screen"/>
+            <t t-call-assets="point_of_sale.assets_prod_dark"/>
         </t>
         <t t-else="">
-            <t t-call-assets="point_of_sale.assets_prod" media="screen"/>
+            <t t-call-assets="point_of_sale.assets_prod"/>
         </t>
     </head>
     <body class="pos">
