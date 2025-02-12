@@ -101,6 +101,10 @@ export class ChannelInvitation extends Component {
         );
     }
 
+    get searchPlaceholder() {
+        return _t("Search people to invite");
+    }
+
     async fetchPartnersToInvite() {
         const results = await this.sequential(() =>
             this.orm.call("res.partner", "search_for_channel_invite", [

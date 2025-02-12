@@ -5,10 +5,21 @@
             <t t-if="props.thread?.channel_type !== 'livechat' or !selectablePartner.lang_name">$0</t>
             <div t-else="" class="d-flex flex-column flex-grow-1">
                 <t>$0</t>
-                <span class="mx-2 text-truncate text-start fs-6">
-                    <i class="fa fa-comment-o me-1" aria-label="Lang"/>
-                    <t t-esc="selectablePartner.lang_name"/>
-                </span>
+                <div class="d-flex flex-wrap align-items-center gap-1 ms-2">
+                    <span class="d-flex text-start fs-6 gap-1">
+                        <i class="fa fa-fw fa-comment-o" aria-label="Lang"/>
+                        <span class="badge rounded text-bg-primary" t-esc="selectablePartner.lang_name"/>
+                        <t t-foreach="selectablePartner.languages" t-as="language" t-key="index">
+                            <span class="badge rounded text-bg-primary" t-esc="language"/>
+                        </t>
+                    </span>
+                    <span class="d-flex text-start fs-6 gap-1">
+                        <i t-if="selectablePartner.expertises.length" class="fa fa-fw fa-certificate" aria-label="Expertise"/>
+                        <t t-foreach="selectablePartner.expertises" t-as="expertise" t-key="index">
+                            <span class="badge rounded text-bg-info bg-opacity-75" style="color: #FFF" t-esc="expertise"/>
+                        </t>
+                    </span>
+                </div>
             </div>
         </xpath>
     </t>
