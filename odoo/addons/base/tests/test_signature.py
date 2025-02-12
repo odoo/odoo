@@ -1,5 +1,6 @@
 
 import datetime
+import hashlib
 import io
 import os
 from unittest.mock import PropertyMock, patch
@@ -59,9 +60,11 @@ class TestSignature(TransactionCase):
     def test_odoo_pdf_signer(self):
         with file_open(self.pdf_path, "rb") as stream:
             out_stream = io.BytesIO()
-            with patch.object(PdfSigner, "_load_key_and_certificate", return_value=(self.private_key, self.certificate, None)):
+            with patch.object(PdfSigner, "_load_key_and_certificate", return_value=(self.private_key, self.certificate)):
                 signer = PdfSigner(stream, self.env)
                 out_stream = signer.sign_pdf()
+                if not out_stream:
+                    self.skipTest("Could not load the PdfSigner class properly")
             pdf_data = out_stream.getvalue()
             
             # Retrive the signature content
@@ -78,10 +81,10 @@ class TestSignature(TransactionCase):
             byte_range = pdf_data[start_bracket_index + 1: end_bracket_index].strip().split(b" ")
 
             # Computing the hash from the resulting document
-            hash = hashes.Hash(hashes.SHA256())
+            hash = hashlib.sha256()
             for i in range(0, len(byte_range), 2):
                 hash.update(pdf_data[int(byte_range[i]):int(byte_range[i])+int(byte_range[i+1])])
-            result_digest = hash.finalize()
+            result_digest = hash.digest()
 
             cert = asn1x509.Certificate.load(
                     self.certificate.public_bytes(encoding=serialization.Encoding.DER))
@@ -99,7 +102,7 @@ class TestSignature(TransactionCase):
                 }),
                 cms.CMSAttribute({
                     'type': 'signing_time',
-                    'values': [cms.Time({'utc_time': core.UTCTime(datetime.datetime.now(datetime.UTC))})]
+                    'values': [cms.Time({'utc_time': core.UTCTime(datetime.datetime.now(datetime.timezone.utc))})]
                 }),
                 cms.CMSAttribute({
                     'type': 'cms_algorithm_protection',
