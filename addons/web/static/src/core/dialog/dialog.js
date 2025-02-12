@@ -97,7 +97,6 @@ export class Dialog extends Component {
         );
         this.state = useState({ buttonCount: 0 });
         this.id = `dialog_${this.data.id}`;
-        this.design = this.props.design ? this.props.design : (['sm', 'md'].includes(this.props.size)) ? "minimal" : "default";
         useChildSubEnv({ inDialog: true, dialogId: this.id });
         this.isMovable = this.props.header;
         if (this.isMovable) {
@@ -130,11 +129,11 @@ export class Dialog extends Component {
     }
 
     get isFullscreen() {
-        return this.props.fullscreen || this.env.isSmall && this.design != "minimal";
+        return this.props.fullscreen || this.env.isSmall && this.computeDesign() != "minimal";
     }
 
     get getDesign() {
-        return this.design;
+        return this.computeDesign();
     }
 
     get buttonsCount() {
@@ -146,6 +145,10 @@ export class Dialog extends Component {
             return `top: ${this.position.top}px; left: ${this.position.left}px;`;
         }
         return "";
+    }
+
+    computeDesign() {
+        return this.props.design ? this.props.design : (['sm', 'md'].includes(this.props.size)) ? "minimal" : "default";
     }
 
     updateButtonCount() {
