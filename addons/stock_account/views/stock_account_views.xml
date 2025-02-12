@@ -30,7 +30,7 @@
             <field name="inherit_id" ref="stock.view_location_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='additional_info']" position="after">
-                    <div groups="stock_account.group_stock_accounting_automatic">
+                    <div groups="account.group_account_readonly">
                         <group string="Accounting Information" invisible="usage not in ('inventory', 'production')">
                             <field name="valuation_in_account_id" options="{'no_create': True}"/>
                             <field name="valuation_out_account_id" options="{'no_create': True}"/>
