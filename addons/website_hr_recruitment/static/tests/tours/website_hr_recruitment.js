@@ -107,7 +107,7 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
 ...clickOnSave(),
 {
     content: "wait for the form values are patched",
-    trigger: ":iframe form input[name=partner_name]:value(mitchell admin)",
+    trigger: ":iframe form input[name=partner_name]:value(admin)",
 },
 {
     content: 'Go back to /jobs page after save',
