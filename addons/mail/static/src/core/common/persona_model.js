@@ -147,6 +147,10 @@ export class Persona extends Record {
         }
         this.im_status = newStatus;
     }
+
+    _getPyModelName() {
+        return this.type === "partner" ? "res.partner" : "mail.guest";
+    }
 }
 
 Persona.register();
