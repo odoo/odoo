@@ -854,6 +854,44 @@ class TransactionCase(BaseCase):
         # cleanup class attributes
         cls.cr = None
         cls.registry = None
+        cls.env = None
+
+    @classmethod
+    def setUpCommonData(cls):
+        """
+        Sets up data that will persist between different classes.
+
+        The data will be kept as long as the call chain for this method is not changed.
+        :code:`super()` should NOT be used within this method.
+
+        You may define dependencies on this method to auto-magically override behavior:
+        ```
+        class BaseCommon(TransactionCase):
+
+            @classmethod
+            def _get_partner_name(cls)
+                return 'Goofy'
+
+            @tests.common.depends('_get_partner_name')
+            @classmethod
+            def setUpCommonData(cls):
+                cls.partner = cls.env['res.partner'].create({'name': cls._get_partner_name()})
+
+        class BaseTest(BaseCommon):
+            def test_partner_name(self):
+                self.assertEqual(self.partner.name, 'Goofy')
+
+        class MailTest(BaseCommon):
+            @classmethod
+            def _get_partner_name(cls):
+                return 'Mickey'
+
+            def test_partner_name(self):
+                self.assertEqual(self.partner.name, 'Mickey')
+        ```
+        NOTE: dependencies must be class attributes as this is evaluated on a class level.
+        """
+        pass
 
     @classmethod
     def setUpClass(cls):
@@ -908,7 +946,7 @@ class TransactionCase(BaseCase):
         cls.close_patcher = patch.object(cls.cr, 'close', forbidden)
         cls.startClassPatcher(cls.close_patcher)
 
-        cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
+        cls.env = cls.env or api.Environment(cls.cr, api.SUPERUSER_ID, {})
 
         # speedup CryptContext. Many user an password are done during tests, avoid spending time hasing password with many rounds
         def _crypt_context(self):  # noqa: ARG001
@@ -989,14 +1027,14 @@ class SingleTransactionCase(BaseCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.registry = Registry(get_db_name())
+        cls.registry = cls.registry or Registry(get_db_name())
         cls.addClassCleanup(cls.registry.reset_changes)
         cls.addClassCleanup(cls.registry.clear_all_caches)
 
-        cls.cr = cls.registry.cursor()
+        cls.cr = cls.cr or cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
 
-        cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
+        cls.env = cls.env or api.Environment(cls.cr, api.SUPERUSER_ID, {})
 
     def setUp(self):
         super(SingleTransactionCase, self).setUp()
@@ -2287,6 +2325,20 @@ def tagged(*tags):
         return obj
     return tags_decorator
 
+def data_depends(*attrs):
+    """ A decorator to add class dependencies on :code:`:TransactionCase.setUpCommonData`
+
+    The dependencies should be either class attributes or class methods.
+    """
+    def depends_decorator(method):
+        assert method.__name__ == 'setUpCommonData', '@data_depends should only be used on setUpCommonData'
+        assert isinstance(method, classmethod), '@data_depends should be used before @classmethod'
+        # breakpoint()
+        # cls = method.__self__
+        # assert all(hasattr(cls, attr) for attr in attrs), f'One of the following attributes is not defined on {cls.__qualname__}: {attrs}'
+        method._data_depends = tuple(attrs)
+        return method
+    return depends_decorator
 
 class freeze_time:
     """ Object to replace the freezegun in Odoo test suites
