@@ -402,6 +402,10 @@ export class Message extends Record {
         );
     }
 
+    get canCopyLink() {
+        return this.message_type && this.message_type !== "user_notification";
+    }
+
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canAddReaction(thread) {
         return Boolean(!this.is_transient && this.thread);

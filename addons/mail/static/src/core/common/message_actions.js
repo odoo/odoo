@@ -199,9 +199,7 @@ messageActionsRegistry
         sequence: 100,
     })
     .add("copy-link", {
-        condition: (component) =>
-            component.message.message_type &&
-            component.message.message_type !== "user_notification",
+        condition: (component) => component.props.message.canCopyLink,
         icon: "fa fa-link",
         title: _t("Copy Link"),
         onClick: (component) => component.message.copyLink(),
