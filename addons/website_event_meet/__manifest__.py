@@ -28,7 +28,7 @@
         'web.assets_frontend': [
             'website_event_meet/static/src/scss/event_meet_templates.scss',
             'website_event_meet/static/src/interactions/**/*.js',
-            'website_event_meet/static/src/xml/website_event_meeting_room.xml',
+            # 'website_event_meet/static/src/xml/website_event_meeting_room.xml',
         ],
         'website.assets_wysiwyg': [
             'website_event_meet/static/src/js/snippets/options.js',
@@ -40,7 +40,7 @@
             'website_event_meet/static/src/interactions/**/*.js',
         ],
         'website_event_meet.assets_widget_xml': [
-            # 'website_event_meet/static/src/xml/website_event_meeting_room.xml', interaction
+            'website_event_meet/static/src/xml/website_event_meeting_room.xml',
         ],
     },
     'license': 'LGPL-3',

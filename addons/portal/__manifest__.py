@@ -39,7 +39,7 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/src/interactions/**/*',
             'portal/static/src/scss/portal.scss',
             'portal/static/src/js/portal.js',
-            'portal/static/src/xml/portal_chatter.xml',
+            # 'portal/static/src/xml/portal_chatter.xml',
             'portal/static/src/js/portal_security.js',
             'portal/static/src/xml/portal_security.xml',
             'portal/static/src/js/components/**/*',
@@ -52,7 +52,7 @@ a dependency towards website editing and customization capabilities.""",
         ],
         'portal.assets_widget_xml': [
             'portal/static/src/xml/portal_security.xml',
-            # 'portal/static/src/xml/portal_chatter.xml', converted to interaction
+            'portal/static/src/xml/portal_chatter.xml',
         ],
         'web.assets_tests': [
             'portal/static/tests/**/*',
