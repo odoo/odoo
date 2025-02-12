@@ -1189,6 +1189,42 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': -2627.014,
         })
 
+    def test_out_invoice_change_date_rounding_multi_currency(self):
+        new_currency_id = self.env['res.currency'].create({
+                'name': 'Test',
+                'symbol': 'T',
+                'rounding': 0.01,
+            })
+
+        self.env['res.currency.rate'].create([
+            {
+                'currency_id': new_currency_id.id,
+                'name': '2017-01-01',
+                'rate': 0.233661237937,
+            }, {
+                'currency_id': new_currency_id.id,
+                'name': '2016-01-01',
+                'rate': 0.233666697822,
+            }
+        ])
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice', check_move_validity=True))
+        move_form.partner_id = self.partner_a
+        move_form.currency_id = new_currency_id
+        move_form.invoice_date = '2016-01-01'
+        move_form.invoice_payment_term_id = self.env['account.payment.term']
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+            line_form.price_unit = 88.54
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_b
+            line_form.price_unit = 17.71
+
+        move_form.save()
+
+        move_form.invoice_date = '2017-01-01'
+        move_form.save()
+
     def test_payment_term_line_fiscal_position(self):
         """Test the mapping of payment term line accounts with fiscal position."""
         account_revenue_copy = self.company_data['default_account_revenue'].copy()
