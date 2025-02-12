@@ -243,6 +243,7 @@ export class Rtc extends Record {
             audioTrack: undefined,
             cameraTrack: undefined,
             screenTrack: undefined,
+            screenAudioTrack: undefined,
             /**
              * callback to properly end the audio monitoring.
              * If set it indicates that we are currently monitoring the local
@@ -952,6 +953,7 @@ export class Rtc extends Record {
             disconnectAudioMonitor: undefined,
             cameraTrack: undefined,
             screenTrack: undefined,
+            screenAudioTrack: undefined,
             audioTrack: undefined,
             sendCamera: false,
             sendScreen: false,
@@ -1145,6 +1147,7 @@ export class Rtc extends Record {
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getDisplayMedia({
                         video: SCREEN_CONFIG,
+                        audio: true,
                     });
                 }
                 this.soundEffectsService.play("screen-sharing");
@@ -1159,6 +1162,7 @@ export class Rtc extends Record {
             return;
         }
         let outputTrack = sourceStream ? sourceStream.getVideoTracks()[0] : undefined;
+        const screenAudioTrack = sourceStream ? sourceStream.getAudioTracks()[0] : undefined;
         if (outputTrack) {
             outputTrack.addEventListener("ended", async () => {
                 await this.toggleVideo(type, false);
@@ -1194,10 +1198,14 @@ export class Rtc extends Record {
                 Object.assign(this.state, {
                     sourceScreenStream: sourceStream,
                     screenTrack: outputTrack,
+                    screenAudioTrack: screenAudioTrack,
                     sendScreen: Boolean(outputTrack),
                 });
                 break;
             }
+        }
+        if (this.state.screenAudioTrack) {
+            this.resetAudioTrack({ force: true });
         }
     }
 
@@ -1214,8 +1222,9 @@ export class Rtc extends Record {
         }
         if (force) {
             let audioTrack;
+            let audioStream;
             try {
-                const audioStream = await browser.navigator.mediaDevices.getUserMedia({
+                audioStream = await browser.navigator.mediaDevices.getUserMedia({
                     audio: this.store.settings.audioConstraints,
                 });
                 audioTrack = audioStream.getAudioTracks()[0];
@@ -1245,7 +1254,19 @@ export class Rtc extends Record {
             audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
             this.state.audioTrack = audioTrack;
             this.linkVoiceActivationDebounce();
-            await this.network.updateUpload("audio", this.state.audioTrack);
+            if (this.state.screenAudioTrack) {
+                const audioContext = new AudioContext();
+                const micSource = audioContext.createMediaStreamSource(audioStream);
+                const screenAudioStream = new MediaStream([this.state.screenAudioTrack]);
+                const screenAudioSource = audioContext.createMediaStreamSource(screenAudioStream);
+                const mixedAudioDestination = audioContext.createMediaStreamDestination();
+                micSource.connect(mixedAudioDestination);
+                screenAudioSource.connect(mixedAudioDestination);
+                const mixedAudioStreamTrack = mixedAudioDestination.stream.getAudioTracks()[0];
+                await this.network.updateUpload("audio", mixedAudioStreamTrack);
+            } else {
+                await this.network.updateUpload("audio", this.state.audioTrack);
+            }
         }
     }
 
@@ -1312,6 +1333,7 @@ export class Rtc extends Record {
      * @param {"camera"|"screen"} [parm1.videoType]
      */
     async updateStream(session, track, { mute, videoType } = {}) {
+        // here I get the audio track from remote
         const stream = new window.MediaStream();
         stream.addTrack(track);
         if (track.kind === "audio") {
