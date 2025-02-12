@@ -1,10 +1,9 @@
 import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
 import { Plugin } from "../plugin";
-import { closestBlock, isBlock } from "../utils/blocks";
-import { unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
-import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
+import { closestBlock } from "../utils/blocks";
+import { removeClass, removeStyle, unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
+import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
-import { getTableCells } from "../utils/table";
 import {
     baseContainerGlobalSelector,
     getBaseContainerSelector,
@@ -115,6 +114,15 @@ export class ClipboardPlugin extends Plugin {
         this.addDomListener(this.editable, "paste", this.onPaste);
         this.addDomListener(this.editable, "dragstart", this.onDragStart);
         this.addDomListener(this.editable, "drop", this.onDrop);
+
+        this.systemClasses = this.getResource("system_classes");
+        this.systemAttributes = this.getResource("system_attributes");
+        this.systemStyleProperties = this.getResource("system_style_properties");
+        this.systemPropertiesSelector = [
+            ...this.systemClasses.map((className) => `.${className}`),
+            ...this.systemAttributes.map((attr) => `[${attr}]`),
+            ...this.systemStyleProperties.map((prop) => `[style*="${prop}"]`),
+        ].join(",");
     }
 
     onCut(ev) {
@@ -130,100 +138,28 @@ export class ClipboardPlugin extends Plugin {
     onCopy(ev) {
         ev.preventDefault();
         const selection = this.dependencies.selection.getEditableSelection();
-        const commonAncestor = selection.commonAncestorContainer;
-        if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
-            this.dispatchTo("clean_handlers", commonAncestor);
-        }
         let clonedContents = selection.cloneContents();
         if (!clonedContents.hasChildNodes()) {
-            if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
-                this.dispatchTo("normalize_handlers", commonAncestor);
-            }
             return;
         }
-        // Repair the copied range.
-        if (clonedContents.firstChild.nodeName === "LI") {
-            const list = selection.commonAncestorContainer.cloneNode();
-            list.replaceChildren(...childNodes(clonedContents));
-            clonedContents = list;
+
+        // Prepare text content for clipboard.
+        let textContent = selection.textContent();
+        for (const processor of this.getResource("clipboard_text_processors")) {
+            textContent = processor(textContent);
         }
-        if (
-            clonedContents.firstChild.nodeName === "TR" ||
-            clonedContents.firstChild.nodeName === "TD"
-        ) {
-            // We enter this case only if selection is within single table.
-            const table = closestElement(selection.commonAncestorContainer, "table");
-            const tableClone = table.cloneNode(true);
-            // A table is considered fully selected if it is nested inside a
-            // cell that is itself selected, or if all its own cells are
-            // selected.
-            const isTableFullySelected =
-                (table.parentElement &&
-                    !!closestElement(table.parentElement, "td.o_selected_td")) ||
-                getTableCells(table).every((td) => td.classList.contains("o_selected_td"));
-            if (!isTableFullySelected) {
-                for (const td of tableClone.querySelectorAll("td:not(.o_selected_td)")) {
-                    if (closestElement(td, "table") === tableClone) {
-                        // ignore nested
-                        td.remove();
-                    }
-                }
-                const trsWithoutTd = Array.from(tableClone.querySelectorAll("tr")).filter(
-                    (row) => !row.querySelector("td")
-                );
-                for (const tr of trsWithoutTd) {
-                    if (closestElement(tr, "table") === tableClone) {
-                        // ignore nested
-                        tr.remove();
-                    }
-                }
-            }
-            // If it is fully selected, clone the whole table rather than
-            // just its rows.
-            clonedContents = tableClone;
+        ev.clipboardData.setData("text/plain", textContent);
+
+        // Prepare html content for clipboard.
+        for (const processor of this.getResource("clipboard_content_processors")) {
+            clonedContents = processor(clonedContents, selection) || clonedContents;
         }
-        const startTable = closestElement(selection.startContainer, "table");
-        if (clonedContents.firstChild.nodeName === "TABLE" && startTable) {
-            // Make sure the full leading table is copied.
-            clonedContents.firstChild.after(startTable.cloneNode(true));
-            clonedContents.firstChild.remove();
-        }
-        const endTable = closestElement(selection.endContainer, "table");
-        if (clonedContents.lastChild.nodeName === "TABLE" && endTable) {
-            // Make sure the full trailing table is copied.
-            clonedContents.lastChild.before(endTable.cloneNode(true));
-            clonedContents.lastChild.remove();
-        }
-        const commonAncestorElement = closestElement(selection.commonAncestorContainer);
-        if (commonAncestorElement && !isBlock(clonedContents.firstChild)) {
-            // Get the list of ancestor elements starting from the provided
-            // commonAncestorElement up to the block-level element.
-            const blockEl = closestBlock(commonAncestorElement);
-            const ancestorsList = [
-                commonAncestorElement,
-                ...ancestors(commonAncestorElement, blockEl),
-            ];
-            // Wrap rangeContent with clones of their ancestors to keep the styles.
-            for (const ancestor of ancestorsList) {
-                // Keep the formatting by keeping inline ancestors and paragraph
-                // related ones like headings etc.
-                if (!isBlock(ancestor) || isParagraphRelatedElement(ancestor)) {
-                    const clone = ancestor.cloneNode();
-                    clone.append(...childNodes(clonedContents));
-                    clonedContents.appendChild(clone);
-                }
-            }
-        }
+        this.removeSystemProperties(clonedContents);
         const dataHtmlElement = this.document.createElement("data");
         dataHtmlElement.append(clonedContents);
-        const odooHtml = dataHtmlElement.innerHTML;
-        const odooText = selection.textContent();
-        ev.clipboardData.setData("text/plain", odooText);
-        ev.clipboardData.setData("text/html", odooHtml);
-        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", odooHtml);
-        if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
-            this.dispatchTo("normalize_handlers", commonAncestor);
-        }
+        const htmlContent = dataHtmlElement.innerHTML;
+        ev.clipboardData.setData("text/html", htmlContent);
+        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", htmlContent);
     }
 
     /**
@@ -708,6 +644,20 @@ export class ClipboardPlugin extends Plugin {
         const fragment = this.document.createDocumentFragment();
         fragment.append(...nodes);
         return fragment;
+    }
+
+    /**
+     * Remove system-specific classes, attributes, and style properties from a
+     * fragment.
+     *
+     * @param {DocumentFragment} fragment
+     */
+    removeSystemProperties(fragment) {
+        for (const element of fragment.querySelectorAll(this.systemPropertiesSelector)) {
+            removeClass(element, ...this.systemClasses);
+            this.systemAttributes.forEach((attr) => element.removeAttribute(attr));
+            removeStyle(element, ...this.systemStyleProperties);
+        }
     }
 }
 
