@@ -267,6 +267,7 @@ class HrContract(models.Model):
         if from_cron:
             auto_commit = not modules.module.current_test
             for contract in self:
+                # REMOVE savepoint
                 try:
                     with self.env.cr.savepoint():
                         contract.write(vals)

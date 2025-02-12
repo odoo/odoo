@@ -21,6 +21,7 @@ def post_init(env):
         previous_level = sql_logger.level
         sql_logger.setLevel(logging.CRITICAL)
         try:
+            # OK pour savepoint
             with env.cr.savepoint():
                 env['account.chart.template'].with_company(company)._load_data({
                     'account.tax': env['account.chart.template']._get_hu_account_tax()

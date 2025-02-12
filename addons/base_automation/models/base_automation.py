@@ -1072,6 +1072,7 @@ class BaseAutomation(models.Model):
             # run the automation on the records
             for record in records:
                 try:
+                    # REMOVE Rollpack If not self test
                     with self.env.cr.savepoint():
                         automation._process(record)
                 except Exception:

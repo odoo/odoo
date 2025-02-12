@@ -149,6 +149,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                     self._cr.execute(query, (dst_record.id, record.id, dst_record.id))
             else:
                 try:
+                    # Maybe rollback instead
                     with mute_logger('odoo.sql_db'), self._cr.savepoint():
                         query = 'UPDATE "%(table)s" SET "%(column)s" = %%s WHERE "%(column)s" IN %%s' % query_dic
                         self._cr.execute(query, (dst_record.id, tuple(src_records.ids)))
@@ -174,6 +175,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 return
             records = Model.sudo().search([(field_model, '=', referenced_model), (field_id, '=', src.id)])
             try:
+                # UJPDATE or unlink, rollabck ?
                 with mute_logger('odoo.sql_db'), self._cr.savepoint():
                     records.sudo().write({field_id: dst_record.id})
                     records.env.flush_all()
@@ -259,6 +261,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         self.env.flush_all()
 
         # company_dependent fields of merged records
+        # WHY save point ?
         with self._cr.savepoint():
             for fname, field in dst_record._fields.items():
                 if field.company_dependent:

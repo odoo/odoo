@@ -53,6 +53,7 @@ class CrmLead(models.Model):
         batches = [self[index:index + 50] for index in range(0, len(self), 50)]
         for leads in batches:
             lead_emails = {}
+            # Accept rollback
             with self._cr.savepoint():
                 try:
                     self._cr.execute(
