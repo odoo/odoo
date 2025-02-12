@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="stock.LazyColumnLoading" owl="1">
+        <i t-if="state.loading" class="fa fa-refresh fa-spin m-1"/>
+        <div t-else="" t-out="components_availability" t-att-class="decorator"/>
+    </t>
+</templates>

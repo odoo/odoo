@@ -95,13 +95,7 @@
                     <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
                     <field name="scheduled_date" optional="show" widget="remaining_days" invisible="state in ('done', 'cancel')" readonly="state in ['cancel', 'done']"/>
                     <field name="picking_type_code" column_invisible="True"/>
-                    <field name="products_availability_state" column_invisible="True" options='{"lazy": true}'/>
-                    <field name="products_availability" options='{"lazy": true}'
-                        optional="hide"
-                        invisible="picking_type_code != 'outgoing' or state not in ['confirmed', 'waiting', 'assigned']"
-                        decoration-success="state == 'assigned' or products_availability_state == 'available'"
-                        decoration-warning="state != 'assigned' and products_availability_state in ('expected', 'available')"
-                        decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
+                    <widget name="lazy_column_widget"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" invisible="state in ('done', 'cancel')"/>
                     <field name="date_done" string="Effective Date" optional="hide"/>
                     <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
