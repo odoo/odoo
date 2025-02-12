@@ -1602,6 +1602,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 ),
                 "country": self.env.ref("base.in").id,
                 "id": user.partner_id.id,
+                "im_status": "offline",
                 "isInternalUser": True,
                 "is_company": False,
                 "is_public": False,
