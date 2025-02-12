@@ -1,16 +1,18 @@
 import logging
-from pathlib import Path
 import subprocess
-from tempfile import TemporaryFile
 from odoo import api, models, fields
 from odoo.tools.misc import find_in_path
 from odoo.exceptions import UserError
+from odoo import _, api
+
+from .papermuncher import printPM, OdooLoader
 
 _logger = logging.getLogger(__name__)
 papermuncher_state = 'install'
 
 def _get_paper_muncher_bin():
     return find_in_path('paper-muncher')
+
 
 try:
     process = subprocess.Popen(
@@ -58,7 +60,8 @@ class IrActionsReport(models.Model):
         :rtype: bytes
         '''
 
-        args : list[str] = []
+        report_name = self._get_report(report_ref).report_name or "placeholder_report_title"
+        args: list[str] = [report_name, "--httpipe"]
         if landscape:
             args += ['--orientation', 'landscape']
 
@@ -71,23 +74,19 @@ class IrActionsReport(models.Model):
                 args += ['--width', str(paperformat_id.page_width) + 'mm']
                 args += ['--height', str(paperformat_id.page_height) + 'mm']
 
-
         if len(bodies) != 1:
             raise ValueError('Paper Muncher only supports one body per report')
 
         body = bodies[0]
 
-        command : list[str] = [_get_paper_muncher_bin(), "print"] + args
+        odooLoader = OdooLoader(self.env, body, report_name)
 
-        process = subprocess.Popen(
-            command,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-        stdout, stderr = process.communicate(body.encode("utf-8"))
+        output, procStderr, exc = printPM(odooLoader, _get_paper_muncher_bin(), *args)
 
-        if process.returncode != 0:
-            raise UserError(f'Error while running paper-muncher:\n{stderr.decode("utf-8")}')
+        if output is None:
+            import traceback
+            raise UserError(
+                f'Error while running paper-muncher:\n{"".join(traceback.format_tb(exc.__traceback__))}\n{exc}\n'
+                f'\nPM\'s process STDERR: {procStderr}\n')
 
-        return stdout
+        return output
