@@ -39,14 +39,14 @@
         <t t-if="fullscreen">
             <button class="btn oi oi-arrow-left oi-large" data-bs-dismiss="modal" aria-label="Close" t-on-click="dismiss" />
         </t>
-        <h4 class="modal-title text-break flex-grow-1 fs-5" t-att-class="{ 'me-auto': fullscreen }">
+        <h4 class="modal-title text-break flex-grow-1" t-att-class="{ 'me-auto': fullscreen, 'fs-5': props.size == 'sm' }">
             <t t-esc="props.title"/>
         </h4>
         <t t-if="!isFullscreen and onExpand">
             <button type="button" class="fa fa-expand btn o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand"/>
         </t>
         <t t-if="!fullscreen">
-            <button type="button" class="btn-close" t-att-class="getDesign == 'minimal' ? 'position-absolute top-0 end-0 mt-1 me-1' : ''" aria-label="Close" tabindex="-1" t-on-click="dismiss"></button>
+            <button type="button" class="btn-close" t-att-class="{'position-absolute top-0 end-0 mt-1 me-1': getDesign == 'minimal' and !onExpand  }" aria-label="Close" tabindex="-1" t-on-click="dismiss"></button>
         </t>
     </t>
 </templates>

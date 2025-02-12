@@ -89,25 +89,12 @@
   body.modal-open {
     // FIXME: Fix scrolling in modal on focus input due to a bug between Chrome (Android) and Bootstrap
     position: fixed;
-
-    @include media-breakpoint-down(sm) {
-      &:has(.modal.o_modal_full:not(.o_modal_is_dismissing)) {
-        .o_navbar, .o_action_manager {
-          transform: translateX(-100%);
-          transition-timing-function: $o-easing-exit;
-        }
-      }
-    }
   }
 }
 
 @include media-only(screen) {
     html {
         @extend %o-html-layout-fill;
-    }
-
-    .o_navbar, .o_action_manager {
-        transition: transform $o-modal-slide-duration $o-easing-enter;
     }
 }
 
