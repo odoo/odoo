@@ -677,6 +677,39 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. All entries have to be reconciled."), self.env.cr.savepoint():
             unreconciled_move.button_hash()
 
+    def test_account_move_unhashed_entries(self):
+        """
+        Test that when _get_chain_info is called with early_stop=True (e.g., when checking if a journal has unhashed
+        entries), no error is raised and the right value is returned based on whether there are unhashed documents.
+        """
+        sales_journal = self.company_data['default_journal_sale']
+        # Create a move before the journal is set to 'Hash on post', allowing to test if the journal has unhashed entries.
+        self._init_and_post([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000]}])
+        sales_journal.restrict_mode_hash_table = True
+        # There should be unhashed entries in the sales journal until another move is posted
+        self.assertTrue(sales_journal._get_moves_to_hash(include_pre_last_hash=False, early_stop=True))
+        self._init_and_post([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000]}])
+        # After posting one entry, sales journal shouldn't have unhashed entries
+        self.assertFalse(sales_journal._get_moves_to_hash(include_pre_last_hash=False, early_stop=True))
+
+    def test_account_group_account_secured(self):
+        """
+        Test that user is not granted the group account secured if only entries from a journal without 'Hash on Post' is
+        secured. Once entries from a journal without 'Hash on Post' are secured, the user is granted the access rights.
+        """
+        self.company_data['default_journal_sale'].restrict_mode_hash_table = True
+        move = self._init_and_post([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000]}])
+        self.assertNotEqual(move.inalterable_hash, False)
+        # Since only moves from a journal with 'Hash on Post' have been secured, user shouldn't be granted access rights
+        self.assertFalse(self.env.ref('account.group_account_secured') in self.env.user.groups_id)
+
+        # Once moves from a journal without 'Hash on Post' is secured, user should be granted secured group access rights
+        in_invoice = self.init_invoice("in_invoice", self.partner_a, "2023-01-01", amounts=[1000], post=True)
+        wizard = self.env['account.secure.entries.wizard'].create({'hash_date': '2023-01-02'})
+        wizard.action_secure_entries()
+        self.assertNotEqual(in_invoice.inalterable_hash, False)
+        self.assertTrue(self.env.ref('account.group_account_secured') in self.env.user.groups_id)
+
     def test_wizard_hashes_all_journals(self):
         """
         Test that the wizard hashes all journals.
