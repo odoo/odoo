@@ -143,20 +143,26 @@ export const accountTaxHelpers = {
         for (const tax_data of batch.taxes) {
             if (batch._original_price_include) {
                 if (!special_mode || special_mode === "total_included") {
-                    if (!batch.include_base_amount) {
+                    if (batch.include_base_amount) {
                         for (const other_batch of batches_after) {
-                            if (other_batch._original_price_include) {
+                            if (!other_batch.is_base_affected) {
                                 add_extra_base(other_batch, tax_data, -1);
                             }
+                        }
+                    } else {
+                        for (const other_batch of batches_after) {
+                            add_extra_base(other_batch, tax_data, -1);
                         }
                     }
                     for (const other_batch of batches_before) {
                         add_extra_base(other_batch, tax_data, -1);
                     }
                 } else {  // special_mode === "total_excluded"
-                    for (const other_batch of batches_after) {
-                        if (!other_batch._original_price_include || batch.include_base_amount) {
-                            add_extra_base(other_batch, tax_data, 1);
+                    if (batch.include_base_amount) {
+                        for (const other_batch of batches_after) {
+                            if (other_batch.is_base_affected) {
+                                add_extra_base(other_batch, tax_data, 1);
+                            }
                         }
                     }
                 }
