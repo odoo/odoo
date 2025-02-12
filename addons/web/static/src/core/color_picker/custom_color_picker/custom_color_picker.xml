@@ -22,7 +22,7 @@
                     t-on-input="onHexColorInput"/>
                 <label class="flex-grow-0 ms-1 mb-0">hex</label>
             </div>
-            <div class="o_rgba_div px-1 d-flex align-items-baseline">
+            <div t-if="props.showRgbaField" class="o_rgba_div px-1 d-flex align-items-baseline">
                 <input type="text" t-attf-class="o_red_input {{input_classes}}" data-color-method="rgb" size="1"/>
                 <input type="text" t-attf-class="o_green_input {{input_classes}}" data-color-method="rgb" size="1"/>
                 <input type="text" t-attf-class="o_blue_input {{input_classes}}" data-color-method="rgb" size="1"/>
