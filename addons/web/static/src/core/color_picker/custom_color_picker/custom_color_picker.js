@@ -21,6 +21,7 @@ export class CustomColorPicker extends Component {
         onColorSelect: { type: Function, optional: true },
         onColorPreview: { type: Function, optional: true },
         onInputEnter: { type: Function, optional: true },
+        showRgbaField: { type: Boolean, optional: true },
     };
     static defaultProps = {
         document: window.document,
@@ -30,6 +31,7 @@ export class CustomColorPicker extends Component {
         onColorSelect: () => {},
         onColorPreview: () => {},
         onInputEnter: () => {},
+        showRgbaField: true,
     };
 
     setup() {

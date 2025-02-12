@@ -1,15 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import {
-    click,
-    waitFor,
-    queryOne,
-    hover,
-    press,
-    waitUntil,
-    edit,
-    queryAllValues,
-    queryAll,
-} from "@odoo/hoot-dom";
+import { click, waitFor, queryOne, hover, press, waitUntil, edit, queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -113,7 +103,7 @@ test("custom text-colors used in the editor are shown in the colorpicker", async
     await click(".btn:contains('Custom')");
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#00FF00");
-    expect(queryAllValues(".o_rgba_div input")).toEqual(["0", "255", "0", "100"]);
+    expect(".o_rgba_div input").toHaveCount(0);
     expect(queryAll("button[data-color='#ff0000']")).toHaveCount(1);
     expect(queryOne("button[data-color='#ff0000']").style.backgroundColor).toBe("rgb(255, 0, 0)");
     expect(queryAll("button[data-color='#00ff00']")).toHaveCount(1);
@@ -134,7 +124,7 @@ test("custom background colors used in the editor are shown in the colorpicker",
     await click(".btn:contains('Custom')");
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#00FF00");
-    expect(queryAllValues(".o_rgba_div input")).toEqual(["0", "255", "0", "100"]);
+    expect(".o_rgba_div input").toHaveCount(0);
     expect(queryAll("button[data-color='#ff0000']")).toHaveCount(1);
     expect(queryOne("button[data-color='#ff0000']").style.backgroundColor).toBe("rgb(255, 0, 0)");
     expect(queryAll("button[data-color='#00ff00']")).toHaveCount(1);
@@ -425,6 +415,7 @@ test("gradient picker correctly shows the current selected gradient", async () =
     await click("button[title='Define a custom gradient']");
     await animationFrame();
     expect("button.active:contains('Linear')").toHaveCount(1);
+    expect(".o_rgba_div input").toHaveCount(0);
     expect("input[name='angle']").toHaveValue("2");
     expect("input[name='firstColorPercentage']").toHaveValue(10);
     expect("input[name='secondColorPercentage']").toHaveValue(90);
