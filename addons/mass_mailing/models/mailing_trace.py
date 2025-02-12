@@ -66,6 +66,7 @@ class MailingTrace(models.Model):
              'However the ID is needed for several action and controllers.',
         index='btree_not_null',
     )
+    mail_message_id = fields.Many2one('mail.message', compute='_compute_mail_message_id', store=True)
     email = fields.Char(string="Email", help="Normalized email address")
     message_id = fields.Char(string='Message-ID') # email Message-ID (RFC 2392)
     medium_id = fields.Many2one(related='mass_mailing_id.medium_id')
@@ -122,6 +123,11 @@ class MailingTrace(models.Model):
     def _compute_display_name(self):
         for trace in self:
             trace.display_name = f'{trace.trace_type}: {trace.mass_mailing_id.name} ({trace.id})'
+
+    @api.depends('mail_mail_id.mail_message_id')
+    def _compute_mail_message_id(self):
+        for trace in self.filtered('mail_mail_id.mail_message_id'):
+            trace.mail_message_id = trace.mail_mail_id.mail_message_id
 
     @api.model_create_multi
     def create(self, values_list):

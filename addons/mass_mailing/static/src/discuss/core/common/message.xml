@@ -1,0 +1,12 @@
+<templates>
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//em[hasclass('o-message-subject')]" position="attributes">
+            <attribute name="t-if" separator=" and ">!message.mailing_name</attribute>
+        </xpath>
+        <xpath expr="//em[hasclass('o-message-subject')]" position="after">
+            <em class="o-message-mailing-name" t-elif="message.mailing_name">
+            Mass Mailing: <t t-out="message.mailing_name"/>
+            </em>
+        </xpath>
+    </t>
+</templates>
