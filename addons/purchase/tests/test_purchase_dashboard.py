@@ -33,8 +33,7 @@ class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_purchase_dashboard(self):
-        '''
-        Test purchase dashboard values with multiple users.
+        ''' Test purchase dashboard values with multiple users.
         '''
 
         # Create 3 Request for Quotations with lines.
@@ -67,6 +66,7 @@ class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
             'partner_id': self.partner_a.id,
             'company_id': self.user_a.company_id.id,
             'currency_id': self.user_a.company_id.currency_id.id,
+            'priority': '1',
             'date_order': fields.Date().today() + timedelta(days=7)
         }])
 
@@ -88,12 +88,10 @@ class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
 
         # Check dashboard values
         currency_id = self.env.company.currency_id
-        zero_value_keys = ['all_waiting', 'my_waiting', 'my_late']
-        self.assertListEqual([dashboard_result[key] for key in zero_value_keys], [0]*len(zero_value_keys))
-        self.assertEqual(dashboard_result['all_to_send'], 2)
-        self.assertEqual(dashboard_result['my_to_send'], 1)
-        self.assertEqual(dashboard_result['all_late'], 1)
-        self.assertEqual(dashboard_result['all_avg_order_value'], format_amount(self.env, self.tax_purchase_a.compute_all(700.0)['total_included'], currency_id))
-        self.assertEqual(dashboard_result['all_avg_days_to_purchase'], 0)
-        self.assertEqual(dashboard_result['all_total_last_7_days'], format_amount(self.env, self.tax_purchase_a.compute_all(2100.0)['total_included'], currency_id))
-        self.assertEqual(dashboard_result['all_sent_rfqs'], 2)
+
+        self.assertFalse(dashboard_result['global']['sent']['all'])
+        self.assertFalse(dashboard_result['my']['late']['all'])
+        self.assertEqual(dashboard_result['global']['draft']['all'], 2)
+        self.assertEqual(dashboard_result['global']['draft']['priority'], 1)
+        self.assertEqual(dashboard_result['my']['draft']['all'], 1)
+        self.assertEqual(dashboard_result['global']['late']['all'], 1)

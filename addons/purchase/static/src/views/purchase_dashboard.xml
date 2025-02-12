@@ -12,30 +12,55 @@
                             <div class="g-col-2 p-0" t-on-click="setSearchContext" title="All Draft RFQs" filter_name="draft_rfqs">
                                 <a href="#" class="btn purchase-dashboard-card"
                                     t-attf-class="{{ purchaseData['global']['draft']['all'] == 0 ? 'btn btn-secondary' : 'btn btn-info' }}">
-                                    <div class="fs-2" t-out="purchaseData['global']['draft']['all']"/>New
+                                    <div class="fs-2">
+                                        <span t-out="purchaseData['global']['draft']['all']"/>
+                                        <span class="ps-4" t-if="purchaseData['global']['draft']['priority']">
+                                            <span class="o_priority_star fa fa-star "/> <span t-out="purchaseData['global']['draft']['priority']"/>
+                                        </span>
+                                    </div>New
                                 </a>
                             </div>
                             <div class="g-col-2 p-0" t-on-click="setSearchContext" title="All Sent RFQs" filter_name="waiting_rfqs">
                                 <a href="#" class="btn btn-secondary purchase-dashboard-card">
-                                    <div class="fs-2" t-out="purchaseData['global']['sent']['all']"/>RFQ Sent
+                                    <div class="fs-2">
+                                        <span t-out="purchaseData['global']['sent']['all']"/>
+                                        <span class="ps-4" t-if="purchaseData['global']['sent']['priority']">
+                                            <span class="o_priority_star fa fa-star "/> <span t-out="purchaseData['global']['sent']['priority']"/>
+                                        </span>
+                                    </div>RFQ Sent
                                 </a>
                             </div>
                             <div class="g-col-2 p-0" t-on-click="setSearchContext" title="All Late RFQs" filter_name="late">
                                 <a href="#" class="btn purchase-dashboard-card"
                                     t-attf-class="{{ purchaseData['global']['late']['all'] == 0 ? 'btn btn-secondary' : 'btn btn-warning' }}">
-                                    <div class="fs-2" t-out="purchaseData['global']['late']['all']"/>Late RFQ
+                                    <div class="fs-2">
+                                        <span t-out="purchaseData['global']['late']['all']"/>
+                                        <span class="ps-4" t-if="purchaseData['global']['late']['priority']">
+                                            <span class="o_priority_star fa fa-star "/> <span t-out="purchaseData['global']['late']['priority']"/>
+                                        </span>
+                                    </div>Late RFQ
                                 </a>
                             </div>
                             <div class="g-col-2 p-0" t-on-click="setSearchContext" title="All Not Acknowledged RFQs" filter_name="not_acknowledged">
                                 <a href="#" class="btn purchase-dashboard-card"
                                     t-attf-class="{{ purchaseData['global']['not_acknowledged']['all'] == 0 ? 'btn btn-secondary' : 'btn btn-info' }}">
-                                    <div class="fs-2" t-out="purchaseData['global']['not_acknowledged']['all']"/>Not Acknowledged
+                                    <div class="fs-2">
+                                        <span t-out="purchaseData['global']['not_acknowledged']['all']"/>
+                                        <span class="ps-4" t-if="purchaseData['global']['not_acknowledged']['priority']">
+                                            <span class="o_priority_star fa fa-star "/> <span t-out="purchaseData['global']['not_acknowledged']['priority']"/>
+                                        </span>
+                                    </div>Not Acknowledged
                                 </a>
                             </div>
                             <div class="g-col-2 p-0" t-on-click="setSearchContext" title="All Late Receipt RFQs" filter_name="late_receipt">
                                 <a href="#" class="btn purchase-dashboard-card"
                                     t-attf-class="{{ purchaseData['global']['late_receipt']['all'] == 0 ? 'btn btn-secondary' : 'btn btn-danger' }}">
-                                    <div class="fs-2" t-out="purchaseData['global']['late_receipt']['all']"/>Late Receipt
+                                    <div class="fs-2">
+                                        <span t-out="purchaseData['global']['late_receipt']['all']"/>
+                                        <span class="ps-4" t-if="purchaseData['global']['late_receipt']['priority']">
+                                            <span class="o_priority_star fa fa-star "/> <span t-out="purchaseData['global']['late_receipt']['priority']"/>
+                                        </span>
+                                    </div>Late Receipt
                                 </a>
                             </div>
                         </div>
@@ -48,30 +73,55 @@
                             <div class="g-col-2 p-0" t-on-click="setSearchContext" title="My Draft RFQs" filter_name="draft_rfqs,my_purchases">
                                 <a href="#" class="btn purchase-dashboard-card"
                                     t-attf-class="{{ purchaseData['my']['draft']['all'] == 0 ? 'btn btn-secondary' : 'btn btn-info' }}">
-                                    <div t-out="purchaseData['my']['draft']['all']"/>
+                                    <div>
+                                        <span t-out="purchaseData['my']['draft']['all']"/>
+                                        <span class="ps-4" t-if="purchaseData['my']['draft']['priority']">
+                                            <span class="o_priority_star fa fa-star "/> <span t-out="purchaseData['my']['draft']['priority']"/>
+                                        </span>
+                                    </div>
                                 </a>
                             </div>
                             <div class="g-col-2 p-0" t-on-click="setSearchContext" title="My Waiting RFQs" filter_name="waiting_rfqs,my_purchases">
                                 <a href="#" class="btn btn-secondary purchase-dashboard-card">
-                                    <div t-out="purchaseData['my']['sent']['all']"/>
+                                    <div>
+                                        <span t-out="purchaseData['my']['sent']['all']"/>
+                                        <span class="ps-4" t-if="purchaseData['my']['sent']['priority']">
+                                            <span class="o_priority_star fa fa-star "/> <span t-out="purchaseData['my']['sent']['priority']"/>
+                                        </span>
+                                    </div>
                                 </a>
                             </div>
                             <div class="g-col-2 p-0" t-on-click="setSearchContext" title="My Late RFQs" filter_name="late,my_purchases">
                                 <a href="#" class="btn purchase-dashboard-card"
                                     t-attf-class="{{ purchaseData['my']['late']['all'] == 0 ? 'btn btn-secondary' : 'btn btn-warning' }}">
-                                    <div t-out="purchaseData['my']['late']['all']"/>
+                                    <div>
+                                        <span t-out="purchaseData['my']['late']['all']"/>
+                                        <span class="ps-4" t-if="purchaseData['my']['late']['priority']">
+                                            <span class="o_priority_star fa fa-star "/> <span t-out="purchaseData['my']['late']['priority']"/>
+                                        </span>
+                                    </div>
                                 </a>
                             </div>
                             <div class="g-col-2 p-0" t-on-click="setSearchContext" title="My Not Acknowledged RFQs" filter_name="not_acknowledged,my_purchases">
                                 <a href="#" class="btn purchase-dashboard-card"
                                     t-attf-class="{{ purchaseData['my']['not_acknowledged']['all'] == 0 ? 'btn btn-secondary' : 'btn btn-info' }}">
-                                    <div t-out="purchaseData['my']['not_acknowledged']['all']"/>
+                                    <div>
+                                        <span t-out="purchaseData['my']['not_acknowledged']['all']"/>
+                                        <span class="ps-4" t-if="purchaseData['my']['not_acknowledged']['priority']">
+                                            <span class="o_priority_star fa fa-star "/> <span t-out="purchaseData['my']['not_acknowledged']['priority']"/>
+                                        </span>
+                                    </div>
                                 </a>
                             </div>
                             <div class="g-col-2 p-0" t-on-click="setSearchContext" title="My Late Receipt RFQs" filter_name="late_receipt,my_purchases">
                                 <a href="#" class="btn purchase-dashboard-card"
                                     t-attf-class="{{ purchaseData['my']['late_receipt']['all'] == 0 ? 'btn btn-secondary' : 'btn btn-danger' }}">
-                                    <div t-out="purchaseData['my']['late_receipt']['all']"/>
+                                    <div>
+                                        <span t-out="purchaseData['my']['late_receipt']['all']"/>
+                                        <span class="ps-4" t-if="purchaseData['my']['late_receipt']['priority']">
+                                            <span class="o_priority_star fa fa-star "/> <span t-out="purchaseData['my']['late_receipt']['priority']"/>
+                                        </span>
+                                    </div>
                                 </a>
                             </div>
                         </div>
