@@ -223,7 +223,7 @@ class PurchaseOrder(models.Model):
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             po.display_name = name
 
-    @api.depends('company_id', 'partner_id')
+    @api.depends('company_id', 'partner_id', 'partner_id.reminder_date_before_receipt')
     def _compute_receipt_reminder_email(self):
         for order in self:
             order.receipt_reminder_email = order.partner_id.with_company(order.company_id).receipt_reminder_email
