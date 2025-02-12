@@ -42,6 +42,7 @@ class DiscussChannelMember(models.Model):
                 "active",
                 "avatar_128",
                 Store.One("country_id", ["code", "name"], rename="country"),
+                "im_status",
                 "is_public",
                 "user_livechat_username",
             ]
