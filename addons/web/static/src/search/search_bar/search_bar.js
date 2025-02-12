@@ -539,7 +539,7 @@ export class SearchBar extends Component {
                         ev.preventDefault();
                         if (focusedItem.isExpanded) {
                             focusedIndex = this.state.focusedIndex + 1;
-                        } else {
+                        } else if (!ev.repeat) {
                             this.toggleItem(focusedItem, true);
                         }
                     } else if (ev.target.selectionStart === this.state.query.length) {

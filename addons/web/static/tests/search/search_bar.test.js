@@ -121,6 +121,8 @@ class Partner extends models.Model {
     };
 }
 
+window.queryFirst = queryFirst
+
 defineModels([Partner]);
 
 defineActions([
@@ -1723,3 +1725,34 @@ test("order by count resets when there is no group left", async () => {
     expect(".fa-sort-numeric-asc").toHaveCount(0);
     expect(".fa-sort").toHaveCount(1);
 });
+
+test(
+    "single name_search call and no flicker when holding ArrowRight",
+    async function () {
+        onRpc(({ method }) => {
+            if (method === "name_search") {
+                expect.step(method);
+            }
+        });
+
+        await mountWithSearch(SearchBar, {
+            resModel: "partner",
+            searchMenuTypes: [],
+            searchViewId: false,
+        });
+
+        await editSearch("a");
+        await press("arrowdown");
+        await press("arrowleft");
+        await animationFrame();
+
+        for (let i = 0; i < 3; i++) {
+            await press("arrowright", { repeat: i > 0 });
+            await animationFrame();
+            expect(".o_menu_item.o_indent").toHaveCount(0);
+            expect("input.o_searchview_input").toBeFocused();
+        }
+        await press("arrowright");
+        expect.verifySteps(["name_search"]);
+    }
+);
