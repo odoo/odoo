@@ -1,8 +1,16 @@
 import { Record } from "./record";
-import { IS_DELETED_SYM, STORE_SYM } from "./misc";
+import { IS_DELETED_SYM, STORE_SYM, modelRegistry } from "./misc";
 import { reactive, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
+
+export const storeInsertFns = {
+    makeContext() {},
+    getActualModelName(ctx, pyOrJsModelName) {
+        return pyOrJsModelName;
+    },
+    getExtraFieldsFromModel() {},
+};
 
 export class Store extends Record {
     /** @type {import("./store_internal").StoreInternal} */
@@ -178,6 +186,53 @@ export class Store extends Record {
         }
         return res;
     }
+    /**
+     * @template T
+     * @param {T} [dataByModelName={}]
+     * @param {Object} [options={}]
+     * @returns {{ [K in keyof T]: import("models").Models[K][] }}
+     */
+    insert(dataByModelName = {}, options = {}) {
+        const store = this;
+        const ctx = storeInsertFns.makeContext();
+        return Record.MAKE_UPDATE(function storeInsert() {
+            const res = {};
+            const recordsDataToDelete = [];
+            for (const [pyOrJsModelName, data] of Object.entries(dataByModelName)) {
+                const modelName = storeInsertFns.getActualModelName(ctx, pyOrJsModelName);
+                if (!store[modelName]) {
+                    console.warn(`store.insert() received data for unknown model “${modelName}”.`);
+                    continue;
+                }
+                const insertData = [];
+                for (const vals of Array.isArray(data) ? data : [data]) {
+                    const extraFields = storeInsertFns.getExtraFieldsFromModel(pyOrJsModelName);
+                    if (extraFields) {
+                        Object.assign(vals, extraFields);
+                    }
+                    if (vals._DELETE) {
+                        delete vals._DELETE;
+                        recordsDataToDelete.push([modelName, vals]);
+                    } else {
+                        insertData.push(vals);
+                    }
+                }
+                const records = store[modelName].insert(insertData, options);
+                if (!res[modelName]) {
+                    res[modelName] = records;
+                } else {
+                    const knownRecordIds = new Set(res[modelName].map((r) => r.localId));
+                    res[modelName].push(...records.filter((r) => !knownRecordIds.has(r.localId)));
+                }
+            }
+            // Delete after all inserts to make sure a relation potentially registered before the
+            // delete doesn't re-add the deleted record by mistake.
+            for (const [modelName, vals] of recordsDataToDelete) {
+                store[modelName].get(vals)?.delete();
+            }
+            return res;
+        });
+    }
     onChange(record, name, cb) {
         return this._onChange(record, name, (observe) => {
             const fn = () => {
@@ -236,5 +291,14 @@ export class Store extends Record {
         return () => {
             ready = false;
         };
+    }
+    _cleanupData(data) {
+        super._cleanupData(data);
+        if (this._getActualModelName() === "Store") {
+            delete data.Models;
+            for (const [name] of modelRegistry.getEntries()) {
+                delete data[name];
+            }
+        }
     }
 }

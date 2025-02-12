@@ -952,13 +952,133 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     store.Message.get("2").delete();
     store.Team.get("Discuss").delete();
     expect(toRaw(store.Person.records[p.localId])).toBe(undefined);
-    const p2 = store.Person.insert(data);
+    store.insert(data);
+    const p2 = store.Person.get(1);
     // Same assertions as before
     expect(p2.names).toEqual(["John", "Marc"]);
     expect(p2.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
     expect(p2.team.name).toBe("Discuss");
     expect(toRaw(store.Person.records[p2.localId])).toBe(toRaw(p2));
     expect(serializeDateTime(p2.due_datetime)).toBe("2024-08-28 10:19:44");
+});
+
+test("record.toData() returns flat data", async () => {
+    (class Person extends Record {
+        static id = "id";
+        id;
+        names = fields.Attr([]);
+        due_datetime = fields.Attr(undefined, { type: "datetime" });
+        messages = fields.Many("Message");
+        team = fields.One("Team");
+    }).register(localRegistry);
+    (class Message extends Record {
+        static id = "id";
+        id;
+        body = fields.Attr("");
+    }).register(localRegistry);
+    (class Team extends Record {
+        static id = "id";
+        id;
+        name;
+        leader = fields.One("Person");
+    }).register(localRegistry);
+    const store = await start();
+    store.Person.insert([
+        {
+            id: 1,
+            due_datetime: "2024-08-28 10:19:44",
+            names: ["Seb", "Theys"],
+            messages: [
+                { id: 1, body: "1" },
+                { id: 2, body: "2" },
+            ],
+            team: { id: 1, name: "Discuss", leader: { id: 2 } },
+        },
+        {
+            id: 2,
+            due_datetime: "2025-01-23 12:12:12",
+            names: ["Louis", "Wicket"],
+            messages: [
+                { id: 1, body: "1" },
+                { id: 3, body: "3" },
+            ],
+            team: { id: 2, name: "VoIP", leader: { id: 1 } },
+        },
+    ]);
+    const p = store.Person.get(1);
+    expect(p.toData()).toEqual({
+        Person: [
+            {
+                id: 1,
+                due_datetime: "2024-08-28 10:19:44",
+                names: ["Seb", "Theys"],
+                messages: [{ id: 1 }, { id: 2 }],
+                team: { id: 1 },
+            },
+        ],
+    });
+    expect(p.toData(["messages", "team"])).toEqual({
+        Person: [
+            {
+                id: 1,
+                due_datetime: "2024-08-28 10:19:44",
+                names: ["Seb", "Theys"],
+                messages: [{ id: 1 }, { id: 2 }],
+                team: { id: 1 },
+            },
+        ],
+        Message: [
+            { id: 1, body: "1" },
+            { id: 2, body: "2" },
+        ],
+        Team: [{ id: 1, name: "Discuss", leader: { id: 2 } }],
+    });
+    expect(p.toData(["team.leader"])).toEqual({
+        Person: [
+            {
+                id: 2,
+                due_datetime: "2025-01-23 12:12:12",
+                names: ["Louis", "Wicket"],
+                messages: [{ id: 1 }, { id: 3 }],
+                team: { id: 2 },
+            },
+            {
+                id: 1,
+                due_datetime: "2024-08-28 10:19:44",
+                names: ["Seb", "Theys"],
+                messages: [{ id: 1 }, { id: 2 }],
+                team: { id: 1 },
+            },
+        ],
+        Team: [{ id: 1, name: "Discuss", leader: { id: 2 } }],
+    });
+    expect(p.toData({ depth: true })).toEqual({
+        Person: [
+            {
+                id: 2,
+                due_datetime: "2025-01-23 12:12:12",
+                names: ["Louis", "Wicket"],
+                messages: [{ id: 1 }, { id: 3 }],
+                team: { id: 2 },
+            },
+            {
+                id: 1,
+                due_datetime: "2024-08-28 10:19:44",
+                names: ["Seb", "Theys"],
+                messages: [{ id: 1 }, { id: 2 }],
+                team: { id: 1 },
+            },
+        ],
+        Message: [
+            { id: 1, body: "1" },
+            { id: 2, body: "2" },
+            { id: 3, body: "3" },
+        ],
+        Team: [
+            { id: 2, name: "VoIP", leader: { id: 1 } },
+            { id: 1, name: "Discuss", leader: { id: 2 } },
+        ],
+    });
 });
 
 test("Methods are bound to records", async () => {
