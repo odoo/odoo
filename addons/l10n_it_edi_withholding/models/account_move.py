@@ -223,14 +223,20 @@ class AccountMove(models.Model):
                 if not number_element:
                     continue
                 enasarco_amount = float(number_element[0].text)
-                enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / price_subtotal * 100)
+                enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / (price_subtotal or move_line_form.move_id.amount_untaxed) * 100)
                 enasarco_tax = self._l10n_it_edi_search_tax_for_import(
                     company,
                     enasarco_percentage,
                     [('l10n_it_pension_fund_type', '=', 'TC07')] + type_tax_use_domain,
                     vat_only=False)
                 if enasarco_tax:
-                    move_line_form.tax_ids |= enasarco_tax
+                    if price_subtotal:
+                        move_line_form.tax_ids |= enasarco_tax
+                    else:
+                        # In the case of a line with a price of 0 who include a TC07 tax, 
+                        # it's considered as a withholding tax to be applied on the total amount
+                        move_line_form.move_id.invoice_line_ids.tax_ids |= enasarco_tax
+                        move_line_form.unlink()
                 else:
                     messages_to_log.append(Markup("%s<br/>%s") % (
                         _("Enasarco tax not found for line with description '%s'", move_line_form.name),
