@@ -16,4 +16,13 @@ patch(PosStore.prototype, {
     isArgentineanCompany() {
         return this.company.country_id?.code == "AR";
     },
+    createNewOrder() {
+        const order = super.createNewOrder(...arguments);
+
+        if (this.isArgentineanCompany() && !order.partner_id) {
+            order.partner_id = this.session._consumidor_final_anonimo_id;
+        }
+
+        return order;
+    },
 });
