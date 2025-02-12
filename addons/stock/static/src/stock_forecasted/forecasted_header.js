@@ -22,6 +22,28 @@ export class ForecastedHeader extends Component {
         return this.action.doAction(action);
     }
 
+    async _onClickTransfers(type){
+        const context = Object.assign({}, this._getActionContext());
+        if (context.search_default_product_tmpl_id) {
+            context.search_default_product_id = [this.props.docs.product_variants_ids];
+            delete context.search_default_product_tmpl_id;
+        }
+        const action = await this.orm.call(
+            'stock.picking', this._getPickingActionMethod(type), [], { context }
+        );
+        if (action.help) {
+            action.help = markup(action.help);
+        }
+        return this.action.doAction(action);
+    }
+    _getPickingActionMethod(type){
+        const methodMap = {
+            incoming: 'get_action_picking_tree_incoming',
+            outgoing: 'get_action_picking_tree_outgoing',
+        }
+        return methodMap[type];
+    }
+
     _getActionContext(){
         const context = { ...this.context };
         const templates = this.props.docs.product_templates_ids;
