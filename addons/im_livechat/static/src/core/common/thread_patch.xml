@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Thread" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Thread')]" position="before">
+            <div t-if="showVisitorDisconnected" class="o-livechat-VisitorDisconnected bg-secondary p-2 fw-bold">
+                <i class="fa fa fa-circle-o text-700 mx-1"/><t t-esc="disconnectedText"/>
+            </div>
+        </xpath>
+    </t>
+</templates>
