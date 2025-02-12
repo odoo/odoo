@@ -27,6 +27,10 @@ export class PortalComposer extends Interaction {
         },
     };
 
+    assetLibs = [
+        "portal.assets_widget_xml",
+    ];
+
     static prepareOptions(options) {
         if (typeof options.default_attachment_ids === "string") {
             options.default_attachment_ids = JSON.parse(options.default_attachment_ids);
