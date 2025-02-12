@@ -162,6 +162,7 @@ class PurchaseOrder(models.Model):
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
 
     is_late = fields.Boolean('Is Late', store=False, search='_search_is_late')
+    show_comparison = fields.Boolean('Show Comparison', compute='_compute_show_comparison')
 
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
@@ -257,6 +258,18 @@ class PurchaseOrder(models.Model):
                 record.tax_country_id = record.fiscal_position_id.country_id
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
+
+    @api.depends('order_line', 'order_line.product_id')
+    def _compute_show_comparison(self):
+        line_groupby_product = self.env['purchase.order.line']._read_group(
+            [('product_id', 'in', self.order_line.product_id.ids), ('state', '=', 'purchase')],
+            ['product_id'],
+            ['order_id:array_agg']
+        )
+
+        order_by_product = {p: set(o_ids) for p, o_ids in line_groupby_product}
+        for record in self:
+            record.show_comparison = any(set(record.ids) != order_by_product[p] for p in record.order_line.product_id if p in order_by_product)
 
     @api.onchange('date_planned')
     def onchange_date_planned(self):
@@ -505,6 +518,13 @@ class PurchaseOrder(models.Model):
 
     def action_acknowledge(self):
         self.acknowledged = True
+
+    def action_purchase_comparison(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
+        action['domain'] = [('product_id', 'in', self.order_line.product_id.ids)]
+        action['display_name'] = _("Purchase Comparison for %s", self.display_name)
+        return action
 
     def print_quotation(self):
         self.write({'state': "sent"})
