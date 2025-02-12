@@ -272,7 +272,7 @@ class Image(Binary):
             # will be resized once the inverse has been applied
             cache_value = self.convert_to_cache(value if self.related else new_value, record)
             record.env.cache.update(record, self, itertools.repeat(cache_value))
-        super(Image, self).create(new_record_values)
+        super().create(new_record_values)
 
     def write(self, records, value):
         try:
@@ -287,7 +287,7 @@ class Image(Binary):
                 return
             raise
 
-        super(Image, self).write(records, new_value)
+        super().write(records, new_value)
         cache_value = self.convert_to_cache(value if self.related else new_value, records)
         dirty = self.column_type and self.store and any(records._ids)
         records.env.cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
@@ -308,8 +308,8 @@ class Image(Binary):
             return value
         try:
             img = base64.b64decode(value or '') or False
-        except:
-            raise UserError(env._("Image is not encoded in base64."))
+        except Exception as e:
+            raise UserError(env._("Image is not encoded in base64.")) from e
 
         if img and guess_mimetype(img, '') == 'image/webp':
             if not self.max_width and not self.max_height:
