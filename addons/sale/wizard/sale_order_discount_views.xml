@@ -21,13 +21,7 @@
                                 <field name="discount_percentage"
                                        invisible="discount_type not in ('so_discount', 'sol_discount')"
                                        widget="percentage" nolabel="1"/>
-                                <field
-                                    name="tax_ids"
-                                    placeholder="Untaxed discount"
-                                    widget="many2many_tax_tags"
-                                    options="{'no_create': True}"
-                                    invisible="discount_type != 'amount'"
-                                />
+                                <field name="tax_ids" invisible="1"/>
                             </group>
                         </div>
                         <div class="col-sm-7 col-md-8 col-lg-8 col-8">
