@@ -888,7 +888,11 @@ export class MockXMLHttpRequest extends MockEventTarget {
                 headers: this._headers,
             });
             this._status = response.status;
-            this._response = await response.text();
+            if (new URL(this._url, mockLocation.origin).protocol === "blob:") {
+                this._response = await response.arrayBuffer();
+            } else {
+                this._response = await response.text();
+            }
             this.dispatchEvent(new ProgressEvent("load"));
         } catch (error) {
             this.dispatchEvent(new ProgressEvent("error", { error }));
