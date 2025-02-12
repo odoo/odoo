@@ -598,41 +598,6 @@ class SaleOrder(models.Model):
                     })
             return [reward_line_values]
 
-        if reward_applies_on == 'order' and reward.discount_mode in ['per_point', 'per_order']:
-            reward_line_values = {
-                **base_reward_line_values,
-                'price_unit': -min(max_discount, discountable),
-                'points_cost': point_cost,
-            }
-
-            reward_taxes = reward.tax_ids._filter_taxes_by_company(self.company_id)
-            if reward_taxes:
-                mapped_taxes = self.fiscal_position_id.map_tax(reward_taxes)
-
-                # Check for any order line where its taxes exactly match reward_taxes
-                matching_lines = [
-                    line for line in self.order_line
-                    if not line._is_delivery() and set(line.tax_ids) == set(mapped_taxes)
-                ]
-
-                if not matching_lines:
-                    raise ValidationError(_("No product is compatible with this promotion."))
-
-                untaxed_amount = sum(line.price_subtotal for line in matching_lines)
-                # Discount amount should not exceed total untaxed amount of the matching lines
-                reward_line_values['price_unit'] = max(
-                    -untaxed_amount,
-                    reward_line_values['price_unit']
-                )
-
-                reward_line_values['tax_ids'] = [Command.set(mapped_taxes.ids)]
-
-            # Discount amount should not exceed the untaxed amount on the order
-            if abs(reward_line_values['price_unit']) > self.amount_untaxed:
-                reward_line_values['price_unit'] = -self.amount_untaxed
-
-            return [reward_line_values]
-
         discount_factor = min(1, (max_discount / discountable)) if discountable else 1
         reward_dict = {}
         for tax, price in discountable_per_tax.items():
