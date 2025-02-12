@@ -85,7 +85,6 @@ export class DomPlugin extends Plugin {
             commandId: "insertSeparator",
         },
         /** Handlers */
-        clean_handlers: this.removeEmptyClassAndStyleAttributes.bind(this),
         clean_for_save_handlers: ({ root }) => {
             this.removeEmptyClassAndStyleAttributes(root);
             for (const el of root.querySelectorAll("hr[contenteditable]")) {
@@ -474,7 +473,6 @@ export class DomPlugin extends Plugin {
      * @param {HTMLElement} target
      */
     copyAttributes(source, target) {
-        this.dispatchTo("clean_handlers", source);
         if (source?.nodeType !== Node.ELEMENT_NODE || target?.nodeType !== Node.ELEMENT_NODE) {
             return;
         }

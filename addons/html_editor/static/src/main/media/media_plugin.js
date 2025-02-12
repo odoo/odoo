@@ -60,7 +60,6 @@ export class MediaPlugin extends Plugin {
         power_buttons: withSequence(1, { commandId: "insertMedia" }),
 
         /** Handlers */
-        clean_handlers: this.clean.bind(this),
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalizeMedia.bind(this),
 
