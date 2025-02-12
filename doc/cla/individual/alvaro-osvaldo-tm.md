@@ -1,4 +1,4 @@
-India, 2021-08-16
+Uruguay, 2025-02-12
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Manish Bohra manishkumarbohra@outlook.com https://github.com/manishkumarbohra
+Álvaro Osvaldo TM alvaro@osvaldo.dev.br https://github.com/alvaro-osvaldo-tm
