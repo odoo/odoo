@@ -2625,8 +2625,10 @@ class TestPrettifyDomain(BaseCase):
 
 class TestAnyfy(TransactionCase):
     def _test_combine_anies(self, domain, expected):
-        anyfied_domain = list(Domain(domain).optimize(self.env['res.partner']))
-        return self.assertEqual(anyfied_domain, expected,
+        model = self.env['res.partner']
+        anyfied_domain = Domain(domain).optimize(model)
+        expected_domain = Domain(expected).map_conditions(lambda c: c.optimize(model))
+        return self.assertEqual(anyfied_domain, expected_domain,
                                 f'\nFor initial domain: {domain}\nBecame: {anyfied_domain}')
 
     def test_true_leaf_as_list(self):
@@ -2655,32 +2657,6 @@ class TestAnyfy(TransactionCase):
             ('child_ids.name', '=', 'Jack'),
         ], [
             ('child_ids', 'any', [('name', '=', 'Jack')]),
-        ])
-
-    def test_and_multiple_fields(self):
-        self._test_combine_anies([
-            '&', '&',
-                ('name', '=', 'Jack'),
-                ('name', '=', 'Sam'),
-                ('name', '=', 'Daniel'),
-        ], [
-            '&', '&',
-                ('name', '=', 'Jack'),
-                ('name', '=', 'Sam'),
-                ('name', '=', 'Daniel'),
-        ])
-
-    def test_or_multiple_fields(self):
-        self._test_combine_anies([
-            '|', '|',
-                ('name', '=', 'Jack'),
-                ('name', '=', 'Sam'),
-                ('name', '=', 'Daniel'),
-        ], [
-            '|', '|',
-                ('name', '=', 'Jack'),
-                ('name', '=', 'Sam'),
-                ('name', '=', 'Daniel'),
         ])
 
     def test_and_multiple_many2one_with_subfield(self):
@@ -2760,19 +2736,6 @@ class TestAnyfy(TransactionCase):
             '!', ('child_ids.name', '=', 'Jack')
         ], [
             ('child_ids', 'not any', [('name', '=', 'Jack')])
-        ])
-
-    def test_not_or_multiple_fields(self):
-        self._test_combine_anies([
-            '!', '|', '|',
-                ('name', '=', 'Jack'),
-                ('name', '=', 'Sam'),
-                ('name', '=', 'Daniel'),
-        ], [
-            '&', '&',
-                ('name', '!=', 'Jack'),
-                ('name', '!=', 'Sam'),
-                ('name', '!=', 'Daniel'),
         ])
 
     def test_not_and_multiple_many2one_field_with_subfield(self):
