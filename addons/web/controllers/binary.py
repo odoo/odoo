@@ -93,7 +93,8 @@ class Binary(http.Controller):
     # pylint: disable=redefined-builtin,invalid-name
     def content_assets(self, id=None, filename=None, unique=False, extra=None, nocache=False):
         if not id:
-            domain = [('url', '!=', False)]
+            domain = [('url', '!=', False), ('res_model', '=', 'ir.ui.view'),
+                      ('res_id', '=', 0), ('create_uid', '=', odoo.SUPERUSER_ID)]
             if extra:
                 domain += [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
             else:
