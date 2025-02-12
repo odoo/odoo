@@ -4,6 +4,7 @@
 from odoo.tests.common import HttpCase, tagged, ChromeBrowser
 from odoo.tools import config, logging
 from unittest.mock import patch
+from time import sleep
 
 @tagged('-at_install', 'post_install')
 class TestHttpCase(HttpCase):
@@ -73,6 +74,8 @@ class TestHttpCase(HttpCase):
 
 @tagged('-at_install', 'post_install')
 class TestChromeBrowser(HttpCase):
+    __name__ = 'TestChromeBrowser'
+
     def setUp(self):
         super().setUp()
         screencasts_dir = config['screencasts'] or config['screenshots']
@@ -88,3 +91,22 @@ class TestChromeBrowser(HttpCase):
         code = "setTimeout(() => console.log('test successful'), 2000); setInterval(() => document.body.innerText = (new Date()).getTime(), 100);"
         self.browser._wait_code_ok(code, 10)
         self.browser._save_screencast()
+
+    def test_capture_html(self):
+        self.browser.navigate_to('about:blank')
+        self.browser._wait_ready()
+        html_content = '<h1>Test HTML</h1>'
+        code = f"document.body.innerHTML = '{html_content}';console.log('test successful');"
+        self.browser._wait_code_ok(code, 10)
+        with self.assertLogs('odoo.addons.base.tests.test_http_case.TestChromeBrowser') as log_catcher:
+            f = self.browser._capture_html()
+            # TODO: find a better way than this waiting. Didn't fin a way to wait for the future callback to be done
+            f.result(timeout=1)
+            sleep(1) # Time for capture HTML handler to finish
+        self.assertEqual(len(log_catcher.output), 2)
+        self.assertIn('Asking for page HTML', log_catcher.output[0])
+        log_prefix = 'HTML Snapshot in: '
+        self.assertIn(log_prefix, log_catcher.output[1])
+        html_file_path = log_catcher.output[1].split(log_prefix)[1]
+        with open(html_file_path, 'r') as html_file:
+            self.assertIn(html_content, html_file.read())
