@@ -27,6 +27,9 @@ export class ChatRoom extends Interaction {
         ".o_wjitsi_room_link": { "t-on-click": this.onChatRoomClick },
     };
 
+    assetLibs = [
+        "website_jitsi.assets_widget_xml",
+    ];
     /**
       * Manage the chat room (Jitsi), update the participant count...
       *
