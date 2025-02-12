@@ -72,7 +72,6 @@ export class DomPlugin extends Plugin {
             { id: "setTag", run: this.setTag.bind(this) },
         ],
         /** Handlers */
-        clean_handlers: this.removeEmptyClassAndStyleAttributes.bind(this),
         clean_for_save_handlers: ({ root }) => {
             this.removeEmptyClassAndStyleAttributes(root);
         },
@@ -457,7 +456,6 @@ export class DomPlugin extends Plugin {
      * @param {HTMLElement} target
      */
     copyAttributes(source, target) {
-        this.dispatchTo("clean_handlers", source);
         if (source?.nodeType !== Node.ELEMENT_NODE || target?.nodeType !== Node.ELEMENT_NODE) {
             return;
         }
