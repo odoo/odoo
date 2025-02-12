@@ -55,4 +55,21 @@
         <field name="code">action = records.action_create_project()</field>
     </record>
 
+    <record id="view_order_simple_form" model="ir.ui.view">
+        <field name="name">sale.order.form.from.task</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <header position="replace"/>
+            <sheet position="after">
+                <footer>
+                    <button string="Confirm &amp; Close" special="save" class="btn btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn btn-secondary"/>
+                </footer>
+            </sheet>
+            <page name="pdf_quote_builder" position="replace"/>
+        </field>
+    </record>
+
 </odoo>

@@ -198,6 +198,28 @@ class ProjectTask(models.Model):
             "url": self.sale_order_id.access_url,
         }
 
+    def action_create_sales_order_from_task(self):
+        self.ensure_one()
+        if self.sale_line_id:
+            raise ValidationError(_('This task already has a sale order item.'))
+        return {
+            'name': _('Create Sales Order'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'view_mode': 'form',
+            'view_id': self.env.ref('sale_project.view_order_simple_form').id,
+            'target': 'new',
+            'context': {
+                'create_for_task_id': self.id,
+                'default_partner_id': self.partner_id.id,
+                'default_company_id': self.company_id.id or self.env.company.id,
+                'default_project_id': self.project_id.id,
+                'default_user_id': self.env.user.id,
+                'with_price_unit': True,
+                'dialog_size': 'large',
+            },
+        }
+
     def _rating_get_partner(self):
         partner = self.partner_id or self.sale_line_id.order_id.partner_id
         return partner or super()._rating_get_partner()

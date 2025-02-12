@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sale_timesheet.SoLineCreateButton" t-inherit="web.Many2OneField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_field_many2one_selection')]" position="inside">
+            <button
+                t-if="!props.record.data.sale_line_id"
+                type="button"
+                class="btn"
+                tabindex="-1"
+                draggable="false"
+                aria-label="Create Sales Order"
+                data-tooltip="Create Sales Order"
+                t-on-click="openSalesOrderDialog"
+            >
+                <i class="fa fa-plus"/>
+            </button>
+        </xpath>
+    </t>
+
+</templates>
