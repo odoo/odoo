@@ -40,7 +40,7 @@ import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
-import { dispatchClean, dispatchCleanForSave } from "./_helpers/dispatch";
+import { cleanHints, dispatchCleanForSave } from "./_helpers/dispatch";
 
 function getConfig(components) {
     return {
@@ -576,7 +576,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
         await animationFrame();
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
@@ -590,7 +590,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
         await animationFrame();
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p>a</p>
@@ -605,7 +605,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
         await animationFrame();
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
@@ -619,7 +619,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
         await animationFrame();
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p>a</p>
@@ -928,7 +928,7 @@ describe("In-editor manipulations", () => {
                 config: getConfig([embedding("counter", Counter)]),
             }
         );
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(
             `<div><p>a</p></div><div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>`
         );

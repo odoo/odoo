@@ -34,7 +34,6 @@ export class QWebPlugin extends Plugin {
     resources = {
         /** Handlers */
         selectionchange_handlers: this.onSelectionChange.bind(this),
-        clean_handlers: this.clearDataAttributes.bind(this),
         clean_for_save_handlers: ({ root }) => {
             this.clearDataAttributes(root);
             for (const element of root.querySelectorAll(PROTECTED_QWEB_SELECTOR)) {

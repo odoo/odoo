@@ -93,7 +93,6 @@ export class TablePlugin extends Plugin {
 
         /** Handlers */
         selectionchange_handlers: this.updateSelectionTable.bind(this),
-        clean_handlers: this.deselectTable.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         clean_for_save_handlers: ({ root }) => this.deselectTable(root),
         before_line_break_handlers: this.resetTableSelection.bind(this),
