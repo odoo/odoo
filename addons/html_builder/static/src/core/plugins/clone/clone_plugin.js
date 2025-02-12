@@ -32,6 +32,7 @@ export class ClonePlugin extends Plugin {
                 apply: ({ editingElement, param: itemSelector, value: position }) => {
                     const itemEl = editingElement.querySelector(itemSelector);
                     this.cloneElement(itemEl, { position, scrollToClone: true });
+                    this.dependencies.history.addStep();
                 },
             },
         };
@@ -47,7 +48,10 @@ export class ClonePlugin extends Plugin {
         buttons.push({
             class: "o_snippet_clone fa fa-clone",
             title: _t("Duplicate"),
-            handler: () => this.cloneElement(this.overlayTarget, { scrollToClone: true }),
+            handler: () => {
+                this.cloneElement(this.overlayTarget, { scrollToClone: true });
+                this.dependencies.history.addStep();
+            },
         });
         return buttons;
     }
@@ -63,6 +67,5 @@ export class ClonePlugin extends Plugin {
             cloneEl.scrollIntoView({ behavior: "smooth", block: "center" });
         }
         // TODO snippet_cloned ?
-        this.dependencies.history.addStep();
     }
 }

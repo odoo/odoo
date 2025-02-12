@@ -64,11 +64,13 @@ export class OptionsContainer extends Component {
     // Actions of the buttons in the title bar.
     removeElement() {
         this.env.editor.shared.remove.removeElement(this.props.editingElement);
+        this.env.editor.shared.history.addStep();
     }
 
     cloneElement() {
         this.env.editor.shared.clone.cloneElement(this.props.editingElement, {
             scrollToClone: true,
         });
+        this.env.editor.shared.history.addStep();
     }
 }

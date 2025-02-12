@@ -95,7 +95,6 @@ export class RemovePlugin extends Plugin {
     removeElement(el) {
         this.updateContainers(el);
         this.removeCurrentTarget(el);
-        this.dependencies.history.addStep();
     }
 
     removeCurrentTarget(toRemoveEl) {
