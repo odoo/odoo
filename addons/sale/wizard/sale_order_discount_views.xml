@@ -21,6 +21,7 @@
                                 <field name="discount_percentage"
                                        invisible="discount_type not in ('so_discount', 'sol_discount')"
                                        widget="percentage" nolabel="1"/>
+<<<<<<< saas-18.1
                                 <field
                                     name="tax_ids"
                                     placeholder="Untaxed discount"
@@ -28,6 +29,17 @@
                                     options="{'no_create': True}"
                                     invisible="discount_type != 'amount'"
                                 />
+||||||| 122d228a9540cf73ab5eff0c917c4f99a5e50180
+                                <field
+                                    name="tax_ids"
+                                    placeholder="Untaxed discount"
+                                    widget="many2many_tags"
+                                    options="{'no_create': True}"
+                                    invisible="discount_type != 'amount'"
+                                />
+=======
+                                <field name="tax_ids" invisible="1"/>
+>>>>>>> 905f2bb1dd07cf5141fbc769d92ed079c064a6ac
                             </group>
                         </div>
                         <div class="col-sm-7 col-md-8 col-lg-8 col-8">
