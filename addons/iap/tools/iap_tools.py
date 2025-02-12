@@ -112,6 +112,11 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
     if hasattr(threading.current_thread(), 'testing') and threading.current_thread().testing:
         raise exceptions.AccessError("Unavailable during tests.")  # pylint: disable=missing-gettext
 
+    def raise_iap_access_error(url):
+        raise exceptions.AccessError(
+            _('The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was %s', url)
+        )
+
     payload = {
         'jsonrpc': '2.0',
         'method': method,
@@ -134,6 +139,8 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
                 e_class = exceptions.AccessError
             elif name == 'UserError':
                 e_class = exceptions.UserError
+            elif name == "ValidationError":
+                e_class = exceptions.ValidationError
             elif name == "ReadTimeout":
                 raise requests.exceptions.Timeout()
             else:
@@ -147,11 +154,12 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
         raise exceptions.ValidationError(
             _('The request to the service timed out. Please contact the author of the app. The URL it tried to contact was %s', url)
         )
+    except exceptions.ValidationError:
+        _logger.warning('And error occurred with the URL %s:', url)
+        raise_iap_access_error(url)
     except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.HTTPError):
         _logger.exception("iap jsonrpc %s failed", url)
-        raise exceptions.AccessError(
-            _("An error occurred while reaching %s. Please contact Odoo support if this error persists.", url)
-        )
+        raise_iap_access_error(url)
 
 #----------------------------------------------------------
 # Helpers for proxy
