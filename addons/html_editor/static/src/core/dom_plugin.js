@@ -76,6 +76,7 @@ export class DomPlugin extends Plugin {
         clean_for_save_handlers: ({ root }) => {
             this.removeEmptyClassAndStyleAttributes(root);
         },
+        content_for_clipboard_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
     };
     contentEditableToRemove = new Set();
 
