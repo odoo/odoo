@@ -126,5 +126,5 @@ class ProductAttribute(models.Model):
             'name': _("Related Products"),
             'res_model': 'product.template',
             'view_mode': 'tree,form',
-            'domain': [('id', 'in', self.product_tmpl_ids.ids)],
+            'domain': [('id', 'in', self.with_context(active_test=False).product_tmpl_ids.ids)],
         }
