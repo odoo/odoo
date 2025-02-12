@@ -34,8 +34,14 @@
                     </div>
                 </button>
             </xpath>
+            <group name="organization" position="replace"/>
             <div id="o_work_employee_main" position="after">
-                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5 pe-lg-0">
+                <div id="o_employee_right" class="col-lg-5 px-0 ps-lg-5 pe-lg-0">
+                    <group name="organization" string="Organization">
+                        <field name="department_id"/>
+                        <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                        <field name="parent_id" widget="many2one_avatar_employee"/>
+                    </group>
                     <separator string="Organization Chart"/>
                     <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
                 </div>
@@ -102,6 +108,29 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='o_work_employee_main']" position="after">
                 <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
+                    <group name="organization" string="Organization">
+                        <field name="department_id"/>
+                        <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                    </group>
+                    <separator string="Organization Chart"/>
+                    <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_history_view_form_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.history.view.form.inherit.org_chart</field>
+        <field name="model">hr.employee.history</field>
+        <field name="inherit_id" ref="hr.hr_employee_history_form"/>
+        <field name="arch" type="xml">
+            <group name="organization" position="replace"/>
+            <xpath expr="//div[@id='o_work_employee_main']" position="after">
+                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
+                    <group name="organization" string="Organization">
+                        <field name="department_id"/>
+                        <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                    </group>
                     <separator string="Organization Chart"/>
                     <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
                 </div>

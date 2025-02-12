@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="hr_employee_version_wizard_view_form" model="ir.ui.view">
+            <field name="name">hr.employee.version.wizard.view.form</field>
+            <field name="model">hr.employee.version.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="effective_date"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_create_new_version" string="Create" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_employee_version_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create Version</field>
+            <field name="res_model">hr.employee.version.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'dialog_size': 'medium'}</field>
+        </record>
+    </data>
+</odoo>
