@@ -22,6 +22,11 @@ import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
 import { Component, useState } from "@odoo/owl";
 
+import { parseXML } from "@web/core/utils/xml";
+import { Record } from "@web/model/record";
+import { FormArchParser } from "@web/views/form/form_arch_parser";
+import { FormRenderer } from "@web/views/form/form_renderer";
+
 const { DateTime } = luxon;
 
 export const SCALE_LABELS = {
@@ -53,6 +58,8 @@ export class CalendarController extends Component {
         SearchBar,
         ViewScaleSelector,
         CogMenu,
+        Record,
+        FormRenderer,
     };
     static template = "web.CalendarController";
     static props = {
@@ -98,9 +105,37 @@ export class CalendarController extends Component {
             showSideBar:
                 !this.env.isSmall &&
                 Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
+            isQuickCreateMode: false,
+            isQuickDeleteMode: false,
         });
+        this.hasQuick = Object.keys(this.model.meta.quickFields).length > 0;
 
         this.searchBarToggler = useSearchBarToggler();
+
+        // Quick Month
+
+        const resModel = this.props.resModel;
+        const quickFormModels = { [resModel]: { fields: this.props.fields } };
+        this.quickCreateFields = this.model.meta.quickFields;
+
+        const archFields = Object.entries(this.quickCreateFields)
+            .map(
+                ([name, field]) =>
+                    `<field name="${name}" widget="${field.widget ?? ""}" invisible="${
+                        field.invisible ?? ""
+                    }" />`
+            )
+            .join("\n");
+
+        const arch = `
+            <t>
+                <group>
+                    ${archFields}
+                </group>
+            </t>
+        `;
+        console.log(arch);
+        this.archInfo = new FormArchParser().parse(parseXML(arch), quickFormModels, resModel);
     }
 
     get currentDate() {
@@ -172,6 +207,8 @@ export class CalendarController extends Component {
             deleteRecord: this.deleteRecord.bind(this),
             editRecord: this.editRecord.bind(this),
             setDate: this.setDate.bind(this),
+            isQuickCreateMode: this.state.isQuickCreateMode,
+            isQuickDeleteMode: this.state.isQuickDeleteMode,
         };
     }
     get containerProps() {
@@ -408,5 +445,28 @@ export class CalendarController extends Component {
     toggleWeekendVisibility() {
         this.state.isWeekendVisible = !this.state.isWeekendVisible;
         browser.localStorage.setItem("calendar.isWeekendVisible", this.state.isWeekendVisible);
+    }
+
+    // quick Month
+
+    get showQuickCreate() {
+        return this.model.meta.scale === "month" && this.state.isQuickCreateMode;
+    }
+
+    get quickFieldsValues() {
+        return Object.fromEntries(Object.keys(this.quickCreateFields).map((name) => [name, false]));
+    }
+
+    onQuickCreateRootLoaded(record) {
+        console.log(record);
+        this.model.data.quickCreateValuesCallback = record.getChanges.bind(record);
+    }
+
+    quickCreateToggleMode() {
+        this.state.isQuickCreateMode = !this.state.isQuickCreateMode;
+    }
+
+    quickCreateToggleDeleteMode() {
+        this.state.isQuickDeleteMode = !this.state.isQuickDeleteMode;
     }
 }

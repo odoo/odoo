@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="calendar_calendar" model="ir.ui.view">
+        <field name="name">calendar_calendar</field>
+        <field name="model">web_test.calendar</field>
+        <field name="arch" type="xml">
+            <calendar string="Test" date_start="date" date_delay="duration" scales="month" color="employee_id" show_date_picker="0">
+                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" filter_field="filter_active" avatar_field="avatar_128" widget="many2one_avatar_employee"/>
+                <QuickCreate>
+                    <field name="duration"/>
+                    <field name="name"/>
+                    <field name="work_entry_type_id"/>
+                </QuickCreate>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="calendar_form" model="ir.ui.view">
+        <field name="name">calendar_form</field>
+        <field name="model">web_test.calendar</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="duration"/>
+                    <field name="work_entry_type_id" widget="radio"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="calendar_list" model="ir.ui.view">
+        <field name="name">calendar_list</field>
+        <field name="model">web_test.calendar</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="duration"/>
+                <field name="work_entry_type_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="calendar_action" model="ir.actions.act_window">
+        <field name="name">Test Calendar</field>
+        <field name="res_model">web_test.calendar</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="context">
+            {
+                'default_duration': 8,
+                'default_name': 'Sick',
+            }
+        </field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="web_test_calendar_menu" name="Test Calendar" web_icon="calendar,static/description/icon.png" groups="base.group_user">
+            <menuitem id="web_test_calendar_action_menu" name="Calendar" action="calendar_action" groups="base.group_user"/>
+    </menuitem>
+</odoo>
