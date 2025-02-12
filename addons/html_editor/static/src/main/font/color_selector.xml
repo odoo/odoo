@@ -77,7 +77,8 @@
                                 <ColorPicker
                                     defaultColor="this.defaultColor"
                                     onColorSelect.bind="(color) => this.applyColor(color.hex)"
-                                    onColorPreview.bind="onColorPreview" />
+                                    onColorPreview.bind="onColorPreview"
+                                    hideRgbaField="true" />
                             </div>
                         </t>
                         <t t-if="state.activeTab==='gradient'">
