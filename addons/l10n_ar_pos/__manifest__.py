@@ -19,6 +19,9 @@ Install this if you are using the Point of Sale app in Argentina.
         'point_of_sale._assets_pos': [
             'l10n_ar_pos/static/src/**/*'
         ],
+        'web.assets_tests': [
+            'l10n_ar_pos/static/tests/tours/**/*',
+        ],
     },
     'installable': True,
     'auto_install': True,
