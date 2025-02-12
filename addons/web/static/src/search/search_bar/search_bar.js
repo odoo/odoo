@@ -626,6 +626,7 @@ export class SearchBar extends Component {
             hotkeys: {
                 arrowright: {
                     bypassEditableProtection: true,
+                    allowRepeat: false,
                     isAvailable: (navigator) => {
                         const focusedItem = this.items[navigator.activeItemIndex];
                         return (
