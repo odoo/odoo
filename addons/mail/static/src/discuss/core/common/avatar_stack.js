@@ -30,13 +30,11 @@ export class AvatarStack extends Component {
     };
 
     getStyle(index) {
-        let style = `width: ${this.props.size}px; height: ${this.props.size}px;`;
         if (index === 0) {
-            return style;
+            return;
         }
         // Compute cumulative offset,
         const marginDirection = this.props.direction === "v" ? "top" : "left";
-        style += `margin-${marginDirection}: -${this.props.size / 3}px`;
-        return style;
+        return `margin-${marginDirection}: -${this.props.size / 3}px`;
     }
 }
