@@ -14,6 +14,7 @@ export class ClickAndCollectAvailability extends Component {
         zipCode: { type: String, optional: true },
         selectedWhLocation: { type: Object, optional: true },
         inStoreStock: { type: Object, optional: true },
+        deliveryStock: { type: Object, optional: true},
     }
     setup() {
         super.setup();
@@ -22,6 +23,7 @@ export class ClickAndCollectAvailability extends Component {
             productId: this.props.productId,
             selectedWhLocation: this.props.selectedWhLocation,
             inStoreStock: this.props.inStoreStock,
+            deliveryStock: this.props.deliveryStock,
         });
         const updateState = this._updateStateWithCombinationInfo.bind(this);
         this.env.bus.addEventListener('updateCombinationInfo', res => updateState(res.detail));
@@ -38,6 +40,7 @@ export class ClickAndCollectAvailability extends Component {
     _updateStateWithCombinationInfo (combinationInfo) {
         this.state.productId = combinationInfo.product_id;
         this.state.inStoreStock = combinationInfo.in_store_stock;
+        this.state.deliveryStock = combinationInfo.delivery_stock;
     }
 
     /**

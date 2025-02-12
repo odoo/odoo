@@ -20,7 +20,16 @@ class ProductTemplate(models.Model):
             and product_or_template.is_product_variant
             and product_or_template.is_storable
         ):
-            res['show_click_and_collect_availability'] = True
+            available_delivery_methods = self.env['delivery.carrier'].sudo().search([
+                '|', ('website_id', '=', website.id), ('website_id', '=', False),
+                ('website_published', '=', True),
+            ])
+            if available_delivery_methods:
+                res['delivery_stock'] = utils.format_product_stock_values(
+                    product_or_template.sudo(), wh_id=website.warehouse_id.id
+                )
+            else:
+                res['delivery_stock'] = {}
             order_sudo = request.cart
             if (
                 order_sudo
@@ -28,8 +37,13 @@ class ProductTemplate(models.Model):
                 and order_sudo.pickup_location_data
             ):  # Get stock values for the product variant in the selected store.
                 res['in_store_stock'] = utils.format_product_stock_values(
-                    product_or_template.sudo(), order_sudo.pickup_location_data['id']
+                    product_or_template.sudo(), wh_id=order_sudo.pickup_location_data['id']
                 )
             else:
-                res['in_store_stock'] = {}
+                res['in_store_stock'] = utils.format_product_stock_values(
+                    product_or_template.sudo(),
+                    free_qty=website.sudo()._get_max_in_store_product_available_qty(
+                        product_or_template
+                    )
+                )
         return res

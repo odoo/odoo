@@ -61,6 +61,17 @@ class SaleOrder(models.Model):
             raise ValidationError(_("Some products are not available in the selected store."))
         return super()._check_cart_is_ready_to_be_paid()
 
+    def _get_cart_and_free_qty(self, product, line=None):
+        """ Override of `website_sale_stock` to get free_qty of the product from the warehouse that
+        was chosen rather than website's one.
+        """
+        cart_qty, free_qty = super()._get_cart_and_free_qty(product, line=line)
+        if self.carrier_id.delivery_type == 'in_store':
+            free_qty = (product or line.product_id).with_context(
+                warehouse_id=self.warehouse_id.id
+            ).free_qty
+        return cart_qty, free_qty
+
     # === TOOLING ===#
 
     def _is_in_stock(self, wh_id):
