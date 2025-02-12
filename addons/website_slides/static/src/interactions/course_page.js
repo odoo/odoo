@@ -15,6 +15,10 @@ export class CoursePage extends Interaction {
         },
     };
 
+    assetLibs = [
+        "website_slides.assets_widget_xml",
+    ];
+
     /**
      * @param {Integer} nextCategoryId
      */

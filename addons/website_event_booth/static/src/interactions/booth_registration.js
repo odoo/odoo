@@ -36,6 +36,10 @@ export class BoothRegistration extends Interaction {
         },
     };
 
+    assetLibs = [
+        // "website_event_booth.assets_widget_xml",
+    ];
+
     setup() {
         this.inError = false;
         this.boothCache = {};
