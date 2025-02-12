@@ -66,6 +66,7 @@ export class ColorSelector extends Component {
         this.currentCustomColor = useState({ color: this.selectedColors[this.mode] });
         this.state = useState({
             activeTab: this.getCorrespondingColorTab(this.currentCustomColor.color),
+            showGradientPicker: false,
         });
 
         this.usedCustomColors = this.props.getUsedCustomColors();
@@ -147,5 +148,9 @@ export class ColorSelector extends Component {
             }; border-image-slice: 1`;
         }
         return `border-bottom: 2px solid ${this.selectedColors[this.mode]}`;
+    }
+
+    toggleGradientPicker() {
+        this.state.showGradientPicker = !this.state.showGradientPicker;
     }
 }
