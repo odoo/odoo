@@ -1168,8 +1168,6 @@ class TestWebReadGroup(common.TransactionCase):
             ],
         )
 
-        # TODO: should we order by the relation and not by the id also for many2many
-        # (same than many2one) ? for public methods ?
         self.assertEqual(
             tasks.formatted_read_group(
                 [('id', 'in', tasks.ids)],
@@ -1178,24 +1176,23 @@ class TestWebReadGroup(common.TransactionCase):
             ),
             [
                 {
-                    '__extra_domain': [('user_ids', '=', mario.id)],
-                    'name:array_agg': ['Super Mario Bros.', 'Paper Mario'],
-                    'user_ids': (mario.id, 'Mario'),
-                },
-                {
                     '__extra_domain': [('user_ids', '=', luigi.id)],
                     'name:array_agg': ['Super Mario Bros.', "Luigi's Mansion"],
                     'user_ids': (luigi.id, 'Luigi'),
                 },
                 {
-                    '__extra_domain': [('user_ids', 'not in', [mario.id, luigi.id])],
+                    '__extra_domain': [('user_ids', '=', mario.id)],
+                    'name:array_agg': ['Super Mario Bros.', 'Paper Mario'],
+                    'user_ids': (mario.id, 'Mario'),
+                },
+                {
+                    '__extra_domain': [('user_ids', 'not in', [luigi.id, mario.id,])],
                     'name:array_agg': ['Donkey Kong'],
                     'user_ids': False,
                 },
             ]
         )
 
-        # Inverse the order, only inverse depending of id (see TODO above)
         self.assertEqual(
             tasks.formatted_read_group(
                 [('id', 'in', tasks.ids)],
@@ -1206,18 +1203,18 @@ class TestWebReadGroup(common.TransactionCase):
             [
                 {
                     'user_ids': False,
-                    '__extra_domain': [('user_ids', 'not in', [luigi.id, mario.id])],
+                    '__extra_domain': [('user_ids', 'not in', [mario.id, luigi.id,])],
                     'name:array_agg': ['Donkey Kong'],
-                },
-                {
-                    'user_ids': (luigi.id, 'Luigi'),
-                    '__extra_domain': [('user_ids', '=', luigi.id)],
-                    'name:array_agg': ['Super Mario Bros.', "Luigi's Mansion"],
                 },
                 {
                     'user_ids': (mario.id, 'Mario'),
                     '__extra_domain': [('user_ids', '=', mario.id)],
                     'name:array_agg': ['Super Mario Bros.', 'Paper Mario'],
+                },
+                {
+                    'user_ids': (luigi.id, 'Luigi'),
+                    '__extra_domain': [('user_ids', '=', luigi.id)],
+                    'name:array_agg': ['Super Mario Bros.', "Luigi's Mansion"],
                 },
             ]
         )

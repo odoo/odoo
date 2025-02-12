@@ -834,8 +834,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             },
         ])
 
-        # TODO: should we order by the relation and not by the id also for many2many
-        # (same than many2one) ? for public methods ?
+        # No explicit order - No ir.rule
         expected = """
             SELECT
                 "test_read_group_task__user_ids"."user_id",
@@ -860,17 +859,61 @@ class TestPrivateReadGroup(common.TransactionCase):
                 ],
             )
 
-        # Inverse the order, only inverse depending of id (see TODO above)
+        # Force order => use the comodel order - No ir.rule
         expected = """
             SELECT
                 "test_read_group_task__user_ids"."user_id",
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
-            FROM "test_read_group_task"
-                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids"
+            FROM
+                "test_read_group_task"
+                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids" 
                     ON ("test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id")
-            WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__user_ids"."user_id"
-            ORDER BY "test_read_group_task__user_ids"."user_id" DESC
+                LEFT JOIN "test_read_group_user" AS "test_read_group_task__user_ids__user_ids" 
+                    ON ("test_read_group_task__user_ids"."user_id" = "test_read_group_task__user_ids__user_ids"."id")
+            WHERE
+                "test_read_group_task"."id" IN %s
+            GROUP BY
+                "test_read_group_task__user_ids"."user_id",
+                "test_read_group_task__user_ids__user_ids"."name",
+                "test_read_group_task__user_ids__user_ids"."id"
+            ORDER BY
+                "test_read_group_task__user_ids__user_ids"."name",
+                "test_read_group_task__user_ids__user_ids"."id"
+        """
+        with self.assertQueries([expected]):
+            self.assertEqual(tasks._read_group(
+                    [('id', 'in', tasks.ids)],
+                    ['user_ids'],
+                    ['name:array_agg'],
+                    order='user_ids',
+                ),
+                [
+                    (luigi, ["Super Mario Bros.", "Luigi's Mansion"]),  # tasks of Luigi
+                    (mario, ["Super Mario Bros.", "Paper Mario"]),      # tasks of Mario
+                    (User, ["Donkey Kong"]),                            # tasks of nobody
+                ],
+            )
+
+        # Inverse the order => inverse the comodel order - No ir.rule
+        expected = """
+            SELECT
+                "test_read_group_task__user_ids"."user_id",
+                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
+            FROM
+                "test_read_group_task"
+                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids" 
+                    ON ("test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id")
+                LEFT JOIN "test_read_group_user" AS "test_read_group_task__user_ids__user_ids" 
+                    ON ("test_read_group_task__user_ids"."user_id" = "test_read_group_task__user_ids__user_ids"."id")
+            WHERE
+                "test_read_group_task"."id" IN %s
+            GROUP BY
+                "test_read_group_task__user_ids"."user_id",
+                "test_read_group_task__user_ids__user_ids"."name",
+                "test_read_group_task__user_ids__user_ids"."id"
+            ORDER BY
+                "test_read_group_task__user_ids__user_ids"."name" DESC,
+                "test_read_group_task__user_ids__user_ids"."id" DESC
         """
         with self.assertQueries([expected]):
             self.assertEqual(tasks._read_group(
@@ -881,8 +924,8 @@ class TestPrivateReadGroup(common.TransactionCase):
                 ),
                 [
                     (User, ["Donkey Kong"]),                            # tasks of nobody
-                    (luigi, ["Super Mario Bros.", "Luigi's Mansion"]),  # tasks of Luigi
                     (mario, ["Super Mario Bros.", "Paper Mario"]),      # tasks of Mario
+                    (luigi, ["Super Mario Bros.", "Luigi's Mansion"]),  # tasks of Luigi
                 ],
             )
 
@@ -919,6 +962,40 @@ class TestPrivateReadGroup(common.TransactionCase):
         with self.assertQueries([expected]):
             self.assertEqual(
                 tasks._read_group([], groupby=['user_ids'], aggregates=['name:array_agg']),
+                [
+                    (mario, ['Super Mario Bros.', 'Paper Mario']),
+                    (User, ["Luigi's Mansion", 'Donkey Kong']),
+                ],
+            )
+
+        # Explicit order + ir.rule
+        expected = """
+            SELECT
+                "test_read_group_task__user_ids"."user_id",
+                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
+            FROM "test_read_group_task"
+            LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids"
+                ON (
+                    "test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id"
+                    AND "test_read_group_task__user_ids"."user_id" IN (
+                        SELECT "test_read_group_user"."id"
+                        FROM "test_read_group_user"
+                        WHERE "test_read_group_user"."id" = %s
+                    )
+                )
+            LEFT JOIN "test_read_group_user" AS "test_read_group_task__user_ids__user_ids"
+                    ON ("test_read_group_task__user_ids"."user_id" = "test_read_group_task__user_ids__user_ids"."id")
+            GROUP BY
+                "test_read_group_task__user_ids"."user_id",
+                "test_read_group_task__user_ids__user_ids"."name",
+                "test_read_group_task__user_ids__user_ids"."id"
+            ORDER BY
+                "test_read_group_task__user_ids__user_ids"."name",
+                "test_read_group_task__user_ids__user_ids"."id"
+        """
+        with self.assertQueries([expected]):
+            self.assertEqual(
+                tasks._read_group([], groupby=['user_ids'], aggregates=['name:array_agg'], order='user_ids'),
                 [
                     (mario, ['Super Mario Bros.', 'Paper Mario']),
                     (User, ["Luigi's Mansion", 'Donkey Kong']),

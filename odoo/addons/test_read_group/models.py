@@ -93,6 +93,7 @@ class Test_Read_GroupOrderLine(models.Model):
 class Test_Read_GroupUser(models.Model):
     _name = 'test_read_group.user'
     _description = "User"
+    _order = 'name, id'
 
     name = fields.Char(required=True)
     task_ids = fields.Many2many(

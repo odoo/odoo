@@ -1768,10 +1768,10 @@ class BaseModel(metaclass=MetaModel):
         :param query: The query we are building
         """
         if order:
-            traverse_many2one = True
+            traverse_relational = True
         else:
             order = ','.join(groupby_terms)
-            traverse_many2one = False
+            traverse_relational = False
 
         if not order:
             return SQL()
@@ -1799,10 +1799,32 @@ class BaseModel(metaclass=MetaModel):
 
             field = self._fields.get(term)
             if (
-                traverse_many2one and field and field.type == 'many2one'
+                traverse_relational and field and field.type in ('many2one', 'many2many')
                 and self.env[field.comodel_name]._order != 'id'
             ):
-                if sql_order := self._order_to_sql(f'{term} {direction} {nulls}', query):
+                if field.type == 'many2many':
+                    # Special case for many2many field
+
+                    # Alias is created in the same way than in _read_group_groupby in order to
+                    # target same LEFT JOIN.
+                    alias = self._table
+                    if field.related and not field.store:
+                        _model, field, alias = self._traverse_related_sql(alias, field, query)
+
+                    comodel = self.env[field.comodel_name]
+                    rel_alias = query.make_alias(alias, field.name)
+                    comodel_alias = query.make_alias(rel_alias, field.name)
+                    condition_extra_join = SQL(
+                        "%s = %s",
+                        SQL.identifier(rel_alias, field.column2),
+                        SQL.identifier(comodel_alias, 'id'),
+                    )
+                    query.add_join("LEFT JOIN", comodel_alias, comodel._table_sql, condition_extra_join)
+
+                    sql_order = comodel._order_to_sql(comodel._order, query, comodel_alias, direction == "DESC")
+                    if sql_order:
+                        orderby_terms.append(sql_order)
+                elif sql_order := self._order_to_sql(f'{term} {direction} {nulls}', query):
                     orderby_terms.append(sql_order)
             else:
                 sql_expr = groupby_terms[term]
