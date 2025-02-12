@@ -145,6 +145,14 @@ export class Persona extends Record {
         }
         this.im_status = newStatus;
     }
+
+    _getActualModelName() {
+        return this.type === "partner"
+            ? "res.partner"
+            : this.type === "visitor"
+            ? "website.visitor"
+            : "mail.guest";
+    }
 }
 
 Persona.register();
