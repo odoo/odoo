@@ -396,6 +396,24 @@ test("clicking on button color parent does not crash", async () => {
     expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
 });
 
+test("gradient picker should be closed by default when switching gradient tab", async () => {
+    await setupEditor("<p>[test]</p>");
+
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    expect(".o_colorpicker_widget").toHaveCount(0);
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect(".o_colorpicker_widget").toHaveCount(1);
+    await click("button[title='Define a custom gradient']"); // Should be toggleable
+    await animationFrame();
+    expect(".o_colorpicker_widget").toHaveCount(0);
+});
+
 test("gradient picker correctly shows the current selected gradient", async () => {
     await setupEditor(
         `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
@@ -403,6 +421,8 @@ test("gradient picker correctly shows the current selected gradient", async () =
     await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
     await animationFrame();
     expect("button.active:contains('Linear')").toHaveCount(1);
     expect("input[name='angle']").toHaveValue("2");
@@ -417,6 +437,8 @@ test("gradient picker does change the selector gradient color", async () => {
     await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
     await animationFrame();
     expect("button.active:contains('Linear')").toHaveCount(1);
     await contains("input[name='angle'").edit("10");
@@ -435,6 +457,8 @@ test("clicking on the angle input does not close the dropdown", async () => {
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
     expect("button.active:contains('Linear')").toHaveCount(1);
     await contains("input[name='angle'").click();
     expect("input[name='angle'").toHaveCount(1);
@@ -447,6 +471,8 @@ test("should be able to select farthest-corner option in radial gradient", async
     await animationFrame();
     expect(".btn:contains('Gradient')").toHaveCount(1);
     await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
     await animationFrame();
     expect("button:contains('Radial')").toHaveCount(1);
     await click(".btn:contains('Radial')");
