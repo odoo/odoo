@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, onWillRender, useRef, useState, xml } from "@odoo/owl";
+import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
 import { lookup, normalize } from "../hoot_utils";
@@ -64,13 +64,30 @@ export class HootSideBarSuite extends Component {
                 }"
             />
         </t>
-        <span t-att-class="getClassName()" t-esc="props.name" />
+        <span t-ref="root" t-att-class="getClassName()" t-esc="props.name" />
         <t t-if="props.multi">
             <strong class="text-amber whitespace-nowrap me-1">
                 x<t t-esc="props.multi" />
             </strong>
         </t>
     `;
+
+    setup() {
+        const rootRef = useRef("root");
+        let wasSelected = false;
+        useEffect(
+            (selected) => {
+                if (selected && !wasSelected) {
+                    rootRef.el.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
+                }
+                wasSelected = selected;
+            },
+            () => [this.props.selected]
+        );
+    }
 
     getClassName() {
         const { reporting, selected } = this.props;
