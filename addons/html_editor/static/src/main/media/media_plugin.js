@@ -65,6 +65,8 @@ export class MediaPlugin extends Plugin {
         normalize_handlers: this.normalizeMedia.bind(this),
 
         unsplittable_node_predicates: isIconElement, // avoid merge
+        clipboard_content_processors: this.clean.bind(this),
+        clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
     };
 
     get recordInfo() {

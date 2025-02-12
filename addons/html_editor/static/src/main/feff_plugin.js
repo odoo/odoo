@@ -32,6 +32,8 @@ export class FeffPlugin extends Plugin {
         intangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) =>
             // Skip first FEFF, but not the second one (unless shift is pressed).
             char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
+        clipboard_text_processors: (text) => text.replace(/\ufeff/g, ""),
     };
 
     clean({ root, preserveSelection = false }) {
@@ -138,6 +140,14 @@ export class FeffPlugin extends Plugin {
             }
         };
         return cursors;
+    }
+
+    processContentForClipboard(clonedContent) {
+        descendants(clonedContent)
+            .filter(isTextNode)
+            .filter((node) => node.textContent.includes("\ufeff"))
+            .forEach((node) => (node.textContent = node.textContent.replace(/\ufeff/g, "")));
+        return clonedContent;
     }
 }
 
