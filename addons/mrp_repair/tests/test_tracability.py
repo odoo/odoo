@@ -89,7 +89,7 @@ class TestRepairTraceability(TestMrpCommon):
         def produce_one(product, component):
             mo_form = Form(self.env['mrp.production'])
             mo_form.product_id = product
-            mo_form.picking_type_id = self.warehouse_1.manu_type_id
+            mo_form.picking_type_id = self.picking_type_manu
             with mo_form.move_raw_ids.new() as raw_line:
                 raw_line.product_id = component
                 raw_line.product_uom_qty = 1
@@ -217,7 +217,7 @@ class TestRepairTraceability(TestMrpCommon):
         # create a manufacturing order
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = finished
-        mo_form.picking_type_id = self.warehouse_1.manu_type_id
+        mo_form.picking_type_id = self.picking_type_manu
         with mo_form.move_raw_ids.new() as raw_line:
             raw_line.product_id = component
             raw_line.product_uom_qty = 1

@@ -22,11 +22,6 @@ class TestStockMoveLine(TestStockCommon):
             'is_storable': True,
             'tracking': 'lot',
         })
-        cls.shelf1 = cls.env['stock.location'].create({
-            'name': 'Shelf 1',
-            'usage': 'internal',
-            'location_id': cls.stock_location.id,
-        })
         cls.pack = cls.env['stock.quant.package'].create({
             'name': 'Pack A',
         })
@@ -41,7 +36,7 @@ class TestStockMoveLine(TestStockCommon):
 
         cls.quant = cls.env['stock.quant'].create({
             'product_id': cls.product.id,
-            'location_id': cls.shelf1.id,
+            'location_id': cls.shelf_1.id,
             'quantity': 10,
             'lot_id': cls.lot.id,
             'package_id': cls.pack.id,
@@ -71,7 +66,7 @@ class TestStockMoveLine(TestStockCommon):
         self.assertEqual(move.move_line_ids.lot_id, self.lot)
         self.assertEqual(move.move_line_ids.package_id, self.pack)
         self.assertEqual(move.move_line_ids.owner_id, self.partner)
-        self.assertEqual(move.move_line_ids.location_id, self.shelf1)
+        self.assertEqual(move.move_line_ids.location_id, self.shelf_1)
         self.assertEqual(move.move_line_ids.quantity, 10)
 
     def test_pick_from_3(self):
@@ -98,7 +93,7 @@ class TestStockMoveLine(TestStockCommon):
 
     def test_pick_from_4(self):
         """ check the quantity done is not negative if the quant has negative quantity"""
-        self.env['stock.quant']._update_available_quantity(self.product, self.shelf1, -20, lot_id=self.lot, package_id=self.pack, owner_id=self.partner)
+        self.env['stock.quant']._update_available_quantity(self.product, self.shelf_1, -20, lot_id=self.lot, package_id=self.pack, owner_id=self.partner)
         self.assertEqual(self.quant.quantity, -10)
         move = self.env['stock.move'].create({
             'name': 'Test move',
@@ -163,8 +158,8 @@ class TestStockMoveLine(TestStockCommon):
         """
         Ensure that the quant_id and lot_id cannot be updated in multi-edit mode when the move lines use different products.
         """
-        self.env['stock.quant']._update_available_quantity(self.product, self.shelf1, 20, lot_id=self.lot, owner_id=self.partner)
-        quant_productA = self.env['stock.quant']._update_available_quantity(self.productA, self.shelf1, 20, owner_id=self.partner)
+        self.env['stock.quant']._update_available_quantity(self.product, self.shelf_1, 20, lot_id=self.lot, owner_id=self.partner)
+        quant_productA = self.env['stock.quant']._update_available_quantity(self.productA, self.shelf_1, 20, owner_id=self.partner)
         picking1 = self.env['stock.picking'].create({
             'name': 'Picking 1',
             'location_id': self.stock_location.id,

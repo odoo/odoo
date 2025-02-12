@@ -214,7 +214,7 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(set((test_bom_2_l1 | test_bom_2_l4 | test_bom_1.bom_line_ids).ids), set([l[0].id for l in lines]))
 
         # check with another picking_type
-        test_bom_1.write({'picking_type_id': self.warehouse_1.manu_type_id.id})
+        test_bom_1.write({'picking_type_id': self.picking_type_manu.id})
         self.bom_2.write({'picking_type_id': tmp_picking_type.id})
         test_bom_2.write({'picking_type_id': tmp_picking_type.id})
         boms, lines = test_bom_2.explode(self.product_7_1, 4)
@@ -1749,7 +1749,7 @@ class TestBoM(TestMrpCommon):
         # Creates a MO.
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_1
-        mo_form.picking_type_id = self.warehouse_1.manu_type_id
+        mo_form.picking_type_id = self.picking_type_manu
         mo_1 = mo_form.save()
         mo_1.action_confirm()
         picking = mo_1.picking_ids

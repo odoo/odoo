@@ -356,8 +356,8 @@ class TestPickShip(TestStockCommon):
         activity).
         """
         picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
-        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        warehouse_1.write({'delivery_steps': 'pick_pack_ship'})
+        warehouse_1 = self.warehouse_1
+        warehouse_1.delivery_steps = 'pick_pack_ship'
         warehouse_2 = self.env['stock.warehouse'].create({
             'name': 'Small Warehouse',
             'code': 'SWH'
@@ -2625,12 +2625,12 @@ class TestSinglePicking(TestStockCommon):
             {
                 'name': f'Super location',
                 'usage': 'internal',
-                'location_id': self.stock_location,
+                'location_id': self.stock_location.id,
             },
             {
                 'name': f'Super destination',
                 'usage': 'internal',
-                'location_id': self.stock_location,
+                'location_id': self.stock_location.id,
             }
         ])
         with Form(self.env['stock.picking'].with_context(restricted_picking_type_code='internal')) as picking_form:
@@ -2777,11 +2777,9 @@ class TestRoutes(TestStockCommon):
         cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
 
     def _enable_pick_ship(self):
-        self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-
         # create and get back the pick ship route
-        self.wh.write({'delivery_steps': 'pick_ship'})
-        self.pick_ship_route = self.wh.route_ids.filtered(lambda r: '(pick + ship)' in r.name)
+        self.warehouse_1.delivery_steps = 'pick_ship'
+        self.pick_ship_route = self.warehouse_1.route_ids.filtered(lambda r: '(pick + ship)' in r.name)
 
     def test_replenish_pick_ship_1(self):
         """ Creates 2 warehouses and make a replenish using one warehouse
@@ -2789,7 +2787,7 @@ class TestRoutes(TestStockCommon):
         """
         self.product_uom_qty = 42
 
-        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse_1 = self.warehouse_1
         warehouse_2 = self.env['stock.warehouse'].create({
             'name': 'Small Warehouse',
             'code': 'SWH'
@@ -2800,14 +2798,13 @@ class TestRoutes(TestStockCommon):
         resupply_route = self.env['stock.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
         self.assertTrue(resupply_route, "Ressuply route not found")
         self.product1.write({'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)]})
-        self.wh = warehouse_1
 
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'quantity': self.product_uom_qty,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
         })
 
         genrated_picking = replenish_wizard.launch_replenishment()
@@ -2902,7 +2899,6 @@ class TestRoutes(TestStockCommon):
         with auto field set to transparent is done correctly. The stock_move
         is create with the move line directly to pass into action_confirm() via
         action_done(). """
-        self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         new_loc = self.env['stock.location'].create({
             'name': 'New_location',
             'usage': 'internal',
@@ -2914,7 +2910,7 @@ class TestRoutes(TestStockCommon):
             'sequence_code': 'NPT',
             'default_location_src_id': self.stock_location.id,
             'default_location_dest_id': new_loc.id,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
         })
         route = self.env['stock.route'].create({
             'name': 'new route',
@@ -3382,13 +3378,12 @@ class TestAutoAssign(TestStockCommon):
         Ensure the description_picking of a move matches the product template's
         description in a multi-step reception process.
         """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.reception_steps = 'two_steps'
+        self.warehouse_1.reception_steps = 'two_steps'
 
         self.productA.product_tmpl_id.description_picking = 'transfer'
         receipt = self.env['stock.picking'].create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
             'move_line_ids': [Command.create({
                 'product_id': self.productA.id,
                 'quantity': 1,

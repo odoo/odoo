@@ -26,7 +26,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
             'resource_calendar_id': cls.env.ref('resource.resource_calendar_std').id,
         })
         cls.env['stock.quant'].create({
-            'location_id': cls.stock_location_14.id,
+            'location_id': cls.shelf_1.id,
             'product_id': cls.graphics_card.id,
             'inventory_quantity': 16.0
         }).action_apply_inventory()
@@ -35,7 +35,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
             'product_tmpl_id': cls.laptop.product_tmpl_id.id,
             'product_qty': 1,
             'product_uom_id': cls.uom_unit.id,
-            'picking_type_id': cls.warehouse_1.manu_type_id.id,
+            'picking_type_id': cls.picking_type_manu.id,
             'consumption': 'flexible',
             'bom_line_ids': [(0, 0, {
                 'product_id': cls.graphics_card.id,
@@ -65,20 +65,16 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertEqual(self.warehouse_1.manufacture_pull_id, manu_rule)
         manu_route = manu_rule.route_id
         self.assertIn(manu_route, warehouse_1_stock_manager._get_all_routes())
-        warehouse_1_stock_manager.write({
-            'manufacture_to_resupply': False
-        })
+        warehouse_1_stock_manager.manufacture_to_resupply = False
         self.assertFalse(self.warehouse_1.manufacture_pull_id.active)
-        self.assertFalse(self.warehouse_1.manu_type_id.active)
+        self.assertFalse(self.picking_type_manu.active)
         self.assertNotIn(manu_route, warehouse_1_stock_manager._get_all_routes())
-        warehouse_1_stock_manager.write({
-            'manufacture_to_resupply': True
-        })
+        warehouse_1_stock_manager.manufacture_to_resupply = True
         manu_rule = self.env['stock.rule'].search([
             ('action', '=', 'manufacture'),
             ('warehouse_id', '=', self.warehouse_1.id)])
         self.assertEqual(self.warehouse_1.manufacture_pull_id, manu_rule)
-        self.assertTrue(self.warehouse_1.manu_type_id.active)
+        self.assertTrue(self.picking_type_manu.active)
         self.assertIn(manu_route, warehouse_1_stock_manager._get_all_routes())
 
     def test_manufacturing_rule_other_dest(self):
@@ -104,7 +100,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
                 Command.create({
                     'name': 'Manufacture',
                     'action': 'manufacture',
-                    'picking_type_id': self.warehouse_1.manu_type_id.id,
+                    'picking_type_id': self.picking_type_manu.id,
                     'location_src_id': self.warehouse_1.lot_stock_id.id,
                     'location_dest_id': freezer_loc.id,
                     'location_dest_from_rule': True,
@@ -211,7 +207,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
 
         # Inventory for Stick
         self.env['stock.quant'].create({
-            'location_id': self.stock_location_14.id,
+            'location_id': self.shelf_1.id,
             'product_id': self.product_4.id,
             'inventory_quantity': 8,
             'lot_id': lot_product_4.id
@@ -219,7 +215,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
 
         # Inventory for Stone Tools
         self.env['stock.quant'].create({
-            'location_id': self.stock_location_14.id,
+            'location_id': self.shelf_1.id,
             'product_id': self.product_2.id,
             'inventory_quantity': 12,
             'lot_id': lot_product_2.id
@@ -284,8 +280,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
 
     def test_backorder_unpacking(self):
         """ Test that movement of pack in backorder is correctly handled. """
-        warehouse = self.warehouse_1
-        warehouse.write({'manufacture_steps': 'pbm'})
+        self.warehouse_1.manufacture_steps = 'pbm'
 
         self.product_1.is_storable = True
         self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 100)

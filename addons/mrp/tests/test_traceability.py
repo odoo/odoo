@@ -73,7 +73,7 @@ class TestTraceability(TestMrpCommon):
                 'product_tmpl_id': finished_product.product_tmpl_id.id,
                 'product_uom_id': self.uom_unit.id,
                 'product_qty': 1.0,
-                'picking_type_id': self.warehouse_1.manu_type_id.id,
+                'picking_type_id': self.picking_type_manu.id,
                 'type': 'normal',
                 'bom_line_ids': [
                     (0, 0, {'product_id': consumed_no_track.id, 'product_qty': 1}),
@@ -388,7 +388,7 @@ class TestTraceability(TestMrpCommon):
             'product_tmpl_id': finished.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
             'type': 'normal',
             'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1})],
         } for finished, component in [(productA, productB), (productB, productC)]])
@@ -446,7 +446,7 @@ class TestTraceability(TestMrpCommon):
             'product_tmpl_id': finished.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
             'type': 'normal',
             'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1})],
         } for finished, component in [(endproductA, componentA), (componentA, subcomponentA)]])
@@ -740,7 +740,7 @@ class TestTraceability(TestMrpCommon):
             'product_id': component.id,
             'product_qty': 1,
             'product_uom_id': component.uom_id.id,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
             'company_id': self.env.company.id,
         })
         mo_produce_sn.action_confirm()
@@ -805,7 +805,7 @@ class TestTraceability(TestMrpCommon):
             'product_id': component.id,
             'product_qty': 1,
             'product_uom_id': component.uom_id.id,
-            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'picking_type_id': self.picking_type_manu.id,
             'company_id': self.env.company.id,
         })
         mo_produce_sn.action_confirm()

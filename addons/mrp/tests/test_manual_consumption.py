@@ -286,7 +286,7 @@ class TestManualConsumption(TestMrpCommon):
         bom.bom_line_ids[-1].product_qty = 0.0
         self.env['stock.quant']._update_available_quantity(components[0], self.warehouse_1.lot_stock_id, 10.0)
         mo_form = Form(self.env['mrp.production'])
-        mo_form.picking_type_id = self.warehouse_1.manu_type_id
+        mo_form.picking_type_id = self.picking_type_manu
         mo_form.bom_id = bom
         mo_form.product_qty = 4
         mo = mo_form.save()

@@ -24,11 +24,6 @@ class TestStockFlow(TestStockCommon):
             'partner_id': cls.partner_company2.id,
             'name': 'My Company (Chicago)-demo',
         })
-        cls.uom_dozen = cls.UomObj.create({
-            'name': 'Test-DozenA',
-            'relative_factor': 12,
-            'relative_uom_id': cls.uom_unit.id,
-        })
         cls.uom_sdozen = cls.UomObj.create({
             'name': 'Test-SDozenA',
             'relative_factor': 144,
