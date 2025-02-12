@@ -50,6 +50,22 @@ class AccountMove(models.Model):
         for move in self:
             move.sale_order_count = len(move.line_ids.sale_line_ids.order_id)
 
+    @api.depends('partner_id')
+    def _compute_invoice_default_sale_person(self):
+        super()._compute_invoice_default_sale_person()
+
+        for move in self:
+            if (
+                move.is_sale_document(include_receipts=True)
+                and move.partner_id
+                and not (move._origin.id and move.user_id)
+            ):
+                move.invoice_user_id = (
+                    move.partner_id.user_id
+                    or move.partner_id.commercial_partner_id.user_id
+                    or (self.env.user.has_group('sales_team.group_sale_salesman') and self.env.user)
+                )
+
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # OVERRIDE
         if not default_values_list:
