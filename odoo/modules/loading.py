@@ -411,7 +411,6 @@ def load_modules(
             _logger.info('updating modules list')
             Module.update_list()
 
-<<<<<<< HEAD
             _check_module_names(cr, itertools.chain(install_modules, upgrade_modules))
 
             if install_modules:
@@ -423,33 +422,6 @@ def load_modules(
                 modules = Module.search([('state', 'in', ('installed', 'to upgrade')), ('name', 'in', tuple(upgrade_modules))])
                 if modules:
                     modules.button_upgrade()
-||||||| parent of b9298b514e1 ([WIP])
-            def cleanup(x):
-                return set(x) - {'base', 'all'}
-            for (states, patterns, slot) in [
-                (('uninstalled', ), cleanup(tools.config['init']), Module.__class__.button_install),
-                (('installed', 'to upgrade'), cleanup(tools.config['update']), Module.__class__.button_upgrade)
-            ]:
-                found_modules, incorrect_names = _check_module_names(env, patterns, states)
-                if found_modules:
-                    slot(found_modules)
-                if incorrect_names:
-                    _logger.warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
-=======
-            _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
-
-            module_names = [k for k, v in tools.config['init'].items() if v]
-            if module_names:
-                modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', module_names)])
-                if modules:
-                    modules.button_install()
-
-            module_names = [k for k, v in tools.config['update'].items() if v]
-            if module_names:
-                modules = Module.search([('state', 'in', ('installed', 'to upgrade')), ('name', 'in', module_names)])
-                if modules:
-                    modules.button_upgrade()
->>>>>>> b9298b514e1 ([WIP])
 
             env.flush_all()
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
