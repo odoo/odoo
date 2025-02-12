@@ -27,6 +27,7 @@ class PosOrder(models.Model):
     _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin", "mail.thread"]
     _description = "Point of Sale Orders"
     _order = "date_order desc, name desc, id desc"
+    _mailing_enabled = True
 
     # This function deals with orders that belong to a closed session. It attempts to find
     # any open session that can be used to capture the order. If no open session is found,
