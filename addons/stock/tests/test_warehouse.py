@@ -282,7 +282,11 @@ class TestWarehouse(TestStockCommon):
         product = self.env['product.product'].create({
             'name': 'Fakir',
             'is_storable': True,
-            'route_ids': [(4, route_id) for route_id in [route_stock_to_dist.id, route_dist_to_shop.id, self.env.ref('stock.route_warehouse0_mto').id]],
+            'route_ids': [(4, route_id) for route_id in [
+                route_stock_to_dist.id,
+                route_dist_to_shop.id,
+                self.warehouse_1.mto_pull_id.route_id.id,
+            ]],
         })
 
         picking_out = self.env['stock.picking'].create({
@@ -359,7 +363,11 @@ class TestWarehouse(TestStockCommon):
         product = self.env['product.product'].create({
             'name': 'Fakir',
             'is_storable': True,
-            'route_ids': [(4, route_id) for route_id in [route_shop_namur.id, route_shop_wavre.id, self.env.ref('stock.route_warehouse0_mto').id]],
+            'route_ids': [(4, route_id) for route_id in [
+                route_shop_namur.id,
+                route_shop_wavre.id,
+                self.warehouse_1.mto_pull_id.route_id.id,
+            ]],
         })
 
         # Add 1 quant in each distribution warehouse.
@@ -794,7 +802,10 @@ class TestWarehouse(TestStockCommon):
         """ Check that the closest warehouse is selected
         in a warehouse within warehouse situation
         """
-        wh = self.env.ref("stock.warehouse0")
+        wh = self.env['stock.warehouse'].create({
+            'name': 'Main Test Warehouse',
+            'code': 'MTWH',
+        })
         test_warehouse = self.warehouse_1
         location = test_warehouse.lot_stock_id
         self.assertEqual(location.warehouse_id, test_warehouse)

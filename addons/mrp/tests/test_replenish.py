@@ -25,10 +25,10 @@ class TestMrpReplenish(TestMrpCommon):
         """Open the replenish view and check if delay is taken into account
             in the base date computation
         """
-        route = self.env.ref('mrp.route_warehouse0_manufacture')
+        route = self.warehouse_1.manufacture_pull_id.route_id
         product = self.product_4
         product.route_ids = route
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        wh = self.warehouse_1
         self.env.company.manufacturing_lead = 0
         self.env['ir.config_parameter'].sudo().set_param('mrp.use_manufacturing_lead', True)
 
@@ -43,10 +43,9 @@ class TestMrpReplenish(TestMrpCommon):
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard3.date_planned)
 
     def test_mrp_orderpoint_leadtime(self):
-        self.warehouse = self.env.ref('stock.warehouse0')
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id
-        route_manufacture.supplied_wh_id = self.warehouse
-        route_manufacture.supplier_wh_id = self.warehouse
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        route_manufacture.supplied_wh_id = self.warehouse_1
+        route_manufacture.supplier_wh_id = self.warehouse_1
         route_manufacture.rule_ids.delay = 2
         product_1 = self.env['product.product'].create({
             'name': 'Cake',
@@ -63,7 +62,7 @@ class TestMrpReplenish(TestMrpCommon):
         # setup orderpoint (reordering rule)
         rr = self.env['stock.warehouse.orderpoint'].create({
             'name': 'Cake RR',
-            'location_id': self.warehouse.lot_stock_id.id,
+            'location_id': self.stock_location.id,
             'product_id': product_1.id,
             'product_min_qty': 0,
             'product_max_qty': 5,
@@ -78,7 +77,7 @@ class TestMrpReplenish(TestMrpCommon):
         """Check manufacturing order take bom according to picking type of the rule triggered by an
         orderpoint."""
 
-        self.product_4.route_ids = self.env.ref('mrp.route_warehouse0_manufacture')
+        self.product_4.route_ids = self.warehouse_1.manufacture_pull_id.route_id
         picking_type_2 = self.warehouse_1.manu_type_id.copy({'sequence': 100})
         self.product_4.bom_ids.picking_type_id = picking_type_2
         rr = self.env['stock.warehouse.orderpoint'].create({
@@ -97,11 +96,11 @@ class TestMrpReplenish(TestMrpCommon):
         self.assertTrue(mo)
 
     def test_mrp_delay_bom(self):
-        route = self.env.ref('mrp.route_warehouse0_manufacture')
+        route = self.warehouse_1.manufacture_pull_id.route_id
         product = self.product_4
         bom = product.bom_ids
         product.route_ids = route
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        wh = self.warehouse_1
         self.env.company.manufacturing_lead = 0
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, wh)

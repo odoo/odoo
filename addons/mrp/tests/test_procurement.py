@@ -113,8 +113,7 @@ class TestProcurement(TestMrpCommon):
             bom_line_id.product_id.categ_id = child_categ_id
 
         # set the MTO route to the parent category (all)
-        self.warehouse = self.env.ref('stock.warehouse0')
-        mto_route = self.warehouse.mto_pull_id.route_id
+        mto_route = self.warehouse_1.mto_pull_id.route_id
         mto_route.active = True
         mto_route.product_categ_selectable = True
         all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
@@ -129,7 +128,7 @@ class TestProcurement(TestMrpCommon):
             production_product_4.action_confirm()
 
     def test_procurement_3(self):
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        warehouse = self.warehouse_1
         warehouse.write({'reception_steps': 'three_steps'})
         warehouse.mto_pull_id.route_id.active = True
         self.env['stock.location']._parent_store_compute()
@@ -204,7 +203,7 @@ class TestProcurement(TestMrpCommon):
         # create a product with manufacture route
         product_1 = self.env['product.product'].create({
             'name': 'AAA',
-            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]
+            'route_ids': [(4, self.warehouse_1.manufacture_pull_id.route_id.id)]
         })
 
         component_1 = self.env['product.product'].create({
@@ -216,6 +215,7 @@ class TestProcurement(TestMrpCommon):
             'product_tmpl_id': product_1.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
+            'picking_type_id': self.warehouse_1.manu_type_id.id,
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
@@ -226,9 +226,9 @@ class TestProcurement(TestMrpCommon):
         move_dest = self.env['stock.move'].create({
             'name': 'move_orig',
             'product_id': product_1.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.output_location.id,
             'product_uom_qty': 10,
             'procure_method': 'make_to_order'
         })
@@ -266,7 +266,7 @@ class TestProcurement(TestMrpCommon):
         """Check state of finished move on cancellation of raw moves. """
         product_bottle = self.env['product.product'].create({
             'name': 'Plastic Bottle',
-            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]
+            'route_ids': [(4, self.warehouse_1.manufacture_pull_id.route_id.id)]
         })
 
         component_mold = self.env['product.product'].create({
@@ -307,9 +307,8 @@ class TestProcurement(TestMrpCommon):
         """Ensure that a procurement request using a product with an empty BoM
         will create an empty MO in draft state that can be completed afterwards.
         """
-        self.warehouse = self.env.ref('stock.warehouse0')
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
-        route_mto = self.warehouse.mto_pull_id.route_id.id
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id.id
+        route_mto = self.warehouse_1.mto_pull_id.route_id.id
         product = self.env['product.product'].create({
             'name': 'Clafoutis',
             'route_ids': [(6, 0, [route_manufacture, route_mto])]
@@ -552,7 +551,7 @@ class TestProcurement(TestMrpCommon):
             'name': 'Roger'
         })
         # This needs to be tried with MTO route activated
-        mto_route = self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto'))
+        mto_route = self.warehouse_1.mto_pull_id.route_id
         mto_route.action_unarchive()
         mto_route.rule_ids.procure_method = "make_to_order"
         # Setup for the secondary test
@@ -563,7 +562,10 @@ class TestProcurement(TestMrpCommon):
         product = self.env['product.product'].create({
             'name': 'product',
             'is_storable': True,
-            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('mrp.route_warehouse0_manufacture'))],
+            'route_ids': [
+                (4, self.warehouse_1.mto_pull_id.route_id.id),
+                (4, self.warehouse_1.manufacture_pull_id.route_id.id)
+            ],
         })
         component = self.env['product.product'].create({
             'name': 'component',
@@ -614,10 +616,9 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(self.env['stock.route'].search_count([]), routes_count)
 
     def test_rr_with_dependance_between_bom(self):
-        self.warehouse = self.env.ref('stock.warehouse0')
-        route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto = self.warehouse_1.mto_pull_id.route_id
         route_mto.active = True
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
         product_1 = self.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,
@@ -640,7 +641,7 @@ class TestProcurement(TestMrpCommon):
 
         op1 = self.env['stock.warehouse.orderpoint'].create({
             'name': 'Product A',
-            'location_id': self.warehouse.lot_stock_id.id,
+            'location_id': self.stock_location.id,
             'product_id': product_1.id,
             'product_min_qty': 1,
             'product_max_qty': 20,
@@ -648,7 +649,7 @@ class TestProcurement(TestMrpCommon):
 
         op2 = self.env['stock.warehouse.orderpoint'].create({
             'name': 'Product B',
-            'location_id': self.warehouse.lot_stock_id.id,
+            'location_id': self.stock_location.id,
             'product_id': product_3.id,
             'product_min_qty': 5,
             'product_max_qty': 50,
@@ -701,19 +702,18 @@ class TestProcurement(TestMrpCommon):
         """
         # Required for `picking_type_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('stock.group_adv_location')
-        warehouse = self.env.ref('stock.warehouse0')
 
-        stock_location01 = warehouse.lot_stock_id
+        stock_location01 = self.stock_location
         stock_location02 = stock_location01.copy()
 
-        manu_operation01 = warehouse.manu_type_id
+        manu_operation01 = self.warehouse_1.manu_type_id
         manu_operation02 = manu_operation01.copy()
         with Form(manu_operation02) as form:
             form.name = 'Manufacturing 02'
             form.sequence_code = 'MO2'
             form.default_location_dest_id = stock_location02
 
-        manu_rule01 = warehouse.manufacture_pull_id
+        manu_rule01 = self.warehouse_1.manufacture_pull_id
         manu_route = manu_rule01.route_id
         manu_rule02 = manu_rule01.copy()
         with Form(manu_rule02) as form:
@@ -749,13 +749,13 @@ class TestProcurement(TestMrpCommon):
         bom02 = bom02_form.save()
 
         self.env['stock.warehouse.orderpoint'].create([{
-            'warehouse_id': warehouse.id,
+            'warehouse_id': self.warehouse_1.id,
             'location_id': stock_location01.id,
             'product_id': finished.id,
             'product_min_qty': 1,
             'product_max_qty': 1,
         }, {
-            'warehouse_id': warehouse.id,
+            'warehouse_id': self.warehouse_1.id,
             'location_id': stock_location02.id,
             'product_id': finished.id,
             'product_min_qty': 2,

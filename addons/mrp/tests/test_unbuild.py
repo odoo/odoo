@@ -744,10 +744,11 @@ class TestUnbuild(TestMrpCommon):
     def test_compute_location_id(self):
         order = self.env['mrp.unbuild'].create({
             'product_id': self.product_4.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.stock_location,
         })
-        warehouse = self.env.ref('stock.warehouse0')
-        self.assertEqual(order.location_id, warehouse.lot_stock_id)
-        self.assertEqual(order.location_dest_id, warehouse.lot_stock_id)
+        self.assertEqual(order.location_id, self.stock_location)
+        self.assertEqual(order.location_dest_id, self.stock_location)
 
     def test_use_unbuilt_sn_in_mo(self):
         """
