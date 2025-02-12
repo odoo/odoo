@@ -570,4 +570,21 @@ describe("isActiveItem", () => {
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
         ).not.toBeDisplayed();
     });
+    test("a button should not be visible if its dependency is removed from the DOM", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderButton classAction="'my-class1'" id="'id1'">b1</BuilderButton>
+                <BuilderButton classAction="'my-class2'" id="'id2'" t-if="this.isActiveItem('id1')">b2</BuilderButton>
+                <BuilderButton classAction="'my-class3'" t-if="this.isActiveItem('id2')">b3</BuilderButton>
+            `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target my-class1 my-class2">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await contains("[data-class-action='my-class1']").click();
+        // Wait 2 animation frames: one for id2 to be removed and another for
+        // id3 to be removed.
+        await animationFrame();
+        expect("[data-class-action='my-class3']").not.toBeVisible();
+    });
 });

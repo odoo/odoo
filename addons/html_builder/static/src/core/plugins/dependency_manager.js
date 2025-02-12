@@ -38,5 +38,6 @@ export class DependencyManager extends EventBus {
     removeByValue(value) {
         this.dependencies = this.dependencies.filter(([, v]) => v !== value);
         this.dirty = true;
+        this.triggerDependencyUpdated();
     }
 }
