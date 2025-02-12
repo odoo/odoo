@@ -676,7 +676,7 @@
                             <field name="color" widget="kanban_color_picker"/>
                         </t>
                         <t t-name="card">
-                            <main t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
+                            <main class="oe_kanban_card" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                 <field name="name" class="fw-bold fs-5"/>
                                 <div class="text-muted d-flex flex-column">
                                     <field t-if="record.parent_id.raw_value" invisible="context.get('default_parent_id', False)" name="parent_id"/>
