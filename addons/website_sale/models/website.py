@@ -456,7 +456,7 @@ class Website(models.Model):
                 ('partner_id', '=', self.env.user.partner_id.id),
                 ('website_id', '=', self.id),
                 ('state', '=', 'draft'),
-            ])
+            ], limit=1)
             if abandonned_cart_sudo:
                 if not request.env.cr.readonly:
                     # Force the recomputation of the pricelist and fiscal position when resurrecting
