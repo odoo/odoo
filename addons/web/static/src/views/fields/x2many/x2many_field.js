@@ -18,6 +18,8 @@ import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { symmetricalDifference } from "@web/core/utils/arrays";
+import { x2ManyCommands } from "@web/core/orm_service";
 
 import { Component } from "@odoo/owl";
 
@@ -229,12 +231,45 @@ export class X2ManyField extends Component {
     }
 
     async switchToForm(record, options) {
-        await this.props.record.save();
+        let resId = null;
+        if (record.isNew) {
+            // In the case of a new record, you don't have access to the id from the start, to get it we need to:
+            // - Finds the record's index using its _virtualId.
+            // - Saves the record and compares resIds before and after to detect new records.
+            // - If the record was created, it determines its final resId by matching the index.
+            // - Opens the form view for the correct record.
+            const createCommands = this.list._commands.filter(
+                ([command]) => command === x2ManyCommands.CREATE
+            );
+            const newRecordIndex = createCommands.findIndex(
+                ([_command, virtualId]) => virtualId === record._virtualId
+            );
+            const previousResIds = this.list.resIds;
+            const saved = await this.props.record.save();
+            if (!saved) {
+                return;
+            }
+            const newResIds = symmetricalDifference(this.list.resIds, previousResIds);
+            if (newResIds.length !== createCommands.length) {
+                return this.notificationService.add(_t("Please save your changes first"), {
+                    type: "danger",
+                });
+            }
+            newResIds.sort((x, y) => x - y);
+            resId = newResIds[newRecordIndex];
+        } else {
+            const saved = await this.props.record.save();
+            if (!saved) {
+                return;
+            }
+            resId = record.resId;
+        }
+
         this.action.doAction(
             {
                 type: "ir.actions.act_window",
                 views: [[false, "form"]],
-                res_id: record.resId,
+                res_id: resId,
                 res_model: this.list.resModel,
             },
             {

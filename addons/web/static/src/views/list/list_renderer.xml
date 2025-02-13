@@ -288,7 +288,7 @@
             <t t-if="hasOpenFormViewColumn">
                 <td class="o_list_record_open_form_view w-print-0 p-print-0 text-center"
                     t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
-                    t-custom-click.stop="(ev, newWindow) => isX2Many and record.isNew ? this.displaySaveNotification() : props.onOpenFormView(record, { force: true, newWindow })"
+                    t-custom-click.stop="(ev, newWindow) => props.onOpenFormView(record, { force: true, newWindow })"
                     tabindex="-1"
                 >
                     <button class="btn btn-link align-top text-end"
