@@ -36,9 +36,6 @@ export class MailCoreWeb {
                 if (message.isNeedaction) {
                     this.store.discuss.inbox.counter--;
                 }
-                if (message.isStarred) {
-                    this.store.discuss.starred.counter--;
-                }
             });
             this.busService.subscribe("mail.message/inbox", (payload) => {
                 const message = this.store.Message.insert(payload, { html: true });
