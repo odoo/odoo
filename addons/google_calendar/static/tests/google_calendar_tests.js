@@ -129,7 +129,7 @@ QUnit.module('Google Calendar', {
             },
         });
         // select the partner filter
-        await click(target.querySelector('.o_calendar_filter_item[data-value=all] input'));
+        await click(target.querySelector('.o_calendar_filter_items_checkall input'));
         // sync_data was called a first time without filter, event from google calendar was created twice
         assert.containsN(target, '.fc-event', 4, "should display 4 events on the month");
 
