@@ -28,6 +28,9 @@ class PosSelfOrderController(http.Controller):
         if 'picking_type_id' in order:
             del order['picking_type_id']
 
+        if table:
+            order['table_id'] = table.id
+
         order['name'] = order_reference
         order['pos_reference'] = order_reference
         order['sequence_number'] = sequence_number
@@ -49,7 +52,8 @@ class PosSelfOrderController(http.Controller):
         })
 
         order_ids.send_table_count_notification(order_ids.mapped('table_id'))
-        return self._generate_return_values(order_ids, pos_config)
+        data = self._generate_return_values(order_ids, pos_config)
+        return data
 
     def _generate_return_values(self, order, config_id):
         return {
