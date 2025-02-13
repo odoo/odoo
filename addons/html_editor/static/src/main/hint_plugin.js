@@ -5,10 +5,6 @@ import { childNodes, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
-function isMutationRecordSavable(record) {
-    return !(record.type === "attributes" && record.attributeName === "placeholder");
-}
-
 export class HintPlugin extends Plugin {
     static id = "hint";
     static dependencies = ["history", "selection"];
@@ -23,8 +19,8 @@ export class HintPlugin extends Plugin {
         clean_for_save_handlers: ({ root }) => this.clearHints(root),
         content_updated_handlers: this.updateHints.bind(this),
 
-        savable_mutation_record_predicates: isMutationRecordSavable,
         system_classes: ["o-we-hint"],
+        system_attributes: ["placeholder"],
         ...(this.config.placeholder && {
             hints: [
                 {
