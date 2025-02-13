@@ -753,6 +753,7 @@ test(`add a filter with the search more dialog on desktop`, async () => {
     });
     const section = `.o_calendar_filter[data-name="attendee_ids"]`;
     expect(`${section} .o_calendar_filter_item`).toHaveCount(2);
+    expect(`${section} .o_calendar_filter_item input:checked`).toHaveCount(0);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual(["partner 1", "partner 2"]);
 
     // Open the autocomplete dropdown
@@ -884,6 +885,7 @@ test(`add a filter with the search more dialog on desktop`, async () => {
     await contains(`.modal .o_form_button_cancel`).click();
     expect(`.modal`).toHaveCount(0);
     expect(`${section} .o_calendar_filter_item`).toHaveCount(4);
+    expect(`${section} .o_calendar_filter_item input:checked`).toHaveCount(2);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "foo partner 5",
         "foo partner 6",

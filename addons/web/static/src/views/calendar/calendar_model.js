@@ -179,6 +179,13 @@ export class CalendarModel extends Model {
 
         await this.orm.create(info.writeResModel, dataArray);
         await this.load();
+        if (!info.filterFieldName) {
+            // the active state of the filter is handled client-side => tick the added filter
+            const section = this.filterSections.find((s) => s.fieldName === fieldName);
+            const filters = section.filters.filter((f) => normalizedFilterValue.includes(f.value));
+            filters.forEach((filter) => (filter.active = true));
+            this.notify();
+        }
     }
     async createRecord(record) {
         const rawRecord = this.buildRawRecord(record);
