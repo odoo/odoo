@@ -5,7 +5,7 @@
         <Many2One t-props="m2oProps">
             <t t-set-slot="start">
                 <t t-if="value !== false">
-                    <Avatar resModel="relation" resId="value[0]" noSpacing="true"/>
+                    <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value[0]" noSpacing="true"/>
                 </t>
             </t>
             <t t-set-slot="items" t-slot-scope="itemsScope">

@@ -4,7 +4,7 @@
     <t t-name="hr.KanbanMany2OneAvatarEmployeeField">
         <KanbanMany2One t-props="m2oProps">
             <t t-set-slot="avatar">
-                <AvatarEmployee resModel="relation" resId="resId" noSpacing="true" displayName="displayName"/>
+                <AvatarEmployee cssClass="'o_m2o_avatar'" resModel="relation" resId="resId" noSpacing="true" displayName="displayName"/>
             </t>
             <t t-set-slot="items" t-slot-scope="itemsScope">
                 <span class="o_avatar o_m2o_avatar">

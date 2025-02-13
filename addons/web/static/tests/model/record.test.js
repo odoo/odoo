@@ -276,7 +276,7 @@ test(`handles many2one fields: value is a pair id, display_name`, async () => {
 
     await contains(`.o_field_many2one_selection input`).edit("abc", { confirm: false });
     await runAllTimers();
-    expect.verifySteps(["/web/dataset/call_kw/bar/name_search"]);
+    expect.verifySteps(["/web/dataset/call_kw/bar/web_name_search"]);
 
     await contains(`.o-autocomplete--dropdown-item a:eq(0)`).click();
     expect.verifySteps(["record changed"]);

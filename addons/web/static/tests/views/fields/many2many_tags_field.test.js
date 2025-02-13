@@ -101,9 +101,7 @@ class Turtle extends models.Model {
 
 defineModels([Partner, PartnerType, Turtle]);
 
-onRpc("has_group", () => {
-    return true;
-});
+onRpc("has_group", () => true);
 
 test.tags("desktop");
 test("Many2ManyTagsField with and without color on desktop", async () => {
@@ -1629,7 +1627,7 @@ test("Many2ManyTagsField with attribute 'can_create' set to false on desktop", a
 
 test.tags("desktop");
 test("Many2ManyTagsField with arch context in form view on desktop", async () => {
-    onRpc("name_search", async (args) => {
+    onRpc("web_name_search", async (args) => {
         const result = await args.parent();
         if (args.kwargs.context.append_coucou) {
             expect.step("name search with context given");
@@ -1759,9 +1757,9 @@ test("Many2ManyTagsField with arch context in list view on mobile", async () => 
 });
 
 test.tags("desktop");
-test("Many2ManyTagsField doesn't use virtualId for 'name_search' on desktop", async () => {
-    onRpc("name_search", ({ kwargs }) => {
-        expect.step("name_search");
+test("Many2ManyTagsField doesn't use virtualId for 'web_name_search' on desktop", async () => {
+    onRpc("web_name_search", ({ kwargs }) => {
+        expect.step("web_name_search");
         // no virtualId in domain
         expect(kwargs.args).toEqual([]);
     });
@@ -1791,11 +1789,11 @@ test("Many2ManyTagsField doesn't use virtualId for 'name_search' on desktop", as
     expect("[name='turtles'] .o_data_row").toHaveCount(2);
 
     await contains("[name='turtles'] input").click();
-    expect.verifySteps(["name_search"]);
+    expect.verifySteps(["web_name_search"]);
 });
 
 test.tags("mobile");
-test("Many2ManyTagsField doesn't use virtualId for 'name_search' on mobile", async () => {
+test("Many2ManyTagsField doesn't use virtualId for 'web_name_search' on mobile", async () => {
     onRpc("web_search_read", ({ args }) => {
         expect.step("web_search_read");
         // no virtualId in domain

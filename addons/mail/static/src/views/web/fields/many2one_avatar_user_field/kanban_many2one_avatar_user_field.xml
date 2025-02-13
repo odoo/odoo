@@ -4,7 +4,7 @@
     <t t-name="mail.KanbanMany2OneAvatarUserField">
         <KanbanMany2One t-props="m2oProps">
             <t t-set-slot="avatar">
-                <Avatar resModel="relation" resId="value[0]" noSpacing="true" displayName="displayName"/>
+                <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value[0]" noSpacing="true" displayName="displayName"/>
             </t>
             <t t-set-slot="items" t-slot-scope="itemsScope">
                 <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">

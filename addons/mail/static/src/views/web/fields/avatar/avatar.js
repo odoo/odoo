@@ -9,6 +9,7 @@ export class Avatar extends Component {
     static props = {
         resModel: { type: String },
         resId: { type: Number },
+        cssClass: { type: [String, Object], optional: true },
         displayName: { type: String, optional: true },
         noSpacing: { type: Boolean, optional: true },
     };

@@ -12,7 +12,7 @@
                     </span>
                 </t>
                 <t t-elif="resourceType === 'user'">
-                    <AvatarResource resModel="relation" resId="value[0]"/>
+                    <AvatarResource cssClass="'o_m2o_avatar'" resModel="relation" resId="value[0]"/>
                 </t>
             </t>
             <t t-set-slot="items" t-slot-scope="itemsScope">
