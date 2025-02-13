@@ -34,7 +34,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             'channel_id': self.livechat_channel.id,
             'persisted': True,
         })
-        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertEqual(lead.origin_channel_id, channel)
@@ -52,7 +52,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             'channel_id': self.livechat_channel.id,
             'persisted': True,
         })
-        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertTrue(any(m.partner_id == self.user_sales_leads.partner_id for m in channel.channel_member_ids))
@@ -75,7 +75,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             'channel_id': self.livechat_channel.id,
             'persisted': True,
         })
-        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertEqual(

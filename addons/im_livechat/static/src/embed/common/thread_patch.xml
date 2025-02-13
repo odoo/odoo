@@ -13,7 +13,7 @@
             <t t-if="props.thread.channel_type !== 'livechat'">$0</t>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-Thread-newMessage')]" position="replace">
-            <t t-if="!chatbotService.chatbot">$0</t>
+            <t t-if="!props.thread.chatbot">$0</t>
         </xpath>
     </t>
 </templates>

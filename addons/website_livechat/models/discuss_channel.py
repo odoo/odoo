@@ -8,6 +8,9 @@ from odoo.exceptions import AccessError
 class DiscussChannel(models.Model):
     _inherit = 'discuss.channel'
 
+    is_pending_chat_request = fields.Boolean(
+        "When created from an operator, whether the channel is yet to be opened on the visitor side.",
+    )
     livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor', index='btree_not_null')
 
     def channel_pin(self, pinned=False):
