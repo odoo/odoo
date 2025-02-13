@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="website_sale.ReorderConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary">
+        <xpath expr="//button[1]" position="replace">
+            <button class="btn btn-primary" t-on-click="_confirm">
+              Yes
+            </button>
+        </xpath>
+        <xpath expr="//button[2]" position="replace">
+            <button class="btn btn-secondary" t-on-click="_cancel">
+              No
+            </button>
+        </xpath>
+    </t>
+</templates>
