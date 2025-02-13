@@ -79,8 +79,12 @@ options.registry.FloatingBlocks = options.Class.extend({
 
         if (this.boxes != boxesNew) {
             this.boxes = boxesNew;
-            // Refresh public widgets
-            await this._refreshPublicWidgets();
+
+            // Notify the editor that the content has changed, and let the editor
+            // handle refreshing the interactions properly
+            this.trigger_up('content_changed', {
+                $target: this.$target,
+            });
         }
 
         this._injectAlert();
