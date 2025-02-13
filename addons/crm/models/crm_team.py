@@ -361,8 +361,7 @@ class CrmTeam(models.Model):
         Heuristic of this method is the following:
           * find unassigned leads for each team, aka leads being
             * without team, without user -> not assigned;
-            * not in a won stage, and not having False/0 (lost) or 100 (won)
-              probability) -> live leads;
+            * not won nor inactive -> live leads;
             * created in the last creation_delta_days (in the last week by default)
               This avoid to take into account old leads in the allocation.
             * if set, a delay after creation can be applied (see BUNDLE_HOURS_DELAY)
@@ -435,7 +434,7 @@ class CrmTeam(models.Model):
                 literal_eval(team.assignment_domain or '[]'),
                 [('create_date', '<=', max_create_dt)],
                 ['&', ('team_id', '=', False), ('user_id', '=', False)],
-                ['|', ('stage_id', '=', False), ('stage_id.is_won', '=', False)]
+                [('won_status', '!=', 'won')]
             ])
             if creation_delta_days > 0:
                 lead_domain = expression.AND([

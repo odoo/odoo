@@ -1,23 +1,21 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import timedelta
 
-from odoo import tools
+from odoo import exceptions, tools
+from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.fields import Date
-from odoo.tests import Form, tagged, users, loaded_demo_data
+from odoo.tests import Form, tagged, users
 from odoo.tests.common import TransactionCase
+from odoo.tools import mute_logger
 
 
-@tagged('crm_lead_pls')
-class TestCRMPLS(TransactionCase):
+class CrmPlsCommon(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         """ Keep a limited setup to ensure tests are not impacted by other
         records created in CRM common. """
-        super(TestCRMPLS, cls).setUpClass()
+        super().setUpClass()
 
         cls.company_main = cls.env.user.company_id
         cls.user_sales_manager = mail_new_test_user(
@@ -32,26 +30,28 @@ class TestCRMPLS(TransactionCase):
             'name': 'PLS Team',
         })
 
-        # Ensure independance on demo data
+        # Ensure independence on demo data
         cls.env['crm.lead'].with_context({'active_test': False}).search([]).unlink()
         cls.env['crm.lead.scoring.frequency'].search([]).unlink()
         cls.cr.flush()
 
-    def _get_lead_values(self, team_id, name_suffix, country_id, state_id, email_state, phone_state, source_id, stage_id):
+    def _prepare_test_lead_values(self, team_id, name_suffix, country_id, state_id, email_state, phone_state, source_id, stage_id):
         return {
             'name': 'lead_' + name_suffix,
+            'stage_id': stage_id,
+            'team_id': team_id,
             'type': 'opportunity',
-            'state_id': state_id,
+            # contact
             'email_state': email_state,
             'phone_state': phone_state,
-            'source_id': source_id,
-            'stage_id': stage_id,
+            # address
             'country_id': country_id,
-            'team_id': team_id
+            'state_id': state_id,
+            # misc
+            'source_id': source_id,
         }
 
-    def generate_leads_with_tags(self, tag_ids):
-        Lead = self.env['crm.lead']
+    def _generate_leads_with_tags(self, tag_ids):
         team_id = self.env['crm.team'].create({
             'name': 'blup',
         }).id
@@ -77,15 +77,18 @@ class TestCRMPLS(TransactionCase):
                     'team_id': team_id
                 })
 
-        leads_with_tags = Lead.create(leads_to_create)
+        leads_with_tags = self.env['crm.lead'].create(leads_to_create)
 
         return leads_with_tags
 
+
+@tagged('post_install', '-at_install', 'crm_lead_pls')
+class TestConfig(CrmPlsCommon):
+
     def test_crm_lead_pls_update(self):
-        """ We test here that the wizard for updating probabilities from settings
-            is getting correct value from config params and after updating values
-            from the wizard, the config params are correctly updated
-        """
+        """ Test the wizard for updating probabilities from settings is getting
+        correct value from config params and after updating values from the wizard
+        config params are correctly updated. """
         # Set the PLS config
         frequency_fields = self.env['crm.lead.scoring.frequency.field'].search([])
         pls_fields_str = ','.join(frequency_fields.mapped('field_id.name'))
@@ -115,6 +118,25 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(IrConfigSudo.get_param("crm.pls_start_date"), date_to_update, 'Correct date is updated in config')
         self.assertEqual(IrConfigSudo.get_param("crm.pls_fields"), fields_after_updation_str, 'Correct fields are updated in config')
 
+    def test_settings_pls_start_date(self):
+        """ Test various use cases of 'crm.pls_start_date' """
+        str_date_8_days_ago = Date.to_string(Date.today() - timedelta(days=8))
+
+        for value, expected in [
+            ("2021-10-10", "2021-10-10"),
+            # empty of invalid value -> set to 8 days before today
+            ("", str_date_8_days_ago),
+            ("One does not simply walk into system parameters to corrupt them", str_date_8_days_ago),
+        ]:
+            with self.subTest(value=value):
+                self.env['ir.config_parameter'].sudo().set_param('crm.pls_start_date', value)
+                res_config_new = self.env['res.config.settings'].new()
+                self.assertEqual(Date.to_string(res_config_new.predictive_lead_scoring_start_date), expected)
+
+
+@tagged('post_install', '-at_install', 'crm_lead_pls')
+class TestCrmPls(CrmPlsCommon):
+
     def test_predictive_lead_scoring(self):
         """ We test here computation of lead probability based on PLS Bayes.
                 We will use 3 different values for each possible variables:
@@ -141,32 +163,32 @@ class TestCRMPLS(TransactionCase):
         #   for team 1
         for i in range(3):
             leads_to_create.append(
-                self._get_lead_values(team_ids[0], 'team_1_%s' % str(i), country_ids[i], state_ids[i], state_values[i], state_values[i], source_ids[i], stage_ids[i]))
+                self._prepare_test_lead_values(team_ids[0], 'team_1_%s' % str(i), country_ids[i], state_ids[i], state_values[i], state_values[i], source_ids[i], stage_ids[i]))
         leads_to_create.append(
-            self._get_lead_values(team_ids[0], 'team_1_%s' % str(3), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
+            self._prepare_test_lead_values(team_ids[0], 'team_1_%s' % str(3), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
         leads_to_create.append(
-            self._get_lead_values(team_ids[0], 'team_1_%s' % str(4), country_ids[1], state_ids[1], state_values[1], state_values[0], source_ids[1], stage_ids[0]))
+            self._prepare_test_lead_values(team_ids[0], 'team_1_%s' % str(4), country_ids[1], state_ids[1], state_values[1], state_values[0], source_ids[1], stage_ids[0]))
         #   for team 2
         leads_to_create.append(
-            self._get_lead_values(team_ids[1], 'team_2_%s' % str(5), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[1], stage_ids[2]))
+            self._prepare_test_lead_values(team_ids[1], 'team_2_%s' % str(5), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[1], stage_ids[2]))
         leads_to_create.append(
-            self._get_lead_values(team_ids[1], 'team_2_%s' % str(6), country_ids[0], state_ids[1], state_values[0], state_values[1], source_ids[2], stage_ids[1]))
+            self._prepare_test_lead_values(team_ids[1], 'team_2_%s' % str(6), country_ids[0], state_ids[1], state_values[0], state_values[1], source_ids[2], stage_ids[1]))
         leads_to_create.append(
-            self._get_lead_values(team_ids[1], 'team_2_%s' % str(7), country_ids[0], state_ids[2], state_values[0], state_values[1], source_ids[2], stage_ids[0]))
+            self._prepare_test_lead_values(team_ids[1], 'team_2_%s' % str(7), country_ids[0], state_ids[2], state_values[0], state_values[1], source_ids[2], stage_ids[0]))
         leads_to_create.append(
-            self._get_lead_values(team_ids[1], 'team_2_%s' % str(8), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
+            self._prepare_test_lead_values(team_ids[1], 'team_2_%s' % str(8), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
         leads_to_create.append(
-            self._get_lead_values(team_ids[1], 'team_2_%s' % str(9), country_ids[1], state_ids[0], state_values[1], state_values[0], source_ids[1], stage_ids[1]))
+            self._prepare_test_lead_values(team_ids[1], 'team_2_%s' % str(9), country_ids[1], state_ids[0], state_values[1], state_values[0], source_ids[1], stage_ids[1]))
 
         #   for leads with no team
         leads_to_create.append(
-            self._get_lead_values(False, 'no_team_%s' % str(10), country_ids[1], state_ids[1], state_values[2], state_values[0], source_ids[1], stage_ids[2]))
+            self._prepare_test_lead_values(False, 'no_team_%s' % str(10), country_ids[1], state_ids[1], state_values[2], state_values[0], source_ids[1], stage_ids[2]))
         leads_to_create.append(
-            self._get_lead_values(False, 'no_team_%s' % str(11), country_ids[0], state_ids[1], state_values[1], state_values[1], source_ids[0], stage_ids[0]))
+            self._prepare_test_lead_values(False, 'no_team_%s' % str(11), country_ids[0], state_ids[1], state_values[1], state_values[1], source_ids[0], stage_ids[0]))
         leads_to_create.append(
-            self._get_lead_values(False, 'no_team_%s' % str(12), country_ids[1], state_ids[2], state_values[0], state_values[1], source_ids[2], stage_ids[0]))
+            self._prepare_test_lead_values(False, 'no_team_%s' % str(12), country_ids[1], state_ids[2], state_values[0], state_values[1], source_ids[2], stage_ids[0]))
         leads_to_create.append(
-            self._get_lead_values(False, 'no_team_%s' % str(13), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
+            self._prepare_test_lead_values(False, 'no_team_%s' % str(13), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
 
         leads = Lead.create(leads_to_create)
 
@@ -284,6 +306,7 @@ class TestCRMPLS(TransactionCase):
 
         # Restore -> Should decrease lost
         leads[4].action_unarchive()
+        self.assertEqual(leads[4].won_status, 'pending')
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # unchanged
@@ -304,6 +327,7 @@ class TestCRMPLS(TransactionCase):
 
         # set to won stage -> Should increase won
         leads[4].stage_id = won_stage_id
+        self.assertEqual(leads[4].won_status, 'won')
         self.assertEqual(lead_4_stage_0_freq.won_count, 2.1)  # + 1
         self.assertEqual(lead_4_stage_won_freq.won_count, 2.1)  # + 1
         self.assertEqual(lead_4_country_freq.won_count, 1.1)  # + 1
@@ -313,36 +337,52 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(lead_4_country_freq.lost_count, 1.1)  # unchanged
         self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # unchanged
 
-        # Archive (was won, now lost) -> Should decrease won and increase lost
+        # Archive in won stage -> Should NOT decrease won NOR increase lost
+        # as lost = archived + 0% and WON = won_stage (+ 100%)
         leads[4].action_archive()
-        self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # - 1
-        self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # - 1
-        self.assertEqual(lead_4_country_freq.won_count, 0.1)  # - 1
-        self.assertEqual(lead_4_email_state_freq.won_count, 1.1)  # - 1
-        self.assertEqual(lead_4_stage_0_freq.lost_count, 3.1)  # + 1
-        self.assertEqual(lead_4_stage_won_freq.lost_count, 1.1)  # consider stages with <= sequence when lostand as stage is won.. even won_stage lost_count is increased by 1
-        self.assertEqual(lead_4_country_freq.lost_count, 2.1)  # + 1
-        self.assertEqual(lead_4_email_state_freq.lost_count, 3.1)  # + 1
+        self.assertEqual(leads[4].won_status, 'won')
+        self.assertEqual(lead_4_stage_0_freq.won_count, 2.1)  # unchanged
+        self.assertEqual(lead_4_stage_won_freq.won_count, 2.1)  # unchanged
+        self.assertEqual(lead_4_country_freq.won_count, 1.1)  # unchanged
+        self.assertEqual(lead_4_email_state_freq.won_count, 2.1)  # unchanged
+        self.assertEqual(lead_4_stage_0_freq.lost_count, 2.1)  # unchanged
+        self.assertEqual(lead_4_stage_won_freq.lost_count, 0.1)  # unchanged
+        self.assertEqual(lead_4_country_freq.lost_count, 1.1)  # unchanged
+        self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # unchanged
 
-        # Move to original stage -> Should do nothing (as lead is still lost)
+        # Move to original stage -> lead is not won anymore but not lost as probability != 0
         leads[4].stage_id = stage_ids[0]
+        self.assertEqual(leads[4].won_status, 'pending')
+        self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # -1
+        self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # -1
+        self.assertEqual(lead_4_country_freq.won_count, 0.1)  # -1
+        self.assertEqual(lead_4_email_state_freq.won_count, 1.1)  # -1
+        self.assertEqual(lead_4_stage_0_freq.lost_count, 2.1)  # unchanged
+        self.assertEqual(lead_4_stage_won_freq.lost_count, 0.1)  # unchanged
+        self.assertEqual(lead_4_country_freq.lost_count, 1.1)  # unchanged
+        self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # unchanged
+
+        # force proba to 0% -> as already archived, will be lost (lost = archived AND 0%)
+        leads[4].probability = 0
+        self.assertEqual(leads[4].won_status, 'lost')
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # unchanged
         self.assertEqual(lead_4_email_state_freq.won_count, 1.1)  # unchanged
-        self.assertEqual(lead_4_stage_0_freq.lost_count, 3.1)  # unchanged
-        self.assertEqual(lead_4_stage_won_freq.lost_count, 1.1)  # unchanged
-        self.assertEqual(lead_4_country_freq.lost_count, 2.1)  # unchanged
-        self.assertEqual(lead_4_email_state_freq.lost_count, 3.1)  # unchanged
+        self.assertEqual(lead_4_stage_0_freq.lost_count, 3.1)  # +1
+        self.assertEqual(lead_4_stage_won_freq.lost_count, 0.1)  # unchanged - should not increase lost frequency of won stage.
+        self.assertEqual(lead_4_country_freq.lost_count, 2.1)  # +1
+        self.assertEqual(lead_4_email_state_freq.lost_count, 3.1)  # +1
 
         # Restore -> Should decrease lost - at the end, frequencies should be like first frequencyes tests (except for 0.0 -> 0.1)
         leads[4].action_unarchive()
+        self.assertEqual(leads[4].won_status, 'pending')
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # unchanged
         self.assertEqual(lead_4_email_state_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_0_freq.lost_count, 2.1)  # - 1
-        self.assertEqual(lead_4_stage_won_freq.lost_count, 1.1)  # unchanged - consider stages with <= sequence when lost
+        self.assertEqual(lead_4_stage_won_freq.lost_count, 0.1)  # unchanged - consider stages with <= sequence when lost
         self.assertEqual(lead_4_country_freq.lost_count, 1.1)  # - 1
         self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # - 1
 
@@ -356,7 +396,7 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # unchanged
         self.assertEqual(lead_4_email_state_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_0_freq.lost_count, 2.1)  # unchanged
-        self.assertEqual(lead_4_stage_won_freq.lost_count, 1.1)  # unchanged
+        self.assertEqual(lead_4_stage_won_freq.lost_count, 0.1)  # unchanged
         self.assertEqual(lead_4_country_freq.lost_count, 1.1)  # unchanged
         self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # unchanged
 
@@ -398,7 +438,7 @@ class TestCRMPLS(TransactionCase):
             {'name': "Tag_test_2"},
         ]).ids
         # tag_ids = self.env['crm.tag'].search([], limit=2).ids
-        leads_with_tags = self.generate_leads_with_tags(tag_ids)
+        leads_with_tags = self._generate_leads_with_tags(tag_ids)
 
         leads_with_tags[:30].action_set_lost()  # 60% lost on tag 1
         leads_with_tags[31:50].action_set_won()   # 40% won on tag 1
@@ -500,9 +540,9 @@ class TestCRMPLS(TransactionCase):
         team_id = self.env['crm.team'].create({'name': 'Team Test 1'}).id
         # create two leads
         leads = Lead.create([
-            self._get_lead_values(team_id, 'edge pending', country_id, False, False, False, False, stage_id),
-            self._get_lead_values(team_id, 'edge lost', country_id, False, False, False, False, stage_id),
-            self._get_lead_values(team_id, 'edge won', country_id, False, False, False, False, stage_id),
+            self._prepare_test_lead_values(team_id, 'edge pending', country_id, False, False, False, False, stage_id),
+            self._prepare_test_lead_values(team_id, 'edge lost', country_id, False, False, False, False, stage_id),
+            self._prepare_test_lead_values(team_id, 'edge won', country_id, False, False, False, False, stage_id),
         ])
         # set a new tag
         leads.tag_ids = self.env['crm.tag'].create({'name': 'lead scoring edge case'})
@@ -540,27 +580,6 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(tools.float_compare(leads[1].probability, 0, 2), 0)
         self.assertEqual(tools.float_compare(leads[0].probability, 0.01, 2), 0)
 
-    def test_settings_pls_start_date(self):
-        # We test here that settings never crash due to ill-configured config param 'crm.pls_start_date'
-        set_param = self.env['ir.config_parameter'].sudo().set_param
-        str_date_8_days_ago = Date.to_string(Date.today() - timedelta(days=8))
-        resConfig = self.env['res.config.settings']
-
-        set_param("crm.pls_start_date", "2021-10-10")
-        res_config_new = resConfig.new()
-        self.assertEqual(Date.to_string(res_config_new.predictive_lead_scoring_start_date),
-            "2021-10-10", "If config param is a valid date, date in settings should match with config param")
-
-        set_param("crm.pls_start_date", "")
-        res_config_new = resConfig.new()
-        self.assertEqual(Date.to_string(res_config_new.predictive_lead_scoring_start_date),
-            str_date_8_days_ago, "If config param is empty, date in settings should be set to 8 days before today")
-
-        set_param("crm.pls_start_date", "One does not simply walk into system parameters to corrupt them")
-        res_config_new = resConfig.new()
-        self.assertEqual(Date.to_string(res_config_new.predictive_lead_scoring_start_date),
-            str_date_8_days_ago, "If config param is not a valid date, date in settings should be set to 8 days before today")
-
     def test_pls_no_share_stage(self):
         """ We test here the situation where all stages are team specific, as there is
             a current limitation (can be seen in _pls_get_won_lost_total_count) regarding
@@ -574,41 +593,123 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(tools.float_compare(lead.probability, 41.23, 2), 0)
         self.assertEqual(tools.float_compare(lead.automated_probability, 0, 2), 0)
 
+
+@tagged('post_install', '-at_install', 'crm_lead_pls')
+class TestCrmPlsSides(CrmPlsCommon):
+
+    def test_won_lost_validity(self):
+        team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
+        stage_new, stage_in_progress, stage_won = self.env['crm.stage'].create([
+            {
+                'name': 'New Stage',
+                'sequence': 1,
+                'team_id': team_id,
+            }, {
+                'name': 'In Progress Stage',
+                'sequence': 2,
+                'team_id': team_id,
+            }, {
+                'is_won': True,
+                'name': 'Won Stage',
+                'sequence': 3,
+                'team_id': team_id,
+            },
+        ])
+        lead = self.env['crm.lead'].create([
+            {
+                'active': True,
+                'name': 'Test Lead',
+                'probability': 50,
+                'stage_id': stage_new.id,
+                'team_id': team_id,
+            }
+        ])
+        self.assertEqual(lead.won_status, 'pending')
+
+        # Probability 100 is not a sufficient condition to win the lead
+        lead.write({'probability': 100})
+        self.assertEqual(lead.won_status, 'pending')
+
+        # Test won validity
+        lead.write({'probability': 90})
+        self.assertEqual(lead.won_status, 'pending')
+        lead.action_set_won()
+        self.assertEqual(lead.probability, 100)
+        self.assertTrue(lead.stage_id.is_won)
+        self.assertEqual(lead.won_status, 'won')
+        with self.assertRaises(exceptions.ValidationError, msg='A won lead cannot be set as lost.'):
+            lead.action_set_lost()
+
+        # Won lead can be inactive
+        lead.write({'active': False})
+        self.assertEqual(lead.probability, 100)
+        self.assertEqual(lead.won_status, 'won')
+        with self.assertRaises(exceptions.ValidationError, msg='A won lead cannot have probability < 100'):
+            lead.write({'probability': 75})
+
+        # Restore the lead in a non won stage. won_count = lost_count = 0.1 in frequency table. P = 50%
+        lead.write({'stage_id': stage_in_progress.id, 'active': True})
+        self.assertFalse(lead.probability == 100)
+        self.assertEqual(lead.won_status, 'pending')
+
+        # Test lost validity
+        lead.action_set_lost()
+        self.assertFalse(lead.active)
+        self.assertEqual(lead.probability, 0)
+        self.assertEqual(lead.won_status, 'lost')
+
+        # Test won validity reaching won stage, currently does not update
+        lead.write({'stage_id': stage_won.id})
+        self.assertFalse(lead.active)
+        self.assertEqual(lead.probability, 100)
+        self.assertEqual(lead.won_status, 'won')
+
+        # Back to lost
+        lead.write({'probability': 0, 'stage_id': stage_new.id})
+        self.assertEqual(lead.won_status, 'lost')
+
+        # Once active again, lead is not lost anymore
+        lead.write({'active': True})
+        self.assertEqual(lead.won_status, 'pending', "An active lead cannot be lost")
+
     @users('user_sales_manager')
     def test_team_unlink(self):
         """ Test that frequencies are sent to "no team" when unlinking a team
         in order to avoid losing too much informations. """
         pls_team = self.env["crm.team"].browse(self.pls_team.ids)
 
-        # clean existing data
-        self.env["crm.lead.scoring.frequency"].sudo().search([('team_id', '=', False)]).unlink()
-
         # existing no-team data
-        no_team = [
+        noteam_scoring_data = [
             ('stage_id', '1', 20, 10),
             ('stage_id', '2', 0.1, 0.1),
             ('stage_id', '3', 10, 0),
             ('country_id', '1', 10, 0.1),
         ]
         self.env["crm.lead.scoring.frequency"].sudo().create([
-            {'variable': variable, 'value': value,
-             'won_count': won_count, 'lost_count': lost_count,
-             'team_id': False,
-            } for variable, value, won_count, lost_count in no_team
+            {
+                'lost_count': lost_count,
+                'team_id': False,
+                'value': value,
+                'variable': variable,
+                'won_count': won_count,
+            } for variable, value, won_count, lost_count in noteam_scoring_data
         ])
 
         # add some frequencies to team to unlink
-        team = [
+        team_scoring_data = [
             ('stage_id', '1', 20, 10),  # existing noteam
             ('country_id', '1', 0.1, 10),  # existing noteam
             ('country_id', '2', 0.1, 0),  # new but void
             ('country_id', '3', 30, 30),  # new
         ]
         existing_plsteam = self.env["crm.lead.scoring.frequency"].sudo().create([
-            {'variable': variable, 'value': value,
-             'won_count': won_count, 'lost_count': lost_count,
-             'team_id': pls_team.id,
-            } for variable, value, won_count, lost_count in team
+            {
+                'lost_count': lost_count,
+                'team_id': pls_team.id,
+                'value': value,
+                'variable': variable,
+                'won_count': won_count,
+            } for variable, value, won_count, lost_count in team_scoring_data
         ])
 
         pls_team.unlink()
@@ -633,3 +734,147 @@ class TestCRMPLS(TransactionCase):
             self.assertEqual(frequency.won_count, stat[2])
             self.assertEqual(frequency.lost_count, stat[3])
         self.assertEqual(len(existing_noteam), len(final_noteam))
+
+
+@tagged('lead_manage', 'crm_lead_pls')
+class TestLeadLost(TestCrmCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.lost_reason = cls.env['crm.lost.reason'].create({
+            'name': 'Test Reason'
+        })
+
+    @users('user_sales_salesman')
+    def test_lead_lost(self):
+        """ Test setting a lead as lost using the wizard. Also check that an
+        'html editor' void content used as feedback is not logged on the lead. """
+        # Initial data
+        self.assertEqual(len(self.lead_1.message_ids), 1, 'Should contain creation message')
+        creation_message = self.lead_1.message_ids[0]
+        self.assertEqual(creation_message.subtype_id, self.env.ref('crm.mt_lead_create'))
+        self.assertEqual(
+            self.lead_1.message_partner_ids, self.user_sales_leads.partner_id,
+            'Responsible should be follower')
+
+        # Update responsible as ACLs is "own only" for user_sales_salesman
+        with self.mock_mail_gateway():
+            self.lead_1.with_user(self.user_sales_manager).write({
+                'user_id': self.user_sales_salesman.id,
+                'probability': 32,
+            })
+            self.flush_tracking()
+
+        lead = self.env['crm.lead'].browse(self.lead_1.ids)
+        self.assertFalse(lead.lost_reason_id)
+        self.assertEqual(
+            self.lead_1.message_partner_ids, self.user_sales_leads.partner_id + self.user_sales_salesman.partner_id,
+            'New responsible should be follower')
+        self.assertEqual(lead.probability, 32)
+        # tracking message
+        self.assertEqual(len(lead.message_ids), 2, 'Should have tracked new responsible')
+        update_message = lead.message_ids[0]
+        self.assertMessageFields(
+            update_message,
+            {
+                'notified_partner_ids': self.env['res.partner'],
+                'partner_ids': self.env['res.partner'],
+                'subtype_id': self.env.ref('mail.mt_note'),
+                'tracking_field_names': ['user_id'],
+            }
+        )
+
+        # mark as lost using the wizard
+        lost_wizard = self.env['crm.lead.lost'].create({
+            'lead_ids': lead.ids,
+            'lost_reason_id': self.lost_reason.id,
+            'lost_feedback': '<p></p>',  # void content
+        })
+        lost_wizard.action_lost_reason_apply()
+        self.flush_tracking()
+
+        # check lead update
+        self.assertFalse(lead.active)
+        self.assertEqual(lead.automated_probability, 0)
+        self.assertEqual(lead.lost_reason_id, self.lost_reason)  # TDE FIXME: should be called lost_reason_id non didjou
+        self.assertEqual(lead.probability, 0)
+        # check messages
+        self.assertEqual(len(lead.message_ids), 3, 'Should have logged a tracking message for lost lead with reason')
+        lost_message = lead.message_ids[0]
+        self.assertMessageFields(
+            lost_message,
+            {
+                'notified_partner_ids': self.env['res.partner'],
+                'partner_ids': self.env['res.partner'],
+                'subtype_id': self.env.ref('crm.mt_lead_lost'),
+                'tracking_field_names': ['active', 'lost_reason_id', 'won_status'],
+                'tracking_values': [
+                    ('active', 'boolean', True, False),
+                    ('lost_reason_id', 'many2one', False, self.lost_reason),
+                    ('won_status', 'char', 'Pending', 'Lost'),
+                ],
+            }
+        )
+
+    @users('user_sales_leads')
+    def test_lead_lost_batch_wfeedback(self):
+        """ Test setting leads as lost in batch using the wizard, including a log
+        message. """
+        leads = self._create_leads_batch(lead_type='lead', count=10, probabilities=[10, 20, 30])
+        self.assertEqual(len(leads), 10)
+        self.flush_tracking()
+
+        lost_wizard = self.env['crm.lead.lost'].create({
+            'lead_ids': leads.ids,
+            'lost_reason_id': self.lost_reason.id,
+            'lost_feedback': '<p>I cannot find it. It was in my closet and pouf, disappeared.</p>',
+        })
+        lost_wizard.action_lost_reason_apply()
+        self.flush_tracking()
+
+        for lead in leads:
+            # check content
+            self.assertFalse(lead.active)
+            self.assertEqual(lead.automated_probability, 0)
+            self.assertEqual(lead.probability, 0)
+            self.assertEqual(lead.lost_reason_id, self.lost_reason)
+            # check messages
+            self.assertEqual(len(lead.message_ids), 2, 'Should have 2 messages: creation, lost with log')
+            lost_message = lead.message_ids.filtered(lambda msg: msg.subtype_id == self.env.ref('crm.mt_lead_lost'))
+            self.assertTrue(lost_message)
+            self.assertTracking(
+                lost_message,
+                [('active', 'boolean', True, False),
+                 ('lost_reason_id', 'many2one', False, self.lost_reason)
+                ]
+            )
+            self.assertIn('<p>I cannot find it. It was in my closet and pouf, disappeared.</p>', lost_message.body,
+                          'Feedback should be included directly within tracking message')
+
+    @users('user_sales_salesman')
+    @mute_logger('odoo.addons.base.models')
+    def test_lead_lost_crm_rights(self):
+        """ Test ACLs of lost reasons management and usage """
+        lead = self.lead_1.with_user(self.env.user)
+
+        # nice try little salesman but only managers can create lost reason to avoid bloating the DB
+        with self.assertRaises(exceptions.AccessError):
+            lost_reason = self.env['crm.lost.reason'].create({
+                'name': 'Test Reason'
+            })
+
+        with self.with_user('user_sales_manager'):
+            lost_reason = self.env['crm.lost.reason'].create({
+                'name': 'Test Reason'
+            })
+
+        # nice try little salesman, you cannot invoke a wizard to update other people leads
+        with self.assertRaises(exceptions.AccessError):
+            # wizard needs to be here due to cache clearing in assertRaises
+            # (ORM does not load m2m records unavailable to the user from database)
+            lost_wizard = self.env['crm.lead.lost'].create({
+                'lead_ids': lead.ids,
+                'lost_reason_id': lost_reason.id
+            })
+            lost_wizard.action_lost_reason_apply()
