@@ -308,7 +308,7 @@ class MrpWorkcenter(models.Model):
         :param end_datetime: filter unavailability with only slots before this end_datetime
         :rtype: dict
         """
-        unavailability_ressources = self.resource_id._get_unavailable_intervals(start_datetime, end_datetime)
+        unavailability_ressources = self.resource_id._get_absence_intervals_batch(start_datetime, end_datetime)
         return {wc.id: unavailability_ressources.get(wc.resource_id.id, []) for wc in self}
 
     def _get_first_available_slot(self, start_datetime, duration, forward=True, leaves_to_ignore=False, extra_leaves_slots=[]):
@@ -329,11 +329,11 @@ class MrpWorkcenter(models.Model):
         self.ensure_one()
         resource = self.resource_id
         start_datetime, revert = make_aware(start_datetime)
-        get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, resources=resource, tz=timezone(self.resource_calendar_id.tz))
+        get_available_intervals = partial(resource._get_work_intervals, tz=timezone(self.resource_calendar_id.tz))
         workorder_intervals_leaves_domain = [('time_type', '=', 'other')]
         if leaves_to_ignore:
             workorder_intervals_leaves_domain.append(('id', 'not in', leaves_to_ignore.ids))
-        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=workorder_intervals_leaves_domain, resources=resource, tz=timezone(self.resource_calendar_id.tz))
+        get_workorder_intervals = partial(resource._get_leave_intervals, domain=workorder_intervals_leaves_domain, tz=timezone(self.resource_calendar_id.tz))
         extra_leaves_slots_intervals = Intervals([(make_aware(start)[0], make_aware(stop)[0], self.env['resource.calendar.attendance']) for start, stop in extra_leaves_slots])
 
         remaining = duration
@@ -344,8 +344,8 @@ class MrpWorkcenter(models.Model):
             if forward:
                 date_start = start_datetime + delta * n
                 date_stop = date_start + delta
-                available_intervals = get_available_intervals(date_start, date_stop)[resource.id]
-                workorder_intervals = get_workorder_intervals(date_start, date_stop)[resource.id]
+                available_intervals = get_available_intervals(date_start, date_stop)
+                workorder_intervals = get_workorder_intervals(date_start, date_stop)
                 for start, stop, _records in available_intervals:
                     start_interval = start_interval or start
                     interval_minutes = (stop - start).total_seconds() / 60
@@ -361,9 +361,9 @@ class MrpWorkcenter(models.Model):
                 # same process but starting from end on reversed intervals
                 date_stop = start_datetime - delta * n
                 date_start = date_stop - delta
-                available_intervals = get_available_intervals(date_start, date_stop)[resource.id]
+                available_intervals = get_available_intervals(date_start, date_stop)
                 available_intervals = reversed(available_intervals)
-                workorder_intervals = get_workorder_intervals(date_start, date_stop)[resource.id]
+                workorder_intervals = get_workorder_intervals(date_start, date_stop)
                 for start, stop, _records in available_intervals:
                     stop_interval = stop_interval or stop
                     interval_minutes = (stop - start).total_seconds() / 60

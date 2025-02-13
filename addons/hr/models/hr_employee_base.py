@@ -273,36 +273,15 @@ class HrEmployeeBase(models.AbstractModel):
 
     @api.model
     def _get_employee_working_now(self):
-        working_now = []
-        # We loop over all the employee tz and the resource calendar_id to detect working hours in batch.
-        all_employee_tz = set(self.mapped('tz'))
-        for tz in all_employee_tz:
-            employee_ids = self.filtered(lambda e: e.tz == tz)
-            resource_calendar_ids = employee_ids.mapped('resource_calendar_id')
-            for calendar_id in resource_calendar_ids:
-                res_employee_ids = employee_ids.filtered(lambda e: e.resource_calendar_id.id == calendar_id.id)
-                start_dt = fields.Datetime.now()
-                stop_dt = start_dt + timedelta(hours=1)
-                from_datetime = utc.localize(start_dt).astimezone(timezone(tz or 'UTC'))
-                to_datetime = utc.localize(stop_dt).astimezone(timezone(tz or 'UTC'))
-                # Getting work interval of the first is working. Functions called on resource_calendar_id
-                # are waiting for singleton
-                work_interval = res_employee_ids[0].resource_calendar_id._work_intervals_batch(from_datetime, to_datetime)[False]
-                # Employee that is not supposed to work have empty items.
-                if len(work_interval._items) > 0:
-                    # The employees should be working now according to their work schedule
-                    working_now += res_employee_ids.ids
+        working_now = self.env['hr.employee']
+        employee_per_tz = self.grouped('tz')
+        for tz, employees in employee_per_tz.items():
+            start_dt = fields.Datetime.now()
+            stop_dt = start_dt + timedelta(hours=1)
+            from_datetime = utc.localize(start_dt).astimezone(timezone(tz or 'UTC'))
+            to_datetime = utc.localize(stop_dt).astimezone(timezone(tz or 'UTC'))
+            work_intervals = employees._get_work_intervals_batch(from_datetime, to_datetime)
+            for employee in employees:
+                if len(work_intervals[employee]._items) > 0:
+                    working_now |= employee
         return working_now
-
-    def _get_calendar_periods(self, start, stop):
-        """
-        :param datetime start: the start of the period
-        :param datetime stop: the stop of the period
-        This method can be overridden in other modules where it's possible to have different resource calendars for an
-        employee depending on the date.
-        """
-        calendar_periods_by_employee = {}
-        for employee in self:
-            calendar = employee.resource_calendar_id or employee.company_id.resource_calendar_id
-            calendar_periods_by_employee[employee] = [(start, stop, calendar)]
-        return calendar_periods_by_employee

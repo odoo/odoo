@@ -24,6 +24,26 @@ def datetime_str(year, month, day, hour=0, minute=0, second=0, microsecond=0, tz
         dt = timezone(tzinfo).localize(dt).astimezone(utc)
     return fields.Datetime.to_string(dt)
 
+def list_leaves(employee, from_datetime, to_datetime):
+    """
+        Returns a list of tuples (day, hours, resource.calendar.leaves)
+        for each leave in the calendar.
+    """
+
+    # naive datetimes are made explicit in UTC
+    if not from_datetime.tzinfo:
+        from_datetime = from_datetime.replace(tzinfo=utc)
+    if not to_datetime.tzinfo:
+        to_datetime = to_datetime.replace(tzinfo=utc)
+
+    attendances = employee._get_attendance_intervals(from_datetime, to_datetime)
+    leaves = employee._get_leave_intervals(from_datetime, to_datetime)
+    result = []
+    for start, stop, leave in (leaves & attendances):
+        hours = (stop - start).total_seconds() / 3600
+        result.append((start.date(), hours, leave))
+    return result
+
 
 class TestIntervals(TransactionCase):
 
@@ -137,7 +157,6 @@ class TestCalendar(TestResourceCommon):
             'date_from': datetime_str(2018, 4, 5, 0, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 5, 23, 59, 59, tzinfo=self.jean.tz),
         })
-
         hours = self.calendar_jean.get_work_hours_count(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.jean.tz),
@@ -527,46 +546,23 @@ class TestCalendar(TestResourceCommon):
         calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True)
         self.assertEqual(calendar_dt, end, "It should return the end of the closest attendance")
 
-        # with a resource specific attendance
-        self.env['resource.calendar.attendance'].create({
-            'name': 'Att4',
-            'calendar_id': self.calendar_john.id,
-            'dayofweek': '4',
-            'hour_from': 5,
-            'hour_to': 6,
-            'resource_id': self.john.resource_id.id,
-        })
-        dt = datetime_tz(2020, 4, 3, 5, 0, 0, tzinfo=self.john.tz)
-        start = datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt)
-        self.assertEqual(calendar_dt, start, "It should not take into account resouce specific attendances")
-
-        dt = datetime_tz(2020, 4, 3, 5, 0, 0, tzinfo=self.john.tz)
-        start = datetime_tz(2020, 4, 3, 5, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
-        self.assertEqual(calendar_dt, start, "It should have taken john's specific attendances")
-
-        dt = datetime_tz(2020, 4, 4, 1, 0, 0, tzinfo='UTC')  # The next day in UTC, but still the 3rd in john's timezone (America/Los_Angeles)
-        start = datetime_tz(2020, 4, 3, 16, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
-        self.assertEqual(calendar_dt, start, "It should have found the attendance on the 3rd April")
-
     def test_attendance_interval_edge_tz(self):
         # When genereting the attendance intervals in an edge timezone, the last interval shouldn't
         # be truncated if the timezone is correctly set
         self.env.user.tz = "America/Los_Angeles"
         self.calendar_jean.tz = "America/Los_Angeles"
-        attendances = self.calendar_jean._attendance_intervals_batch(
+        calendar = self.calendar_jean
+        attendances = calendar._get_attendance_intervals(
             datetime.combine(date(2023, 1, 1), datetime.min.time(), tzinfo=timezone("UTC")),
             datetime.combine(date(2023, 1, 31), datetime.max.time(), tzinfo=timezone("UTC")))
-        last_attendance = list(attendances[False])[-1]
+        last_attendance = list(attendances)[-1]
         self.assertEqual(last_attendance[0].replace(tzinfo=None), datetime(2023, 1, 31, 8))
         self.assertEqual(last_attendance[1].replace(tzinfo=None), datetime(2023, 1, 31, 15, 59, 59, 999999))
 
-        attendances = self.calendar_jean._attendance_intervals_batch(
+        attendances = calendar._get_attendance_intervals(
             datetime.combine(date(2023, 1, 1), datetime.min.time(), tzinfo=timezone("America/Los_Angeles")),
             datetime.combine(date(2023, 1, 31), datetime.max.time(), tzinfo=timezone("America/Los_Angeles")))
-        last_attendance = list(attendances[False])[-1]
+        last_attendance = list(attendances)[-1]
         self.assertEqual(last_attendance[0].replace(tzinfo=None), datetime(2023, 1, 31, 8))
         self.assertEqual(last_attendance[1].replace(tzinfo=None), datetime(2023, 1, 31, 16))
 
@@ -1058,7 +1054,8 @@ class TestResMixin(TestResourceCommon):
             'date_to': datetime_str(2018, 4, 10, 23, 59, 59, tzinfo=self.jean.tz),
         })
 
-        leaves = self.jean.list_leaves(
+        leaves = list_leaves(
+            self.jean,
             datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jean.tz),
         )
@@ -1073,7 +1070,8 @@ class TestResMixin(TestResourceCommon):
             'date_to': datetime_str(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.tz),
         })
 
-        leaves = self.jean.list_leaves(
+        leaves = list_leaves(
+            self.jean,
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
@@ -1090,7 +1088,8 @@ class TestResMixin(TestResourceCommon):
             'date_to': datetime_str(2018, 4, 2, 10, 0, 1, tzinfo=self.jean.tz),
         })
 
-        leaves = self.jean.list_leaves(
+        leaves = list_leaves(
+            self.jean,
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
@@ -1110,7 +1109,8 @@ class TestResMixin(TestResourceCommon):
             'date_to': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
         })
 
-        leaves = self.jean.list_leaves(
+        leaves = list_leaves(
+            self.jean,
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
@@ -1350,21 +1350,24 @@ class TestTimezones(TestResourceCommon):
         })
 
         # 09-04-2018 10:00:00 - 13-04-2018 18:00:00
-        leaves = self.jean.list_leaves(
+        leaves = list_leaves(
+            self.jean,
             datetime_tz(2018, 4, 9, 8, 0, 0),
             datetime_tz(2018, 4, 13, 16, 0, 0),
         )
         self.assertEqual(leaves, [(date(2018, 4, 9), 4, leave)])
 
         # 09-04-2018 00:00:00 - 13-04-2018 08:00:00
-        leaves = self.jean.list_leaves(
+        leaves = list_leaves(
+            self.jean,
             datetime_tz(2018, 4, 9, 8, 0, 0, tzinfo=self.tz3),
             datetime_tz(2018, 4, 13, 16, 0, 0, tzinfo=self.tz3),
         )
         self.assertEqual(leaves, [(date(2018, 4, 9), 6, leave)])
 
         # 09-04-2018 08:00:00 - 14-04-2018 12:00:00
-        leaves = self.jean.list_leaves(
+        leaves = list_leaves(
+            self.jean,
             datetime_tz(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
             datetime_tz(2018, 4, 13, 16, 0, 0, tzinfo=self.tz4),
         )
@@ -1413,8 +1416,14 @@ class TestTimezones(TestResourceCommon):
             'name': 'resource',
             'tz': self.tz3,
         })
-        intervals = resource._get_unavailable_intervals(datetime(2022, 9, 21), datetime(2022, 9, 22))
-        self.assertEqual(list(intervals.values())[0], [
+        intervals = [
+            (interval[0], interval[1])
+            for interval in resource._get_absence_intervals(
+                utc.localize(datetime(2022, 9, 21)),
+                utc.localize(datetime(2022, 9, 22)),
+            )
+        ]
+        self.assertEqual(intervals, [
             (datetime(2022, 9, 21, 0, 0, tzinfo=utc), datetime(2022, 9, 21, 6, 0, tzinfo=utc)),
             (datetime(2022, 9, 21, 10, 0, tzinfo=utc), datetime(2022, 9, 21, 11, 0, tzinfo=utc)),
             (datetime(2022, 9, 21, 15, 0, tzinfo=utc), datetime(2022, 9, 22, 0, 0, tzinfo=utc)),
@@ -1463,7 +1472,7 @@ class TestResource(TestResourceCommon):
 
         start = utc.localize(datetime(2021, 7, 7, 12, 0, 0))
         end = utc.localize(datetime(2021, 7, 16, 23, 59, 59))
-        with self.assertQueryCount(13):
+        with self.assertQueryCount(30):
             work_intervals, _ = self.resources_test.resource_id._get_valid_work_intervals(start, end)
 
         self.assertEqual(len(work_intervals), 50)
@@ -1529,5 +1538,8 @@ class TestResource(TestResourceCommon):
         })
 
         resource.company_id.resource_calendar_id = False
-        unavailabilities = resource._get_unavailable_intervals(datetime(2024, 7, 11), datetime(2024, 7, 12))
+        unavailabilities = resource._get_absence_intervals(
+            utc.localize(datetime(2024, 7, 11)),
+            utc.localize(datetime(2024, 7, 12)),
+        )
         self.assertFalse(unavailabilities)

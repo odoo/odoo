@@ -36,7 +36,6 @@ class ResourceCalendarAttendance(models.Model):
         ('morning', 'Morning'),
         ('lunch', 'Break'),
         ('afternoon', 'Afternoon')], required=True, default='morning')
-    resource_id = fields.Many2one('resource.resource', 'Resource')
     week_type = fields.Selection([
         ('1', 'Second'),
         ('0', 'First')

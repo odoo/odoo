@@ -62,10 +62,10 @@ class TestAttendances(TestContractCommon):
         tz = timezone("Europe/Brussels")
         check_in_tz = datetime.combine(datetime(2024, 6, 1), datetime.min.time()).astimezone(tz)
         check_out_tz = datetime.combine(datetime(2024, 6, 30), datetime.max.time()).astimezone(tz)
-        intervals = self.employee._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=False)
+        intervals = self.employee._get_attendance_intervals(check_in_tz, check_out_tz, lunch=False)
         self.assertEqual(len(intervals), 40)
 
         check_in_tz = datetime.combine(datetime(2024, 7, 1), datetime.min.time()).astimezone(tz)
         check_out_tz = datetime.combine(datetime(2024, 7, 31), datetime.max.time()).astimezone(tz)
-        intervals = self.employee._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=False)
+        intervals = self.employee._get_attendance_intervals(check_in_tz, check_out_tz, lunch=False)
         self.assertEqual(len(intervals), 25)

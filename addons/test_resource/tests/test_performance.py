@@ -16,7 +16,7 @@ class TestResourcePerformance(TransactionCase):
 
     @warmup
     def test_performance_attendance_intervals_batch(self):
-        # Tests the performance of _attendance_intervals_batch with a batch of 100 resources
+        # Tests the performance of _get_attendance_intervals_batch with a batch of 100 resources
         calendar = self.env['resource.calendar'].create({
             'name': 'Calendar',
         })
@@ -32,8 +32,8 @@ class TestResourcePerformance(TransactionCase):
             start = pytz.utc.localize(datetime.now() + relativedelta(month=1, day=1))
             stop = pytz.utc.localize(datetime.now() + relativedelta(month=12, day=31))
             start_time = time.time()
-            calendar._attendance_intervals_batch(start, stop, resources=resources)
-            _logger.info('Attendance Intervals Batch (100): --- %s seconds ---', time.time() - start_time)
+            resources._get_attendance_intervals_batch(start, stop)
+            _logger.info('Get Attendance Intervals (100): --- %s seconds ---', time.time() - start_time)
             # Before
             #INFO master test_performance: Attendance Intervals Batch (100): --- 2.0667169094085693 seconds ---
             #INFO master test_performance: Attendance Intervals Batch (100): --- 2.0868310928344727 seconds ---

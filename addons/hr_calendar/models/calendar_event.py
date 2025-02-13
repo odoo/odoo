@@ -46,8 +46,7 @@ class CalendarEvent(models.Model):
         """
         start = min(self.mapped('start')).replace(hour=0, minute=0, second=0, tzinfo=UTC)
         stop = max(self.mapped('stop')).replace(hour=23, minute=59, second=59, tzinfo=UTC)
-        company_calendar = self.env.company.resource_calendar_id
-        global_interval = company_calendar._work_intervals_batch(start, stop)[False]
+        global_interval = self.env.company.resource_calendar_id._get_work_intervals(start, stop)
         interval_by_event = {}
         for event in self:
             if event.allday:

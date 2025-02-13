@@ -228,48 +228,6 @@ class HrEmployee(models.Model):
             ))
         return unusual_days
 
-    def _employee_attendance_intervals(self, start, stop, lunch=False):
-        self.ensure_one()
-        if not lunch:
-            return self._get_expected_attendances(start, stop)
-        else:
-            valid_contracts = self.sudo()._get_contracts(start, stop, states=['open', 'close'])
-            if not valid_contracts:
-                return super()._employee_attendance_intervals(start, stop, lunch)
-            employee_tz = timezone(self.tz) if self.tz else None
-            duration_data = Intervals()
-            for contract in valid_contracts:
-                contract_start = datetime.combine(contract.date_start, time.min, employee_tz)
-                contract_end = datetime.combine(contract.date_end or date.max, time.max, employee_tz)
-                calendar = contract.resource_calendar_id or contract.company_id.resource_calendar_id
-                lunch_intervals = calendar._attendance_intervals_batch(
-                    max(start, contract_start),
-                    min(stop, contract_end),
-                    resources=self.resource_id,
-                    lunch=True)[self.resource_id.id]
-                duration_data = duration_data | lunch_intervals
-            return duration_data
-
-    def _get_expected_attendances(self, date_from, date_to):
-        self.ensure_one()
-        valid_contracts = self.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])
-        if not valid_contracts:
-            return super()._get_expected_attendances(date_from, date_to)
-        employee_tz = timezone(self.tz) if self.tz else None
-        duration_data = Intervals()
-        for contract in valid_contracts:
-            contract_start = datetime.combine(contract.date_start, time.min, employee_tz)
-            contract_end = datetime.combine(contract.date_end or date.max, time.max, employee_tz)
-            calendar = contract.resource_calendar_id or contract.company_id.resource_calendar_id
-            contract_intervals = calendar._work_intervals_batch(
-                                    max(date_from, contract_start),
-                                    min(date_to, contract_end),
-                                    tz=employee_tz,
-                                    resources=self.resource_id,
-                                    compute_leaves=True)[self.resource_id.id]
-            duration_data = duration_data | contract_intervals
-        return duration_data
-
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()
         valid_contracts = self.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])

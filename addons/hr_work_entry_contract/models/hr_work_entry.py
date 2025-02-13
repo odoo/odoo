@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
@@ -8,7 +7,7 @@ from itertools import chain
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.addons.hr_work_entry_contract.models.hr_work_intervals import WorkIntervals
+from odoo.addons.resource.models.utils import WorkIntervals
 
 
 class HrWorkEntry(models.Model):
@@ -155,17 +154,17 @@ class HrWorkEntry(models.Model):
         :return: leave work entries completely outside the contract's calendar
         """
         work_entries = self._get_leaves_entries_outside_schedule()
-        entries_by_calendar = defaultdict(lambda: self.env['hr.work.entry'])
-        for work_entry in work_entries:
-            calendar = work_entry.contract_id.resource_calendar_id
-            entries_by_calendar[calendar] |= work_entry
+        if not work_entries:
+            return False
+        entries_by_calendar = work_entries.grouped(lambda we: we.contract_id.resource_calendar_id)
 
         outside_entries = self.env['hr.work.entry']
+        datetime_start = min(work_entries.mapped('date_start'))
+        datetime_stop = max(work_entries.mapped('date_stop'))
+        calendars = work_entries.contract_id.resource_calendar_id
+        all_calendar_intervals = calendars._get_attendance_intervals_batch(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop))
         for calendar, entries in entries_by_calendar.items():
-            datetime_start = min(entries.mapped('date_start'))
-            datetime_stop = max(entries.mapped('date_stop'))
-
-            calendar_intervals = calendar._attendance_intervals_batch(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop))[False]
+            calendar_intervals = all_calendar_intervals[calendar]
             entries_intervals = entries._to_intervals()
             overlapping_entries = self._from_intervals(entries_intervals & calendar_intervals)
             outside_entries |= entries - overlapping_entries

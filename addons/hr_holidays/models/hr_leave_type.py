@@ -15,6 +15,8 @@ from odoo.tools import format_date, frozendict
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
 
+from odoo.addons.resource.models.utils import get_attendance_intervals_days_data
+
 _logger = logging.getLogger(__name__)
 
 
@@ -592,17 +594,12 @@ class HrLeaveType(models.Model):
                                                                         )
                 if closest_expiration_date:
                     closest_allocation_expire = format_date(self.env, closest_expiration_date)
-                    calendar = employee.resource_calendar_id\
-                                or self.env.company.resource_calendar_id
                     # closest_allocation_duration corresponds to the time remaining before the allocation expires
-                    calendar_attendance = calendar._work_intervals_batch(
+                    emp_attendances = employee._get_work_intervals(
                         datetime.combine(target_date, time.min).replace(tzinfo=pytz.UTC),
-                        datetime.combine(closest_expiration_date, time.max).replace(tzinfo=pytz.UTC),
-                        resources=employee.resource_id
+                        datetime.combine(closest_expiration_date, time.max).replace(tzinfo=pytz.UTC)
                     )
-                    closest_allocation_dict =\
-                        self.env['resource.calendar']._get_attendance_intervals_days_data(
-                            calendar_attendance[employee.resource_id.id])
+                    closest_allocation_dict = get_attendance_intervals_days_data(emp_attendances)
                     if leave_type.request_unit in ['hour']:
                         closest_allocation_duration = closest_allocation_dict['hours']
                     else:

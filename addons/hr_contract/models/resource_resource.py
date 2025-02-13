@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from collections import defaultdict
 from datetime import datetime
 from pytz import timezone
 
 from odoo import models
+
 from odoo.addons.resource.models.utils import Intervals
 
 
@@ -31,7 +32,7 @@ class ResourceResource(models.Model):
         }
         resource_without_contract = self.filtered(
             lambda r: not r.employee_id\
-                   or not r.employee_id.id in employee_ids_with_active_contracts\
+                   or r.employee_id.id not in employee_ids_with_active_contracts\
                    or r.employee_id.employee_type not in ['employee', 'student']
         )
         if resource_without_contract:

@@ -44,7 +44,8 @@ class TestWorkEntry(TestWorkEntryBase):
 
     def test_work_entry(self):
         self.richard_emp.generate_work_entries(self.start, self.end)
-        attendance_nb = len(self.resource_calendar_id._attendance_intervals_batch(self.start.replace(tzinfo=pytz.utc), self.end.replace(tzinfo=pytz.utc))[False])
+        calendar = self.resource_calendar_id
+        attendance_nb = len(calendar._get_attendance_intervals(self.start.replace(tzinfo=pytz.utc), self.end.replace(tzinfo=pytz.utc)))
         work_entry_nb = self.env['hr.work.entry'].search_count([
             ('employee_id', '=', self.richard_emp.id),
             ('date_start', '>=', self.start),

@@ -17,11 +17,11 @@ class HrEmployeeBase(models.AbstractModel):
 
             if not employee.company_id.hr_presence_control_email and not employee.company_id.hr_presence_control_ip:
                 continue
-            if company.hr_presence_last_compute_date and employee.id in working_now_list and \
+            if company.hr_presence_last_compute_date and employee in working_now_list and \
                     company.hr_presence_last_compute_date.day == fields.Datetime.now().day and \
                     (employee.email_sent or employee.ip_connected or employee.manually_set_present):
                 employee.hr_presence_state = 'present'
-            elif employee.id in working_now_list and employee.is_absent and \
+            elif employee in working_now_list and employee.is_absent and \
                 not (employee.email_sent or employee.ip_connected or employee.manually_set_present):
                 employee.hr_presence_state = 'absent'
             else:

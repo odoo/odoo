@@ -191,13 +191,13 @@ class HrAttendance(models.Model):
         for attendance in self:
             if attendance.check_out and attendance.check_in and attendance.employee_id:
                 calendar = attendance._get_employee_calendar()
-                resource = attendance.employee_id.resource_id
-                tz = timezone(resource.tz) if not calendar else timezone(calendar.tz)
+                employee = attendance.employee_id
+                tz = timezone(employee.tz) if not calendar else timezone(calendar.tz)
                 check_in_tz = attendance.check_in.astimezone(tz)
                 check_out_tz = attendance.check_out.astimezone(tz)
                 lunch_intervals = []
-                if not attendance.employee_id.is_flexible:
-                    lunch_intervals = attendance.employee_id._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=True)
+                if not employee.is_flexible:
+                    lunch_intervals = employee._get_attendance_intervals(check_in_tz, check_out_tz, lunch=True)
                 attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals
                 delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
                 attendance.worked_hours = delta / 3600.0
@@ -305,12 +305,12 @@ class HrAttendance(models.Model):
                 check_in_day_start = attendance._get_day_start_and_day(attendance.employee_id, attendance.check_in)
                 attendances_per_day[check_in_day_start[1]] += attendance
 
-            # As _attendance_intervals_batch and _leave_intervals_batch both take localized dates we need to localize those date
+            # As _get_attendance_interval and _get_leave_intervals both take localized dates we need to localize those date
             start = pytz.utc.localize(min(attendance_dates, key=itemgetter(0))[0])
             stop = pytz.utc.localize(max(attendance_dates, key=itemgetter(0))[0] + timedelta(hours=24))
 
             # Retrieve expected attendance intervals
-            expected_attendances = emp._employee_attendance_intervals(start, stop)
+            expected_attendances = emp._get_work_intervals(start, stop)
 
             # working_times = {date: [(start, stop)]}
             working_times = defaultdict(lambda: [])
@@ -442,7 +442,7 @@ class HrAttendance(models.Model):
                 stop_dt = min(planned_end_dt, local_check_out)
                 work_duration += (stop_dt - start_dt).total_seconds() / 3600.0
                 # remove lunch time from work duration
-                lunch_intervals = employee._employee_attendance_intervals(start_dt, stop_dt, lunch=True)
+                lunch_intervals = employee._get_attendance_intervals(start_dt, stop_dt, lunch=True)
                 work_duration -= sum((i[1] - i[0]).total_seconds() / 3600.0 for i in lunch_intervals)
 
             # There is an overtime at the end of the day

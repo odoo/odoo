@@ -36,8 +36,6 @@ class HrContract(models.Model):
             employee = contract.employee_id
             employee_calendar = contract.resource_calendar_id
             company = contract.company_id
-            company_calendar = company.resource_calendar_id
-            resource = employee.resource_id
             tz = pytz.timezone(employee_calendar.tz)
 
             for leave in leaves_per_employee[employee]:
@@ -46,9 +44,9 @@ class HrContract(models.Model):
 
                 # Compute the attendances for the company calendar and the employee calendar
                 # and then compute and keep the difference between those two
-                company_attendances = company_calendar._attendance_intervals_batch(
-                    leave_start_dt, leave_end_dt_fr, resources=resource, tz=tz,
-                )[resource.id]
+                company_attendances = company.resource_calendar_id._get_attendance_intervals(
+                    leave_start_dt, leave_end_dt_fr, tz=tz,
+                )
                 # Dates on which work entries should already be generated
                 employee_dates = set()
                 for vals in result:
