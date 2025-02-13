@@ -35,7 +35,7 @@ class ResUsers(models.Model):
         try:
             return super()._check_credentials(credential, env)
         except AccessDenied:
-            if not (credential['type'] == 'password' and credential['password']):
+            if not (credential['type'] == 'password' and credential.get('password')):
                 raise
             passwd_allowed = env['interactive'] or not self.env.user._rpc_api_keys_only()
             if passwd_allowed and self.env.user.active:
