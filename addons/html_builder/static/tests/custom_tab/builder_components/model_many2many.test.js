@@ -1,10 +1,9 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, reactive, xml } from "@odoo/owl";
+import { xml } from "@odoo/owl";
 import { delay } from "@web/core/utils/concurrency";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../helpers";
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 
 class Test extends models.Model {
     _name = "test";
@@ -32,30 +31,22 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
         [2, "Second"],
         [3, "Third"],
     ]);
-    class TestComponent extends Component {
-        static template = xml`<ModelMany2Many baseModel="'test.base'" m2oField="'rel'" recordId="1" useModelEditState="props.useModelEditState"/>`;
-        static props = {
-            useModelEditState: Function,
-        };
-        static components = { ...defaultBuilderComponents };
-    }
-    const temporary = reactive({
-        selection: undefined,
-    });
-    const useModelEditState = ({ model, recordId }) => temporary;
     addOption({
         selector: ".test-options-target",
-        Component: TestComponent,
-        props: {
-            useModelEditState: useModelEditState,
-        },
+        template: xml`<ModelMany2Many baseModel="'test.base'" m2oField="'rel'" recordId="1"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    const { getEditor } = await setupWebsiteBuilder(
+        `<div class="test-options-target" data-res-model="test.base" data-res-id="1">b</div>`
+    );
 
     await contains(":iframe .test-options-target").click();
+    const modelEdit = getEditor().shared.CachedModel.useModelEdit({
+        model: "test.base",
+        recordId: 1,
+    });
     expect(".options-container").toBeDisplayed();
     expect("table tr").toHaveCount(0);
-    expect(temporary.selection).toEqual([]);
+    expect(modelEdit.get("relSelection")).toEqual([]);
 
     await contains(".btn.o-dropdown").click();
     expect("input").toHaveCount(1);
@@ -64,7 +55,7 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(3);
     await contains("span.o-dropdown-item").click();
-    expect(temporary.selection).toEqual([{ id: 1, name: "First" }]);
+    expect(modelEdit.get("relSelection")).toEqual([{ id: 1, name: "First" }]);
     expect("table tr").toHaveCount(1);
 
     await contains(".btn.o-dropdown").click();
@@ -73,14 +64,14 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(2);
     await contains("span.o-dropdown-item").click();
-    expect(temporary.selection).toEqual([
+    expect(modelEdit.get("relSelection")).toEqual([
         { id: 1, name: "First" },
         { id: 2, name: "Second" },
     ]);
     expect("table tr").toHaveCount(2);
 
     await contains("button.fa-minus").click();
-    expect(temporary.selection).toEqual([{ id: 2, name: "Second" }]);
+    expect(modelEdit.get("relSelection")).toEqual([{ id: 2, name: "Second" }]);
     expect("table tr").toHaveCount(1);
     expect("table input").toHaveValue("Second");
 

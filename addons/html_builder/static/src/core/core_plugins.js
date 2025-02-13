@@ -2,6 +2,7 @@ import { AnchorPlugin } from "./plugins/anchor/anchor_plugin";
 import { BuilderActionsPlugin } from "./plugins/builder_actions_plugin";
 import { BuilderOptionsPlugin } from "./plugins/builder_options_plugin";
 import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
+import { CachedModelPlugin } from "./plugins/cached_model_plugin";
 import { ClonePlugin } from "./plugins/clone/clone_plugin";
 import { DropZonePlugin } from "./plugins/drop_zone_plugin";
 import { DropZoneSelectorPlugin } from "./plugins/dropzone_selector_plugin";
@@ -36,4 +37,5 @@ export const CORE_PLUGINS = [
     SavePlugin,
     VisibilityPlugin,
     DropZoneSelectorPlugin,
+    CachedModelPlugin,
 ];
