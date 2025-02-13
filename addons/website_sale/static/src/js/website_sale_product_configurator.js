@@ -108,7 +108,7 @@ WebsiteSale.include({
         serializedProduct.product_custom_attribute_values = [];
         for (const ptal of product.attribute_lines) {
             const selectedPtavIds = new Set(ptal.selected_attribute_value_ids);
-            const selectedCustomPtav = ptal.attribute_values.find(
+            const selectedCustomPtav = ptal.customValue && ptal.attribute_values.find(
                 ptav => ptav.is_custom && selectedPtavIds.has(ptav.id)
             );
             if (selectedCustomPtav) {
