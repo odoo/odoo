@@ -8,8 +8,10 @@
                     t-if="this.swapButton"
                     class="btn-switchpane pay-button btn btn-lg w-50 position-relative lh-sm overflow-hidden"
                     t-on-click="submitOrder"
-                    t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-light' }}">
-                    <!-- Replace the payment button by the order button -->
+                    t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-secondary' }}">
+                    <div t-if="this.uiState.clicked and this.displayCategoryCount.length" class="h-100 w-100 position-absolute top-0 start-0 d-flex align-items-center justify-content-center" style="backdrop-filter: blur(5px);">
+                        <img src="/web/static/img/spin.svg" style="height:35px; width:35px" alt="Loading..."/>
+                    </div>                    <!-- Replace the payment button by the order button -->
                     <span class="d-block">Order</span>
                     <small><t t-esc="nbrOfChanges"/> changes</small>
                 </button>
