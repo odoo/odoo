@@ -36,6 +36,7 @@ class TestMrpCommon(TestStockCommon):
             'product_id': product_to_build.id,
             'product_tmpl_id': product_to_build.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
+            'picking_type_id': cls.warehouse_1.manu_type_id.id,
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': consumption if consumption else 'flexible',
@@ -129,6 +130,7 @@ class TestMrpCommon(TestStockCommon):
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
+            'picking_type_id': cls.warehouse_1.manu_type_id.id,
             'consumption': 'flexible',
             'operation_ids': [
             ],
@@ -141,6 +143,7 @@ class TestMrpCommon(TestStockCommon):
             'product_id': cls.product_5.id,
             'product_tmpl_id': cls.product_5.product_tmpl_id.id,
             'product_uom_id': cls.product_5.uom_id.id,
+            'picking_type_id': cls.warehouse_1.manu_type_id.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
@@ -157,6 +160,7 @@ class TestMrpCommon(TestStockCommon):
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
             'product_uom_id': cls.uom_dozen.id,
             'ready_to_produce': 'asap',
+            'picking_type_id': cls.warehouse_1.manu_type_id.id,
             'consumption': 'flexible',
             'product_qty': 2.0,
             'operation_ids': [
@@ -172,6 +176,7 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_4 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
+            'picking_type_id': cls.warehouse_1.manu_type_id.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
@@ -185,6 +190,7 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_5 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
+            'picking_type_id': cls.warehouse_1.manu_type_id.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
@@ -198,6 +204,7 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_6 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
+            'picking_type_id': cls.warehouse_1.manu_type_id.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
@@ -211,11 +218,11 @@ class TestMrpCommon(TestStockCommon):
 
         cls.stock_location_14 = cls.env['stock.location'].create({
             'name': 'Shelf 2',
-            'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,
+            'location_id': cls.warehouse_1.lot_stock_id.id,
         })
         cls.stock_location_components = cls.env['stock.location'].create({
             'name': 'Shelf 1',
-            'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,
+            'location_id': cls.warehouse_1.lot_stock_id.id,
         })
         cls.laptop = cls.env['product.product'].create({
             'name': 'Acoustic Bloc Screens',

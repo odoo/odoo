@@ -79,8 +79,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
         self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
         # Configure warehouse.
-        warehouse = self.env.ref('stock.warehouse0')
-        warehouse.reception_steps = 'three_steps'
+        self.warehouse_1.reception_steps = 'three_steps'
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner

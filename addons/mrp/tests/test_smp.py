@@ -167,6 +167,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': tracked_product.product_tmpl_id.id,
             'product_qty': 1,
+            'picking_type_id': self.warehouse_1.manu_type_id.id,
             'bom_line_ids': [Command.create({
                 'product_id': component.id,
                 'product_qty': 1,
@@ -340,7 +341,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.env['res.config.settings'].write({
             'group_stock_adv_location': True,
         })
-        self.env.ref('stock.warehouse0').manufacture_steps = 'pbm'
+        self.warehouse_1.manufacture_steps = 'pbm'
         mo = self.generate_mo(tracking_final='lot', tracking_base_1='lot')[0]
         # Make some stock and reserve
         for product in mo.move_raw_ids.product_id:
