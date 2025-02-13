@@ -8,6 +8,8 @@ import { verifyHttpsUrl } from "@website/utils/misc";
 
 export class Countdown extends Interaction {
     static selector = ".s_countdown";
+    static hasCanvasEl = true;
+
     dynamicContent = {
         ".s_countdown_canvas_wrapper": {
             "t-att-class": () => ({
@@ -45,9 +47,11 @@ export class Countdown extends Interaction {
         this.progressBarStyle = this.el.dataset.progressBarStyle;
         this.progressBarWeight = this.el.dataset.progressBarWeight;
 
-        this.layoutBackgroundColor = this.ensureCSSColor(this.el.dataset.layoutBackgroundColor);
-        this.progressBarColor = this.ensureCSSColor(this.el.dataset.progressBarColor);
-        this.textColor = this.ensureCSSColor(this.el.dataset.textColor);
+        if (this.constructor.hasCanvasEl) {
+            this.layoutBackgroundColor = this.ensureCSSColor(this.el.dataset.layoutBackgroundColor);
+            this.progressBarColor = this.ensureCSSColor(this.el.dataset.progressBarColor);
+            this.textColor = this.ensureCSSColor(this.el.dataset.textColor);
+        }
 
         this.onlyOneUnit = this.display === "d";
         this.width = this.size;
@@ -88,17 +92,17 @@ export class Countdown extends Interaction {
             if (this.hereBeforeTimerEnds) {
                 this.waitForTimeout(() => window.location = redirectUrl, 500);
             } else {
-                if (!this.el.querySelector(".s_countdown_end_redirect_message").length) {
-                    const container = this.el.querySelector("> .container, > .container-fluid, > .o_container_small");
-                    this.renderAt("website.s_countdown.end_redirect_message", {
+                if (!this.el.querySelector(this.constructor.selector + "_end_redirect_message")) {
+                    const container = this.el.querySelector(".s_countdown_inline > div, :scope > .container, :scope > .container-fluid, :scope > .o_container_small");
+                    this.renderAt("website" + this.constructor.selector + ".end_redirect_message", {
                         redirectUrl: redirectUrl,
                     }, container);
                 }
             }
         } else if (this.endAction === "message" || this.endAction === "message_no_countdown") {
-            this.el.querySelector(".s_countdown_end_message")?.classList.remove("d-none");
+            this.el.querySelector(this.constructor.selector + "_end_message")?.classList.remove("d-none");
         }
-        this.registerCleanup(() => this.el.querySelector(".s_countdown_end_message")?.classList.add("d-none"));
+        this.registerCleanup(() => this.el.querySelector(this.constructor.selector + "_end_message")?.classList.add("d-none"));
     }
 
     getDelta() {
@@ -122,8 +126,10 @@ export class Countdown extends Interaction {
         const delta = this.getDelta();
         this.timeDiff = [];
         if (this.isUnitVisible("d") && !(this.onlyOneUnit && delta < 86400)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            const divEl = this.constructor.hasCanvasEl ? this.createCanvasWrapper() : null;
+            if (this.constructor.hasCanvasEl) {
+                this.insert(divEl, this.wrapperEl);
+            }
             this.timeDiff.push({
                 canvas: divEl,
                 // There is no logical number of unit (total) on which day units
@@ -134,8 +140,10 @@ export class Countdown extends Interaction {
             });
         }
         if (this.isUnitVisible("h") || (this.onlyOneUnit && delta < 86400 && delta > 3600)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            const divEl = this.constructor.hasCanvasEl ? this.createCanvasWrapper() : null;
+            if (this.constructor.hasCanvasEl) {
+                this.insert(divEl, this.wrapperEl);
+            }
             this.timeDiff.push({
                 canvas: divEl,
                 total: 24,
@@ -144,8 +152,10 @@ export class Countdown extends Interaction {
             });
         }
         if (this.isUnitVisible("m") || (this.onlyOneUnit && delta < 3600 && delta > 60)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            const divEl = this.constructor.hasCanvasEl ? this.createCanvasWrapper() : null;
+            if (this.constructor.hasCanvasEl) {
+                this.insert(divEl, this.wrapperEl);
+            }
             this.timeDiff.push({
                 canvas: divEl,
                 total: 60,
@@ -154,8 +164,10 @@ export class Countdown extends Interaction {
             });
         }
         if (this.isUnitVisible("s") || (this.onlyOneUnit && delta < 60)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            const divEl = this.constructor.hasCanvasEl ? this.createCanvasWrapper() : null;
+            if (this.constructor.hasCanvasEl) {
+                this.insert(divEl, this.wrapperEl);
+            }
             this.timeDiff.push({
                 canvas: divEl,
                 total: 60,
@@ -194,55 +206,59 @@ export class Countdown extends Interaction {
      */
     render() {
         if (this.onlyOneUnit && this.getDelta() < this.timeDiff[0].nbSeconds) {
-            this.el.querySelector(".s_countdown_canvas_flex").remove();
+            if (this.constructor.hasCanvasEl) {
+                this.el.querySelector(".s_countdown_canvas_flex").remove();
+            }
             this.initTimeDiff();
         }
         this.updateTimediff();
 
         const hideCountdown = this.isFinished && !this.editableMode && this.el.classList.contains("hide-countdown");
-        if (this.layout === "text") {
-            const canvasEls = this.el.querySelectorAll(".s_countdown_canvas_flex");
-            for (const canvasEl of canvasEls) {
-                canvasEl.classList.add("d-none");
-            }
-            if (!this.textWrapperEl) {
-                this.textWrapperEl = document.createElement("span");
-                this.textWrapperEl.classList.add("s_countdown_text_wrapper", "d-none");
-                this.textWrapperEl.textContent = _t("Countdown ends in");
-                const spanEl = document.createElement("span");
-                spanEl.classList.add("s_countdown_text", "ms-1");
-                this.textWrapperEl.appendChild(spanEl);
-                this.insert(this.textWrapperEl, this.wrapperEl);
-            }
-            this.textWrapperEl.classList.toggle("d-none", hideCountdown);
+        if(this.constructor.hasCanvasEl) {
+            if (this.layout === "text") {
+                const canvasEls = this.el.querySelectorAll(".s_countdown_canvas_flex");
+                for (const canvasEl of canvasEls) {
+                    canvasEl.classList.add("d-none");
+                }
+                if (!this.textWrapperEl) {
+                    this.textWrapperEl = document.createElement("span");
+                    this.textWrapperEl.classList.add("s_countdown_text_wrapper", "d-none");
+                    this.textWrapperEl.textContent = _t("Countdown ends in");
+                    const spanEl = document.createElement("span");
+                    spanEl.classList.add("s_countdown_text", "ms-1");
+                    this.textWrapperEl.appendChild(spanEl);
+                    this.insert(this.textWrapperEl, this.wrapperEl);
+                }
+                this.textWrapperEl.classList.toggle("d-none", hideCountdown);
 
-            const countdownText = this.timeDiff.map(e => e.nb + " " + e.label).join(", ");
-            this.el.querySelector(".s_countdown_text").innerText = countdownText.toLowerCase();
-        } else {
-            for (const val of this.timeDiff) {
-                const canvas = val.canvas.querySelector("canvas");
-                const ctx = canvas.getContext("2d");
-                ctx.canvas.width = this.width;
-                ctx.canvas.height = this.size;
-                this.clearCanvas(ctx);
+                const countdownText = this.timeDiff.map(e => e.nb + " " + e.label).join(", ");
+                this.el.querySelector(".s_countdown_text").innerText = countdownText.toLowerCase();
+            } else {
+                for (const val of this.timeDiff) {
+                    const canvas = val.canvas.querySelector("canvas");
+                    const ctx = canvas.getContext("2d");
+                    ctx.canvas.width = this.width;
+                    ctx.canvas.height = this.size;
+                    this.clearCanvas(ctx);
 
-                canvas.classList.toggle("d-none", hideCountdown);
-                if (hideCountdown) {
-                    continue;
-                }
+                    canvas.classList.toggle("d-none", hideCountdown);
+                    if (hideCountdown) {
+                        continue;
+                    }
 
-                // Draw canvas elements
-                if (this.layoutBackground !== "none") {
-                    this.drawBgShape(ctx, this.layoutBackground === "plain");
+                    // Draw canvas elements
+                    if (this.layoutBackground !== "none") {
+                        this.drawBgShape(ctx, this.layoutBackground === "plain");
+                    }
+                    this.drawText(canvas, val.nb, val.label, this.layoutBackground === "plain");
+                    if (this.progressBarStyle === "surrounded") {
+                        this.drawProgressBarBg(ctx, this.progressBarWeight === "thin");
+                    }
+                    if (this.progressBarStyle !== "none") {
+                        this.drawProgressBar(ctx, val.nb, val.total, this.progressBarWeight === "thin");
+                    }
+                    val.canvas.classList.toggle("mx-1", this.layout === "boxes");
                 }
-                this.drawText(canvas, val.nb, val.label, this.layoutBackground === "plain");
-                if (this.progressBarStyle === "surrounded") {
-                    this.drawProgressBarBg(ctx, this.progressBarWeight === "thin");
-                }
-                if (this.progressBarStyle !== "none") {
-                    this.drawProgressBar(ctx, val.nb, val.total, this.progressBarWeight === "thin");
-                }
-                val.canvas.classList.toggle("mx-1", this.layout === "boxes");
             }
         }
 
