@@ -35,30 +35,34 @@ export class MailingFilterDropdown extends Dropdown {
  * in form of the favorite filter, or to remove the store filters.
  *
  */
-export class Many2OneMailingFilter extends Many2One {
-    static template = "mass_mailing.Many2OneMailingFilter";
+export class FieldMany2OneMailingFilter extends Component {
+    static template = "mass_mailing.MailingFilter";
     static components = {
-        ...super.components,
+        Many2One,
         MailingFilterDropdown,
     };
     static props = {
-        ...super.props,
-        mailingDomain: { type: String, optional: true },
-        mailingFilterCount: Number,
-        mailingFilterDomain: String,
-        mailingFilterId: [Number, { value: false }],
-        modelField: { type: String, optional: true },
-        updateMailingDomain: Function,
+        ...Many2OneField.props,
+        domain_field: { type: String, optional: true },
+        model_field: { type: String, optional: true },
+    };
+    static defaultProps = {
+        domain_field: "mailing_domain",
+        model_field: "mailing_model_id",
     };
 
     setup() {
         super.setup();
         this.notification = useService("notification");
+        this.orm = useService("orm");
         this.filter = useState({
             canSaveFilter: false,
-            canRemoveFilter: false,
         });
         useEffect(() => this._updateFilterIcons());
+    }
+
+    get m2oProps() {
+        return computeM2OProps(this.props);
     }
 
     /**
@@ -70,7 +74,7 @@ export class Many2OneMailingFilter extends Many2One {
      * - No favorite filter is currently set
      * - User emptied the input
      * - User changed the domain when favorite filter is set
-     * - The input is currently being edited, known by the "this.state.isFloating" variable
+     * - The input is currently being edited, known by the "isFloating" variable
      *
      * @private
      */
@@ -79,7 +83,7 @@ export class Many2OneMailingFilter extends Many2One {
         if (!el || this.props.readonly) {
             return;
         }
-        const filterCount = this.props.mailingFilterCount;
+        const filterCount = this.props.record.data.mailing_filter_count;
         const dropdown = document.querySelector(
             ".o_field_mailing_filter > .o_field_many2one_selection > .o_input_dropdown"
         );
@@ -91,8 +95,12 @@ export class Many2OneMailingFilter extends Many2One {
         let recordDomain;
         let filterDomain;
         try {
-            recordDomain = new Domain(this.props.mailingDomain || []).toString();
-            filterDomain = new Domain(this.props.mailingFilterDomain || []).toString();
+            recordDomain = new Domain(
+                this.props.record.data[this.props.domain_field] || []
+            ).toString();
+            filterDomain = new Domain(
+                this.props.record.data.mailing_filter_domain || []
+            ).toString();
         } catch {
             // Don't raise a traceback if a domain set manually doesn't match the format expected.
             // This can happen when we unfocus the domain editor
@@ -102,9 +110,9 @@ export class Many2OneMailingFilter extends Many2One {
         }
 
         const modelFieldElement =
-            this.props.modelField &&
+            this.props.model_field &&
             document.querySelector(
-                `input#${this.props.modelField},div [name="${this.props.modelField}"]`
+                `input#${this.props.model_field},div [name="${this.props.model_field}"]`
             );
 
         let value = "";
@@ -116,9 +124,8 @@ export class Many2OneMailingFilter extends Many2One {
 
         el.classList.toggle("d-none", recordDomain === "[]");
         this.filter.canSaveFilter =
-            !this.props.mailingFilterId ||
+            !this.props.record.data.mailing_filter_id ||
             !!value.length ||
-            this.state.isFloating ||
             filterDomain !== recordDomain;
         this.filter.canRemoveFilter = !this.filter.canSaveFilter;
     }
@@ -147,14 +154,16 @@ export class Many2OneMailingFilter extends Many2One {
      * @param {Event} ev
      */
     async onRemoveFilter(ev) {
-        const filterId = this.props.mailingFilterId[0];
-        const mailingDomain = this.props.mailingDomain;
+        const filterId = this.props.record.data.mailing_filter_id[0];
+        const mailingDomain = this.props.record.data[this.props.domain_field];
         // Prevent multiple clicks to avoid trying to deleting same record multiple times.
         ev.target.disabled = true;
 
         await this.orm.unlink("mailing.filter", [filterId]);
-        this.update(false);
-        this.props.updateMailingDomain(mailingDomain);
+        this.props.record.update({
+            [this.props.name]: false,
+            [this.props.domain_field]: mailingDomain,
+        });
     }
 
     /**
@@ -179,41 +188,12 @@ export class Many2OneMailingFilter extends Many2One {
             const [newFilterId] = await this.env.model.orm.create("mailing.filter", [
                 {
                     name: filterName,
-                    mailing_domain: this.props.mailingDomain,
-                    mailing_model_id: this.props.modelField[0],
+                    mailing_domain: this.props.record.data[this.props.domain_field],
+                    mailing_model_id: this.props.record.data[this.props.model_field][0],
                 },
             ]);
-            this.update([newFilterId, filterName]);
+            this.props.record.update({ [this.props.name]: [newFilterId, filterName] });
         }
-    }
-}
-
-export class FieldMany2OneMailingFilter extends Component {
-    static template = "mass_mailing.FieldMany2OneMailingFilter";
-    static components = { Many2OneMailingFilter };
-    static props = {
-        ...Many2OneField.props,
-        domain_field: { type: String, optional: true },
-        model_field: { type: String, optional: true },
-    };
-    static defaultProps = {
-        ...Many2OneField.defaultProps,
-        domain_field: "mailing_domain",
-        model_field: "mailing_model_id",
-    };
-
-    get m2oProps() {
-        const p = computeM2OProps(this.props);
-        return {
-            ...p,
-            mailingDomain: this.props.record.data[this.props.domain_field],
-            mailingFilterCount: this.props.record.data.mailing_filter_count,
-            mailingFilterDomain: this.props.record.data.mailing_filter_domain,
-            mailingFilterId: this.props.record.data.mailing_filter_id,
-            modelField: this.props.model_field,
-            updateMailingDomain: (value) =>
-                this.props.record.update({ [this.props.domain_field]: value }),
-        };
     }
 }
 
