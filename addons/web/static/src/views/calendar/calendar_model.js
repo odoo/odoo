@@ -12,6 +12,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { browser } from "@web/core/browser/browser";
+import { makeContext } from "@web/core/context";
 
 export class CalendarModel extends Model {
     setup(params, services) {
@@ -660,6 +661,7 @@ export class CalendarModel extends Model {
                 model: writeResModel,
             },
             canAddFilter: !!filterInfo.writeResModel,
+            context: makeContext([filterInfo.context, this.meta.context]),
         };
     }
     /**
