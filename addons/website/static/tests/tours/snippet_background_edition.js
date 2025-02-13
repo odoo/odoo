@@ -55,7 +55,6 @@ function addCheck(steps, checkX, checkNoX, xType, noSwitch = false) {
     }
     if (!selectorCheckX && selectorCheckNoX) {
         steps.push({
-            isActive: ["auto"],
             trigger: selectorCheckNoX,
         });
     }

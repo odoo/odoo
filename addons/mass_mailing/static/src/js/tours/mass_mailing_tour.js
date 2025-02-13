@@ -21,7 +21,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: ".o_mass_mailing_mailing_tree",
     },
     {
