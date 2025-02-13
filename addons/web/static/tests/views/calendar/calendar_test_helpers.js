@@ -73,16 +73,6 @@ export const FAKE_FILTER_SECTIONS = [
                 hasAvatar: true,
             },
             {
-                type: "all",
-                label: "Everybody's calendar",
-                active: false,
-                value: "all",
-                colorIndex: null,
-                recordId: null,
-                canRemove: false,
-                hasAvatar: false,
-            },
-            {
                 type: "record",
                 label: "Brandon Freeman",
                 active: true,

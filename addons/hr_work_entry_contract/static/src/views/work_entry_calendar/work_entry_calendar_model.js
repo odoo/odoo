@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { useWorkEntry } from "@hr_work_entry_contract/views/work_entry_hook";
 
@@ -9,14 +8,6 @@ export class WorkEntryCalendarModel extends CalendarModel {
         super.setup(...arguments);
         const { generateWorkEntries } = useWorkEntry({ getRange: this.computeRange.bind(this) });
         this.generateWorkEntries = generateWorkEntries;
-    }
-
-    makeFilterAll() {
-        return {
-            ...super.makeFilterAll(...arguments),
-            label: _t("Everybody's work entries"),
-            active: true,
-        };
     }
 
     async updateData(data) {
