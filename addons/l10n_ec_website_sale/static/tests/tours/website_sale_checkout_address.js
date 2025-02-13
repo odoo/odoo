@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("tour_new_billing_ec", {
         },
         {
             content: "Save address",
-            trigger: "button#save_address",
+            trigger: "a[name='website_sale_main_button']",
             run: "click",
         },
         {
