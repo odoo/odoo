@@ -49,11 +49,11 @@ describe("Range collapsed", () => {
 
         test("should turn an empty heading into a checklist and display the right hint", async () => {
             const { el, editor } = await setupEditor("<h1>[]</h1>");
-            expect(getContent(el)).toBe(`<h1 placeholder="Heading 1" class="o-we-hint">[]</h1>`);
+            expect(getContent(el)).toBe(`<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]</h1>`);
 
             toggleCheckList(editor);
             expect(getContent(el)).toBe(
-                `<ul class="o_checklist"><li><h1 placeholder="Heading 1" class="o-we-hint">[]</h1></li></ul>`
+                `<ul class="o_checklist"><li><h1 o-we-hint-text="Heading 1" class="o-we-hint">[]</h1></li></ul>`
             );
 
             await insertText(editor, "a");

@@ -14,7 +14,7 @@ describe("insert separator", () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
             stepFunction: insertSeparator,
-            contentAfterEdit: `<hr contenteditable="false"><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+            contentAfterEdit: `<hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
             contentAfter: "<hr><p>[]<br></p>",
         });
     });
@@ -23,7 +23,7 @@ describe("insert separator", () => {
         await testEditor({
             contentBefore: "<p>content</p><p>[]<br></p>",
             stepFunction: insertSeparator,
-            contentAfterEdit: `<p>content</p><hr contenteditable="false"><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+            contentAfterEdit: `<p>content</p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
             contentAfter: "<p>content</p><hr><p>[]<br></p>",
         });
     });
@@ -68,7 +68,7 @@ describe("insert separator", () => {
         el.append(div);
         editor.shared.history.addStep();
         expect(getContent(el)).toBe(
-            `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p><div><hr contenteditable="false"></div>`
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><div><hr contenteditable="false"></div>`
         );
     });
 

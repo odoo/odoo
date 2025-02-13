@@ -18,13 +18,13 @@ test("can instantiate a Editor", async () => {
 
 test("cannot reattach an editor", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
     expect(() => editor.attachTo(el)).toThrow("Cannot re-attach an editor");
 });
 
 test("cannot reattach a destroyed editor", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
     editor.destroy();
     expect(getContent(el)).toBe(`<p>[]</p>`);
     expect(() => editor.attachTo(el)).toThrow("Cannot re-attach an editor");
@@ -44,10 +44,10 @@ test("can instantiate a Editor in an iframe", async () => {
 test("with an empty selector", async () => {
     const { el } = await setupEditor("<div>[]</div>", {});
     expect(el.innerHTML).toBe(
-        `<div class="o-paragraph o-we-hint" placeholder="Type &quot;/&quot; for commands"><br></div>`
+        `<div class="o-paragraph o-we-hint" o-we-hint-text="Type &quot;/&quot; for commands"><br></div>`
     );
     expect(getContent(el)).toBe(
-        `<div class="o-paragraph o-we-hint" placeholder='Type "/" for commands'>[]<br></div>`
+        `<div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>`
     );
 });
 
@@ -66,7 +66,7 @@ test("inverse selection", async () => {
 test("with an empty selector and a <br>", async () => {
     const { el } = await setupEditor("<p>[]<br></p>", {});
     expect(getContent(el)).toBe(
-        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 

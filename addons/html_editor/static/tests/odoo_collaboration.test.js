@@ -1140,12 +1140,12 @@ describe("History steps Ids", () => {
         editor.shared.split.splitBlock();
         editor.shared.history.addStep();
         expect(getContent(editor.editable)).toBe(
-            `<p>a</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+            `<p>a</p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
         editor.shared.split.splitBlock();
         editor.shared.history.addStep();
         expect(getContent(editor.editable)).toBe(
-            `<p>a</p><p><br></p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+            `<p>a</p><p><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
         editor.destroy();
     });

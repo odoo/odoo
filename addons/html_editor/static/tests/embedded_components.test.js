@@ -413,7 +413,7 @@ describe("Mount and Destroy embedded components", () => {
                         </div>
                     </div>
                 </div>
-                <p class="target o-we-hint" placeholder='Type "/" for commands'>[]<br></p>
+                <p class="target o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
             `)
         );
         for (const index of indexOrder) {
@@ -439,7 +439,7 @@ describe("Mount and Destroy embedded components", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false"></div>
-                <p class="target o-we-hint" placeholder='Type "/" for commands'>[]<br></p>
+                <p class="target o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
             `)
         );
         // Verify that there is no potential host outside of the editable,
