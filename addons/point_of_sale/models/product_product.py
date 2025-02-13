@@ -1,5 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+<<<<<<< saas-18.2
 from odoo import api, models, fields, _
+||||||| 90a08c770060f76ac4367e56d6f30c6ef7ecffaa
+from odoo import api, models, _
+=======
+from odoo import api, fields, models, _
+>>>>>>> 9decb6d427448ba2df135f6213c5dc5b0af940f6
 from odoo.exceptions import UserError
 
 
@@ -14,6 +20,16 @@ class ProductProduct(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids', 'barcode', 'product_tag_ids', 'default_code']
+
+    def _load_pos_data(self, data):
+        products = super()._load_pos_data(data)
+        config = self.env['pos.config'].browse(data['pos.config'][0]['id'])
+
+        if config.currency_id != self.env.company.currency_id:
+            for product in products:
+                product['lst_price'] = self.env.company.currency_id._convert(product['lst_price'], config.currency_id, self.env.company, fields.Date.today())
+
+        return products
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):

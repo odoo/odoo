@@ -142,8 +142,13 @@ class ProductTemplate(models.Model):
         for product in products:
             if different_currency:
                 product['list_price'] = self.env.company.currency_id._convert(product['list_price'], config_id.currency_id, self.env.company, fields.Date.today())
+<<<<<<< saas-18.2
                 product['standard_price'] = self.env.company.currency_id._convert(product['standard_price'], config_id.currency_id, self.env.company, fields.Date.today())
 
+||||||| 90a08c770060f76ac4367e56d6f30c6ef7ecffaa
+                product['lst_price'] = self.env.company.currency_id._convert(product['lst_price'], config_id.currency_id, self.env.company, fields.Date.today())
+=======
+>>>>>>> 9decb6d427448ba2df135f6213c5dc5b0af940f6
             product['image_128'] = bool(product['image_128'])
 
             if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
