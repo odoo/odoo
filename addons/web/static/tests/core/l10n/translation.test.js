@@ -151,6 +151,18 @@ test("_t fills the format specifiers in translated terms with its extra argument
     expect(translatedStr).toBe("Échéance dans 513 jours");
 });
 
+test("_t fills the format specifiers in translated terms with formatted lists", async () => {
+    patchTranslations({
+        "Due in %s days": "Échéance dans %s jours",
+        "Due in %(due_dates)s days for %(user)s": "Échéance dans %(due_dates)s jours pour %(user)s",
+    });
+    await mockLang("fr_FR");
+    const translatedStr1 = _t("Due in %s days", ["30", "60", "90"]);
+    const translatedStr2 = _t("Due in %(due_dates)s days for %(user)s", {due_dates: ["30", "60", "90"], user: "Mitchell"});
+    expect(translatedStr1).toBe("Échéance dans 30, 60 et 90 jours");
+    expect(translatedStr2).toBe("Échéance dans 30, 60 et 90 jours pour Mitchell");
+});
+
 test("_t fills the format specifiers in lazy translated terms with its extra arguments", async () => {
     translatedTerms[translationLoaded] = false;
     const translatedStr = _t("Due in %s days", 513);
