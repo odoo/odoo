@@ -18,6 +18,11 @@
 
     <data noupdate="1">
 
+    <record id="group_show_uom_price" model="res.groups">
+        <field name="name">UOM Price Display for Point of Sale</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <record id="rule_pos_bank_statement_account_user" model="ir.rule">
         <field name="name">Point Of Sale Bank Statement Accountant</field>
         <field name="model_id" ref="account.model_account_bank_statement" />
