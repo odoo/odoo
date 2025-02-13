@@ -865,7 +865,11 @@ class WebsocketConnectionHandler:
             return
         headers = request.httprequest.headers
         origin_url = urlparse(headers.get('origin'))
-        if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
+        if odoo.tools.config['proxy_mode']:
+            different_scheme = headers["X-Forwarded-Proto"] != request.httprequest.scheme
+        else:
+            different_scheme = origin_url.scheme != request.httprequest.scheme
+        if origin_url.netloc != headers.get('host') or different_scheme:
             session = root.session_store.new()
             session.update(get_default_session(), db=request.session.db)
             root.session_store.save(session)
