@@ -416,8 +416,10 @@ class PosSession(models.Model):
 
     def unlink(self):
         self.statement_line_ids.unlink()
-        (self.order_seq_id | self.login_number_seq_id).unlink()
-        return super(PosSession, self).unlink()
+        sequences_to_unlink = (self.order_seq_id | self.login_number_seq_id)
+        result = super().unlink()
+        sequences_to_unlink.unlink()
+        return result
 
     def login(self):
         self.ensure_one()
