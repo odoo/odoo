@@ -440,8 +440,16 @@ class Im_LivechatChannelRule(models.Model):
     auto_popup_timer = fields.Integer('Open automatically timer', default=0,
         help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Open automatically' otherwise this parameter will not be taken into account.")
     chatbot_script_id = fields.Many2one('chatbot.script', string='Chatbot')
-    chatbot_only_if_no_operator = fields.Boolean(
-        string='Enabled only if no operator', help='Enable the bot only if there is no operator available')
+    chatbot_enabled_condition = fields.Selection(
+        string="Enable ChatBot",
+        selection=[
+            ("always", "Always"),
+            ("only_if_no_operator", "Only when no operator is available"),
+            ("only_if_operator", "Only when an operator is available"),
+        ],
+        required=True,
+        default="always",
+    )
     channel_id = fields.Many2one('im_livechat.channel', 'Channel',
         help="The channel of the rule")
     country_ids = fields.Many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Country',
@@ -467,7 +475,12 @@ class Im_LivechatChannelRule(models.Model):
                     not rule.chatbot_script_id.active or not rule.chatbot_script_id.script_step_ids
                 ):
                     continue
-                if rule.chatbot_only_if_no_operator and rule.channel_id.available_operator_ids:
+                if (
+                    rule.chatbot_enabled_condition == "only_if_operator"
+                    and not rule.channel_id.available_operator_ids
+                    or rule.chatbot_enabled_condition == "only_if_no_operator"
+                    and rule.channel_id.available_operator_ids
+                ):
                     continue
                 return rule
             return False

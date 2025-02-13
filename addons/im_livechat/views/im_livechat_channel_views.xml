@@ -226,10 +226,7 @@
                                 <field name="chatbot_script_id" class="oe_inline" style="width: 60% !important;"
                                        options="{'no_create': True, 'no_open': True}"/>
                             </div>
-                            <label for="chatbot_only_if_no_operator" class="oe_inline" invisible="not chatbot_script_id" string="Enabled only if no operator"/>
-                            <div class="oe_inline" invisible="not chatbot_script_id">
-                                <field name="chatbot_only_if_no_operator"/>
-                            </div>
+                            <field name="chatbot_enabled_condition" invisible="not chatbot_script_id" widget="radio"/>
                             <field name="regex_url" placeholder="e.g. /contactus"/>
                             <label for="auto_popup_timer" class="oe_inline" invisible="action != 'auto_popup'"/>
                             <div class="oe_inline" invisible="action != 'auto_popup'">
