@@ -22,7 +22,7 @@ test(`render filter panel`, async () => {
     await start({});
     expect(`.o_calendar_filter`).toHaveCount(2);
     expect(`.o_calendar_filter:eq(0) .o_cw_filter_label`).toHaveText("Attendees");
-    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(4);
+    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
     expect(`.o_calendar_filter:eq(1) .o_cw_filter_label`).toHaveText("Users");
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item`).toHaveCount(2);
 });
@@ -33,7 +33,6 @@ test(`filters are correctly sorted`, async () => {
         "Mitchell Admin",
         "Brandon Freeman",
         "Marc Demo",
-        "Everybody's calendar",
     ]);
     expect(queryAllTexts`.o_calendar_filter:eq(1) .o_calendar_filter_item`).toEqual([
         "Brandon Freeman",
@@ -44,7 +43,7 @@ test(`filters are correctly sorted`, async () => {
 test(`section can collapse`, async () => {
     await start({});
     expect(`.o_calendar_filter:eq(0) .o_cw_filter_collapse_icon`).toHaveCount(1);
-    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(4);
+    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
 
     await contains(`.o_calendar_filter:eq(0) .o_cw_filter_label`).click();
     await runAllTimers();
@@ -52,7 +51,7 @@ test(`section can collapse`, async () => {
 
     await contains(`.o_calendar_filter:eq(0) .o_cw_filter_label`).click();
     await runAllTimers();
-    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(4);
+    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
 });
 
 test(`section cannot collapse`, async () => {
@@ -69,9 +68,8 @@ test(`section cannot collapse`, async () => {
 
 test(`filters can have avatar`, async () => {
     await start({});
-    expect(`.o_calendar_filter:eq(0) .o_cw_filter_avatar`).toHaveCount(4);
+    expect(`.o_calendar_filter:eq(0) .o_cw_filter_avatar`).toHaveCount(3);
     expect(`.o_calendar_filter:eq(0) img.o_cw_filter_avatar`).toHaveCount(3);
-    expect(`.o_calendar_filter:eq(0) i.o_cw_filter_avatar`).toHaveCount(1);
     expect(
         `.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(0) .o_cw_filter_avatar`
     ).toHaveAttribute("data-src", "/web/image/res.partner/3/avatar_128");
@@ -91,7 +89,7 @@ test(`filters cannot have avatar`, async () => {
 
 test(`filter can have remove button`, async () => {
     await start({});
-    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(4);
+    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item .o_remove`).toHaveCount(2);
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(0) .o_remove`).toHaveCount(0);
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(1) .o_remove`).toHaveCount(1);
@@ -125,8 +123,8 @@ test(`click on filter`, async () => {
     await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(0) input`);
     await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(1) input`);
     await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(2) input`);
-    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(3) input`);
-    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(3) input`);
+    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_items_checkall input`);
+    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_items_checkall input`);
     expect.verifySteps([
         "partner_ids 3 false",
         "partner_ids 4 false",

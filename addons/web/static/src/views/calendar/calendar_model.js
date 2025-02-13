@@ -31,7 +31,6 @@ export class CalendarModel extends Model {
         };
         this.meta.scale = this.getLocalStorageScale();
         this.data = {
-            filters: {},
             filterSections: {},
             hasCreateRight: null,
             hasEditRight: null,
@@ -151,11 +150,9 @@ export class CalendarModel extends Model {
     get unusualDays() {
         return this.data.unusualDays;
     }
-
     get quickCreateFormViewId() {
         return this.meta.quickCreateViewId;
     }
-
     get defaultFilterLabel() {
         return _t("Undefined");
     }
@@ -645,9 +642,6 @@ export class CalendarModel extends Model {
             );
         }
 
-        const previousAllFilter = previousFilters.find((f) => f.type === "all");
-        filters.push(this.makeFilterAll(previousAllFilter, isUserOrPartner, filterInfo.label));
-
         return {
             label: filterInfo.label,
             fieldName,
@@ -856,23 +850,6 @@ export class CalendarModel extends Model {
             canRemove: false,
             colorIndex,
             hasAvatar: !!value,
-        };
-    }
-    /**
-     * @protected
-     */
-    makeFilterAll(previousAllFilter, isUserOrPartner, sectionLabel) {
-        return {
-            type: "all",
-            recordId: null,
-            value: "all",
-            label: isUserOrPartner ? _t("Everybody's calendars") : _t("Everything"),
-            active: previousAllFilter
-                ? previousAllFilter.active
-                : this.meta.allFilter[sectionLabel] || false,
-            canRemove: false,
-            colorIndex: null,
-            hasAvatar: false,
         };
     }
 }
