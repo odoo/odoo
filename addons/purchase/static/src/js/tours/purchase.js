@@ -29,7 +29,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_purchase_order",
         },
         {
@@ -39,7 +38,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_purchase_order",
         },
         {
@@ -57,7 +55,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_field_res_partner_many2one[name='partner_id'] .o_external_button",
         },
         {
@@ -67,7 +64,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_purchase_order",
         },
         {
@@ -85,11 +81,9 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_purchase_order",
         },
         {
@@ -107,7 +101,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             _t("Send the request for quotation to your vendor.")
         ),
         {
-            isActive: ["auto"],
             trigger: ".modal-footer button[name='action_send_mail']",
         },
         {
@@ -117,7 +110,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_purchase_order",
         },
         {
