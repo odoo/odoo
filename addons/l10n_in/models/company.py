@@ -19,11 +19,6 @@ class ResCompany(models.Model):
         store=True,
         readonly=False,
     )
-    l10n_in_edi_production_env = fields.Boolean(
-        string="Indian Production Environment",
-        help="Enable the use of production credentials",
-        groups="base.group_system",
-    )
     l10n_in_pan = fields.Char(
         string="PAN",
         compute="_compute_l10n_in_hsn_code_digit_and_l10n_in_pan",
@@ -177,3 +172,7 @@ class ResCompany(models.Model):
     def action_update_state_as_per_gstin(self):
         self.ensure_one()
         self.partner_id.action_update_state_as_per_gstin()
+
+    def _l10n_in_is_dummy_gst_number(self):
+        for company in self:
+            return company.country_code == "IN" and company.vat and company.vat != "24DUMMY1234AAZA"

@@ -97,7 +97,7 @@ class ResPartner(models.Model):
             raise ValidationError(_("Please enter the GSTIN"))
         if not self.env.company.l10n_in_gstin_status_feature:
             raise ValidationError(_("This feature is not activated. Go to Settings to activate this feature."))
-        is_production = self.env.company.sudo().l10n_in_edi_production_env
+        is_production = self.env.company.sudo()._l10n_in_is_dummy_gst_number()
         params = {
             "gstin_to_search": self.vat,
         }

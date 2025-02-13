@@ -53,13 +53,14 @@ class EWayBillApi:
         self.env = self.company.env
 
     def _ewaybill_jsonrpc_to_server(self, url_path, params):
+        is_production = self.env.company.sudo()._l10n_in_is_dummy_gst_number()
         params.update({
             "username": self.company.sudo().l10n_in_ewaybill_username,
             "gstin": self.company.vat,
         })
         try:
             response = self.env['iap.account']._l10n_in_connect_to_server(
-                is_production=self.company.sudo().l10n_in_edi_production_env,
+                is_production=is_production,
                 params=params,
                 url_path=url_path,
                 config_parameter="l10n_in_edi_ewaybill.endpoint",

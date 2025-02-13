@@ -12,11 +12,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     group_l10n_in_reseller = fields.Boolean(implied_group='l10n_in.group_l10n_in_reseller', string="Manage Reseller(E-Commerce)")
-    l10n_in_edi_production_env = fields.Boolean(
-        string="Indian Production Environment",
-        related="company_id.l10n_in_edi_production_env",
-        readonly=False
-    )
     l10n_in_hsn_code_digit = fields.Selection(related='company_id.l10n_in_hsn_code_digit', readonly=False)
 
     # TDS/TCS settings
@@ -64,18 +59,6 @@ class ResConfigSettings(models.TransientModel):
                     WHERE id = {self.env.company.id}
                 """
             ))
-
-    def l10n_in_edi_buy_iap(self):
-        if not self.l10n_in_edi_production_env or not (self.module_l10n_in_edi or self.module_l10n_in_ewaybill or self.l10n_in_gstin_status_feature or self.l10n_in_gst_efiling_feature):
-            raise ValidationError(_(
-                "Please ensure that at least one Indian service and production environment is enabled,"
-                " and save the configuration to proceed with purchasing credits."
-            ))
-        return {
-            'type': 'ir.actions.act_url',
-            'url': self.env["iap.account"].get_credits_url(service_name=IAP_SERVICE_NAME),
-            'target': '_new'
-        }
 
     def _l10n_in_check_gst_number(self):
         if not self.company_id.vat:

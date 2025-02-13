@@ -547,13 +547,14 @@ class AccountEdiFormat(models.Model):
 
     @api.model
     def _l10n_in_edi_connect_to_server(self, company, url_path, params):
+        is_production = self.env.company.sudo()._l10n_in_is_dummy_gst_number()
         params.update({
             "username": company.sudo().l10n_in_edi_username,
             "gstin": company.vat,
         })
         try:
             return self.env['iap.account']._l10n_in_connect_to_server(
-              company.sudo().l10n_in_edi_production_env,
+              is_production,
               params,
               url_path,
               "l10n_in_edi.endpoint"
