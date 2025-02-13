@@ -3,7 +3,8 @@
     aspect-ratio: 16/9;
 
     &.o-isTalking {
-        box-shadow: inset 0 0 0 map-get($spacers, 1) var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline-offset: -4px;
 
         &.o-inset {
             box-shadow: inset 0 0 0 map-get($spacers, 1)/2 var(--discuss-talkingColor, $o-discuss-talkingColor);
