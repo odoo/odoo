@@ -166,13 +166,13 @@ export class Builder extends Component {
     }
 
     discard() {
-        if (this.editor.shared.dirty.isEditableDirty()) {
+        if (this.state.canUndo) {
             this.dialog.add(ConfirmationDialog, {
                 body: _t(
                     "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
                 ),
                 confirm: () => this.props.closeEditor(),
-                cancel: () => { },
+                cancel: () => {},
             });
         } else {
             this.props.closeEditor();
@@ -180,8 +180,9 @@ export class Builder extends Component {
     }
 
     getInvisibleSelector(isMobile = this.props.isMobile) {
-        return `.o_snippet_invisible, ${isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
-            }`;
+        return `.o_snippet_invisible, ${
+            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
+        }`;
     }
 
     async save() {
@@ -268,14 +269,14 @@ export class Builder extends Component {
     }
 
     onBeforeUnload(event) {
-        if (!this.isSaving && this.editor.shared.dirty.isEditableDirty()) {
+        if (!this.isSaving && this.state.canUndo) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
         }
     }
 
     async onBeforeLeave() {
-        if (this.editor.shared.dirty.isEditableDirty()) {
+        if (this.state.canUndo) {
             let continueProcess = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {

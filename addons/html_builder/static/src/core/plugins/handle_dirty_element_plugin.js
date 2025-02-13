@@ -3,7 +3,7 @@ import { SAVABLE_SELECTOR } from "@html_builder/utils/utils";
 
 export class HandleDirtyElementPlugin extends Plugin {
     static id = "dirty";
-    static shared = ["handleDirtyElement", "isEditableDirty"];
+    static shared = ["handleDirtyElement"];
     resources = {
         handleNewRecords: this.handleMutations,
     };
@@ -51,9 +51,5 @@ export class HandleDirtyElementPlugin extends Plugin {
             }
             savableEl.classList.add("o_dirty");
         }
-    }
-
-    isEditableDirty() {
-        return !!this.editable.querySelector(".o_dirty");
     }
 }
