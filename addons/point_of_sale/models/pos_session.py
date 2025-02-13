@@ -1723,7 +1723,7 @@ class PosSession(models.Model):
             message += _('Opening control message: ')
             message += notes
         if message:
-            self.message_post(body=plaintext2html(message))
+            self.message_post(body=plaintext2html(message), email_from=self.env.user.email or "admin@example.com")
 
     def action_view_order(self):
         return {
