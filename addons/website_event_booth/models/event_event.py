@@ -33,6 +33,11 @@ class EventEvent(models.Model):
     def toggle_booth_menu(self, val):
         self.booth_menu = val
 
+    def copy_event_menus(self, old_events):
+        super().copy_event_menus(old_events)
+        for new_event in self:
+            new_event.booth_menu_ids.menu_id.parent_id = new_event.menu_id
+
     def _get_menu_update_fields(self):
         return super()._get_menu_update_fields() + ['booth_menu']
 
