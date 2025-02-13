@@ -945,6 +945,22 @@ class AccountTax(models.Model):
             incl_base_multiplicator = 1.0 if total_percentage == 1.0 else 1 - total_percentage
             return raw_base * self.amount / 100.0 / incl_base_multiplicator
 
+    @api.model
+    def prepare_tax_extra_data(self, tax, special_mode, **kwargs):
+        if special_mode == 'total_included':
+            price_include = True
+        elif special_mode == 'total_excluded':
+            price_include = False
+        else:
+            price_include = tax.price_include
+        return {
+            **kwargs,
+            'tax': tax,
+            'price_include': price_include,
+            'extra_base_for_tax': 0.0,
+            'extra_base_for_base': 0.0,
+        }
+
     def _get_tax_details(
         self,
         price_unit,
@@ -1008,29 +1024,15 @@ class AccountTax(models.Model):
             if tax_amount is not None:
                 add_tax_amount_to_results(tax, tax_amount)
 
-        def prepare_tax_extra_data(tax, **kwargs):
-            if special_mode == 'total_included':
-                price_include = True
-            elif special_mode == 'total_excluded':
-                price_include = False
-            else:
-                price_include = tax.price_include
-            return {
-                **kwargs,
-                'tax': tax,
-                'price_include': price_include,
-                'extra_base_for_tax': 0.0,
-                'extra_base_for_base': 0.0,
-            }
-
         # Flatten the taxes and order them.
         batching_results = self._batch_for_taxes_computation(special_mode=special_mode)
         sorted_taxes = batching_results['sorted_taxes']
         taxes_data = {}
         reverse_charge_taxes_data = {}
         for tax in sorted_taxes:
-            taxes_data[tax.id] = prepare_tax_extra_data(
+            taxes_data[tax.id] = self.prepare_tax_extra_data(
                 tax,
+                special_mode,
                 group=batching_results['group_per_tax'].get(tax.id),
                 batch=batching_results['batch_per_tax'][tax.id],
             )
