@@ -1,0 +1,86 @@
+<odoo>
+
+     <!-- Inherit the existing employee form view to add new fields -->
+    <record id="view_hr_employee_form_inherit_training" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.training</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <!-- Add a new page for Training Records -->
+                <page string="Training Courses">
+                    <field name="training_course_ids" context="{'default_employee_id': active_id}">
+                        <tree string="Training Courses">
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="duration"/>
+                            <field name="category_id"/>
+                        </tree>
+                        <form string="Training Courses">
+                            <sheet>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="duration"/>
+                                    <field name="category_id"/>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+                <page string="Training Plans">
+                    <field name="training_plan_ids" context="{'default_employee_id': active_id}">
+                    <tree string="Training Plans">
+                        <field name="name"/>
+                        <field name="due_date"/>
+                        <field name="progress"/>
+                    </tree>
+                    <form string="Training Plans">
+                        <sheet>
+                            <group>
+                                <field name="name"/>
+                                <field name="role_id"/>
+                                <field name="course_ids" widget="many2many_tags"/>
+                                <field name="due_date"/>
+                                <field name="progress"/>
+                            </group>
+                        </sheet>
+                    </form>
+                    </field>
+                </page>
+               <!-- <page>
+                     <form string="Training Plan">
+                        <sheet>
+                            <group>
+                                <field name="name"/>
+                                <field name="employee_id"/>
+                                <field name="role_id"/>
+                                <field name="course_ids" widget="many2many_tags"/>
+                                <field name="due_date"/>
+                                <field name="progress"/>
+                            </group>
+                        </sheet>
+                    </form> 
+                </page>-->
+                <!-- Add a new page for Skills-->
+                <page string="Skills">
+                    <field name="skill_ids" context="{'default_employee_id': active_id}">
+                    <tree string="Skills">
+                        <field name="display_name"/>
+                        <field name="description"/>
+                    </tree>
+                    <form string="Skills">
+                        <sheet>
+                            <group>
+                                <field name="display_name"/>
+                                <field name="description"/>
+                                <field name="course_ids"/>
+                            </group>
+                        </sheet>
+                    </form>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

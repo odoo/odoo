@@ -1,0 +1,20 @@
+<odoo>
+    <record id="email_template_overdue_training" model="mail.template">
+        <field name="name">Overdue Training Notification</field>
+        <field name="email_from">${(user.email_formatted or '')|safe}</field>
+        <field name="subject">Training Plan Overdue: ${object.name}</field>
+        <field name="model_id" ref="model_training_plan"/>
+        <field name="body_html">
+            <![CDATA[
+            <p>Hello ${object.employee_id.name},</p>
+            <p>Your training plan <strong>${object.name}</strong> is overdue. Please complete the following courses:</p>
+            <ul>
+                <t t-foreach="object.course_ids" t-as="course">
+                    <li>${course.name}</li>
+                </t>
+            </ul>
+            <p>Due date: ${object.due_date}</p>
+            ]]>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<odoo>
+    <template id="report_training_history">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <h2>Training History for ${doc.name}</h2>
+                <ul>
+                    <t t-foreach="doc.training_record_ids" t-as="record">
+                        <li>
+                            ${record.course_id.name} - Completed on ${record.completion_date} (Score: ${record.score})
+                        </li>
+                    </t>
+                </ul>
+            </t>
+        </t>
+    </template>
+</odoo>

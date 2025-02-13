@@ -1,0 +1,15 @@
+
+<odoo>
+    <record id="action_notify_overdue_training" model="ir.cron">
+        <field name="name">Notify Overdue Training</field>
+        <field name="model_id" ref="model_training_plan"/>
+        <field name="state">code</field>
+        <field name="code">
+            model._notify_overdue_training()
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+    </record>
+</odoo>

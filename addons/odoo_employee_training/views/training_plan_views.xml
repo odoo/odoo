@@ -1,0 +1,43 @@
+<odoo>
+  <record id="view_training_plan_form" model="ir.ui.view">
+        <field name="name">training.plan.form</field>
+        <field name="model">training.plan</field>
+        <field name="arch" type="xml">
+            <form string="Training Plan">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="role_id"/>
+                        <field name="course_ids" widget="many2many_tags"/>
+                        <field name="due_date"/>
+                        <field name="progress"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_training_plan_tree" model="ir.ui.view">
+        <field name="name">training.plan.tree</field>
+        <field name="model">training.plan</field>
+        <field name="arch" type="xml">
+            <tree string="Training Plans">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="due_date"/>
+                <field name="progress"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action to manage training plans -->
+    <record id="action_training_plan" model="ir.actions.act_window">
+        <field name="name">Training Plans</field>
+        <field name="res_model">training.plan</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_training_plan" name="Training Plans" parent="hr.menu_hr_root"
+              action="action_training_plan"/>
+</odoo>
