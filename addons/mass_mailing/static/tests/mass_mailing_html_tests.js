@@ -1,5 +1,6 @@
 import weTestUtils from "@web_editor/../tests/test_utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registry } from "@web/core/registry";
 import {
     editInput,
     getFixture,
@@ -13,10 +14,21 @@ import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
 let serverData;
 let fixture;
 
+function makeFakeMailStoreService() {
+    return {
+        start: (env) => ({}),
+    };
+}
+
+function loadServices() {
+    registry.category("services").add("mail.store", makeFakeMailStoreService());
+}
+
 QUnit.module('mass_mailing', {}, function () {
 QUnit.module('field html', (hooks) => {
     hooks.beforeEach(() => {
         fixture = getFixture();
+        loadServices();
         const models = weTestUtils.wysiwygData({
             'mailing.mailing': {
                 fields: {

@@ -111,6 +111,10 @@ export class ChatHub extends Component {
         return true;
     }
 
+    shouldDisplayChatWindow(cw) {
+        return this.isShown || this.ui.isSmall;
+    }
+
     expand() {
         this.chatHub.compact = false;
         this.more.isOpen = this.chatHub.folded.length > this.chatHub.maxFolded;

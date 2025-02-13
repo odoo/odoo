@@ -141,13 +141,6 @@ describe("buttons", () => {
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
     });
-
-    test("should open chatgpt dialog using power buttons", async () => {
-        await setupEditor("<p>[]<br></p>");
-        click(".o_we_power_buttons .power_button:contains('AI')");
-        await animationFrame();
-        expect(".modal .modal-header:contains('Generate Text with AI')").toHaveCount(1);
-    });
 });
 
 describe.tags("desktop");
