@@ -234,15 +234,8 @@ export class LinkPlugin extends Plugin {
         this.removeLinkShortcut = this.services.command.add(
             "Create link",
             () => {
-                // To avoid a race condition between the events spawn by :
-                // 1. the `focus editable` and
-                // 2. the odoo `Shortcut bar` closure
-                // Which can affect the link overlay opening sequence if we keep it in sync.
-                // Therefore we need to wait for the next tick before triggering openLinkTools.
-                setTimeout(() => {
-                    this.toggleLinkTools();
-                    this.dependencies.selection.focusEditable();
-                });
+                this.toggleLinkTools();
+                this.dependencies.selection.focusEditable();
             },
             {
                 hotkey: "control+k",
