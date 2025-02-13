@@ -162,10 +162,10 @@ test('many2one_avatar_user widget edited by the smart action "Assign to me" in l
     await openListView("m2x.avatar.user", {
         arch: "<list multi_edit='1'><field name='user_id' widget='many2one_avatar_user'/></list>",
     });
-    await contains(":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+    await contains(":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user .o-many2one", {
         text: "Luigi",
     });
-    await contains(":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+    await contains(":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user .o-many2one", {
         text: "Mario",
     });
     // Select all
@@ -178,10 +178,10 @@ test('many2one_avatar_user widget edited by the smart action "Assign to me" in l
     await contains(".o_dialog");
     // Cancel
     await click(".o_dialog .modal-footer button:nth-child(2)");
-    await contains(":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+    await contains(":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user .o-many2one", {
         text: "Luigi",
     });
-    await contains(":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+    await contains(":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user .o-many2one", {
         text: "Mario",
     });
     // Assign me
@@ -191,10 +191,10 @@ test('many2one_avatar_user widget edited by the smart action "Assign to me" in l
     // Confirm
     await click(".o_dialog .modal-footer button:nth-child(1)");
     await contains(".o_dialog", { count: 0 });
-    await contains(":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+    await contains(":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user .o-many2one", {
         text: "Mitchell Admin",
     });
-    await contains(":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+    await contains(":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user .o-many2one", {
         text: "Mitchell Admin",
     });
     // Unassign me
@@ -203,7 +203,7 @@ test('many2one_avatar_user widget edited by the smart action "Assign to me" in l
     await contains(".o_dialog");
     // Confirm
     await click(".o_dialog .modal-footer button:nth-child(1)");
-    await contains(".o_field_many2one_avatar_user .o_form_uri span", { count: 0 });
+    await contains(".o_field_many2one_avatar_user .o_form_uri", { count: 0 });
 });
 
 test('many2many_avatar_user widget edited by the smart action "Assign to me"', async () => {
@@ -251,7 +251,7 @@ test("avatar_user widget displays the appropriate user image in list view", asyn
         arch: "<list><field name='user_id' widget='many2one_avatar_user'/></list>",
     });
 
-    await contains(`.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128"]`);
+    await contains(`.o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128"]`);
 });
 
 test("avatar_user widget displays the appropriate user image in kanban view", async () => {
@@ -261,7 +261,7 @@ test("avatar_user widget displays the appropriate user image in kanban view", as
     await start();
     await openKanbanView("m2x.avatar.user", {
         res_id: avatarUserId,
-        arch: ` 
+        arch: `
             <kanban>
                 <templates>
                     <t t-name="card">
@@ -272,7 +272,7 @@ test("avatar_user widget displays the appropriate user image in kanban view", as
         `,
     });
     await start();
-    await contains(`.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128"]`);
+    await contains(`.o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128"]`);
 });
 
 test("avatar card preview", async () => {
@@ -323,7 +323,7 @@ test("avatar card preview", async () => {
         `,
     });
     // Open card
-    await click(".o_m2o_avatar > img");
+    await click(".o_avatar > img");
     await contains(".o_avatar_card");
     await contains(".o_card_user_infos > span", { text: "Mario" });
     await contains(".o_card_user_infos > a", { text: "Mario@odoo.test" });
@@ -363,7 +363,7 @@ test("many2one_avatar_user widget in list view", async () => {
     await openListView("m2x.avatar.user", {
         arch: "<list><field name='user_id' widget='many2one_avatar_user'/></list>",
     });
-    await click(".o_data_cell .o_m2o_avatar > img");
+    await click(".o_data_cell .o_avatar > img");
     await contains(".o_avatar_card");
     await contains(".o_card_user_infos > span", { text: "Mario" });
     await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });

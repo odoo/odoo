@@ -105,9 +105,9 @@ test("many2one_avatar_resource widget in kanban view", async () => {
                 </templates>
             </kanban>`,
     });
-    await contains(".o_m2o_avatar", { count: 3 });
+    await contains(".o-kanban-many2one .o_avatar", { count: 3 });
     // fa-wrench should be displayed for the first task
-    await contains(".o_m2o_avatar > span.o_material_resource > i.fa-wrench");
+    await contains(".o_avatar > span.o_material_resource > i.fa-wrench");
     // Second and third slots should display employee avatar
     await contains(".o_field_many2one_avatar_resource img", { count: 2 });
     expect(queryFirst(".o_field_many2one_avatar_resource img").getAttribute("data-src")).toBe(
@@ -119,10 +119,10 @@ test("many2one_avatar_resource widget in kanban view", async () => {
         ).getAttribute("data-src")
     ).toBe("/web/image/resource.resource/" + data.resourcePierreId + "/avatar_128");
     // 1. Clicking on material resource's icon
-    await click(".o_kanban_record:nth-of-type(1) .o_m2o_avatar");
+    await click(".o_kanban_record:nth-of-type(1) .o_avatar > span > i");
     await contains(".o_avatar_card", { count: 0 });
     // 2. Clicking on human resource's avatar with no user associated
-    await click(".o_kanban_record:nth-of-type(2) .o_m2o_avatar");
+    await click(".o_kanban_record:nth-of-type(2) .o_avatar > img");
     await contains(".o_card_user_infos span", { text: "Marie" });
     await contains(
         ".o_avatar_card",
@@ -135,7 +135,7 @@ test("many2one_avatar_resource widget in kanban view", async () => {
         'No "Send Message" button should be displayed for this employee as it is linked to no user'
     );
     // 3. Clicking on human resource's avatar with one user associated
-    await click(".o_kanban_record:nth-of-type(3) .o_m2o_avatar");
+    await click(".o_kanban_record:nth-of-type(3) .o_avatar > img");
     await contains(".o_card_user_infos span", { text: "Pierre" });
     await contains(
         ".o_avatar_card",

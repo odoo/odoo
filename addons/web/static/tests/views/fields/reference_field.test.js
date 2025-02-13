@@ -149,8 +149,8 @@ test("ReferenceField can quick create models", async () => {
     expect.verifySteps([
         "get_views",
         "onchange",
-        "name_search", // for the select
-        "name_search", // for the spawned many2one
+        "web_name_search", // for the select
+        "web_name_search", // for the spawned many2one
         "name_create",
         "web_save",
     ]);
@@ -302,9 +302,9 @@ test("reference in form view", async () => {
             });
             return false;
         }
-        if (method === "name_search") {
+        if (method === "web_name_search") {
             expect(model).toBe("partner.type", {
-                message: "the name_search should be done on the newly set model",
+                message: "the web_name_search should be done on the newly set model",
             });
         }
         if (method === "web_save") {

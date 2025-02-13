@@ -129,8 +129,7 @@ export class ReferenceField extends Component {
         this.props.record.update({ [this.props.name]: false });
     }
 
-    updateM2O(data) {
-        const value = data[this.props.name];
+    updateM2O(value) {
         const resModel = this.state.currentRelation || this.getRelation();
         this.props.record.update({
             [this.props.name]: value && {

@@ -47,7 +47,7 @@ export const m2oSupportedTypes = ["many2one"];
 export function buildM2OFieldDescription(component) {
     return {
         component,
-        displayName: _t("Many2One"),
+        displayName: _t("Many2one"),
         extractProps: extractM2OFieldProps,
         supportedOptions: m2oSupportedOptions,
         supportedTypes: m2oSupportedTypes,

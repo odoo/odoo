@@ -348,19 +348,17 @@ export class Many2XAutocomplete extends Component {
         });
     }
     mapRecordToOption(record) {
+        const option = {
+            value: record.id,
+            label: record.display_name ? record.display_name.split("\n")[0] : _t("Unnamed"),
+            record,
+        };
+
         if (this.props.mapLoadedRecordToOption) {
-            return this.props.mapLoadedRecordToOption({
-                value: record.id,
-                label: record.display_name ? record.display_name.split("\n")[0] : _t("Unnamed"),
-                record,
-            });
-        } else {
-            return {
-                value: record.id,
-                label: record.display_name ? record.display_name.split("\n")[0] : _t("Unnamed"),
-                record,
-            };
+            Object.assign(option, this.props.mapLoadedRecordToOption(option));
         }
+
+        return option;
     }
     async loadOptionsSource(request) {
         if (this.lastProm) {
