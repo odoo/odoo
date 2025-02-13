@@ -61,15 +61,6 @@
     }
 
     // Utility classes
-    .oe_form_box_info {
-        @include o-webclient-padding($top: 5px, $bottom: 5px);
-        > p {
-            margin: auto;
-        }
-    }
-    .oe_text_center {
-        text-align: center;
-    }
     .oe_inline, .o_field_widget.oe_inline > * {
         width: auto!important;
     }
@@ -318,21 +309,6 @@
             &:not(.modal .o_form_statusbar) {
                 background-color: $body-bg;
                 box-shadow: 0 0.3rem 0.25rem -0.25rem rgba(0, 0, 0, 0.075);
-            }
-        }
-
-        > .o_statusbar_status {
-            display: flex;
-            align-items: center;
-            align-content: space-around;
-
-            > .o_arrow_button {
-                font-weight: $font-weight-bold;
-
-                // Last element at the right should respect overall padding
-                &:first-of-type {
-                    padding-right: $o-horizontal-padding;
-                }
             }
         }
 
