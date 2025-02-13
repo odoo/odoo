@@ -5,10 +5,7 @@
     <t t-set="partitionedActions" t-value="threadActions.partition"/>
     <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column shadow-sm bg-100"
         t-att-style="style"
-        t-att-class="{
-            'w-100 h-100 o-mobile': ui.isSmall,
-            'rounded-4 border border-dark mb-2': !ui.isSmall,
-        }"
+        t-att-class="attClass"
         t-on-keydown="onKeydown"
         tabindex="1"
     >

@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatHub">
-    <div class="o-mail-ChatHub d-print-none" t-if="isShown or ui.isSmall">
+    <div class="o-mail-ChatHub d-print-none">
 
         <t t-set="visibleChatWindows" t-value="chatHub.compact ? chatHub.opened.filter(({ bypassCompact }) => bypassCompact) : chatHub.opened "/>
         <t t-foreach="visibleChatWindows" t-as="cw" t-key="cw.localId">
-            <ChatWindow chatWindow="cw" right="chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (visibleChatWindows.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2)"/>
+            <ChatWindow chatWindow="cw" t-if="shouldDisplayChatWindow(cw)" right="chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (visibleChatWindows.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2)"/>
         </t>
         <div class="o-mail-ChatHub-bubbles position-fixed d-flex flex-column align-content-start justify-content-end align-items-center" t-attf-style="top: {{position.top}}; left: {{position.left}}; right: {{position.right}}; bottom: {{position.bottom}}" t-att-class="{ 'o-liftUp': busMonitoring.hasConnectionIssues, 'o-mobile': isMobileOS }" t-ref="bubbles">
             <div class="d-flex flex-column align-content-start justify-content-end align-items-center gap-1">
@@ -22,7 +22,9 @@
                 </Dropdown>
                 <t t-if="store.chatHub.compact" t-call="mail.ChatHub.compactButton"/>
                 <t t-else="">
-                    <ChatBubble t-foreach="chatHub.folded.slice(0, chatHub.maxFolded)" t-as="cw" t-key="cw.localId" chatWindow="cw"/>
+                    <t t-foreach="chatHub.folded.slice(0, chatHub.maxFolded)" t-as="cw" t-key="cw.localId">
+                        <ChatBubble t-if="shouldDisplayChatWindow(cw)" chatWindow="cw"/>
+                    </t>
                     <div class="o-mail-ChatHub-extraActions"/>
                     <t t-if="chatHub.folded.length > chatHub.maxFolded" t-call="mail.ChatHub.hiddenButton"/>
                 </t>
