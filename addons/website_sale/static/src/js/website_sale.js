@@ -401,7 +401,16 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             if (productGrid) {
                 productGrid.classList.add("opacity-50");
             }
-            $(ev.currentTarget).closest("form").submit();
+            const searchParams = new URLSearchParams(window.location.search);
+            searchParams.delete('attribute_value');
+            const attributeValues = ev.currentTarget.closest('form')
+                .querySelectorAll('input:checked, select');
+            for (const attributeValue of attributeValues) {
+                if (attributeValue.value) {
+                    searchParams.append('attribute_value', attributeValue.value);
+                }
+            }
+            window.location.search = searchParams.toString();
         }
     },
     /**
