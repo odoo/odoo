@@ -57,13 +57,10 @@ const chatWindowPatch = {
                 break;
             }
             case CW_LIVECHAT_STEP.FEEDBACK: {
+                this.livechatStep = CW_LIVECHAT_STEP.NONE;
                 super.close(...arguments);
                 break;
             }
-        }
-        if (this.livechatStep !== CW_LIVECHAT_STEP.CONFIRM_CLOSE) {
-            this.store.env.services["im_livechat.livechat"]?.leave();
-            this.store.env.services["im_livechat.chatbot"]?.stop();
         }
     },
 };

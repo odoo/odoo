@@ -323,12 +323,12 @@ test("Can compact chat hub", async () => {
     await hover(".o-mail-ChatHub-hiddenBtn");
     await click("button.fa.fa-ellipsis-h[title='Chat Options']");
     await click("button.o-mail-ChatHub-option", { text: "Hide all conversations" });
-    await contains(".o-mail-ChatBubble i.fa.fa-commenting");
-    await click(".o-mail-ChatBubble i.fa.fa-commenting");
+    await contains(".o-mail-ChatBubble i.fa.fa-comments");
+    await click(".o-mail-ChatBubble i.fa.fa-comments");
     await contains(".o-mail-ChatBubble", { count: 8 });
     // alternative compact: click hidden button
     await click(".o-mail-ChatBubble", { text: "+13" });
-    await contains(".o-mail-ChatBubble i.fa.fa-commenting");
+    await contains(".o-mail-ChatBubble i.fa.fa-comments");
 });
 
 test("Compacted chat hub shows badge with amount of hidden chats with important messages", async () => {
@@ -359,7 +359,7 @@ test("Compacted chat hub shows badge with amount of hidden chats with important 
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
     await click(".o-mail-ChatHub-hiddenBtn");
-    await contains(".o-mail-ChatBubble i.fa.fa-commenting");
+    await contains(".o-mail-ChatBubble i.fa.fa-comments");
     await contains(".o-mail-ChatBubble .o-discuss-badge", { text: "9" });
 });
 

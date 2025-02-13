@@ -13,6 +13,6 @@ patch(AttachmentUploadService.prototype, {
 
     _buildFormData() {
         const formData = super._buildFormData(...arguments);
-        formData.append("guest_token", this.env.services["im_livechat.livechat"].guestToken);
+        formData.append("guest_token", this.store.guest_token);
     },
 });

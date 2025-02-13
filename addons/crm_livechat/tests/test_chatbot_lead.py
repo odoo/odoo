@@ -102,7 +102,7 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
             'chatbot_script_id': self.chatbot_script.id,
         })
         discuss_channel = (
-            self.env["discuss.channel"].sudo().browse(data["discuss.channel"][0]["id"])
+            self.env["discuss.channel"].sudo().browse(data["channel_id"])
         )
         self._post_answer_and_trigger_next_step(
             discuss_channel, chatbot_script_answer=self.step_dispatch_create_lead

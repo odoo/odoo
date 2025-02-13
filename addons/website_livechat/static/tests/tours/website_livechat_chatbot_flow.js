@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { contains } from "@web/../tests/utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { TourHelpers } from "@web_tour/tour_service/tour_helpers";
+import { Chatbot } from "@im_livechat/core/common/chatbot_model";
 
 const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
 
@@ -11,7 +12,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         patchWithCleanup(window, {
             debounceAnswerCount: 0,
         });
-        patchWithCleanup(odoo.__WOWL_DEBUG__.root.env.services["mail.store"].Chatbot.prototype, {
+        patchWithCleanup(Chatbot.prototype, {
             // Count the number of times this method is called to check whether the chatbot is regularly
             // checking the user's input in the multi line step until the user finishes typing.
             async _delayThenProcessAnswerAgain(message) {
@@ -19,24 +20,12 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 return await super._delayThenProcessAnswerAgain(message);
             },
         });
+        patchWithCleanup(Chatbot, {
+            MESSAGE_DELAY: 0,
+            MULTILINE_STEP_DEBOUNCE_DELAY: 500,
+            TYPING_DELAY: 0,
+        });
         return [
-            {
-                trigger: messagesContain("Hello! I'm a bot!"),
-                async run() {
-                    await new Promise((resolve) => {
-                        const interval = setInterval(() => {
-                            if (odoo.__WOWL_DEBUG__.root) {
-                                // make chat bot faster for this tour
-                                odoo.__WOWL_DEBUG__.root.env.services[
-                                    "im_livechat.chatbot"
-                                ].chatbot.script.isLivechatTourRunning = true;
-                                clearInterval(interval);
-                                resolve();
-                            }
-                        }, 100);
-                    });
-                },
-            },
             {
                 // check second welcome message is posted
                 trigger: messagesContain("I help lost visitors find their way."),
@@ -154,9 +143,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 run() {
                     const counter = window.debounceAnswerCount;
                     const target = new TourHelpers(this.anchor);
-                    const delay =
-                        odoo.__WOWL_DEBUG__.root.env.services["mail.store"].Chatbot
-                            .MULTILINE_STEP_DEBOUNCE_DELAY_TOUR;
+                    const delay = Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY;
                     target.edit("Never mind!");
                     setTimeout(() => {
                         if (window.debounceAnswerCount <= counter) {

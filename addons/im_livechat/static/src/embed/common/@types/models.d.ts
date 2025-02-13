@@ -1,8 +1,4 @@
 declare module "models" {
-    import { LivechatRule as LivechatRuleClass } from "@im_livechat/embed/common/livechat/livechat_rule_model";
-
-    export interface LivechatRule extends LivechatRuleClass { }
-
     export interface ChatWindpw {
         hasFeedbackPanel: boolean,
     }
@@ -15,6 +11,11 @@ declare module "models" {
         livechatWelcomeMessage: Message,
         chatbot: Chatbot,
         requested_by_operator: boolean,
+    }
+
+    export interface Store {
+        livechat_rule: LivechatChannelRule;
+        livechat_available: boolean;
     }
 
     export interface Models {

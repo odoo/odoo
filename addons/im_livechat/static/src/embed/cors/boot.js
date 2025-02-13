@@ -1,10 +1,11 @@
-import { getGuestToken } from "@im_livechat/embed/common/livechat_service";
 import { livechatRoutingMap } from "@im_livechat/embed/cors/livechat_routing_map";
 
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
+import { GUEST_TOKEN_STORAGE_KEY } from "@im_livechat/embed/cors/store_service_patch";
 
 (async function boot() {
     const { fetch } = browser;
@@ -21,7 +22,7 @@ import { session } from "@web/session";
     rpc._rpc = function (route, params, settings) {
         if (route in livechatRoutingMap.content) {
             route = livechatRoutingMap.get(route, route);
-            const guestToken = getGuestToken();
+            const guestToken = expirableStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
             if (guestToken) {
                 params = {
                     ...params,

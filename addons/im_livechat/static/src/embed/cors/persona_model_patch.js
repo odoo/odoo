@@ -8,10 +8,7 @@ patch(Persona.prototype, {
     get avatarUrl() {
         const params = assignDefined(
             {},
-            {
-                guest_token: this.store.env.services["im_livechat.livechat"].guestToken,
-                unique: this.write_date,
-            }
+            { guest_token: this.store.guest_token, unique: this.write_date }
         );
         if (!this.store.self.isInternalUser) {
             params.access_token = this.avatar_128_access_token;

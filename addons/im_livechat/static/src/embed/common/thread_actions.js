@@ -1,19 +1,17 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import "@mail/discuss/call/common/thread_actions";
-import { useComponent } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 threadActionsRegistry.add("restart", {
     condition(component) {
-        return component.chatbotService.canRestart;
+        return component.thread?.chatbot?.canRestart;
     },
     icon: "fa fa-fw fa-refresh",
     name: _t("Restart Conversation"),
     open(component) {
-        component.chatbotService.restart();
+        component.thread.chatbot.restart();
         component.props.chatWindow.open({ focus: true });
     },
     sequence: 99,
@@ -23,15 +21,8 @@ threadActionsRegistry.add("restart", {
 const callSettingsAction = threadActionsRegistry.get("settings");
 patch(callSettingsAction, {
     condition(component) {
-        if (component.thread?.channel_type !== "livechat") {
-            return super.condition(...arguments);
-        }
-        return component.rtcService.state.channel?.eq(component.thread);
-    },
-    setup() {
-        super.setup(...arguments);
-        const component = useComponent();
-        component.livechatService = useService("im_livechat.livechat");
-        component.rtcService = useService("discuss.rtc");
+        return component.thread?.channel_type === "livechat"
+            ? component.env.services["discuss.rtc"].state.channel?.eq(component.thread)
+            : super.condition(...arguments);
     },
 });

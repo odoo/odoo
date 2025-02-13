@@ -113,7 +113,10 @@ class DiscussChannel(models.Model):
         self.browse(empty_channel_ids).unlink()
 
     def execute_command_history(self, **kwargs):
-        self._bus_send("im_livechat.history_command", {"id": self.id})
+        self._bus_send(
+            "im_livechat.history_command",
+            {"id": self.id, "partner_id": self.env.user.partner_id.id},
+        )
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         return _('Visitor left the conversation.')

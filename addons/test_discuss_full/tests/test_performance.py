@@ -227,7 +227,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "channel_id": self.im_livechat_channel.id,
                     "previous_operator_id": self.users[0].partner_id.id,
                 },
-            )["discuss.channel"][0]["id"]
+            )["channel_id"]
         )
         self.channel_livechat_1.with_user(self.users[1]).message_post(body="test")
         self.authenticate(None, None)
@@ -243,7 +243,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                         "channel_id": self.im_livechat_channel.id,
                         "previous_operator_id": self.users[0].partner_id.id,
                     },
-                )["discuss.channel"][0]["id"]
+                )["channel_id"]
             )
         self.guest = self.channel_livechat_2.channel_member_ids.guest_id.sudo()
         self.make_jsonrpc_request("/mail/message/post", {

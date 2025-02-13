@@ -4,10 +4,7 @@ import { patch } from "@web/core/utils/patch";
 /** @type {import("models").Attachment} */
 const attachmentPatch = {
     get urlQueryParams() {
-        return {
-            ...super.urlQueryParams,
-            guest_token: this.store.env.services["im_livechat.livechat"].guestToken,
-        };
+        return { ...super.urlQueryParams, guest_token: this.store.guest_token };
     },
     get urlRoute() {
         if (!this.access_token && this.thread?.model === "discuss.channel") {

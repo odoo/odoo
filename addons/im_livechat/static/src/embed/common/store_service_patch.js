@@ -1,34 +1,24 @@
-import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
-
-import { Store, storeService } from "@mail/core/common/store_service";
+import { Store } from "@mail/core/common/store_service";
+import { Record } from "@mail/model/record";
 
 import { patch } from "@web/core/utils/patch";
+import { session } from "@web/session";
 
-storeService.dependencies.push("im_livechat.initialized");
-
-patch(Store.prototype, {
-    async initialize({ force } = {}) {
-        const livechatInitialized = this.env.services["im_livechat.initialized"];
-        await livechatInitialized.ready;
-        const livechatService = this.env.services["im_livechat.livechat"];
-        if (livechatService.state === SESSION_STATE.PERSISTED || force) {
-            try {
-                await super.initialize();
-                livechatService.thread ??= this.store.Thread.get({
-                    id: livechatService.savedState?.store["discuss.channel"][0].id,
-                    model: "discuss.channel",
-                });
-            } finally {
-                if (!livechatService.thread) {
-                    livechatService.leave({ notifyServer: false });
+export const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
+/** @type {import("models").Store} */
+const StorePatch = {
+    setup() {
+        super.setup(...arguments);
+        this.livechat_rule = Record.one("im_livechat.channel.rule");
+        this.livechat_available = session.livechatData?.isAvailable;
+        this.activeLivechats = Record.many("Thread", {
+            inverse: "storeAsActiveLivechats",
+            onUpdate() {
+                if (this.activeLivechats.some(({ isTransient }) => !isTransient)) {
+                    this.store.env.services.bus_service.start();
                 }
-            }
-            return;
-        }
-        if (livechatService.savedState?.store) {
-            const { Thread = [] } = this.store.insert(livechatService.savedState.store);
-            livechatService.thread = Thread[0];
-        }
-        this.isReady.resolve();
+            },
+        });
     },
-});
+};
+patch(Store.prototype, StorePatch);
