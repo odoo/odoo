@@ -19,6 +19,7 @@
         'mail',
         'google_recaptcha',
         'utm',
+        'delivery',
     ],
     'external_dependencies': {
         'python': ['geoip2'],
@@ -148,6 +149,7 @@
         'views/snippets/s_google_map.xml',
         'views/snippets/s_cta_mockups.xml',
         'views/snippets/s_map.xml',
+        'views/snippets/s_store_locator.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_embed_code.xml',
@@ -231,6 +233,7 @@
             'website/static/src/xml/website.background.video.xml',
             'website/static/src/xml/website.cookies_warning.xml',
             'website/static/src/js/text_processing.js',
+            'website/static/src/components/store_locator_map/*',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',
@@ -376,6 +379,7 @@
             'website/static/src/snippets/s_media_list/options.js',
             'website/static/src/snippets/s_google_map/options.js',
             'website/static/src/snippets/s_map/options.js',
+            'website/static/src/snippets/s_store_locator/options.js',
             'website/static/src/snippets/s_dynamic_snippet/options.js',
             'website/static/src/snippets/s_dynamic_snippet_carousel/options.js',
             'website/static/src/snippets/s_website_controller_page_listing_layout/options.js',
@@ -393,6 +397,7 @@
             'website/static/src/xml/website.cookies_bar.xml',
             'website/static/src/js/editor/commands_overridden.js',
             'website/static/src/js/editor/odoo_editor.js',
+            'website/static/src/components/store_locator_map/*',
         ],
         'website.assets_all_wysiwyg': [
             ('include', 'web_editor.assets_wysiwyg'),
