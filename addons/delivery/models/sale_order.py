@@ -89,7 +89,9 @@ class SaleOrder(models.Model):
                 pickup_location = None
             self.pickup_location_data = pickup_location
 
-    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
+    def _get_pickup_locations(
+        self, zip_code=None, country=None, selected_country_code=None, **kwargs
+    ):
         """ Return the pickup locations of the delivery method close to a given zip code.
 
         Use provided `zip_code` and `country` or the order's delivery address to determine the zip
@@ -103,6 +105,12 @@ class SaleOrder(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+        # Force selected country code from the dropdown
+        if selected_country_code:
+            country = self.env['res.country'].search(
+                [('code', '=', selected_country_code)],
+                limit=1,
+            )
         if zip_code:
             assert country  # country is required if zip_code is provided.
             partner_address = self.env['res.partner'].new({
@@ -125,13 +133,26 @@ class SaleOrder(models.Model):
             pickup_locations = getattr(self.carrier_id, function_name)(partner_address, **kwargs)
             if not pickup_locations:
                 return error
+
+            if (
+                not country or
+                any([location['country_code'] != country.code for location in pickup_locations])
+            ):
+                country = self.env['stock.warehouse'].browse(
+                    pickup_locations[0]['id']
+                ).partner_id.country_id
+                pickup_locations = [
+                    location for location in pickup_locations
+                    if location['country_code'] == country.code
+                ]
+
             return {
                 'pickup_locations': pickup_locations,
                 'selected_country': {
-                    'name': partner_address.country_id.name,
-                    'code': partner_address.country_id.code,
-                    'image_url': partner_address.country_id.image_url,
-                    'fields': partner_address.country_id.get_address_fields(),
+                    'name': country.name,
+                    'code': country.code,
+                    'image_url': country.image_url,
+                    'fields': country.get_address_fields(),
                 },
             }
         except UserError as e:
