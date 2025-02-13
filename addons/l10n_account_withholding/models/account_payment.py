@@ -26,6 +26,7 @@ class AccountPayment(models.Model):
     payment_account_id = fields.Many2one(related="payment_method_line_id.payment_account_id")
     # We may need to manually set an account, for this we want it to not be readonly by default.
     outstanding_account_id = fields.Many2one(readonly=False)
+    hide_tax_base_account = fields.Boolean(compute='_compute_hide_tax_base_account')
 
     # --------------------------------
     # Compute, inverse, search methods
@@ -47,6 +48,11 @@ class AccountPayment(models.Model):
         """ We enable the boolean by default only if withholding tax lines are given at the creation of the payment. """
         for wizard in self:
             wizard.withhold_tax = bool(wizard.withholding_line_ids)
+
+    @api.depends('company_id')
+    def _compute_hide_tax_base_account(self):
+        for wizard in self:
+            wizard.hide_tax_base_account = bool(wizard.company_id.withholding_tax_base_account_id.id)
 
     # -----------------------
     # CRUD, inherited methods
