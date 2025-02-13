@@ -27,8 +27,19 @@
                                     <record id="tax_annual_report_line_vl1_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">VE26.balance + VJ19.balance</field>
-                                        <field name="subformula">cross_report</field>
+                                        <field name="formula">VL1.cross_report_ve26 + VL1.cross_report_vj19</field>
+                                    </record>
+                                    <record id="tax_annual_report_line_vl1_cross_report_ve26" model="account.report.expression">
+                                        <field name="label">cross_report_ve26</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VE26.balance</field>
+                                        <field name="subformula">cross_report(l10n_it.tax_annual_report_vat_ve)</field>
+                                    </record>
+                                    <record id="tax_annual_report_line_vl1_cross_report_vj19" model="account.report.expression">
+                                        <field name="label">cross_report_vj19</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VJ19.balance</field>
+                                        <field name="subformula">cross_report(l10n_it.tax_annual_report_vat_vj)</field>
                                     </record>
                                 </field>
                             </record>
@@ -40,7 +51,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VF71.tax</field>
-                                        <field name="subformula">cross_report</field>
+                                        <field name="subformula">cross_report(l10n_it.tax_annual_report_vat_vf)</field>
                                     </record>
                                 </field>
                             </record>

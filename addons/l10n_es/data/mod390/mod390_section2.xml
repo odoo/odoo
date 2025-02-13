@@ -1167,7 +1167,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">aeat_mod_303_40.balance</field>
-                                        <field name="subformula">cross_report</field>
+                                        <field name="subformula">cross_report(l10n_es.mod_303)</field>
                                     </record>
                                 </field>
                             </record>
@@ -1179,7 +1179,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">aeat_mod_303_41.balance</field>
-                                        <field name="subformula">cross_report</field>
+                                        <field name="subformula">cross_report(l10n_es.mod_303)</field>
                                     </record>
                                 </field>
                             </record>
@@ -1223,7 +1223,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">aeat_mod_303_43.balance</field>
-                                <field name="subformula">cross_report</field>
+                                <field name="subformula">cross_report(l10n_es.mod_303)</field>
                             </record>
                         </field>
                     </record>
@@ -1235,7 +1235,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">aeat_mod_303_44.balance</field>
-                                <field name="subformula">cross_report</field>
+                                <field name="subformula">cross_report(l10n_es.mod_303)</field>
                             </record>
                         </field>
                     </record>
@@ -1259,8 +1259,13 @@
                             <record id="mod_390_casilla_65_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">aeat_mod_390_47.balance - aeat_mod_390_64.balance</field>
-                                <field name="subformula">cross_report</field>
+                                <field name="formula">aeat_mod_390_65.result_cross_aeat_mod_390_47 - aeat_mod_390_64.balance</field>
+                            </record>
+                            <record id="mod_390_casilla_65_result_cross_aeat_mod_390_47" model="account.report.expression">
+                                <field name="label">result_cross_aeat_mod_390_47</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">aeat_mod_390_47.balance</field>
+                                <field name="subformula">cross_report(l10n_es.mod_390_section_1)</field>
                             </record>
                         </field>
                     </record>
