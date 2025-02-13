@@ -1,12 +1,12 @@
 declare module "models" {
-
     export interface Message {
-        pinned_at: string,
+        pin: () => unknown;
+        pinned_at: luxon.DateTime;
+        unpin: () => unknown;
     }
-
     export interface Thread {
-        pinnedMessages: Message[],
-        pinnedMessagesState: "loaded"|"loading"|"error"|undefined,
+        fetchPinnedMessages: () => Promise<undefined>;
+        pinnedMessages: Message[];
+        pinnedMessagesState: unknown;
     }
-
 }

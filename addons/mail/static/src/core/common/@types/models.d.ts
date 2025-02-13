@@ -14,11 +14,9 @@ declare module "models" {
     import { Persona as PersonaClass } from "@mail/core/common/persona_model";
     import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
-    import { Store as StoreClass } from "@mail/core/common/store_service";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
 
-    // define interfaces for jsdoc, including with patches
     export interface Attachment extends AttachmentClass {}
     export interface CannedResponse extends CannedResponseClass {}
     export interface ChatHub extends ChatHubClass {}
@@ -34,29 +32,26 @@ declare module "models" {
     export interface Persona extends PersonaClass {}
     export interface ResGroups extends ResGroupsClass {}
     export interface Settings extends SettingsClass {}
-    export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
     export interface Volume extends VolumeClass {}
 
-    // required to propagate types in relational fields
     export interface Models {
-        "ChatHub": ChatHub,
-        "ChatWindow": ChatWindow,
-        "Composer": Composer,
-        "Failure": Failure,
-        "ir.attachment": Attachment,
-        "mail.canned.response": CannedResponse,
-        "mail.followers": Follower,
-        "mail.link.preview": LinkPreview,
-        "mail.message": Message,
-        "mail.notification": Notification,
-        "MessageReactions": MessageReactions,
-        "Persona": Persona,
-        "res.country": Country,
-        "res.groups": ResGroups,
-        "Settings": Settings,
-        "Store": Store,
-        "Thread": Thread,
-        "Volume": Volume,
+        "ir.attachment": Attachment;
+        "mail.canned.response": CannedResponse;
+        ChatHub: ChatHub;
+        ChatWindow: ChatWindow;
+        Composer: Composer;
+        "res.country": Country;
+        Failure: Failure;
+        "mail.followers": Follower;
+        "mail.link.preview": LinkPreview;
+        "mail.message": Message;
+        MessageReactions: MessageReactions;
+        "mail.notification": Notification;
+        Persona: Persona;
+        "res.groups": ResGroups;
+        Settings: Settings;
+        Thread: Thread;
+        Volume: Volume;
     }
 }
