@@ -14,8 +14,6 @@ def _l10n_account_wth_post_init(env):
         for company in companies:
             ChartTemplate = env['account.chart.template'].with_company(company)
             chart_template_data = ChartTemplate._get_chart_template_data(template_code)
-            template_data = chart_template_data.pop('template_data')
-            env['account.chart.template']._setup_withholding_tax_base_account(company, template_data)
 
             # We also want to set up a demo tax and put it on the service demo products; to ease testing/...
             if env.ref('base.module_l10n_account_withholding').demo:
@@ -44,6 +42,7 @@ def _make_demo_tax(chart_template, chart_template_data):
         'amount_type': 'percent',
         'amount': 2,
         'company_id': chart_template.env.company.id,
+        'price_include_override': 'tax_included',
         'invoice_repartition_line_ids': [
             Command.create({
                 'repartition_type': 'base',
@@ -71,4 +70,4 @@ def _make_demo_tax(chart_template, chart_template_data):
         }).id,
     })
     # Add the tax on both demo services
-    (chart_template.ref('product.product_product_1') | chart_template.ref('product.product_product_2')).supplier_withholding_tax_ids += wh_tax
+    (chart_template.ref('product.product_product_1') | chart_template.ref('product.product_product_2')).supplier_taxes_id += wh_tax

@@ -14,11 +14,13 @@ class AccountPaymentWithholdingLine(models.Model):
 
     payment_id = fields.Many2one(
         comodel_name='account.payment',
+        required=True,
+        ondelete='cascade',
     )
 
-    # ----------------------------
-    # Onchange, Constraint methods
-    # ----------------------------
+    # --------------------------------
+    # Compute, inverse, search methods
+    # --------------------------------
 
     @api.depends('payment_id.payment_type')
     def _compute_type_tax_use(self):

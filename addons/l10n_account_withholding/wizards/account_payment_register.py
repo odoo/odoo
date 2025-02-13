@@ -53,6 +53,7 @@ class AccountPaymentRegister(models.TransientModel):
     payment_move_amount_total = fields.Monetary(
         compute="_compute_payment_move_amount_total",
     )
+    hide_tax_base_account = fields.Boolean(compute='_compute_hide_tax_base_account')
 
     # --------------------------------
     # Compute, inverse, search methods
@@ -88,7 +89,7 @@ class AccountPaymentRegister(models.TransientModel):
                 ],
                 fields=['outstanding_account_id'],
                 limit=1,
-                order='id desc'
+                order='id desc',
             )
             if wizard.payment_account_id or not latest_payment:
                 wizard.outstanding_account_id = False  # we'll use the payment method one.
@@ -132,29 +133,34 @@ class AccountPaymentRegister(models.TransientModel):
                 batch_result = wizard.batches[0]
                 for move in batch_result['lines'].move_id:
                     for line in move.invoice_line_ids:
-                        taxes = line.product_id.withholding_tax_ids if move.is_sale_document(include_receipts=True) else line.product_id.supplier_withholding_tax_ids
                         domain = self.env['account.withholding.line']._get_withholding_tax_domain(company=move.company_id, payment_type=self.payment_type)
-                        withholding_taxes = taxes.filtered_domain(domain)
+                        withholding_taxes = line.tax_ids.filtered_domain(domain)
 
                         # For each line, we will compute the tax details as if the withholding taxes were part of the line.
                         # This way, we can apply is_base_affected/include_base_amount for taxes that would be on the line before we sum it all up for the wizard.
+                        # We update the context of the base_line's tax_ids to trigger computation of the withholding taxes.
                         base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
-                        base_line['tax_ids'] += withholding_taxes  # We add the withholding taxes in order to get the whole picture
+                        base_line['tax_ids'] = base_line['tax_ids'].with_context(include_withholding_taxes=True)
                         self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
 
-                        # We want to generate one line per group. A group is defined by a tax, and an analytic distribution.
+                        base_account = line.company_id.withholding_tax_base_account_id or line.account_id
+
+                        # We want to generate one line per group. A group is defined by a tax, account, and an analytic distribution.
                         for withholding_tax in withholding_taxes:
-                            tax_data = [d for d in base_line['tax_details']['taxes_data'] if d['tax'] == withholding_tax][0]
+                            base_amount = 0
+                            if tax_data := [d for d in base_line['tax_details']['taxes_data'] if d['tax'] == withholding_tax][:1]:
+                                base_amount = tax_data[0]['raw_base_amount']  # We want the amount in company currency
                             # Check if the move has a fiscal position and apply if needed.
                             if move.fiscal_position_id:
                                 withholding_tax = move.fiscal_position_id.map_tax(withholding_tax)
-                            withholding_line_amounts[(json.dumps(base_line['analytic_distribution']), withholding_tax)] += tax_data['raw_base_amount']
+                            withholding_line_amounts[(json.dumps(base_line['analytic_distribution']), base_account, withholding_tax)] += base_amount
 
-                for (analytic_distribution, withholding_tax), withholding_line_amount in withholding_line_amounts.items():
+                for (analytic_distribution, base_account, withholding_tax), withholding_line_amount in withholding_line_amounts.items():
                     withholding_line_creation_vals.append(Command.create({
                         'tax_id': withholding_tax.id,
                         'analytic_distribution': json.loads(analytic_distribution),
                         'original_base_amount': withholding_line_amount,
+                        'tax_base_account_id': base_account.id,
                     }))
             wizard.withholding_line_ids = withholding_line_creation_vals
 
@@ -181,6 +187,11 @@ class AccountPaymentRegister(models.TransientModel):
             # We take the amount in company currency, which will be easier to convert when/if the wizard currency changes.
             move_amount_total = sum(get_total_in_company_currency(move) for move in wizard.batches[0]['lines'].move_id)
             wizard.payment_move_amount_total = move_amount_total
+
+    @api.depends('company_id')
+    def _compute_hide_tax_base_account(self):
+        for wizard in self:
+            wizard.hide_tax_base_account = bool(wizard.company_id.withholding_tax_base_account_id.id)
 
     # ----------------------------
     # Onchange, Constraint methods
@@ -256,6 +267,9 @@ class AccountPaymentRegister(models.TransientModel):
                 'tax_id': withholding_line.tax_id.id,
                 'base_amount': withholding_line.base_amount,
                 'amount': sign * withholding_line.amount,
+                'tax_base_account_id': withholding_line.tax_base_account_id.id,
             }))
 
         return payment_vals
+
+# todo display account_id if we don't use the default setting
