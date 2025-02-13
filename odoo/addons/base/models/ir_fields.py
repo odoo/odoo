@@ -207,7 +207,7 @@ class IrFieldsConverter(models.AbstractModel):
         try:
             return json.loads(value), []
         except ValueError:
-            msg = _("'%s' does not seem to be a valid JSON for field '%%(field)s'")
+            msg = self.env._("'%s' does not seem to be a valid JSON for field '%%(field)s'")
             raise self._format_import_error(ValueError, msg, value)
 
     def _str_to_properties(self, model, field, value):
@@ -217,17 +217,17 @@ class IrFieldsConverter(models.AbstractModel):
             try:
                 value = json.loads(value)
             except ValueError:
-                msg = _("Unable to import'%%(field)s' Properties field as a whole, target individual property instead.")
+                msg = self.env._("Unable to import'%%(field)s' Properties field as a whole, target individual property instead.")
                 raise self._format_import_error(ValueError, msg)
 
         if not isinstance(value, list):
-            msg = _("Unable to import'%%(field)s' Properties field as a whole, target individual property instead.")
+            msg = self.env._("Unable to import'%%(field)s' Properties field as a whole, target individual property instead.")
             raise self._format_import_error(ValueError, msg, {'value': value})
 
         warnings = []
         for property_dict in value:
             if not (property_dict.keys() >= {'name', 'type', 'string'}):
-                msg = _("'%(value)s' does not seem to be a valid Property value for field '%%(field)s'. Each property need at least 'name', 'type' and 'string' attribute.")
+                msg = self.env._("'%(value)s' does not seem to be a valid Property value for field '%%(field)s'. Each property need at least 'name', 'type' and 'string' attribute.")
                 raise self._format_import_error(ValueError, msg, {'value': property_dict})
 
             val = property_dict.get('value')
@@ -244,7 +244,7 @@ class IrFieldsConverter(models.AbstractModel):
                     if val in (sel_val, sel_label)
                 ), None)
                 if not new_val:
-                    msg = _("'%(value)s' does not seem to be a valid Selection value for '%(label_property)s' (subfield of '%%(field)s' field).")
+                    msg = self.env._("'%(value)s' does not seem to be a valid Selection value for '%(label_property)s' (subfield of '%%(field)s' field).")
                     raise self._format_import_error(ValueError, msg, {'value': val, 'label_property': property_dict['string']})
                 property_dict['value'] = new_val
 
@@ -257,7 +257,7 @@ class IrFieldsConverter(models.AbstractModel):
                         if tag in (tag_val, tag_label)
                     ), None)
                     if not val_tag:
-                        msg = _("'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' (subfield of '%%(field)s' field).")
+                        msg = self.env._("'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' (subfield of '%%(field)s' field).")
                         raise self._format_import_error(ValueError, msg, {'value': tag, 'label_property': property_dict['string']})
                     new_val.append(val_tag)
                 property_dict['value'] = new_val
@@ -267,7 +267,7 @@ class IrFieldsConverter(models.AbstractModel):
                 if not warnings:
                     property_dict['value'] = new_val
                 else:
-                    msg = _("Unknown value '%(value)s' for boolean '%(label_property)s' property (subfield of '%%(field)s' field).")
+                    msg = self.env._("Unknown value '%(value)s' for boolean '%(label_property)s' property (subfield of '%%(field)s' field).")
                     raise self._format_import_error(ValueError, msg, {'value': val, 'label_property': property_dict['string']})
 
             elif property_type in ('many2one', 'many2many'):
@@ -283,7 +283,7 @@ class IrFieldsConverter(models.AbstractModel):
                 ids = []
                 fake_field = FakeField(comodel_name=property_dict['comodel'], name=property_dict['string'])
                 for reference in references:
-                    id_, __, ws = self.db_id_for(model, fake_field, subfield, reference)
+                    id_, ws = self.db_id_for(model, fake_field, subfield, reference)
                     ids.append(id_)
                     warnings.extend(ws)
 
@@ -293,14 +293,14 @@ class IrFieldsConverter(models.AbstractModel):
                 try:
                     property_dict['value'] = int(val)
                 except ValueError:
-                    msg = _("'%(value)s' does not seem to be an integer for field '%(label_property)s' property (subfield of '%%(field)s' field).")
+                    msg = self.env._("'%(value)s' does not seem to be an integer for field '%(label_property)s' property (subfield of '%%(field)s' field).")
                     raise self._format_import_error(ValueError, msg, {'value': val, 'label_property': property_dict['string']})
 
             elif property_type == 'float':
                 try:
                     property_dict['value'] = float(val)
                 except ValueError:
-                    msg = _("'%(value)s' does not seem to be an float for field '%(label_property)s' property (subfield of '%%(field)s' field).")
+                    msg = self.env._("'%(value)s' does not seem to be an float for field '%(label_property)s' property (subfield of '%%(field)s' field).")
                     raise self._format_import_error(ValueError, msg, {'value': val, 'label_property': property_dict['string']})
 
         return value, warnings
@@ -331,9 +331,9 @@ class IrFieldsConverter(models.AbstractModel):
 
         return True, [self._format_import_error(
             ValueError,
-            _(u"Unknown value '%s' for boolean field '%%(field)s'"),
+            self.env._("Unknown value '%s' for boolean field '%%(field)s'"),
             value,
-            {'moreinfo': _(u"Use '1' for yes and '0' for no")}
+            {'moreinfo': self.env._("Use '1' for yes and '0' for no")}
         )]
 
     @api.model
@@ -343,7 +343,7 @@ class IrFieldsConverter(models.AbstractModel):
         except ValueError:
             raise self._format_import_error(
                 ValueError,
-                _(u"'%s' does not seem to be an integer for field '%%(field)s'"),
+                self.env._("'%s' does not seem to be an integer for field '%%(field)s'"),
                 value
             )
 
@@ -354,7 +354,7 @@ class IrFieldsConverter(models.AbstractModel):
         except ValueError:
             raise self._format_import_error(
                 ValueError,
-                _(u"'%s' does not seem to be a number for field '%%(field)s'"),
+                self.env._("'%s' does not seem to be a number for field '%%(field)s'"),
                 value
             )
 
@@ -374,9 +374,9 @@ class IrFieldsConverter(models.AbstractModel):
         except ValueError:
             raise self._format_import_error(
                 ValueError,
-                _(u"'%s' does not seem to be a valid date for field '%%(field)s'"),
+                self.env._("'%s' does not seem to be a valid date for field '%%(field)s'"),
                 value,
-                {'moreinfo': _(u"Use the format '%s'", u"2012-12-31")}
+                {'moreinfo': self.env._("Use the format '%s'", u"2012-12-31")}
             )
 
     @api.model
@@ -406,9 +406,9 @@ class IrFieldsConverter(models.AbstractModel):
         except ValueError:
             raise self._format_import_error(
                 ValueError,
-                _(u"'%s' does not seem to be a valid datetime for field '%%(field)s'"),
+                self.env._("'%s' does not seem to be a valid datetime for field '%%(field)s'"),
                 value,
-                {'moreinfo': _(u"Use the format '%s'", u"2012-12-31 23:59:59")}
+                {'moreinfo': self.env._("Use the format '%s'", u"2012-12-31 23:59:59")}
             )
 
         input_tz = self._input_tz()# Apply input tz to the parsed naive datetime
@@ -485,7 +485,7 @@ class IrFieldsConverter(models.AbstractModel):
             return False, []
         raise self._format_import_error(
             ValueError,
-            _(u"Value '%s' not found in selection field '%%(field)s'"),
+            self.env._("Value '%s' not found in selection field '%%(field)s'"),
             value,
             {'moreinfo': [_label or str(item) for item, _label in selection if _label or item]}
         )
@@ -520,7 +520,7 @@ class IrFieldsConverter(models.AbstractModel):
             'view_mode': 'list,form',
             'views': [(False, 'list'), (False, 'form')],
             'context': {'create': False},
-            'help': _(u"See all possible values")}
+            'help': self.env._("See all possible values")}
         if subfield is None:
             action['res_model'] = field.comodel_name
         elif subfield in ('id', '.id'):
@@ -529,23 +529,23 @@ class IrFieldsConverter(models.AbstractModel):
 
         RelatedModel = self.env[field.comodel_name]
         if subfield == '.id':
-            field_type = _(u"database id")
+            field_type = self.env._("database id")
             if isinstance(value, str) and not self._str_to_boolean(model, field, value)[0]:
-                return False, field_type, warnings
+                return False, warnings
             try:
                 tentative_id = int(value)
             except ValueError:
                 raise self._format_import_error(
                     ValueError,
-                    _(u"Invalid database id '%s' for the field '%%(field)s'"),
+                    self.env._("Invalid database id '%s' for the field '%%(field)s'"),
                     value,
                     {'moreinfo': action})
             if RelatedModel.browse(tentative_id).exists():
                 id = tentative_id
         elif subfield == 'id':
-            field_type = _(u"external id")
+            field_type = self.env._("external id")
             if not self._str_to_boolean(model, field, value)[0]:
-                return False, field_type, warnings
+                return False, warnings
             if '.' in value:
                 xmlid = value
             else:
@@ -553,9 +553,9 @@ class IrFieldsConverter(models.AbstractModel):
             flush(xml_id=xmlid)
             id = self._xmlid_to_record_id(xmlid, RelatedModel)
         elif subfield is None:
-            field_type = _(u"name")
+            field_type = self.env._("name")
             if value == '':
-                return False, field_type, warnings
+                return False, warnings
             flush(model=field.comodel_name)
             ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
@@ -573,11 +573,11 @@ class IrFieldsConverter(models.AbstractModel):
                         with self.env.cr.savepoint():
                             id, _name = RelatedModel.name_create(name=value)
                     except (Exception, psycopg2.IntegrityError):
-                        error_msg = _("Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
+                        error_msg = self.env._("Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
         else:
             raise self._format_import_error(
                 Exception,
-                _("Unknown sub-field “%s”", subfield),
+                self.env._("Unknown sub-field “%s”", subfield),
             )
 
         set_empty = False
@@ -589,9 +589,9 @@ class IrFieldsConverter(models.AbstractModel):
             skip_record = field_path in self.env.context.get('import_skip_records', [])
         if id is None and not set_empty and not skip_record:
             if error_msg:
-                message = _("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s' and the following error was encountered when we attempted to create one: %(error_message)s")
+                message = self.env._("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s' and the following error was encountered when we attempted to create one: %(error_message)s")
             else:
-                message = _("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
+                message = self.env._("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
 
             error_info_dict = {'moreinfo': action}
             if self.env.context.get('import_file'):
@@ -605,7 +605,7 @@ class IrFieldsConverter(models.AbstractModel):
                 message,
                 {'field_type': field_type, 'value': value, 'error_message': error_msg},
                 error_info_dict)
-        return id, field_type, warnings
+        return id, warnings
 
     def _xmlid_to_record_id(self, xmlid, model):
         """ Return the record id corresponding to the given external id,
@@ -646,10 +646,10 @@ class IrFieldsConverter(models.AbstractModel):
         fieldset = set(record)
         if fieldset - REFERENCING_FIELDS:
             raise ValueError(
-                _(u"Can not create Many-To-One records indirectly, import the field separately"))
+                self.env._("Can not create Many-To-One records indirectly, import the field separately"))
         if len(fieldset) > 1:
             raise ValueError(
-                _(u"Ambiguous specification for field '%(field)s', only provide one of name, external id or database id"))
+                self.env._("Ambiguous specification for field '%(field)s', only provide one of name, external id or database id"))
 
         # only one field left possible, unpack
         [subfield] = fieldset
@@ -662,7 +662,7 @@ class IrFieldsConverter(models.AbstractModel):
 
         subfield, w1 = self._referencing_subfield(record)
 
-        id, _, w2 = self.db_id_for(model, field, subfield, record[subfield])
+        id, w2 = self.db_id_for(model, field, subfield, record[subfield])
         return id, w1 + w2
 
     @api.model
@@ -677,7 +677,7 @@ class IrFieldsConverter(models.AbstractModel):
 
         ids = []
         for reference in record[subfield].split(','):
-            id, _, ws = self.db_id_for(model, field, subfield, reference)
+            id, ws = self.db_id_for(model, field, subfield, reference)
             ids.append(id)
             warnings.extend(ws)
 
@@ -738,7 +738,7 @@ class IrFieldsConverter(models.AbstractModel):
                 subfield, w1 = self._referencing_subfield(refs)
                 warnings.extend(w1)
                 try:
-                    id, _, w2 = self.db_id_for(model, field, subfield, record[subfield])
+                    id, w2 = self.db_id_for(model, field, subfield, record[subfield])
                     warnings.extend(w2)
                 except ValueError:
                     if subfield != 'id':
