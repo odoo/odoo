@@ -50,23 +50,10 @@ class PosOrder(models.Model):
                     if old_order.takeaway:
                         order['takeaway'] = old_order.takeaway
 
-        return super().sync_from_ui(orders)
-
-    def _get_open_order(self, order):
-        open_order = super()._get_open_order(order)
-        if not self.env.context.get('from_self'):
-            return open_order
-        elif open_order:
-            del order['table_id']
-        return self.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
-
-    def _process_saved_order(self, draft):
-        res = super()._process_saved_order(draft)
-
-        if self.env.context.get('from_self') is not True:
-            self._send_notification(self)
-
-        return res
+        result = super().sync_from_ui(orders)
+        order_ids = self.browse([order['id'] for order in result['pos.order'] if order.get('id')])
+        self._send_notification(order_ids)
+        return result
 
     @api.model
     def remove_from_ui(self, server_ids):
@@ -76,11 +63,6 @@ class PosOrder(models.Model):
         return super().remove_from_ui(server_ids)
 
     def _send_notification(self, order_ids):
-        for order in order_ids:
-            order._notify('ORDER_STATE_CHANGED', {
-                'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                'pos.payment': order.payment_ids.read(order.payment_ids._load_pos_data_fields(order.config_id.id), load=False),
-                'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(self.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
-                'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(order.config_id.id), load=False),
-            })
+        config_ids = order_ids.config_id
+        for config in config_ids:
+            config._notify('ORDER_STATE_CHANGED', {})
