@@ -292,8 +292,12 @@ class Digest(models.Model):
                     continue
                 margin = self._get_margin_value(compute_value, previous_value)
                 if self._fields['%s_value' % field_name].type == 'monetary':
-                    converted_amount = tools.format_decimalized_amount(compute_value)
-                    compute_value = self._format_currency_amount(converted_amount, company.currency_id)
+                    if self.company_id.currency_id != company.currency_id:  # Perform currency conversion if necessary
+                        compute_value = self.company_id.currency_id._convert(
+                            compute_value, company.currency_id, company, fields.Date.today()
+                        )
+                    decimalized_value = tools.format_decimalized_amount(compute_value)
+                    compute_value = self._format_currency_amount(decimalized_value, company.currency_id)
                 elif self._fields['%s_value' % field_name].type == 'float':
                     compute_value = "%.2f" % compute_value
 
