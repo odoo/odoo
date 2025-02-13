@@ -10,6 +10,68 @@ from odoo.tests.common import HttpCase, users
 
 class TestEventMenus(OnlineEventCase, HttpCase):
 
+    @users('admin')
+    def test_menu_copy(self):
+        """ Test that the content of the introduction and location menu are
+        correctly copied when duplicating an event """
+
+        event = self.env['event.event'].create({
+            'name': 'TestEvent',
+            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
+            'website_menu': True,
+        })
+        self.assertTrue(event.website_menu)
+        self.assertTrue(event.introduction_menu)
+        self.assertTrue(event.location_menu)
+        self.env['ir.ui.view'].create([{
+            'arch_db': '<xpath expr="//div[@id=\'oe_structure_website_event_intro_2\']" position="replace"><p>This is an intro</p></xpath>',
+            'inherit_id': event.introduction_menu_ids.view_id.id,
+            'key': 'website_event.intro-test-child',
+        }, {
+            'arch_db': '<xpath expr="//div[@id=\'oe_structure_website_event_location_2\']" position="replace"><p>This is a location</p></xpath>',
+            'inherit_id': event.location_menu_ids.view_id.id,
+            'key': 'website_event.location-test-child',
+        }])
+        event_copy = event.copy()
+        self.assertTrue(event_copy.website_menu)
+        self.assertTrue(event_copy.introduction_menu)
+        self.assertTrue(event.location_menu)
+
+        # The menu used should be different
+        self.assertNotEqual(event.introduction_menu_ids, event_copy.introduction_menu_ids)
+        self.assertNotEqual(event.location_menu_ids, event_copy.location_menu_ids)
+
+        # The child in the view should be different
+        self.assertNotEqual(
+            event.introduction_menu_ids.view_id.inherit_children_ids,
+            event_copy.introduction_menu_ids.view_id.inherit_children_ids,
+        )
+        self.assertNotEqual(
+            event.location_menu_ids.view_id.inherit_children_ids,
+            event_copy.location_menu_ids.view_id.inherit_children_ids,
+        )
+
+        # The content of the views should be the same
+        self.assertEqual(
+            event.introduction_menu_ids.view_id.arch_db,
+            event_copy.introduction_menu_ids.view_id.arch_db,
+        )
+        self.assertEqual(
+            event.location_menu_ids.view_id.arch_db,
+            event_copy.location_menu_ids.view_id.arch_db,
+        )
+        self.assertEqual(
+            event.introduction_menu_ids.view_id.inherit_children_ids[0].arch_db,
+            event_copy.introduction_menu_ids.view_id.inherit_children_ids[0].arch_db,
+        )
+        self.assertEqual(
+            event.location_menu_ids.view_id.inherit_children_ids[0].arch_db,
+            event_copy.location_menu_ids.view_id.inherit_children_ids[0].arch_db,
+        )
+        self.assertIn("This is an intro", event_copy.introduction_menu_ids.view_id.inherit_children_ids[0].arch_db)
+        self.assertIn("This is a location", event_copy.location_menu_ids.view_id.inherit_children_ids[0].arch_db)
+
     @users('user_eventmanager')
     def test_menu_management(self):
         event = self.env['event.event'].create({
