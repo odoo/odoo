@@ -104,8 +104,10 @@ export class Many2ManyTagsField extends Component {
                 write: true,
             },
             onRecordSaved: async (record) => {
-                await this.props.record.data[this.props.name].forget(record);
-                return saveRecord([record.resId]);
+                await this.props.record.data[this.props.name].validateExtendedRecord(record);
+                // Save the intermediate changes of record and reload the model for fresh changes
+                await this.props.record.save();
+                await this.props.record.model.load();
             },
         });
 
@@ -291,7 +293,12 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
 
     getTagProps(record) {
         const props = super.getTagProps(record);
-        props.onClick = (ev) => this.onTagClick(ev, record);
+        props.onClick = props.onClick = (ev) => {
+            if (!this.props.canEditColor) {
+                ev.preventDefault();
+            }
+            this.onTagClick(ev, record);
+        };
         return props;
     }
 
@@ -365,13 +372,18 @@ export const many2ManyTagsFieldColorEditable = {
             ),
         },
     ],
-    extractProps({ options, attrs }) {
+    extractProps({ options, attrs, viewType }) {
         const props = many2ManyTagsField.extractProps(...arguments);
         const hasEditPermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
         props.canEditTags = options.edit_tags ? hasEditPermission : false;
-        props.canEditColor = !props.canEditTags && !options.no_edit_color && !!options.color_field;
+        props.canEditColor =
+            !props.canEditTags &&
+            !options.no_edit_color &&
+            viewType !== "list" &&
+            !!options.color_field;
         return props;
     },
 };
 
 registry.category("fields").add("form.many2many_tags", many2ManyTagsFieldColorEditable);
+registry.category("fields").add("list.many2many_tags", many2ManyTagsFieldColorEditable);

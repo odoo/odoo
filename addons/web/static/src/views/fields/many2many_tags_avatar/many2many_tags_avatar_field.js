@@ -2,21 +2,21 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import {
-    many2ManyTagsField,
-    Many2ManyTagsField,
+    many2ManyTagsFieldColorEditable,
+    Many2ManyTagsFieldColorEditable,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
 import { imageUrl } from "@web/core/utils/urls";
 
-export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
+export class Many2ManyTagsAvatarField extends Many2ManyTagsFieldColorEditable {
     static template = "web.Many2ManyTagsAvatarField";
     static components = {
         Many2XAutocomplete: AvatarMany2XAutocomplete,
         TagsList,
     };
     static props = {
-        ...Many2ManyTagsField.props,
+        ...Many2ManyTagsFieldColorEditable.props,
         withCommand: { type: Boolean, optional: true },
     };
     getTagProps(record) {
@@ -28,10 +28,10 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
 }
 
 export const many2ManyTagsAvatarField = {
-    ...many2ManyTagsField,
+    ...many2ManyTagsFieldColorEditable,
     component: Many2ManyTagsAvatarField,
     extractProps({ viewType }, dynamicInfo) {
-        const props = many2ManyTagsField.extractProps(...arguments);
+        const props = many2ManyTagsFieldColorEditable.extractProps(...arguments);
         props.withCommand = viewType === "form" || viewType === "list";
         props.domain = dynamicInfo.domain;
         return props;
