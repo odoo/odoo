@@ -39,7 +39,7 @@
                     t-on-click="(ev) => this.onClickToggleAudioCall(ev, { camera: true })">
                     <i class="fa fa-video-camera fa-fw m-2" t-att-class="{ 'fa-lg': !isSmall }"/>
                 </button>
-                <t t-if="props.thread.eq(rtc.state.channel)" t-set="callText">Disconnect</t>
+                <t t-if="props.thread.eq(rtc.channel)" t-set="callText">Disconnect</t>
                 <t t-else="" t-set="callText">Join Call</t>
                 <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none align-items-center"
                     t-att-aria-label="callText"
@@ -62,8 +62,8 @@
     </t>
 
     <t t-name="discuss.CallActionList.actionButton">
-        <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover align-items-center"
-            t-att-class="{ 'p-0': isSmall, 'p-1': !isSmall }"
+        <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-75-hover align-items-center"
+            t-att-class="{ 'p-0': isSmall, 'p-1': !isSmall, 'bg-600 opacity-75': action.unavailable, 'opacity-100': !action.unavailable }"
             t-att-aria-label="action.name"
             t-att-title="action.name"
             t-on-click="action.select">
