@@ -271,6 +271,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
                     "incoterm_location": line.incoterm_location or "N/A",
                     "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
+                    "carrier":line.picking_id.sale_id.carrier or "N/A",
                 }
 
             grouped_lines[sku_code]["quantity"] += line.quantity
@@ -323,6 +324,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
                     "incoterm_location": line.incoterm_location or "N/A",
                     "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
+                    "carrier": line.picking_id.sale_id.carrier or "N/A",
                 })
 
             payloads.append({
@@ -372,7 +374,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code')
     package_box_type_id = fields.Many2one('package.box.configuration', string='Package Box Type',
                                           help="Select packaging box for each product line.")
-    sale_order_id = fields.Many2one(related='picking_id.sale_id', string='Sale Order')
+    sale_order_id = fields.Many2one(related='picking_id.sale_id', string='Sale Order', store=True)
     incoterm_location = fields.Char(related='sale_order_id.packaging_source_type', string='Incoterm location')
     weight = fields.Float(string="Weight", help="If product weight is missing, enter weight here.", required=True)
 
