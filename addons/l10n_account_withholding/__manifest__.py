@@ -8,6 +8,7 @@
     'data': [
         'security/ir.model.access.csv',
 
+        'views/account_move_views.xml',
         'views/account_payment_view.xml',
         'views/account_tax_views.xml',
         'views/product_view.xml',
@@ -16,6 +17,14 @@
 
         'wizards/account_payment_register_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_account_withholding/static/src/helpers/*.js',
+        ],
+        'web.assets_frontend': [
+            'l10n_account_withholding/static/src/helpers/*.js',
+        ],
+    },
     'installable': True,
     'post_init_hook': '_l10n_account_wth_post_init',
     'license': 'LGPL-3',

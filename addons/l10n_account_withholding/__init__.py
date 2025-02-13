@@ -71,4 +71,4 @@ def _make_demo_tax(chart_template, chart_template_data):
         }).id,
     })
     # Add the tax on both demo services
-    (chart_template.ref('product.product_product_1') | chart_template.ref('product.product_product_2')).supplier_withholding_tax_ids += wh_tax
+    (chart_template.ref('product.product_product_1') | chart_template.ref('product.product_product_2')).supplier_taxes_id += wh_tax

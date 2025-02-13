@@ -132,14 +132,14 @@ class AccountPaymentRegister(models.TransientModel):
                 batch_result = wizard.batches[0]
                 for move in batch_result['lines'].move_id:
                     for line in move.invoice_line_ids:
-                        taxes = line.product_id.withholding_tax_ids if move.is_sale_document(include_receipts=True) else line.product_id.supplier_withholding_tax_ids
                         domain = self.env['account.withholding.line']._get_withholding_tax_domain(company=move.company_id, payment_type=self.payment_type)
-                        withholding_taxes = taxes.filtered_domain(domain)
+                        withholding_taxes = line.tax_ids.filtered_domain(domain)
 
                         # For each line, we will compute the tax details as if the withholding taxes were part of the line.
                         # This way, we can apply is_base_affected/include_base_amount for taxes that would be on the line before we sum it all up for the wizard.
+                        # We update the context of the base_line's tax_ids to trigger computation of the withholding taxes.
                         base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
-                        base_line['tax_ids'] += withholding_taxes  # We add the withholding taxes in order to get the whole picture
+                        base_line['tax_ids'] = base_line['tax_ids'].with_context(include_withholding_taxes=True)
                         self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
 
                         # We want to generate one line per group. A group is defined by a tax, and an analytic distribution.
