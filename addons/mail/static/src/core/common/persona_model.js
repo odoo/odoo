@@ -42,7 +42,7 @@ export class Persona extends Record {
     /** @type {boolean | undefined} */
     is_company;
     /** @type {string} */
-    landlineNumber;
+    phone;
     debouncedSetImStatus;
     storeAsTrackedImStatus = Record.one("Store", {
         /** @this {import("models").Persona} */
@@ -97,13 +97,6 @@ export class Persona extends Record {
     /** @type {luxon.DateTime} */
     write_date = Record.attr(undefined, { type: "datetime" });
     groups_id = Record.many("res.groups", { inverse: "personas" });
-
-    /**
-     * @returns {boolean}
-     */
-    get hasPhoneNumber() {
-        return Boolean(this.landlineNumber);
-    }
 
     get emailWithoutDomain() {
         return this.email.substring(0, this.email.lastIndexOf("@"));
