@@ -79,7 +79,7 @@ class MrpProduction(models.Model):
     lot_producing_id = fields.Many2one(
         'stock.lot', string='Lot/Serial Number', copy=False,
         domain="[('product_id', '=', product_id)]", check_company=True)
-    qty_producing = fields.Float(string="Quantity Producing", digits='Product Unit of Measure', copy=False)
+    qty_producing = fields.Float(string="Quantity Producing", digits='Product Unit of Measure', copy=False, compute="_compute_qty_producing", store=True, readonly=False)
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
@@ -314,6 +314,12 @@ class MrpProduction(models.Model):
                 fallback_loc = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1).lot_stock_id
             production.location_src_id = production.picking_type_id.default_location_src_id.id or fallback_loc.id
             production.location_dest_id = production.picking_type_id.default_location_dest_id.id or fallback_loc.id
+
+    @api.depends('lot_producing_id')
+    def _compute_qty_producing(self):
+        for  production in self:
+            if production.product_tracking == 'serial' and production.lot_producing_id and production.qty_producing == 0:
+                production.qty_producing = 1.0
 
     @api.model
     def _search_components_availability_state(self, operator, value):
