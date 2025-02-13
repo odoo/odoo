@@ -493,6 +493,14 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(order_b.order_line.price_unit, 10.0, 'The price unit should be 10.0')
         self.assertEqual(order_b.amount_total_cc, order_b.amount_total, 'Company Total should be 10.0$')
 
+        with self.assertRaises(KeyError):
+            order_b.tax_totals['amount_total_cc']
+        order_b.currency_id = company_a.currency_id
+        self.assertEqual(
+            order_b.tax_totals['total_amount'] / order_b.tax_totals['total_amount_currency'],
+            company_b.currency_id['rate']/company_a.currency_id['rate'],
+        )
+
     def test_discount_and_price_update_on_quantity_change(self):
         """ Purchase order line price and discount should update accordingly based on quantity
         """
