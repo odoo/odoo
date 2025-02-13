@@ -89,7 +89,7 @@ export function fillAdressForm(
     }
     steps.push({
         content: "Continue checkout",
-        trigger: "#save_address",
+        trigger: "a[name='website_sale_main_button']",
         run: "click",
     });
     return steps;
