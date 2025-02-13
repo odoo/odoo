@@ -12,7 +12,7 @@ import { insertText } from "./_helpers/user_actions";
 
 test("hints are removed when editor is destroyed", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
     editor.destroy();
     expect(getContent(el)).toBe("<p>[]</p>");
 });
@@ -23,7 +23,7 @@ test("powerbox hint is display when the selection is in the editor", async () =>
 
     setContent(el, "<p>[]</p>");
     await tick();
-    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
 
     moveSelectionOutsideEditor();
     await tick();
@@ -32,15 +32,15 @@ test("powerbox hint is display when the selection is in the editor", async () =>
 
 test("placeholder is display when the selection is outside of the editor", async () => {
     const { el } = await setupEditor("<p></p>", { config: { placeholder: "test" } });
-    expect(getContent(el)).toBe(`<p placeholder="test" class="o-we-hint"></p>`);
+    expect(getContent(el)).toBe(`<p o-we-hint-text="test" class="o-we-hint"></p>`);
 
     setContent(el, "<p>[]</p>");
     await tick();
-    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
 
     moveSelectionOutsideEditor();
     await tick();
-    expect(getContent(el)).toBe(`<p placeholder="test" class="o-we-hint"></p>`);
+    expect(getContent(el)).toBe(`<p o-we-hint-text="test" class="o-we-hint"></p>`);
 });
 
 test("placeholder must not be visible if there is content in the editor", async () => {
@@ -66,14 +66,14 @@ test("should not display hint in paragraph with media content", async () => {
 
 test("should not lose track of temporary hints on split block", async () => {
     const { el, editor, plugins } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
     editor.shared.split.splitBlock();
     editor.shared.history.addStep();
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
     const [firstP, secondP] = el.children;
@@ -81,7 +81,7 @@ test("should not lose track of temporary hints on split block", async () => {
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
-            <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
             <p><br></p>
         `)
     );
@@ -90,7 +90,7 @@ test("should not lose track of temporary hints on split block", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
     // Changing the selection should not generate mutations for the next step
@@ -100,19 +100,19 @@ test("should not lose track of temporary hints on split block", async () => {
 test("hint should only Be display for focused empty block element", async () => {
     const { el, editor } = await setupEditor("<p>[]<br></p>", {});
     expect(getContent(el)).toBe(
-        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
     editor.shared.dom.setTag({ tagName: "H1" });
     await animationFrame();
     // @todo @phoenix: getContent does not place the selection when anchor is BR
-    expect(el.innerHTML).toBe(`<h1 placeholder="Heading 1" class="o-we-hint"><br></h1>`);
+    expect(el.innerHTML).toBe(`<h1 o-we-hint-text="Heading 1" class="o-we-hint"><br></h1>`);
     editor.shared.split.splitBlock();
     editor.shared.history.addStep();
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
             <h1><br></h1>
-            <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
     const h1 = el.firstElementChild;
@@ -120,7 +120,7 @@ test("hint should only Be display for focused empty block element", async () => 
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
-            <h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1>
+            <h1 o-we-hint-text="Heading 1" class="o-we-hint">[]<br></h1>
             <p><br></p>
         `)
     );
@@ -128,7 +128,7 @@ test("hint should only Be display for focused empty block element", async () => 
 
 test("hint for code section should have the same padding as its text content", async () => {
     const { el, editor } = await setupEditor("<pre>[]</pre>");
-    expect(getContent(el)).toBe(`<pre placeholder="Code" class="o-we-hint">[]</pre>`);
+    expect(getContent(el)).toBe(`<pre o-we-hint-text="Code" class="o-we-hint">[]</pre>`);
     const pre = el.firstElementChild;
     const hintStyle = getComputedStyle(pre, "::after");
     expect(hintStyle.content).toBe('"Code"');
@@ -142,7 +142,7 @@ test("hint for code section should have the same padding as its text content", a
 test("hint for blockquote should have the same padding as its text content", async () => {
     const { el, editor } = await setupEditor("<blockquote>[]</blockquote>");
     expect(getContent(el)).toBe(
-        `<blockquote placeholder="Quote" class="o-we-hint">[]</blockquote>`
+        `<blockquote o-we-hint-text="Quote" class="o-we-hint">[]</blockquote>`
     );
     const blockquote = el.firstElementChild;
     const hintStyle = getComputedStyle(blockquote, "::after");

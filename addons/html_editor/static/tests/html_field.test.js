@@ -960,21 +960,21 @@ test("html field with a placeholder", async () => {
     });
 
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<div class="o-paragraph o-we-hint" placeholder="test"><br></div>',
+        '<div class="o-paragraph o-we-hint" o-we-hint-text="test"><br></div>',
         { type: "html" }
     );
 
     setSelectionInHtmlField("div.o-paragraph");
     await tick();
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<div class="o-paragraph o-we-hint" placeholder="Type &quot;/&quot; for commands"><br></div>',
+        '<div class="o-paragraph o-we-hint" o-we-hint-text="Type &quot;/&quot; for commands"><br></div>',
         { type: "html" }
     );
 
     moveSelectionOutsideEditor();
     await tick();
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<div class="o-paragraph o-we-hint" placeholder="test"><br></div>',
+        '<div class="o-paragraph o-we-hint" o-we-hint-text="test"><br></div>',
         { type: "html" }
     );
 });

@@ -420,7 +420,7 @@ test("Deleting an image that is alone inside `p` should set selection at start o
     await animationFrame();
     expect(".test-image").toHaveCount(0);
     expect(getContent(el)).toBe(
-        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 

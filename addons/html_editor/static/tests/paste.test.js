@@ -2558,7 +2558,7 @@ describe("link", () => {
             );
             undo(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`
+                `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
             );
         });
 
@@ -2592,7 +2592,7 @@ describe("link", () => {
             );
             undo(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`
+                `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
             );
         });
 
@@ -2606,7 +2606,7 @@ describe("link", () => {
             );
             undo(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`
+                `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
             );
         });
 

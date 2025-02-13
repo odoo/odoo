@@ -20,7 +20,7 @@ export class HintPlugin extends Plugin {
         content_updated_handlers: this.updateHints.bind(this),
 
         system_classes: ["o-we-hint"],
-        system_attributes: ["placeholder"],
+        system_attributes: ["o-we-hint-text"],
         ...(this.config.placeholder && {
             hints: [
                 {
@@ -86,12 +86,12 @@ export class HintPlugin extends Plugin {
 
     makeHint(el, text) {
         this.dispatchTo("make_hint_handlers", el);
-        el.setAttribute("placeholder", text);
+        el.setAttribute("o-we-hint-text", text);
         el.classList.add("o-we-hint");
     }
 
     removeHint(el) {
-        el.removeAttribute("placeholder");
+        el.removeAttribute("o-we-hint-text");
         removeClass(el, "o-we-hint");
         this.getResource("system_style_properties").forEach((n) => el.style.removeProperty(n));
         if (this.hint === el) {
