@@ -2,7 +2,7 @@
 
 import json
 import logging
-from collections import defaultdict
+from collections import OrderedDict, defaultdict
 from datetime import timedelta
 from itertools import groupby
 
@@ -245,6 +245,11 @@ class SaleOrder(models.Model):
         string="Invoice Status",
         compute='_compute_invoice_status',
         store=True)
+
+    sale_warning_text = fields.Text(
+        "Sale Warning",
+        help="Internal warning for the partner or the products as set by the user.",
+        compute='_compute_sale_warning_text')
 
     # Payment fields
     transaction_ids = fields.Many2many(
@@ -758,6 +763,18 @@ class SaleOrder(models.Model):
         for order in self:
             order.access_url = f'/my/orders/{order.id}'
 
+    @api.depends('partner_id.name', 'partner_id.sale_warn_msg', 'order_line.sale_line_warn_msg')
+    def _compute_sale_warning_text(self):
+        for order in self:
+            warnings = []
+            if partner_msg := order.partner_id.sale_warn_msg:
+                warnings.append(order.partner_id.name + ' - ' + partner_msg)
+            for line in order.order_line:
+                if product_msg := line.sale_line_warn_msg:
+                    warnings.append(line.product_id.display_name + ' - ' + product_msg)
+            # Remove duplicate warnings before merging
+            order.sale_warning_text = '\n'.join(OrderedDict().fromkeys(warnings))
+
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('company_id', 'order_line')
@@ -833,32 +850,6 @@ class SaleOrder(models.Model):
             or (self.fiscal_position_id and self._origin.fiscal_position_id != self.fiscal_position_id)
         ):
             self.show_update_fpos = True
-
-    @api.onchange('partner_id')
-    def _onchange_partner_id_warning(self):
-        if not self.partner_id:
-            return
-
-        partner = self.partner_id
-
-        # If partner has no warning, check its company
-        if partner.sale_warn == 'no-message' and partner.parent_id:
-            partner = partner.parent_id
-
-        if partner.sale_warn and partner.sale_warn != 'no-message':
-            # Block if partner only has warning but parent company is blocked
-            if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
-                partner = partner.parent_id
-
-            if partner.sale_warn == 'block':
-                self.partner_id = False
-
-            return {
-                'warning': {
-                    'title': _("Warning for %s", partner.name),
-                    'message': partner.sale_warn_msg,
-                }
-            }
 
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id_show_update_prices(self):
@@ -2075,10 +2066,8 @@ class SaleOrder(models.Model):
         res = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
             res[product.id]['price'] = pricelist.get(product.id)
-            if product.sale_line_warn != 'no-message' and product.sale_line_warn_msg:
+            if product.sale_line_warn_msg:
                 res[product.id]['warning'] = product.sale_line_warn_msg
-            if product.sale_line_warn == "block":
-                res[product.id]['readOnly'] = True
         return res
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):
