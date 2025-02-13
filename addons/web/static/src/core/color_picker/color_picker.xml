@@ -1,18 +1,18 @@
 <templates xml:space="preserve">
 <t t-name="web.ColorPicker">
     <div class="o_font_color_selector user-select-none" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true">
-        <div class="mb-1 d-flex">
-            <button class="btn btn-sm btn-light ms-1"
+        <div class="my-1 d-flex">
+            <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab"
                 t-att-class="{active: state.activeTab === 'solid'}"
                 t-on-click="() => this.setTab('solid')">
                 Solid
             </button>
-            <button class="btn btn-sm btn-light"
+            <button class="btn btn-sm btn-light text-truncate btn-tab"
                 t-att-class="{active: state.activeTab === 'custom'}"
                 t-on-click="() => this.setTab('custom')">
                 Custom
             </button>
-            <button class="btn btn-sm btn-light"
+            <button class="btn btn-sm btn-light text-truncate btn-tab"
                 t-att-class="{active: state.activeTab === 'gradient'}"
                 t-on-click="() => this.setTab('gradient')">
                 Gradient
@@ -37,7 +37,7 @@
                 </div>
 
                 <t t-foreach="DEFAULT_COLORS" t-as="line" t-key="line_index">
-                    <div class="o_color_section d-flex">
+                    <div class="o_color_section justify-content-center d-flex">
                         <t t-foreach="line" t-as="color" t-key="color_index">
                             <button class="o_color_button btn" t-att-class="{'selected': color === this.state.currentCustomColor.toUpperCase()}" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                         </t>
