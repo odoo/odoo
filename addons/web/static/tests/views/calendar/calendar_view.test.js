@@ -893,6 +893,51 @@ test(`add a filter with the search more dialog on desktop`, async () => {
     expect(`.o-autocomplete--input`).toHaveValue("");
 });
 
+test.tags("desktop");
+test(`add a filter with the search more dialog (field with a context)`, async () => {
+    CalendarPartner._views = {
+        list: `<list><field name="name"/></list>`,
+        search: `<search/>`,
+    };
+    CalendarPartner._records.push(
+        { id: 5, name: "foo partner 5" },
+        { id: 6, name: "foo partner 6" },
+        { id: 7, name: "foo partner 7" },
+        { id: 8, name: "foo partner 8" },
+        { id: 9, name: "foo partner 9" },
+        { id: 10, name: "foo partner 10" },
+        { id: 11, name: "foo partner 11" },
+        { id: 12, name: "foo partner 12" },
+        { id: 13, name: "foo partner 13" },
+        { id: 14, name: "foo partner 14" }
+    );
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" context="{'search_view_ref': 'my_view'}"/>
+            </calendar>
+        `,
+    });
+
+    onRpc("get_views", ({ kwargs }) => {
+        expect.step("get_views");
+        expect(kwargs.context.search_view_ref).toBe("my_view");
+    });
+    await contains(`.o_calendar_filter[data-name="attendee_ids"] .o-autocomplete--input`).click();
+    await advanceTime(500);
+    expect(
+        `.o_calendar_filter[data-name="attendee_ids"] .o-autocomplete--dropdown-item:last-child`
+    ).toHaveText("Search More...");
+    await contains(
+        `.o_calendar_filter[data-name="attendee_ids"] .o-autocomplete--dropdown-item:last-child`
+    ).click();
+    expect(`.modal`).toHaveCount(1);
+    expect.verifySteps(["get_views"]);
+});
+
 test.tags("mobile");
 test(`add a filter with the search more dialog on mobile`, async () => {
     CalendarPartner._views = {

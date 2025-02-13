@@ -8,6 +8,9 @@
             <xpath expr="//calendar" position="attributes">
                 <attribute name="show_unusual_days">True</attribute>
             </xpath>
+            <xpath expr="//field[@name='partner_ids']" position="attributes">
+                <attribute name="context">{'search_view_ref': 'hr_calendar.view_res_partner_filter_inherit_calendar'}</attribute>
+            </xpath>
         </field>
     </record>
 
