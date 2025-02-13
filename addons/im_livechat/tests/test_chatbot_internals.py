@@ -499,7 +499,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                 {
                     "channel_id": self.livechat_channel.id,
                     "chatbot_script_id": chatbot_no_operator.id,
-                    "chatbot_only_if_no_operator": True,
+                    "chatbot_enabled_condition": "only_if_no_operator",
                     "regex_url": "/",
                     "sequence": 1,
                 },
@@ -528,3 +528,42 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             .chatbot_script_id,
             chatbot_operator,
         )
+
+    def test_chatbot_enabled_condition(self):
+        cases = [
+            # condition - operator_available - expected_result
+            ("only_if_no_operator", False, True),
+            ("only_if_no_operator", True, False),
+            ("only_if_operator", True, True),
+            ("only_if_operator", False, False),
+            ("always", False, True),
+            ("always", True, True),
+        ]
+        for condition, operator_available, expected_result in cases:
+            self.livechat_channel.user_ids.unlink()
+            if operator_available:
+                operator_user = new_test_user(
+                    self.env,
+                    login=f"operator_user_{condition}_{operator_available}_{expected_result}",
+                    groups="im_livechat.im_livechat_group_user,base.group_user",
+                )
+                self.env["mail.presence"]._update_presence(operator_user)
+                self.livechat_channel.user_ids = operator_user
+            self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create(
+                {
+                    "channel_id": self.livechat_channel.id,
+                    "chatbot_script_id": self.chatbot_script.id,
+                    "chatbot_enabled_condition": condition,
+                    "regex_url": "/",
+                    "sequence": 1,
+                }
+            )
+            matching_rule = (
+                self.env["im_livechat.channel.rule"].match_rule(self.livechat_channel.id, "/")
+                or self.env["im_livechat.channel.rule"]
+            )
+            self.assertEqual(
+                matching_rule.chatbot_script_id,
+                self.chatbot_script if expected_result else self.env["chatbot.script"],
+                f"Condition: {condition}, Operator available: {operator_available}, Expected result: {expected_result}",
+            )
