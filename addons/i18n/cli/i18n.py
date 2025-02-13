@@ -56,7 +56,7 @@ class I18nList(Subcommand):
         super().__init__(*args, **kwargs)
         self.parser.add_argument('--database', '-d', dest='db_name', required=True,
             help="Specify the database name.")
-        self.parser.add_argument('--delimiter', default='\n',
+        self.parser.add_argument('--delimiter', '--del', default='\n',
             help="Delimiter between modules, default='\n'")
         self.parser.add_argument('--folder',
             help="Filter modules by parent folder")
@@ -268,7 +268,7 @@ class I18nExport(Subcommand):
 
     def _export_module(self, env, module, filepath, lang_code, fmt):
         if not module or module.state != 'installed':
-            _logger.info("Module %s is not installed, skipping", module)
+            _logger.info("Module %s is not installed, skipping", module.name)
             return
         _logger.info("Exporting %s", filepath)
         i18n_path = Path(filepath).parent
