@@ -371,8 +371,15 @@ export function useClickableBuilderComponent() {
         getActions: getAllActions,
     };
 }
-export function useInputBuilderComponent({ defaultValue } = {}) {
+export function useInputBuilderComponent(
+    {
+        defaultValue,
+        formatRawValue = (rawValue) => rawValue,
+        parseDisplayValue = (displayValue) => displayValue,
+    } = {},
+) {
     const comp = useComponent();
+    // TODO: replace saveUnit and unit by formatRawValue and parseDisplayValue?
     if (comp.props.saveUnit && !comp.props.unit) {
         throw new Error("'unit' must be defined to use the 'saveUnit' props");
     }
@@ -435,15 +442,20 @@ export function useInputBuilderComponent({ defaultValue } = {}) {
 
     function onChange(e) {
         if (defaultValue !== undefined) {
-            e.target.value ||= defaultValue;
+            e.target.value ||= formatRawValue(defaultValue);
         }
         const userValueInput = e.target.value;
-        callOperation(applyOperation.commit, { userValueInput: userValueInput });
+        const rawValue = parseDisplayValue(userValueInput);
+        // If the parsed value is not equivalent to the user input, we want to
+        // normalize the displayed value. It is useful in cases of invalid
+        // input and allows to fall back to the output of parseDisplayValue.
+        e.target.value = rawValue !== undefined ? formatRawValue(rawValue) : "";
+        callOperation(applyOperation.commit, { userValueInput: rawValue });
     }
     let onInput = (e) => {
         const userValueInput = e.target.value;
         callOperation(applyOperation.preview, {
-            userValueInput: userValueInput,
+            userValueInput: parseDisplayValue(userValueInput),
             operationParams: {
                 cancellable: true,
                 cancelPrevious: () => applyOperation.revert(),
@@ -457,6 +469,9 @@ export function useInputBuilderComponent({ defaultValue } = {}) {
         onInput = () => {};
     }
 
+    // TODO: turn this into a parameter instead of implicitly
+    //  turning all id props of the components into this?
+    //  this would avoid breaking encapsulation/data ownership
     if (comp.props.id) {
         useDependencyDefinition(comp.props.id, {
             type: "input",

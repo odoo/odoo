@@ -1,6 +1,7 @@
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { BuilderButtonGroup } from "./building_blocks/builder_button_group";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { BuilderDateTimePicker } from "./building_blocks/builder_datetimepicker";
 import { BuilderRow } from "./building_blocks/builder_row";
 import { BuilderButton } from "./building_blocks/builder_button";
 import { BuilderNumberInput } from "./building_blocks/builder_number_input";
@@ -32,4 +33,5 @@ export const defaultBuilderComponents = {
     BasicMany2Many,
     BuilderMany2Many,
     ModelMany2Many,
+    BuilderDateTimePicker,
 };
