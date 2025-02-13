@@ -195,19 +195,7 @@ export class Builder extends Component {
         for (const actionButtonEl of actionButtonEls) {
             actionButtonEl.disabled = true;
         }
-        // Save the pending images and the dirty elements
-        const saveProms = [...this.editor.editable.querySelectorAll(".o_dirty")].map(
-            async (dirtyEl) => {
-                await this.editor.shared.media.savePendingImages(dirtyEl);
-                const cleanedEl = this.editor.shared.dirty.handleDirtyElement(dirtyEl);
-                if (this.props.isTranslation) {
-                    await this.saveTranslationElement(cleanedEl);
-                } else {
-                    await this.saveView(cleanedEl);
-                }
-            }
-        );
-        await Promise.all(saveProms);
+        await this.editor.shared.savePlugin.save(this.props.isTranslation);
         this.props.closeEditor();
     }
 
@@ -221,51 +209,6 @@ export class Builder extends Component {
 
     redo() {
         this.editor.shared.history.redo();
-    }
-
-    /**
-     * Saves one (dirty) element of the page.
-     *
-     * @param {HTMLElement} el - the element to save.
-     */
-    async saveView(el) {
-        const viewID = Number(el.dataset["oeId"]);
-        const result = this.orm.call(
-            "ir.ui.view",
-            "save",
-            [viewID, el.outerHTML, (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null],
-            {
-                context: {
-                    website_id: this.websiteService.currentWebsite.id,
-                    lang: this.websiteService.currentWebsite.metadata.lang,
-                    // TODO: Restore the delay translation feature once it's
-                    // fixed, see commit msg for more info.
-                    delay_translations: false,
-                },
-            }
-        );
-        return result;
-    }
-    /**
-     * If the element holds a translation, saves it. Otherwise, fallback to the
-     * standard saving but with the lang kept.
-     *
-     * @param {HTMLElement} el - the element to save.
-     */
-    async saveTranslationElement(el) {
-        if (el.dataset["oeTranslationSourceSha"]) {
-            const translations = {};
-            translations[this.websiteService.currentWebsite.metadata.lang] = {
-                [el.dataset["oeTranslationSourceSha"]]: el.innerHTML,
-            };
-            return this.orm.call(el.dataset["oeModel"], "web_update_field_translations", [
-                [Number(el.dataset["oeId"])],
-                el.dataset["oeField"],
-                translations,
-            ]);
-        }
-        // TODO: check what we want to modify in translate mode
-        return this.saveView(el);
     }
 
     onBeforeUnload(event) {

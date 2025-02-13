@@ -6,7 +6,7 @@ import { ClonePlugin } from "./plugins/clone/clone_plugin";
 import { DropZonePlugin } from "./plugins/drop_zone_plugin";
 import { DropZoneSelectorPlugin } from "./plugins/dropzone_selector_plugin";
 import { GridLayoutPlugin } from "./plugins/grid_layout/grid_layout_plugin";
-import { HandleDirtyElementPlugin } from "./plugins/handle_dirty_element_plugin";
+import { SavePlugin } from "./plugins/save_plugin";
 import { MediaWebsitePlugin } from "./plugins/media_website_plugin";
 import { MovePlugin } from "./plugins/move/move_plugin";
 import { OperationPlugin } from "./plugins/operation_plugin";
@@ -33,7 +33,7 @@ export const CORE_PLUGINS = [
     DropZonePlugin,
     MediaWebsitePlugin,
     SetupEditorPlugin,
-    HandleDirtyElementPlugin,
+    SavePlugin,
     VisibilityPlugin,
     DropZoneSelectorPlugin,
 ];

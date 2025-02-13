@@ -119,6 +119,7 @@ async function setupSidebarBuilderForTranslation(options) {
     patchWithCleanup(Builder.prototype, {
         setup() {
             super.setup();
+            this.env.services.website = websiteServiceInTranslateMode;
             this.websiteService = websiteServiceInTranslateMode;
         },
     });
