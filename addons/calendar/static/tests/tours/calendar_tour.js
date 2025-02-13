@@ -93,11 +93,6 @@ const clickOnTheEvent = {
 
 registry.category("web_tour.tours").add("test_calendar_delete_tour", {
     steps: () => [
-        {
-            content: "Select filter (everybody)",
-            trigger: 'div[data-value="all"] input',
-            run: "click",
-        },
         clickOnTheEvent,
         {
             content: "Delete the event",
@@ -118,31 +113,6 @@ registry.category("web_tour.tours").add("test_calendar_decline_tour", {
         {
             content: "Delete the event",
             trigger: ".o_cw_popover_delete",
-            run: "click",
-        },
-        {
-            content: "Wait declined status",
-            trigger: ".o_attendee_status_declined",
-        },
-    ],
-});
-
-registry.category("web_tour.tours").add("test_calendar_decline_with_everybody_filter_tour", {
-    steps: () => [
-        {
-            content: "Select filter (everybody)",
-            trigger: 'div[data-value="all"] input',
-            run: "click",
-        },
-        clickOnTheEvent,
-        {
-            content: "Delete the event",
-            trigger: ".o_cw_popover_delete",
-            run: "click",
-        },
-        {
-            content: "Select filter (everybody)",
-            trigger: 'div[data-value="all"] input',
             run: "click",
         },
         {

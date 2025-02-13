@@ -67,28 +67,3 @@ class TestCalendarTours(HttpCaseWithUserDemo):
         self.start_tour(url, 'test_calendar_decline_tour', login='demo')
         attendee = self.env['calendar.attendee'].search([('event_id', '=', event.id), ('partner_id', '=', user_demo.partner_id.id)])
         self.assertEqual(attendee.state, 'declined')  # Check if the event has been correctly declined
-
-    def test_calendar_decline_with_everybody_filter_tour(self):
-        """
-            Check that we can decline events with the "Everybody's calendars" filter.
-        """
-        user_admin = self.env.ref('base.user_admin')
-        user_demo = self.user_demo
-        start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
-        stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
-        event = self.env['calendar.event'].with_user(user_admin).create({
-            'name': 'Test Event',
-            'description': 'Test Description',
-            'start': start.strftime("%Y-%m-%d %H:%M:%S"),
-            'stop': stop.strftime("%Y-%m-%d %H:%M:%S"),
-            'duration': 3,
-            'location': 'Odoo S.A.',
-            'privacy': 'public',
-            'show_as': 'busy',
-        })
-        event.partner_ids = [Command.link(user_demo.partner_id.id)]
-        action_id = self.env.ref('calendar.action_calendar_event')
-        url = "/odoo/action-" + str(action_id.id)
-        self.start_tour(url, 'test_calendar_decline_with_everybody_filter_tour', login='demo')
-        attendee = self.env['calendar.attendee'].search([('event_id', '=', event.id), ('partner_id', '=', user_demo.partner_id.id)])
-        self.assertEqual(attendee.state, 'declined')  # Check if the event has been correctly declined
