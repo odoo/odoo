@@ -78,7 +78,8 @@
                                 <ColorPicker
                                     defaultColor="this.defaultColor"
                                     onColorSelect.bind="(color) => this.applyColor(color.hex)"
-                                    onColorPreview.bind="onColorPreview" />
+                                    onColorPreview.bind="onColorPreview"
+                                    noTransparency="props.noTransparency" />
                             </div>
                         </t>
                         <t t-if="state.activeTab==='gradient'">
@@ -89,7 +90,7 @@
                             </div>
                             <div class="px-2">
                                 <button t-attf-style="background-image: {{ getCurrentGradientColor() }};" class="w-50 border btn" title="Define a custom gradient">Custom</button>
-                                <GradientPicker onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>
+                                <GradientPicker onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()" noTransparency="props.noTransparency"/>
                             </div>
                         </t>
                     </div>

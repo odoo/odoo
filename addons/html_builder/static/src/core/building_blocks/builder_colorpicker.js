@@ -12,6 +12,7 @@ export class BuilderColorPicker extends Component {
     static template = "html_builder.BuilderColorPicker";
     static props = {
         ...basicContainerBuilderComponentProps,
+        noTransparency: { type: Boolean, optional: true },
         unit: { type: String, optional: true },
     };
     static components = {

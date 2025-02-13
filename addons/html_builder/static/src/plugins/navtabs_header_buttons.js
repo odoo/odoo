@@ -6,7 +6,7 @@ import { uniqueId } from "@web/core/utils/functions";
 
 class NavTabsPlugin extends Plugin {
     static id = "NavTabsOption";
-    static dependencies = ["history", "clone", "remove"];
+    static dependencies = ["clone", "remove"];
     resources = {
         builder_header_middle_buttons: {
             Component: NavTabsHeaderMiddleButtons,

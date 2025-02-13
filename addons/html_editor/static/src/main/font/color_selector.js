@@ -41,6 +41,7 @@ export class ColorSelector extends Component {
         applyColorPreview: Function,
         applyColorResetPreview: Function,
         focusEditable: Function,
+        noTransparency: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
     };
 
