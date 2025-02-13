@@ -14,6 +14,10 @@ from odoo.modules import get_module_path
 from odoo.tools.translate import trans_export, load_language
 
 _logger = logging.getLogger(__name__)
+BOOL_YES = {'1', 'yes', 'true', 'on'}
+BOOL_NO = {'0', 'no', 'false', 'off'}
+BOOL_ONLY = {'only'}
+YES_NO_ONLY = BOOL_YES | BOOL_NO | BOOL_ONLY
 
 
 def _get_languages(env, lang):
@@ -42,7 +46,7 @@ class I18nList(Subcommand):
     List all modules that can be exported, given user constraints.
 
     Example:
-    ./odoo-bin <addons> i18n list <db> --l10n --delimiter=',' \
+    ./odoo-bin <addons> i18n list <db> --l10n=yes --delimiter=',' \
          | xargs ./odoo-bin <addons> <db> server -i
     """
     description = "List i18n-exportable modules"
@@ -56,14 +60,8 @@ class I18nList(Subcommand):
             help="Delimiter between modules, default='\n'")
         self.parser.add_argument('--folder',
             help="Filter modules by parent folder")
-        modules_group = self.parser.add_argument_group('Module options (mutually exclusive)')
-        modules_parser = modules_group.add_mutually_exclusive_group()
-        modules_parser.add_argument('--community', action='store_true',
-            help="List only i18n-exportable community modules")
-        modules_parser.add_argument('--enterprise', action='store_true',
-            help="List only i18n-exportable enterprise modules")
-        modules_parser.add_argument('--l10n', action='store_true',
-            help="List only i18n-exportable l10n modules")
+        self.parser.add_argument('--l10n', choices=YES_NO_ONLY, default=True,
+            help="Include localization modules, yes/no/only, default=yes")
 
     def run(self, cmdargs):
         try:
@@ -81,16 +79,19 @@ class I18nList(Subcommand):
 
                 # Look for modules
                 domain = [('name', 'not =ilike', pattern) for pattern in self.excluded]
-                if parsed_args.community:
-                    domain += [('license', '=', 'LGPL-3')]
-                elif parsed_args.enterprise:
-                    domain += [('license', '=', 'OEEL-1')]
-                elif parsed_args.l10n:
-                    domain += ['|',
-                        ('name', '=ilike', r'l10n\_%'),
-                        ('name', '=ilike', r'%l10n\_%'),
-                        ('name', '!=', 'l10n_multilang'),
-                    ]
+                match parsed_args.l10n:
+                    case x if x in BOOL_ONLY:
+                        domain += ['|',
+                            ('name', '=ilike', r'l10n\_%'),
+                            ('name', '=ilike', r'%l10n\_%'),
+                            ('name', '!=', 'l10n_multilang'),
+                        ]
+                    case x if x in BOOL_NO:
+                        domain += ['|',
+                            ('name', 'not =ilike', r'l10n\_%'),
+                            ('name', 'not =ilike', r'%l10n\_%'),
+                        ]
+
                 modules = env['ir.module.module'].search_fetch(domain, ['name'], order="name")
                 module_names = modules.mapped("name")
 
