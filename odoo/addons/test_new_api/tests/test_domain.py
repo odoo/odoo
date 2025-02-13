@@ -590,10 +590,45 @@ class TestDomainOptimize(TransactionCase):
             Domain('date', '=like', '2024%')._optimize(model),
             Domain('date', '=like', '2024%'),
         )
+        # using a datetime format
+        self.assertEqual(
+            Domain('date', '=', datetime(2024, 1, 1))._optimize(model),
+            Domain('date', '=', date(2024, 1, 1)),
+        )
+        self.assertEqual(
+            Domain('date', '=', datetime(2024, 1, 1, 5))._optimize(model),
+            Domain.FALSE,
+        )
+        # inequalities
         self.assertEqual(
             Domain('date', '>', '2024-01-01')._optimize(model),
             Domain('date', '>', date(2024, 1, 1)),
         )
+        self.assertEqual(
+            Domain('date', '>', '2024-01-01 03:00:00')._optimize(model),
+            Domain('date', '>', date(2024, 1, 1)),
+        )
+        self.assertEqual(
+            Domain('date', '>=', '2024-01-01 03:00:00')._optimize(model),
+            Domain('date', '>', date(2024, 1, 1)),
+        )
+        self.assertEqual(
+            Domain('date', '<=', '2024-01-01 03:00:00')._optimize(model),
+            Domain('date', '<=', date(2024, 1, 1)),
+        )
+        self.assertEqual(
+            Domain('date', '<', '2024-01-01 03:00:00')._optimize(model),
+            Domain('date', '<=', date(2024, 1, 1)),
+        )
+        self.assertEqual(
+            Domain('date', '<', datetime(2024, 1, 1, 5))._optimize(model),
+            Domain('date', '<=', date(2024, 1, 1)),
+        )
+        self.assertEqual(
+            Domain('date', '<=', datetime(2024, 1, 1))._optimize(model),
+            Domain('date', '<=', date(2024, 1, 1)),
+        )
+        # comparing with False
         self.assertEqual(
             Domain('date', '>', False)._optimize(model),
             Domain.FALSE,
