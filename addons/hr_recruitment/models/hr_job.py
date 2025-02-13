@@ -110,7 +110,8 @@ class HrJob(models.Model):
         """, {
             'today': fields.Date.context_today(self),
             'user_id': self.env.uid,
-            'job_ids': tuple(self.ids),
+            'job_ids': tuple(self.ids or [0]),
+            # or [0] is used in case we only have newIds (web studio)
         })
         job_activities = defaultdict(dict)
         for activity in self.env.cr.dictfetchall():
@@ -216,7 +217,8 @@ class HrJob(models.Model):
                  WHERE a.company_id in %s
                     OR a.company_id is NULL
               GROUP BY s.job_id
-            """, [tuple(self.ids), tuple(self.env.companies.ids)]
+            """, [tuple(self.ids or [0]), tuple(self.env.companies.ids)]
+            # or [0] is used in case we only have newIds (web studio)
         )
 
         new_applicant_count = dict(self.env.cr.fetchall())
