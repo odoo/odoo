@@ -8,9 +8,9 @@ describe("Range collapsed", () => {
         test("should turn an empty paragraph into a list", async () => {
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
-                contentBeforeEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+                contentBeforeEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 stepFunction: toggleUnorderedList,
-                contentAfterEdit: `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`,
+                contentAfterEdit: `<ul><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`,
                 contentAfter: "<ul><li>[]<br></li></ul>",
             });
         });
@@ -162,9 +162,9 @@ describe("Range collapsed", () => {
         test("should turn an empty list into a paragraph", async () => {
             await testEditor({
                 contentBefore: "<ul><li>[]<br></li></ul>",
-                contentBeforeEdit: `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`,
+                contentBeforeEdit: `<ul><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`,
                 stepFunction: toggleUnorderedList,
-                contentAfterEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+                contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 contentAfter: "<p>[]<br></p>",
             });
         });
@@ -301,7 +301,7 @@ describe("Range collapsed", () => {
             await testEditor({
                 contentBefore: "<ol><li>[]<br></li></ol>",
                 stepFunction: toggleUnorderedList,
-                contentAfterEdit: `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`,
+                contentAfterEdit: `<ul><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`,
                 contentAfter: "<ul><li>[]<br></li></ul>",
             });
         });
@@ -310,7 +310,7 @@ describe("Range collapsed", () => {
             await testEditor({
                 contentBefore: '<ul class="o_checklist"><li>[]<br></li></ul>',
                 stepFunction: toggleUnorderedList,
-                contentAfterEdit: `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`,
+                contentAfterEdit: `<ul><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`,
                 contentAfter: "<ul><li>[]<br></li></ul>",
             });
         });

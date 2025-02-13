@@ -28,7 +28,7 @@ test("can get content of an Editor", async () => {
 test("can get content of an empty paragraph", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
     expect(el.innerHTML).toBe(
-        `<p placeholder="Type &quot;/&quot; for commands" class="o-we-hint"></p>`
+        `<p o-we-hint-text="Type &quot;/&quot; for commands" class="o-we-hint"></p>`
     );
     expect(editor.getContent()).toBe(`<p></p>`);
 });
