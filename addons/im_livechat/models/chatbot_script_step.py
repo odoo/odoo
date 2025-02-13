@@ -353,7 +353,23 @@ class ChatbotScriptStep(models.Model):
                 self.env.user.display_name if not self.env.user._is_public() else discuss_channel.anonymous_name,
                 human_operator.livechat_username if human_operator.livechat_username else human_operator.name
             ])
-
+            step_message = next((
+                # sudo - chatbot.message.id: visitor can access chat bot messages.
+                m.mail_message_id for m in discuss_channel.sudo().chatbot_message_ids
+                if m.script_step_id == self
+                and m.mail_message_id.author_id == self.chatbot_script_id.operator_partner_id
+            ), self.env["mail.message"])
+            discuss_channel._bus_send_store(
+                Store(
+                    "ChatbotStep",
+                    {
+                        "id": (self.id, step_message.id),
+                        "scriptStep": self.id,
+                        "message": step_message.id,
+                        "operatorFound": True,
+                    },
+                )
+            )
             discuss_channel._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)
 

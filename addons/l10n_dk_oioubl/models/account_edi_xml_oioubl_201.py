@@ -30,6 +30,65 @@ UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING = {
     'M': 'ZeroRated',
 }
 TAX_POSSIBLE_VALUES = set(UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING.values())
+EAS_SCHEME_ID_MAPPING = {
+    '0007': 'SE:ORGNR',
+    '0009': 'FR:SIRET',
+    '0060': 'DUNS',
+    '0088': 'GLN',
+    '0096': 'DK:P',
+    '0097': 'IT:FTI',
+    '0135': 'IT:SIA',
+    '0142': 'IT:SECETI',
+    '0184': 'DK:CVR',
+    '0192': 'NO:ORGNR',
+    '0196': 'IS:KT',
+    '0198': 'DK:SE',
+    '0201': 'IT:IPA',
+    '0208': 'BE:VAT',
+    '0210': 'IT:CF',
+    '0211': 'IT:VAT',
+    '0212': 'FI:ORGNR',
+    '0213': 'FI:VAT',
+    '0216': 'FI:OVT',
+    '9955': 'SE:VAT',
+    '9910': 'HU:VAT',
+    '9915': 'AT:VAT',
+    '9918': 'IBAN',
+    '9919': 'AT:KUR',
+    '9920': 'ES:VAT',
+    '9922': 'AD:VAT',
+    '9923': 'AL:VAT',
+    '9924': 'BA:VAT',
+    '9925': 'BE:VAT',
+    '9926': 'BG:VAT',
+    '9927': 'CH:VAT',
+    '9928': 'CY:VAT',
+    '9929': 'CZ:VAT',
+    '9930': 'DE:VAT',
+    '9931': 'EE:VAT',
+    '9932': 'GB:VAT',
+    '9933': 'GR:VAT',
+    '9934': 'HR:VAT',
+    '9935': 'IE:VAT',
+    '9936': 'LI:VAT',
+    '9937': 'LT:VAT',
+    '9938': 'LU:VAT',
+    '9939': 'LV:VAT',
+    '9940': 'MC:VAT',
+    '9941': 'ME:VAT',
+    '9942': 'MK:VAT',
+    '9943': 'MT:VAT',
+    '9944': 'NL:VAT',
+    '9945': 'PL:VAT',
+    '9946': 'PT:VAT',
+    '9947': 'RO:VAT',
+    '9948': 'RS:VAT',
+    '9949': 'SI:VAT',
+    '9950': 'SK:VAT',
+    '9951': 'SM:VAT',
+    '9952': 'TR:VAT',
+    '9953': 'VA:VAT',
+}
 
 
 def format_vat_number(partner):
@@ -92,10 +151,14 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
 
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account.edi.xml.ubl_20
+        """ The scheme_id needs to be in letters and the VAT number (if there is one) should be preceded by 2 letters"""
         vals = super()._get_partner_party_vals(partner, role)
-        if partner.peppol_endpoint:
+        if partner.peppol_endpoint and partner.peppol_eas in EAS_SCHEME_ID_MAPPING:
+            # if we don't know the mapping with real names for the Peppol Endpoint, fallback on VAT simply
             endpoint_id = partner.peppol_endpoint
-            scheme_id = 'GLN'
+            scheme_id = EAS_SCHEME_ID_MAPPING[partner.peppol_eas]
+            if (scheme_id in ('DK:CVR', 'FR:SIRET') or scheme_id[3:] == 'VAT') and endpoint_id.isnumeric():
+                endpoint_id = scheme_id[:2] + endpoint_id
         else:
             endpoint_id = format_vat_number(partner)
             country_code = endpoint_id[:2]

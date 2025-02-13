@@ -15,10 +15,9 @@
 # Servisi RAM d.o.o. <support@servisiram.hr>, 2024
 # Milan Tribuson <one.mile.code@gmail.com>, 2024
 # Ivan Marijanović <ivanm101@yahoo.com>, 2024
+# Alen Komljen, 2024
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
 # Marko Čalić, 2024
-# Alen Komljen, 2024
-# Vladimir Vrgoč, 2024
 # Jasmina Otročak <jasmina@uvid.hr>, 2024
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2024
 # Martin Trigaux, 2024
@@ -33,6 +32,7 @@
 # Luka Carević <luka@uvid.hr>, 2024
 # Carlo Štefanac, 2024
 # Bole <bole@dajmi5.com>, 2025
+# Vladimir Vrgoč, 2025
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2025\n"
+"Last-Translator: Vladimir Vrgoč, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9051,7 +9051,7 @@ msgstr "Temeljnica"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment_field.js:0
 msgid "Journal Entry Info"
-msgstr ""
+msgstr "Info o plaćanju"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -13420,6 +13420,11 @@ msgid "Set a price."
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
@@ -16154,10 +16159,9 @@ msgstr "Prijenos na %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"Aktiviraj upozorenja prilikom izrade faktura i prodajnih naloga za partnere "
-"s ukupnim iznosom potraživanja koji premašuje ograničenje."
 
 #. module: account
 #. odoo-python

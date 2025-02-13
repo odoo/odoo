@@ -273,7 +273,8 @@ export function clickOnSave(position = "bottom", timeout) {
         },
         {
             isActive: ["auto"],
-            trigger: "body:not(:has(.editor_enable))",
+            trigger:
+                "body:not(.editor_enable):not(.editor_has_snippets):not(:has(.o_notification_bar))",
             noPrepend: true,
             timeout: timeout,
         },
@@ -411,17 +412,23 @@ export function getClientActionUrl(path, edition) {
 }
 
 export function clickOnExtraMenuItem(stepOptions, backend = false) {
-    return Object.assign({
-        content: "Click on the extra menu dropdown toggle if it is there",
-        trigger: `${backend ? ":iframe" : ""} .top_menu`,
-        async run(actions) {
-            const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
-            // Don't click on the extra menu button if it's already visible.
-            if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
-                await actions.click(extraMenuButton);
-            }
+    return Object.assign(
+        {
+            content: "Click on the extra menu dropdown toggle if it is there and not shown",
+            trigger: `${
+                backend ? ":iframe" : ""
+            } ul.top_menu`,
+            run(actions) {
+                // Note: the button might not exist (it only appear if there is many menu items)
+                const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
+                // Don't click on the extra menu button if it's already visible.
+                if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
+                    actions.click(extraMenuButton);
+                }
+            },
         },
-    }, stepOptions);
+        stepOptions
+    );
 }
 
 /**

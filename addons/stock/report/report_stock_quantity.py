@@ -56,7 +56,11 @@ WITH
         SELECT m.id, m.product_id, pt.id, m.product_qty, m.date, m.state, m.company_id, source.w_id, dest.w_id
         FROM stock_move m
         LEFT JOIN warehouse_cte source ON source.sl_id = m.location_id
-        LEFT JOIN warehouse_cte dest ON dest.sl_id = COALESCE(m.location_final_id, m.location_dest_id)
+        LEFT JOIN warehouse_cte dest ON
+            CASE
+                WHEN m.state != 'done' THEN dest.sl_id = COALESCE(m.location_final_id, m.location_dest_id)
+                WHEN m.state = 'done' THEN dest.sl_id = m.location_dest_id
+            END
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
         WHERE pt.is_storable = true AND
