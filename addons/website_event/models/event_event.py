@@ -255,6 +255,19 @@ class EventEvent(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
+    def copy(self, default=None):
+        res = super().copy(default=default)
+        res.copy_event_menus(self)
+        return res
+
+    def copy_event_menus(self, old_events):
+        for new_event, old_event in zip(self, old_events):
+            default_menu_values = {'event_id': new_event.id}
+            new_event.menu_id = old_event.menu_id.copy({'name': new_event.name, 'website_id': new_event.website_id.id})
+            new_event.introduction_menu_ids = old_event.introduction_menu_ids.copy(default_menu_values)
+            new_event.location_menu_ids = old_event.location_menu_ids.copy(default_menu_values)
+            (new_event.introduction_menu_ids + new_event.location_menu_ids + new_event.community_menu_ids + new_event.register_menu_ids).menu_id.parent_id = new_event.menu_id
+
     @api.model_create_multi
     def create(self, vals_list):
         events = super().create(vals_list)
