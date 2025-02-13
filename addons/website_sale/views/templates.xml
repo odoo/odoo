@@ -1892,19 +1892,24 @@
                                         <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/>All Products
                                     </a>
                                 </li>
-                                <li
-                                    t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
-                                    t-if="category"
-                                    class="breadcrumb-item"
-                                >
-                                    <a
-                                        class="py-2 py-lg-0"
-                                        t-att-href="keep('%s/category/%s' % (shop_path, slug(category)))"
+                                <t t-foreach="category.parents_and_self" t-as="cat">
+                                    <li
+                                        t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
+                                        class="breadcrumb-item"
                                     >
-                                        <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="category.name"/>
-                                    </a>
-                                </li>
-                                <li t-else="" class="o_not_editable breadcrumb-item d-lg-none">
+                                        <a
+                                            class="py-2 py-lg-0"
+                                            t-att-href="keep('%s/category/%s' % (shop_path, slug(cat)))"
+                                        >
+                                            <i
+                                                class="oi oi-chevron-left d-lg-none me-1"
+                                                role="presentation"
+                                            />
+                                            <t t-out="cat.name"/>
+                                        </a>
+                                    </li>
+                                </t>
+                                <li class="o_not_editable breadcrumb-item d-lg-none">
                                     <a class="py-2 py-lg-0" t-att-href="keep(shop_path)">
                                         <i class="oi oi-chevron-left me-1" role="presentation"/>All Products
                                     </a>
