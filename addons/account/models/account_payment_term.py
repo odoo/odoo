@@ -233,6 +233,11 @@ class AccountPaymentTerm(models.Model):
             ).unlink()
         return super(AccountPaymentTerm, self).unlink()
 
+    def copy(self, default=None):
+        default = dict(default or {})
+        default['name'] = _('%s (copy)', self.name)
+        return super().copy(default)
+
 
 class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"
