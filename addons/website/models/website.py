@@ -382,6 +382,7 @@ class Website(models.Model):
         r = dict()
         company = self.get_current_website().company_id
         configurator_features = self.env['website.configurator.feature'].search([])
+        configurator_status = self.get_current_website().configurator_done
         r['features'] = [{
             'id': feature.id,
             'name': feature.name,
@@ -394,6 +395,7 @@ class Website(models.Model):
         r['logo'] = False
         if company.logo and company.logo != company._get_logo():
             r['logo'] = company.logo.decode('utf-8')
+        r['is_configurator_done'] = configurator_status
         try:
             result = self._website_api_rpc('/api/website/1/configurator/industries', {'lang': self.env.context.get('lang')})
             r['industries'] = result['industries']
