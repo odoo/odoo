@@ -102,10 +102,16 @@ class BaseModel(models.AbstractModel):
           customers to contact;
         """
         partner_fields = self._mail_get_partner_fields(introspect_fields=introspect_fields)
-        return dict(
-            (record.id, self.env['res.partner'].union(*[record[fname] for fname in partner_fields]))
+        pids = {
+            pid
+            for record in self for fname in partner_fields for pid in record[fname].ids
+            if record[fname]
+        }
+        Partner = self.env['res.partner'].with_prefetch(pids)
+        return {
+            record.id: Partner.union(*[record[fname] for fname in partner_fields])
             for record in self
-        )
+        }
 
     @api.model
     def _mail_get_primary_email_field(self):
