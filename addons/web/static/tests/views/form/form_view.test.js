@@ -11261,6 +11261,73 @@ test(`open form view action in x2many should display a notification if the recor
     expect.verifySteps([`danger:Please save your changes first`]);
 });
 
+test(`open form view action in x2many should work with several virtual record`, async () => {
+    mockService("action", {
+        async doAction({ type, res_id, res_model }) {
+            expect.step(`${type}:${res_model}(${res_id})`);
+        },
+    });
+
+    onRpc("web_save", () => expect.step(`web_save`));
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="child_ids">
+                    <list editable="bottom" open_form_view="1">
+                        <field name="foo"/>
+                    </list>
+                </field>
+            </form>
+        `,
+    });
+    async function createVirtualRecord(x) {
+        await contains(`.o_field_x2many_list_row_add a`).click();
+        await contains(`.o_data_row [name='foo'] input`).edit(`record ${x}`);
+    }
+    await createVirtualRecord("a");
+    await createVirtualRecord("b");
+    await createVirtualRecord("c");
+    await createVirtualRecord("d");
+    await contains(".o_list_record_open_form_view:eq(4)").click();
+    expect.verifySteps(["web_save", "ir.actions.act_window:partner(11)"]);
+});
+
+test(`open form view action in x2many with several virtual record with limit`, async () => {
+    mockService("action", {
+        async doAction({ type, res_id, res_model }) {
+            expect.step(`${type}:${res_model}(${res_id})`);
+        },
+    });
+
+    onRpc("web_save", () => expect.step(`web_save`));
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="child_ids">
+                    <list editable="bottom" open_form_view="1" limit="2">
+                        <field name="foo"/>
+                    </list>
+                </field>
+            </form>
+        `,
+    });
+    async function createVirtualRecord(x) {
+        await contains(`.o_field_x2many_list_row_add a`).click();
+        await contains(`.o_data_row [name='foo'] input`).edit(`record ${x}`);
+    }
+    await createVirtualRecord("a");
+    await createVirtualRecord("b");
+    await createVirtualRecord("c");
+    await createVirtualRecord("d");
+    await contains(".o_list_record_open_form_view:eq(6)").click();
+    expect.verifySteps(["web_save", "ir.actions.act_window:partner(13)"]);
+});
+
 test(`prevent recreating a deleted record`, async () => {
     Partner._records = [{ id: 1, name: "first record" }];
     Partner._views = {

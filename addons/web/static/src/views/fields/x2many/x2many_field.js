@@ -18,6 +18,7 @@ import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { symmetricalDifference } from "@web/core/utils/arrays";
 
 import { Component } from "@odoo/owl";
 
@@ -228,13 +229,53 @@ export class X2ManyField extends Component {
         return evaluateBooleanExpr(invisible, this.list.evalContext);
     }
 
+    displaySaveNotification() {
+        this.notificationService.add(_t("Please save your changes first"), {
+            type: "danger",
+        });
+    }
+
     async switchToForm(record, options) {
-        await this.props.record.save();
+        /*
+            Switches to the form view of a record, even if its final resId is unknown at the start.
+            - Finds the record's index using its _virtualId.
+            - Saves the record and compares resIds before and after to detect new records.
+            - If the record was created, it determines its final resId by matching the index.
+            - Opens the form view for the correct record.
+        */
+        let resId = null;
+        if (record.isNew) {
+            const createCommands = this.list._commands.filter(
+                ([command, _virtualId]) => command === 0
+            );
+            const newRecordIndex = createCommands.findIndex(
+                ([_command, virtualId]) => virtualId === record._virtualId
+            );
+            if (newRecordIndex === -1) {
+                return this.displaySaveNotification();
+            }
+            const commandsLength = createCommands.length;
+            const previousResIds = this.list.resIds;
+            const saved = await this.props.record.save();
+            const newResIds = symmetricalDifference(this.list.resIds, previousResIds);
+            if (!saved || newResIds.length !== commandsLength) {
+                return this.displaySaveNotification();
+            }
+            newResIds.sort((x, y) => x - y);
+            resId = newResIds[newRecordIndex];
+        } else {
+            const saved = await this.props.record.save();
+            if (!saved) {
+                return this.displaySaveNotification();
+            }
+            resId = record.resId;
+        }
+
         this.action.doAction(
             {
                 type: "ir.actions.act_window",
                 views: [[false, "form"]],
-                res_id: record.resId,
+                res_id: resId,
                 res_model: this.list.resModel,
             },
             {
