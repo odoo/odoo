@@ -358,11 +358,12 @@ class Website(Home):
         return request.redirect(url, local=False)
 
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
-    def get_suggested_link(self, needle, limit=10):
+    def get_suggested_link(self, needle, limit=None):
         current_website = request.website
 
         matching_pages = []
-        for page in current_website.search_pages(needle, limit=int(limit)):
+        limit = int(limit) if limit else None
+        for page in current_website.search_pages(needle, limit):
             matching_pages.append({
                 'value': page['loc'],
                 'label': 'name' in page and '%s (%s)' % (page['loc'], page['name']) or page['loc'],

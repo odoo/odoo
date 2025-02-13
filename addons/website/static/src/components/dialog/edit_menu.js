@@ -2,7 +2,18 @@ import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from '@website/js/utils';
 import { WebsiteDialog } from './dialog';
-import { Component, useState, useEffect, onWillStart, useRef } from "@odoo/owl";
+import {
+    Component,
+    useState,
+    useEffect,
+    onWillStart,
+    useRef,
+    onMounted,
+} from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import { isEmail } from "@web/core/utils/strings";
+import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 
 const useControlledInput = (initialValue, validate) => {
     const input = useState({
@@ -28,6 +39,54 @@ const useControlledInput = (initialValue, validate) => {
     };
 };
 
+const checkIfPageExists = (url, allPages) => {
+    let isSameDomain = false;
+    let isRelativeUrl = true;
+    let providedUrl = null;
+
+    // Do not check if the page exists if the input is empty, an anchor, an
+    // email, or a phone number.
+    if (!url.trim() || url.startsWith("#") || isEmail(url) || /^(mailto:|tel:)/.test(url)) {
+        return false;
+    }
+
+    // Check if it's an absolute URL, and if so, verify whether it's the
+    // website's domain or not.
+    try {
+        if (url.startsWith("www.")) {
+            url = "https://" + url // Add https:// if "www." is present.
+        }
+        providedUrl = new URL(url);
+        isSameDomain = providedUrl.hostname === window.location.hostname;
+        isRelativeUrl = false;
+    } catch {
+        // The URL is probably relative or invalid, do nothing here.
+    }
+
+    if (!isRelativeUrl && !isSameDomain) {
+        // It’s a URL to an external site.
+        return false;
+    } else {
+        // Use pathname of the absolute URL.
+        url = isSameDomain ? providedUrl.pathname : url;
+        // Remove query params and hash.
+        url = url.split('?')[0].split('#')[0];
+        // Ensure the URL starts with "/".
+        url = url.startsWith('/') ? url : '/' + url;
+        // Check if the page exists.
+        return !allPages.includes(url);
+    }
+}
+
+const getAllPages = async () => {
+    const res = await rpc("/website/get_suggested_links", {
+        needle: "/",
+    });
+    const allPages = res.matching_pages.map((page) => page.value);
+    allPages.push(...res.others.flatMap(o => o.values?.map(v => v.value) || []));
+    return allPages;
+}
+
 export class MenuDialog extends Component {
     static template = "website.MenuDialog";
     static components = { WebsiteDialog };
@@ -35,17 +94,29 @@ export class MenuDialog extends Component {
         name: { type: String, optional: true },
         url: { type: String, optional: true },
         isMegaMenu: { type: Boolean, optional: true },
+        allPages: { type: Array, optional: true },
         save: Function,
         close: Function,
     };
 
     setup() {
         this.website = useService('website');
+        this.title = this.props.isMegaMenu ? _t("Add a mega menu item") : _t("Add a menu item");
         useAutofocus();
 
         this.name = useControlledInput(this.props.name, value => !!value);
         this.url = useControlledInput(this.props.url, value => !!value);
         this.urlInputRef = useRef('url-input');
+
+        this.state = useState({
+            pageNotFound: false,
+        });
+
+        onWillStart(async () => {
+            if (!this.props.isMegaMenu) {
+                this.allPages = this.props.allPages || await getAllPages();
+            }
+        });
 
         useEffect((input) => {
             if (!input) {
@@ -59,20 +130,37 @@ export class MenuDialog extends Component {
                 },
                 urlChosen: () => {
                     this.url.input.value = input.value;
+                    this.state.pageNotFound = false;
                 },
             };
             const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(input, options);
             return () => unmountAutocompleteWithPages();
         }, () => [this.urlInputRef.el]);
+
+        onMounted(() => {
+            if (!this.props.isMegaMenu) {
+                this.state.pageNotFound =
+                    checkIfPageExists(this.urlInputRef.el.value, this.allPages);
+            }
+        });
     }
 
     onClickOk() {
         if (this.name.isValid()) {
             if (this.props.isMegaMenu || this.url.isValid()) {
-                this.props.save(this.name.input.value, this.url.input.value);
+                this.props.save(this.name.input.value, this.url.input.value, this.state.pageNotFound);
                 this.props.close();
             }
         }
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    onUrlInput(ev) {
+        this.state.pageNotFound =
+            checkIfPageExists(ev.target.value, this.allPages);
     }
 }
 
@@ -82,6 +170,7 @@ class MenuRow extends Component {
         menu: Object,
         edit: Function,
         delete: Function,
+        createPage: Function,
     };
     static components = {
         MenuRow,
@@ -93,6 +182,10 @@ class MenuRow extends Component {
 
     delete() {
         this.props.delete(this.props.menu.fields['id']);
+    }
+
+    createPage() {
+        this.props.createPage(this.props.menu.fields['url']);
     }
 }
 
@@ -114,12 +207,14 @@ export class EditMenuDialog extends Component {
         this.state = useState({ rootMenu: {} });
 
         onWillStart(async () => {
+            this.allPages = await getAllPages();
             const menu = await this.orm.call(
                 'website.menu',
                 'get_tree',
                 [this.website.currentWebsite.id, this.props.rootID],
                 { context: { lang: this.website.currentWebsite.metadata.lang } }
             );
+            this.markPageNotFound(menu);
             this.state.rootMenu = menu;
             this.map = new Map();
             this.populate(this.map, this.state.rootMenu);
@@ -141,6 +236,16 @@ export class EditMenuDialog extends Component {
         map.set(menu.fields['id'], menu);
         for (const submenu of menu.children) {
             this.populate(map, submenu);
+        }
+    }
+
+    markPageNotFound(menu) {
+        for (const menuItem of menu.children) {
+            menuItem.page_not_found =
+                checkIfPageExists(menuItem.fields["url"], this.allPages);
+            if (menuItem.children) {
+                this.markPageNotFound(menuItem);
+            }
         }
     }
 
@@ -186,7 +291,8 @@ export class EditMenuDialog extends Component {
     addMenu(isMegaMenu) {
         this.dialogs.add(MenuDialog, {
             isMegaMenu,
-            save: (name, url, isNewWindow) => {
+            allPages: this.allPages,
+            save: (name, url, pageNotFound, isNewWindow) => {
                 const newMenu = {
                     fields: {
                         id: `menu_${(new Date).toISOString()}`,
@@ -198,6 +304,7 @@ export class EditMenuDialog extends Component {
                         'parent_id': false,
                     },
                     'children': [],
+                    'page_not_found': pageNotFound,
                 };
                 this.state.rootMenu.children.push(newMenu);
                 // this.state.rootMenu.children.at(-1) to forces a rerender
@@ -212,9 +319,11 @@ export class EditMenuDialog extends Component {
             name: menuToEdit.fields['name'],
             url: menuToEdit.fields['url'],
             isMegaMenu: menuToEdit.fields['is_mega_menu'],
-            save: (name, url) => {
+            allPages: this.allPages,
+            save: (name, url, pageNotFound) => {
                 menuToEdit.fields['name'] = name;
                 menuToEdit.fields['url'] = url;
+                menuToEdit.page_not_found = pageNotFound;
             },
         });
     }
@@ -262,5 +371,12 @@ export class EditMenuDialog extends Component {
         } else {
             this.website.goToWebsite();
         }
+    }
+
+    async createPage(url) {
+        this.dialogs.add(AddPageDialog, {
+            websiteId: this.website.currentWebsite.id,
+            forcedURL: url,
+        });
     }
 }

@@ -685,7 +685,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 return event.data.onSuccess();
             case 'edit_menu':
                 return this.dialogs.add(EditMenuDialog, {
-                    rootID: params[0],
+                    rootID: params && params[0],
                     save: () => {
                         // TODO: Rework _onSaveRequest to not take Events
                         this._onSaveRequest({ data: { reload: true} });
