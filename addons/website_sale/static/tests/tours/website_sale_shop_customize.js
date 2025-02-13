@@ -147,8 +147,13 @@ registerWebsitePreviewTour('shop_customize', {
             trigger: "#oe_snippets .o_we_customize_panel",
         },
         {
+            content: "open 'Filters' selector",
+            trigger: '[data-name="attributes_selector"] we-toggler',
+            run: "click",
+        },
+        {
             content: "remove 'Attributes'",
-            trigger: 'we-button[data-name="attributes_opt"]',
+            trigger: 'we-button[data-name="attributes_hide_opt"]',
             run: "click",
         },
         ...clickOnSave(),

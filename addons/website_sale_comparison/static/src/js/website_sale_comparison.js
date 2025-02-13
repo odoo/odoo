@@ -69,6 +69,9 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             });
         });
 
+        // Update checkboxes states on launch.
+        this._updateCheckboxesState();
+
         return this._super.apply(this, arguments);
     },
     /**
@@ -120,6 +123,24 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         } else {
             this.$('.o_comparelist_limit_warning').show();
             $('#comparelist .o_product_panel_header').popover('show');
+        }
+    },
+
+    /**
+     * @param {Element} el - The checkbox.
+     */
+    handleCompareToggle: function (el) {
+        const productId = parseInt(el.dataset.productProductId);
+        const toCompare = el.checked;
+
+        if (toCompare) {
+            this.handleCompareAddition($(el));
+        } else {
+            this.comparelist_product_ids = this.comparelist_product_ids.filter(
+                (comp) => comp !== productId
+            );
+            this._updateCookie();
+            this._updateContent('show');
         }
     },
 
@@ -206,6 +227,16 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     /**
      * @private
      */
+    _updateCheckboxesState: function () {
+        const checkboxes = this.el.parentElement.querySelectorAll('input.o_add_compare');
+        checkboxes.forEach((checkbox) => {
+            const productId = parseInt(checkbox.dataset.productProductId);
+            checkbox.checked = this.comparelist_product_ids.includes(productId);
+        });
+    },
+    /**
+     * @private
+     */
     _removeFromComparelist: function (e) {
         this.guard.exec(this._removeFromComparelistImpl.bind(this, e));
     },
@@ -218,6 +249,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this._updateCookie();
         $('.o_comparelist_limit_warning').hide();
         this._updateContent('show');
+        this._updateCheckboxesState();
     },
     /**
      * @private
@@ -260,7 +292,8 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
 publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
     selector: '.js_sale',
     events: {
-        'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
+        'click .o_add_compare': '_onToggleCheckbox',
+        'click .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',
         'submit .o_add_cart_form_compare': '_onFormSubmit',
     },
@@ -277,7 +310,13 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onToggleCheckbox: function (ev) {
+        this.productComparison.handleCompareToggle(ev.currentTarget);
+    },
     /**
      * @private
      * @param {Event} ev
