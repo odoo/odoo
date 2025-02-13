@@ -300,9 +300,9 @@ class DiscussChannel(models.Model):
     def _types_allowing_unfollow(self):
         return super()._types_allowing_unfollow() + ["livechat"]
 
-    def _action_unfollow(self, partner=None, guest=None):
+    def _action_unfollow(self, partner=None, guest=None, post_leave_message=True):
         if partner and self.channel_type == "livechat" and len(self.channel_member_ids) <= 2:
             # sudo: discuss.channel - last operator left the conversation, state must be updated
             self.sudo().livechat_active = False
             self._bus_send_store(Store(self, "livechat_active"))
-        super()._action_unfollow(partner, guest)
+        super()._action_unfollow(partner, guest, post_leave_message)
