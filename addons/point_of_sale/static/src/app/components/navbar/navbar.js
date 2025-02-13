@@ -22,6 +22,8 @@ import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_sl
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
 
+const { DateTime } = luxon;
+
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
     static components = {
@@ -66,7 +68,7 @@ export class Navbar extends Component {
             if (!isSpecialKey) {
                 this.bufferedInput += event.key;
             }
-            if (document.activeElement == this.inputRef.el) {
+            if (document.activeElement == this.inputRef?.el) {
                 this.checkInput(event);
             } else {
                 this.timeout = setTimeout(() => {

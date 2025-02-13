@@ -277,6 +277,16 @@ class PosConfig(models.Model):
     def _load_pos_data_domain(self, data):
         return [('id', '=', data['pos.session'][0]['config_id'])]
 
+    def _load_pos_data(self, data):
+        domain = self._load_pos_data_domain(data)
+        fields = self._load_pos_data_fields(self.id)
+        config_ids = self.search_read(domain, fields, load=False)
+
+        if not config_ids[0]['use_pricelist']:
+            config_ids[0]['pricelist_id'] = False
+
+        return config_ids
+
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
         for config in self:

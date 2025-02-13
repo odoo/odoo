@@ -332,16 +332,6 @@ export class PosStore extends WithLazyGetterTrap {
         };
         this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
-        const models = Object.keys(this.models);
-        const dynamicModels = this.data.opts.dynamicModels;
-        const staticModels = models.filter((model) => !dynamicModels.includes(model));
-        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
-
-        this.deviceSync = deviceSync;
-        this.data.deviceSync = deviceSync;
-
-        await this.deviceSync.readDataFromServer();
-
         // Check cashier
         this.checkPreviousLoggedCashier();
 
@@ -970,14 +960,6 @@ export class PosStore extends WithLazyGetterTrap {
     }
     setScaleTare(tare) {
         this.scaleTare = tare;
-    }
-
-    /**
-     * Remove the order passed in params from the list of orders
-     * @param order
-     */
-    removeOrder(order, removeFromServer = true) {
-        return this.data.localDeleteCascade(order, removeFromServer);
     }
 
     /**
