@@ -205,11 +205,6 @@
             <t t-set="display_description" t-valuef="true"/>
             <t t-set="display_extra_link" t-valuef="true"/>
             <t t-set="display_detail" t-valuef="true"/>
-            <t t-if="attrib_values">
-                <t t-foreach="attrib_values" t-as="a">
-                    <input type="hidden" name="attribute_value" t-att-value="'%s-%s' % (a[0], a[1])" />
-                </t>
-            </t>
         </t>
     </template>
 
