@@ -2462,7 +2462,7 @@ export class Model extends Array {
         const kwargs = getKwArgs(arguments, "name", "specification", "args", "operator", "limit");
         ({ name, specification, args: domain = [], operator = "ilike", limit = 100 } = kwargs);
 
-        const idNamePairs = this.name_search(name, domain, operator, limit);
+        const idNamePairs = this.name_search(name, domain, operator, limit, kwargs);
         if (Object.keys(specification).length === 1 && "display_name" in specification) {
             return idNamePairs.map(([id, name]) => ({ id, display_name: name }));
         }

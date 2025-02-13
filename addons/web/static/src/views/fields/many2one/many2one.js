@@ -1,14 +1,14 @@
 import { Component, useRef, useState } from "@odoo/owl";
-import { scanBarcode } from "@web/core/barcode/barcode_dialog";
+import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "../relational_utils";
-import { usePopover } from "@web/core/popover/popover_hook";
 
 ///////////////////////////////////////////////////////////////////////////////
 // UTILS
@@ -238,9 +238,12 @@ export class Many2One extends Component {
     }
 
     async openBarcodeScanner() {
-        const barcode = await scanBarcode(this.env);
+        const barcode = await BarcodeScanner.scanBarcode(this.env);
         if (barcode) {
             await this.processScannedBarcode(barcode);
+            if ("vibrate" in navigator) {
+                navigator.vibrate(100);
+            }
         } else {
             /** @type {any} */
             const message = _t("Please, scan again!");

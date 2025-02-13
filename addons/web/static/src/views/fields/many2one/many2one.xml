@@ -28,7 +28,7 @@
                 <t t-slot="start" record="value"/>
                 <t t-if="value">
                     <t t-if="props.canOpen">
-                        <a class="o_form_uri" t-att-class="props.linkCssClass" t-on-click.prevent.stop="() => this.openRecord('action')">
+                        <a class="o_form_uri" t-att-class="props.linkCssClass" t-att-href="linkHref" t-on-click.prevent.stop="() => this.openRecord('action')">
                             <t t-call="web.Many2One.linkContent"/>
                         </a>
                     </t>

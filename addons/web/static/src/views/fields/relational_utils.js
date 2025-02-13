@@ -324,11 +324,7 @@ export class Many2XAutocomplete extends Component {
                 openRecord: (openParams) => this.openMany2X(openParams),
             });
         }
-        const record = {
-            id: option.value,
-            display_name: option.displayName,
-        };
-        this.props.update([record], params);
+        this.props.update([option.record], params);
     }
 
     abortableSearch(name) {
