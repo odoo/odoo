@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PartnerList">
-        <Dialog bodyClass="'partner-list overflow-hidden p-0'" contentClass="'h-100'">
+        <Dialog bodyClass="'partner-list p-0 mobile-scroll-target'" contentClass="'h-100'">
             <t t-set-slot="header">
                 <button t-if="!ui.isSmall and this.pos.cashier._role !== 'minimal'" class="btn btn-primary btn-lg lh-lg me-2" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"

@@ -44,11 +44,13 @@ export class PartnerList extends Component {
                 if (!this.list || !this.list.el) {
                     return;
                 }
-
+                this.scrollTarget = this.ui.isSmall
+                    ? this.list.el.closest(".mobile-scroll-target")
+                    : this.list.el;
                 const scrollMethod = this.onScroll.bind(this);
-                this.list.el.addEventListener("scroll", scrollMethod);
+                this.scrollTarget.addEventListener("scroll", scrollMethod);
                 return () => {
-                    this.list.el.removeEventListener("scroll", scrollMethod);
+                    this.scrollTarget.removeEventListener("scroll", scrollMethod);
                 };
             },
             () => [this.list]
@@ -58,12 +60,12 @@ export class PartnerList extends Component {
         return this.pos.screenState.partnerList;
     }
     onScroll(ev) {
-        if (this.state.loading || !this.list || !this.list.el) {
+        if (this.state.loading || !this.scrollTarget) {
             return;
         }
-        const height = this.list.el.offsetHeight;
-        const scrollTop = this.list.el.scrollTop;
-        const scrollHeight = this.list.el.scrollHeight;
+        const height = this.scrollTarget.offsetHeight;
+        const scrollTop = this.scrollTarget.scrollTop;
+        const scrollHeight = this.scrollTarget.scrollHeight;
 
         if (scrollTop + height >= scrollHeight * 0.8) {
             this.getNewPartners();
