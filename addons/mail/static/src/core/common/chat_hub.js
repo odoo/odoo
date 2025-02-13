@@ -31,8 +31,15 @@ export class ChatHub extends Component {
         });
         this.options = useDropdownState();
         this.more = useDropdownState();
-        this.compactRef = useRef("compact");
-        this.compactPosition = useState({ left: "auto", top: "auto" });
+        this.ref = useRef("bubbles");
+        this.position = useState({
+            dragged: false,
+            isDragging: false,
+            top: "unset",
+            left: "unset",
+            bottom: `${this.chatHub.BUBBLE_OUTER}px;`,
+            right: `${this.chatHub.BUBBLE_OUTER + this.chatHub.BUBBLE_START}px;`,
+        });
         this.onResize();
         useExternalListener(browser, "resize", this.onResize);
         useEffect(() => {
@@ -42,10 +49,16 @@ export class ChatHub extends Component {
         });
         useMovable({
             cursor: "grabbing",
-            ref: this.compactRef,
-            elements: ".o-mail-ChatHub-compact",
-            onDrop: ({ top, left }) =>
-                Object.assign(this.compactPosition, { left: `${left}px`, top: `${top}px` }),
+            ref: this.ref,
+            elements: ".o-mail-ChatHub-bubbles",
+            onDragStart: () => {
+                this.more.close();
+                this.options.close();
+                this.position.isDragging = true;
+                this.position.dragged = true;
+            },
+            onDragEnd: () => (this.position.isDragging = false),
+            onDrop: this.onDrop.bind(this),
         });
     }
 
@@ -53,8 +66,24 @@ export class ChatHub extends Component {
         return isMobileOS();
     }
 
+    onDrop({ top, left }) {
+        this.position.bottom = "unset";
+        this.position.right = "unset";
+        this.position.top = `${top}px`;
+        this.position.left = `${left}px`;
+    }
+
     onResize() {
         this.chatHub.onRecompute();
+    }
+
+    resetPosition() {
+        this.position.top = "unset";
+        this.position.left = "unset";
+        this.position.bottom = `${this.chatHub.BUBBLE_OUTER}px;`;
+        this.position.right = `${this.chatHub.BUBBLE_OUTER + this.chatHub.BUBBLE_START}px;`;
+        this.position.dragged = false;
+        this.options.close();
     }
 
     get compactCounter() {
@@ -74,13 +103,16 @@ export class ChatHub extends Component {
         return counter;
     }
 
+    get displayConversations() {
+        return this.chatHub.opened.length + this.chatHub.folded.length > 0 && !this.chatHub.compact;
+    }
+
     get isShown() {
         return true;
     }
 
     expand() {
         this.chatHub.compact = false;
-        Object.assign(this.compactPosition, { left: "auto", top: "auto" });
         this.more.isOpen = this.chatHub.folded.length > this.chatHub.maxFolded;
     }
 }

@@ -8,7 +8,7 @@
             </t>
         </xpath>
         <xpath expr="//Composer" position="replace">
-            <t t-if="thread?.composerDisabled and store.self.notEq(thread?.livechatVisitorMember?.persona)">$0</t>
+            <t t-if="thread?.composerDisabled and !thread?.isTransient and store.self.notEq(thread?.livechatVisitorMember?.persona)">$0</t>
             <div t-if="thread?.composerDisabled" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-ref="composerDisabledContainer">
                 <span t-if="!showGiveFeedbackBtn" class="flex-grow-1"/>
                 <span t-esc="thread.composerDisabledText"/>
