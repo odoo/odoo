@@ -24,6 +24,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
 import { usePopoutAttachment } from "@mail/core/common/attachment_view";
+import { rpc } from "@web/core/network/rpc";
 
 export const DELAY_FOR_SPINNER = 1000;
 
@@ -119,7 +120,7 @@ patch(Chatter.prototype, {
                     );
                     this.state.isAttachmentBoxOpened = true;
                 }
-            }
+            },
         });
         useEffect(
             () => {
@@ -244,9 +245,12 @@ patch(Chatter.prototype, {
     },
 
     async _follow(thread) {
-        await this.orm.call(thread.model, "message_subscribe", [[thread.id]], {
+        const data = await rpc("/mail/thread/subscribe", {
+            res_model: thread.model,
+            res_id: thread.id,
             partner_ids: [this.store.self.id],
         });
+        this.store.insert(data);
         this.onFollowerChanged(thread);
     },
 
@@ -310,7 +314,6 @@ patch(Chatter.prototype, {
     onFollowerChanged(thread) {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
-        this.load(thread, ["followers", "suggestedRecipients"]);
     },
 
     _onMounted() {
