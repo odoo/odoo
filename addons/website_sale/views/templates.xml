@@ -59,6 +59,7 @@
             <t t-else="">Categories:</t>
         </button>
         <t t-foreach="categories" t-as="category">
+            <!-- TODO(loti): use keep? -->
             <button class="btn btn-link btn-sm p-0 text-wrap" t-out="category.name"
                 t-attf-onclick="location.href='/shop/category/#{slug(category)}';return false;"/>
         </t>
@@ -200,7 +201,7 @@
             <t t-set="_submit_classes" t-valuef="btn btn-{{navClass}}"/>
             <t t-set="_input_classes" t-valuef="border-0 text-bg-{{navClass}}"/>
             <t t-set="search_type" t-valuef="products"/>
-            <t t-set="action" t-value="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0) or '/shop'"/>
+            <t t-set="action" t-value="keep(shopPath, search=0)"/>
             <t t-set="display_image" t-valuef="true"/>
             <t t-set="display_description" t-valuef="true"/>
             <t t-set="display_extra_link" t-valuef="true"/>
@@ -218,7 +219,8 @@
             class="oe_product_cart h-100 d-flex"
             t-att-data-publish="product.website_published and 'on' or 'off'"
         >
-            <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None)) + selected_attributes_hash" />
+            <t t-set="product_path" t-value="'/shop/%s/%s' % (slug(category), slug(product)) if category else '/shop/%s' % slug(product)"/>
+            <t t-set="product_href" t-value="product_path + selected_attributes_hash"/>
             <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
 
             <div class="oe_product_image position-relative flex-grow-0 overflow-hidden">
@@ -336,14 +338,14 @@
     <template id="products_breadcrumb" name="Products Breadcrumb">
         <ol t-if="category" t-attf-class="breadcrumb #{_classes}">
             <li class="breadcrumb-item">
-                <a href="/shop">Products</a>
+                <a t-att-href="keep('/shop')">Products</a>
             </li>
             <t t-foreach="category.parents_and_self" t-as="cat">
                 <li t-if="cat == category" class="breadcrumb-item">
                     <span class="d-inline-block" t-field="cat.name"/>
                 </li>
                 <li t-else="" class="breadcrumb-item">
-                    <a t-att-href="keep('/shop/category/%s' % slug(cat), category=0)" t-field="cat.name"/>
+                    <a t-att-href="keep('/shop/category/%s' % slug(cat))" t-field="cat.name"/>
                 </li>
             </t>
         </ol>
@@ -377,6 +379,10 @@
             <t t-set="isFilteringByPrice" t-if="opt_wsale_filter_price" t-value="float_round(available_min_price, 2) != float_round(min_price, 2) or float_round(available_max_price, 2) != float_round(max_price, 2)"/>
             <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
             <t t-set="isSortingBy" t-value="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]"/>
+            <t
+                t-set="shopPath"
+                t-value="'/shop/category/%s' % slug(category) if category else '/shop'"
+            />
 
             <div id="wrap" class="js_sale o_wsale_products_page">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_1"/>
@@ -395,11 +401,34 @@
                                 >
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
+                                <t
+                                    t-set="show_price_filter"
+                                    t-value="opt_wsale_filter_price and opt_wsale_attributes"
+                                />
+                                <div
+                                    t-if="attrib_values or tags or (
+                                        show_price_filter
+                                        and (
+                                            min_price != available_min_price
+                                            or max_price != available_max_price
+                                        )
+                                    )"
+                                    class="py-3 border-bottom"
+                                >
+                                    <a
+                                        t-att-href="keep(shopPath, attribute_value=0, tags=0, min_price=0, max_price=0)"
+                                        t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1"
+                                        title="Clear Filters"
+                                    >
+                                        <small class="mx-auto"><b>Clear Filters</b></small>
+                                        <i class="oi oi-close" role="presentation"/>
+                                    </a>
+                                </div>
                                 <div
                                     t-attf-class="products_attributes_filters d-empty-none {{opt_wsale_categories and 'border-top'}}"
                                 />
                                 <t
-                                    t-if="opt_wsale_filter_price and opt_wsale_attributes"
+                                    t-if="show_price_filter"
                                     t-call="website_sale.filter_products_price"
                                 >
                                     <t
@@ -448,10 +477,10 @@
                                 </t>
 
                                 <div t-if="category" class="d-flex align-items-center d-lg-none me-auto">
-                                    <t t-if="not category.parent_id" t-set="backUrl" t-valuef="/shop"/>
-                                    <t t-else="" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
-
-                                    <a t-attf-class="btn btn-{{navClass}} me-2" t-att-href="category.parent_id and keep('/shop/category/' + slug(category.parent_id), category=0) or '/shop'">
+                                    <a
+                                        t-attf-class="btn btn-{{navClass}} me-2"
+                                        t-att-href="keep('/shop/category/%s' % slug(category.parent_id) if category.parent_id else '/shop')"
+                                    >
                                         <i class="fa fa-angle-left"/>
                                     </a>
                                     <h4 t-out="category.name" class="mb-0 me-auto"/>
@@ -611,7 +640,12 @@
             </a>
             <div class="dropdown-menu dropdown-menu-end" role="menu">
                 <t t-foreach="website_sale_sortable" t-as="sortby">
-                    <a role="menuitem" rel="noindex,nofollow" t-att-href="keep('/shop', order=sortby[0])" class="dropdown-item">
+                    <a
+                        role="menuitem"
+                        rel="noindex,nofollow"
+                        t-att-href="keep(shopPath, order=sortby[0])"
+                        class="dropdown-item"
+                    >
                         <span t-out="sortby[1]"/>
                     </a>
                 </t>
@@ -730,11 +764,11 @@
                                 <a t-foreach="website_sale_sortable" t-as="sortby"
                                    role="menuitem"
                                    rel="noindex,nofollow"
-                                   t-att-href="keep('/shop', order=sortby[0])"
+                                   t-att-href="keep(shopPath, order=sortby[0])"
                                    class="list-group-item border-0 ps-0 pb-0">
                                     <div class="form-check d-inline-block">
                                         <input type="radio"
-                                               t-attf-onclick="location.href='#{keep('/shop', order=sortby[0])}';"
+                                               t-attf-onclick="location.href='#{keep(shopPath, order=sortby[0])}';"
                                                class="form-check-input o_not_editable"
                                                name="wsale_sortby_radios_offcanvas"
                                                t-att-checked="isSortingBy and isSortingBy == sortby[1]">
@@ -774,9 +808,6 @@
                 <form t-if="opt_wsale_attributes or opt_wsale_attributes_top"
                       t-attf-class="js_attributes accordion accordion-flush d-flex flex-column {{len(attributes) > 0 and 'border-bottom'}}"
                       method="get">
-                    <input t-if="category" type="hidden" name="category" t-att-value="category.id"/>
-                    <input type="hidden" name="search" t-att-value="search"/>
-
                     <t t-foreach="attributes" t-as="a">
                         <t t-cache="a,attrib_set">
                             <t t-set="_status" t-value="'inactive'"/>
@@ -869,7 +900,7 @@
             <div class="offcanvas-body d-flex justify-content-between flex-grow-0 border-top overflow-hidden">
                 <a t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2 {{(not attrib_values and not isFilteringByPrice and not tags) and 'disabled' }}"
                    t-att-aria-disabled="(not attrib_values and not isFilteringByPrice and not tags) and 'true' or 'false'"
-                   href="/shop"
+                   t-att-href="keep(shopPath, attribute_value=0, tags=0, min_price=0, max_price=0)"
                    title="Clear Filters">
                     Clear Filters
                 </a>
@@ -895,16 +926,13 @@
         <div t-if="entries" class="o_wsale_filmstip_container d-flex align-items-stretch mb-2 overflow-hidden">
             <div class="o_wsale_filmstip_wrapper pb-1 overflow-auto">
                 <ul class="o_wsale_filmstip d-flex align-items-stretch mb-0 list-unstyled overflow-visible">
-                    <t t-if="category.parent_id" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
-                    <t t-else="" t-set="backUrl" t-value="'/shop'"/>
-
                     <li
                         t-foreach="entries"
                         t-as="c"
                         t-attf-class="d-flex {{'pe-3' if not c_last else ''}}"
                     >
                         <a
-                            t-att-href="keep('/shop/category/' + slug(c), category=0)"
+                            t-att-href="keep('/shop/category/%s' % slug(c))"
                             class="text-decoration-none"
                             draggable="false"
                         >
@@ -953,7 +981,7 @@
 
     <template id="categorie_link" name="Category Link">
         <a
-            t-att-href="keep('/shop/category/' + slug(c), category=0)"
+            t-att-href="keep('/shop/category/%s' % slug(c))"
             t-attf-class="{{c.id == category.id and 'text-decoration-underline'}} p-0"
             t-field="c.name"
         />
@@ -970,7 +998,7 @@
                 <ul class="nav d-flex flex-column mb-3">
                     <li class="nav-item mb-1">
                         <a
-                            t-att-href="keep('/shop', category=0)"
+                            t-att-href="keep('/shop')"
                             t-attf-class="{{not category and 'text-decoration-underline'}} p-0"
                         >
                             All Products
@@ -1076,22 +1104,6 @@
             <div t-if="attributes or all_tags" id="wsale_products_attributes_collapse"
                  class=" position-relative">
                 <form class="js_attributes position-relative mb-2" method="get">
-                    <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
-                    <input type="hidden" name="search" t-att-value="search" />
-                    <input type="hidden" name="order" t-att-value="order"/>
-                    <div
-                        t-if="attrib_values or tags"
-                        class="accordion-item rounded-0 border-top-0 py-3"
-                    >
-                        <a
-                            t-att-href="keep('/shop' + ('/category/' + slug(category)) if category else None, attribute_value=0, tags=0)"
-                            t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1"
-                            title="Clear Filters"
-                        >
-                            <small class="mx-auto"><b>Clear Filters</b></small>
-                            <i class="oi oi-close" role="presentation"/>
-                        </a>
-                    </div>
                     <t t-foreach="attributes" t-as="a">
                         <t t-cache="a,attrib_set">
                             <div class="accordion-item nav-item mb-1 rounded-0" t-if="a.value_ids and len(a.value_ids) &gt; 1">
@@ -1297,7 +1309,7 @@
                         <div class="col d-flex align-items-center order-1 order-lg-0">
                             <ol class="o_wsale_breadcrumb breadcrumb p-0 mb-4 m-lg-0">
                                 <li class="o_not_editable breadcrumb-item d-none d-lg-inline-block">
-                                    <a t-att-href="keep(category=0, attribute_value=0, tags=0)">
+                                    <a href="/shop">
                                         <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/>All Products
                                     </a>
                                 </li>
@@ -1308,16 +1320,13 @@
                                 >
                                     <a
                                         class="py-2 py-lg-0"
-                                        t-att-href="keep('/shop/category/%s' % slug(category), category=0, attribute_value=0, tags=0)"
+                                        t-att-href="'/shop/category/%s' % slug(category)"
                                     >
                                         <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="category.name"/>
                                     </a>
                                 </li>
                                 <li t-else="" class="o_not_editable breadcrumb-item d-lg-none">
-                                    <a
-                                        class="py-2 py-lg-0"
-                                        t-att-href="keep(category=0, attribute_value=0, tags=0)"
-                                    >
+                                    <a class="py-2 py-lg-0" href="/shop">
                                         <i class="oi oi-chevron-left me-1" role="presentation"/>All Products
                                     </a>
                                 </li>
@@ -1330,6 +1339,7 @@
                             <div class="d-flex justify-content-between w-100">
                                 <t t-if="is_view_active('website_sale.search')" t-call="website_sale.search">
                                     <t t-set="search" t-value="False"/>
+                                    <t t-set="shopPath" t-value="'/shop'"/>
                                     <t t-set="_form_classes" t-valuef="mb-4 mb-lg-0"/>
                                     <t t-set="_classes" t-value="'me-sm-2'"/>
                                 </t>

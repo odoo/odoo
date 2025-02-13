@@ -402,7 +402,20 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             if (productGrid) {
                 productGrid.classList.add("opacity-50");
             }
-            $(ev.currentTarget).closest("form").submit();
+            const searchParams = new URLSearchParams(window.location.search);
+            // There's no easy way to know which attribute value or tag was changed, so we clear all
+            // previously selected attribute values and tags and append the currently selected ones.
+            searchParams.delete('attribute_value');
+            searchParams.delete('tags');
+            const attributeValues = ev.currentTarget.closest('form')
+                .querySelectorAll('input:checked, select');
+            for (const attributeValue of attributeValues) {
+                if (attributeValue.value) {
+                    searchParams.append(attributeValue.name, attributeValue.value);
+                }
+            }
+            window.location.search = searchParams.toString();
+            // TODO(loti): also clear page from path if present?
         }
     },
     /**
