@@ -5,12 +5,13 @@
 import csv
 import logging
 from itertools import product
+from os.path import sep
 from pathlib import Path
 
 import odoo
 from odoo.cli.command import Command, SubcommandsMixin, Subcommand
+from odoo.modules import get_module_path
 from odoo.tools.translate import trans_export, load_language
-
 
 _logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ def _get_language_files(env, module_names, language_codes, export_pot=False):
     for module_name, (code, isocode) in product(module_names, codes):
         if module := modules_map.get(module_name):
             filename = f"{module_name}.pot" if isocode == 'pot' else f"{isocode}.po"
-            filepath = str(Path(odoo.modules.get_module_path(module_name)) / 'i18n' / filename)
+            filepath = str(Path(get_module_path(module_name)) / 'i18n' / filename)
             yield (module, code, filepath)
 
 
@@ -45,7 +46,7 @@ class I18nList(Subcommand):
          | xargs ./odoo-bin <addons> <db> server -i
     """
     description = "List i18n-exportable modules"
-    excluded = (r'%\_test', r'%\_tests', r'test\_%', r'hw\_%', 'l10n_be_codabox')
+    excluded = (r'%\_test', r'%\_tests', r'test\_%', r'hw\_%')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -53,14 +54,16 @@ class I18nList(Subcommand):
             help="Specify the database name.")
         self.parser.add_argument('--delimiter', default='\n',
             help="Delimiter between modules, default='\n'")
+        self.parser.add_argument('--folder',
+            help="Filter modules by parent folder")
         modules_group = self.parser.add_argument_group('Module options (mutually exclusive)')
-        modules_parser = modules_group.add_mutually_exclusive_group(required=True)
+        modules_parser = modules_group.add_mutually_exclusive_group()
         modules_parser.add_argument('--community', action='store_true',
-            help="List all i18n-exportable community modules")
+            help="List only i18n-exportable community modules")
         modules_parser.add_argument('--enterprise', action='store_true',
-            help="List all i18n-exportable enterprise modules")
+            help="List only i18n-exportable enterprise modules")
         modules_parser.add_argument('--l10n', action='store_true',
-            help="List all i18n-exportable l10n modules")
+            help="List only i18n-exportable l10n modules")
 
     def run(self, cmdargs):
         try:
@@ -75,16 +78,36 @@ class I18nList(Subcommand):
         try:
             with self.build_env(parsed_args.db_name) as env:
                 logging.disable(logging.NOTSET)
+
+                # Look for modules
                 domain = [('name', 'not =ilike', pattern) for pattern in self.excluded]
                 if parsed_args.community:
                     domain += [('license', '=', 'LGPL-3')]
                 elif parsed_args.enterprise:
                     domain += [('license', '=', 'OEEL-1')]
                 elif parsed_args.l10n:
-                    domain += [('name', '=ilike', r'l10n\_%')]
+                    domain += ['|',
+                        ('name', '=ilike', r'l10n\_%'),
+                        ('name', '=ilike', r'%l10n\_%'),
+                        ('name', '!=', 'l10n_multilang'),
+                    ]
                 modules = env['ir.module.module'].search_fetch(domain, ['name'], order="name")
                 module_names = modules.mapped("name")
+
+                # Eventually filter by base folder
+                if parsed_args.folder:
+                    base_path = f"{Path(parsed_args.folder).resolve()}{sep}"
+                    to_filter, module_names = module_names, []
+                    for module_name in to_filter:
+                        if not (module_path := get_module_path(module_name, display_warning=False)):
+                            continue
+                        module_path = Path(module_path).resolve()
+                        if str(module_path).startswith(base_path):
+                            module_names.append(module_name)
+
+                # Print the list
                 print(parsed_args.delimiter.join(module_names))
+
         except Exception as e:
             Command.die(f"Error retrieving modules: {e}")
 
@@ -123,9 +146,6 @@ class I18nLoadLang(Subcommand):
         except ValueError as e:
             self.parser.print_help()
             Command.die(f'\n{e}\n')
-
-        # Configure Odoo
-        odoo.tools.config['without_demo'] = True
 
         # Start a new environment, create/init the database if needed
         with self.build_env(parsed_args.db_name) as env:
