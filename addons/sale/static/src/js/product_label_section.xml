@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+
+    <t t-name="sale.SaleProductLabelSectionAutocomplete" t-inherit="web.AutoComplete">
+        <xpath expr="//a[@class='dropdown-item ui-menu-item-wrapper text-truncate']" position="attributes">
+            <attribute name="t-att-class">{'text-info': isPrioritized()}</attribute>
+        </xpath>
+    </t>
+
+</templates>

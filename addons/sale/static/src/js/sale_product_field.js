@@ -1,4 +1,6 @@
 import {
+    ProductLabelSectionAndNoteAutocomplete,
+    ProductLabelSectionAndNoteFieldAutocomplete,
     ProductLabelSectionAndNoteField,
     productLabelSectionAndNoteField,
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
@@ -47,12 +49,45 @@ async function applyProduct(record, product) {
     });
 };
 
+export class SaleProductLabelSectionAutocomplete extends ProductLabelSectionAndNoteAutocomplete {
+    static template = "sale.SaleProductLabelSectionAutocomplete";
+    setup() {
+        super.setup();
+        this.count = [];
+        this.ormcall().then((count) => {
+            this.count = count;
+        })
+    }
+
+    async ormcall() {
+        if (this.env.model.root.data.partner_id) {
+            return await this.env.model.orm.call('product.template', 'get_prioritized_product', [{}, 'sale'], {context : this.env.model.root.data.partner_id[0]});
+        }
+        return []
+    }
+
+    isPrioritized() {
+        return this.count.includes(this.option.value);
+    }
+}
+
+export class SaleProductLabelSectionFieldAutocomplete extends ProductLabelSectionAndNoteFieldAutocomplete {
+    static components = {
+        ...ProductLabelSectionAndNoteFieldAutocomplete.components,
+        AutoComplete: SaleProductLabelSectionAutocomplete,
+    };
+}
 
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "sale.SaleProductField";
     static props = {
         ...ProductLabelSectionAndNoteField.props,
         readonlyField: { type: Boolean, optional: true },
+    };
+
+    static components = {
+        ...ProductLabelSectionAndNoteField.components,
+        Many2XAutocomplete: SaleProductLabelSectionFieldAutocomplete,
     };
 
     setup() {
