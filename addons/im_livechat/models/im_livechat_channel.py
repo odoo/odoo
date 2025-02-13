@@ -167,6 +167,36 @@ class Im_LivechatChannel(models.Model):
             record.nbr_channel = channel_count.get(record.id, 0)
 
     # --------------------------
+    # CRUD
+    # --------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        channels = super().create(vals_list)
+        for channel in channels:
+            for operator in channel.user_ids:
+                operator._bus_send_store(channel, ["are_you_inside", "name"])
+        return channels
+
+    def write(self, vals):
+        user_ids = self.user_ids
+        res = super().write(vals)
+        added_user_ids = self.user_ids - user_ids
+        removed_user_ids = user_ids - self.user_ids
+        for user in added_user_ids:
+            user._bus_send_store(self, {"are_you_inside": True, "name": self.name})
+        for user in removed_user_ids:
+            user._bus_send_store(self, {"are_you_inside": False, "name": self.name})
+        return res
+
+    def unlink(self):
+        user_ids = self.user_ids
+        res = super().unlink()
+        for user in user_ids:
+            user._bus_send_store(self, {"are_you_inside": False})
+        return res
+
+    # --------------------------
     # Action Methods
     # --------------------------
     def action_join(self):
@@ -175,13 +205,11 @@ class Im_LivechatChannel(models.Model):
             raise AccessError(_("Only Live Chat operators can join Live Chat channels"))
         # sudo: im_livechat.channel - operators can join channels
         self.sudo().user_ids = [Command.link(self.env.user.id)]
-        self.env.user._bus_send_store(self, ["are_you_inside", "name"])
 
     def action_quit(self):
         self.ensure_one()
         # sudo: im_livechat.channel - users can leave channels
         self.sudo().user_ids = [Command.unlink(self.env.user.id)]
-        self.env.user._bus_send_store(self.sudo(), ["are_you_inside", "name"])
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
