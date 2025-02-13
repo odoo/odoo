@@ -85,7 +85,7 @@
                         setSelectedLocation.bind="setSelectedLocation"
                         validateSelection.bind="validateSelection"
                         addressChangeWarning="addressChangeWarning"
-                        isCountryChanged="this.state.isCountryChanged"
+                        isCountryChanged="this.state.initialCountryCode !== this.state.selectedCountry.code"
                     />
                 </section>
             </div>
@@ -101,7 +101,10 @@
                         t-on-click="validateSelection"
                         t-out="validationButtonLabel"
                     />
-                    <div class="alert alert-warning mt-3" t-if="this.state.isCountryChanged">
+                    <div
+                        class="alert alert-warning mt-3"
+                        t-if="this.state.initialCountryCode !== this.state.selectedCountry.code"
+                    >
                         <span t-out="addressChangeWarning"/>
                     </div>
                 </div>
@@ -119,10 +122,9 @@
                 onSelect.bind="this.setSelectedCountry"
                 class="'rounded-end-0 border-0'"
                 togglerClass="'rounded-end-0 pe-0'"
-                menuClass="'o_locationSelector_countrySelector'"
+                menuClass="'o_location_selector_country_selector'"
             >
                 <img
-                    t-ref="togglerRef"
                     t-att-src="state.selectedCountry.image_url"
                     class="pe-2"
                     style="height: auto; width: 30px;"

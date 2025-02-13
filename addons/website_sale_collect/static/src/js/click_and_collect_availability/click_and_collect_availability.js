@@ -46,13 +46,14 @@ export class ClickAndCollectAvailability extends Component {
      * @return {void}
      */
     async openLocationSelector() {
-        const { zip_code, id } = this.state.selectedWhLocation;
+        const { zip_code, country_code, id } = this.state.selectedWhLocation;
         this.dialog.add(LocationSelectorDialog, {
             isProductPage: true,
             isFrontend: true,
             productId: this.state.productId,
             zipCode: zip_code || this.props.zipCode,
             selectedLocationId: String(id),
+            countryCode: country_code || this.props.countryCode,
             save: async location => {
                 this.state.selectedWhLocation = location;
                 this.state.inStoreStock = location.additional_data.in_store_stock;
