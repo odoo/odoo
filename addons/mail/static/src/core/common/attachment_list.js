@@ -78,6 +78,14 @@ export class AttachmentList extends Component {
     /**
      * @param {import("models").Attachment} attachment
      */
+    async onClickShowInConversation(attachment) {
+        await attachment.thread.loadAround(attachment.message.id);
+        this.env.messageHighlight?.highlightMessage(attachment.message, attachment.thread);
+    }
+
+    /**
+     * @param {import("models").Attachment} attachment
+     */
     onClickDownload(attachment) {
         const downloadLink = document.createElement("a");
         downloadLink.setAttribute("href", attachment.downloadUrl);
@@ -127,6 +135,13 @@ export class AttachmentList extends Component {
 
     getActions(attachment) {
         const res = [];
+        if (this.showShowInConversation) {
+            res.push({
+                label: _t("Show in conversation"),
+                icon: "fa fa-eye",
+                onSelect: () => this.onClickShowInConversation(attachment),
+            });
+        }
         if (this.showDelete) {
             res.push({
                 label: _t("Remove"),
@@ -142,6 +157,10 @@ export class AttachmentList extends Component {
             });
         }
         return res;
+    }
+
+    get showShowInConversation() {
+        return this.attachment.message && !this.env.message;
     }
 
     get showDelete() {
