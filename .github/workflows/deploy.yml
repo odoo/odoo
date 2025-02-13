@@ -38,9 +38,9 @@ jobs:
           whoami
           cd /home/ubuntu/infinite-laundry-crm
           systemctl stop odoo.service
-          pip install -r requirements.txt
-          git branch
+          git branch;
            git pull
+          pip install -r requirements.txt
           systemctl start odoo.service
           exit
           EOF
