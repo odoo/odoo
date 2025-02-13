@@ -71,7 +71,7 @@ test("basic form view flow", async () => {
     expect('.o_m2o_avatar > img[data-src="/web/image/res.users/1/avatar_128"]').toHaveCount(1);
 
     await clickFieldDropdown("user_id");
-    expect(".o_field_many2one_selection .o_avatar").toHaveCount(3);
+    expect(".o_field_many2one_selection .o_avatar_many2x_autocomplete").toHaveCount(3);
     await clickFieldDropdownItem("user_id", "Christine");
 
     expect('.o_m2o_avatar > img[data-src="/web/image/res.users/2/avatar_128"]').toHaveCount(1);
@@ -337,16 +337,15 @@ test("widget many2one_avatar in kanban view (load more dialog)", async () => {
 
     // open popover
     await contains(
-        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar a.o_quick_assign"
+        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > a.o_quick_assign"
     ).click();
 
     // load more
     await contains(".o-overlay-container .o_m2o_dropdown_option_search_more").click();
     await contains(".o_dialog .o_list_table .o_data_row .o_data_cell").click();
-    expect(".o_kanban_record:nth-child(4) .o_field_many2one_avatar img").toHaveAttribute(
-        "data-src",
-        "/web/image/res.users/1/avatar_128"
-    );
+    expect(
+        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
+    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
 });
 
 test("widget many2one_avatar in kanban view", async () => {
@@ -366,23 +365,25 @@ test("widget many2one_avatar in kanban view", async () => {
                 </templates>
             </kanban>`,
     });
-    expect(".o_kanban_record:nth-child(1) .o_field_many2one_avatar img").toHaveAttribute(
-        "data-src",
-        "/web/image/res.users/1/avatar_128"
-    );
-    expect(".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_quick_assign").toHaveCount(1);
+    expect(
+        ".o_kanban_record:nth-child(1) .o_field_many2one_avatar .o_m2o_avatar > img"
+    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
+    expect(
+        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > .o_quick_assign"
+    ).toHaveCount(1);
     // open popover
     await contains(
-        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_quick_assign"
+        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > .o_quick_assign"
     ).click();
     expect(getActiveElement()).toBe(queryOne(".o-overlay-container input"));
     // select first input
     await contains(".o-overlay-container .o-autocomplete--dropdown-item").click();
-    expect(".o_kanban_record:nth-child(4) .o_field_many2one_avatar img").toHaveAttribute(
-        "data-src",
-        "/web/image/res.users/1/avatar_128"
-    );
-    expect(".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_quick_assign").toHaveCount(0);
+    expect(
+        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
+    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
+    expect(
+        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > .o_quick_assign"
+    ).toHaveCount(0);
 });
 
 test("widget many2one_avatar in kanban view without access rights", async () => {
@@ -401,9 +402,10 @@ test("widget many2one_avatar in kanban view without access rights", async () => 
                 </templates>
             </kanban>`,
     });
-    expect(".o_kanban_record:nth-child(1) .o_field_many2one_avatar img").toHaveAttribute(
-        "data-src",
-        "/web/image/res.users/1/avatar_128"
-    );
-    expect(".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_quick_assign").toHaveCount(0);
+    expect(
+        ".o_kanban_record:nth-child(1) .o_field_many2one_avatar .o_m2o_avatar > img"
+    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
+    expect(
+        ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > .o_quick_assign"
+    ).toHaveCount(0);
 });

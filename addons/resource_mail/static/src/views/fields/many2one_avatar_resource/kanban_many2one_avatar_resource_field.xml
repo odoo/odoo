@@ -16,7 +16,7 @@
                 </t>
             </t>
             <t t-set-slot="items" t-slot-scope="itemsScope">
-                <span class="o_avatar o_m2o_avatar">
+                <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
                     <t t-if="itemsScope.record.resource_type === 'material'">
                         <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="itemsScope.record.id">
                             <i class="fa fa-wrench"/>

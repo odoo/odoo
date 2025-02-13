@@ -4,12 +4,14 @@
     <t t-name="web.KanbanMany2One">
         <div class="o-kanban-many2one">
             <t t-if="props.value">
-                <t t-slot="avatar"/>
+                    <t t-slot="avatar"/>
             </t>
             <t t-elif="!props.readonly">
-                <a class="o_quick_assign btn-link d-flex align-items-center text-dark" href="#" role="button" tabIndex="-1" aria-label="Assign" data-tooltip="Assign" t-on-click.stop.prevent="(e) => this.openAssignPopover(e.currentTarget)">
-                    <i class="fa fa-user-plus"/>
-                </a>
+                <span class="o_avatar o_m2o_avatar">
+                    <a class="o_quick_assign btn-link d-flex align-items-center text-dark" href="#" role="button" tabIndex="-1" aria-label="Assign" data-tooltip="Assign" t-on-click.stop.prevent="(e) => this.openAssignPopover(e.currentTarget)">
+                        <i class="fa fa-user-plus"/>
+                    </a>
+                </span>
             </t>
         </div>
     </t>
@@ -39,8 +41,8 @@
                 <t t-slot="end" record="value"/>
             </t>
             <t t-else="">
+                <t t-slot="start" record="value"/>
                 <div class="o-many2one-selection o_field_many2one_selection" t-ref="root">
-                    <t t-slot="start" record="value"/>
                     <AutoComplete t-props="autoCompleteProps">
                         <t t-set-slot="recordItem" t-slot-scope="recordItemScope">
                             <t t-if="props.slots?.items">
@@ -56,11 +58,11 @@
                             <i class="oi" t-att-class="env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
                         </button>
                     </t>
-                    <t t-slot="end" record="value"/>
                     <t t-if="hasBarcodeButton">
                         <button class="btn ms-3 o_barcode" draggable="false" tabindex="-1" type="button" aria-label="Scan barcode" data-tooltip="Scan barcode" t-on-click="() => this.openBarcodeScanner()"/>
                     </t>
                 </div>
+                <t t-slot="end" record="value"/>
                 <t t-set="lines" t-value="extraLines"/>
                 <t t-if="lines.length">
                     <div class="o-many2one-extra o_field_many2one_extra">

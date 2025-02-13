@@ -7,7 +7,7 @@
                 <AvatarEmployee cssClass="'o_m2o_avatar'" resModel="relation" resId="resId" noSpacing="true" displayName="displayName"/>
             </t>
             <t t-set-slot="items" t-slot-scope="itemsScope">
-                <span class="o_avatar o_m2o_avatar">
+                <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
                     <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{itemsScope.record.id}}/avatar_128"/>
                     <t t-esc="itemsScope.record.display_name"/>
                 </span>

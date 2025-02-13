@@ -4,7 +4,9 @@
     <t t-name="web.KanbanMany2OneAvatarField">
         <KanbanMany2One t-props="m2oProps">
             <t t-set-slot="avatar">
-                <img t-attf-src="/web/image/{{relation}}/{{value[0]}}/avatar_128" class="rounded"/>
+                <span class="o_avatar o_m2o_avatar">
+                    <img t-attf-src="/web/image/{{relation}}/{{value[0]}}/avatar_128" class="rounded"/>
+                </span>
             </t>
             <t t-set-slot="items" t-slot-scope="itemsScope">
                 <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
