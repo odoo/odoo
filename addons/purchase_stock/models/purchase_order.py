@@ -6,7 +6,6 @@ from markupsafe import Markup
 from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.exceptions import UserError
-from odoo.tools import format_list
 from odoo.tools.misc import OrderedSet
 
 
@@ -130,7 +129,7 @@ class PurchaseOrder(models.Model):
 
         purchase_orders_with_receipt = self.filtered(lambda po: any(move.state == 'done' for move in po.order_line.move_ids))
         if purchase_orders_with_receipt:
-            raise UserError(_("Unable to cancel purchase order(s): %s since they have receipts that are already done.", format_list(self.env, purchase_orders_with_receipt.mapped('display_name'))))
+            raise UserError(_("Unable to cancel purchase order(s): %s since they have receipts that are already done.", purchase_orders_with_receipt.mapped('display_name')))
         for order in self:
             # If the product is MTO, change the procure_method of the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
