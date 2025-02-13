@@ -59,6 +59,10 @@
             <field eval="0" name="list_base_price"/>
         </record>
 
+        <record id="delivery.payment_provider_cod" model="payment.provider">
+            <field name="state">disabled</field>
+        </record>
+
         <function model="ir.default" name="set" eval="('res.partner', 'property_delivery_carrier_id', obj().env.ref('delivery.delivery_local_delivery').id)"/>
 
 </odoo>

@@ -45,10 +45,9 @@ class DeliveryCarrier(models.Model):
         default='fixed',
         required=True,
     )
-    is_cash_on_delivery_enabled = fields.Boolean(
-        string="Cash on delivery",
-        help="When activated, users will see `Cash on delivery` as payment method.",
-        default=False,
+    allow_cash_on_delivery = fields.Boolean(
+        string="Cash on Delivery",
+        help="Allow customers to choose Cash on Delivery as their payment method.",
     )
     integration_level = fields.Selection([('rate', 'Get Rate'), ('rate_and_ship', 'Get Rate and Create Shipment')], string="Integration Level", default='rate_and_ship', help="Action while validating Delivery Orders")
     prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")

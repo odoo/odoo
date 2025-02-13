@@ -2,6 +2,8 @@
 
 from odoo.tests import TransactionCase
 
+from odoo.addons.payment_custom.tests.common import PaymentCustomCommon
+
 
 class DeliveryCommon(TransactionCase):
 
@@ -38,3 +40,15 @@ class DeliveryCommon(TransactionCase):
             'product_id': product.id,
         }
         return cls.env['delivery.carrier'].create(dict(default_values, **values))
+
+
+class CashOnDeliveryCommon(PaymentCustomCommon, DeliveryCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.sale_order = cls.env['sale.order'].create({
+            'partner_id': cls.partner.id,
+            'state': 'draft',
+        })
+        cls.cod_provider = cls._prepare_provider('cash_on_delivery')
