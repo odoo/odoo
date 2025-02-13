@@ -47,6 +47,7 @@ odoo.define('website_event.ticket_details', function (require) {
                 $target.children().toggleClass('d-none');
                 $target.siblings('.o_wevent_registration_title, .o_wevent_price_range').toggleClass('d-none');
             }
+            this._onTicketQuantityChange();
         },
         /**
          * @private
