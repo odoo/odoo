@@ -201,7 +201,7 @@ class ResUsers(models.Model):
             if not user.email:
                 raise UserError(_("Cannot send email: user %s has no email address.", user.name))
             email_values['email_to'] = user.email
-            with contextlib.closing(self.env.cr.savepoint()):
+            with contextlib.closing(self.env.cr.savepoint()):  # krma: why?
                 if account_created_template:
                     account_created_template.send_mail(
                         user.id, force_send=True,

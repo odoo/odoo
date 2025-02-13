@@ -95,6 +95,7 @@ class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
                 # To correctly generate the XML for invoices created before l10n_hu_edi was installed,
                 # we need to temporarily set the chain index and line numbers, so we do this in a savepoint.
                 # REMOVE savepoint
+                # krma: seems touchy and an edge case
                 with contextlib.closing(self.env.cr.savepoint(flush=False)):
                     for invoice in invoices.sorted(lambda i: i.create_date):
                         if invoice.l10n_hu_edi_state:

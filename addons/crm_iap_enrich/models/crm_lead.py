@@ -54,6 +54,7 @@ class CrmLead(models.Model):
         for leads in batches:
             lead_emails = {}
             # Accept rollback
+            # krma: Need to review the whole cron and remove the from_cron boolean flag
             with self._cr.savepoint():
                 try:
                     self._cr.execute(
