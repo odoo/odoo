@@ -29,4 +29,9 @@ export class ProductInfoPopup extends Component {
     get allowProductEdition() {
         return true; // Overrided in pos_hr
     }
+    toggleFavorite() {
+        this.pos.data.write("product.template", [this.props.productTemplate.id], {
+            is_favorite: !this.props.productTemplate.is_favorite,
+        });
+    }
 }
