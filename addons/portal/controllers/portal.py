@@ -19,6 +19,11 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
 
     This method computes url, page range to display, ... in the pager.
 
+    Enhanced pager logic for SEO optimization:
+    - Shows first and last page in pagination
+    - Shows current page with -1 and +1 neighbors
+    - Adds ellipses when necessary
+
     :param str url : base url of the page link
     :param int total : number total of item to be splitted into pages
     :param int page : current page
@@ -31,19 +36,37 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
     page_count = int(math.ceil(float(total) / step))
 
     page = max(1, min(int(page if str(page).isdigit() else 1), page_count))
-    scope -= 1
 
-    pmin = max(page - int(math.floor(scope/2)), 1)
-    pmax = min(pmin + scope, page_count)
-
-    if pmax - pmin < scope:
-        pmin = pmax - scope if pmax - scope > 0 else 1
+    page_previous = max(1, page - 1)
+    page_next = min(page_count, page + 1)
 
     def get_url(page):
         _url = "%s/page/%s" % (url, page) if page > 1 else url
         if url_args:
             _url = "%s?%s" % (_url, urls.url_encode(url_args))
         return _url
+
+    def add_pages(page_list):
+        """ Helper to add a page or ellipsis to the pages list. """
+        for p in page_list:
+            pages.append({
+                'num': p,
+                'url': get_url(p) if p != '...' else None,
+                'is_current': p == page
+            })
+
+    pages = []
+
+    if page_count <= 5:
+        # Show all pages if there are 5 or fewer pages
+        add_pages(range(1, page_count + 1))
+    else:
+        if page <= 3:
+            add_pages([1, 2, 3, 4, '...', page_count])
+        elif page < page_count - 2:
+            add_pages([1, '...', page - 1, page, page + 1, '...', page_count])
+        else:
+            add_pages([1, '...', page_count - 3, page_count - 2, page_count - 1, page_count])
 
     return {
         "page_count": page_count,
@@ -56,29 +79,19 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
             'url': get_url(1),
             'num': 1
         },
-        "page_start": {
-            'url': get_url(pmin),
-            'num': pmin
-        },
         "page_previous": {
-            'url': get_url(max(pmin, page - 1)),
-            'num': max(pmin, page - 1)
+            'url': get_url(page_previous),
+            'num': page_previous
         },
         "page_next": {
-            'url': get_url(min(pmax, page + 1)),
-            'num': min(pmax, page + 1)
-        },
-        "page_end": {
-            'url': get_url(pmax),
-            'num': pmax
+            'url': get_url(page_next),
+            'num': page_next
         },
         "page_last": {
             'url': get_url(page_count),
             'num': page_count
         },
-        "pages": [
-            {'url': get_url(page_num), 'num': page_num} for page_num in range(pmin, pmax+1)
-        ]
+        "pages": pages
     }
 
 
