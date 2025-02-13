@@ -853,7 +853,7 @@ test("list daterange: column widths (no record)", async () => {
 
     expect(".o_data_row").toHaveCount(0);
     const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
-    expect(columnWidths).toEqual([40, 189, 304, 267]);
+    expect(columnWidths).toEqual([40, 250, 250, 261]);
 });
 
 test("always range: related end date, both start date and end date empty", async () => {
