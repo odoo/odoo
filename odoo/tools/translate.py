@@ -20,8 +20,8 @@ import polib
 import re
 import tarfile
 import typing
-import warnings
 from collections import defaultdict, namedtuple
+from collections.abc import Iterable
 from contextlib import suppress
 from datetime import datetime
 from os.path import join
@@ -35,6 +35,7 @@ from psycopg2.extras import Json
 
 from odoo.exceptions import UserError
 from .config import config
+from .i18n import format_list
 from .misc import file_open, file_path, get_iso_codes, split_every, OrderedSet, ReadonlyDict, SKIPPED_ELEMENT_TYPES
 
 if typing.TYPE_CHECKING:
@@ -430,7 +431,6 @@ html_translate.is_text = is_text
 xml_translate.term_adapter = xml_term_adapter
 
 
-
 def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> str:
     """Translate and format using a module, language, source text and args."""
     # get the translation by using the language
@@ -452,6 +452,14 @@ def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> 
             args = {k: v._translate(lang) if isinstance(v, LazyGettext) else v for k, v in args.items()}
         else:
             args = tuple(v._translate(lang) if isinstance(v, LazyGettext) else v for v in args)
+    if any(isinstance(a, Iterable) and not isinstance(a, str) for a in (args.values() if args_is_dict else args)):
+        # automatically format list-like arguments in a localized way
+        def process_translation_arg(v):
+            return format_list(env=None, lst=v, lang_code=lang) if isinstance(v, Iterable) and not isinstance(v, str) else v
+        if args_is_dict:
+            args = {k: process_translation_arg(v) for k, v in args.items()}
+        else:
+            args = tuple(process_translation_arg(v) for v in args)
     # format
     try:
         return translation % args

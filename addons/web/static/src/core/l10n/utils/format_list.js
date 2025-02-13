@@ -71,5 +71,5 @@ const LIST_STYLES = {
 export function formatList(list, { localeCode = "", style = "standard" } = {}) {
     const locale = localeCode || user.lang || "en-US";
     const formatter = new Intl.ListFormat(locale, LIST_STYLES[style]);
-    return formatter.format(list);
+    return formatter.format(Array.from(list, String));
 }

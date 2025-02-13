@@ -218,6 +218,13 @@ class TestImport(common.TransactionCase):
             "Translation placeholders were not applied"
         )
 
+        # correctly format lists
+        self.assertEqual(
+            model_fr_BE.get_code_placeholder_translation(["1", "2", "3"]),
+            "Code, 1, 2 et 3, Français, Belgium",
+            "Translation placeholders were not applied"
+        )
+
         # source error: wrong arguments
         with self.assertRaises(TypeError):
             model_fr_BE.get_code_placeholder_translation(1, "🧀")
@@ -226,6 +233,13 @@ class TestImport(common.TransactionCase):
         self.assertEqual(
             model_fr_BE.get_code_named_placeholder_translation(num=2, symbol="🧀"),
             "Code, 2, 🧀, Français, Belgium",
+            "Translation placeholders were not applied"
+        )
+
+        # correctly format lists
+        self.assertEqual(
+            model_fr_BE.get_code_named_placeholder_translation(num=2, symbol=["1", "2", "3"]),
+            "Code, 2, 1, 2 et 3, Français, Belgium",
             "Translation placeholders were not applied"
         )
 
