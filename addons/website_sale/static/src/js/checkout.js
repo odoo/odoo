@@ -161,13 +161,13 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
             countryCode: countryCode,
             selectedLocationId: locationId,
             isFrontend: true,
-            save: async (location, countryCode) => {
+            save: async location => {
                 const jsonLocation = JSON.stringify(location);
                 // Assign the selected pickup location to the order.
                 await this._setPickupLocation(jsonLocation);
 
                 //  Show and set the order location details.
-                this._updatePickupLocation(deliveryMethodContainer, location, jsonLocation, countryCode);
+                this._updatePickupLocation(deliveryMethodContainer, location, jsonLocation);
 
                 this._enableMainButton();
             },
@@ -185,7 +185,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @param jsonLocation - The selected location as an JSON string.
      * @return {void}
      */
-    _updatePickupLocation(deliveryMethodContainer, location, jsonLocation, countryCode) {
+    _updatePickupLocation(deliveryMethodContainer, location, jsonLocation) {
         const pickupLocation = deliveryMethodContainer.querySelector('[name="o_pickup_location"]');
         pickupLocation.querySelector('[name="o_pickup_location_name"]').innerText = location.name;
         pickupLocation.querySelector(
@@ -197,7 +197,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         editPickupLocationButton.dataset.locationId = location.id;
         editPickupLocationButton.dataset.zipCode = location.zip_code;
         editPickupLocationButton.dataset.pickupLocationData = jsonLocation;
-        editPickupLocationButton.dataset.countryCode = countryCode;
+        editPickupLocationButton.dataset.countryCode = location.country_code;
         pickupLocation.querySelector(
             '[name="o_pickup_location_details"]'
         ).classList.remove('d-none');
@@ -501,7 +501,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     },
 
     /**
-     * Set the pickup location on the order.
+     * Set the pickup location on the order and update the cart in case the fiscal position changed.
      *
      * @private
      * @param {String} pickupLocationData - The pickup location's data to set.
@@ -509,7 +509,9 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     async _setPickupLocation(pickupLocationData) {
         let result = await rpc(
-            '/website_sale/set_pickup_location', { pickup_location_data: pickupLocationData });
+            '/website_sale/set_pickup_location',
+            { pickup_location_data: pickupLocationData }
+        );
         this._updateCartSummary(result);
     },
 

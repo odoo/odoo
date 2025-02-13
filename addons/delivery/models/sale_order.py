@@ -103,6 +103,16 @@ class SaleOrder(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+        # Force selected country code from the dropdown
+        selected_country_code = kwargs.get(
+            'selected_country_code',
+            self.partner_shipping_id.country_code
+        )
+        country = self.env['res.country'].search(
+             [('code', '=', selected_country_code)],
+            limit=1,
+        )
+        kwargs['selected_country_code'] = selected_country_code
         if zip_code:
             assert country  # country is required if zip_code is provided.
             partner_address = self.env['res.partner'].new({
@@ -125,13 +135,24 @@ class SaleOrder(models.Model):
             pickup_locations = getattr(self.carrier_id, function_name)(partner_address, **kwargs)
             if not pickup_locations:
                 return error
+
+            selected_country = partner_address.country_id
+            if not selected_country:
+                selected_country = self.env['stock.warehouse'].browse(
+                    pickup_locations[0]['id']
+                ).partner_id.country_id
+                pickup_locations = [
+                    location for location in pickup_locations
+                    if location['country_code'] == selected_country.code
+                ]
+
             return {
                 'pickup_locations': pickup_locations,
                 'selected_country': {
-                    'name': partner_address.country_id.name,
-                    'code': partner_address.country_id.code,
-                    'image_url': partner_address.country_id.image_url,
-                    'fields': partner_address.country_id.get_address_fields(),
+                    'name': selected_country.name,
+                    'code': selected_country.code,
+                    'image_url': selected_country.image_url,
+                    'fields': selected_country.get_address_fields(),
                 },
             }
         except UserError as e:

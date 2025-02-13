@@ -106,6 +106,7 @@
                 type="button"
                 class="btn btn-primary ms-4"
                 t-att-data-zip-code="order.partner_shipping_id.zip"
+                t-att-data-country-code="order.partner_shipping_id.get('country_code')"
             >
                 Select a location
             </button>

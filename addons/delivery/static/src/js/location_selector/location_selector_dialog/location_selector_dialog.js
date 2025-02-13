@@ -12,7 +12,7 @@ import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { SelectMenu } from '@web/core/select_menu/select_menu';
 import { useDebounced } from '@web/core/utils/timing';
 
 export class LocationSelectorDialog extends Component {
@@ -21,7 +21,7 @@ export class LocationSelectorDialog extends Component {
     static props = {
         orderId: Number,
         zipCode: String,
-        countryCode: { type: String, optional: true},
+        countryCode: { type: String },
         selectedLocationId: { type: String, optional: true},
         save: Function,
         close: Function, // This is the close from the env of the Dialog Component
@@ -35,13 +35,13 @@ export class LocationSelectorDialog extends Component {
             locations: [],
             countries: [],
             savedZipCodes: {},
-            selectedCountry: {code: this.props?.countryCode || false},
+            selectedCountry: { code: this.props.countryCode ?? false },
             error: false,
             viewMode: 'list',
             zipCode: this.props.zipCode,
             // Some APIs like FedEx use strings to identify locations.
             selectedLocationId: String(this.props.selectedLocationId),
-            savedCountryCode: this.props?.countryCode || false,
+            initialCountryCode: this.props.countryCode ?? false,
             isCountryChanged: false,
             isSmall: this.env.isSmall,
         });
@@ -49,9 +49,9 @@ export class LocationSelectorDialog extends Component {
         this.getLocationUrl = '/delivery/get_pickup_locations';
 
         this.debouncedOnResize = useDebounced(this.updateSize, 300);
-        this.debouncedSearchButton = useDebounced((zipCode) => {
+        this.debouncedSearchButton = useDebounced(() => {
             this.state.locations = [];
-            this._updateLocations(zipCode);
+            this._updateLocations();
         }, 300);
 
         onMounted(() => {
@@ -60,14 +60,12 @@ export class LocationSelectorDialog extends Component {
         });
         onWillUnmount(() => browser.removeEventListener('resize', this.debouncedOnResize));
 
-        onWillStart(async () => {
-            this.state.countries = await this._getCountries();
-        });
+        onWillStart(async () => this.state.countries = await this._getCountries());
 
         // Fetch new locations when the zip code is updated.
         useEffect(
             (zipCode) => {
-                this._updateLocations(zipCode)
+                this._updateLocations()
                 this.state.savedZipCodes[this.state.selectedCountry.code] = zipCode
                 return () => {
                     this.state.locations = []
@@ -88,11 +86,11 @@ export class LocationSelectorDialog extends Component {
      * @param {String} zip - The zip code used to look for close locations.
      * @return {Object} The result values.
      */
-    async _getLocations(zip) {
+    async _getLocations() {
         return rpc(this.getLocationUrl, {
             order_id: this.props.orderId,
-            zip_code: zip,
-            selected_country: this.state.selectedCountry.code,
+            zip_code: this.state.zipCode,
+            selected_country_code: this.state.selectedCountry.code,
         });
     }
 
@@ -103,7 +101,7 @@ export class LocationSelectorDialog extends Component {
      * @return {Object} The result values.
      */
     async _getCountries() {
-        return rpc('/shop/get_delivery_method_countries', {
+        return rpc('/delivery/get_delivery_method_countries', {
             dm_id: this.props.dmId,
         });
     }
@@ -122,9 +120,9 @@ export class LocationSelectorDialog extends Component {
      * @param {String} zip - The zip code used to look for close locations.
      * @return {void}
      */
-    async _updateLocations(zip) {
+    async _updateLocations() {
         this.state.error = false;
-        const { pickup_locations, selected_country, error } = await this._getLocations(zip);
+        const { pickup_locations, selected_country, error } = await this._getLocations();
 
         if (error) {
             this.state.error = error;
@@ -132,6 +130,9 @@ export class LocationSelectorDialog extends Component {
         } else {
             this.state.locations = pickup_locations;
             this.state.selectedCountry = selected_country;
+            if (!this.state.initialCountryCode) {
+                this.state.initialCountryCode = this.state.selectedCountry.code;
+            }
             if (!this.state.locations.find(l => String(l.id) === this.state.selectedLocationId)) {
                 this.state.selectedLocationId = this.state.locations[0]
                                                 ? String(this.state.locations[0].id)
@@ -168,10 +169,9 @@ export class LocationSelectorDialog extends Component {
      */
     setSelectedCountry(value) {
         this.state.selectedCountry = value;
-        let presavedZipCode = this.state.savedZipCodes[value.code];
-        this.state.zipCode = presavedZipCode;
-        this.state.isCountryChanged = this.state.savedCountryCode !== value.code
-        this._updateLocations(this.state.zipCode);
+        this.state.zipCode = this.state.savedZipCodes[value.code];
+        this.state.isCountryChanged = this.state.initialCountryCode !== value.code
+        this._updateLocations();
     }
 
     /**
@@ -184,8 +184,7 @@ export class LocationSelectorDialog extends Component {
         const selectedLocation = this.state.locations.find(
             l => String(l.id) === this.state.selectedLocationId
         );
-        this.state.savedCountryCode = selectedLocation.country_code
-        await this.props.save(selectedLocation, this.state.selectedCountry.code);
+        await this.props.save(selectedLocation);
         this.props.close();
     }
 
