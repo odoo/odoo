@@ -26,9 +26,6 @@ export class MailCoreWeb {
             if (message.needaction && notifId > this.store.inbox.counter_bus_id) {
                 this.store.inbox.counter--;
             }
-            if (message.starred && notifId > this.store.starred.counter_bus_id) {
-                this.store.starred.counter--;
-            }
         });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {
             const { Message: messages = [] } = this.store.insert(payload, { html: true });
