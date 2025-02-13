@@ -4,7 +4,6 @@ from collections import defaultdict
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import format_list
 from odoo.tools.sql import column_exists, create_column
 
 
