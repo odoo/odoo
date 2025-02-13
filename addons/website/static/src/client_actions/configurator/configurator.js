@@ -630,8 +630,11 @@ export class Configurator extends Component {
 
         onWillStart(async () => {
             this.websiteId = (await this.orm.call('website', 'get_current_website')).match(/\d+/)[0];
-
             await store.start(() => this.getInitialState());
+            if (store.is_configurator_done) {
+                this.router.redirect("/");
+                return Promise.reject();
+            }
             this.updateStorage(store);
             if (!store.industries) {
                 await this.skipConfigurator();
@@ -676,6 +679,7 @@ export class Configurator extends Component {
         const r = {
             industries: results.industries,
             logo: results.logo ? 'data:image/png;base64,' + results.logo : false,
+            is_configurator_done: results.is_configurator_done,
         };
         r.industries = r.industries.map((industry, index) => ({
             ...industry,
