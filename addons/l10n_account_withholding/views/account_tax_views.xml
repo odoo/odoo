@@ -7,14 +7,17 @@
         <field name="arch" type="xml">
             <field name="hide_tax_exigibility" position="after">
                 <!-- Hide for argentina, it should be handled by their own module -->
-                <field name="is_withholding_tax_on_payment" invisible="type_tax_use not in ['sale', 'purchase'] or country_code == 'AR'"/>
-                <field name="withholding_sequence_id" context="{'default_name': name}" invisible="not (type_tax_use == 'purchase' and is_withholding_tax_on_payment) or country_code == 'AR'"/>
+                <field name="is_withholding_tax_on_payment" invisible="amount_type == 'group' or type_tax_use not in ['sale', 'purchase'] or country_code == 'AR'"/>
+                <field name="withholding_sequence_id" context="{'default_name': name}" invisible="amount_type == 'group' or not (type_tax_use == 'purchase' and is_withholding_tax_on_payment) or country_code == 'AR'"/>
             </field>
             <field name="tax_exigibility" position="attributes">
                 <attribute name="invisible" add="is_withholding_tax_on_payment" separator=" or "/>
             </field>
             <field name="cash_basis_transition_account_id" position="attributes">
                 <attribute name="invisible" add="is_withholding_tax_on_payment" separator=" or "/>
+            </field>
+            <field name="is_base_affected" position="attributes">
+                <attribute name="invisible" add="amount_type == 'group' or not is_withholding_tax_on_payment" separator=" and "/>
             </field>
         </field>
     </record>
