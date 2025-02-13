@@ -13,9 +13,9 @@ from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSend
 
 
 class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
+    country_code = 'ES'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('es')
     def setUpClass(cls):
         super().setUpClass()
 
