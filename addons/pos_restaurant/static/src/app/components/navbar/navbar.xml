@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="before">
+        <xpath expr="//div[contains(@class, 'pos-burger-menu-items')]" position="inside">
             <t t-if="pos.mainScreen.component.name == 'FloorScreen'">
                 <DropdownItem t-if="showEditPlanButton and this.pos.config.floor_ids.length" onSelected="() => this.pos.toggleEditMode()">
                     Edit Plan

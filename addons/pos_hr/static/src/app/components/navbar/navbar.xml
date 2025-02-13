@@ -4,7 +4,7 @@
     <t t-name="pos_hr.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
         <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="attributes">
             <attribute name="t-if">
-                !pos.config.module_pos_hr or pos.employeeIsAdmin or pos.getCashierUserId() === pos.session.user_id?.id
+                !pos.config.module_pos_hr or showBackendButton
             </attribute>
         </xpath>
         <xpath expr="//DropdownItem[contains(text(), 'Close Register')]" position="attributes">
