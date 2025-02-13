@@ -1,5 +1,6 @@
 import { markup } from "@odoo/owl";
 
+import { formatList } from "@web/core/l10n/utils";
 import { Deferred } from "@web/core/utils/concurrency";
 import { escape, sprintf } from "@web/core/utils/strings";
 
@@ -38,6 +39,20 @@ export function _t(term, ...values) {
         const translation = translatedTerms[term] ?? term;
         if (values.length === 0) {
             return translation;
+        }
+        // Localize list arguments
+        if (values.length === 1 && Object.prototype.toString.call(values[0]) === "[object Object]") {
+            Object.entries(values[0]).forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                    values[0][key] = formatList(value);
+                }
+            });
+        } else if (values.length > 0) {
+            values.forEach((value, index, arr) => {
+                if (Array.isArray(value)) {
+                    arr[index] = formatList(value);
+                }
+            });
         }
         return _safeSprintf(translation, ...values);
     } else {

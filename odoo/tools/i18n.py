@@ -23,7 +23,7 @@ XPG_LOCALE_RE = re.compile(
 
 def format_list(
     env: odoo.api.Environment,
-    lst: Sequence[str],
+    lst: Sequence,
     style: Literal["standard", "standard-short", "or", "or-short", "unit", "unit-short", "unit-narrow"] = "standard",
     lang_code: Optional[str] = None,
 ) -> str:
@@ -65,7 +65,7 @@ def format_list(
     # Some styles could be unavailable for the chosen locale
     if style not in locale.list_patterns:
         style = "standard"
-    return lists.format_list(lst, style, locale)
+    return lists.format_list([str(el) for el in lst], style, locale)
 
 
 def py_to_js_locale(locale: str) -> str:
