@@ -8,9 +8,9 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nTHEmvQrCode(AccountTestInvoicingCommon):
     """ Test the generation of the EMV QR Code on invoices """
+    country_code = 'th'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('th')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].qr_code = True

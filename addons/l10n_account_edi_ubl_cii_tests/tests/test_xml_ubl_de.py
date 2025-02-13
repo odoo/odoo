@@ -8,9 +8,9 @@ import base64
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLDE(TestUBLCommon):
+    country_code = 'DE'
 
     @classmethod
-    @TestUBLCommon.setup_country("de")
     def setUpClass(cls):
         super().setUpClass()
 

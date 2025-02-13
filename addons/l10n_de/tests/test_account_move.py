@@ -8,8 +8,9 @@ from freezegun import freeze_time
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountMoveDE(AccountTestInvoicingCommon):
+    chart_template = 'de_skr03'
+
     @classmethod
-    @AccountTestInvoicingCommon.setup_chart_template('de_skr03')
     def setUpClass(cls):
         super().setUpClass()
         cls.partner = cls.env['res.partner'].create({

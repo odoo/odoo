@@ -12,9 +12,9 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestSwissQRCode(AccountTestInvoicingCommon):
     """ Tests the generation of Swiss QR-codes on invoices
     """
+    country_code = 'CH'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('ch')
     def setUpClass(cls):
         super().setUpClass()
 

@@ -4,9 +4,9 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestHSNsummary(TestTaxCommon):
+    country_code = 'IN'
 
     @classmethod
-    @TestTaxCommon.setup_country('in')
     def setUpClass(cls):
         super().setUpClass()
 

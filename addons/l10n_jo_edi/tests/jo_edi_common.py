@@ -4,8 +4,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 class JoEdiCommon(AccountTestInvoicingCommon):
+    country_code = 'JO'
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('jo')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].write({

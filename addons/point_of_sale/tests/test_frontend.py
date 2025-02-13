@@ -7,7 +7,7 @@ from unittest.mock import patch
 from odoo import Command
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.tests import tagged
+from odoo.tests import tagged, data_depends
 from odoo.addons.account.tests.common import TestTaxCommon, AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from datetime import date, timedelta
@@ -40,10 +40,9 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         session.post_closing_cash_details(0)
         session.close_session_from_ui()
 
+    @data_depends('_get_main_company')
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         env = cls.env
         cls.env.user.group_ids += env.ref('point_of_sale.group_pos_manager')
         journal_obj = env['account.journal']

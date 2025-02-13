@@ -10,8 +10,9 @@ _logger = logging.getLogger(__name__)
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAuditTrailDE(AccountTestInvoicingHttpCommon):
+    chart_template = 'de_skr03'
+
     @classmethod
-    @AccountTestInvoicingCommon.setup_chart_template('de_skr03')
     def setUpClass(cls):
         super().setUpClass()
         cls.document_installed = 'documents_account' in cls.env['ir.module.module']._installed()

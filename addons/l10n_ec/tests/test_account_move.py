@@ -10,9 +10,9 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestEcAccountMove(AccountTestInvoicingCommon):
+    country_code = 'EC'
 
     @classmethod
-    @AccountEdiTestCommon.setup_country('ec')
     def setUpClass(cls):
         super().setUpClass()
 

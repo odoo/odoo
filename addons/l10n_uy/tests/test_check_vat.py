@@ -6,9 +6,9 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 @tagged("post_install_l10n", "post_install", "-at_install")
 class CheckUyVat(AccountTestInvoicingCommon):
+    country_code = 'UY'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('uy')
     def setUpClass(cls):
         super().setUpClass()
 
