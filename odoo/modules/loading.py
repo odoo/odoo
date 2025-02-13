@@ -201,11 +201,6 @@ def _load_one_module(
     registry = env.registry
     module_name = package.name
     module_id = package.id
-
-    module_t0 = time.time()
-    module_cursor_query_count = env.cr.sql_log_count
-    module_extra_query_count = odoo.sql_db.sql_counter
-
    
     needs_update = update_module and package.state in ("to install", "to upgrade")
     if config['profile'] and needs_update:
@@ -221,6 +216,12 @@ def _load_one_module(
         context_manager = contextlib.nullcontext()
 
     with context_manager:
+        if module_name in registry._init_modules:
+            return
+
+        module_t0 = time.time()
+        module_cursor_query_count = env.cr.sql_log_count
+        module_extra_query_count = odoo.sql_db.sql_counter
         module_log_level = logging.DEBUG
         if needs_update:
             module_log_level = logging.INFO

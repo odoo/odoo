@@ -233,7 +233,8 @@ class PeriodicCollector(Collector):
 
     def stop(self):
         self.active = False
-        self.__thread.join()
+        if self.__thread != threading.current_thread():  # Possible if an async profiler flush during it's own loop turn.
+            self.__thread.join()
         self.profiler.init_thread.profile_hooks.remove(self.progress)
 
     def add(self, entry=None, frame=None):

@@ -51,6 +51,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
         cls.maxDiff = None
         cls.company_data = cls.collect_company_accounting_data(cls.env.company)
         cls.product_category.with_company(cls.env.company).write({
