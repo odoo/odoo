@@ -201,6 +201,8 @@ class PrinterDriver(Driver):
                           self.device_identifier)
 
     def print_receipt(self, data):
+        _logger.debug("print_receipt called for printer %s", self.device_name)
+
         receipt = b64decode(data['receipt'])
         im = Image.open(io.BytesIO(receipt))
 
@@ -424,11 +426,14 @@ class PrinterDriver(Driver):
 
     def open_cashbox(self, data):
         """Sends a signal to the current printer to open the connected cashbox."""
+        _logger.debug("open_cashbox called for printer %s", self.device_name)
+
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         for drawer in commands['drawers']:
             self.print_raw(drawer)
 
     def _action_default(self, data):
+        _logger.debug("_action_default called for printer %s", self.device_name)
         self.print_raw(b64decode(data['document']))
         send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
 
