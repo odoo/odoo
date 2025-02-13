@@ -1,0 +1,50 @@
+name: PR Review Automation
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up GitHub CLI
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const labels = context.payload.pull_request.labels.map(label => label.name);
+            const requiredLabel = "review";
+            const prStatus = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+
+            // Condition to approve the PR if it has a 'review' label and all checks are passing
+            if (labels.includes(requiredLabel) && prStatus.data.mergeable_state === "clean") {
+              await github.rest.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                event: "APPROVE",
+                body: "Automated approval: All criteria met, including label and passing checks."
+              });
+              console.log("Approved PR #" + prNumber);
+            } 
+            // Condition to request changes if checks are failing or required label is missing
+            else {
+              await github.rest.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                event: "REQUEST_CHANGES",
+                body: "Automated review: PR requires the 'review' label and all checks must pass."
+              });
+              console.log("Requested changes for PR #" + prNumber);
+            }
