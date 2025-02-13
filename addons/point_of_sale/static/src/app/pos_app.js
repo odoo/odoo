@@ -47,45 +47,28 @@ export class Chrome extends Component {
         }
         this.customerDisplayChannel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
         effect(
-            batched(
-                ({
-                    selectedOrder,
-                    scaleData,
-                    scaleWeight,
-                    scaleTare,
-                    totalPriceOnScale,
-                    isScaleScreenVisible,
-                }) => {
-                    if (selectedOrder) {
-                        const allScaleData = {
-                            ...scaleData,
-                            weight: scaleWeight,
-                            tare: scaleTare,
-                            totalPriceOnScale,
-                            isScaleScreenVisible,
-                        };
-                        this.sendOrderToCustomerDisplay(selectedOrder, allScaleData);
-                    }
+            batched(({ selectedOrder, scale }) => {
+                if (selectedOrder) {
+                    const scaleData = scale.product
+                        ? {
+                              product: { ...scale.product },
+                              unitPrice: scale.unitPriceString,
+                              totalPrice: scale.totalPriceString,
+                              netWeight: scale.netWeightString,
+                              grossWeight: scale.grossWeightString,
+                              tare: scale.tareWeightString,
+                          }
+                        : null;
+                    this.sendOrderToCustomerDisplay(selectedOrder, scaleData);
                 }
-            ),
+            }),
             [this.pos]
         );
     }
 
     sendOrderToCustomerDisplay(selectedOrder, scaleData) {
         const customerDisplayData = selectedOrder.getCustomerDisplayData();
-        customerDisplayData.isScaleScreenVisible = scaleData.isScaleScreenVisible;
-        if (scaleData) {
-            customerDisplayData.scaleData = {
-                productName: scaleData.productName,
-                uomName: scaleData.uomName,
-                uomRounding: scaleData.uomRounding,
-                productPrice: scaleData.productPrice,
-            };
-        }
-        customerDisplayData.weight = scaleData.weight;
-        customerDisplayData.tare = scaleData.tare;
-        customerDisplayData.totalPriceOnScale = scaleData.totalPriceOnScale;
+        customerDisplayData.scaleData = scaleData;
 
         if (this.pos.config.customer_display_type === "local") {
             this.customerDisplayChannel.postMessage(customerDisplayData);
