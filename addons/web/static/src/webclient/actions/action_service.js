@@ -27,7 +27,7 @@ import {
     reactive,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
-import { omit, pick, shallowEqual } from "@web/core/utils/objects";
+import { omit, pick, shallowEqual, deepEqual } from "@web/core/utils/objects";
 import { zip } from "@web/core/utils/arrays";
 import { session } from "@web/session";
 
@@ -1483,6 +1483,24 @@ export function makeActionManager(env, router = _router) {
             newController,
             _getViewInfo(view, controller.action, controller.views, props)
         );
+
+        // Harmonizing the new controllers with old controller embedded actions
+        let oldControllerEmbeds = controller.embeddedActions;
+        if (!newController.config.parentActionId) {
+            oldControllerEmbeds = oldControllerEmbeds?.filter((embed) => embed.id);
+        }
+        if (controller.currentEmbeddedActionId) {
+            newController.config.currentEmbeddedActionId = controller.currentEmbeddedActionId;
+            newController.currentEmbeddedActionId = controller.currentEmbeddedActionId;
+        }
+        if (
+            oldControllerEmbeds?.length &&
+            newController.config.embeddedActions?.length &&
+            !deepEqual(newController.config.embeddedActions, oldControllerEmbeds)
+        ) {
+            newController.config.embeddedActions = oldControllerEmbeds;
+        }
+
         controller.action.controllers[viewType] = newController;
         let index;
         if (view.multiRecord) {

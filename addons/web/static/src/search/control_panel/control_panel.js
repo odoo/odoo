@@ -502,7 +502,8 @@ export class ControlPanel extends Component {
             JSON.stringify(visibleEmbeddedActions)
         );
         browser.localStorage.setItem(this.embeddedOrderKey, JSON.stringify(order));
-        this.env.config.setCurrentEmbeddedAction(embeddedActionId);
+        this.env.config.setCurrentEmbeddedAction(embeddedActionId[0]);
+        this.env.config.setEmbeddedActions(this.state.embeddedInfos.embeddedActions);
         this.state.embeddedInfos.currentEmbeddedAction = enrichedNewEmbeddedAction;
         this.state.embeddedInfos.newActionName = `${newActionName} Custom`;
     }
@@ -540,6 +541,7 @@ export class ControlPanel extends Component {
         this.state.embeddedInfos.embeddedActions = embeddedActions.filter(
             ({ id }) => id !== action.id
         );
+        this.env.config.setEmbeddedActions(this.state.embeddedInfos.embeddedActions);
         await this.orm.unlink("ir.embedded.actions", [action.id]);
         if (action.id === currentEmbeddedAction?.id) {
             const { active_id, active_model } = this.env.searchModel.globalContext;
