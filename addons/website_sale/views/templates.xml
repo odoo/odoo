@@ -2183,6 +2183,15 @@
                         'o_img_ratio_2_3' if is_view_active('website_sale.products_thumb_2_3') else
                         '')
             ">
+
+            <t t-if="reorder_notifications">
+                <t t-foreach="reorder_notifications" t-as="notification">
+                    <div t-att-class="'alert alert-' + notification['type']" role="alert">
+                        <t t-esc="notification['message']"/>
+                    </div>
+                </t>
+            </t>
+
                 <h3 class="mb-4">Order overview</h3>
                 <div t-if="abandoned_proceed or access_token" class="alert alert-info mt8 mb8" role="alert"> <!-- abandoned cart choices -->
                     <t t-if="abandoned_proceed">
@@ -3297,7 +3306,10 @@
     <template id="sale_order_re_order_btn" inherit_id="sale.sale_order_portal_template" name="Sale Order Order Again">
         <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="before">
             <t t-if="request.website.enabled_portal_reorder_button and sale_order.with_user(request.env.user).sudo()._is_reorder_allowed()">
-                <button class="btn btn-primary o_wsale_reorder_button" t-att-data-sale-order-id="sale_order.id">
+                <button
+                    class="btn btn-primary o_wsale_reorder_button oe_website_sale"
+                    t-att-data-sale-order-id="sale_order.id"
+                >
                     <i class="fa fa-rotate-right me-1"/>
                     Order Again
                 </button>
