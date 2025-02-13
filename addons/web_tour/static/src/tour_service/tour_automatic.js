@@ -8,7 +8,6 @@ import * as hoot from "@odoo/hoot-dom";
 
 export class TourAutomatic {
     mode = "auto";
-    pointer = null;
     constructor(data) {
         Object.assign(this, data);
         this.steps = this.steps.map((step, index) => new TourStepAutomatic(step, this, index));
@@ -27,12 +26,9 @@ export class TourAutomatic {
         return this.config.debug !== false;
     }
 
-    get checkForUndeterminisms() {
-        return this.config.delayToCheckUndeterminisms > 0;
-    }
-
-    start(pointer) {
+    start() {
         setupEventActions(document.createElement("div"));
+        const { delayToCheckUndeterminisms, stepDelay } = this.config;
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => [
@@ -41,37 +37,31 @@ export class TourAutomatic {
                         if (this.debugMode) {
                             console.groupCollapsed(step.describeMe);
                             console.log(step.stringify);
+                            if (step.break) {
+                                // eslint-disable-next-line no-debugger
+                                debugger;
+                            }
                         } else {
                             console.log(step.describeMe);
-                        }
-                        if (step.break && this.debugMode) {
-                            // eslint-disable-next-line no-debugger
-                            debugger;
                         }
                         // This delay is important for making the current set of tour tests pass.
                         // IMPROVEMENT: Find a way to remove this delay.
                         await new Promise((resolve) => requestAnimationFrame(resolve));
-                        if (this.config.stepDelay > 0) {
-                            await hoot.delay(this.config.stepDelay);
+                        if (stepDelay > 0) {
+                            await hoot.delay(stepDelay);
                         }
                     },
                 },
                 {
                     initialDelay: () => (this.previousStepIsJustACheck ? 0 : null),
                     trigger: step.trigger ? () => step.findTrigger() : null,
-                    timeout: (step.timeout || 10000) + this.config.stepDelay,
+                    timeout: (step.timeout || 10000) + stepDelay,
                     action: async () => {
-                        if (this.checkForUndeterminisms) {
+                        if (delayToCheckUndeterminisms > 0) {
                             await step.checkForUndeterminisms();
                         }
-                        this.previousStepIsJustACheck = !this.currentStep.hasAction;
+                        this.previousStepIsJustACheck = !step.hasAction;
                         if (this.debugMode) {
-                            if (!step.skipped && this.showPointerDuration > 0 && step.element) {
-                                // Useful in watch mode.
-                                pointer.pointTo(step.element, this);
-                                await hoot.delay(this.showPointerDuration);
-                                pointer.hide();
-                            }
                             console.log(step.element);
                             if (step.skipped) {
                                 console.log("This step has been skipped");
@@ -94,7 +84,6 @@ export class TourAutomatic {
             delete window.hoot;
             transitionConfig.disabled = false;
             tourState.clear();
-            pointer.stop();
             //No need to catch error yet.
             window.addEventListener(
                 "error",
