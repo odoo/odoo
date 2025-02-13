@@ -56,7 +56,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             'chatbot_script_id': self.chatbot_script.id,
             'channel_id': self.livechat_channel.id,
         })
-        discuss_channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        discuss_channel = self.env["discuss.channel"].browse(data["channel_id"])
 
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_dispatch)
 
@@ -124,7 +124,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             },
         )
         discuss_channel = (
-            self.env["discuss.channel"].sudo().browse(data["discuss.channel"][0]["id"])
+            self.env["discuss.channel"].sudo().browse(data["channel_id"])
         )
         self.assertEqual(discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id)
         discuss_channel.add_members(partner_ids=self.env.user.partner_id.ids)
@@ -149,7 +149,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             },
         )
         discuss_channel = (
-            self.env["discuss.channel"].sudo().browse(data["discuss.channel"][0]["id"])
+            self.env["discuss.channel"].sudo().browse(data["channel_id"])
         )
         self.step_forward_operator._process_step_forward_operator(discuss_channel)
         self.assertEqual(

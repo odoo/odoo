@@ -323,6 +323,7 @@ export class Thread extends Record {
 
     get allowCalls() {
         return (
+            !this.isTransient &&
             this.typesAllowingCalls.includes(this.channel_type) &&
             !this.correspondent?.persona.eq(this.store.odoobot)
         );
@@ -873,6 +874,22 @@ export class Thread extends Record {
                 this.messages.splice(afterIndex - 1, 0, message);
             }
         }
+    }
+
+    async leaveChannel({ force = false } = {}) {
+        if (this.channel_type !== "group" && this.create_uid === this.store.self.userId && !force) {
+            await this.askLeaveConfirmation(
+                _t("You are the administrator of this channel. Are you sure you want to leave?")
+            );
+        }
+        if (this.channel_type === "group" && !force) {
+            await this.askLeaveConfirmation(
+                _t(
+                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
+                )
+            );
+        }
+        this.leave();
     }
 }
 

@@ -3,6 +3,7 @@ import { ChatbotStep as ChatbotStepClass } from "@im_livechat/core/common/chatbo
 import { Chatbot as ChatbotClass } from "@im_livechat/core/common/chatbot_model";
 import { ChatbotScriptStepAnswer as ChatbotScriptStepAnswerClass } from "@im_livechat/core/common/chatbot_script_step_answer_model";
 import { ChatbotScript as ChatbotScriptClass } from "@im_livechat/core/common/chatbot_script_model";
+import { LivechatChannelRule as LivechatChannelRuleClass } from "@im_livechat/core/common/livechat_channel_rule_model";
 
 declare module "models" {
     export interface Thread {
@@ -13,5 +14,5 @@ declare module "models" {
     export interface Chatbot extends ChatbotClass { }
     export interface ChatbotScriptStepAnswer extends ChatbotScriptStepAnswerClass { }
     export interface ChatbotScript extends ChatbotScriptClass { }
-
+    export interface LivechatChannelRule extends LivechatChannelRuleClass {}
 }

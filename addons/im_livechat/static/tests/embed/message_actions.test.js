@@ -1,11 +1,9 @@
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 
-import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { describe, test } from "@odoo/hoot";
 import {
     click,
     contains,
@@ -14,7 +12,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { describe, test } from "@odoo/hoot";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -25,7 +23,6 @@ test("Only two quick actions are shown", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
     const env = await start({ authenticateAs: false });
-    await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");

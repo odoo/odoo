@@ -6,6 +6,7 @@ import re
 
 from odoo import api, Command, fields, models, _
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
+from odoo.addons.mail.tools.discuss import Store
 
 
 class Im_LivechatChannel(models.Model):
@@ -483,7 +484,7 @@ class Im_LivechatChannelRule(models.Model):
                 ):
                     continue
                 return rule
-            return False
+            return self.env["im_livechat.channel.rule"]
         # first, search the country specific rules (the first match is returned)
         if country_id: # don't include the country in the research if geoIP is not installed
             domain = [('country_ids', 'in', [country_id]), ('channel_id', '=', channel_id)]
@@ -493,3 +494,10 @@ class Im_LivechatChannelRule(models.Model):
         # second, fallback on the rules without country
         domain = [('country_ids', '=', False), ('channel_id', '=', channel_id)]
         return _match(self.search(domain))
+
+    def _to_store_defaults(self):
+        return [
+            "action",
+            "auto_popup_timer",
+            Store.One("chatbot_script_id"),
+        ]

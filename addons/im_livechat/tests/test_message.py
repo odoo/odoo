@@ -68,7 +68,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                     "previous_operator_id": self.users[0].partner_id.id,
                     "channel_id": im_livechat_channel.id,
                 },
-            )["discuss.channel"][0]["id"]
+            )["channel_id"]
         )
         record_rating = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('discuss.channel').id,
@@ -174,7 +174,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                     "previous_operator_id": self.users[0].partner_id.id,
                     "channel_id": im_livechat_channel.id,
                 },
-            )["discuss.channel"][0]["id"]
+            )["channel_id"]
         )
 
         def _get_feedback_bus():
