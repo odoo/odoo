@@ -4,7 +4,6 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import format_list
 from odoo.tools.misc import unquote
 
 TIMESHEET_INVOICE_TYPES = [
@@ -231,7 +230,7 @@ class AccountAnalyticLine(models.Model):
         if missing_plan_names:
             raise ValidationError(_(
                 "'%(missing_plan_names)s' analytic plan(s) required on the analytic distribution of the sale order item '%(so_line_name)s' linked to the timesheet.",
-                missing_plan_names=format_list(self.env, missing_plan_names),
+                missing_plan_names=missing_plan_names,
                 so_line_name=so_line.name,
             ))
 
