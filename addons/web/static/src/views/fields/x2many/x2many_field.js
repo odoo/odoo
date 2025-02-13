@@ -229,7 +229,11 @@ export class X2ManyField extends Component {
     }
 
     async switchToForm(record) {
-        await this.props.record.save();
+        const saved = await this.props.record.save();
+        if (!saved) {
+            return;
+        }
+
         this.action.doAction(
             {
                 type: "ir.actions.act_window",
