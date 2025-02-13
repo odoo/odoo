@@ -71,16 +71,7 @@ class TestLivechatUI(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(len(chat_request.message_ids), 1, "Number of messages incorrect.")
 
         # Visitor comes to the website and receives the chat request
-        self.start_tour("/", 'website_livechat_chat_request_part_1_no_close_tour')
-
-        # Check that the current session is the chat request
-        channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor_tour.id), ('livechat_active', '=', True)])
-        self.assertEqual(len(channel), 1, "There can only be one channel created for 'Visitor Tour'.")
-        self.assertEqual(channel, chat_request, "The active livechat session must be the chat request one.")
-
-        # Visitor reload the page and continues the chat with the operator normally
-        guest = channel.channel_member_ids.filtered(lambda m: m.guest_id).guest_id
-        self.start_tour("/", 'website_livechat_chat_request_part_2_end_session_tour', cookies={guest._cookie_name: guest._format_auth_cookie()})
+        self.start_tour("/", "website_livechat_chat_request")
         self._check_end_of_rating_tours()
 
     def _check_end_of_rating_tours(self):

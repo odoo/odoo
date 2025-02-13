@@ -15,7 +15,10 @@ class LivechatChatbotScriptController(http.Controller):
             return None
         chatbot_language = chatbot._get_chatbot_language()
         message = discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)
-        return Store(message, for_current_user=True).get_result()
+        return {
+            "message_id": message.id,
+            "store_data": Store(message, for_current_user=True).get_result(),
+        }
 
     @http.route("/chatbot/answer/save", type="jsonrpc", auth="public")
     @add_guest_to_context

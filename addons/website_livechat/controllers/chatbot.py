@@ -44,11 +44,6 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
             'channel_type': 'livechat',
             'name': chatbot_script.title,
         }
-
-        visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
-        if visitor_sudo:
-            discuss_channel_values['livechat_visitor_id'] = visitor_sudo.id
-
         discuss_channel = request.env['discuss.channel'].create(discuss_channel_values)
         chatbot_script._post_welcome_steps(discuss_channel)
         store.add(discuss_channel, {"open_chat_window": True})
@@ -56,7 +51,6 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         store.add(chatbot_script)
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),
-            'channel_data': {'id': discuss_channel.id, 'model': 'discuss.channel'},
             'chatbot_script': chatbot_script,
-            'storeData': store.get_result(),
+            'chatbot_test_store': store.get_result(),
         })

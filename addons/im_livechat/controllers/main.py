@@ -69,38 +69,6 @@ class LivechatController(http.Controller):
         info = channel.get_livechat_info(username=username)
         return request.render('im_livechat.loader', {'info': info}, headers=[('Content-Type', 'application/javascript')])
 
-    @http.route('/im_livechat/init', type='jsonrpc', auth="public")
-    @add_guest_to_context
-    def livechat_init(self, channel_id):
-        operator_available = len(request.env['im_livechat.channel'].sudo().browse(channel_id).available_operator_ids)
-        rule = {}
-        store = Store()
-        # find the country from the request
-        country_id = False
-        if request.geoip.country_code:
-            country_id = request.env['res.country'].sudo().search([('code', '=', request.geoip.country_code)], limit=1).id
-        # extract url
-        url = request.httprequest.headers.get('Referer')
-        # find the first matching rule for the given country and url
-        if matching_rule := request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id):
-            matching_rule = matching_rule.with_context(lang=request.env['chatbot.script']._get_chatbot_language())
-            rule = {
-                "action": matching_rule.action,
-                "auto_popup_timer": matching_rule.auto_popup_timer,
-                "regex_url": matching_rule.regex_url,
-            }
-            if chatbot_script := matching_rule.chatbot_script_id:
-                rule.update({"chatbotScript": chatbot_script.id})
-                store.add(chatbot_script)
-        store = Store()
-        request.env["res.users"]._init_store_data(store)
-        return {
-            'available_for_me': bool((rule and rule.get('chatbotScript'))
-                                or operator_available and (not rule or rule['action'] != 'hide_button')),
-            'rule': rule,
-            'storeData': store.get_result(),
-        }
-
     def _get_guest_name(self):
         return _("Visitor")
 
@@ -140,6 +108,7 @@ class LivechatController(http.Controller):
         )
         if not channel_vals:
             return False
+        channel_id = -1  # only one temporary thread at a time, id does not matter.
         if not persisted:
             chatbot_data = None
             if chatbot_script:
@@ -153,12 +122,14 @@ class LivechatController(http.Controller):
             operator = request.env["res.partner"].sudo().browse(channel_vals["livechat_operator_id"])
             channel_info = {
                 "fetchChannelInfoState": "fetched",
-                "id": -1,  # only one temporary thread at a time, id does not matter.
+                "id": channel_id,
                 "isLoaded": True,
+                "livechat_active": True,
                 "livechat_operator_id": Store.One(
                     operator, ["avatar_128", "user_livechat_username"]
                 ),
                 "name": channel_vals["name"],
+                "open_chat_window": True,
                 "scrollUnread": False,
                 "channel_type": "livechat",
                 "chatbot": chatbot_data,
@@ -169,6 +140,7 @@ class LivechatController(http.Controller):
                 mail_create_nosubscribe=False,
                 lang=request.env['chatbot.script']._get_chatbot_language()
             ).sudo().create(channel_vals)
+            channel_id = channel.id
             if chatbot_script:
                 chatbot_script._post_welcome_steps(channel)
             with replace_exceptions(UserError, by=NotFound()):
@@ -186,13 +158,17 @@ class LivechatController(http.Controller):
                 channel,
                 extra_fields={
                     "isLoaded": not chatbot_script,
+                    "open_chat_window": True,
                     "scrollUnread": False,
                 },
             )
             if guest:
                 store.add_global_values(guest_token=guest._format_auth_cookie())
         request.env["res.users"]._init_store_data(store)
-        return store.get_result()
+        return {
+            "store_data": store.get_result(),
+            "channel_id": channel_id,
+        }
 
     def _post_feedback_message(self, channel, rating, reason):
         reason = Markup("<br>" + re.sub(r'\r\n|\r|\n', "<br>", reason) if reason else "")
