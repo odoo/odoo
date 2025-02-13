@@ -9,7 +9,7 @@ from unittest.mock import patch
 from werkzeug.urls import url_parse, url_decode
 
 from odoo.addons.mail.models.mail_message import Message
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users, HttpCase
@@ -36,6 +36,16 @@ class TestMailMCCommon(MailCommon, TestRecipients):
              'company_id': cls.user_employee_c2.company_id.id},
         ])
 
+        # Add a user for Company 3
+        cls.user_employee_c3 = mail_new_test_user(
+            cls.env, login='employee_c3',
+            groups='base.group_user',
+            company_id=cls.company_3.id,
+            company_ids=[(4, cls.company_3.id)],
+            email='employeec3@example.com',
+            name='Employee C3',
+            notification_type='inbox'
+        )
         cls.partner_1 = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
@@ -66,6 +76,41 @@ class TestMailMCCommon(MailCommon, TestRecipients):
 
 @tagged('multi_company')
 class TestMultiCompanySetup(TestMailMCCommon):
+
+    def test_cross_company_notification(self):
+        # Disable the multi-company rule to collaborate between companies
+        self.env.ref('test_mail.mail_test_ticket_mc_rule').action_archive()
+        # User A in main company has a ticket and then assign it to user B in another company
+        ticket = self.env['mail.test.ticket.mc'].create({
+            'name': 'Collaborate ticket',
+            'user_id': self.user_employee.id,
+            'company_id': self.user_employee.company_id.id,
+        })
+        self.env['res.company'].invalidate_model()
+        ticket.with_user(self.user_employee).write({
+            'user_id': self.user_employee_c2.id,
+        })
+        # User B should receive the notification message
+        self.assertTrue(self.env['mail.message'].search([
+            ('model', '=', 'mail.test.ticket.mc'),
+            ('res_id', '=', ticket.id),
+            ('author_id', '=', self.user_employee.partner_id.id),
+            ('partner_ids', 'in', self.user_employee_c2.partner_id.ids),
+            ('message_type', '=', 'user_notification'),
+        ]))
+        # User B then assign it to user C in another company
+        self.env['res.company'].invalidate_model()
+        ticket.with_user(self.user_employee_c2).write({
+            'user_id': self.user_employee_c3.id,
+        })
+        # User C should receive the notification message
+        self.assertTrue(self.env['mail.message'].search([
+            ('model', '=', 'mail.test.ticket.mc'),
+            ('res_id', '=', ticket.id),
+            ('author_id', '=', self.user_employee_c2.partner_id.id),
+            ('partner_ids', 'in', self.user_employee_c3.partner_id.ids),
+            ('message_type', '=', 'user_notification'),
+        ]))
 
     @users('employee_c2')
     @mute_logger('odoo.addons.base.models.ir_rule')
