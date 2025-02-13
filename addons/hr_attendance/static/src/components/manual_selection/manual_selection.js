@@ -20,9 +20,10 @@ export class KioskManualSelection extends Component {
     };
     static props = {
         displayBackButton: { type: Boolean },
-        token: { type: Number },
+        token: { type: String },
         departments: { type: Array },
         onSelectEmployee: { type: Function },
+        onClickBack: { type: Function },
     };
 
     setup() {
@@ -127,16 +128,3 @@ export class KioskManualSelection extends Component {
         await this._fetchEmployeeData();
     }
 }
-
-KioskManualSelection.template = "hr_attendance.public_kiosk_manual_selection";
-KioskManualSelection.components = {
-    Dropdown,
-    DropdownItem,
-};
-KioskManualSelection.props = {
-    employees: { type: Array },
-    displayBackButton: { type: Boolean },
-    departments: { type: Array },
-    onSelectEmployee: { type: Function },
-    onClickBack: { type: Function },
-};
