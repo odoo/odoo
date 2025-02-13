@@ -4,6 +4,8 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { jsonrpc } from "@web/core/network/rpc_service";
+import { renderToElement } from "@web/core/utils/render";
+import { session } from "@web/session";
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = publicWidget.Widget.extend({
@@ -79,6 +81,8 @@ var EventRegistrationForm = publicWidget.Widget.extend({
                 return false;
             }
             var $modal = $(modal);
+            const form = $modal[0].querySelector("form#attendee_registration");
+            self._addTurnstile(form);
             $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
             $modal.appendTo(document.body);
             const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
@@ -99,6 +103,42 @@ var EventRegistrationForm = publicWidget.Widget.extend({
                 ev.currentTarget.appendChild(tokenInput);
             })
         });
+    },
+
+    _addTurnstile: function (form) {
+        if (!session.turnstile_site_key) {
+            return false;
+        }
+        this._removeTurnstile();
+
+        const formButton = form.querySelector("button[type=submit]")
+        formButton.setAttribute("disabled", "1")
+        const globalCallbackName = "websiteEventRegistrationFormTurnstileExecuteCallback"
+        globalThis[globalCallbackName] = () => formButton.removeAttribute("disabled");
+
+        const turnstileContainer = renderToElement("website_cf_turnstile.turnstile_container", {
+            action: "website_event_registration",
+            additionalClasses: "float-end s_turnstile_container",
+            executeGlobalCallback: globalCallbackName,
+            errorGlobalCallback: globalCallbackName,
+            sitekey: session.turnstile_site_key,
+        });
+
+        const modalFooter = form.querySelector("div.modal-footer");
+        modalFooter.prepend(turnstileContainer);
+        
+        // script will implicitly render inside all cf-turnstile containers when loaded
+        if (!("turnstile" in window)) {
+            const turnstileScript = renderToElement("website_cf_turnstile.turnstile_remote_script");
+            document.body.appendChild(turnstileScript);
+        } else {
+            window.turnstile.render(turnstileContainer);
+        }
+
+        return true;
+    },
+    _removeTurnstile: function () {
+        document.querySelectorAll(".s_turnstile_container").forEach(e => e.remove());
     },
 });
 
