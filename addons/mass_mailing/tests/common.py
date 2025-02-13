@@ -69,12 +69,13 @@ class MassMailCase(MailCase, MockLinkTracker):
         :param records: records given to mailing that generated traces. It is
           used notably to find traces using their IDs;
         :param check_mail: if True, also check mail.mail records that should be
-          linked to traces;
+          linked to traces unless not sent (trace_status == 'cancel');
         :param sent_unlink: it True, sent mail.mail are deleted and we check gateway
           output result instead of actual mail.mail records;
         :param mail_links_info: if given, should follow order of ``recipients_info``
           and give details about links. See ``assertLinkShortenedHtml`` helper for
-          more details about content to give;
+          more details about content to give.
+          Not tested for mail with trace status == 'cancel';
         :param author: author of sent mail.mail;
         """
         # map trace state to email state
@@ -141,13 +142,15 @@ class MassMailCase(MailCase, MockLinkTracker):
                     email, partner, status, record,
                     len(recipient_trace), debug_info)
             )
-            self.assertTrue(bool(recipient_trace.mail_mail_id_int))
+            # In mass_mail mode, messages that would be canceled are not created, only the trace is created.
+            mail_not_created = recipient_trace.trace_status == 'cancel'
+            self.assertTrue(mail_not_created or bool(recipient_trace.mail_mail_id_int))
             if 'failure_type' in recipient_info or status in ('error', 'cancel', 'bounce'):
                 self.assertEqual(recipient_trace.failure_type, failure_type)
             if 'failure_reason' in recipient_info:
                 self.assertEqual(recipient_trace.failure_reason, failure_reason)
 
-            if check_mail:
+            if check_mail and not mail_not_created:
                 if author is None:
                     author = self.env.user.partner_id
 
@@ -194,7 +197,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                         fields_values=fields_values,
                     )
 
-            if link_info:
+            if link_info and not mail_not_created:
                 trace_mail = self._find_mail_mail_wrecord(record)
                 for (anchor_id, url, is_shortened, add_link_params) in link_info:
                     link_params = {'utm_medium': 'Email', 'utm_source': mailing.name}
