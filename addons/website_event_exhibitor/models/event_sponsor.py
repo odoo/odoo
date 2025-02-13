@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from pytz import timezone, utc
 
 from odoo import api, fields, models, _
-from odoo.addons.resource.models.utils import float_to_time
+from odoo.addons.base.models.utils import float_to_time
 from odoo.tools import is_html_empty
 from odoo.tools.translate import html_translate
 

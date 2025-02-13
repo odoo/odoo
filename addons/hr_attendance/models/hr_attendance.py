@@ -12,7 +12,7 @@ from random import randint
 
 from odoo.http import request
 from odoo import models, fields, api, exceptions, _
-from odoo.addons.resource.models.utils import Intervals
+from odoo.addons.base.models.utils import Intervals
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError

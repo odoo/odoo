@@ -13,12 +13,12 @@ from pytz import timezone, utc
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.addons.base.models.utils import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_compare, ormcache
-from .utils import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime
 from odoo.addons.hr_work_entry_contract.models.hr_work_intervals import WorkIntervals
 
 
