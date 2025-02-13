@@ -10,45 +10,12 @@
             <!-- for both type we keep the original fields as they may be targeted by inherits -->
             <field name="arch" type="xml">
                 <!-- Sale -->
-                <label for="taxes_id" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </label>
                 <field name="taxes_id" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </field>
-                <label for="taxes_id" position="after">
-                    <label for="all_tax_ids" invisible="type == 'combo'" string="Sales Taxes"/>
-                </label>
-                <field name="taxes_id" position="after">
-                    <field
-                        name="all_tax_ids"
-                        widget="many2many_tags"
-                        class="oe_inline"
-                        context="{
-                            'default_type_tax_use': 'sale',
-                            'search_default_sale': 1,
-                            'search_default_service': type == 'service',
-                            'search_default_goods': type == 'consu',
-                        }"
-                    />
+                    <attribute name="options">{'no_create': True, 'color_field': 'color'}</attribute>
                 </field>
                 <!-- Purchase -->
                 <field name="supplier_taxes_id" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </field>
-                <field name="supplier_taxes_id" position="after">
-                    <field
-                        name="all_supplier_tax_ids"
-                        invisible="not purchase_ok or type == 'combo'"
-                        widget="many2many_tags"
-                        context="{
-                            'default_type_tax_use':'purchase',
-                            'search_default_purchase': 1,
-                            'search_default_service': type == 'service',
-                            'search_default_goods': type == 'consu',
-                        }"
-                        string="Purchase Taxes"
-                    />
+                    <attribute name="options">{'no_create': True, 'color_field': 'color'}</attribute>
                 </field>
             </field>
         </record>
