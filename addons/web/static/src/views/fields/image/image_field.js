@@ -159,7 +159,7 @@ export class ImageField extends Component {
                 canvas.width = image.width * ratio;
                 canvas.height = image.height * ratio;
                 const ctx = canvas.getContext("2d");
-                ctx.fillStyle = "rgb(255, 255, 255)";
+                ctx.fillStyle = "transparent";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(
                     image,
@@ -188,6 +188,7 @@ export class ImageField extends Component {
                     ],
                 ]);
                 referenceId = referenceId || resizedId; // Keep track of original.
+                // Converted to JPEG for use in PDF files, alpha values will default to white
                 await this.orm.call("ir.attachment", "create_unique", [
                     [
                         {
