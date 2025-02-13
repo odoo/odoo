@@ -11,11 +11,11 @@ import {
 } from "@html_editor/utils/image_processing";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { defaultBuilderComponents } from "../core/default_builder_components";
-import { AddElementOption } from "./add_element_option";
-import { SpacingOption } from "./spacing_option";
+import { defaultBuilderComponents } from "../../core/default_builder_components";
+import { AddElementOption } from "../add_element_option";
+import { SpacingOption } from "../spacing_option";
 import { Plugin } from "@html_editor/plugin";
-import { useIsActiveItem } from "../core/building_blocks/utils";
+import { useIsActiveItem } from "../../core/building_blocks/utils";
 import { isImageCorsProtected } from "@html_builder/utils/utils_css";
 
 class ImageToolOptionPlugin extends Plugin {
