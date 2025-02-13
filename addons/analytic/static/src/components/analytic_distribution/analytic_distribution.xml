@@ -43,7 +43,7 @@
                         <tr t-foreach="state.formattedData" t-as="line" t-key="line.id" t-att-id="line_index" t-att-name="'line_' + line_index">
                             <Record t-props="recordProps(line)" t-slot-scope="data">
                                 <td t-foreach="Object.keys(data.record.fields).filter((f) => f.startsWith('x_plan'))" t-as="field" t-key="field">
-                                    <Field id="field" name="field" record="data.record" domain="data.record.fields[field].domain" canOpen="false" canCreate="false" canCreateEdit="false" canQuickCreate="false"/>
+                                    <Field id="field" name="field" record="data.record" context="data.record.fields[field].context" domain="data.record.fields[field].domain" canOpen="false" canCreate="false" canCreateEdit="false" canQuickCreate="false"/>
                                 </td>
                                 <td class="numeric_column_width">
                                     <Field id="'percentage'" name="'percentage'" record="data.record"/>
