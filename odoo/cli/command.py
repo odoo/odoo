@@ -45,7 +45,7 @@ class Command:
 
     @contextmanager
     def build_env(self, db_name, update_module=False):
-        registry = Registry.new(db_name, False, update_module=update_module)
+        registry = Registry.new(db_name, update_module=update_module)
         with closing(registry.cursor()) as cr:
             yield odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
 
