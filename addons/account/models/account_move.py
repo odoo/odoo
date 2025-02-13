@@ -1319,36 +1319,120 @@ class AccountMove(models.Model):
                     }
 
     def _compute_payments_widget_to_reconcile_info(self):
-        for move in self:
-            move.invoice_outstanding_credits_debits_widget = False
-            move.invoice_has_outstanding = False
 
-            if move.state not in {'draft', 'posted'} \
-                    or move.payment_state not in ('not_paid', 'partial') \
-                    or not move.is_invoice(include_receipts=True):
-                continue
-
-            pay_term_lines = move.line_ids\
-                .filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
-
-            domain = [
-                ('account_id', 'in', pay_term_lines.account_id.ids),
+        def _get_common_domain(commercial_partner_id):
+            """ Return the common domain conditions for searching outstanding payments """
+            return [
                 ('parent_state', '=', 'posted'),
-                ('partner_id', '=', move.commercial_partner_id.id),
+                ('partner_id', '=', commercial_partner_id),
                 ('reconciled', '=', False),
                 '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
             ]
 
-            payments_widget_vals = {'outstanding': True, 'content': [], 'move_id': move.id}
+        moves_to_process = self.filtered(
+            lambda m: m.state in {'draft', 'posted'}
+            and m.payment_state in ('not_paid', 'partial')
+            and m.is_invoice(include_receipts=True)
+        )
+
+        for move in self:
+            move.invoice_outstanding_credits_debits_widget = False
+            move.invoice_has_outstanding = False
+
+        if not moves_to_process:
+            return
+
+        pay_term_lines = self.env['account.move.line'].search([
+            ('move_id', 'in', moves_to_process.ids),
+            ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable')),
+        ])
+
+        pay_term_lines_by_move = {}
+        for line in pay_term_lines:
+            pay_term_lines_by_move.setdefault(line.move_id.id, set()).add(line.account_id.id)
+
+        all_lines = self.env['account.move.line']
+        move_line_mapping = {}
+        
+        for move in moves_to_process:
+            account_ids = list(pay_term_lines_by_move.get(move.id, set()))
+            if not account_ids:
+                continue
 
             if move.is_inbound():
-                domain.append(('balance', '<', 0.0))
-                payments_widget_vals['title'] = _('Outstanding credits')
+                domain = expression.AND([
+                    _get_common_domain(move.commercial_partner_id.id),
+                    expression.OR([
+                        expression.AND([
+                            [('account_id', 'in', account_ids)],
+                            [('balance', '<', 0.0)],
+                        ]),
+                        expression.AND([
+                            [
+                                ('account_id.account_type', 'in', ['asset_cash', 'asset_receivable']),
+                                ('journal_id', 'in', self.env['account.journal']._search([
+                                    *self.env['account.journal']._check_company_domain(move.company_id.id),
+                                    ('type', '=', 'bank')
+                                ])),
+                            ]
+                        ])
+                    ])
+                ])
             else:
-                domain.append(('balance', '>', 0.0))
-                payments_widget_vals['title'] = _('Outstanding debits')
+                domain = expression.AND([
+                    _get_common_domain(move.commercial_partner_id.id),
+                    [('account_id', 'in', account_ids), ('balance', '>', 0.0)]
+                ])
 
-            for line in self.env['account.move.line'].search(domain):
+            lines = self.env['account.move.line'].search(domain)
+            all_lines += lines
+            move_line_mapping[move.id] = lines
+
+        if not all_lines:
+            return
+
+        move_names = set(all_lines.mapped('move_name'))
+        move_counts = dict(
+            (move_name, count)
+            for move_name, count in self.env['account.move.line']._read_group(
+                domain=[
+                    ('move_name', 'in', list(move_names)),
+                    ('id', 'in', all_lines.ids),
+                ],
+                groupby=['move_name'],
+                aggregates=['__count'],
+            )
+        )
+        reconciled_counts = dict(
+            (move_name, count)
+            for move_name, count in self.env['account.move.line']._read_group(
+                domain=[
+                    ('move_name', 'in', list(move_names)),
+                    ('reconciled', '=', True),
+                ],
+                groupby=['move_name'],
+                aggregates=['__count'],
+            )
+        )
+
+        for move in moves_to_process:
+            lines = move_line_mapping.get(move.id, self.env['account.move.line'])
+            if not lines:
+                continue
+
+            payments_widget_vals = {
+                'outstanding': True,
+                'content': [],
+                'move_id': move.id,
+                'title': _('Outstanding credits') if move.is_inbound() else _('Outstanding debits')
+            }
+            
+            for line in lines:
+                if (
+                    line.account_id.account_type == 'asset_cash' and
+                    (move_counts.get(line.move_name) > 1 or reconciled_counts.get(line.move_name))
+                ):
+                    continue
 
                 if line.currency_id == move.currency_id:
                     # Same foreign currency.
@@ -1375,11 +1459,9 @@ class AccountMove(models.Model):
                     'account_payment_id': line.payment_id.id,
                 })
 
-            if not payments_widget_vals['content']:
-                continue
-
-            move.invoice_outstanding_credits_debits_widget = payments_widget_vals
-            move.invoice_has_outstanding = True
+            if payments_widget_vals['content']:
+                move.invoice_outstanding_credits_debits_widget = payments_widget_vals
+                move.invoice_has_outstanding = True
 
     @api.depends('partner_id', 'company_id')
     def _compute_preferred_payment_method_line_id(self):
@@ -5537,6 +5619,13 @@ class AccountMove(models.Model):
         '''
         self.ensure_one()
         lines = self.env['account.move.line'].browse(line_id)
+        if lines[0].account_id.account_type == "asset_cash":
+            st_line = self.env['account.bank.statement.line'].search([
+                ('invoice_line_ids', 'in', lines[0].id)
+            ], limit=1)
+            wizard = self.env['bank.rec.widget'].with_context(default_st_line_id=st_line.id).new({})
+            wizard._action_validate()
+            lines = st_line.invoice_line_ids.filtered(lambda line: line.account_id.account_type == 'asset_receivable')
         lines += self.line_ids.filtered(lambda line: line.account_id == lines[0].account_id and not line.reconciled)
         return lines.reconcile()
 
