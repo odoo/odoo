@@ -16,6 +16,8 @@ class MailLinkPreview(models.Model):
     _name = 'mail.link.preview'
     _inherit = ["bus.listener.mixin"]
     _description = "Store link preview data"
+    _order = 'source_url'
+    _rec_name = 'source_url'
 
     message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade')
     is_hidden = fields.Boolean()

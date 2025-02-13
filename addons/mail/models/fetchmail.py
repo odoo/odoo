@@ -58,7 +58,7 @@ class FetchmailServer(models.Model):
     """Incoming POP/IMAP mail server account"""
     _name = 'fetchmail.server'
     _description = 'Incoming Mail Server'
-    _order = 'priority'
+    _order = 'priority, id DESC'
 
     name = fields.Char('Name', required=True)
     active = fields.Boolean('Active', default=True)

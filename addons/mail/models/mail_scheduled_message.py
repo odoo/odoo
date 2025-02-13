@@ -30,6 +30,8 @@ class MailScheduledMessage(models.Model):
     """
     _name = 'mail.scheduled.message'
     _description = 'Scheduled Message'
+    _order = 'id DESC'
+    _rec_name = 'subject'
 
     # content
     subject = fields.Char('Subject')
