@@ -1363,6 +1363,8 @@ def preload_registries(dbnames):
                         profile_session=f'{os.getpid()} - {dbnames[0]}',
                         collectors=config['profile_collectors'],
                         params=json.loads(config['profile_params']),
+                        entry_count_limit=100000, # arbitrary limit to avoid memory error. With memory limit set to 4Go would fail around 500k entries
+                        flush=True,
                     )
                 else:
                     profiler_cm = contextlib.nullcontext()

@@ -213,8 +213,8 @@ def _load_one_module(
                 db=config['profile_database'] or registry.db_name,
                 description=f'Loading - {registry.db_name}, {package.name}',
                 profile_session=registry.db_name,
-                collectors=config['profile_collectors'],
-                params=json.loads(config['profile_params']),
+                entry_count_limit=100000, # arbitrary limit to avoid memory error. With memory limit set to 4Go would fail around 500k entries
+                flush=True,
             )
         context_manager = odoo.tools.profiler.Nested(odoo.tools.profiler.ExecutionContext(loading=package.name), context_manager)
     else:
