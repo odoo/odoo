@@ -103,9 +103,8 @@ class MrpProduction(models.Model):
         return {'type': 'ir.actions.act_window_close'}
 
     def pre_button_mark_done(self):
-        if self._get_subcontract_move():
-            return True
-        return super().pre_button_mark_done()
+        res = super().pre_button_mark_done()
+        return res or self._get_subcontract_move()
 
     def _should_postpone_date_finished(self, date_finished):
         return super()._should_postpone_date_finished(date_finished) and not self._get_subcontract_move()
