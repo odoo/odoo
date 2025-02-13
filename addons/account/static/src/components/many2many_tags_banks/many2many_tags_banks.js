@@ -16,6 +16,11 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
         TagsList: FieldMany2ManyTagsBanksTagsList,
     };
 
+    setup() {
+        super.setup();
+        this.props.record.model.root.save();
+    }
+
     getTagProps(record) {
         return {
             ...super.getTagProps(record),
