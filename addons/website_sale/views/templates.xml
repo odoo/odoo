@@ -2663,26 +2663,6 @@
 
                         <!-- Example -->
                         <input type="hidden" name="required_fields" t-att-value="'name,country_id'"/>
-
-                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mt32 mb32">
-                            <a role="button" t-att-href="discard_url" class="btn btn-outline-secondary w-100 w-md-auto order-md-1 order-3">
-                                <i class="fw-light fa fa-angle-left me-2"/>Discard
-                            </a>
-                            <div class="position-relative w-100 d-flex d-md-none justify-content-center align-items-center order-2 my-2 opacity-75">
-                                <hr class="w-100"/>
-                                <span class="px-3">or</span>
-                                <hr class="w-100"/>
-                            </div>
-                            <button id="save_address" class="btn btn-primary w-100 w-md-auto order-1 order-md-3">
-                                <t t-if="is_anonymous_cart">
-                                    Continue checkout
-                                </t>
-                                <t t-else="">
-                                    Save address
-                                </t>
-                                <i class="fw-light fa fa-angle-right ms-2"/>
-                            </button>
-                        </div>
                     </form>
                 </div>
             </div>
