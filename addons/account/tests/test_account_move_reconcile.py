@@ -5697,3 +5697,113 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(invoice_line.matching_number, payment_line.matching_number)
         self.assertEqual(payment_line.matching_number, currency_exchange_line.matching_number)
         self.assertEqual(currency_exchange_line.amount_residual, 0)
+
+    def test_reconcile_invoice_with_bank_statement_line(self):
+        """
+        Test reconcile invoice with bank statement line. with foreign currency on both invoice and statement line.
+        """
+        foreign_curr = self.setup_other_currency('EUR', rates=[
+            ('2019-06-28', 2.0),
+            ('2019-06-24', 3.0),
+        ])
+        invoice = self.init_invoice(move_type='out_invoice', invoice_date='2019-06-24', currency=foreign_curr, amounts=[6000], partner=self.partner_a, post=True)
+        invoice_rec_line = invoice.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+        statement_line = self.env['account.bank.statement.line'].create({
+            'name': 'test_statement',
+            'date': '2019-06-28',
+            'payment_ref': 'line_1',
+            'partner_id': self.partner_a.id,
+            'foreign_currency_id': foreign_curr.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'amount': 2000,
+            'amount_currency': 1000,
+        })
+        statement_line_rec_line = statement_line.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_cash')
+
+        self.assert_invoice_outstanding_to_reconcile_widget(invoice, {
+            statement_line.move_id.id: 1000.0,
+        })
+        invoice.js_assign_outstanding_line(statement_line_rec_line.id)
+        statement_line_rec_line = statement_line.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')[0]
+        partials = self._get_partials(invoice_rec_line + statement_line_rec_line)
+
+        self.assertRecordValues(partials, [
+            {
+                'amount': 333.33,
+                'debit_amount_currency': 1000.0,
+                'credit_amount_currency': 1000.0,
+                'debit_move_id': invoice_rec_line.id,
+                'credit_move_id': statement_line_rec_line.id,
+            },
+            {
+                'amount': 1666.67,
+                'debit_amount_currency': 0.0,
+                'credit_amount_currency': 0.0,
+                'debit_move_id': partials.exchange_move_id.line_ids[0].id,
+                'credit_move_id': statement_line_rec_line.id,
+            },
+        ])
+
+        self.assertRecordValues(invoice_rec_line + statement_line_rec_line, [
+            {'amount_residual': 1666.67, 'amount_residual_currency': 5000, 'reconciled': False},
+            {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'reconciled': True},
+        ])
+
+        self.assert_invoice_outstanding_reconciled_widget(invoice, {
+            statement_line.move_id.id: 1000.0,
+            partials.exchange_move_id.id: 1666.67,
+        })
+
+    def test_reconcile_refund_with_bank_statement_line(self):
+        """
+        Test reconcile refund with bank statement line. with foreign currency on the refund.
+        """
+        foreign_curr = self.setup_other_currency('EUR', rates=[
+            ('2019-06-28', 2.0),
+            ('2019-06-24', 3.0),
+        ])
+        refund = self.init_invoice(move_type='in_invoice', invoice_date='2019-06-24', currency=foreign_curr, amounts=[6000], partner=self.partner_a, post=True)
+        refund_rec_line = refund.line_ids.filtered(lambda x: x.account_id.account_type == 'liability_payable')
+        statement_line = self.env['account.bank.statement.line'].create({
+            'name': 'test_statement',
+            'date': '2019-06-28',
+            'payment_ref': 'line_1',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'amount': -2000.0,
+        })
+        statement_line_rec_line = statement_line.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_cash')
+
+        self.assert_invoice_outstanding_to_reconcile_widget(refund, {
+            statement_line.move_id.id: 2000.0,
+        })
+        refund.js_assign_outstanding_line(statement_line_rec_line.id)
+        statement_line_rec_line = statement_line.line_ids.filtered(lambda x: x.account_id.account_type == 'liability_payable')[0]
+        partials = self._get_partials(refund_rec_line + statement_line_rec_line)
+
+        self.assertRecordValues(partials, [
+            {
+                'amount': 1333.33,
+                'debit_amount_currency': 3999.99,
+                'credit_amount_currency': 3999.99,
+                'credit_move_id': refund_rec_line.id,
+                'debit_move_id': statement_line_rec_line.id,
+            },
+            {
+                'amount': 666.67,
+                'debit_amount_currency': 0.0,
+                'credit_amount_currency': 0.0,
+                'credit_move_id': partials.exchange_move_id.line_ids[0].id,
+                'debit_move_id': statement_line_rec_line.id,
+            },
+        ])
+
+        self.assertRecordValues(refund_rec_line + statement_line_rec_line, [
+            {'amount_residual': -666.67, 'amount_residual_currency': -2000.01, 'reconciled': False},
+            {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'reconciled': True},
+        ])
+
+        self.assert_invoice_outstanding_reconciled_widget(refund, {
+            statement_line.move_id.id: 3999.99,
+            partials.exchange_move_id.id: 666.67,
+        })
