@@ -917,9 +917,15 @@ class Cache:
         """ Return the fields that have dirty records in cache. """
         return self._dirty.keys()
 
-    def get_dirty_records(self, model: BaseModel, field: Field) -> BaseModel:
-        """ Return the records that for which ``field`` is dirty in cache. """
-        return model.browse(self._dirty.get(field, ()))
+    def filtered_dirty_records(self, records: BaseModel, field: Field) -> BaseModel:
+        """ Filtered ``records`` where ``field`` is dirty. """
+        dirties = self._dirty.get(field, ())
+        return records.browse(id_ for id_ in records._ids if id_ in dirties)
+
+    def filtered_clean_records(self, records: BaseModel, field: Field) -> BaseModel:
+        """ Filtered ``records`` where ``field`` is not dirty. """
+        dirties = self._dirty.get(field, ())
+        return records.browse(id_ for id_ in records._ids if id_ not in dirties)
 
     def has_dirty_fields(self, records: BaseModel, fields: Collection[Field] | None = None) -> bool:
         """ Return whether any of the given records has dirty fields.
