@@ -3,8 +3,8 @@ from odoo import Command
 
 
 class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
+    country_code = 'IN'
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('in')
     def setUpClass(cls):
         super().setUpClass()
 

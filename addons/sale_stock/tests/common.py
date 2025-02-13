@@ -8,6 +8,9 @@ class TestSaleStockCommon(TestSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+    
+    @classmethod
+    def setUpCommonData(cls):
         cls.warehouse_3_steps_pull = cls.env['stock.warehouse'].create({
             'name': 'Warehouse 3 steps',
             'code': '3S',
