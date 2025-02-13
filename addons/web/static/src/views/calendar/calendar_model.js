@@ -203,29 +203,26 @@ export class CalendarModel extends Model {
         await this.orm.unlink(this.meta.resModel, [recordId]);
         await this.load();
     }
-    async updateFilters(fieldName, filters) {
+    async updateFilters(fieldName, filters, active) {
         const section = this.data.filterSections[fieldName];
         if (section) {
-            for (const value in filters) {
-                const active = filters[value];
-                const filter = section.filters.find((filter) => `${filter.value}` === value);
-                if (filter) {
+            const info = this.meta.filtersInfo[fieldName];
+            if (info && info.writeFieldName && info.writeResModel && info.filterFieldName) {
+                const userFilter = filters.find((f) => f.type === "user");
+                if (userFilter) {
+                    userFilter.active = active;
+                }
+                const filterIds = filters.filter((f) => f.type === "record").map((f) => f.recordId);
+                if (filterIds) {
+                    const data = {
+                        [info.filterFieldName]: active,
+                    };
+                    const context = this.meta.context;
+                    await this.orm.write(info.writeResModel, filterIds, data, { context });
+                }
+            } else {
+                for (const filter of filters) {
                     filter.active = active;
-                    const info = this.meta.filtersInfo[fieldName];
-                    if (
-                        filter.recordId &&
-                        info &&
-                        info.writeFieldName &&
-                        info.writeResModel &&
-                        info.filterFieldName
-                    ) {
-                        const data = {
-                            [info.filterFieldName]: active,
-                        };
-                        await this.orm.write(info.writeResModel, [filter.recordId], data);
-                    } else if (filter.type === "all") {
-                        this.meta.allFilter[section.label] = active;
-                    }
                 }
             }
         }
@@ -235,7 +232,7 @@ export class CalendarModel extends Model {
         const rawRecord = this.buildRawRecord(record, options);
         delete rawRecord.name; // name is immutable.
         await this.orm.write(this.meta.resModel, [record.id], rawRecord, {
-            context: { from_ui: true },
+            context: this.meta.context,
         });
         await this.load();
     }
@@ -607,18 +604,21 @@ export class CalendarModel extends Model {
         const previousSections = data.filterSections;
         const sections = {};
         const dynamicFiltersInfo = {};
+        const proms = [];
         for (const [fieldName, filterInfo] of Object.entries(this.meta.filtersInfo)) {
             const previousSection = previousSections[fieldName];
             if (filterInfo.writeResModel) {
-                sections[fieldName] = await this.loadFilterSection(
-                    fieldName,
-                    filterInfo,
-                    previousSection
+                const prom = this.loadFilterSection(fieldName, filterInfo, previousSection).then(
+                    (result) => {
+                        sections[fieldName] = result;
+                    }
                 );
+                proms.push(prom);
             } else {
                 dynamicFiltersInfo[fieldName] = { filterInfo, previousSection };
             }
         }
+        await Promise.all(proms);
         return { sections, dynamicFiltersInfo };
     }
     /**
@@ -668,14 +668,19 @@ export class CalendarModel extends Model {
      */
     async loadDynamicFilters(data, filtersInfo) {
         const sections = {};
+        const proms = [];
         for (const [fieldName, { filterInfo, previousSection }] of Object.entries(filtersInfo)) {
-            sections[fieldName] = await this.loadDynamicFilterSection(
+            const prom = this.loadDynamicFilterSection(
                 data,
                 fieldName,
                 filterInfo,
                 previousSection
-            );
+            ).then((result) => {
+                sections[fieldName] = result;
+            });
+            proms.push(prom);
         }
+        await Promise.all(proms);
         return sections;
     }
     /**
@@ -814,10 +819,10 @@ export class CalendarModel extends Model {
         const colorIndex = Array.isArray(colorValue) ? colorValue[0] : colorValue;
 
         let active = false;
-        if (previousFilter) {
-            active = previousFilter.active;
-        } else if (filterFieldName) {
+        if (filterFieldName) {
             active = rawRecord[filterFieldName];
+        } else if (previousFilter) {
+            active = previousFilter.active;
         }
         return {
             type: "record",

@@ -3042,6 +3042,24 @@ test(`create event with filters (no quickCreate)`, async () => {
     expect(`.o_event`).toHaveCount(4);
 });
 
+test(`Toggle multiple values at once in a filter with filter_field`, async () => {
+    onRpc("write", ({ args }) => {
+        expect.step(`write ${args[0]}`);
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" filter_field="is_checked"/>
+            </calendar>
+        `,
+    });
+
+    await toggleSectionFilter("attendee_ids");
+    expect.verifySteps(["write 1,2"]); // single write rpc, on both records
+});
+
 test.tags("desktop");
 test(`Update event with filters on desktop`, async () => {
     CalendarUsers._records.push({ id: 5, name: "user 5", partner_id: 3 });
