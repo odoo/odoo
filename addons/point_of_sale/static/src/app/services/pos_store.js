@@ -38,6 +38,7 @@ import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -1866,13 +1867,20 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
     }
+    orderUsageUTCtoLocal(data) {
+        const result = {};
+        for (const [datetime, usage] of Object.entries(data)) {
+            const dt = deserializeDateTime(datetime);
+            const formattedDt = dt.toFormat("yyyy-MM-dd HH:mm:ss");
+            result[formattedDt] = usage;
+        }
+        return result;
+    }
     async syncPresetSlotAvaibility(preset) {
         try {
-            const presetAvailabilities = await this.data.call("pos.preset", "get_available_slots", [
-                preset.id,
-            ]);
-
-            preset.computeAvailabilities(presetAvailabilities);
+            const result = await this.data.call("pos.preset", "get_available_slots", [preset.id]);
+            const localUsage = this.orderUsageUTCtoLocal(result.usage_utc);
+            preset.computeAvailabilities(localUsage);
         } catch {
             // Compute locally if the server is not reachable
             preset.computeAvailabilities();
