@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_event_resume_many2one_list">
+        <field name="name">event.event.list.resume_many2one</field>
+        <field name="model">event.event</field>
+        <field name="arch" type="xml">
+            <list string="Events">
+                <field name="name"/>
+                <field name="user_id" readonly="1" widget="many2one_avatar_user"/>
+                <field name="date_begin" readonly="1"/>
+                <field name="date_end" readonly="1"/>
+            </list>
+        </field>
+    </record>
+</odoo>
