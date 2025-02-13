@@ -44,26 +44,20 @@ test(`section can collapse`, async () => {
     await start({});
     expect(`.o_calendar_filter:eq(0) .o_cw_filter_collapse_icon`).toHaveCount(1);
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
+    expect(`.o_calendar_filter:eq(1) .o_cw_filter_collapse_icon`).toHaveCount(1);
+    expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item`).toHaveCount(2);
 
     await contains(`.o_calendar_filter:eq(0) .o_cw_filter_label`).click();
     await runAllTimers();
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(0);
 
+    await contains(`.o_calendar_filter:eq(1) .o_cw_filter_label`).click();
+    await runAllTimers();
+    expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item`).toHaveCount(0);
+
     await contains(`.o_calendar_filter:eq(0) .o_cw_filter_label`).click();
     await runAllTimers();
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
-});
-
-test(`section cannot collapse`, async () => {
-    await start({});
-    expect(`.o_calendar_filter:eq(1) .o_cw_filter_label > i`).toHaveCount(0);
-    expect(`.o_calendar_filter:eq(1)`).not.toHaveClass("o_calendar_filter-collapsed");
-    expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item`).toHaveCount(2);
-
-    await contains(`.o_calendar_filter:eq(1) .o_cw_filter_label`).click();
-    await runAllTimers();
-    expect(`.o_calendar_filter:eq(1)`).not.toHaveClass("o_calendar_filter-collapsed");
-    expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item`).toHaveCount(2);
 });
 
 test(`filters can have avatar`, async () => {
