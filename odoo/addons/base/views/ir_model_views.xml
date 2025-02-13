@@ -45,13 +45,15 @@
                                     </group>
                                     <notebook>
                                         <page name="base" string="Properties">
-                                            <group string="Base Properties">
+                                            <group>
                                                 <group>
                                                     <field name="required"/>
                                                     <field name="readonly"/>
                                                     <field name="store" groups="base.group_no_one"/>
                                                     <field name="index" groups="base.group_no_one"/>
                                                     <field name="copied" groups="base.group_no_one"/>
+                                                    <field name="state" groups="base.group_no_one"/>
+                                                    <field name="modules" groups="base.group_no_one"/>
                                                 </group>
                                                 <group>
                                                     <field name="translate"
@@ -94,12 +96,14 @@
                                                     </list>
                                                 </field>
                                             </group>
-                                            <group string="Advanced Properties" groups="base.group_no_one">
+                                        </page>
+                                        <page name="compute" string="Compute" groups="base.group_no_one">
+                                            <group>
                                                 <field name="related"/>
                                                 <field name="depends" required="compute not in [False, '']"/>
                                                 <field name="compute" widget="code" options="{'mode': 'python'}"/>
                                             </group>
-                                            <div groups="base.group_no_one">
+                                            <div>
                                                 <h3>How to define a computed field</h3>
                                                 <p>Computed fields are defined with the fields
                                                 <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
@@ -129,12 +133,6 @@
                                         </page>
                                         <page name="groups" string="Access Rights">
                                             <field name="groups"/>
-                                        </page>
-                                        <page name="misc" string="Miscellaneous" groups="base.group_no_one">
-                                            <group>
-                                                <field name="state"/>
-                                                <field name="modules"/>
-                                            </group>
                                         </page>
                                     </notebook>
                                 </form>
@@ -236,13 +234,15 @@
                         </group>
                         <notebook>
                             <page name="base" string="Properties">
-                                <group string="Base Properties">
+                                <group>
                                     <group>
                                         <field name="required"/>
                                         <field name="readonly"/>
                                         <field name="store" groups="base.group_no_one"/>
                                         <field name="index" groups="base.group_no_one"/>
                                         <field name="copied" groups="base.group_no_one"/>
+                                        <field name="state" groups="base.group_no_one"/>
+                                        <field name="modules" groups="base.group_no_one"/>
                                     </group>
                                     <group>
                                         <field name="translate"
@@ -282,7 +282,7 @@
                                             readonly="ttype != 'monetary'"/>
                                     </group>
                                 </group>
-                                <group string="HTML/Sanitization Properties">
+                                <group string="HTML/Sanitization Properties" invisible="ttype != 'html'">
                                     <group>
                                         <field name="sanitize"
                                             invisible="ttype != 'html'"
@@ -321,12 +321,14 @@
                                         </list>
                                     </field>
                                 </group>
-                                <group string="Advanced Properties" groups="base.group_no_one">
+                            </page>
+                            <page name="compute" string="Compute" groups="base.group_no_one">
+                                <group>
                                     <field name="related"/>
                                     <field name="depends" required="compute not in [False, '']"/>
                                     <field name="compute" widget="code" options="{'mode': 'python'}"/>
                                 </group>
-                                <div groups="base.group_no_one">
+                                <div>
                                     <h3>How to define a computed field</h3>
                                     <p>Computed fields are defined with the fields
                                     <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
@@ -356,12 +358,6 @@
                             </page>
                             <page name="groups" string="Access Rights">
                                 <field name="groups"/>
-                            </page>
-                            <page name="misc" string="Miscellaneous" groups="base.group_no_one">
-                                <group>
-                                    <field name="state"/>
-                                    <field name="modules"/>
-                                </group>
                             </page>
                         </notebook>
                     </sheet>
