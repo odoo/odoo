@@ -151,6 +151,7 @@ export class CalendarArchParser {
                                 resModel: field.relation,
                                 writeFieldName: null,
                                 writeResModel: null,
+                                context: fieldInfo.context || "{}",
                             };
                             filterInfo = filtersInfo[fieldName];
                         }

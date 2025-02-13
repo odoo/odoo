@@ -68,7 +68,7 @@ export class CalendarFilterPanel extends Component {
             operator: "ilike",
             args: domain,
             limit: 8,
-            context: {},
+            context: section.context,
         });
 
         const options = records.map((result) => ({
@@ -103,7 +103,7 @@ export class CalendarFilterPanel extends Component {
                 name: request,
                 args: domain,
                 operator: "ilike",
-                context: {},
+                context: section.context,
             });
             dynamicFilters.push({
                 description: _t("Quick search: %s", request),
@@ -116,7 +116,7 @@ export class CalendarFilterPanel extends Component {
             noCreate: true,
             multiSelect: true,
             resModel,
-            context: {},
+            context: section.context,
             domain,
             onSelected: (resId) => this.props.model.createFilter(section.fieldName, resId),
             dynamicFilters,
