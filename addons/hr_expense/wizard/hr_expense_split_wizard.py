@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import Command, fields, models, api, _
 
 
 class HrExpenseSplitWizard(models.TransientModel):
@@ -49,7 +49,7 @@ class HrExpenseSplitWizard(models.TransientModel):
             self.expense_split_line_ids -= expense_split
             if self.expense_split_line_ids:
                 for split in self.expense_split_line_ids:
-                    copied_expenses |= self.expense_id.copy(split._get_values())
+                    copied_expenses |= self.expense_id.with_context({'from_split_wizard': True}).copy(split._get_values())
 
                 attachment_ids = self.env['ir.attachment'].search([
                     ('res_model', '=', 'hr.expense'),
@@ -60,11 +60,8 @@ class HrExpenseSplitWizard(models.TransientModel):
                     for attachment in attachment_ids:
                         attachment.copy({'res_model': 'hr.expense', 'res_id': copied_expense.id})
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.expense',
-            'name': _('Split Expenses'),
-            'view_mode': 'list,form',
-            'target': 'current',
-            'domain': [('id', 'in', (copied_expenses | self.expense_split_line_ids.expense_id).ids)],
-        }
+        all_related_expenses = copied_expenses | self.expense_id | self.expense_id.split_expense_ids
+        for split_expense in all_related_expenses:
+            split_expense.split_expense_ids |= all_related_expenses
+
+        return all_related_expenses._get_records_action(name=_("Split Expenses"))

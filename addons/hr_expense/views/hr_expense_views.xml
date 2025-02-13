@@ -156,6 +156,15 @@
                     An <a type="object" name="action_show_same_receipt_expense_ids">expense</a> with the same receipt already exists.
                 </div>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_split_expense"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="not split_expense_ids"
+                            string="Split"
+                        />
+                    </div>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
