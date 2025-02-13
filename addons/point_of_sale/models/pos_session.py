@@ -323,19 +323,22 @@ class PosSession(models.Model):
             ))
 
     def _create_sequences(self):
+        value = {}
         for session in self:
-            order_seq = self.env['ir.sequence'].sudo().create({
-                'name': _("PoS Order Sequence of Session %s", session.id),
-                'code': f'pos.order_{session.id}',
-            })
-            login_number_seq = self.env['ir.sequence'].sudo().create({
-                'name': _("Login Number Sequence of Session %s", session.id),
-                'code': f'pos.login_number_{session.id}',
-            })
-            session.write({
-                'order_seq_id': order_seq.id,
-                'login_number_seq_id': login_number_seq.id
-            })
+            # need not to create the sequences for the session if they exist
+            if not session.order_seq_id:
+                order_seq = self.env['ir.sequence'].sudo().create({
+                    'name': _("PoS Order Sequence of Session %s", session.id),
+                    'code': f'pos.order_{session.id}',
+                })
+                value.update({'order_seq_id': order_seq.id})
+            if not session.login_number_seq_id:
+                login_number_seq = self.env['ir.sequence'].sudo().create({
+                    'name': _("Login Number Sequence of Session %s", session.id),
+                    'code': f'pos.login_number_{session.id}',
+                })
+                value.update({'login_number_seq_id': login_number_seq.id})
+            session.write(value)
 
     def get_next_order_refs(self, login_number=0, ref_prefix=None, tracking_prefix=''):
         """
@@ -403,6 +406,8 @@ class PosSession(models.Model):
 
     def login(self):
         self.ensure_one()
+        if not self.login_number_seq_id:
+            self._create_sequences()
         return self.login_number_seq_id._next()
 
     def action_pos_session_open(self):
