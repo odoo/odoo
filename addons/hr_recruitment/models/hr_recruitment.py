@@ -730,7 +730,8 @@ class Applicant(models.Model):
         for applicant in self:
             applicant.write(
                 {'stage_id': applicant.job_id.id and default_stage[applicant.job_id.id],
-                 'refuse_reason_id': False})
+                 'refuse_reason_id': False,
+                 'referral_state': 'progress'})
 
     def toggle_active(self):
         res = super(Applicant, self).toggle_active()
