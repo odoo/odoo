@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="hr_applicant_event_report_view_search" model="ir.ui.view">
+        <field name="name">hr.applicant.event.report.view.search</field>
+        <field name="model">hr.applicant.event.report</field>
+        <field name="arch" type="xml">
+            <search string="Event Analysis">
+                <field name="applicant_name"/>
+                <field name="event_name"/>
+                <filter name="this_month" string="This Month" domain="[
+                ('date_begin', '>=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
+                ('date_begin', '&lt;', (context_today() + relativedelta(months=1, day=1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="this_year" string="This Year" domain="[
+                ('date_begin', '>=', (context_today() + relativedelta(month=1, day=1)).strftime('%Y-%m-%d')),
+                ('date_begin', '&lt;', (context_today() + relativedelta(years=1, months=1, day=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Event date" name="date_begin" date="date_begin"/>
+                <separator/>
+                <filter name="active" string="Arhived"/>
+                <filter string="Event Country" name="event_country_group" context="{'group_by': 'event_country_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_applicant_event_report_view_pivot" model="ir.ui.view">
+        <field name="name">hr.applicant.event.report.view.pivot</field>
+        <field name="model">hr.applicant.event.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Time off Summary" sample="1" disable_linking="1">
+                <field name="event_id" type="row"/>
+                <field name="number_of_attendees" type="measure"/>
+                <field name="number_of_applicants" type="measure"/>
+                <field name="number_of_signed_contracts" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_recruitment_event_report_action" model="ir.actions.act_window">
+        <field name="name">Event Audience</field>
+        <field name="res_model">hr.applicant.event.report</field>
+        <field name="search_view_id" ref="hr_applicant_event_report_view_search"/>
+        <field name="view_mode">pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+    id="menu_hr_recruitment_event"
+    name="Event Audience"
+    parent="hr_recruitment.report_hr_recruitment"
+    action="hr_recruitment_event_report_action"
+    sequence="5"/>
+</odoo>
