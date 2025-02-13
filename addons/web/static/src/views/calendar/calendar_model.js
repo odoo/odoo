@@ -655,7 +655,6 @@ export class CalendarModel extends Model {
                 field: writeFieldName,
                 model: writeResModel,
             },
-            canCollapse: filters.length > 2,
             canAddFilter: !!filterInfo.writeResModel,
         };
     }
@@ -748,7 +747,6 @@ export class CalendarModel extends Model {
                 field: filterInfo.writeFieldName,
                 model: filterInfo.writeResModel,
             },
-            canCollapse: filters.length > 2,
             canAddFilter: !!filterInfo.writeResModel,
         };
     }
