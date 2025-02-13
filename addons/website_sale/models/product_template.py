@@ -734,23 +734,11 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return [self] + list(self.product_template_image_ids)
 
-    def _get_attrib_values_domain(self, attribute_values):
-        attribute_id = None
-        attribute_value_ids = []
-        domains = []
-        for value in attribute_values:
-            if not attribute_id:
-                attribute_id = value[0]
-                attribute_value_ids.append(value[1])
-            elif value[0] == attribute_id:
-                attribute_value_ids.append(value[1])
-            else:
-                domains.append([('attribute_line_ids.value_ids', 'in', attribute_value_ids)])
-                attribute_id = value[0]
-                attribute_value_ids = [value[1]]
-        if attribute_id:
-            domains.append([('attribute_line_ids.value_ids', 'in', attribute_value_ids)])
-        return domains
+    def _get_attribute_value_domain(self, attribute_value_dict):
+        return [
+            [('attribute_line_ids.value_ids', 'in', attribute_value_ids)]
+            for attribute_value_ids in attribute_value_dict.values()
+        ]
 
     @api.model
     def _search_get_detail(self, website, order, options):
@@ -763,7 +751,7 @@ class ProductTemplate(models.Model):
         tags = options.get('tags')
         min_price = options.get('min_price')
         max_price = options.get('max_price')
-        attrib_values = options.get('attrib_values')
+        attribute_value_dict = options.get('attribute_value_dict')
         if category:
             domains.append([('public_categ_ids', 'child_of', self.env['ir.http']._unslug(category)[1])])
         if tags:
@@ -775,8 +763,8 @@ class ProductTemplate(models.Model):
             domains.append([('list_price', '>=', min_price)])
         if max_price:
             domains.append([('list_price', '<=', max_price)])
-        if attrib_values:
-            domains.extend(self._get_attrib_values_domain(attrib_values))
+        if attribute_value_dict:
+            domains.extend(self._get_attribute_value_domain(attribute_value_dict))
         search_fields = ['name', 'default_code', 'product_variant_ids.default_code']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {

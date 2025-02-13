@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import itertools
 import json
 
 from datetime import datetime
@@ -123,7 +124,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _add_search_subdomains_hook(self, search):
         return []
 
-    def _get_shop_domain(self, search, category, attrib_values, search_in_description=True):
+    def _get_shop_domain(self, search, category, attribute_value_dict, search_in_description=True):
         domains = [request.website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
@@ -142,8 +143,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if category:
             domains.append([('public_categ_ids', 'child_of', int(category))])
 
-        if attrib_values:
-            domains.extend(request.env['product.template']._get_attrib_values_domain(attrib_values))
+        if attribute_value_dict:
+            domains.extend(
+                request.env['product.template']._get_attribute_value_domain(attribute_value_dict)
+            )
 
         return expression.AND(domains)
 
@@ -181,8 +184,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 yield {'loc': loc}
 
     def _get_search_options(
-        self, category=None, attrib_values=None, tags=None, min_price=0.0, max_price=0.0,
-        conversion_rate=1, **post
+        self,
+        category=None,
+        attribute_value_dict=None,
+        tags=None,
+        min_price=0.0,
+        max_price=0.0,
+        conversion_rate=1,
+        **post,
     ):
         return {
             'displayDescription': True,
@@ -195,11 +204,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'tags': tags,
             'min_price': min_price / conversion_rate,
             'max_price': max_price / conversion_rate,
-            'attrib_values': attrib_values,
+            'attribute_value_dict': attribute_value_dict,
             'display_currency': post.get('display_currency'),
         }
 
-    def _shop_lookup_products(self, attrib_set, options, post, search, website):
+    def _shop_lookup_products(self, options, post, search, website):
         # No limit because attributes are obtained from complete product list
         product_count, details, fuzzy_search_term = website._search_with_fuzzy("products_only", search,
                                                                                limit=None,
@@ -214,10 +223,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
     ):
         return {
             'search': search,
-            'tags': tags,
             'min_price': min_price,
             'max_price': max_price,
             'order': order,
+            'tags': tags,
             'attribute_value': attribute_value,
         }
 
@@ -235,7 +244,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         '/shop/category/<model("product.public.category"):category>',
         '/shop/category/<model("product.public.category"):category>/page/<int:page>',
     ], type='http', auth="public", website=True, sitemap=sitemap_shop)
-    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, **post):
+    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, tags='', **post):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
 
@@ -267,20 +276,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         gap = website.shop_gap or "16px"
 
         request_args = request.httprequest.args
-        attrib_list = request_args.getlist('attribute_value')
-        attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
-        attributes_ids = {v[0] for v in attrib_values}
-        attrib_set = {v[1] for v in attrib_values}
-        if attrib_list:
-            post['attribute_value'] = attrib_list
+        attribute_values = request_args.getlist('attribute_value')
+        attribute_value_dict = self._get_attribute_value_dict(attribute_values)
+        attribute_ids = set(attribute_value_dict.keys())
+        attribute_value_ids = set(itertools.chain.from_iterable(attribute_value_dict.values()))
+        if attribute_values:
+            post['attribute_value'] = attribute_values
 
         filter_by_tags_enabled = website.is_view_active('website_sale.filter_products_tags')
         if filter_by_tags_enabled:
-            tags = request_args.getlist('tags')
-            # Allow only numeric tag values to avoid internal error.
-            if tags and all(tag.isnumeric() for tag in tags):
+            if tags:
                 post['tags'] = tags
-                tags = {int(tag) for tag in tags}
+                tags = {self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')}
             else:
                 post['tags'] = None
                 tags = {}
@@ -312,20 +319,22 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         options = self._get_search_options(
             category=category,
-            attrib_values=attrib_values,
+            attribute_value_dict=attribute_value_dict,
             min_price=min_price,
             max_price=max_price,
             conversion_rate=conversion_rate,
             display_currency=website.currency_id,
             **post
         )
-        fuzzy_search_term, product_count, search_product = self._shop_lookup_products(attrib_set, options, post, search, website)
+        fuzzy_search_term, product_count, search_product = self._shop_lookup_products(
+            options, post, search, website
+        )
 
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
             Product = request.env['product.template'].with_context(bin_size=True)
-            domain = self._get_shop_domain(search, category, attrib_values)
+            domain = self._get_shop_domain(search, category, attribute_value_dict)
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
             query = Product._where_calc(domain)
@@ -386,7 +395,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ('visibility', '=', 'visible'),
             ]))
         else:
-            attributes = lazy(lambda: ProductAttribute.browse(attributes_ids))
+            attributes = lazy(lambda: ProductAttribute.browse(attribute_ids))
 
         layout_mode = request.session.get('website_sale_shop_layout_mode')
         if not layout_mode:
@@ -398,7 +407,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         products_prices = lazy(lambda: products._get_sales_prices(website))
 
-        attributes_values = request.env['product.attribute.value'].browse(attrib_set)
+        attributes_values = request.env['product.attribute.value'].browse(attribute_value_ids)
         sorted_attributes_values = attributes_values.sorted('sequence')
         multi_attributes_values = sorted_attributes_values.filtered(lambda av: av.display_type == 'multi')
         single_attributes_values = sorted_attributes_values - multi_attributes_values
@@ -414,8 +423,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'original_search': fuzzy_search_term and search,
             'order': post.get('order', ''),
             'category': category,
-            'attrib_values': attrib_values,
-            'attrib_set': attrib_set,
+            'attrib_values': attribute_value_dict,
+            'attrib_set': attribute_value_ids,
             'pager': pager,
             'products': products,
             'search_product': search_product,
@@ -1835,3 +1844,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         for key in keys_to_remove:
             query.pop(key, False)
         return urls.url_encode(query)
+
+    @staticmethod
+    def _get_attribute_value_dict(attribute_values):
+        """ Parses a list of attribute value query params, and returns a dict grouping attribute
+        value ids by attribute id.
+
+        :param list(str) attribute_values: The list of attribute value query parameters to parse.
+        :return: A dict grouping attribute value ids by attribute id.
+        :rtype: dict(int, list(int))
+        """
+        attribute_value_pairs = [value.split('-') for value in attribute_values if value]
+        return {
+            int(pair[0]): [int(value_id) for value_id in pair[1].split(',')]
+            for pair in attribute_value_pairs
+        }
