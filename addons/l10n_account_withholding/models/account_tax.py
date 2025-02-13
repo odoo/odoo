@@ -20,9 +20,23 @@ class AccountTax(models.Model):
         copy=False,
         check_company=True,
     )
+    color = fields.Integer(compute='_compute_color')
+
+    def _compute_color(self):
+        for tax in self:
+            tax.color = 1 if tax.is_withholding_tax_on_payment else 0
 
     @api.onchange('is_withholding_tax_on_payment')
     def _onchange_is_withholding_tax_on_payment(self):
         """ Ensure that we don't keep cash basis enabled if it was before checking the withholding tax option. """
         if self.is_withholding_tax_on_payment:
             self.tax_exigibility = 'on_invoice'
+
+    def _batch_for_taxes_computation(self, special_mode=False):
+        # EXTEND account to remove withholding taxes from the batches and thus skip all computations for them.
+        filtered_self = self
+        # By default, we don't want withholding taxes to affect anything, but in some cases (payment wizard, withholding tax lines, ...)
+        # the computation is still required.
+        if not self.env.context.get('include_withholding_taxes'):
+            filtered_self = self.filtered(lambda t: not t.is_withholding_tax_on_payment)
+        return super(AccountTax, filtered_self)._batch_for_taxes_computation(special_mode=special_mode)

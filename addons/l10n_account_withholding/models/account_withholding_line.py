@@ -157,7 +157,7 @@ class AccountWithholdingLine(models.AbstractModel):
     def _get_withholding_tax_values(self):
         """ Helper that uses compute_all in order to return the tax details. """
         self.ensure_one()
-        tax_values = self.tax_id.compute_all(price_unit=self.base_amount, currency=self.currency_id)
+        tax_values = self.tax_id.with_context(include_withholding_taxes=True).compute_all(price_unit=self.base_amount, currency=self.currency_id)
         return [{
             'amount': tax['amount'],
             'account': tax['account_id'],
@@ -171,7 +171,7 @@ class AccountWithholdingLine(models.AbstractModel):
         """ Helper which returns the tax tags applied to the base repartition line for the withholding lines in self. """
         tag_ids = set()
         for line in self:
-            tax_values = line.tax_id.compute_all(price_unit=line.base_amount, currency=line.currency_id)
+            tax_values = line.tax_id.with_context(include_withholding_taxes=True).compute_all(price_unit=line.base_amount, currency=line.currency_id)
             tag_ids.update(tax_values['base_tags'])
         return tag_ids
 

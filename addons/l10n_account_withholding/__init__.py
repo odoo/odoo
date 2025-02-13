@@ -20,6 +20,7 @@ def _l10n_account_wth_post_init(env):
             # We also want to set up a demo tax and put it on the service demo products; to ease testing/...
             if env.ref('base.module_l10n_account_withholding').demo:
                 _make_demo_tax(ChartTemplate, chart_template_data)
+                _make_demo_reconcile_model(company)
 
 
 def _make_demo_tax(chart_template, chart_template_data):
@@ -71,4 +72,58 @@ def _make_demo_tax(chart_template, chart_template_data):
         }).id,
     })
     # Add the tax on both demo services
-    (chart_template.ref('product.product_product_1') | chart_template.ref('product.product_product_2')).supplier_withholding_tax_ids += wh_tax
+    (chart_template.ref('product.product_product_1') | chart_template.ref('product.product_product_2')).supplier_taxes_id += wh_tax
+
+
+def _make_demo_reconcile_model(company):
+    company.env['account.reconcile.model'].create([{
+            "name": company.env._('Invoices Withholding Match'),
+            "company_id": company.id,
+            "sequence": 1,  # We want it to be before the partial match (but after the perfect match)
+            "rule_type": 'invoice_matching',
+            "auto_reconcile": False,
+            "match_nature": 'amount_received',
+            "match_same_currency": False,
+            "allow_payment_tolerance": False,
+            "match_partner": True,
+            "limit_to_withholding_tax": True,
+            "line_ids": [
+                Command.create(
+                    {
+                        "account_id": company.env['account.chart.template']._get_demo_account(
+                            'Current Asset',
+                            'asset_current',
+                            company,
+                        ).id,
+                        "amount_type": "percentage",
+                        'amount_string': '100',
+                        "label": "Withholding Tax Amount",
+                    }
+                ),
+            ],
+        }, {
+            "name": company.env._('Bills Withholding Match'),
+            "company_id": company.id,
+            "sequence": 1,  # We want it to be before the partial match (but after the perfect match)
+            "rule_type": 'invoice_matching',
+            "auto_reconcile": False,
+            "match_nature": 'amount_paid',
+            "match_same_currency": False,
+            "allow_payment_tolerance": False,
+            "match_partner": True,
+            "limit_to_withholding_tax": True,
+            "line_ids": [
+                Command.create(
+                    {
+                        "account_id": company.env['account.chart.template']._get_demo_account(
+                                'Current Liabilities',
+                                'liability_current',
+                                company,
+                            ).id,
+                        "amount_type": "percentage",
+                        'amount_string': '100',
+                        "label": "Withholding Tax Amount",
+                    }
+                ),
+            ],
+        }])
