@@ -29,3 +29,11 @@ class ProductProduct(models.Model):
         if field_name == "image_128" and self.sudo().available_in_pos:
             return True
         return super()._can_return_content(field_name, access_token)
+
+    def action_archive(self):
+        if self.product_tmpl_id._used_in_pos():
+            raise UserError(_(
+                "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+                "Make sure to close all sessions first to avoid any issues.",
+            ))
+        return super().action_archive()
