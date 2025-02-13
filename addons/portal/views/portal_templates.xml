@@ -412,15 +412,15 @@
             <h5>Your contact</h5>
             <hr class="mt-1"/>
             <h6 t-esc="sales_user.name"/>
-            <div class="d-flex align-items-baseline mb-1">
+            <div t-if="sales_user.email_normalized" class="d-flex align-items-baseline mb-1">
                 <i class="fa fa-envelope fa-fw me-1 text-600"/>
                 <a class="text-break w-100" t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
             </div>
-            <div class="d-flex flex-nowrap align-items-center mb-1">
+            <div t-if="sales_user.phone" class="d-flex flex-nowrap align-items-center mb-1">
                 <i class="fa fa-phone fa-fw me-1 text-600"/>
                 <span t-esc="sales_user.phone"/>
             </div>
-            <div class="d-flex flex-nowrap align-items-center mb-1">
+            <div t-if="sales_user.city" class="d-flex flex-nowrap align-items-center mb-1">
                 <i class="fa fa-map-marker fa-fw me-1 text-600"/>
                 <span t-esc="sales_user.city"/>
             </div>
