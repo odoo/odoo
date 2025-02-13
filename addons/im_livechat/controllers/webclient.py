@@ -20,3 +20,36 @@ class WebClient(WebclientController):
         super()._process_request_for_internal_user(store, name, params)
         if name == "im_livechat.channel":
             store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
+
+    def _process_request_for_all(self, store: Store, name, params):
+        super()._process_request_for_all(store, name, params)
+        if name == "init_livechat":
+            partner, guest = self.env["res.partner"]._get_current_persona()
+            if partner or guest:
+                store.add_global_values(store_self=Store.One(partner or guest))
+            # sudo - im_livechat.channel: allow access to live chat channel to
+            # check if operators are available.
+            channel = request.env["im_livechat.channel"].sudo().search([("id", "=", params)])
+            if not channel:
+                return
+            country_id = (
+                # sudo - res.country: accessing user country is allowed.
+                request.env["res.country"].sudo().search([("code", "=", code)])
+                if (code := request.geoip.country_code)
+                else None
+            )
+            url = request.httprequest.headers.get("Referer")
+            if (
+                # sudo - im_livechat.channel.rule: getting channel's rule is allowed.
+                matching_rule := request.env["im_livechat.channel.rule"]
+                .sudo()
+                .match_rule(params, url, country_id)
+            ):
+                matching_rule = matching_rule.with_context(
+                    lang=request.env["chatbot.script"]._get_chatbot_language()
+                )
+                store.add_global_values(livechat_rule=Store.One(matching_rule))
+            store.add_global_values(
+                livechat_available=bool(matching_rule.chatbot_script_id
+                or channel.available_operator_ids)
+            )

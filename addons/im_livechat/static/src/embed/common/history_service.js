@@ -10,21 +10,25 @@ export class HistoryService {
     constructor(env, services) {
         /** @type {ReturnType<typeof import("@bus/services/bus_service").busService.start>} */
         this.busService = services.bus_service;
-        /** @type {import("@im_livechat/embed/common/livechat_service").LivechatService} */
-        this.livechatService = services["im_livechat.livechat"];
+        /** @type {import("models").Store} */
+        this.storeService = services["mail.store"];
     }
 
     setup() {
         this.updateHistory();
-        this.busService.subscribe("im_livechat.history_command", (payload) => {
-            if (payload.id !== this.livechatService.thread?.id) {
+        this.busService.subscribe("im_livechat.history_command", async (payload) => {
+            const thread = await this.storeService.Thread.getOrFetch({
+                id: payload.id,
+                model: "discuss.channel",
+            });
+            if (thread?.channel_type !== "livechat") {
                 return;
             }
             const data = expirableStorage.getItem(HistoryService.HISTORY_STORAGE_KEY);
             const history = data ? JSON.parse(data) : [];
             rpc("/im_livechat/history", {
-                pid: this.livechatService.thread.livechat_operator_id.id,
-                channel_id: this.livechatService.thread.id,
+                pid: payload.partner_id,
+                channel_id: thread.id,
                 page_history: history,
             });
         });
@@ -49,7 +53,7 @@ export class HistoryService {
 }
 
 export const historyService = {
-    dependencies: ["im_livechat.livechat", "bus_service"],
+    dependencies: ["bus_service", "mail.store"],
     start(env, services) {
         const history = new HistoryService(env, services);
         history.setup();

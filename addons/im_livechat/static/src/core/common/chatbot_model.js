@@ -6,10 +6,10 @@ import { debounce } from "@web/core/utils/timing";
 export class Chatbot extends Record {
     static id = AND("script", "thread");
     static MESSAGE_DELAY = 1500;
+    static TYPING_DELAY = 500;
     // Time to wait without user input before considering a multi line step as
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
-    static MULTILINE_STEP_DEBOUNCE_DELAY_TOUR = 500;
 
     isTyping = false;
     script = Record.one("chatbot.script");
@@ -38,14 +38,46 @@ export class Chatbot extends Record {
      */
     _processAnswerDebounced = Record.attr(null, {
         compute() {
-            return debounce(
-                this._processAnswer,
-                this.script.isLivechatTourRunning
-                    ? Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY_TOUR
-                    : Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY
-            );
+            return debounce(this._processAnswer, Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY);
         },
     });
+
+    /**
+     * Start the chatbot. Either from the beginning if the user just started the
+     * session or from where we left off if the session was restored after a
+     * page load.
+     */
+    async start() {
+        if (this.completed) {
+            return;
+        }
+        if (this.thread.isLastMessageFromCustomer) {
+            await this.processAnswer(this.thread.newestPersistentOfAllMessage);
+        }
+        if (!this.currentStep?.expectAnswer || this.currentStep?.completed) {
+            this._runUntilUserInputStep();
+        }
+    }
+
+    stop() {
+        clearTimeout(this.nextStepTimeout);
+    }
+
+    async restart() {
+        if (!this.completed) {
+            return;
+        }
+        const { store_data, message_id } = await rpc("/chatbot/restart", {
+            channel_id: this.thread.id,
+            chatbot_script_id: this.script.id,
+        });
+        this.store.insert(store_data, { html: true });
+        this.thread.messages.push(this.store["mail.message"].get(message_id));
+        if (this.currentStep) {
+            this.currentStep.isLast = false;
+        }
+        this.start();
+    }
 
     /**
      * @param {import("models").Message} message
@@ -61,7 +93,7 @@ export class Chatbot extends Record {
         }
     }
 
-    async triggerNextStep() {
+    async _triggerNextStep() {
         if (this.currentStep) {
             await this._simulateTyping();
         }
@@ -95,6 +127,10 @@ export class Chatbot extends Record {
         );
     }
 
+    get canRestart() {
+        return this.completed && !this.currentStep?.operatorFound;
+    }
+
     /**
      * Go to the next step of the chatbot, fetch it if needed.
      */
@@ -117,6 +153,25 @@ export class Chatbot extends Record {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
             this.currentStep = this.steps[nextStepIndex];
         }
+    }
+
+    /**
+     * Trigger chat bot steps recursively until the script is completed or a user
+     * input is required.
+     */
+    async _runUntilUserInputStep() {
+        await this._triggerNextStep();
+        if (
+            !this.currentStep ||
+            this.completed ||
+            (this.currentStep.expectAnswer && !this.currentStep.completed)
+        ) {
+            return;
+        }
+        this.nextStepTimeout = browser.setTimeout(
+            async () => this._runUntilUserInputStep(),
+            Chatbot.TYPING_DELAY
+        );
     }
 
     /**
@@ -148,6 +203,9 @@ export class Chatbot extends Record {
             stepCompleted = await this._processAnswerQuestionSelection(message);
         }
         this.currentStep.completed = stepCompleted;
+        if (this.currentStep.completed) {
+            await this._runUntilUserInputStep();
+        }
     }
 
     async _delayThenProcessAnswerAgain(message) {
@@ -197,15 +255,6 @@ export class Chatbot extends Record {
             this.thread.messages.add(message);
         }
         return success;
-    }
-
-    /**
-     * Restart the chatbot script.
-     */
-    restart() {
-        if (this.currentStep) {
-            this.currentStep.isLast = false;
-        }
     }
 }
 Chatbot.register();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ChatBubble">
-        <div class="o-mail-ChatBubble bg-view position-relative" t-att-name="props.chatWindow.displayName" t-att-class="{ 'o-bouncing': state.bouncing, 'position-fixed': env.embedLivechat, 'position-relative': !env.embedLivechat, 'o-active': popover.isOpen }" t-att-style="env.embedLivechat ? `top: ${ position.top }; left: ${ position.left };` : ''" t-on-click="() => props.chatWindow.open({ focus: true })" t-on-animationend="() => state.bouncing = false" t-ref="root">
+        <div class="o-mail-ChatBubble bg-view position-relative" t-att-name="props.chatWindow.displayName" t-att-class="{ 'o-bouncing': state.bouncing, 'o-active': popover.isOpen }" t-on-click="() => props.chatWindow.open({ focus: true })" t-on-animationend="() => state.bouncing = false" t-ref="root">
             <span class="o-mail-ChatBubble-unreadIndicator position-absolute" t-att-class="{ 'opacity-50': thread?.isUnread and !thread?.importantCounter, 'opacity-0': !thread?.isUnread or thread?.importantCounter }"><i class="fa fa-circle"/></span>
             <div t-if="thread?.importantCounter > 0" class="o-mail-ChatBubble-counter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow" t-out="thread?.importantCounter"/>
             <button t-if="state.showClose and !env.embedLivechat" class="o-mail-ChatBubble-close position-absolute shadow rounded-circle fw-bold bg-view" title="Close Chat Bubble" t-on-click.stop="() => this.props.chatWindow.close()"><i class="oi oi-close"/></button>
