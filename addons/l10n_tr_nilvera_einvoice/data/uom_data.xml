@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="product_uom_categ_energy" model="uom.category">
+        <field name="name">Energy</field>
+    </record>
+
+    <record id="product_uom_package" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Package</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_khy" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Hydrogen Peroxide (KG)</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_pf" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Pallet</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_cr" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Crate</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_ncl" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Number of Cells</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_ctm" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Carat</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="uom_square_decimeter" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_surface"/>
+        <field name="name">Square Decimeter - dm²</field>
+        <field name="factor" eval="100.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_standard_cubic_meter" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Standard Cubic Meter</field>
+        <field name="factor" eval="1000.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_sa" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Bags</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_cmq" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Cubic Centimeter - cm³</field>
+        <field name="factor" eval="1000.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_mlt" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Milliliter - ml</field>
+        <field name="factor" eval="1000.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_mmq" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Cubic Millimeter - mm³</field>
+        <field name="factor" eval="1000000.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_cen" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Hundred Units</field>
+        <field name="factor" eval="0.01"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_cmk" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_surface"/>
+        <field name="name">Square Centimeter - cm²</field>
+        <field name="factor" eval="10000.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_kpo" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Kilogram of Potassium Oxide</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_b32" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_surface"/>
+        <field name="name">Kilogram per Square Meter - kg/m²</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_bg" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Pack</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_cct" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Capacity per Ton</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_bx" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Box</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_pr" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Pair</field>
+        <field name="factor" eval="0.5"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_d40" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Thousand Liters</field>
+        <field name="factor" eval="1000.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_mgm" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Milligram - mg</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_mon" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_wtime"/>
+        <field name="name">Month</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_gt" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Gross Ton</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_ann" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_wtime"/>
+        <field name="name">Year</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_hur" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_wtime"/>
+        <field name="name">Hour</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_mnd" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Dried Net Weight (KG)</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_d61" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_wtime"/>
+        <field name="name">Minute</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_3i" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Kilogram per Unit - kg/unit</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_d62" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_wtime"/>
+        <field name="name">Second</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_kfo" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Diphosphorus Pentoxide (KG)</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_pa" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Package</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_kma" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Methyl Amines (KG)</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_kni" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Nitrogen (KG)</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_ksd" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">90% Dry Product (KG)</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_kph" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Potassium Hydroxide (KG)</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_ksh" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Sodium Hydroxide (KG)</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_kur" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Uranium (KG)</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_kwt" model="uom.uom">
+        <field name="category_id" ref="product_uom_categ_energy"/>
+        <field name="name">Kilowatt</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">reference</field>
+    </record>
+        <record id="product_uom_d30" model="uom.uom">
+        <field name="category_id" ref="product_uom_categ_energy"/>
+        <field name="name">Gross Calorie</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_gfi" model="uom.uom">
+        <field name="category_id" ref="product_uom_categ_energy"/>
+        <field name="name">Isotope in Grams</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_kjo" model="uom.uom">
+        <field name="category_id" ref="product_uom_categ_energy"/>
+        <field name="name">Kilojoule - kJ</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_d32" model="uom.uom">
+        <field name="category_id" ref="product_uom_categ_energy"/>
+        <field name="name">Terawatt Hour</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_gwh" model="uom.uom">
+        <field name="category_id" ref="product_uom_categ_energy"/>
+        <field name="name">Gigawatt Hour</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_mwh" model="uom.uom">
+        <field name="category_id" ref="product_uom_categ_energy"/>
+        <field name="name">Megawatt Hour</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_kwh" model="uom.uom">
+        <field name="category_id" ref="product_uom_categ_energy"/>
+        <field name="name">Kilowatt Hour</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_lpa" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Pure Alcohol in Liters</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_r9" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Thousand Cubic Meters</field>
+        <field name="factor" eval="1000000.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_set" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Set</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_t3" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Thousand Units</field>
+        <field name="factor" eval="1000.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+</odoo>

@@ -1,4 +1,62 @@
 from odoo import models
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import UOM_TO_UNECE_CODE
+
+UOM_TO_UNSPSC_CODE = {
+    **UOM_TO_UNECE_CODE,
+    'l10n_tr_nilvera_einvoice.product_uom_package': 'PK',
+    'l10n_tr_nilvera_einvoice.product_uom_khy': 'KHY',
+    'l10n_tr_nilvera_einvoice.product_uom_pf': 'PF',
+    'l10n_tr_nilvera_einvoice.product_uom_cr': 'CR',
+    'l10n_tr_nilvera_einvoice.product_uom_ncl': 'NCL',
+    'l10n_tr_nilvera_einvoice.product_uom_ctm': 'CTM',
+    'uom.uom_square_meter': 'MTK',
+    'l10n_tr_nilvera_einvoice.uom_square_decimeter': 'DMK',
+    'l10n_tr_nilvera_einvoice.product_uom_standard_cubic_meter': 'SM3',
+    'uom.product_uom_millimeter': 'MMT',
+    'l10n_tr_nilvera_einvoice.product_uom_sa': 'SA',
+    'l10n_tr_nilvera_einvoice.product_uom_cmq': 'CMQ',
+    'l10n_tr_nilvera_einvoice.product_uom_mlt': 'MLT',
+    'l10n_tr_nilvera_einvoice.product_uom_kjo': 'KJO',
+    'l10n_tr_nilvera_einvoice.product_uom_mmq': 'MMQ',
+    'l10n_tr_nilvera_einvoice.product_uom_cen': 'CEN',
+    'l10n_tr_nilvera_einvoice.product_uom_cmk': 'CMK',
+    'l10n_tr_nilvera_einvoice.product_uom_kpo': 'KPO',
+    'l10n_tr_nilvera_einvoice.product_uom_b32': 'B32',
+    'l10n_tr_nilvera_einvoice.product_uom_bg': 'BG',
+    'l10n_tr_nilvera_einvoice.product_uom_cct': 'CCT',
+    'l10n_tr_nilvera_einvoice.product_uom_bx': 'BX',
+    'l10n_tr_nilvera_einvoice.product_uom_pr': 'PR',
+    'l10n_tr_nilvera_einvoice.product_uom_d40': 'D40',
+    'l10n_tr_nilvera_einvoice.product_uom_d30': 'D30',
+    'l10n_tr_nilvera_einvoice.product_uom_gfi': 'GFI',
+    'uom.product_uom_day': 'DAY',
+    'l10n_tr_nilvera_einvoice.product_uom_mgm': 'MGM',
+    'l10n_tr_nilvera_einvoice.product_uom_mon': 'MON',
+    'l10n_tr_nilvera_einvoice.product_uom_gt': 'GT',
+    'l10n_tr_nilvera_einvoice.product_uom_ann': 'ANN',
+    'l10n_tr_nilvera_einvoice.product_uom_nt': 'NT',
+    'l10n_tr_nilvera_einvoice.product_uom_mnd': 'MND',
+    'l10n_tr_nilvera_einvoice.product_uom_d61': 'D61',
+    'l10n_tr_nilvera_einvoice.product_uom_3i': '3I',
+    'l10n_tr_nilvera_einvoice.product_uom_d62': 'D62',
+    'l10n_tr_nilvera_einvoice.product_uom_kfo': 'KFO',
+    'l10n_tr_nilvera_einvoice.product_uom_pa': 'PA',
+    'l10n_tr_nilvera_einvoice.product_uom_kma': 'KMA',
+    'l10n_tr_nilvera_einvoice.product_uom_kni': 'KNI',
+    'l10n_tr_nilvera_einvoice.product_uom_ksd': 'KSD',
+    'l10n_tr_nilvera_einvoice.product_uom_kph': 'KPH',
+    'l10n_tr_nilvera_einvoice.product_uom_ksh': 'KSH',
+    'l10n_tr_nilvera_einvoice.product_uom_kur': 'KUR',
+    'l10n_tr_nilvera_einvoice.product_uom_d32': 'D32',
+    'l10n_tr_nilvera_einvoice.product_uom_gwh': 'GWH',
+    'l10n_tr_nilvera_einvoice.product_uom_mwh': 'MWH',
+    'l10n_tr_nilvera_einvoice.product_uom_kwh': 'KWH',
+    'l10n_tr_nilvera_einvoice.product_uom_kwt': 'KWT',
+    'l10n_tr_nilvera_einvoice.product_uom_lpa': 'LPA',
+    'l10n_tr_nilvera_einvoice.product_uom_r9': 'R9',
+    'l10n_tr_nilvera_einvoice.product_uom_set': 'SET',
+    'l10n_tr_nilvera_einvoice.product_uom_T3': 'T3',
+}
 
 
 class AccountEdiXmlUblTr(models.AbstractModel):
@@ -143,6 +201,26 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'document_type_code': "SEND_TYPE",
             })
         return additional_document_reference_list
+
+    def _get_invoice_line_price_vals(self, line):
+        # EXTEND 'account.edi.common'
+        invoice_line_price_vals = super()._get_invoice_line_price_vals(line)
+        invoice_line_price_vals['base_quantity_attrs'] = {'unitCode': self._get_uom_unspsc_code(line)}
+
+        return invoice_line_price_vals
+
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
+        invoice_line_vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
+        invoice_line_vals['line_quantity_attrs'] = {'unitCode': self._get_uom_unspsc_code(line)}
+        return invoice_line_vals
+
+    def _get_uom_unspsc_code(self, line):
+        """ This depends on the mapping from https://developer.nilvera.com/en/code-lists#birim-kodlari """
+        xmlid = line.product_uom_id.get_external_id()
+        if xmlid and line.product_uom_id.id in xmlid:
+            return UOM_TO_UNSPSC_CODE.get(xmlid[line.product_uom_id.id], 'C62')
+        return 'C62'
+
 
     # -------------------------------------------------------------------------
     # IMPORT
