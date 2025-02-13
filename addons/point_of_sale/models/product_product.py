@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -14,6 +14,16 @@ class ProductProduct(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids', 'barcode', 'product_tag_ids', 'default_code']
+
+    def _load_pos_data(self, data):
+        products = super()._load_pos_data(data)
+        config = self.env['pos.config'].browse(data['pos.config'][0]['id'])
+
+        if config.currency_id != self.env.company.currency_id:
+            for product in products:
+                product['lst_price'] = self.env.company.currency_id._convert(product['lst_price'], config.currency_id, self.env.company, fields.Date.today())
+
+        return products
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
