@@ -7,7 +7,7 @@
                     Old unit price:
                     <span class="oldPrice">
                         <s>
-                            <t t-esc="env.utils.formatCurrency(line.get_taxed_lst_unit_price())" /> / Units
+                            <t t-esc="env.utils.formatCurrency(line.getTaxedlstUnitPrice())" /> / Units
                         </s>
                     </span>
                 </li>
