@@ -15,6 +15,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { delay } from "@odoo/hoot-dom";
 import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
 import { Command, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -1840,5 +1841,6 @@ test("Delete starred message decrements starred counter once", async () => {
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Delete']");
     await click("button", { text: "Confirm" });
+    await delay(50);
     await contains("button", { count: 1, text: "Starred2" });
 });
