@@ -1102,7 +1102,9 @@ class BaseModel(metaclass=MetaModel):
             # Get all following rows which have relational values attached to
             # the current record (no non-relational values)
             record_span = itertools.takewhile(
-                only_o2m_values, itertools.islice(data, index + 1, None))
+                only_o2m_values,
+                (data[j] for j in range(index + 1, len(data))),
+            )
             # stitch record row back on for relational fields
             record_span = list(itertools.chain([row], record_span))
 
