@@ -2054,8 +2054,6 @@ class IrModelAccess(models.Model):
 
     def _make_access_error(self, model: str, mode: str):
         """ Return the exception corresponding to an access error. """
-        _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
-
         operation_error = str(ACCESS_ERROR_HEADER[mode]) % {
             'document_kind': self.env['ir.model']._get(model).name or model,
             'document_model': model,
