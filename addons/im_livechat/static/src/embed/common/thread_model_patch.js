@@ -88,6 +88,7 @@ patch(Thread.prototype, {
     },
     /** @returns {Promise<import("models").Message} */
     async post() {
+        // debugger;
         if (this.channel_type === "livechat" && this.isTransient) {
             const thread = await this.store.env.services["im_livechat.livechat"].persist();
             if (!thread) {

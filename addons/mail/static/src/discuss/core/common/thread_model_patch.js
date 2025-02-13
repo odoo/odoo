@@ -382,7 +382,9 @@ const threadPatch = {
         if (this.model === "discuss.channel" && body.startsWith("/")) {
             const [firstWord] = body.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
+            // debugger;
             if (
+                this.store.self.type !== "guest" &&
                 command &&
                 (!command.channel_types || command.channel_types.includes(this.channel_type))
             ) {

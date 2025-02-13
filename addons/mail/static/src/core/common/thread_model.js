@@ -421,6 +421,7 @@ export class Thread extends Record {
     }
 
     executeCommand(command, body = "") {
+        // debugger
         return this.store.env.services.orm.call(
             "discuss.channel",
             command.methodName,
@@ -775,6 +776,7 @@ export class Thread extends Record {
      *  @param {Object} extraData
      */
     async post(body, postData = {}, extraData = {}) {
+        // debugger
         let tmpMsg;
         postData.attachments = postData.attachments ? [...postData.attachments] : []; // to not lose them on composer clear
         const { attachments, parentId, mentionedChannels, mentionedPartners } = postData;
