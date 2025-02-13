@@ -38,9 +38,14 @@
         'web.assets_frontend': [
             'payment/static/lib/jquery.payment/jquery.payment.js',
             'payment/static/src/**/*',
+            ('remove', 'payment/static/src/js/payment_wizard_copy_clipboard_field.js'),
         ],
         'web.assets_backend': [
             'payment/static/src/scss/payment_provider.scss',
+            'payment/static/src/js/payment_wizard_copy_clipboard_field.js',
+        ],
+        'web.qunit_suite_tests': [
+            'payment/static/tests/payment_wizard_copy_clipboard_field_tests.js',
         ],
     },
     'license': 'LGPL-3',

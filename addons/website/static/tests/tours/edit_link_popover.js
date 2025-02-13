@@ -156,7 +156,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
             actions.click();
             const el = this.$anchor[0];
             const sel = el.ownerDocument.getSelection();
-            sel.collapse(el, 0);
+            sel.collapse(el.childNodes[1], 1);
             el.focus();
         },
     },
