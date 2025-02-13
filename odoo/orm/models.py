@@ -4080,10 +4080,6 @@ class BaseModel(metaclass=MetaModel):
             if self._parent_store and self._parent_name in vals:
                 self.flush_model([self._parent_name])
 
-            # validate non-inversed fields first
-            inverse_fields = [f.name for fs in determine_inverses.values() for f in fs]
-            real_recs._validate_fields(vals, inverse_fields)
-
             for fields in determine_inverses.values():
                 # write again on non-stored fields that have been invalidated from cache
                 for field in fields:
@@ -4104,8 +4100,8 @@ class BaseModel(metaclass=MetaModel):
                         ))
                     raise
 
-            # validate inversed fields
-            real_recs._validate_fields(inverse_fields)
+            # validate all fields in vals
+            real_recs._validate_fields(vals)
 
         if check_company and self._check_company_auto:
             self._check_company()
@@ -4307,9 +4303,26 @@ class BaseModel(metaclass=MetaModel):
 
                 next(iter(fields)).determine_inverse(self.browse(inv_rec_ids))
 
-        # check Python constraints for non-stored inversed fields
+        # check Python constraints for all field expected the one that will be recompute since
+        # compute_field_value will trigger the constraint anyway
+        batch_inverse = defaultdict(list)  # {(fname_to_validate, fname_to_exclude): [ids]}
+        fields_stored = tuple(name for name, field in self._fields.items() if field.store)
+        fields_stored_compute = [
+            field for field in self._fields.values()
+            if field.store and field.compute
+        ]
         for data in data_list:
-            data['record']._validate_fields(data['inversed'], data['stored'])
+            record = data['record']
+            fname_to_exclude = tuple(
+                field.name for field in fields_stored_compute
+                if self.env.is_to_compute(field, record)
+            )
+            # All field where the cache has been set, either store or inversed
+            fname_to_validate = fields_stored + tuple(data['inversed'])
+            batch_inverse[(fname_to_validate, fname_to_exclude)].append(record.id)
+
+        for (fname_to_validate, fname_to_exclude), ids in batch_inverse.items():
+            self.browse(ids).with_prefetch(records._ids)._validate_fields(fname_to_validate, fname_to_exclude)
 
         if self._check_company_auto:
             records._check_company()
@@ -4531,8 +4544,6 @@ class BaseModel(metaclass=MetaModel):
                 if self.env.cache.contains(record, field) and not self.env.cache.get(record, field):
                     self.env.cache.remove(record, field)
 
-        # check Python constraints for stored fields
-        records._validate_fields(name for data in data_list for name in data['stored'])
         records.check_access('create')
         return records
 

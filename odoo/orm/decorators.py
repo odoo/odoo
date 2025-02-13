@@ -77,13 +77,6 @@ def constrains(*args) -> Decorator:
         (fields of relational fields e.g. ``partner_id.customer``) are not
         supported and will be ignored.
 
-        ``@constrains`` will be triggered only if the declared fields in the
-        decorated method are included in the ``create`` or ``write`` call.
-        It implies that fields not present in a view will not trigger a call
-        during a record creation. A override of ``create`` is necessary to make
-        sure a constraint will always be triggered (e.g. to test the absence of
-        value).
-
     One may also pass a single function as argument.  In that case, the field
     names are given by calling the function with a model instance.
 

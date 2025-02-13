@@ -23,6 +23,8 @@ class SlideQuestion(models.Model):
 
     @api.constrains('answer_ids')
     def _check_answers_integrity(self):
+        if self.env.context.get('install_mode'):
+            return
         questions_to_fix = [
             f'- {question.slide_id.name}: {question.question}'
             for question in self
