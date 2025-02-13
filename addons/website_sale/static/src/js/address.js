@@ -7,7 +7,6 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
     selector: '.o_wsale_address_fill',
     events: {
         'change select[name="country_id"]': '_onChangeCountry',
-        'click #save_address': '_onSaveAddress',
         "change select[name='state_id']": "_onChangeState",
     },
 
@@ -18,6 +17,10 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
 
         this.http = this.bindService('http');
+
+        this.submitButton = document.getElementsByName('website_sale_main_button')[0]
+        this._boundSaveAddress = this._onSaveAddress.bind(this);
+        this.submitButton.addEventListener('click', this._boundSaveAddress);
 
         this._changeCountry = debounce(this._changeCountry.bind(this), 500);
         this.addressForm = document.querySelector('form.checkout_autoformat');
@@ -39,6 +42,11 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         this._changeCountry(true);
 
         return def;
+    },
+
+    destroy() {
+        this.submitButton.removeEventListener("click", this._boundSaveAddress);
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
