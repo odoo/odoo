@@ -374,7 +374,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code')
     package_box_type_id = fields.Many2one('package.box.configuration', string='Package Box Type',
                                           help="Select packaging box for each product line.")
-    sale_order_id = fields.Many2one(related='picking_id.sale_id', string='Sale Order')
+    sale_order_id = fields.Many2one(related='picking_id.sale_id', string='Sale Order', store=True)
     incoterm_location = fields.Char(related='sale_order_id.packaging_source_type', string='Incoterm location')
     weight = fields.Float(string="Weight", help="If product weight is missing, enter weight here.", required=True)
 
