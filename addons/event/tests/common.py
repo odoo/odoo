@@ -10,7 +10,7 @@ class EventCase(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(EventCase, cls).setUpClass()
+        super().setUpClass()
 
         cls.admin_user = cls.env.ref('base.user_admin')
         cls.admin_user.write({
@@ -92,6 +92,7 @@ class EventCase(common.TransactionCase):
             'country_id': cls.env.ref('base.be').id,
             'email': 'organizer@example.com',
             'name': 'Organizer',
+            'phone': '+32455123456',
             'street': 'Organizer Street',
         })
         cls.event_customer = cls.env['res.partner'].create({
