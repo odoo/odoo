@@ -189,6 +189,7 @@ class SurveySurvey(models.Model):
             'scoring_type': 'scoring_with_answers',
             'questions_layout': 'page_per_question',
             'session_speed_rating': True,
+            'session_speed_rating_time_limit': 90,
             'question_and_page_ids': [
                 (0, 0, { # survey.question
                     'title': _('What is the best way to catch the attention of an audience?'),
