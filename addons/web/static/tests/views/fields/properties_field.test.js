@@ -13,14 +13,13 @@ import {
     queryAllValues,
     queryAttribute,
     queryFirst,
-    select,
     waitFor,
 } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
 import {
+    editTime,
     getPickerApplyButton,
     getPickerCell,
-    getTimePickers,
 } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickCancel,
@@ -528,12 +527,10 @@ test("properties: selection", async () => {
         "Selection"
     );
 
-    const getOptions = () => {
-        return queryAll(".o_property_field_popover .o_field_property_selection_option");
-    };
-    const getOptionsValues = () => {
-        return queryAllValues(".o_property_field_popover .o_field_property_selection_option input");
-    };
+    const getOptions = () =>
+        queryAll(".o_property_field_popover .o_field_property_selection_option");
+    const getOptionsValues = () =>
+        queryAllValues(".o_property_field_popover .o_field_property_selection_option input");
 
     // Create a new selection option
     await click(".o_field_property_selection .fa-plus");
@@ -590,13 +587,12 @@ test("properties: selection", async () => {
         message: "Should have added a new option at the correct spot",
     });
 
-    const getOptionDraggableElement = (index) => {
-        return queryFirst(
+    const getOptionDraggableElement = (index) =>
+        queryFirst(
             `.o_field_property_selection_option:nth-child(${
                 index + 1
             }) .o_field_property_selection_drag`
         );
-    };
 
     await contains(getOptionDraggableElement(0)).dragAndDrop(getOptionDraggableElement(2));
     expect(getOptionsValues()).toEqual(["C", "New option 2", "A", "New option"]);
@@ -1219,7 +1215,7 @@ test("properties: date(time) property manipulations", async () => {
     // check initial properties
     expect("[property-name=property_1] .o_property_field_value input").toHaveValue("01/01/2019");
     expect("[property-name=property_2] .o_property_field_value input").toHaveValue(
-        "01/01/2019 11:00:00"
+        "01/01/2019 11:00"
     );
 
     // edit date property
@@ -1237,12 +1233,8 @@ test("properties: date(time) property manipulations", async () => {
     await animationFrame();
     await click(getPickerCell("31"));
     await animationFrame();
-    const [[hourSelect, minuteSelect]] = getTimePickers();
-    await select("12", { target: hourSelect });
-    await animationFrame();
-    await select("5", { target: minuteSelect });
-    await animationFrame();
-    expect("[property-name=property_2] input").toHaveValue("12/31/2018 12:05:00");
+    await editTime("12:05");
+    expect("[property-name=property_2] input").toHaveValue("12/31/2018 12:05");
 
     // save
     expect.verifySteps([]);
@@ -2082,11 +2074,8 @@ test("properties: separators move properties", async () => {
     await makePropertiesGroupView([false, true, true, false, true, true, false]);
 
     // return true if the given separator is folded
-    const foldState = (separatorName) => {
-        return !queryFirst(
-            `div[property-name='${separatorName}'] .o_field_property_label .fa-caret-down`
-        );
-    };
+    const foldState = (separatorName) =>
+        !queryFirst(`div[property-name='${separatorName}'] .o_field_property_label .fa-caret-down`);
 
     const assertFolded = (values) => {
         expect(values.length).toBe(4);
@@ -2267,9 +2256,8 @@ test("properties: separators drag and drop", async () => {
         ],
     ]);
 
-    const getPropertyHandleElement = (propertyName) => {
-        return queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
-    };
+    const getPropertyHandleElement = (propertyName) =>
+        queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
 
     // if we move properties inside the same column, do not generate the group
     await contains(getPropertyHandleElement("property_1"), { visible: false }).dragAndDrop(

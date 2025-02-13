@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.TimePicker">
+        <div class="o_time_picker d-flex align-items-center justify-content-center" t-att-class="props.class">
+            <Dropdown
+                state="dropdownState"
+                menuRef="menuRef"
+                manual="true"
+                position="'bottom-start'"
+                menuClass="'o_time_picker_dropdown pt-0 mt-0'"
+                navigationOptions="navigationOptions"
+            >
+                <input
+                    type="text"
+                    t-ref="inputRef"
+                    class="o_time_picker_input o_input cursor-pointer ps-2 me-2 fs-4"
+                    t-att-class="{ o_invalid: !state.isValid }"
+                    t-model="state.inputValue"
+                    t-on-input="onInput"
+                    t-on-focus="ensureOpen"
+                    t-on-click="ensureOpen"
+                    t-on-change="onChange"
+                    t-on-keydown.capture="onKeydown"
+                    t-att-placeholder="getFormat()"
+                    tabindex="-1"
+                />
+                <t t-set-slot="content">
+                    <t t-foreach="state.suggestions" t-as="value" t-key="value_index">
+                        <DropdownItem
+                            class="'o_time_picker_option'"
+                            t-out="timeToString(value, true)"
+                            onSelected="() => this.onItemSelected(value)"
+                            closingMode="'none'"
+                        />
+                    </t>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+</templates>

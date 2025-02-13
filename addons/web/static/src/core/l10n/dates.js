@@ -615,3 +615,137 @@ export function deserializeDateTime(value, options = {}) {
             numberingSystem: Settings.defaultNumberingSystem,
         });
 }
+
+/**
+ * Tries to parse a datetime object from a time string
+ * representation such as:
+ * "10:15"  -> 10h 15m
+ * "2h5"    -> 02h 05m
+ * "1015"   -> 10h 15m
+ * "125"    -> 12h 05m
+ * "315"    -> 03h 15m
+ * "5:15pm" -> 17h 15m
+ *
+ * Returns null if the value could not be parsed.
+ *
+ * @param {string} value
+ * @returns {DateTime}
+ */
+export function parseTime(value, parseSeconds) {
+    value = normalizeTime(value);
+
+    let hour = 0;
+    let minute = 0;
+    let second = 0;
+
+    const amPmMatch = value.match(/(am|pm)/);
+    const isPm = amPmMatch && amPmMatch[0] === "pm";
+    const isAm = amPmMatch && amPmMatch[0] === "am";
+    value = value.replace(/\s*(am|pm)/g, "");
+
+    value = value.replace(/h/g, ":").replace(/m/g, ":").replace(/s/g, "");
+    value = value.replace(/\s*:|:\s*/g, ":").replace(/\s\s+/g, " ");
+
+    const parse = (str) => {
+        if (str.length === 0) {
+            return 0;
+        } else if (/^[0-9]+$/.test(str)) {
+            return parseInt(str, 10);
+        } else {
+            return NaN;
+        }
+    };
+
+    const parts = value.split(/[\s:]/g);
+    if (parts.length > 3) {
+        return null;
+    } else if (parts.length === 3) {
+        if (!parseSeconds) {
+            return null;
+        }
+        hour = parse(parts[0]);
+        minute = parse(parts[1].padEnd(2, "0"));
+        second = parse(parts[2].padEnd(2, "0"));
+    } else if (parts.length === 2) {
+        hour = parse(parts[0]);
+        minute = parse(parts[1].padEnd(2, "0"));
+    } else if (parts.length === 1) {
+        const raw = parts[0];
+
+        if (!raw.match(/^[0-9]+$/)) {
+            return null;
+        }
+
+        const pickSolution = (...solutions) => {
+            for (const solution of solutions) {
+                const h = parse(solution[0]);
+                if (h <= 24) {
+                    hour = h;
+                    if (solution[1]) {
+                        minute = parse(solution[1].padEnd(2, "0"));
+                    }
+                    break;
+                }
+            }
+        };
+
+        if (raw.length == 1) {
+            hour = parse(raw);
+        } else if (raw.length == 2) {
+            pickSolution([raw], [raw[0], raw[1]]);
+        } else if (raw.length === 3) {
+            pickSolution([raw.slice(0, 2), raw[2]], [raw[0], raw.slice(1)]);
+        } else if (raw.length === 4) {
+            hour = parse(raw.slice(0, 2));
+            minute = parse(raw.slice(2));
+        } else if (raw.length > 4 && raw.length <= 6) {
+            if (!parseSeconds) {
+                return null;
+            }
+            hour = parse(raw.slice(0, 2));
+            minute = parse(raw.slice(2, 4));
+            second = parse(raw.slice(4).padEnd(2, "0"));
+        } else {
+            return null;
+        }
+    }
+
+    if (isPm && hour < 12) {
+        hour += 12;
+    } else if (isAm && hour === 12) {
+        hour = 0;
+    }
+
+    if (hour >= 0 && hour <= 24 && minute >= 0 && minute < 60 && second >= 0 && second < 60) {
+        if (hour == 24) {
+            hour = 0;
+        }
+        return DateTime.fromObject({ hour, minute, second });
+    } else {
+        return null;
+    }
+}
+
+/**
+ * @param {string} timeStr
+ * @returns {string}
+ */
+function normalizeTime(timeStr) {
+    timeStr = timeStr.trim().toLocaleLowerCase();
+
+    const numeralMaps = [
+        "٠١٢٣٤٥٦٧٨٩", // Arabic
+        "۰۱۲۳۴۵۶۷۸۹",
+        "०१२३४५६७८९", // Devanagari (Hindi)
+        "๑๒๓๔๕๖๗๘๙๐", // Thai
+        "零一二三四五六七八九", // Chinese/Japanese/Korean
+    ];
+
+    for (const map of numeralMaps) {
+        for (let i = 0; i < map.length; i++) {
+            timeStr = timeStr.replaceAll(map[i], i);
+        }
+    }
+
+    return timeStr;
+}

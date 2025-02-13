@@ -125,10 +125,15 @@ export const datetimePickerService = {
                     }
 
                     const { activeElement } = inputEl.ownerDocument;
+                    // TODO: Should we ignore focus if were are on time picker?
+                    // const popoverEl = getPopoverForTarget(getPopoverTarget());
+                    // if (popoverEl && popoverEl.contains(activeElement) && activeElement.classList.contains("o_time_picker_input")) {
+                    //     return;
+                    // }
+
                     if (activeElement !== inputEl) {
                         inputEl.focus();
                     }
-
                     setInputFocus(inputEl);
                 };
 
