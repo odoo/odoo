@@ -944,6 +944,11 @@ class TransactionCase(BaseCase):
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
 
+    def tearDown(self):
+        # flush remaining computations after the test ran
+        self.env.flush_all()
+        super().tearDown()
+
     @contextmanager
     def enter_registry_test_mode(self):
         """
