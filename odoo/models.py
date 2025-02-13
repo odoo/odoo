@@ -6740,18 +6740,26 @@ class BaseModel(metaclass=MetaModel):
                 continue
             model = self.env[model_name]
             # Lock referenced records by performing a dummy update to prevent concurrent deletion
+            # use AGE(xmin) as a best effert to check if the row is modified in the current transactions
+            # corner case 1: the row is modified in savepoint AGE(xmin) < 0, we don't need UPDATE but we do
+            # corner case 2: the row is frozen and xmin is equal to the current xid % (2^32), we need UPDATE but we don't
             self.env.cr.execute(SQL("""
                 UPDATE %(table)s
                 SET id = id
                 WHERE id IN %(ids)s
+                AND AGE(xmin) != 0;
+
+                SELECT id
+                FROM %(table)s
+                WHERE id IN %(ids)s
                 """,
-                table = SQL.identifier(model._table),
-                ids = tuple(ids),
+                table=SQL.identifier(model._table),
+                ids=tuple(ids),
             ))
             if self.env.cr.rowcount == len(ids):
                 continue
-            records = model.browse(ids)
-            missing = records - records.exists()
+            existing_ids = {r[0] for r in self.env.cr.fetchall()}
+            missing = model.browse(ids - existing_ids)
             raise MissingError(f'Missing many2one reference: {missing!r}')
 
     def _flush(self, fnames=None):
