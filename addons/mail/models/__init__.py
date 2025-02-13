@@ -42,6 +42,7 @@ from . import mail_push_device
 from . import mail_scheduled_message
 from . import mail_tracking_value
 from . import mail_template
+from . import mail_role
 
 # discuss
 from . import mail_ice_server

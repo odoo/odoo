@@ -13,6 +13,7 @@ declare module "models" {
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
     import { Persona as PersonaClass } from "@mail/core/common/persona_model";
     import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
+    import { Role as RoleClass } from "@mail/core/common/role_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
     import { Store as StoreClass } from "@mail/core/common/store_service";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
@@ -33,6 +34,7 @@ declare module "models" {
     export interface Notification extends NotificationClass {}
     export interface Persona extends PersonaClass {}
     export interface ResGroups extends ResGroupsClass {}
+    export interface Role extends RoleClass {}
     export interface Settings extends SettingsClass {}
     export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
@@ -50,6 +52,7 @@ declare module "models" {
         "mail.link.preview": LinkPreview,
         "mail.message": Message,
         "mail.notification": Notification,
+        "mail.role": Role,
         "MessageReactions": MessageReactions,
         "Persona": Persona,
         "res.country": Country,

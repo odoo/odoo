@@ -18,6 +18,16 @@ class ResUsers(models.Model):
     """
     _inherit = 'res.users'
 
+    mail_role_ids = fields.Many2many(
+        "mail.role",
+        string="Roles",
+        help="Users are notified whenever one of their roles is @-mentioned in a conversation.",
+    )
+    is_readonly_mail_role_ids = fields.Boolean(
+        string="User can only read Roles",
+        compute='_compute_is_readonly_mail_role_ids',
+    )
+
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
         ('inbox', 'Handle in Odoo')],
@@ -65,6 +75,11 @@ class ResUsers(models.Model):
         inbox_users = self.filtered(lambda user: user.notification_type == 'inbox')
         inbox_users.write({"groups_id": [Command.link(inbox_group.id)]})
         (self - inbox_users).write({"groups_id": [Command.unlink(inbox_group.id)]})
+
+    @api.depends('groups_id')
+    def _compute_is_readonly_mail_role_ids(self):
+        for user in self:
+            user.is_readonly_mail_role_ids = not self.env['mail.role'].has_access('write')
 
     # ------------------------------------------------------------
     # CRUD
