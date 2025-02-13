@@ -166,13 +166,11 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
                 patch.object(MailTestTLead, '_message_post_after_hook', _message_post_after_hook),\
                 mute_logger('odoo.addons.mail.models.mail_scheduled_message'):
                 self.env['mail.scheduled.message'].with_user(self.user_root)._post_messages_cron()
-            new_messages = self._new_msgs.exists()
-            self.assertEqual(len(new_messages), 2)
-            # failed scheduled message shouldn't be posted
-            self.assertFalse(new_messages.filtered(lambda m: m.model == test_lead._name))
-            # but user should be notified about the failed posting
+            # one scheduled message failed, only one mail should be sent
+            self.assertEqual(len(self._new_mails), 1)
+            # user should be notified about the failed posting
             self.assertMailNotifications(
-                new_messages.filtered(lambda m: not m.model),
+                self._new_msgs.filtered(lambda m: not m.model),
                 [{
                     'content': f"<p>The message scheduled on {test_lead._name}({test_lead.id}) with"
                     " the following content could not be sent:<br>-----<br></p><p>fail</p><br>-----<br>",
@@ -190,7 +188,7 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
                 }])
             # other message should be posted and mail should be sent
             self.assertMailNotifications(
-                new_messages.filtered(lambda m: m.model == self.test_record._name),
+                self._new_msgs.filtered(lambda m: m.model == self.test_record._name),
                 [{
                     'content': "<p>success</p>",
                     'message_type': 'notification',
@@ -205,7 +203,6 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
                     ]
                 }]
             )
-            self.assertEqual(len(self._new_mails), 1)
             self.assertEqual(self._new_mails[0].state, 'sent')
             # scheduled messages shouldn't exist anymore
             self.assertFalse(self.env['mail.scheduled.message'].search([['id', 'in', [scheduled_message_id, failing_schedueld_message_id]]]))
