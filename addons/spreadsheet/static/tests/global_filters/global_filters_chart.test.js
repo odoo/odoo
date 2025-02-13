@@ -19,9 +19,8 @@ async function addChartGlobalFilter(model) {
     /** @type {DateGlobalFilter}*/
     const filter = {
         id: "42",
-        type: "date",
         label: "Last Year",
-        rangeType: "fixedPeriod",
+        operator: "fixedPeriod",
         defaultValue: { yearOffset: -1 },
     };
     await addGlobalFilter(model, filter, { chart: { [chartId]: { chain: "date", type: "date" } } });
@@ -59,9 +58,8 @@ test("Chart is impacted by global filter in dashboard mode", async function () {
     /** @type {DateGlobalFilter}*/
     const filter = {
         id: "42",
-        type: "date",
         label: "Last Year",
-        rangeType: "fixedPeriod",
+        operator: "fixedPeriod",
     };
     await addGlobalFilter(model, filter, {
         chart: { [chartId]: { chain: "date", type: "date" } },

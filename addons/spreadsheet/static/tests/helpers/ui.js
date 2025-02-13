@@ -55,6 +55,31 @@ export async function mountPublicSpreadsheet(dataUrl, mode) {
     return getFixture();
 }
 
+class ComponentWithModelUpdate extends Component {
+    static template = xml`<t t-component="props.component" t-props="props.props" />`;
+    static components = {};
+    static props = ["component", "props"];
+    setup() {
+        this.props.props.model.on("update", this, () => this.render(true));
+    }
+}
+
+/**
+ * Mount a component with the given props. The component will be re-rendered
+ * when the model is updated.
+ * @param {*} component
+ * @param {*} props
+ * @returns
+ */
+export async function mountComponentWithModelUpdate(component, props) {
+    await mountWithCleanup(ComponentWithModelUpdate, {
+        props: {
+            component,
+            props,
+        },
+    });
+}
+
 export async function doMenuAction(registry, path, env) {
     await getActionMenu(registry, path, env).execute(env);
 }
