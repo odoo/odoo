@@ -54,6 +54,7 @@ export class CalendarFilterPanel extends Component {
                 this.props.model.createFilter(section.fieldName, option.value);
             },
             value: "",
+            class: "mt-1",
         };
     }
 
@@ -135,7 +136,7 @@ export class CalendarFilterPanel extends Component {
     }
 
     isAllActive(section) {
-        let active = true;
+        let active = !!section.filters.length;
         for (const filter of section.filters) {
             if (filter.type !== "all" && !filter.active) {
                 active = false;
@@ -168,9 +169,7 @@ export class CalendarFilterPanel extends Component {
     }
 
     toggleSection(section) {
-        if (section.canCollapse) {
-            this.state.collapsed[section.fieldName] = !this.state.collapsed[section.fieldName];
-        }
+        this.state.collapsed[section.fieldName] = !this.state.collapsed[section.fieldName];
     }
 
     isSectionCollapsed(section) {
@@ -187,10 +186,5 @@ export class CalendarFilterPanel extends Component {
 
     onFilterRemoveBtnClick(section, filter) {
         this.props.model.unlinkFilter(section.fieldName, filter.recordId);
-    }
-
-    onFieldChanged(fieldName, filterValue) {
-        this.state.fieldRev += 1;
-        this.props.model.createFilter(fieldName, filterValue);
     }
 }

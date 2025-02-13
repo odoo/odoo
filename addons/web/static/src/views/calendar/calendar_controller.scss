@@ -46,9 +46,7 @@ $o-cw-filter-avatar-size: 20px;
 
     .o_calendar_sidebar {
         @include o-webclient-padding($top: $o-horizontal-padding/2);
-        @include media-breakpoint-up(xl){
-            width: 210px;
-        }
+        width: 230px;
 
         .o_datetime_picker {
             --DateTimePicker__Cell-size-md: 1.8rem;
@@ -72,41 +70,6 @@ $o-cw-filter-avatar-size: 20px;
         .o_calendar_sync {
             padding-bottom: 0.5em;
         }
-    }
-
-    .o_calendar_filter {
-
-        .o_calendar_filter_items_checkall,
-        .o_calendar_filter_item {
-
-            button.o_remove {
-                transform: translate(100%, -50%);
-            }
-
-            &:hover {
-                button.o_remove {
-                    transform: translate(0%, -50%);
-                }
-            }
-        }
-
-        .o_field_many2one {
-            margin-top: 1rem;
-            width: 100%;
-        }
-    }
-}
-
-.modal {
-    .o_attendee_head {
-        width: 32px;
-        margin-right: 5px;
-    }
-}
-
-.o_dashboard {
-    .o_calendar_container .o_calendar_sidebar_container {
-        display: none;
     }
 }
 
