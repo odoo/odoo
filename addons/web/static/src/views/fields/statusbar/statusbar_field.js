@@ -181,7 +181,7 @@ export class StatusBarField extends Component {
         const selectedIndex = itemEls.findIndex((el) =>
             el.classList.contains("o_arrow_button_current")
         );
-        const itemsBefore = itemEls.slice(selectedIndex + 2).reverse();
+        const itemsBefore = itemEls.slice(selectedIndex + 1).reverse();
         const itemsAfter = itemEls.slice(0, Math.max(selectedIndex - 1, 0)).reverse();
 
         // Reset hidden elements
