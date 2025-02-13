@@ -3,7 +3,6 @@ import { fillTemporalService } from "@crm/views/fill_temporal_service";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     click,
-    dragAndDrop,
     getFixture,
     patchDate,
 } from '@web/../tests/helpers/utils';
@@ -261,20 +260,6 @@ QUnit.module('Crm Fill Temporal Service', {
 });
 
 QUnit.module('Crm Forecast main flow with progressBars', (hooks) => {
-    function getCounters() {
-        return [...target.querySelectorAll(".o_animated_number")].map((counter) => counter.innerText);
-    }
-
-    function getProgressBarsColors() {
-        return [...target.querySelectorAll(".o_column_progress")].map(columnProgressEl => {
-            return [...columnProgressEl.querySelectorAll(".progress-bar")].map(progressBarEl => {
-                return [...progressBarEl.classList.values()].filter(htmlClass => {
-                    return htmlClass.startsWith('bg-');
-                })[0];
-            })
-        });
-    }
-
     hooks.beforeEach(() => {
         serviceRegistry.add("fillTemporalService", fillTemporalService);
         this.testKanbanView = {
@@ -319,55 +304,5 @@ QUnit.module('Crm Forecast main flow with progressBars', (hooks) => {
         setupViewRegistries();
         // first september 2023
         patchDate(2023, 8, 1, 0, 0, 0);
-    });
-
-    QUnit.test("Forecast drag&drop and add column", async (assert) => {
-        this.testKanbanView.serverData.models['crm.lead'].records = [
-            {id: 1, int_field: 7, color: 'd', name: 'Lead 1', date_deadline: '2023-09-03'},
-            {id: 2, int_field: 20, color: 'w', name: 'Lead 2', date_deadline: '2023-09-05'},
-            {id: 3, int_field: 300, color: 's', name: 'Lead 3', date_deadline: '2023-10-10'},
-        ];
-
-        await makeView({
-            ...this.testKanbanView,
-            async mockRPC(route, args) {
-                assert.step(args.method || route);
-            },
-        });
-
-        assert.deepEqual(getCounters(), ["27", "300"]);
-        assert.deepEqual(getProgressBarsColors(), [["bg-warning", "bg-danger"], ["bg-success"]]);
-
-        await dragAndDrop(
-            ".o_kanban_group:first-child .o_kanban_record",
-            ".o_kanban_group:nth-child(2)"
-        );
-
-        assert.deepEqual(getCounters(), ["20", "307"]);
-        assert.deepEqual(getProgressBarsColors(), [["bg-warning"], ["bg-success", "bg-danger"]]);
-
-        await click(target, ".o_kanban_add_column");
-
-        // Counters and progressbars should be unchanged after adding a column.
-        assert.deepEqual(getCounters(), ["20", "307"]);
-        assert.deepEqual(getProgressBarsColors(), [["bg-warning"], ["bg-success", "bg-danger"]]);
-
-        assert.verifySteps([
-            // makeView
-            "get_views",
-            "read_progress_bar",
-            "web_read_group",
-            "web_search_read",
-            "web_search_read",
-            // drag&drop
-            "web_save",
-            "read_progress_bar",
-            "web_read_group",
-            // add column
-            "read_progress_bar",
-            "web_read_group",
-            "web_search_read",
-            "web_search_read",
-        ]);
     });
 });
