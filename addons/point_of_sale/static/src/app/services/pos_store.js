@@ -176,8 +176,9 @@ export class PosStore extends WithLazyGetterTrap {
             {
                 timeout: 300000, // 5 minutes
                 action: () =>
-                    this.mainScreen.component.name !== "PaymentScreen" &&
-                    this.showScreen("SaverScreen"),
+                    !["PaymentScreen", "TicketScreen", "ActionScreen"].includes(
+                        this.mainScreen.component.name
+                    ) && this.showScreen("SaverScreen"),
             },
             {
                 timeout: 120000, // 2 minutes
