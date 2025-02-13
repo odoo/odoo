@@ -4,7 +4,6 @@ from collections import defaultdict
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import format_list
 from odoo.tools.sql import column_exists, create_column
 
 
@@ -314,7 +313,7 @@ class SaleOrderLine(models.Model):
             raise UserError(_(
                 "A project must be defined on the quotation or on the form of products creating a task on order.\n"
                 "The following products need a project in which to put their task: %(product_names)s",
-                product_names=format_list(self.env, products_no_project.mapped('name')),
+                product_names=products_no_project.mapped('name'),
             ))
         so_line_new_project = self._get_so_lines_new_project()
 

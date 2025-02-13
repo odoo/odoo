@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 
 from odoo import api, Command, fields, models, _
 from odoo.osv import expression
-from odoo.tools import format_amount, format_date, format_list, formatLang, groupby
+from odoo.tools import format_amount, format_date, formatLang, groupby
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import UserError, ValidationError
 
@@ -532,7 +532,7 @@ class PurchaseOrder(models.Model):
     def button_cancel(self):
         purchase_orders_with_invoices = self.filtered(lambda po: any(i.state not in ('cancel', 'draft') for i in po.invoice_ids))
         if purchase_orders_with_invoices:
-            raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", format_list(self.env, purchase_orders_with_invoices.mapped('display_name'))))
+            raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", purchase_orders_with_invoices.mapped('display_name')))
         self.write({'state': 'cancel', 'mail_reminder_confirmed': False})
 
     def button_unlock(self):

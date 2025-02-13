@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { formatList } from "@web/core/l10n/utils";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 
@@ -68,11 +67,11 @@ class ResConfigInviteUsers extends Component {
                         });
                     case 2:
                         return _t("Invalid email addresses: %(2 addresses)s", {
-                            "2 addresses": formatList(invalidEmails),
+                            "2 addresses": invalidEmails,
                         });
                     default:
                         return _t("Invalid email addresses: %(addresses)s", {
-                            addresses: formatList(invalidEmails),
+                            addresses: invalidEmails,
                         });
                 }
             })();
