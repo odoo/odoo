@@ -5116,8 +5116,8 @@ test("update time while drag and drop on month mode", async () => {
     await clickEvent(8);
     await contains(".o_cw_popover_edit").click();
 
-    expect(".o_field_widget[name='start'] input").toHaveValue("12/26/2016 08:00:00");
-    expect(".o_field_widget[name='stop'] input").toHaveValue("12/29/2016 10:00:00");
+    expect(".o_field_widget[name='start'] input").toHaveValue("12/25/2016 08:00:00");
+    expect(".o_field_widget[name='stop'] input").toHaveValue("12/28/2016 10:00:00");
 });
 
 test("html field on calendar shouldn't have a tooltip", async () => {
