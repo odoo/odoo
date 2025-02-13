@@ -731,3 +731,29 @@ export function isContentEditableAncestor(node) {
     }
     return node.isContentEditable && node.matches("[contenteditable]");
 }
+
+/**
+ * Returns the first scrollable parent of a given element.
+ *
+ * A scrollable parent has `overflowY` set to `auto` or `scroll` and a `scrollHeight`
+ * greater than its `clientHeight`.
+ *
+ * @param {HTMLElement} el - The element to start from.
+ * @returns {HTMLElement|null} - The scrollable parent, or `null` if none is found.
+ */
+export function getFirstScrollableParent(el) {
+    let currentElement = el.parentElement;
+    while (currentElement) {
+        const style = getComputedStyle(currentElement);
+        const isScrollable =
+            /(auto|scroll)/.test(style.overflowY) &&
+            currentElement.scrollHeight > currentElement.clientHeight;
+
+        if (isScrollable) {
+            return currentElement;
+        }
+
+        currentElement = currentElement.parentElement;
+    }
+    return null; // No scrollable parent found
+}

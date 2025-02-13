@@ -1,6 +1,7 @@
 import { closestBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestPosition,
+    getFirstScrollableParent,
     isMediaElement,
     isProtected,
     isProtecting,
@@ -157,7 +158,10 @@ export class SelectionPlugin extends Plugin {
 
     setup() {
         this.resetSelection();
-        this.addDomListener(this.document, "selectionchange", this.updateActiveSelection);
+        this.addDomListener(this.document, "selectionchange", () => {
+            this.updateActiveSelection();
+            this.scrollToSelection();
+        });
         this.addDomListener(this.editable, "mousedown", (ev) => {
             if (ev.detail >= 3) {
                 this.correctTripleClick = true;
@@ -217,6 +221,46 @@ export class SelectionPlugin extends Plugin {
                     focusNode: deepAnchorNode,
                     focusOffset: 0,
                 });
+            }
+        }
+    }
+
+    /**
+     * Scroll to selection if it is out of viewport
+     */
+    scrollToSelection() {
+        const selection = this.getEditableSelection();
+        if (!selection.isCollapsed || !selection.focusNode) {
+            return;
+        }
+        const element =
+            selection.focusNode.nodeType === Node.TEXT_NODE
+                ? selection.focusNode.parentElement
+                : selection.focusNode;
+
+        function scrollToElement(el) {
+            el.scrollIntoView({ block: "center" });
+        }
+
+        const scrollableParent = getFirstScrollableParent(element);
+
+        if (scrollableParent) {
+            const elRect = element.getBoundingClientRect();
+            const parentRect = scrollableParent.getBoundingClientRect();
+
+            const isOutsideScrollParent =
+                elRect.top < parentRect.top || elRect.bottom > parentRect.bottom;
+            if (isOutsideScrollParent) {
+                scrollToElement(element);
+            }
+        } else {
+            const rect = element.getBoundingClientRect();
+            const isOutsideViewport =
+                rect.top < 0 ||
+                rect.bottom > (window.innerHeight || document.documentElement.clientHeight);
+
+            if (isOutsideViewport) {
+                scrollToElement(element);
             }
         }
     }
