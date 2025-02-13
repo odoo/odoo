@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from base64 import b64decode
 from datetime import datetime
 import json
 import logging
 import os
-import subprocess
 from socket import gethostname
 import time
 from werkzeug.exceptions import InternalServerError
@@ -15,7 +13,7 @@ from zlib import adler32
 from odoo import http, tools
 
 from odoo.addons.hw_drivers.event_manager import event_manager
-from odoo.addons.hw_drivers.main import iot_devices, manager
+from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
@@ -23,28 +21,24 @@ _logger = logging.getLogger(__name__)
 
 class DriverController(http.Controller):
     @http.route('/hw_drivers/action', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
-    def action(self, session_id, device_identifier, data):
-        """
-        This route is called when we want to make a action with device (take picture, printing,...)
+    def action(self, session_id, device_identifier, action='', **kwargs):
+        """This route is called when we want to make an action with device (take picture, printing,...)
         We specify in data from which session_id that action is called
         And call the action of specific device
+
+        :param str session_id: the session id of the request
+        :param str device_identifier: the identifier of the device
+        :param str action: the action to be executed
+        :param dict kwargs: the parameters to be passed to the action method
         """
         iot_device = iot_devices.get(device_identifier)
-        if iot_device:
-            iot_device.data['owner'] = session_id
-            data = json.loads(data)
+        # Skip the request if it was already executed (duplicated action calls)
+        if not iot_device or not iot_device.is_idempotent(session_id, **kwargs):
+            return False
 
-            # Skip the request if it was already executed (duplicated action calls)
-            iot_idempotent_id = data.get("iot_idempotent_id")
-            if iot_idempotent_id:
-                idempotent_session = iot_device._check_idempotency(iot_idempotent_id, session_id)
-                if idempotent_session:
-                    _logger.info("Ignored request from %s as iot_idempotent_id %s already received from session %s",
-                                 session_id, iot_idempotent_id, idempotent_session)
-                    return False
-            iot_device.action(data)
-            return True
-        return False
+        iot_device.data['owner'] = session_id
+        iot_device.action(action=action, **kwargs)  # Call action method on device
+        return True
 
     @http.route('/hw_drivers/check_certificate', type='http', auth='none', cors='*', csrf=False, save_session=False)
     def check_certificate(self):

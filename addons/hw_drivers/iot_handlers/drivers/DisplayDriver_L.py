@@ -90,11 +90,11 @@ class DisplayDriver(Driver):
         except json.decoder.JSONDecodeError:
             return response.content.decode('utf8')
 
-    def _action_update_url(self, data):
+    def _action_update_url(self, **kwargs):
         if self.device_identifier != 'distant_display':
-            self.update_url(data.get('url'))
+            self.update_url(kwargs.get('url'))
 
-    def _action_display_refresh(self, data):
+    def _action_display_refresh(self, **_kwargs):
         if self.device_identifier != 'distant_display':
             self.browser.refresh()
 
