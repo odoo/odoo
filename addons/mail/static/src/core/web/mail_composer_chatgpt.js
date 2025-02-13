@@ -8,15 +8,25 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
+<<<<<<< HEAD
+=======
+import { ChatGPTPromptDialog } from "@html_editor/main/chatgpt/chatgpt_prompt_dialog";
+import { Component, markup } from "@odoo/owl";
+import { useOpenChat } from "./open_chat_hook";
+
+
+>>>>>>> fc3f0f6487bd (this is just a poc (pukes))
 export class MailComposerChatGPT extends Component {
     static template = "mail.MailComposerChatGPT";
     static props = { ...standardFieldProps };
 
     setup() {
         this.btnLabel = _t("AI"); // workaround to translate short string
+        this.openChat = useOpenChat('res.users');
     }
 
     async onOpenChatGPTPromptDialogBtnClick() {
+<<<<<<< HEAD
         this.env.services.dialog.add(ChatGPTPromptDialog, {
             /** @param {DocumentFragment} content */
             insert: (content) => {
@@ -38,6 +48,31 @@ export class MailComposerChatGPT extends Component {
                     ADD_ATTR: ["contenteditable"],
                 }),
         });
+=======
+        // this.env.services.dialog.add(ChatGPTPromptDialog, {
+        //     /** @param {DocumentFragment} content */
+        //     insert: content => {
+        //         const root = document.createElement("div");
+        //         root.appendChild(content);
+        //         const { body } = this.props.record.data;
+        //         this.props.record.update({
+        //             body: body + markup(root.innerHTML)
+        //         });
+        //     },
+        //     /**
+        //      * @param {HTMLElement} fragment
+        //      * @returns {string}
+        //      */
+        //     sanitize: (fragment) => {
+        //         return DOMPurify.sanitize(fragment, {
+        //             IN_PLACE: true,
+        //             ADD_TAGS: ["#document-fragment"],
+        //             ADD_ATTR: ["contenteditable"],
+        //         });
+        //     },
+        // });
+        this.joinChat()
+>>>>>>> fc3f0f6487bd (this is just a poc (pukes))
     }
 }
 

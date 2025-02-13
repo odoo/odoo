@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ai_composer_form" model="ir.ui.view">
+        <field name="name">ai.composer.form</field>
+        <field name="model">ai.composer</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="key" readonly="1"/>
+                </header>
+                <sheet>
+                    <field name="default_prompt"/>
+                    <field name="system_prompt"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_composer_tree" model="ir.ui.view">
+        <field name="name">ai.composer.list</field>
+        <field name="model">ai.composer</field>
+        <field name="arch" type="xml">
+            <list string="AI Composer Prompts">
+                <field name="key" readonly="1"/>
+                <field name="default_prompt"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ai_composer_kanban" model="ir.ui.view">
+        <field name="name">ai.composer.kanban</field>
+        <field name="model">ai.composer</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="key" class="fw-bolder" string="Name"/>
+                        <div class="d-flex">
+                            <field name="default_prompt" string="Default Prompt"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="open_view_ai_composer_kanban" model="ir.actions.act_window">
+        <field name="name">AI Composer Prompts</field>
+        <field name="res_model">ai.composer</field>
+        <field name="view_id" ref="ai_composer_kanban"/>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+</odoo>
