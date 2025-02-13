@@ -181,7 +181,7 @@ export class StatusBarField extends Component {
         const selectedIndex = itemEls.findIndex((el) =>
             el.classList.contains("o_arrow_button_current")
         );
-        const itemsBefore = itemEls.slice(selectedIndex + 2).reverse();
+        const itemsBefore = itemEls.slice(selectedIndex + 1).reverse();
         const itemsAfter = itemEls.slice(0, Math.max(selectedIndex - 1, 0)).reverse();
 
         // Reset hidden elements
@@ -279,20 +279,6 @@ export class StatusBarField extends Component {
             classNames.push("disabled");
         }
         return classNames.join(" ");
-    }
-
-    /**
-     * @param {StatusBarItem} item
-     * TODO: unused, remove in master
-     */
-    getItemAriaLabel(item) {
-        if (item.isSelected) {
-            return _t("Current state is %s", item.label);
-        }
-        if (this.props.isDisabled) {
-            return _t("Unselected state is %s", item.label);
-        }
-        return _t("Not active state, click to change it to %s", item.label);
     }
 
     getSortedItems() {
