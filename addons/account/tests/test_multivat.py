@@ -138,6 +138,7 @@ def _tax_vals(name, amount, external_id_prefix):
 @tagged('post_install', '-at_install')
 @patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping)
 class TestMultiVAT(AccountTestInvoicingCommon):
+    country_code = 'BE'
 
     @classmethod
     def _use_chart_template(cls, company, chart_template_ref=None):
@@ -146,7 +147,11 @@ class TestMultiVAT(AccountTestInvoicingCommon):
             cls.env['account.chart.template'].try_loading('local', company=company, install_demo=False)
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('be')
+    def setup_independent_company(cls, **create_values):
+        with patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping):
+            return super().setup_independent_company(**create_values)
+
+    @classmethod
     @patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping)
     def setUpClass(cls):
         """

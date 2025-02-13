@@ -12,6 +12,8 @@ class EventCase(common.TransactionCase):
     def setUpClass(cls):
         super(EventCase, cls).setUpClass()
 
+    @classmethod
+    def setUpCommonData(cls):
         cls.admin_user = cls.env.ref('base.user_admin')
         cls.admin_user.write({
             'country_id': cls.env.ref('base.be').id,

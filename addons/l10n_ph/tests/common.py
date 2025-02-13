@@ -11,8 +11,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 class TestPhCommon(AccountTestInvoicingCommon):
+    country_code = 'PH'
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('ph')
     def setUpClass(cls):
         super().setUpClass()
 

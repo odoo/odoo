@@ -10,6 +10,8 @@ class TestEventBoothCommon(EventCase):
     def setUpClass(cls):
         super(TestEventBoothCommon, cls).setUpClass()
 
+    @classmethod
+    def setUpCommonData(cls):
         cls.event_booth_category_1 = cls.env['event.booth.category'].create({
             'name': 'Standard',
             'description': '<p>Standard</p>',

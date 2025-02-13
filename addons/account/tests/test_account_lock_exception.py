@@ -19,6 +19,8 @@ class TestAccountLockException(AccountTestInvoicingCommon):
         cls.fakenow = cls.env.cr.now()
         cls.startClassPatcher(freeze_time(cls.fakenow))
 
+    @classmethod
+    def setUpCommonData(cls):
         cls.other_user = new_test_user(
             cls.env,
             name='Other User',

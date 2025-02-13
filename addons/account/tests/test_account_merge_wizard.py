@@ -8,6 +8,9 @@ class TestAccountMergeWizard(TestAccountMergeCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+    @classmethod
+    def setUpCommonData(cls):
         cls.company_data_2 = cls.setup_other_company()
 
         cls.company_1 = cls.company_data['company']

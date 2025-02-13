@@ -8,9 +8,9 @@ from odoo.tests import tagged
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
 class TestOSSBelgium(AccountTestInvoicingCommon):
+    country_code = 'BE'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('be')
     def setUpClass(cls):
         super().setUpClass()
         cls.root_company = cls.company_data['company']
@@ -69,9 +69,9 @@ class TestOSSBelgium(AccountTestInvoicingCommon):
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
 class TestOSSSpain(AccountTestInvoicingCommon):
+    country_code = 'ES'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('es')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company']._map_eu_taxes()
