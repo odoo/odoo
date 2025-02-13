@@ -31,7 +31,7 @@ describe("2 columns", () => {
                 ),
             contentAfterEdit:
                 columnsContainer(
-                    column(6, `<p placeholder="Empty column" class="o-we-hint">[]<br></p>`) +
+                    column(6, `<p o-we-hint-text="Empty column" class="o-we-hint">[]<br></p>`) +
                     column(6, `<p><br></p>`)
                 ),
             /* eslint-enable */
@@ -48,7 +48,7 @@ describe("2 columns", () => {
                 ),
             contentAfterEdit:
                 columnsContainer(
-                    column(6, `<table><tbody><tr><td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td></tr></tbody></table>`) +
+                    column(6, `<table><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td></tr></tbody></table>`) +
                     column(6, `<p><br></p>`)
                 ),
             /* eslint-enable */
@@ -148,7 +148,7 @@ describe("3 columns", () => {
                 columnsContainer(
                     column(4, "<p>abcd</p>") +
                     column(4, `<p><br></p>`) +
-                    column(4, `<p placeholder="Empty column" class="o-we-hint">[]<br></p>`)
+                    column(4, `<p o-we-hint-text="Empty column" class="o-we-hint">[]<br></p>`)
                 ),
             /* eslint-enable */
             stepFunction: columnize(3),
