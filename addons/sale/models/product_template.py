@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round, format_list
+from odoo.tools import float_round
 
 from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
 
@@ -203,7 +203,7 @@ class ProductTemplate(models.Model):
                 raise ValidationError(_(
                     "The product (%(product)s) has incompatible values: %(value_list)s",
                     product=val['name'],
-                    value_list=format_list(self.env, [field_descriptions[v] for v in incompatible_fields]),
+                    value_list=[field_descriptions[v] for v in incompatible_fields],
                 ))
 
     def get_single_product_variant(self):

@@ -993,11 +993,10 @@ class ProjectTask(models.Model):
         if fields and (not check_group_user or self.env.user._is_portal()) and not self.env.su:
             unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
             if unauthorized_fields:
-                unauthorized_field_list = format_list(self.env, list(unauthorized_fields))
                 if operation == 'read':
-                    error_message = _('You cannot read the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
+                    error_message = _('You cannot read the following fields on tasks: %(field_list)s', field_list=unauthorized_fields)
                 else:
-                    error_message = _('You cannot write on the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
+                    error_message = _('You cannot write on the following fields on tasks: %(field_list)s', field_list=unauthorized_fields)
                 raise AccessError(error_message)
 
     def _has_field_access(self, field, operation):
@@ -1982,7 +1981,7 @@ class ProjectTask(models.Model):
         # as it is a computed field. personal_stage_type_ids behaves like a M2O from the point
         # of view of the user, we therefore use this field instead.
         if 'personal_stage_type_id' in groupby:
-            # limitation: problem when both personal_stage_type_id and personal_stage_type_ids 
+            # limitation: problem when both personal_stage_type_id and personal_stage_type_ids
             # appear in read_group, but this has no functional utility
             groupby = ['personal_stage_type_ids' if fname == 'personal_stage_type_id' else fname for fname in groupby]
             if order:

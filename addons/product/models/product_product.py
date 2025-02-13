@@ -7,7 +7,7 @@ from operator import itemgetter
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, format_list, groupby
+from odoo.tools import float_compare, groupby
 from odoo.tools.image import is_image_size_above
 from odoo.tools.misc import unique
 
@@ -217,9 +217,9 @@ class ProductProduct(models.Model):
         )
 
         duplicates_as_str = "\n".join(
-            _(
+            self.env._(
                 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s",
-                barcode=barcode, product_list=format_list(self.env, duplicate_products._filtered_access('read').mapped('display_name')),
+                barcode=barcode, product_list=duplicate_products._filtered_access('read').mapped('display_name'),
             )
             for barcode, duplicate_products in products_by_barcode
         )

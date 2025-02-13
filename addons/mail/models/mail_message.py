@@ -10,7 +10,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.osv import expression
-from odoo.tools import clean_context, format_list, groupby, SQL
+from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.tools.discuss import Store
 
@@ -563,7 +563,7 @@ class MailMessage(models.Model):
             "Records: %(records)s, User: %(user)s",
             type=self._description,
             operation=operation,
-            records=format_list(self.env, list(map(str, self.ids[:6]))),
+            records=self.ids[:6],
             user=self.env.uid,
         ))
 

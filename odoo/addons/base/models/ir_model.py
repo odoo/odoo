@@ -15,7 +15,7 @@ from psycopg2.extras import Json
 from odoo import api, fields, models, tools, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_list, lazy_property, split_every, sql, unique, OrderedSet, SQL
+from odoo.tools import lazy_property, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 from odoo.tools.translate import _, LazyTranslate
 
@@ -921,7 +921,7 @@ class IrModelFields(models.Model):
             if not uninstalling:
                 raise UserError(_(
                     "Cannot rename/delete fields that are still present in views:\nFields: %(fields)s\nView: %(view)s",
-                    fields=format_list(self.env, [str(f) for f in fields]),
+                    fields=fields,
                     view=view.name,
                 ))
             else:
