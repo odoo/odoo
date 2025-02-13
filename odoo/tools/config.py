@@ -833,7 +833,7 @@ class configmanager:
 
     def load(self):
         self._warn("Since 19.0, use config._load_file_options instead", DeprecationWarning, stacklevel=2)
-        self._load_default_options(self['config'])
+        self._load_file_options(self['config'])
 
     def _load_file_options(self, rcfile):
         self._file_options.clear()
