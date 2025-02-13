@@ -55,27 +55,18 @@ export class PosPreset extends Base {
         );
     }
 
-    computeAvailabilities(av) {
+    computeAvailabilities(usages) {
         this.generateSlots();
 
-        if (av) {
-            for (const [date, slots] of Object.entries(this.uiState.availabilities)) {
-                for (const [datetime, slot] of Object.entries(slots)) {
-                    const serverSlot = av[date][datetime];
+        const allSlots = Object.values(this.uiState.availabilities).reduce(
+            (acc, curr) => Object.assign(acc, curr),
+            {}
+        );
 
-                    slot.order_ids.forEach((orderId) => {
-                        if (
-                            !serverSlot.order_ids.includes(orderId) &&
-                            !this.models["pos.order"].get(orderId)
-                        ) {
-                            slot.order_ids.delete(orderId);
-                        }
-                    });
-
-                    slot.order_ids = new Set([...slot.order_ids, ...serverSlot.order_ids]);
-                    slot.isFull = slot.order_ids.size >= this.slots_per_interval;
-                }
-            }
+        for (const [datetime, slot] of Object.entries(allSlots)) {
+            const usage = usages[datetime];
+            slot.order_ids = new Set([...slot.order_ids, ...(usage || [])]);
+            slot.isFull = slot.order_ids.size >= this.slots_per_interval;
         }
 
         return this.uiState.availabilities;
