@@ -17,5 +17,6 @@
     ],
     'installable': True,
     'auto_install': ['l10n_my_edi'],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3'
 }

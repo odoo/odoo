@@ -10,6 +10,7 @@ Special thanks to Plementus <info@plementus.com> for their help in developing th
     'website': 'https://www.odoo.com',
     'category': 'account',
     'version': '0.2',
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'depends': ['account_edi', 'l10n_eg'],
     'data': [

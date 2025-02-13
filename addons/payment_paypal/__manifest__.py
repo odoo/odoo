@@ -22,5 +22,6 @@
             'payment_paypal/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

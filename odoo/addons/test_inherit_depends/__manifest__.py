@@ -7,5 +7,6 @@
     'description': """A module to verify the inheritance using _inherit across modules.""",
     'depends': ['test_inherit', 'test_new_api'],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

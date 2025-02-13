@@ -94,5 +94,6 @@
             ('remove', 'crm/static/tests/crm_test_helpers.js')
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

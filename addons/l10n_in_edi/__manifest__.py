@@ -32,5 +32,6 @@ For the creation of API username and password please ref this document: <https:/
         "demo/demo_company.xml",
     ],
     "installable": True,
+    "author": "Odoo S.A.",
     "license": "LGPL-3",
 }

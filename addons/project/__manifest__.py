@@ -216,5 +216,6 @@
             'web/static/src/start.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

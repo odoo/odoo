@@ -73,5 +73,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
             'hr_expense/static/src/scss/hr_expense.scss',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

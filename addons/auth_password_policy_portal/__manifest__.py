@@ -9,5 +9,6 @@
             'auth_password_policy_portal/static/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

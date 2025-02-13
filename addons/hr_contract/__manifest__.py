@@ -38,5 +38,6 @@ You can assign several contracts per employee.
             'hr_contract/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

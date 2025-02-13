@@ -144,5 +144,6 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/css/report_invoice.css',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -24,5 +24,6 @@ Send KPI Digests periodically
         'views/res_config_settings_views.xml',
     ],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

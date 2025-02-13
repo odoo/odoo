@@ -89,5 +89,6 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/xml/public_templates.xml',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

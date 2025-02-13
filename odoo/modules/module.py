@@ -56,7 +56,7 @@ _DEFAULT_MANIFEST = {
     'application': False,
     'bootstrap': False,  # web
     'assets': {},
-    'author': 'Odoo S.A.',
+    #author, mandatory
     'auto_install': False,
     'category': 'Uncategorized',
     'cloc_exclude': [],
@@ -304,6 +304,14 @@ def load_manifest(module: str, mod_path: str | None = None) -> dict:
         if readme_path:
             with tools.file_open(readme_path[0]) as fd:
                 manifest['description'] = fd.read()
+
+    if not manifest.get('author'):
+        # Altought contributors and maintainer are not documented, it is
+        # not uncommon to find them in manifest files, use them as
+        # alternative.
+        author = manifest.get('contributors') or manifest.get('maintainer') or ''
+        manifest['author'] = str(author)
+        _logger.warning("Missing `author` key in manifest for %r, defaulting to %r", module, str(author))
 
     if not manifest.get('license'):
         manifest['license'] = 'LGPL-3'

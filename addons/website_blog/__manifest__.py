@@ -61,5 +61,6 @@
             ('remove', 'website_blog/static/src/snippets/**/options.js'),
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

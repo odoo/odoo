@@ -22,5 +22,6 @@ Use the e-commerce to sell your event booths.
             '/website_event_booth_sale/static/tests/tours/**/*.js'
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

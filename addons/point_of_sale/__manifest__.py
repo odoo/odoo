@@ -240,5 +240,6 @@
             'point_of_sale/static/tests/pos/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

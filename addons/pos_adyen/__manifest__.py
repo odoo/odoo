@@ -20,5 +20,6 @@
             'pos_adyen/static/tests/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

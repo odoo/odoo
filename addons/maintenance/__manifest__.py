@@ -31,5 +31,6 @@ Track equipment and maintenance requests""",
             'maintenance/static/tests/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

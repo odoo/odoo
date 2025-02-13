@@ -39,5 +39,6 @@ Re-implement Odoo's file import system:
             'base_import/static/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

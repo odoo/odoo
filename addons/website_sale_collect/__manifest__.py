@@ -30,5 +30,6 @@ Allows customers to check in-store stock, pay on site, and pick up their orders 
         ],
     },
     'uninstall_hook': 'uninstall_hook',
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

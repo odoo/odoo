@@ -41,5 +41,6 @@ This is a bridge module that adds multi-website support for payment providers.
             'website_payment/static/tests/tours/donation.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

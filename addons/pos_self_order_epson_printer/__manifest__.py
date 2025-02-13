@@ -19,5 +19,6 @@
             'pos_self_order_epson_printer/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -12,9 +12,12 @@ from odoo.tools.misc import file_open, file_path
 _logger = logging.getLogger(__name__)
 
 MANIFEST_KEYS = {
-    'name', 'icon', 'addons_path', 'license',  # mandatory keys
-    *_DEFAULT_MANIFEST,                        # optional keys
-    'contributors', 'maintainer', 'url',       # unused "informative" keys
+    # mandatory keys
+    'name', 'icon', 'addons_path', 'author', 'license',
+    # optional keys
+    *_DEFAULT_MANIFEST,
+    # unused "informative" keys
+    'contributors', 'maintainer', 'url',
 }
 
 

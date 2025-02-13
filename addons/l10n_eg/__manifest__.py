@@ -22,5 +22,6 @@ This is the base module to manage the accounting chart for Egypt in Odoo.
         'demo/demo_company.xml',
         'demo/demo_partner.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

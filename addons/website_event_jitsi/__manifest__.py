@@ -16,5 +16,6 @@
         'views/res_config_settings_views.xml',
     ],
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

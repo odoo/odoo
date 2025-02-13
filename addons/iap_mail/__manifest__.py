@@ -27,5 +27,6 @@
             'iap_mail/static/src/scss/iap_mail.dark.scss',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -35,5 +35,6 @@ If the automated inventory valuation is active, the necessary accounting entries
     'installable': True,
     'auto_install': True,
     'post_init_hook': '_configure_journals',
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
