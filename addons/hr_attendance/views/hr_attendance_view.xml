@@ -91,8 +91,8 @@
                                     string="Extra Hours"
                                     readonly="overtime_status == 'refused'"
                                     />
-                                    <button class="oe_stat_button" string="Approve" invisible="overtime_status not in ['to_approve', 'refused']" name="action_approve_overtime" icon="fa-check" type="object"/>
-                                    <button class="oe_stat_button" string="Refuse" invisible="overtime_status not in ['to_approve', 'approved']" name="action_refuse_overtime" icon="fa-times" type="object"/>
+                                    <button class="oe_stat_button" string="Approve" invisible="overtime_status not in ['to_approve', 'refused'] or validated_overtime_hours == 0" name="action_approve_overtime" icon="fa-check" type="object"/>
+                                    <button class="oe_stat_button" string="Refuse" invisible="overtime_status not in ['to_approve', 'approved'] or validated_overtime_hours == 0" name="action_refuse_overtime" icon="fa-times" type="object"/>
                                 </div>
                             </group>
                         </group>
