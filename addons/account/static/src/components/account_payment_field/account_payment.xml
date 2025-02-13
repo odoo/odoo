@@ -58,6 +58,9 @@
                     </tr>
                 </t>
             </table>
+            <t t-if="outstanding and has_more">
+                <button type="button" class="btn btn-link" t-on-click="() => this.loadMore()">Load more</button>
+            </t>
         </div>
     </t>
 

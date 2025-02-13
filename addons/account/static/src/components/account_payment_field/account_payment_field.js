@@ -9,6 +9,7 @@ import { parseDate, formatDate } from "@web/core/l10n/dates";
 import { formatMonetary } from "@web/views/fields/formatters";
 
 const { Component, onWillUpdateProps } = owl;
+const BATCH_SIZE = 40;
 
 class AccountPaymentPopOver extends Component {}
 AccountPaymentPopOver.template = "account.AccountPaymentPopOver";
@@ -18,9 +19,12 @@ export class AccountPaymentField extends Component {
         this.popover = usePopover();
         this.orm = useService("orm");
         this.action = useService("action");
-
+        this.skip = 0;
         this.formatData(this.props);
-        onWillUpdateProps((nextProps) => this.formatData(nextProps));
+        onWillUpdateProps((nextProps) => {
+            this.skip = 0;
+            this.formatData(nextProps)
+        });
     }
 
     formatData(props) {
@@ -40,8 +44,20 @@ export class AccountPaymentField extends Component {
         }
         this.lines = info.content;
         this.outstanding = info.outstanding;
+        this.has_more = info.has_more;
         this.title = info.title;
         this.move_id = info.move_id;
+    }
+
+    async loadMore() {
+        this.skip += BATCH_SIZE;
+        const result = await this.orm.call('account.move', 'get_payments_widget_to_reconcile_info', [this.move_id], {
+            skip: this.skip,
+            limit: BATCH_SIZE,
+        });
+        result.content = [...this.lines, ...result.content];
+        this.formatData({value:result});
+        this.render();
     }
 
     onInfoClick(ev, idx) {

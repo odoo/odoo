@@ -1056,64 +1056,73 @@ class AccountMove(models.Model):
         for move in self:
             move.invoice_outstanding_credits_debits_widget = False
             move.invoice_has_outstanding = False
-
-            if move.state != 'posted' \
-                    or move.payment_state not in ('not_paid', 'partial') \
-                    or not move.is_invoice(include_receipts=True):
+            payments_widget_vals = move.get_payments_widget_to_reconcile_info()
+            if not payments_widget_vals or not payments_widget_vals['content']:
                 continue
+            self.invoice_outstanding_credits_debits_widget = payments_widget_vals
+            self.invoice_has_outstanding = True
 
-            pay_term_lines = move.line_ids\
-                .filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
+    def get_payments_widget_to_reconcile_info(self, skip=0, limit=40) -> dict | None:
+        self.ensure_one()
 
-            domain = [
-                ('account_id', 'in', pay_term_lines.account_id.ids),
-                ('parent_state', '=', 'posted'),
-                ('partner_id', '=', move.commercial_partner_id.id),
-                ('reconciled', '=', False),
-                '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
-            ]
+        if self.state != 'posted' \
+                or self.payment_state not in ('not_paid', 'partial') \
+                or not self.is_invoice(include_receipts=True):
+            return None
 
-            payments_widget_vals = {'outstanding': True, 'content': [], 'move_id': move.id}
+        pay_term_lines = self.line_ids\
+            .filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
 
-            if move.is_inbound():
-                domain.append(('balance', '<', 0.0))
-                payments_widget_vals['title'] = _('Outstanding credits')
+        domain = [
+            ('account_id', 'in', pay_term_lines.account_id.ids),
+            ('parent_state', '=', 'posted'),
+            ('partner_id', '=', self.commercial_partner_id.id),
+            ('reconciled', '=', False),
+            '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
+        ]
+
+        payments_widget_vals = {'outstanding': True, 'content': [], 'move_id': self.id}
+
+        if self.is_inbound():
+            domain.append(('balance', '<', 0.0))
+            payments_widget_vals['title'] = _('Outstanding credits')
+        else:
+            domain.append(('balance', '>', 0.0))
+            payments_widget_vals['title'] = _('Outstanding debits')
+
+        for line in self.env['account.move.line'].search(domain):
+
+            if line.currency_id == self.currency_id:
+                # Same foreign currency.
+                amount = abs(line.amount_residual_currency)
             else:
-                domain.append(('balance', '>', 0.0))
-                payments_widget_vals['title'] = _('Outstanding debits')
+                # Different foreign currencies.
+                amount = line.company_currency_id._convert(
+                    abs(line.amount_residual),
+                    self.currency_id,
+                    self.company_id,
+                    line.date,
+                )
 
-            for line in self.env['account.move.line'].search(domain):
-
-                if line.currency_id == move.currency_id:
-                    # Same foreign currency.
-                    amount = abs(line.amount_residual_currency)
-                else:
-                    # Different foreign currencies.
-                    amount = line.company_currency_id._convert(
-                        abs(line.amount_residual),
-                        move.currency_id,
-                        move.company_id,
-                        line.date,
-                    )
-
-                if move.currency_id.is_zero(amount):
-                    continue
-
-                payments_widget_vals['content'].append({
-                    'journal_name': line.ref or line.move_id.name,
-                    'amount': amount,
-                    'currency_id': move.currency_id.id,
-                    'id': line.id,
-                    'move_id': line.move_id.id,
-                    'date': fields.Date.to_string(line.date),
-                    'account_payment_id': line.payment_id.id,
-                })
-
-            if not payments_widget_vals['content']:
+            if self.currency_id.is_zero(amount):
                 continue
+            if skip > 0:
+                skip -= 1
+                continue
+            if len(payments_widget_vals['content']) == limit:
+                payments_widget_vals['has_more'] = True
+                break
+            payments_widget_vals['content'].append({
+                'journal_name': line.ref or line.move_id.name,
+                'amount': amount,
+                'currency_id': self.currency_id.id,
+                'id': line.id,
+                'move_id': line.move_id.id,
+                'date': fields.Date.to_string(line.date),
+                'account_payment_id': line.payment_id.id,
+            })
 
-            move.invoice_outstanding_credits_debits_widget = payments_widget_vals
-            move.invoice_has_outstanding = True
+        return payments_widget_vals
 
     @api.depends('move_type', 'line_ids.amount_residual')
     def _compute_payments_widget_reconciled_info(self):
