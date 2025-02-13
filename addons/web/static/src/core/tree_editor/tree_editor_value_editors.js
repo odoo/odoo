@@ -104,6 +104,10 @@ function makeAutoCompleteEditor(fieldDef) {
     };
 }
 
+function isLitteralObject(value) {
+    return typeof value === "object" && !Array.isArray(value) && value !== null;
+}
+
 // ============================================================================
 
 function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
@@ -126,6 +130,9 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "is_not_between":
         case "between": {
             const editorInfo = getValueEditorInfo(fieldDef, "=");
+            const { defaultValue } = getValueEditorInfo(fieldDef, "=", {
+                forBetween: true,
+            });
             return {
                 component: Range,
                 extractProps: ({ value, update }) => ({
@@ -135,8 +142,8 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                 }),
                 isSupported: (value) => Array.isArray(value) && value.length === 2,
                 defaultValue: () => {
-                    const { defaultValue } = editorInfo;
-                    return [defaultValue(), defaultValue()];
+                    const value = defaultValue();
+                    return isLitteralObject(value) ? [value.start, value.end] : [value, value];
                 },
             };
         }
@@ -222,7 +229,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     startEmpty: params.startEmpty,
                 }),
                 isSupported: () => true,
-                defaultValue: () => 1,
+                defaultValue: () => (params.forBetween ? { start: 1, end: 1 } : 1),
                 shouldResetValue: (value) => parseValue(formatType, value) === value,
             };
         }
@@ -238,13 +245,24 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     type,
                     onApply: (value) => {
                         if (!params.startEmpty || value) {
-                            update(genericSerializeDate(type, value || DateTime.local()));
+                            update(
+                                genericSerializeDate(type, value || DateTime.local().startOf("day"))
+                            );
                         }
                     },
                 }),
-                isSupported: (value) =>
-                    value === false || (typeof value === "string" && isParsable(type, value)),
-                defaultValue: () => genericSerializeDate(type, DateTime.local()),
+                isSupported: (value) => typeof value === "string" && isParsable(type, value),
+                defaultValue: () => {
+                    const datetime = DateTime.local();
+                    const defaultValue = genericSerializeDate(type, datetime.startOf("day"));
+                    if (params.forBetween) {
+                        return {
+                            start: defaultValue,
+                            end: genericSerializeDate(type, datetime.endOf("day")),
+                        };
+                    }
+                    return defaultValue;
+                },
                 stringify: (value) => {
                     if (value === false) {
                         return _t("False");
