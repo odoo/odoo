@@ -1368,7 +1368,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "mail.message": self._filter_messages_fields(
+                            "mail.message": self._filter_store_messages_fields(
                                 {
                                     "attachment_ids": [],
                                     "author": {
@@ -1427,7 +1427,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "mail.thread": self._filter_threads_fields(
+                            "mail.thread": self._filter_store_threads_fields(
                                 {
                                     "id": record.id,
                                     "model": "mail.test.simple",
@@ -1436,7 +1436,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "selfFollower": follower_1.id,
                                 },
                             ),
-                            "res.partner": self._filter_partners_fields(
+                            "res.partner": self._filter_store_partners_fields(
                                 {
                                     "id": self.user_test_inbox.partner_id.id,
                                     "name": "Paulette Testouille",
@@ -1474,7 +1474,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "mail.message": self._filter_messages_fields(
+                            "mail.message": self._filter_store_messages_fields(
                                 {
                                     "attachment_ids": [],
                                     "author": {
@@ -1533,7 +1533,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "mail.thread": self._filter_threads_fields(
+                            "mail.thread": self._filter_store_threads_fields(
                                 {
                                     "id": record.id,
                                     "model": "mail.test.simple",
@@ -1542,7 +1542,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "selfFollower": follower_2.id,
                                 },
                             ),
-                            "res.partner": self._filter_partners_fields(
+                            "res.partner": self._filter_store_partners_fields(
                                 {
                                     "id": self.user_test_inbox_2.partner_id.id,
                                     "name": "Jeannette Testouille",

@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import Form, tagged
 from odoo.exceptions import UserError, ValidationError
 
@@ -196,7 +196,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
 
 
 @tagged('post_install', '-at_install', 'mail_alias')
-class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
+class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCase):
 
     @classmethod
     def setUpClass(cls):

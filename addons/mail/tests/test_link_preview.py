@@ -147,7 +147,7 @@ class TestLinkPreview(MailCommon):
                                         "source_url": self.source_url,
                                     },
                                 ],
-                                "mail.message": self._filter_messages_fields(
+                                "mail.message": self._filter_store_messages_fields(
                                     {
                                         "id": message.id,
                                         "linkPreviews": [message.link_preview_ids.id],
