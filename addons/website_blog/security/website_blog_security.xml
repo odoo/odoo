@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+    <record id="group_website_blog_manager" model="res.groups">
+        <field name="name">Blog Manager</field>
+        <field name="category_id" ref="base.module_category_website_blog"/>
+        <field name="implied_ids" eval="[(4, ref('website.group_website_restricted_editor'))]"/>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4, ref('website_blog.group_website_blog_manager'))]"/>
+    </record>
+
     <record model="ir.rule" id="website_blog_post_public">
         <field name="name">Blog Post: public: published only</field>
         <field name="model_id" ref="model_blog_post"/>
