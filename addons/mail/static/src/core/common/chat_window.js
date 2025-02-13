@@ -86,6 +86,13 @@ export class ChatWindow extends Component {
         return this.thread?.channel_type === "chat" && this.thread.correspondent;
     }
 
+    get attClass() {
+        return {
+            'w-100 h-100 o-mobile': this.ui.isSmall,
+            'rounded-4 border border-dark mb-2': !this.ui.isSmall,
+        };
+    }
+
     get style() {
         const maxHeight = !this.ui.isSmall ? "max-height: 95vh;" : "";
         const textDirection = localization.direction;
