@@ -115,8 +115,8 @@ test(`click on filter`, async () => {
     await start({
         model: {
             ...FAKE_MODEL,
-            updateFilters(fieldName, args) {
-                expect.step(`${fieldName} ${Object.keys(args)[0]} ${Object.values(args)[0]}`);
+            updateFilters(fieldName, filters, active) {
+                expect.step(`${fieldName} ${filters.map((f) => f.value)} ${active}`);
             },
         },
     });
@@ -129,7 +129,7 @@ test(`click on filter`, async () => {
         "partner_ids 3 false",
         "partner_ids 4 false",
         "partner_ids 6 true",
-        "partner_ids all true",
-        "partner_ids all false",
+        "partner_ids 3,4,6 true",
+        "partner_ids 3,4,6 false",
     ]);
 });

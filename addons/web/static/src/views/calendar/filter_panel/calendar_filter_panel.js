@@ -178,19 +178,11 @@ export class CalendarFilterPanel extends Component {
     }
 
     onFilterInputChange(section, filter, ev) {
-        this.props.model.updateFilters(section.fieldName, {
-            [filter.value]: ev.target.checked,
-        });
+        this.props.model.updateFilters(section.fieldName, [filter], ev.target.checked);
     }
 
     onAllFilterInputChange(section, ev) {
-        const filters = {};
-        for (const filter of section.filters) {
-            if (filter.type !== "all") {
-                filters[filter.value] = ev.target.checked;
-            }
-        }
-        this.props.model.updateFilters(section.fieldName, filters);
+        this.props.model.updateFilters(section.fieldName, section.filters, ev.target.checked);
     }
 
     onFilterRemoveBtnClick(section, filter) {
