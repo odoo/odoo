@@ -22,7 +22,6 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_sale_order",
         },
         {
@@ -32,7 +31,6 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_sale_order",
         },
         {
@@ -53,7 +51,6 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_sale_order",
         },
         {
@@ -71,7 +68,6 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".oi-arrow-right", // Wait for product creation
         },
         {
