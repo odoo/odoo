@@ -12,8 +12,9 @@
                     <t
                         t-set="categories"
                         t-value="request.env['product.public.category'].search([
-                            ('parent_id', '=', False)
-                        ])[:4]"
+                            ('parent_id', '=', False),
+                            ('product_tmpl_ids.is_published', '=', True),
+                        ], limit=4)"
                     />
                     <t t-foreach="categories" t-as="category">
                         <div class="col-12 col-sm py-2 text-center">
@@ -25,8 +26,10 @@
                                 />
                             </h4>
                             <nav class="nav flex-column">
-                                <t t-foreach="category.child_id" t-as="sub_category">
+                                <t t-foreach="category.child_id.filter(lambda c: c.product_tmpl_ids.is_published)"
+                                   t-as="sub_category">
                                     <a
+                                        t-if="any(sub_category.product_tmpl_ids.mapped('is_published'))"
                                         t-att-href="'/shop/category/%s' % sub_category.id"
                                         class="nav-link"
                                         t-esc="sub_category.name"
