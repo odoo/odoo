@@ -110,7 +110,6 @@
                             <span t-if="!isSendButtonDisabled" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
                         </t>
                     </div>
-                    <span class="flex-grow-1"/>
                     <t t-if="!props.composer.message" t-call="mail.Composer.extraActions"/>
                 </div>
             </div>
