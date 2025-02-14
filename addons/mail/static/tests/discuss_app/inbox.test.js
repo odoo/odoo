@@ -668,6 +668,7 @@ test("Counter should be incremented by 1 when receiving a message with a mention
     const mentionName = serverState.partnerName;
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: `<a href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="${mention[0]}" data-oe-model="res.partner" target="_blank" contenteditable="false">@${mentionName}</a> mention`,
                 message_type: "comment",

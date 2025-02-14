@@ -33,8 +33,11 @@ class TestMessageController(MailControllerThreadCommon):
             data=json.dumps(
                 {
                     "params": {
+                        "data_id": -1,
                         "post_data": {
-                            "attachment_ids": [att.id],  # demo does not have access to this attachment id
+                            "attachment_ids": [
+                                att.id
+                            ],  # demo does not have access to this attachment id
                             "body": "",
                             "message_type": "comment",
                             "partner_ids": [],
@@ -98,6 +101,7 @@ class TestMessageController(MailControllerThreadCommon):
             data=json.dumps(
                 {
                     "params": {
+                        "data_id": -1,
                         "thread_model": self.test_public_record._name,
                         "thread_id": self.test_public_record.id,
                         "post_data": {
@@ -121,6 +125,7 @@ class TestMessageController(MailControllerThreadCommon):
             data=json.dumps(
                 {
                     "params": {
+                        "data_id": -1,
                         "thread_model": self.test_public_record._name,
                         "thread_id": self.test_public_record.id,
                         "post_data": {
@@ -144,13 +149,17 @@ class TestMessageController(MailControllerThreadCommon):
         archived_partner = self.env["res.partner"].create({"name": "partner", "active": False})
 
         # 1. posting a message
-        data = self.make_jsonrpc_request("/mail/message/post", {
-            "thread_model": "res.partner",
-            "thread_id": archived_partner.id,
-            "post_data": {
-                "body": "A great message",
-            }
-        })
+        data = self.make_jsonrpc_request(
+            "/mail/message/post",
+            {
+                "data_id": -1,
+                "thread_model": "res.partner",
+                "thread_id": archived_partner.id,
+                "post_data": {
+                    "body": "A great message",
+                },
+            },
+        )
         self.assertIn("A great message", data["mail.message"][0]["body"])
 
         # 2. attach a file

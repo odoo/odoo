@@ -12,8 +12,8 @@ class ResPartner(models.Model):
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
 
-    def _search_for_channel_invite_to_store(self, store: Store, channel):
-        super()._search_for_channel_invite_to_store(store, channel)
+    def _search_for_channel_invite_to_store(self, store: Store, data_id, channel):
+        super()._search_for_channel_invite_to_store(store, data_id, channel)
         if channel.channel_type != "livechat" or not self:
             return
         lang_name_by_code = dict(self.env["res.lang"].get_installed())
@@ -27,15 +27,16 @@ class ResPartner(models.Model):
         active_livechat_partners = (
             self.env["im_livechat.channel"].search([]).available_operator_ids.partner_id
         )
-        for partner in self:
-            store.add(
-                partner,
-                {
-                    "invite_by_self_count": invite_by_self_count_by_partner.get(partner, 0),
-                    "is_available": partner in active_livechat_partners,
-                    "lang_name": lang_name_by_code[partner.lang],
-                },
-            )
+        store.add(
+            self,
+            [
+                Store.Attr(
+                    "invite_by_self_count", lambda p: invite_by_self_count_by_partner.get(p, 0)
+                ),
+                Store.Attr("is_available", lambda p: p in active_livechat_partners),
+                Store.Attr("lang_name", lambda p: lang_name_by_code[p.lang]),
+            ],
+        )
 
     @api.depends('user_ids.livechat_username')
     def _compute_user_livechat_username(self):

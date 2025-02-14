@@ -42,7 +42,11 @@ test("simple chatter on a record", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
+            fetch_params: [
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+            ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
@@ -70,6 +74,7 @@ test("simple chatter on a record", async () => {
                             thread_id: partnerId,
                             thread_model: "res.partner",
                         },
+                        4,
                     ],
                 ],
                 context: { lang: "en", tz: "taht", uid: 7, allowed_company_ids: [1] },
@@ -87,6 +92,7 @@ test("can post a message on a record thread", async () => {
         asyncStep("/mail/message/post");
         const expected = {
             context: args.context,
+            data_id: 5,
             post_data: {
                 body: "hey",
                 email_add_signature: true,
@@ -118,6 +124,7 @@ test("can post a note on a record thread", async () => {
         asyncStep("/mail/message/post");
         const expected = {
             context: args.context,
+            data_id: 5,
             post_data: {
                 body: "hey",
                 email_add_signature: true,

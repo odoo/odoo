@@ -289,7 +289,7 @@ test("mark channel as fetched when a new message is loaded", async () => {
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
@@ -307,10 +307,10 @@ test("mark channel as fetched when a new message is loaded", async () => {
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
             fetch_params: [
-                "failures",
-                "systray_get_activities",
-                "init_messaging",
-                ["discuss.channel", [channelId]],
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+                ["discuss.channel", [channelId], 4],
             ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
@@ -318,6 +318,7 @@ test("mark channel as fetched when a new message is loaded", async () => {
     // send after init_messaging because bus subscription is done after init_messaging
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Hello!", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -361,6 +362,7 @@ test("mark channel as fetched when a new message is loaded and thread is focused
     // simulate receiving a message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "<p>Some new message</p>", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -397,6 +399,7 @@ test("should scroll to bottom on receiving new message if the list is initially 
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "hello", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -431,6 +434,7 @@ test("should not scroll on receiving new message if the list is initially scroll
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "hello", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -658,6 +662,7 @@ test("first unseen message should be directly preceded by the new message separa
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "test", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -819,6 +824,7 @@ test("[technical] Opening thread without needaction messages should not mark all
     await openDiscuss(channelId);
     await click("button", { text: "Inbox" });
     await rpc("/mail/message/post", {
+        data_id: -1,
         post_data: {
             body: "Hello world!",
             attachment_ids: [],

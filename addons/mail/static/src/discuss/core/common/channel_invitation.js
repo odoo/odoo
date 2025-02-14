@@ -102,22 +102,27 @@ export class ChannelInvitation extends Component {
     }
 
     async fetchPartnersToInvite() {
-        const results = await this.sequential(() =>
-            this.orm.call("res.partner", "search_for_channel_invite", [
-                this.searchStr,
-                this.props.thread?.id ?? false,
-            ])
+        const dataRequest = this.store.Data.createRequest();
+        const data = await this.sequential(() =>
+            this.orm.call("res.partner", "search_for_channel_invite", [], {
+                data_id: dataRequest.id,
+                search_term: this.searchStr,
+                channel_id: this.props.thread?.id ?? false,
+            })
         );
-        if (!results) {
+        if (!data) {
+            // dropped sequential calls return undefined
+            dataRequest.delete();
             return;
         }
-        const { Persona: selectablePartners = [] } = this.store.insert(results.data);
+        this.store.insert(data);
         this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
-            selectablePartners,
+            dataRequest.partners,
             this.searchStr,
             this.props.thread
         );
-        this.state.searchResultCount = results["count"];
+        this.state.searchResultCount = dataRequest.count;
+        dataRequest.delete();
     }
 
     onInput() {

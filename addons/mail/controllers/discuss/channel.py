@@ -3,6 +3,7 @@
 from werkzeug.exceptions import NotFound
 
 from odoo import http
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.controllers.webclient import WebclientController
@@ -28,9 +29,9 @@ class DiscussChannelWebclientController(WebclientController):
             # prefetch a lot of data that message format could use)
             store.add(channels._get_last_messages(), for_current_user=True)
 
-    def _process_request_for_all(self, store: Store, name, params):
+    def _process_request_for_all(self, store: Store, name, params, data_id):
         """Override to return channel as member and last messages."""
-        super()._process_request_for_all(store, name, params)
+        super()._process_request_for_all(store, name, params, data_id)
         if name == "init_messaging":
             member_domain = [("is_self", "=", True), ("rtc_inviting_session_id", "!=", False)]
             channel_domain = [("channel_member_ids", "any", member_domain)]
@@ -48,27 +49,24 @@ class DiscussChannelWebclientController(WebclientController):
                 OrderedSet(int(cid) for cid in params) - OrderedSet(channels.ids)
             ):
                 store.delete(not_found_channels)
+        if name == "/discuss/channel/get_or_create_chat":
+            channel = request.env["discuss.channel"]._get_or_create_chat(
+                params["partners_to"], params.get("pin", True)
+            )
+            store.add(channel).resolve_data_request(data_id, channel=Store.One(channel, []))
+        if name == "/discuss/channel/create_channel":
+            channel = request.env["discuss.channel"]._create_channel(params["name"], params["group_id"])
+            store.add(channel).resolve_data_request(data_id, channel=Store.One(channel, []))
+        if name == "/discuss/channel/create_group":
+            channel = request.env["discuss.channel"]._create_group(
+                params["partners_to"],
+                params.get("default_display_mode", False),
+                params.get("name", ""),
+            )
+            store.add(channel).resolve_data_request(data_id, channel=Store.One(channel, []))
 
 
 class ChannelController(http.Controller):
-    @http.route("/discuss/channel/get_or_create_chat", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
-    def discuss_get_or_create_chat(self, partners_to, pin=True):
-        channel = request.env["discuss.channel"]._get_or_create_chat(partners_to, pin)
-        return {"channel_id": channel.id, "data": Store(channel).get_result()}
-
-    @http.route("/discuss/channel/create_channel", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
-    def discuss_create_channel(self, name, group_id):
-        channel = request.env["discuss.channel"]._create_channel(name, group_id)
-        return Store(channel).get_result()
-
-    @http.route("/discuss/channel/create_group", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
-    def discuss_create_group(self, partners_to, default_display_mode=False, name=''):
-        channel = request.env["discuss.channel"]._create_group(partners_to, default_display_mode, name)
-        return Store(channel).get_result()
-
     @http.route("/discuss/channel/members", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_members(self, channel_id, known_member_ids):
@@ -149,7 +147,7 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/attachments", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
-    def load_attachments(self, channel_id, limit=30, before=None):
+    def load_attachments(self, data_id, channel_id, limit=30, before=None):
         """Load attachments of a channel. If before is set, load attachments
         older than the given id.
         :param channel_id: id of the channel
@@ -167,7 +165,11 @@ class ChannelController(http.Controller):
             domain.append(["id", "<", before])
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
-        return Store(attachments).get_result()
+        return (
+            Store(attachments)
+            .resolve_data_request(data_id, attachments=attachments.ids)
+            .get_result()
+        )
 
     @http.route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -188,14 +190,19 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def discuss_channel_sub_channel_fetch(self, parent_channel_id, search_term=None, before=None, limit=30):
+    def discuss_channel_sub_channel_fetch(self, data_id, parent_channel_id, search_term=None, before=None, limit=30):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
             raise NotFound()
-        domain = [("parent_channel_id", "=", channel.id)]
+        domain = Domain("parent_channel_id", "=", channel.id)
         if before:
-            domain.append(("id", "<", before))
+            domain &= Domain("id", "<", before)
         if search_term:
-            domain.append(("name", "ilike", search_term))
+            domain &= Domain("name", "ilike", search_term)
         sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
-        return Store(sub_channels).add(sub_channels._get_last_messages()).get_result()
+        return (
+            Store(sub_channels)
+            .add(sub_channels._get_last_messages())
+            .resolve_data_request(data_id, channels=Store.Many(sub_channels, []))
+            .get_result()
+        )

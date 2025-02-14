@@ -17,12 +17,16 @@ class TestImLivechatReport(TestImLivechatCommon):
                 record.available_operator_ids = self.operators
 
         with patch.object(type(self.env['im_livechat.channel']), '_compute_available_operator_ids', _compute_available_operator_ids):
-            channel_id = self.make_jsonrpc_request(
+            data = self.make_jsonrpc_request(
                 "/im_livechat/get_session",
-                {"anonymous_name": "Anonymous", "channel_id": self.livechat_channel.id},
-            )["discuss.channel"][0]["id"]
+                {
+                    "anonymous_name": "Anonymous",
+                    "channel_id": self.livechat_channel.id,
+                    "data_id": -1,
+                },
+            )
 
-        channel = self.env['discuss.channel'].browse(channel_id)
+        channel = self.env["discuss.channel"].browse(data["Data"][0]["channel"]["id"])
         self.operator = channel.livechat_operator_id
 
         self._create_message(channel, self.visitor_user.partner_id, '2023-03-17 06:05:54')

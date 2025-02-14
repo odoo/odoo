@@ -30,7 +30,6 @@ test("can create a new channel", async () => {
     onRpcBefore((route, args) => {
         if (
             route.startsWith("/mail") ||
-            route.startsWith("/discuss/channel/create_channel") ||
             route.startsWith("/discuss/channel/messages") ||
             route.startsWith("/discuss/search")
         ) {
@@ -40,14 +39,18 @@ test("can create a new channel", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
+            fetch_params: [
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+            ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["channels_as_member"],
+            fetch_params: [["channels_as_member", null, 4]],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
@@ -56,7 +59,10 @@ test("can create a new channel", async () => {
     await contains(".o-mail-DiscussSidebar-item", { text: "abc", count: 0 });
     await click("input[placeholder='Find or start a conversation']");
     await insertText("input[placeholder='Search a conversation']", "abc");
-    await waitForSteps([`/discuss/search - {"term":""}`, `/discuss/search - {"term":"abc"}`]);
+    await waitForSteps([
+        `/discuss/search - {"data_id":1,"term":""}`,
+        `/discuss/search - {"data_id":2,"term":"abc"}`,
+    ]);
     await click("a", { text: "Create Channel" });
     await contains(".o-mail-DiscussSidebar-item", { text: "abc" });
     await contains(".o-mail-Message", { count: 0 });
@@ -66,8 +72,18 @@ test("can create a new channel", async () => {
         ["partner_id", "=", serverState.partnerId],
     ]);
     await waitForSteps([
-        `/discuss/channel/create_channel - ${JSON.stringify({
-            name: "abc",
+        `/mail/action - ${JSON.stringify({
+            fetch_params: [
+                [
+                    "/discuss/channel/create_channel",
+                    {
+                        data_id: 3,
+                        name: "abc",
+                    },
+                    5,
+                ],
+            ],
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":${selfMember.new_message_separator}}}`,
     ]);
@@ -94,14 +110,18 @@ test("can make a DM chat", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
+            fetch_params: [
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+            ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["channels_as_member"],
+            fetch_params: [["channels_as_member", null, 4]],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
@@ -115,9 +135,18 @@ test("can make a DM chat", async () => {
     await contains(".o-mail-Message", { count: 0 });
     const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mario, Mitchell Admin"]]);
     await waitForSteps([
-        `/discuss/search - {"term":""}`,
-        `/discuss/search - {"term":"mario"}`,
-        `/discuss/channel/get_or_create_chat - ${JSON.stringify({ partners_to: [partnerId] })}`,
+        `/discuss/search - {"data_id":1,"term":""}`,
+        `/discuss/search - {"data_id":2,"term":"mario"}`,
+        `/mail/action - ${JSON.stringify({
+            fetch_params: [
+                [
+                    "/discuss/channel/get_or_create_chat",
+                    { data_id: 3, partners_to: [partnerId] },
+                    5,
+                ],
+            ],
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
+        })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
 });

@@ -96,13 +96,17 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertEqual(created_lead.type, 'lead')
 
     def _play_session_with_lead(self):
-        data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'Test Visitor',
-            'channel_id': self.livechat_channel.id,
-            'chatbot_script_id': self.chatbot_script.id,
-        })
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Test Visitor",
+                "channel_id": self.livechat_channel.id,
+                "chatbot_script_id": self.chatbot_script.id,
+                "data_id": -1,
+            },
+        )
         discuss_channel = (
-            self.env["discuss.channel"].sudo().browse(data["discuss.channel"][0]["id"])
+            self.env["discuss.channel"].sudo().browse(data["Data"][0]["channel"]["id"])
         )
         self._post_answer_and_trigger_next_step(
             discuss_channel, chatbot_script_answer=self.step_dispatch_create_lead

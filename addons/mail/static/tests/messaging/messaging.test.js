@@ -35,14 +35,18 @@ test("Receiving a new message out of discuss app should open a chat bubble", asy
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
+            fetch_params: [
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+            ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
@@ -50,6 +54,7 @@ test("Receiving a new message out of discuss app should open a chat bubble", asy
     // simulate receving new message
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Magic!", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -70,14 +75,18 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
+            fetch_params: [
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+            ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
@@ -86,6 +95,7 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
     // simulate receiving new message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Tricky", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

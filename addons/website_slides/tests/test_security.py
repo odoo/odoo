@@ -539,6 +539,7 @@ class TestReview(common.SlidesCase, HttpCase):
             url="%s/mail/message/post" % self.base_url(),
             json={
                 "params": {
+                    "data_id": -1,
                     "thread_model": "slide.channel",
                     "thread_id": self.channel.id,
                     "post_data": {
@@ -557,6 +558,7 @@ class TestReview(common.SlidesCase, HttpCase):
             url="%s/mail/message/post" % self.base_url(),
             json={
                 "params": {
+                    "data_id": -1,
                     "thread_model": "slide.channel",
                     "thread_id": self.channel.id,
                     "post_data": {

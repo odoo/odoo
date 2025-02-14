@@ -150,6 +150,7 @@ class ChatbotCase(MailCommon, common.HttpCase):
         data = self.make_jsonrpc_request(
             "/mail/message/post",
             {
+                "data_id": -1,
                 "thread_model": "discuss.channel",
                 "thread_id": discuss_channel.id,
                 "post_data": {"body": body or email or chatbot_script_answer.name},

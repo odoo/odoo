@@ -48,6 +48,7 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
     // simulate livechat visitor sending a message
     withGuest(guestId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "Hello, I need help!",
                 message_type: "comment",

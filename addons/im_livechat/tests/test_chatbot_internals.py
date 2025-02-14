@@ -51,12 +51,16 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                          "Only step 'step_no_one_available' should be flagged as forward operator child.")
 
     def test_chatbot_steps(self):
-        data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'Test Visitor',
-            'chatbot_script_id': self.chatbot_script.id,
-            'channel_id': self.livechat_channel.id,
-        })
-        discuss_channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Test Visitor",
+                "chatbot_script_id": self.chatbot_script.id,
+                "channel_id": self.livechat_channel.id,
+                "data_id": -1,
+            },
+        )
+        discuss_channel = self.env["discuss.channel"].browse(data["Data"][0]["channel"]["id"])
 
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_dispatch)
 
@@ -121,10 +125,11 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                 "anonymous_name": "Test Visitor",
                 "channel_id": self.livechat_channel.id,
                 "chatbot_script_id": self.chatbot_script.id,
+                "data_id": -1,
             },
         )
         discuss_channel = (
-            self.env["discuss.channel"].sudo().browse(data["discuss.channel"][0]["id"])
+            self.env["discuss.channel"].sudo().browse(data["Data"][0]["channel"]["id"])
         )
         self.assertEqual(discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id)
         discuss_channel.add_members(partner_ids=self.env.user.partner_id.ids)
@@ -146,10 +151,11 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                 "anonymous_name": "Test Visitor",
                 "channel_id": self.livechat_channel.id,
                 "chatbot_script_id": self.chatbot_script.id,
+                "data_id": -1,
             },
         )
         discuss_channel = (
-            self.env["discuss.channel"].sudo().browse(data["discuss.channel"][0]["id"])
+            self.env["discuss.channel"].sudo().browse(data["Data"][0]["channel"]["id"])
         )
         self.step_forward_operator._process_step_forward_operator(discuss_channel)
         self.assertEqual(

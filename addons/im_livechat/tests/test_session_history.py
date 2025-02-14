@@ -12,10 +12,11 @@ class TestImLivechatSessionHistory(TestImLivechatCommon):
         self.livechat_channel.user_ids |= operator
         self.authenticate(None, None)
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            "channel_id": self.livechat_channel.id,
             "anonymous_name": "Visitor",
+            "channel_id": self.livechat_channel.id,
+            "data_id": -1,
             "previous_operator_id": operator.partner_id.id
         })
-        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        channel = self.env["discuss.channel"].browse(data["Data"][0]["channel"]["id"])
         channel.with_user(operator).message_post(body="Hello, how can I help you?")
         self.start_tour("/odoo", "im_livechat_history_back_and_forth_tour", login="operator")

@@ -26,6 +26,7 @@ class TestCorsLivechat(HttpCase):
             {
                 "anonymous_name": "Visitor",
                 "channel_id": self.livechat_channel.id,
+                "data_id": -1,
                 "persisted": True,
             },
         )
@@ -41,6 +42,7 @@ class TestCorsLivechat(HttpCase):
             {
                 "anonymous_name": "Visitor",
                 "channel_id": self.livechat_channel.id,
+                "data_id": -1,
                 "persisted": True,
             },
             headers={"Cookie": f"{guest._cookie_name}={guest.id}{guest._cookie_separator}{guest.access_token};"},
@@ -55,6 +57,7 @@ class TestCorsLivechat(HttpCase):
             {
                 "anonymous_name": "Visitor",
                 "channel_id": self.livechat_channel.id,
+                "data_id": -1,
                 "persisted": True,
             },
         )
@@ -73,6 +76,7 @@ class TestCorsLivechat(HttpCase):
             {
                 "anonymous_name": "Visitor",
                 "channel_id": self.livechat_channel.id,
+                "data_id": -1,
                 "persisted": True,
             },
         )

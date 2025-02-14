@@ -326,6 +326,7 @@ class TestRatingRoutes(HttpCase, TestRatingCommon):
         res = self.make_jsonrpc_request(
             "/mail/message/post",
             {
+                "data_id": -1,
                 "post_data": {
                     "body": "Good service",
                     "message_type": "comment",

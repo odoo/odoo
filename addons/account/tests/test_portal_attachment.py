@@ -177,6 +177,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
+                    "data_id": -1,
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
                     'post_data': {
@@ -195,6 +196,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
+                    "data_id": -1,
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
                     'post_data': {'body': "test message 1", 'attachment_ids': [attachment.id]},
@@ -214,6 +216,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
+                    "data_id": -1,
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
                     'post_data': {'body': "test message 1", 'attachment_ids': [attachment.id]},
@@ -236,6 +239,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
+                    "data_id": -1,
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
                     'post_data': {'body': "test message 2", 'attachment_ids': [attachment.id]},
@@ -274,6 +278,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
+                    "data_id": -1,
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
                     'post_data': {'body': "test message 3", 'attachment_ids': [create_res['id']]},

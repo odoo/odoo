@@ -1,7 +1,6 @@
 import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
 
@@ -26,23 +25,24 @@ const storeServicePatch = {
         return ["away", "bot", "online"];
     },
     async createGroupChat({ default_display_mode, partners_to, name }) {
-        const data = await rpc("/discuss/channel/create_group", {
-            default_display_mode,
-            partners_to,
-            name,
-        });
-        const { Thread } = this.insert(data);
-        const [channel] = Thread;
+        const { channel } = await this.fetchStoreData(
+            "/discuss/channel/create_group",
+            {
+                default_display_mode,
+                partners_to,
+                name,
+            },
+            { readonly: false }
+        );
         channel.open({ focus: true });
         return channel;
     },
     async fetchChannel(channelId) {
-        const channelIds = this.fetchParams.find(
-            (fetchParams) => fetchParams[0] === "discuss.channel"
-        );
-        if (channelIds) {
-            channelIds[1].push(channelId);
-            await this.fetchDeferred;
+        const fetchParam = this.fetchParams.find(([name]) => name === "discuss.channel");
+        if (fetchParam) {
+            const [, channelIds, dataRequest] = fetchParam;
+            channelIds.push(channelId);
+            await dataRequest._isResolved;
         } else {
             await this.fetchStoreData("discuss.channel", [channelId]);
         }

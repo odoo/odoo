@@ -219,41 +219,46 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env['mail.presence']._update_presence(self.users[0])
         self.authenticate('test1', self.password)
-        self.channel_livechat_1 = Channel.browse(
-            self.make_jsonrpc_request(
-                "/im_livechat/get_session",
-                {
-                    "anonymous_name": "anon 1",
-                    "channel_id": self.im_livechat_channel.id,
-                    "previous_operator_id": self.users[0].partner_id.id,
-                },
-            )["discuss.channel"][0]["id"]
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "anon 1",
+                "channel_id": self.im_livechat_channel.id,
+                "data_id": -1,
+                "previous_operator_id": self.users[0].partner_id.id,
+            },
         )
+        self.channel_livechat_1 = Channel.browse(data["Data"][0]["channel"]["id"])
         self.channel_livechat_1.with_user(self.users[1]).message_post(body="test")
         self.authenticate(None, None)
         with patch(
             "odoo.http.GeoIP.country_code",
             new_callable=PropertyMock(return_value=self.env.ref("base.be").code),
         ):
-            self.channel_livechat_2 = Channel.browse(
-                self.make_jsonrpc_request(
-                    "/im_livechat/get_session",
-                    {
-                        "anonymous_name": "anon 2",
-                        "channel_id": self.im_livechat_channel.id,
-                        "previous_operator_id": self.users[0].partner_id.id,
-                    },
-                )["discuss.channel"][0]["id"]
+            data = self.make_jsonrpc_request(
+                "/im_livechat/get_session",
+                {
+                    "anonymous_name": "anon 2",
+                    "channel_id": self.im_livechat_channel.id,
+                    "data_id": -1,
+                    "previous_operator_id": self.users[0].partner_id.id,
+                },
             )
+        self.channel_livechat_2 = Channel.browse(data["Data"][0]["channel"]["id"])
         self.guest = self.channel_livechat_2.channel_member_ids.guest_id.sudo()
-        self.make_jsonrpc_request("/mail/message/post", {
-            "post_data": {
-                "body": "test",
-                "message_type": "comment",
+        self.make_jsonrpc_request(
+            "/mail/message/post",
+            {
+                "data_id": -1,
+                "post_data": {
+                    "body": "test",
+                    "message_type": "comment",
+                },
+                "thread_id": self.channel_livechat_2.id,
+                "thread_model": "discuss.channel",
             },
-            "thread_id": self.channel_livechat_2.id,
-            "thread_model": "discuss.channel",
-        }, headers={"Cookie": f"{self.guest._cookie_name}={self.guest._format_auth_cookie()};"})
+            headers={"Cookie": f"{self.guest._cookie_name}={self.guest._format_auth_cookie()};"},
+        )
         # add needaction
         self.users[0].notification_type = 'inbox'
         message_0 = self.channel_channel_public_1.message_post(
@@ -340,7 +345,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self._run_test(
             fn=lambda: self.make_jsonrpc_request(
                 "/mail/data",
-                {"fetch_params": [["discuss.channel", [self.channel_chat_1.id]], "init_messaging"]},
+                {
+                    "fetch_params": [
+                        ["discuss.channel", [self.channel_chat_1.id], None],
+                        ["init_messaging", None, None],
+                    ]
+                },
             ),
             count=self._query_count_init_messaging,
             results=self._get_init_messaging_result(),
@@ -352,7 +362,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         """Test performance of `/mail/data` with `channels_as_member`."""
         self._run_test(
             fn=lambda: self.make_jsonrpc_request(
-                "/mail/data", {"fetch_params": ["channels_as_member"]}
+                "/mail/data", {"fetch_params": [["channels_as_member", None, None]]}
             ),
             count=self._query_count_discuss_channels,
             results=self._get_discuss_channels_result(),

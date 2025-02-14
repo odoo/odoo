@@ -63,6 +63,7 @@ test.skip("bus subscription kept after receiving a message as non member", async
     await Promise.all([openDiscuss(channelId), waitUntilSubscribe(`discuss.channel_${channelId}`)]);
     await withUser(johnUser, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Hello!", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -72,6 +73,7 @@ test.skip("bus subscription kept after receiving a message as non member", async
     await tick();
     await withUser(johnUser, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Goodbye!", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

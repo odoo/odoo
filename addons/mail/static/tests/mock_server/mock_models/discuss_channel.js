@@ -220,7 +220,7 @@ export class DiscussChannel extends models.ServerModel {
         );
         const [partner] = ResPartner.read(this.env.user.partner_id);
         this._broadcast([id], [partner]);
-        return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
+        return DiscussChannel.browse(id);
     }
 
     /** @param {number[]} ids */
@@ -361,7 +361,7 @@ export class DiscussChannel extends models.ServerModel {
             [id],
             partners.map(({ id }) => id)
         );
-        return DiscussChannel.browse(id)[0];
+        return DiscussChannel.browse(id);
     }
 
     /** @param {number[]} ids */
@@ -565,7 +565,7 @@ export class DiscussChannel extends models.ServerModel {
             [id],
             partners.map((partner) => partner.id)
         );
-        return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
+        return DiscussChannel.browse(id);
     }
 
     _create_sub_channel(ids, from_message_id, name) {

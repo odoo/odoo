@@ -21,18 +21,20 @@ class ResPartner(models.Model):
 
     @api.readonly
     @api.model
-    def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
+    def search_for_channel_invite(self, data_id, search_term, channel_id=None, limit=30):
         """Returns partners matching search_term that can be invited to a channel.
         If the channel_id is specified, only partners that can actually be invited to the channel
         are returned (not already members, and in accordance to the channel configuration).
         """
         store = Store()
-        count = self._search_for_channel_invite(store, search_term, channel_id, limit)
-        return {"count": count, "data": store.get_result()}
+        self._search_for_channel_invite(store, data_id, search_term, channel_id, limit)
+        return store.get_result()
 
     @api.readonly
     @api.model
-    def _search_for_channel_invite(self, store: Store, search_term, channel_id=None, limit=30):
+    def _search_for_channel_invite(
+        self, store: Store, data_id, search_term, channel_id=None, limit=30
+    ):
         domain = expression.AND(
             [
                 expression.OR(
@@ -59,11 +61,13 @@ class ResPartner(models.Model):
         query = self._search(domain, limit=limit)
         # bypass lack of support for case insensitive order in search()
         query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
-        self.env["res.partner"].browse(query)._search_for_channel_invite_to_store(store, channel)
-        return self.env["res.partner"].search_count(domain)
+        self.env["res.partner"].browse(query)._search_for_channel_invite_to_store(
+            store, data_id, channel
+        )
+        store.resolve_data_request(data_id, count=self.env["res.partner"].search_count(domain))
 
-    def _search_for_channel_invite_to_store(self, store: Store, channel):
-        store.add(self)
+    def _search_for_channel_invite_to_store(self, store: Store, data_id, channel):
+        store.add(self).resolve_data_request(data_id, partners=Store.Many(self, []))
 
     @api.readonly
     @api.model

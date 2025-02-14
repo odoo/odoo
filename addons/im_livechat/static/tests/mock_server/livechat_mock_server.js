@@ -29,6 +29,7 @@ async function get_session(request) {
 
     let {
         channel_id,
+        data_id,
         anonymous_name,
         previous_operator_id,
         persisted,
@@ -79,6 +80,7 @@ async function get_session(request) {
             scrollUnread: false,
             state: "open",
         });
+        store.resolve_data_request(data_id, { channel: { id: -1, model: "discuss.channel" } });
         return store.get_result();
     }
     const channelId = DiscussChannel.create(channelVals);
@@ -96,6 +98,12 @@ async function get_session(request) {
         isLoaded: true,
         open_chat_window: true,
         scrollUnread: false,
+    });
+    store.resolve_data_request(data_id, {
+        channel: mailDataHelpers.Store.one(
+            DiscussChannel.browse(channelId),
+            makeKwArgs({ only_id: true })
+        ),
     });
     return store.get_result();
 }
@@ -167,7 +175,7 @@ async function get_emoji_bundle(request) {
 }
 
 patch(mailDataHelpers, {
-    _process_request_for_internal_user(store, name, params) {
+    _process_request_for_internal_user(store, name, params, data_id) {
         super._process_request_for_internal_user(...arguments);
         if (name === "im_livechat.channel") {
             store.add(

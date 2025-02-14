@@ -197,6 +197,15 @@ class Store:
                 res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
 
+    def resolve_data_request(self, data_id, **values):
+        """Add values to the store for the data request specified by data_id.
+
+        Use case: resolve a specific data request from a client."""
+        if not data_id:
+            return self
+        self.add_model_values("Data", {"id": data_id, "_resolve": True, **values})
+        return self
+
     def _add_values(self, values, model_name, index=None):
         """Adds values to the store for a given model name and index."""
         target = self.data[model_name][index] if index else self.data[model_name]

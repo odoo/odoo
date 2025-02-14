@@ -97,6 +97,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
     await waitForSteps([
         `/im_livechat/get_session - ${JSON.stringify({
+            data_id: 1,
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
             previous_operator_id: null,
@@ -110,6 +111,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
     const [threadId] = pyEnv["discuss.channel"].search([], { order: "id DESC" });
     await waitForSteps([
         `/im_livechat/get_session - ${JSON.stringify({
+            data_id: 2,
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
             previous_operator_id: operatorPartnerId,
@@ -117,9 +119,9 @@ test("Only necessary requests are made when creating a new chat", async () => {
         })}`,
         `/mail/data - ${JSON.stringify({
             fetch_params: [
-                "failures", // called because mail/core/web is loaded in test bundle
-                "systray_get_activities", // called because mail/core/web is loaded in test bundle
-                "init_messaging",
+                ["failures", null, 3], // called because mail/core/web is loaded in test bundle
+                ["systray_get_activities", null, 4], // called because mail/core/web is loaded in test bundle
+                ["init_messaging", null, 5],
             ],
             context: {
                 lang: "en",
@@ -144,6 +146,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
                 allowed_company_ids: [1],
                 temporary_id: 0.81,
             },
+            data_id: 6,
         })}`,
     ]);
 });

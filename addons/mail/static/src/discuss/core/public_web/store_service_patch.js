@@ -9,7 +9,7 @@ const StorePatch = {
     setup() {
         super.setup(...arguments);
         this.channels = this.makeCachedFetchData("channels_as_member");
-        this.fetchSsearchConversationsSequential = useSequential();
+        this.fetchSearchConversationsSequential = useSequential();
     },
     getDiscussSidebarCategoryCounter(categoryId) {
         return this.DiscussAppCategory.get({ id: categoryId }).threads.reduce((acc, channel) => {
@@ -21,11 +21,15 @@ const StorePatch = {
         }, 0);
     },
     async searchConversations(searchValue) {
-        const data = await this.fetchSsearchConversationsSequential(async () => {
-            const data = await rpc("/discuss/search", { term: searchValue });
-            return data;
+        await this.fetchSearchConversationsSequential(async () => {
+            const dataRequest = this.Data.createRequest();
+            const data = await rpc("/discuss/search", {
+                data_id: dataRequest.id,
+                term: searchValue,
+            });
+            this.insert(data);
+            dataRequest.delete();
         });
-        this.insert(data);
     },
 };
 patch(Store.prototype, StorePatch);

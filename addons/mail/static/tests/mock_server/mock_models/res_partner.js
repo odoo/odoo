@@ -265,20 +265,22 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     /**
+     * @param {number} [data_id]
      * @param {string} [search_term]
      * @param {number} [channel_id]
      * @param {number} [limit]
      */
-    search_for_channel_invite(search_term, channel_id, limit = 30) {
-        const kwargs = getKwArgs(arguments, "search_term", "channel_id", "limit");
+    search_for_channel_invite(data_id, search_term, channel_id, limit = 30) {
+        const kwargs = getKwArgs(arguments, "data_id", "search_term", "channel_id", "limit");
         const store = new mailDataHelpers.Store();
-        const count = this._search_for_channel_invite(
+        this._search_for_channel_invite(
             store,
+            kwargs.data_id,
             kwargs.search_term,
             kwargs.channel_id,
-            kwargs.limit
+            kwargs.limit ?? 30
         );
-        return { count: count, data: store.get_result() };
+        return store.get_result();
     }
 
     /**
@@ -286,8 +288,16 @@ export class ResPartner extends webModels.ResPartner {
      * @param {number} [channel_id]
      * @param {number} [limit]
      */
-    _search_for_channel_invite(store, search_term, channel_id, limit = 30) {
-        const kwargs = getKwArgs(arguments, "store", "search_term", "channel_id", "limit");
+    _search_for_channel_invite(store, data_id, search_term, channel_id, limit = 30) {
+        const kwargs = getKwArgs(
+            arguments,
+            "store",
+            "data_id",
+            "search_term",
+            "channel_id",
+            "limit"
+        );
+        data_id = kwargs.data_id;
         search_term = kwargs.search_term || "";
         channel_id = kwargs.channel_id;
         limit = kwargs.limit || 30;
@@ -334,12 +344,15 @@ export class ResPartner extends webModels.ResPartner {
             .map((user) => user.partner_id);
         const count = matchingPartnersIds.length;
         matchingPartnersIds.length = Math.min(count, limit);
-        this._search_for_channel_invite_to_store(matchingPartnersIds, store, channel_id);
-        return count;
+        store.resolve_data_request(data_id, { count });
+        this._search_for_channel_invite_to_store(matchingPartnersIds, store, data_id, channel_id);
     }
 
-    _search_for_channel_invite_to_store(ids, store, channel_id) {
+    _search_for_channel_invite_to_store(ids, store, data_id, channel_id) {
         store.add(this.browse(ids));
+        store.resolve_data_request(data_id, {
+            partners: mailDataHelpers.Store.many(this.browse(ids), makeKwArgs({ only_id: true })),
+        });
     }
 
     /**

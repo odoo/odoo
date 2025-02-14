@@ -57,6 +57,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
+                        "data_id": -1,
                         "thread_model": "discuss.channel",
                         "thread_id": self.channel.id,
                         "post_data": {
@@ -81,6 +82,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
+                        "data_id": -1,
                         "thread_model": "discuss.channel",
                         "thread_id": self.channel.id,
                         "post_data": {
@@ -279,6 +281,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
+                        "data_id": -1,
                         "thread_model": "discuss.channel",
                         "thread_id": self.channel.id,
                         "post_data": {

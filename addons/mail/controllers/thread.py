@@ -160,7 +160,9 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/message/post", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def mail_message_post(self, thread_model, thread_id, post_data, context=None, **kwargs):
+    def mail_message_post(
+        self, data_id, thread_model, thread_id, post_data, context=None, **kwargs
+    ):
         guest = request.env["mail.guest"]._get_guest_from_context()
         guest.env["ir.attachment"].browse(post_data.get("attachment_ids", []))._check_attachments_access(
             kwargs.get("attachment_tokens")
@@ -198,7 +200,8 @@ class ThreadController(http.Controller):
             }
         # sudo: mail.thread - users can post on accessible threads
         message = thread.sudo().message_post(**self._prepare_post_data(post_data, thread, **kwargs))
-        return store.add(message, for_current_user=True).get_result()
+        store.add(message, for_current_user=True).resolve_data_request(data_id, message=message.id)
+        return store.get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context

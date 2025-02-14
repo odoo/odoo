@@ -58,6 +58,7 @@ test("Mobile: chat window shouldn't open automatically after receiving a new mes
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -555,7 +556,7 @@ test("chat window should open when receiving a new DM", async () => {
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -564,6 +565,7 @@ test("chat window should open when receiving a new DM", async () => {
     await contains(".o-mail-ChatHub");
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Hi, are you here?", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -592,6 +594,7 @@ test("chat window should not open when receiving a new DM from odoobot", async (
     await contains(".o-mail-ChatHub");
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "Hello, I'm new", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -639,6 +642,7 @@ test("chat window should remain folded when new message is received", async () =
     await contains(".o-mail-ChatBubble-counter", { count: 0 });
     withUser(userId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: { body: "New Message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -904,6 +908,7 @@ test("mark as read when opening chat window", async () => {
     await contains(".o-mail-Composer-input:not(:focus");
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
+            data_id: -1,
             post_data: {
                 body: "Hello, how are you?",
                 message_type: "comment",
