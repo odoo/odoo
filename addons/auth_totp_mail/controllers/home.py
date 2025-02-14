@@ -21,7 +21,8 @@ class Home(odoo.addons.auth_totp.controllers.home.Home):
 
         # Send the email containing the code to the user inbox
         try:
-            response.qcontext['user']._send_totp_mail_code()
+            with response.qcontext['user'].env.cr.savepoint():
+                response.qcontext['user']._send_totp_mail_code()
         except (AccessDenied, UserError) as e:
             response.qcontext['error'] = str(e)
         except Exception as e:

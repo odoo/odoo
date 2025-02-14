@@ -259,34 +259,37 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         self.env.flush_all()
 
         # company_dependent fields of merged records
-        with self._cr.savepoint():
-            for fname, field in dst_record._fields.items():
-                if field.company_dependent:
-                    self.env.execute_query(SQL(
-                        # use the specific company dependent value of sources
-                        # to fill the non-specific value of destination. Source
-                        # values for rows with larger id have higher priority
-                        # when aggregated
-                        """
-                        WITH source AS (
-                            SELECT %(field)s
-                            FROM  %(table)s
-                            WHERE id IN %(source_ids)s
-                            ORDER BY id
-                        ), source_agg AS (
-                            SELECT jsonb_object_agg(key, value) AS value
-                            FROM  source, jsonb_each(%(field)s)
-                        )
-                        UPDATE %(table)s
-                        SET %(field)s = source_agg.value || COALESCE(%(table)s.%(field)s, '{}'::jsonb)
-                        FROM source_agg
-                        WHERE id = %(destination_id)s AND source_agg.value IS NOT NULL
-                        """,
-                        table=SQL.identifier(dst_record._table),
-                        field=SQL.identifier(fname),
-                        destination_id=dst_record.id,
-                        source_ids=tuple(src_records.ids),
-                    ))
+        company_dependent_fields = (
+            field
+            for field in dst_record._fields.values()
+            if field.company_dependent
+        )
+        for field in company_dependent_fields:
+            self.env.execute_query(SQL(
+                # use the specific company dependent value of sources
+                # to fill the non-specific value of destination. Source
+                # values for rows with larger id have higher priority
+                # when aggregated
+                """
+                WITH source AS (
+                    SELECT %(field)s
+                    FROM  %(table)s
+                    WHERE id IN %(source_ids)s
+                    ORDER BY id
+                ), source_agg AS (
+                    SELECT jsonb_object_agg(key, value) AS value
+                    FROM  source, jsonb_each(%(field)s)
+                )
+                UPDATE %(table)s
+                SET %(field)s = source_agg.value || COALESCE(%(table)s.%(field)s, '{}'::jsonb)
+                FROM source_agg
+                WHERE id = %(destination_id)s AND source_agg.value IS NOT NULL
+                """,
+                table=SQL.identifier(dst_record._table),
+                field=SQL.identifier(field.name),
+                destination_id=dst_record.id,
+                source_ids=tuple(src_records.ids),
+            ))
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):

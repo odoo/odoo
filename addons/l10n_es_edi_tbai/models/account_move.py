@@ -179,6 +179,7 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         try:
+            # SKIP LOCKED
             with self.env.cr.savepoint(flush=False):
                 self.env.cr.execute('SELECT * FROM account_move WHERE id = %s FOR UPDATE NOWAIT', [self.id])
         except LockNotAvailable:
