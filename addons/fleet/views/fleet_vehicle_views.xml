@@ -91,8 +91,6 @@
                             <field name="vehicle_type" invisible="1"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar"/>
                             <field name="future_driver_id" widget="many2one_avatar"/>
-                            <field name="plan_to_change_car" groups="fleet.fleet_group_manager" invisible="vehicle_type != 'car'"/>
-                            <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  invisible="vehicle_type != 'bike'"/>
                             <field name="next_assignation_date"/>
                             <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         </group>
@@ -109,6 +107,10 @@
                             </div>
                             <field name="manager_id" domain="[('share', '=', False), ('company_id', '=', company_id)]" widget="many2one_avatar_user"/>
                             <field name="location"/>
+                            <field name="plan_to_change_car" groups="fleet.fleet_group_manager" invisible="vehicle_type != 'car'" string="Make Vehicle Available"
+                                help="This will allow this vehicle to be selectable for the Salary Configurator"/>
+                            <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  invisible="vehicle_type != 'bike'" string="Make Vehicle Available"
+                                help="This will allow this vehicle to be selectable for the Salary Configurator"/>
                         </group>
                     </group>
                     <field name="vehicle_properties" columns="2"/>
