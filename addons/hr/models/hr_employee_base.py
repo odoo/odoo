@@ -204,6 +204,8 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.work_email = employee.work_contact_id.email
 
     def _create_work_contacts(self):
+        if not self:
+            return
         if any(employee.work_contact_id for employee in self):
             raise UserError(_('Some employee already have a work contact'))
         work_contacts = self.env['res.partner'].create([{
