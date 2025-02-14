@@ -92,7 +92,7 @@
                     <div class="small">
                         <div class="lh-1 fw-bold" t-out="day" t-options="{'widget': 'date', 'format': 'MMMM YYYY'}"/>
                         <span class="lh-1" t-out="day" t-options="{'widget': 'date', 'format': 'EEEE '}"/>
-                        <span class="d-none d-md-inline small lh-1 text-muted">(timezone: <t t-out="event.date_tz"/>)</span>
+                        <span t-if="website_visitor_timezone != event.date_tz" class="d-none d-md-inline small lh-1 text-muted">(timezone: <t t-out="event.date_tz"/>)</span>
                     </div>
                 </time>
                 <small><b t-out="tracks_by_days[day]"/> <span class="text-muted"> tracks</span></small>
