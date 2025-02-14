@@ -51,8 +51,10 @@ class Users(models.Model):
 
     @api.depends('totp_secret')
     def _compute_totp_enabled(self):
-        for r, v in zip(self, self.sudo()):
-            r.totp_enabled = bool(v.totp_secret)
+        self.totp_enabled = False
+        self.env.cr.execute("SELECT id FROM res_users WHERE id = ANY(%s) AND totp_secret IS NOT NULL AND totp_secret <> 'false'", (self.ids,))
+        enabled_ids = {x for [x] in self.env.cr.fetchall()}
+        self.filtered(lambda x: x.id in enabled_ids).totp_enabled = True
 
     def _rpc_api_keys_only(self):
         # 2FA enabled means we can't allow password-based RPC
@@ -63,13 +65,15 @@ class Users(models.Model):
         return super()._get_session_token_fields() | {'totp_secret'}
 
     def _totp_check(self, code):
-        sudo = self.sudo()
-        key = base64.b32decode(sudo.totp_secret)
+        self.ensure_one()
+        self.env.cr.execute('SELECT totp_secret FROM res_users WHERE id=%s', (self.id,))
+        totp_secret = self.env.cr.fetchone()[0]
+        key = base64.b32decode(totp_secret)
         match = TOTP(key).match(code)
         if match is None:
-            _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
+            _logger.info("2FA check: FAIL for %s %r", self, self.sudo().login)
             raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
-        _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
+        _logger.info("2FA check: SUCCESS for %s %r", self, self.sudo().login)
 
     def _totp_try_setting(self, secret, code):
         if self.totp_enabled or self != self.env.user:
@@ -158,9 +162,7 @@ class Users(models.Model):
         return super().change_password(old_passwd, new_passwd)
 
     def _compute_totp_secret(self):
-        for user in self.filtered('id'):
-            self.env.cr.execute('SELECT totp_secret FROM res_users WHERE id=%s', (user.id,))
-            user.totp_secret = self.env.cr.fetchone()[0]
+        self.totp_secret = ''
 
     def _inverse_totp_secret(self):
         for user in self.filtered('id'):
