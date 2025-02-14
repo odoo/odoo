@@ -6,6 +6,9 @@ import { ModelEdit } from "./cached_model_utils";
 export class CachedModelPlugin extends Plugin {
     static id = "CachedModel";
     static shared = ["ormRead", "ormSearchRead", "useModelEdit"];
+    resources = {
+        before_save_handlers: this.savePendingRecords.bind(this),
+    };
     setup() {
         this.ormReadCache = new Cache(
             ({ model, ids, fields }) => this.services.orm.read(model, ids, fields),
@@ -36,6 +39,34 @@ export class CachedModelPlugin extends Plugin {
         const modelEdit = this.modelEditCache.read({ model, recordId, field });
         // track el ?
         return modelEdit;
+    }
+    async savePendingRecords(editableEl = this.editable) {
+        const inventory = {}; // model => { recordId => { field => value } }
+        for (const modelEdit of Object.values(this.modelEditCache.cache)) {
+            modelEdit.collect(inventory);
+        }
+        // Save inventoried changes.
+        for (const [model, records] of Object.entries(inventory)) {
+            for (const [recordId, record] of Object.entries(records)) {
+                for (const [field, value] of Object.entries(record)) {
+                    // Currently only ids selection values are supported.
+                    const proms = value
+                        .filter((value) => typeof value.id === "string")
+                        .map((value) =>
+                            this.services.orm.create(value.model, [{ name: value.name }])
+                        );
+                    const createdIDs = (await Promise.all(proms)).flat();
+                    const ids = value
+                        .filter((value) => typeof value.id === "number")
+                        .map((value) => value.id)
+                        .concat(createdIDs);
+                    await this.services.orm.write(model, [parseInt(recordId)], {
+                        [field]: [[6, 0, ids]],
+                    });
+                }
+            }
+        }
+        return !!inventory.length;
     }
 }
 registry.category("website-plugins").add(CachedModelPlugin.id, CachedModelPlugin);

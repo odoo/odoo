@@ -35,13 +35,12 @@ export class ModelMany2Many extends Component {
             searchModel: undefined,
         });
         this.modelEdit = undefined;
-        this.selectionKey = undefined;
         this.domState = useDomState((el) => {
             if (!this.modelEdit) {
                 return { selection: [] };
             }
             return {
-                selection: this.modelEdit.get(this.selectionKey),
+                selection: this.modelEdit.get(this.props.m2oField),
             };
         });
         onWillStart(async () => {
@@ -64,12 +63,11 @@ export class ModelMany2Many extends Component {
         });
         // TODO: simultaneously fly both RPCs
         this.state.searchModel = modelData[props.m2oField].relation;
-        this.selectionKey = `${props.m2oField}Selection`;
         this.modelEdit = this.cachedModel.useModelEdit({
             model: this.props.baseModel,
             recordId: props.recordId,
         });
-        if (!this.modelEdit.has(this.selectionKey)) {
+        if (!this.modelEdit.has(props.m2oField)) {
             const storedSelection = await this.cachedModel.ormRead(
                 this.state.searchModel,
                 selectedRecordIds,
@@ -78,12 +76,12 @@ export class ModelMany2Many extends Component {
             for (const item of storedSelection) {
                 item.name = item.display_name;
             }
-            this.modelEdit.init(this.selectionKey, [...storedSelection]);
+            this.modelEdit.init(props.m2oField, [...storedSelection]);
         }
-        this.domState.selection = this.modelEdit.get(this.selectionKey);
+        this.domState.selection = this.modelEdit.get(props.m2oField);
     }
     setSelection(newSelection) {
-        this.modelEdit.set(this.selectionKey, newSelection);
+        this.modelEdit.set(this.props.m2oField, newSelection);
         this.env.editor.shared.history.addStep();
     }
     create(name) {
@@ -94,6 +92,7 @@ export class ModelMany2Many extends Component {
                 id: `new-${uniqueId()}`,
                 name: name,
                 display_name: name,
+                model: this.state.searchModel,
             },
         ]);
     }

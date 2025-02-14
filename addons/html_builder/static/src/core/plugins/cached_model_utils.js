@@ -11,43 +11,64 @@ export class ModelEdit {
         // history beyond init.
         this.initialValues = {};
     }
-    setRecord(model, id) {
+    setRecord(model, recordId) {
         if (this.model) {
             // Reused
-            if (model !== this.model || id !== this.id) {
-                throw new Error(`Incompatible record: ${model} ${id} vs ${this.model} ${this.id}`);
+            if (model !== this.model || recordId !== this.recordId) {
+                throw new Error(
+                    `Incompatible record: ${model} ${recordId} vs ${this.model} ${this.recordId}`
+                );
             }
             return;
         }
         this.model = model;
-        this.id = id;
-        this.selector = `[data-res-model="${this.model}"][data-res-id="${this.id}"]`;
+        this.recordId = recordId;
+        this.selector = `[data-res-model="${this.model}"][data-res-id="${this.recordId}"]`;
     }
-    getPropertyName(key) {
-        return `_Edit${key[0].toUpperCase()}${key.slice(1)}`;
+    getPropertyName(field) {
+        return `_Edit${field[0].toUpperCase()}${field.slice(1)}`;
     }
-    has(key) {
-        return key in this.initialValues;
-        // return this.getPropertyName(key) in this.editableEl.querySelector(this.selector).dataset;
+    has(field) {
+        return field in this.initialValues;
     }
-    get(key) {
+    get(field) {
         const jsonValue = this.editableEl.querySelector(this.selector).dataset[
-            this.getPropertyName(key)
+            this.getPropertyName(field)
         ];
         if (!jsonValue) {
-            return this.initialValues[key];
+            return this.initialValues[field];
         }
         return JSON.parse(jsonValue);
     }
-    init(key, value) {
-        this.initialValues[key] = value;
-        this.set(key, value);
+    init(field, value) {
+        this.initialValues[field] = value;
+        this.set(field, value);
     }
-    set(key, value) {
-        const propertyName = this.getPropertyName(key);
+    set(field, value) {
+        const propertyName = this.getPropertyName(field);
         const textValue = JSON.stringify(value);
         for (const el of this.editableEl.querySelectorAll(this.selector)) {
             el.dataset[propertyName] = textValue;
+        }
+    }
+    collect(inventory) {
+        const records = inventory[this.model] || {};
+        const record = records[this.recordId] || {};
+        for (const field of Object.keys(this.initialValues)) {
+            const textInitialValue = JSON.stringify(this.initialValues[field]);
+            const propertyName = this.getPropertyName(field);
+            const el = this.editableEl.querySelector(this.selector);
+            if (el) {
+                const textValue = el.dataset[propertyName];
+                if (textValue !== textInitialValue) {
+                    inventory[this.model] = records;
+                    records[this.recordId] = record;
+                    record[field] = JSON.parse(textValue);
+                    for (const el of this.editableEl.querySelectorAll(this.selector)) {
+                        delete el.dataset[propertyName];
+                    }
+                }
+            }
         }
     }
 }
