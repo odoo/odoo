@@ -27,8 +27,14 @@ class TestEmployee(TestHrCommon):
             self.employee_pierre.is_subordinate,
             'Pierre should not be a subordinate of the current user since Pierre has no manager.')
 
-        self.assertEqual(employees.filtered_domain(employees._search_is_subordinate('=', True)), self.employee_paul)
-        self.assertEqual(employees.filtered_domain(employees._search_is_subordinate('=', False)), self.employee_pierre)
+        def _filtered_is_subordinate(flag):
+            dom = employees._search_is_subordinate('in', [True])
+            if not flag:
+                dom = ['!', *dom]
+            return employees.filtered_domain(dom)
+
+        self.assertEqual(_filtered_is_subordinate(True), self.employee_paul)
+        self.assertEqual(_filtered_is_subordinate(False), self.employee_pierre)
 
         self.employee_pierre.parent_id = self.employee_paul
         self.assertTrue(
@@ -38,8 +44,8 @@ class TestEmployee(TestHrCommon):
             self.employee_pierre.is_subordinate,
             "Pierre should now be a subordinate of the current user since Paul is his manager and the current user is the Paul's manager.")
 
-        self.assertEqual(employees.filtered_domain(employees._search_is_subordinate('=', True)), employees)
-        self.assertFalse(employees.filtered_domain(employees._search_is_subordinate('=', False)))
+        self.assertEqual(_filtered_is_subordinate(True), employees)
+        self.assertFalse(_filtered_is_subordinate(False))
 
         self.employee_paul.parent_id = False
         employees._compute_is_subordinate()
@@ -51,8 +57,8 @@ class TestEmployee(TestHrCommon):
             self.employee_pierre.is_subordinate,
             "Pierre should not be a subordinate of the current user since Paul is his manager and the current user is not the Paul's manager.")
 
-        self.assertFalse(employees.filtered_domain(employees._search_is_subordinate('=', True)))
-        self.assertEqual(employees.filtered_domain(employees._search_is_subordinate('=', False)), employees)
+        self.assertFalse(_filtered_is_subordinate(True))
+        self.assertEqual(_filtered_is_subordinate(False), employees)
 
     def test_hierarchy_read(self):
         HrEmployee = self.env['hr.employee']

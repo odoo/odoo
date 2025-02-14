@@ -2356,9 +2356,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         # We consider an operation without any moves as always available since there is no goods to wait.
         if len(self) == 0:
             is_selected_available = any(val == 'available' for val in value) if isinstance(value, list) else value == 'available'
-            if is_selected_available == (operator in {'=', 'in'}):
-                return True
-            return False
+            return is_selected_available == (operator in {'=', 'in'})
         moves = self
         if operator == '=':
             moves = get_stock_moves(moves, value)

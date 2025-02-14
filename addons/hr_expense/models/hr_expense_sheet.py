@@ -468,8 +468,6 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def _search_product_ids(self, operator, value):
-        if operator == 'in' and not isinstance(value, list):
-            value = [value]
         return [('expense_line_ids.product_id', operator, value)]
 
     # ----------------------------------------

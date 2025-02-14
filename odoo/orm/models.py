@@ -1415,13 +1415,23 @@ class BaseModel(metaclass=MetaModel):
             for fname in field_name.split('.'):
                 field = model._fields[fname]
                 model = self.env.get(field.comodel_name)
+            # depending on the operator, we may need to cast the value to the type of the field
+            # ignore if we cannot convert
             if field.relational:
-                # relational fields will trigger a _name_search on their comodel
+                # relational fields will search on the display_name
+                domains.append([(field_name + '.display_name', operator, value)])
+            elif operator.endswith('like'):
                 domains.append([(field_name, operator, value)])
-                continue
-            with contextlib.suppress(ValueError):
-                # ignore that case if the value doesn't match the field type
-                domains.append([(field_name, operator, field.convert_to_write(value, self))])
+            elif isinstance(value, COLLECTION_TYPES):
+                typed_value = []
+                for v in value:
+                    with contextlib.suppress(ValueError):
+                        typed_value.append(field.convert_to_write(v, self))
+                domains.append([(field_name, operator, typed_value)])
+            else:
+                with contextlib.suppress(ValueError):
+                    typed_value = field.convert_to_write(value, self)
+                    domains.append([(field_name, operator, typed_value)])
         return aggregator(domains)
 
     @api.model
@@ -4806,7 +4816,7 @@ class BaseModel(metaclass=MetaModel):
         ):
             domain &= Domain(self._active_name, '=', True)
 
-        domain = domain._optimize(self)
+        domain = domain._optimize_for_sql(self)
         if domain.is_false():
             return self.browse()._as_query()
         query = Query(self.env, self._table, self._table_sql)
@@ -4838,7 +4848,7 @@ class BaseModel(metaclass=MetaModel):
         domain = self.env['ir.rule']._compute_domain(self._name, mode)
         if not domain.is_true():
             model = self.sudo()
-            domain = domain._optimize(model)
+            domain = domain._optimize_for_sql(model)
             query.add_where(domain._to_sql(model, query.table, query))
 
     def _order_to_sql(self, order: str, query: Query, alias: (str | None) = None,
@@ -4972,7 +4982,7 @@ class BaseModel(metaclass=MetaModel):
             sec_domain = Domain.TRUE
         else:
             sec_domain = self.env['ir.rule']._compute_domain(self._name, 'read')
-            sec_domain = sec_domain._optimize(self.sudo())
+            sec_domain = sec_domain._optimize_for_sql(self.sudo())
 
         # build the query
         if sec_domain.is_false() or (not limit and limit is not None and limit is not False):

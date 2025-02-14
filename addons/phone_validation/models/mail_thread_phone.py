@@ -71,6 +71,10 @@ class MailThreadPhone(models.AbstractModel):
                              where=f'{fname} IS NOT NULL')
 
     def _search_phone_mobile_search(self, operator, value):
+        if operator == 'not in':
+            return expression.AND(self._search_phone_mobile_search('!=', v) for v in value)
+        if operator == 'in':
+            return expression.OR(self._search_phone_mobile_search('=', v) for v in value)
         value = value.strip() if isinstance(value, str) else value
         phone_fields = [
             fname for fname in self._phone_get_number_fields()
@@ -87,6 +91,8 @@ class MailThreadPhone(models.AbstractModel):
             op = expression.AND if operator == '=' else expression.OR
             return op([[(phone_field, operator, False)] for phone_field in phone_fields])
 
+        if not value:
+            return [(1, '=', 1)]
         if self._phone_search_min_length and len(value) < self._phone_search_min_length:
             raise UserError(_('Please enter at least 3 characters when searching a Phone number.'))
 
@@ -173,15 +179,11 @@ class MailThreadPhone(models.AbstractModel):
 
     @api.model
     def _search_phone_sanitized_blacklisted(self, operator, value):
-        # Assumes operator is '=' or '!=' and value is True or False
         self._assert_phone_field()
-        if operator != '=':
-            if operator == '!=' and isinstance(value, bool):
-                value = not value
-            else:
-                raise NotImplementedError()
+        if operator not in ('in', 'not in'):
+            raise NotImplementedError()
 
-        if value:
+        if operator == 'in':
             query = """
                 SELECT m.id
                     FROM phone_blacklist bl
@@ -198,8 +200,6 @@ class MailThreadPhone(models.AbstractModel):
             """
         self._cr.execute(query % self._table)
         res = self._cr.fetchall()
-        if not res:
-            return [(0, '=', 1)]
         return [('id', 'in', [r[0] for r in res])]
 
     def _assert_phone_field(self):

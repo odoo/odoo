@@ -592,9 +592,6 @@ class Properties(Field):
         raw_sql_field = model._field_to_sql(alias, fname, query)
         sql_left = model._field_to_sql(alias, field_expr, query)
 
-        if operator in ('=', '!='):
-            operator = 'in' if operator == '=' else 'not in'
-            value = [value]
         if operator in ('in', 'not in'):
             assert isinstance(value, COLLECTION_TYPES)
             if len(value) == 1 and True in value:

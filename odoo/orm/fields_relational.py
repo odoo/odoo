@@ -643,9 +643,6 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
         comodel = model.env[self.comodel_name]
 
         # update the operator to 'any'
-        if operator in ('=', '!='):
-            operator = 'in' if operator == '=' else 'not in'
-            value = [value]
         if operator in ('in', 'not in'):
             operator = 'any' if operator == 'in' else 'not any'
         assert operator in ('any', 'not any'), \
@@ -687,7 +684,7 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
             return query
         if isinstance(value, Query):
             # add the field_domain to the query
-            domain = field_domain._optimize(comodel)
+            domain = field_domain._optimize_for_sql(comodel)
             if not domain.is_true():
                 # TODO should clone/copy Query value
                 value.add_where(domain._to_sql(comodel, value.table, value))
