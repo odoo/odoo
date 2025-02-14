@@ -33,7 +33,7 @@
             t-set="is_pickup_needed"
             t-value="delivery_type in dm.fields_get() and dm[delivery_type]"
         />
-        <div class="row flex-column flex-md-row flex-grow-1 gap-lg-3">
+        <div name="delivery_method" class="row flex-column flex-md-row flex-grow-1 gap-lg-3">
             <div class="col">
                 <div class="d-flex form-check mb-0 gap-2">
                     <!-- === Radio button === -->
