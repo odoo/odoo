@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="mail.MailComposerBccList">
+        <t t-if="hasRecipients()">
+            <t t-out="getRecipientListToHTML()"/>
+            <button class="btn btn-link badge rounded-pill border-0 p-1" title="Show all recipients" t-if="hasMoreRecipients()" t-on-click="onClickRecipientList">
+                <i class="fa fa-caret-down"/>
+            </button>
+        </t>
+    </t>
+</templates>

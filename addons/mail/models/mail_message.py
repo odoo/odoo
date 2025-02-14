@@ -926,6 +926,8 @@ class MailMessage(models.Model):
             "body",
             "create_date",
             "date",
+            "incoming_email_cc",
+            "incoming_email_to",
             Store.Attr("is_note", lambda m: m.subtype_id.id == note_id),
             Store.Attr("is_discussion", lambda m: m.subtype_id.id == com_id),
             # sudo: mail.message - reading link preview on accessible message is allowed
@@ -1056,6 +1058,11 @@ class MailMessage(models.Model):
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
                 "thread": Store.One(record, [], as_thread=True),
             }
+
+            if message.incoming_email_cc:
+                data["incoming_email_cc"] = tools.mail.email_split_tuples(message.incoming_email_cc)
+            if message.incoming_email_to:
+                data["incoming_email_to"] = tools.mail.email_split_tuples(message.incoming_email_to)
             if for_current_user:
                 # sudo: mail.message - filtering allowed tracking values
                 displayed_tracking_ids = message.sudo().tracking_value_ids._filter_has_field_access(

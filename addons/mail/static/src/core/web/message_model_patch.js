@@ -5,11 +5,13 @@ import { patch } from "@web/core/utils/patch";
 /** @type {import("models").Message} */
 const messagePatch = {
     /** @param {import("models").Thread} thread the thread where the message is shown */
-    canReplyAllandForward(thread) {
+    canReplyAll(thread) {
+        return this.canForward(thread) && !this.is_note;
+    },
+    canForward(thread) {
         return (
             !["discuss.channel", "mail.box"].includes(thread.model) &&
-            ["comment", "email"].includes(this.message_type) &&
-            !this.is_note
+            ["comment", "email"].includes(this.message_type)
         );
     },
 };

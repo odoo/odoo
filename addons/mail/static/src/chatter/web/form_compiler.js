@@ -18,7 +18,7 @@ function compileChatter(node, params) {
         isAttachmentBoxVisibleInitially: Boolean(node.getAttribute("open_attachments")),
         threadId: "__comp__.props.record.resId or undefined",
         threadModel: "__comp__.props.record.resModel",
-        webRecord: "__comp__.props.record",
+        record: "__comp__.props.record",
         saveRecord: "() => __comp__.save and __comp__.save()",
         highlightMessageId: "__comp__.highlightMessageId",
     });

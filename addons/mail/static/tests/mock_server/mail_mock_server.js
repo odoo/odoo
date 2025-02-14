@@ -627,7 +627,10 @@ export async function mail_message_post(request) {
             if (partner.length !== 0) {
                 post_data.partner_ids.push(partner[0].id);
             } else {
-                const partner_id = ResPartner.create(Object.assign({ email }));
+                const partner_id = ResPartner.create({
+                    email,
+                    name: email,
+                });
                 post_data.partner_ids.push(partner_id);
             }
         }
@@ -864,6 +867,19 @@ async function mail_thread_messages(request) {
         ).get_result(),
         messages: mailDataHelpers.Store.many_ids(messages),
     };
+}
+
+registerRoute("/mail/thread/recipients/fields", mail_thread_recipients_fields);
+async function mail_thread_recipients_fields(request) {
+    return {
+        partner_fields: [],
+        primary_email_field: []
+    };
+}
+
+registerRoute("mail/thread/update_suggested_recipents", mail_thread_update_suggested_recipients);
+async function mail_thread_update_suggested_recipients(request) {
+    return [];
 }
 
 registerRoute("/mail/action", mail_action);

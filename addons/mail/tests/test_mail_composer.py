@@ -274,7 +274,12 @@ class TestMailComposerUI(MailCommon, HttpCase):
             'partner_to': '{{ object.id }}',
         })
         partner = self.env["res.partner"].create({"name": "Jane", "email": "jane@example.com"})
-        user = self.env["res.users"].create({"name": "Not A Demo User", "login": "nadu"})
+        user_partner = self.env["res.partner"].create({"name": "Not A Demo User", "email":  "NotADemoUser@mail.com"})
+        user = self.env["res.users"].create({
+            "name": "Not A Demo User",
+            "login": "nadu",
+            "partner_id": user_partner.id
+        })
         with self.mock_mail_app():
             self.start_tour(
                 f"/odoo/res.partner/{partner.id}",
