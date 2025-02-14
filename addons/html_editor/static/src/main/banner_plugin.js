@@ -106,8 +106,9 @@ export class BannerPlugin extends Plugin {
             const zws = document.createTextNode("\u200B");
             bannerElement.before(zws);
         }
+        const baseContainerName = this.dependencies.baseContainer.getDefaultNodeName();
         this.dependencies.selection.setCursorStart(
-            bannerElement.querySelector(".o_editor_banner > div > p")
+            bannerElement.querySelector(`.o_editor_banner > div > ${baseContainerName}`)
         );
         this.dependencies.history.addStep();
     }
