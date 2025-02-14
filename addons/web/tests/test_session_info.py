@@ -72,6 +72,7 @@ class TestSessionInfo(common.HttpCase):
             'allowed_companies': expected_allowed_companies,
             'disallowed_ancestor_companies': expected_disallowed_ancestor_companies,
         }
+        self.assertEqual(result["groups"], {})
         self.assertEqual(
             result['user_companies'],
             expected_user_companies,
