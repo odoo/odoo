@@ -8,6 +8,7 @@
             <field name="subject">Reception of {{ object.name }}</field>
             <field name="use_default_to" eval="True"/>
             <field name="description">Automatically send an email to customers when a task reaches a specific stage in a project by setting this template on that stage</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
 <div>
     Dear <t t-out="object.partner_id.name or 'customer'">Brandon Freeman</t>,<br/><br/>
@@ -35,6 +36,7 @@
             <field name="partner_to" >{{ object._rating_get_partner().id }}</field>
             <field name="use_default_to" eval="False"/>
             <field name="description">Set this template on a project stage to request feedback from your customers. Enable the "customer ratings" feature on the project</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
 <div>
     <t t-set="access_token" t-value="object._rating_get_access_token()"/>

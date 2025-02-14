@@ -10,15 +10,16 @@
                         <div class="alert alert-danger" role="alert" invisible="not error_msg">
                             <field name="error_msg" widget="text"/>
                         </div>
+                        <field name="model_id" invisible="1"/>
                         <field name="mail_template_id" invisible="1"/>
 
                         <group class="align-items-stretch mx-0">
                             <group class="px-0">
-                                <field name="subject"/>
                                 <field name="email_from" invisible="not email_from"/>
-                                <field name="partner_ids" widget="many2many_tags" invisible="not partner_ids"/>
-                                <field name="email_to" invisible="not email_to"/>
-                                <field name="email_cc" invisible="not email_cc"/>
+                                <field name="subject" class="fw-bold"/>
+                                <label for="recipient_names" string="To"/>
+                                <field name="recipient_names" invisible="not recipient_names" nolabel="1"/>
+                                <span invisible="recipient_names">(unspecified)</span>
                                 <field name="reply_to" invisible="not reply_to"/>
                                 <field name="scheduled_date" invisible="not scheduled_date"/>
                             </group>
@@ -28,19 +29,19 @@
                                         class="p-1 d-flex w-25 align-items-center border"
                                         invisible="not has_several_languages_installed" nolabel="1"/>
                                     <field name="resource_ref" nolabel="1"
-                                        class="w-75"
-                                        options="{'hide_model': True, 'no_create': True, 'no_open': True}"
+                                        options="{'hide_model': True, 'no_create': True, 'no_open': True, 'model_field': 'model_id'}"
                                         readonly="False"
                                         invisible="no_record" widget="mail_preview_record_field"/>
                                 </div>
                             </div>
                         </group>
-                        <field name="body_html" class="w-100" options="{'safe': True}"/>
-                        <field name="has_attachments" invisible="1"/>
-                        <field name="attachment_ids" invisible="not has_attachments" widget="many2many_binary"/>
+                        <div class="border p-1 d-flex flex-column flex-grow-1">
+                            <field name="body_html" class="position-relative flex-grow-1" options="{'safe': True, 'sandboxedPreview': True}"/>
+                            <field name="attachment_ids" invisible="not has_attachments" nolabel="1" widget="mail_composer_attachment_list"/>
+                        </div>
                     </sheet>
                     <footer>
-                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button string="Close" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -53,7 +54,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="mail_template_preview_view_form"/>
             <field name="target">new</field>
-            <field name="context">{'default_mail_template_id':active_id}</field>
+            <field name="context">{'default_mail_template_id':active_id, 'dialog_size': 'extra-large'}</field>
         </record>
 
     </data>
