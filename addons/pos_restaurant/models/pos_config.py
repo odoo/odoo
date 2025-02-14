@@ -131,6 +131,7 @@ class PosConfig(models.Model):
             'default_preset_id': presets[0],
             'available_preset_ids': [(6, 0, presets[1:])],
         })
+        self.env.ref("point_of_sale.menu_pos_preset").active = True
         self.env['ir.model.data']._update_xmlids([{
             'xml_id': self._get_suffixed_ref_name(ref_name),
             'record': config,

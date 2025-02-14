@@ -50,7 +50,7 @@ class ResConfigSettings(models.TransientModel):
     # pos.config fields
     pos_use_presets = fields.Boolean(related='pos_config_id.use_presets', readonly=False)
     pos_default_preset_id = fields.Many2one('pos.preset', related='pos_config_id.default_preset_id', readonly=False)
-    pos_available_preset_ids = fields.Many2many('pos.preset', related='pos_config_id.available_preset_ids', readonly=False)
+    pos_available_preset_ids = fields.Many2many('pos.preset', domain="[('id', '!=', pos_default_preset_id)]", compute='_compute_pos_available_preset_ids', store=True, readonly=False)
     pos_module_pos_discount = fields.Boolean(related='pos_config_id.module_pos_discount', readonly=False)
     pos_module_pos_hr = fields.Boolean(related='pos_config_id.module_pos_hr', readonly=False)
     pos_module_pos_restaurant = fields.Boolean(related='pos_config_id.module_pos_restaurant', readonly=False)
@@ -334,3 +334,11 @@ class ResConfigSettings(models.TransientModel):
                     old._add_trusted_config_id(config.pos_config_id)
                 if old.id in removed_trusted_configs:
                     old._remove_trusted_config_id(config.pos_config_id)
+
+    @api.depends('pos_default_preset_id')
+    def _compute_pos_available_preset_ids(self):
+        for record in self:
+            if record.pos_default_preset_id and record.pos_available_preset_ids:
+                record.pos_available_preset_ids = record.pos_available_preset_ids.filtered(lambda x: x._origin.id != record.pos_default_preset_id.id) 
+            else:
+                record.pos_available_preset_ids = record.pos_config_id.available_preset_ids

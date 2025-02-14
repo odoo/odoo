@@ -56,12 +56,14 @@
                                         <field name="pos_default_preset_id"
                                             options="{'no_create': True}"
                                             required="pos_use_presets"
-                                            readonly="pos_has_active_session"
-                                            domain="[('identification', '=', 'none')]" />
+                                            readonly="pos_has_active_session" />
                                     </div>
                                     <div class="row">
                                         <label for="pos_available_preset_ids" class="col-lg-3" string="Others"/>
                                         <field name="pos_available_preset_ids" widget="many2many_tags" options="{'no_quick_create': True, 'color_field': 'color'}" readonly="pos_has_active_session" />
+                                    </div>
+                                    <div>
+                                        <button name="%(action_pos_preset_form)d" icon="oi-arrow-right" type="action" string="Config Presets" class="btn-link"/>
                                     </div>
                                 </div>
                             </setting>
