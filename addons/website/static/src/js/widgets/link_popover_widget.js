@@ -21,6 +21,15 @@ weWidgets.LinkPopoverWidget.include({
                 timeoutID = setTimeout(() => this.$target.popover('show'), 1500);
             });
         }
+        // Disable "edit link" & remove link" buttons in link popover.
+        if (this.target.classList.contains("s_website_form_send")) {
+            this.el.querySelectorAll(".o_we_edit_link, .o_we_remove_link").forEach((anchor) => {
+                anchor.style.cursor = "default";
+                anchor.classList.add("text-muted", "o_disable_link");
+                anchor.classList.remove("text-dark");
+                anchor.setAttribute("title", _t("This button is dynamic and linked to the form, it cannot be updated."));
+            });
+        }
 
         return this._super(...arguments);
     },
