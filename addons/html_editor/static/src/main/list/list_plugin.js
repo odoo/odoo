@@ -10,6 +10,7 @@ import {
     isProtected,
     isProtecting,
     listElementSelector,
+    isZWS,
 } from "@html_editor/utils/dom_info";
 import {
     closestElement,
@@ -766,7 +767,7 @@ export class ListPlugin extends Plugin {
         if (!closestLI || isBlockUnsplittable) {
             return;
         }
-        if (!closestLI.textContent) {
+        if (!closestLI.textContent || isZWS(closestLI)) {
             this.outdentLI(closestLI);
             return true;
         }
