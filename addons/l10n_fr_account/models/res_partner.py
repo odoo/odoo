@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import api, models, _
 
 
 class ResPartner(models.Model):
@@ -10,4 +10,6 @@ class ResPartner(models.Model):
         for partner in self:
             country = partner.ref_company_ids[:1].account_fiscal_country_id or partner.country_id
             if country.code == 'FR':
-                partner.company_registry_placeholder = '12345678900001'  # SIRET
+                partner.company_registry_placeholder = _('SIRET Number')
+            elif country.code == 'PF':
+                partner.company_registry_placeholder = _('No. Tahiti') # PF adheres to French regulations
