@@ -87,6 +87,12 @@ class MailTemplate(models.Model):
     auto_delete = fields.Boolean(
         'Auto Delete', default=True,
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
+    force_header = fields.Boolean('Force Header', default=False,
+        help="If checked, the header will be always shown in the email body when this template is used with"
+        "notification layout.")
+    force_footer = fields.Boolean('Force Footer', default=False,
+        help="If checked, the footer will be always shown in the email body when this template is used with"
+        "notification layout.")
     # contextual action
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "

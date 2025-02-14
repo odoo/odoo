@@ -3147,6 +3147,8 @@ class MailThread(models.AbstractModel):
         return {
             'force_email_company',
             'force_email_lang',
+            'force_footer',
+            'force_header',
             'force_record_name',
             'force_send',
             'mail_auto_delete',
@@ -3414,6 +3416,8 @@ class MailThread(models.AbstractModel):
             model_description=model_description,
             force_email_company=force_email_company,
             force_email_lang=force_email_lang,
+            force_header=kwargs.get('force_header', False),
+            force_footer=kwargs.get('force_footer', False),
             force_record_name=force_record_name,
             subtitles=subtitles,
         ):
@@ -3485,7 +3489,7 @@ class MailThread(models.AbstractModel):
             self, message, recipients_data, msg_vals=False,
             model_description=False, force_email_company=False, force_email_lang=False,  # rendering
             force_record_name=False,  # rendering
-            subtitles=None):
+            force_header=False, force_footer=False, subtitles=None):
         """ Make groups of recipients, based on 'recipients_data' which is a list
         of recipients informations. Purpose of this method is to group them by
         main usage ('user', 'portal_user', 'follower', 'customer', ... see
@@ -3561,6 +3565,8 @@ class MailThread(models.AbstractModel):
                 model_description=lang_model_description,
                 force_email_company=force_email_company,
                 force_email_lang=lang,
+                force_header=force_header,
+                force_footer=force_footer,
                 force_record_name=force_record_name,
             ) # 10 queries
             if subtitles:
@@ -3579,6 +3585,8 @@ class MailThread(models.AbstractModel):
                                                    model_description=False,
                                                    force_email_company=False,
                                                    force_email_lang=False,
+                                                   force_header=False,
+                                                   force_footer=False,
                                                    force_record_name=False):
         """ Prepare rendering context for notification email.
 
@@ -3684,8 +3692,8 @@ class MailThread(models.AbstractModel):
             # tools
             'is_html_empty': is_html_empty,
             # display
-            'email_notification_force_header': self.env.context.get('email_notification_force_header', False),  # force displaying the email header
-            'email_notification_force_footer': self.env.context.get('email_notification_force_footer', False),  # force displaying the email footer
+            'email_notification_force_header': self.env.context.get('email_notification_force_header') or force_header,  # force displaying the email header
+            'email_notification_force_footer': self.env.context.get('email_notification_force_footer') or force_footer,  # force displaying the email footer
             'email_notification_allow_header': self.env.context.get('email_notification_allow_header', True),
             'email_notification_allow_footer': self.env.context.get('email_notification_allow_footer', False),
         }
