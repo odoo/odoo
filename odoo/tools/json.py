@@ -6,6 +6,7 @@ import re
 import markupsafe
 from .func import lazy
 from .misc import ReadonlyDict
+from locale import getpreferredencoding
 
 JSON_SCRIPTSAFE_MAPPER = {
     '&': r'\u0026',
@@ -69,5 +70,12 @@ def json_default(obj):
     if isinstance(obj, ReadonlyDict):
         return dict(obj)
     if isinstance(obj, bytes):
-        return obj.decode()
+        # Impossible to guess the encoding, but we can try common ones.
+        local_encoding = getpreferredencoding()
+        for encoding in ['utf-8', 'latin1', 'iso-8859-1', 'iso-8859-15', 'ascii', local_encoding]:
+            try:
+                return obj.decode(encoding)
+            except UnicodeDecodeError:
+                continue
+        raise UnicodeDecodeError("Unable to decode bytes with common encodings")
     return str(obj)
