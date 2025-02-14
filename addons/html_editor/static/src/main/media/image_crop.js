@@ -256,7 +256,6 @@ export class ImageCrop extends Component {
         if (rect.top < viewportTop || viewportBottom - rect.bottom < 100) {
             await scrollTo(this.media, {
                 behavior: "smooth",
-                isAnchor: true,
                 ...(scrollable && { scrollable }),
             });
         }
