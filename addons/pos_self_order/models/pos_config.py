@@ -289,6 +289,9 @@ class PosConfig(models.Model):
 
                 self.env['pos.session']._load_pos_data_relations(model, response)
 
+        if len(response['pos.session']['data']) > 0:
+            response['pos.session']['data'][0]['_base_url'] = self.get_base_url()
+
         return response
 
     def _split_qr_codes_list(self, floors: List[Dict], cols: int) -> List[Dict]:
