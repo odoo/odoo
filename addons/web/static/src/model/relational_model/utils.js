@@ -718,8 +718,10 @@ export function isRelational(field) {
 export function useRecordObserver(callback) {
     const component = useComponent();
     let alive = true;
-    let props = component.props;
-    const fct = () => {
+    const observeRecord = (props) => {
+        if (!props.record) {
+            return;
+        }
         const def = new Deferred();
         let firstCall = true;
         effect(
@@ -752,12 +754,10 @@ export function useRecordObserver(callback) {
     onWillDestroy(() => {
         alive = false;
     });
-    onWillStart(() => fct());
+    onWillStart(() => observeRecord(component.props));
     onWillUpdateProps((nextProps) => {
-        const currentRecordId = props.record.id;
-        props = nextProps;
-        if (props.record.id !== currentRecordId) {
-            return fct();
+        if (nextProps.record !== component.props.record) {
+            return observeRecord(nextProps);
         }
     });
 }
