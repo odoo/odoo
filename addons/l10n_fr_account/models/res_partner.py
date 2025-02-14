@@ -11,3 +11,5 @@ class ResPartner(models.Model):
             country = partner.ref_company_ids[:1].account_fiscal_country_id or partner.country_id
             if country.code == 'FR':
                 partner.company_registry_placeholder = '12345678900001'  # SIRET
+            elif country.code == 'PF':
+                partner.company_registry_placeholder = 'N° Tahiti' # PF adheres to French regulations
