@@ -4,6 +4,7 @@ from datetime import timedelta
 from odoo import http, fields
 from odoo.http import request
 from odoo.tools import float_round
+from odoo.osv import expression
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 
 class PosSelfOrderController(http.Controller):
@@ -35,7 +36,7 @@ class PosSelfOrderController(http.Controller):
         order['date_order'] = str(fields.Datetime.now())
         order['fiscal_position_id'] = fiscal_position.id if fiscal_position else False
 
-        results = pos_config.env['pos.order'].sudo().with_context(from_self=True).with_company(pos_config.company_id.id).sync_from_ui([order])
+        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([order])
         line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
 
@@ -106,14 +107,25 @@ class PosSelfOrderController(http.Controller):
                 lst_price = 0
 
     @http.route('/pos-self-order/get-orders', auth='public', type='json', website=True)
-    def get_orders_by_access_token(self, access_token, order_access_tokens):
+    def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
         pos_config = self._verify_pos_config(access_token)
         session = pos_config.current_session_id
-        orders = session.order_ids.filtered_domain([
-            ("access_token", "in", order_access_tokens),
-            ("date_order", ">=", fields.Datetime.now() - timedelta(days=7)),
-        ])
+        table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
 
+        domain = ['&', '&',
+            ('table_id', '=', table.id),
+            ('state', '=', 'draft'),
+            ('access_token', 'not in', [data.get('access_token') for data in order_access_tokens])
+        ]
+
+        for data in order_access_tokens:
+            domain = expression.OR([domain, [
+                '&',
+                ('access_token', '=', data.get('access_token')),
+                ('write_date', '>', data.get('write_date'))
+            ]])
+
+        orders = session.order_ids.filtered_domain(domain)
         if not orders:
             return {}
 
