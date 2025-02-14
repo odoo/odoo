@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_form_aside" name="Form Aside">
+    <section class="s_form_aside pt64 pb64">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-6 order-lg-0" style="order: 1;">
+                    <h2>Contact us</h2>
+                    <p class="lead">Chat with us through or fill in this form to get information about anything related to Odoo apps, services, our company.</p>
+                    <t t-snippet-call="website.s_website_form" string="Form"/>
+                </div>
+                <div class="col-12 col-lg-5 offset-lg-1 pt0 pb32 order-lg-0" style="order: 0;">
+                    <img src="/web/image/website.s_form_aside_default_image" class="img img-fluid rounded" alt=""/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>
