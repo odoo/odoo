@@ -2490,8 +2490,7 @@ test("failing quick create on a many2one because ValidationError", async () => {
 });
 
 test("failing quick create on a many2one", async () => {
-    expect.assertions(2);
-    expect.errors(1);
+    expect.assertions(3);
     Product._views = {
         form: '<form><field name="name" /></form>',
     };
@@ -2507,8 +2506,10 @@ test("failing quick create on a many2one", async () => {
 
     await contains(".o_field_widget[name='product_id'] input").edit("abcd", { confirm: false });
     await runAllTimers();
+    expect.errors(1);
     await contains(".o_field_widget[name='product_id'] .dropdown-item").click();
     await animationFrame(); // wait for the error service
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_error_dialog").toHaveCount(1);
     expect(".modal .o_form_view").toHaveCount(0);
 });

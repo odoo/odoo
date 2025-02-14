@@ -2,7 +2,7 @@
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, hover, leave, queryFirst, waitFor } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, disableAnimations, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
     contains,
@@ -349,11 +349,7 @@ test("perform edit on next step", async () => {
 });
 
 test("scrolling to next step should update the pointer's height", async (assert) => {
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView(options) {
-            super.scrollIntoView({ ...options, behavior: "instant" });
-        },
-    });
+    disableAnimations();
 
     const content = "Click this pretty button to increment this magnificent counter !";
     registry.category("web_tour.tours").add("tour_de_france", {
@@ -426,11 +422,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
 });
 
 test("scroller pointer to reach next step", async () => {
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView(options) {
-            super.scrollIntoView({ ...options, behavior: "instant" });
-        },
-    });
+    disableAnimations();
 
     registry.category("web_tour.tours").add("tour_des_flandres", {
         steps: () => [{ trigger: "button.inc", content: "Click to increment", run: "click" }],

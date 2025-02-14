@@ -2,7 +2,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
     fill,
-    getActiveElement,
     press,
     queryAllTexts,
     queryFirst,
@@ -229,7 +228,7 @@ describe("Link creation", () => {
             expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a>[]</a></p>");
             await waitFor(".o-we-linkpopover");
             expect(".o-we-linkpopover").toHaveCount(1);
-            expect(getActiveElement()).toBe(queryOne(".o-we-linkpopover input.o_we_label_link"), {
+            expect(".o-we-linkpopover input.o_we_label_link").toBeFocused({
                 message: "should focus label input by default, when we don't have a label",
             });
         });
@@ -370,9 +369,7 @@ describe("Link creation", () => {
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
             await waitFor(".o-we-linkpopover", { timeout: 1500 });
-            expect(getActiveElement()).toBe(
-                queryOne(".o-we-linkpopover input.o_we_href_input_link")
-            );
+            expect(".o-we-linkpopover input.o_we_href_input_link").toBeFocused();
 
             await fill("test.com");
             await click(".o_we_apply_link");
