@@ -12,9 +12,9 @@
     </record>
 
     <record id="group_product_manager" model="res.groups">
-        <field name="name">Product Creation</field>
+        <field name="name">Administrator</field>
         <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
-        <field name="category_id" ref="base.module_category_usability"/>
+        <field name="category_id" ref="base.module_category_inventory_product"/>
     </record>
 
     <record id="base.default_user" model="res.users">
@@ -22,6 +22,12 @@
     </record>
     <record id="base.group_system" model="res.groups">
         <field name="implied_ids" eval="[Command.link(ref('group_product_manager'))]"/>
+    </record>
+
+    <record id="base.module_category_inventory_product" model="ir.module.category">
+        <field name="description">Helps you manage your product catalog.</field>
+        <field name="sequence">9
+        </field>
     </record>
 
 <data noupdate="1">

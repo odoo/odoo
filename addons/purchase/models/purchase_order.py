@@ -75,7 +75,7 @@ class PurchaseOrder(models.Model):
     name = fields.Char('Order Reference', required=True, index='trigram', copy=False, default='New')
     priority = fields.Selection(
         [('0', 'Normal'), ('1', 'Urgent')], 'Priority', default='0', index=True)
-    origin = fields.Char('Source Document', copy=False,
+    origin = fields.Char('Source', copy=False,
         help="Reference of the document that generated this purchase order "
              "request (e.g. a sales order)")
     partner_ref = fields.Char('Vendor Reference', copy=False,
