@@ -4,6 +4,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { DateTimeInput } from '@web/core/datetime/datetime_input';
 import { Component, useState, onWillStart, markup, xml } from "@odoo/owl";
+const { DateTime } = luxon;
 
 export class LunchCurrency extends Component {
     static template = "lunch.LunchCurrency";
@@ -114,7 +115,7 @@ export class LunchDashboard extends Component {
         super.setup();
         this.state = useState({
             infos: {},
-            date: new Date(),
+            date: DateTime.now(),
         });
 
         useBus(this.env.bus, 'lunch_update_dashboard', () => this._fetchLunchInfos());
@@ -187,12 +188,7 @@ export class LunchDashboard extends Component {
     }
 
     async onUpdateLunchTime(value) {
-        if (value) {
-            // Set time at 12:00
-            this.state.date.setTime(value + 12 * 60 * 60 * 1000);
-        } else {
-            this.state.date.setTime(new Date());
-        }
+        this.state.date = value || DateTime.now();
         this.env.searchModel.updateDate(this.state.date);
     }
 }
