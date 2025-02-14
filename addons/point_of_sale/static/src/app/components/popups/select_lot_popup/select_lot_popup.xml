@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="point_of_sale.EditListPopup">
+    <!-- <t t-name="point_of_sale.SelectLotPopup">
         <Dialog title="props.title">
             <t t-set-slot="header">
                 <h4 class="modal-title title" t-esc="props.title" />
@@ -19,7 +19,7 @@
                             removeItem="() => this.removeItem(item._id)"
                             deletable="_hasMoreThanOneItem()"
                             onInputChange.bind="onInputChange"
-                            onSelectItem.bind="onSelectItem"
+                             onSelectItem.bind="onSelectItem"
                             onUnselectItem.bind="onUnselectItem" />
                     </t>
                 </div>
@@ -27,6 +27,23 @@
             <t t-set-slot="footer">
                 <button class="btn btn-primary btn-lg lh-lg o-default-button" t-on-click="confirm">Ok</button>
             </t>
+       </Dialog>
+    </t> -->
+    <t t-name="point_of_sale.SelectLotPopup">
+        <Dialog title="props.title">
+            <t t-set-slot="header">
+                <h4 class="modal-title title" t-esc="props.title" />
+                <span class="sub-title" t-esc="props.name"/>
+            </t>
+                <!-- value="state.value" -->
+            <AutoComplete
+                placeholder.translate="'Serial/Lot Number'"
+                sources="getSources()"
+                onSelect.bind="(...x) => console.log(x)"
+                dropdown="true"
+                autoSelect="true"
+                autofocus="true"
+            />
        </Dialog>
     </t>
 </templates>
