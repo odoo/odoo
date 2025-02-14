@@ -1,5 +1,4 @@
 import { markRaw, markup, toRaw } from "@odoo/owl";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
@@ -991,7 +990,8 @@ export class Record extends DataPoint {
                 this.data[fieldName]._abandonRecords();
             }
         }
-        if (!this._checkValidity({ displayNotification: true })) {
+        const notify = this.isNew || !this.selected || this.model.multiEdit && !this.isValid && !this._unsetRequiredFields.size;
+        if (!this._checkValidity({ displayNotification: notify })) {
             return false;
         }
         const changes = this._getChanges();
@@ -1143,20 +1143,6 @@ export class Record extends DataPoint {
         const canProceed = this.model.hooks.onWillSetInvalidField(this, fieldName);
         if (canProceed === false) {
             return;
-        }
-        if (
-            this.selected &&
-            this.model.multiEdit &&
-            this.model.root._recordToDiscard !== this &&
-            !this._invalidFields.has(fieldName)
-        ) {
-            await this.model.dialog.add(AlertDialog, {
-                body: _t("No valid record to save"),
-                confirm: async () => {
-                    await this.discard();
-                    this.switchMode("readonly");
-                },
-            });
         }
         this._invalidFields.add(fieldName);
     }
