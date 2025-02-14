@@ -61,7 +61,7 @@ class StockScrap(models.Model):
 
     @api.depends('company_id', 'picking_id')
     def _compute_location_id(self):
-        groups = self.env['stock.warehouse']._read_group(
+        groups = self.env['stock.warehouse'].with_context(active_test=False)._read_group(
             [('company_id', 'in', self.company_id.ids)], ['company_id'], ['lot_stock_id:array_agg'])
         locations_per_company = {
             company.id: lot_stock_ids[0] if lot_stock_ids else False
