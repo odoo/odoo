@@ -179,7 +179,7 @@ export class PosOrder extends Base {
                         this.config.rounding_method,
                         remaining
                     );
-                    if (!this.currency.equal(paymentAmount, remaining)) {
+                    if (!this.currency.isZero(paymentAmount - remaining)) {
                         order_rounding = roundedRemaining - remaining;
                     }
                 }

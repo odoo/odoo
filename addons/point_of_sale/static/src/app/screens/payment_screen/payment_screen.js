@@ -644,7 +644,7 @@ export class PaymentScreen extends Component {
 
             const amountPaid = payment.getAmount();
             const expectedAmountPaid = cashRounding.round(amountPaid);
-            if (currency.equal(expectedAmountPaid, amountPaid)) {
+            if (currency.isZero(expectedAmountPaid - amountPaid)) {
                 continue;
             }
 

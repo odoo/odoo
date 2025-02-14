@@ -68,7 +68,7 @@ patch(PosStore.prototype, {
             const matchingLineIndex = opLinesToUpdate.findIndex(
                 (pl) =>
                     pl.payment_method_id.id === op.payment_method_id &&
-                    this.currency.equal(pl.amount, op.amount)
+                    this.currency.isZero(pl.amount - op.amount)
             );
             let opLine = null;
             if (matchingLineIndex > -1) {

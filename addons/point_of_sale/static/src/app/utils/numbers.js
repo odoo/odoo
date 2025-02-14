@@ -28,27 +28,35 @@ function invertMethod(method) {
 }
 
 export class AbstractNumbers extends Base {
-    comp(a, b, { precision, method } = {}) {
+    get precision() {
+        return Math.pow(10, -2);
+    }
+
+    get method() {
+        return "HALF-UP";
+    }
+
+    comp(a, b) {
         return comp(a, b, {
-            precision: precision || this.precision,
-            method: method || this.method,
+            precision: this.precision,
+            method: this.method,
         });
     }
 
-    isZero(a, { precision, method } = {}) {
-        return this.comp(a, 0, { precision, method }) === EQ;
+    isZero(a) {
+        return this.comp(a, 0) === EQ;
     }
 
-    isPositive(a, { precision, method } = {}) {
-        return this.comp(a, 0, { precision, method }) === GT;
+    isPositive(a) {
+        return this.comp(a, 0) === GT;
     }
 
-    isNegative(a, { precision, method } = {}) {
-        return this.comp(a, 0, { precision, method }) === LT;
+    isNegative(a) {
+        return this.comp(a, 0) === LT;
     }
 
-    equal(a, b, { precision, method } = {}) {
-        return this.comp(a, b, { precision, method }) === EQ;
+    equal(a, b) {
+        return this.comp(a, b) === EQ;
     }
 
     /**
@@ -58,8 +66,8 @@ export class AbstractNumbers extends Base {
      * round(-1.23, { precision: 0.1, method: "UP" }) // -1.3
      * ```
      */
-    round(a, { precision, method } = {}) {
-        return roundPrecision(a, precision || this.precision, method || this.method);
+    round(a) {
+        return roundPrecision(a, this.precision, this.method);
     }
 
     /**
@@ -68,13 +76,12 @@ export class AbstractNumbers extends Base {
      * asymmetricRound(-1.23, { precision: 0.1, method: "UP" }) // -1.2
      * ```
      */
-    asymmetricRound(a, { precision, method } = {}) {
-        method = method ?? this.method ?? "HALF-UP";
+    asymmetricRound(a) {
         return roundPrecision(
             a,
-            precision || this.precision,
+            this.precision,
             // If negative, invert the rounding method
-            this.isNegative(a, { precision, method }) ? invertMethod(method) : method
+            this.isNegative(a) ? invertMethod(this.method) : this.method
         );
     }
 }
