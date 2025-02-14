@@ -154,17 +154,8 @@ class CustomerPortal(portal.CustomerPortal):
             report_ref = 'purchase.report_purchase_quotation' if order_sudo.state in ['rfq','sent'] else 'purchase.action_report_purchase_order'
             return self._show_report(model=order_sudo, report_type=report_type, report_ref=report_ref, download=kw.get('download'))
 
-        confirm_type = kw.get('confirm')
-        if confirm_type == 'reminder':
-            order_sudo.confirm_reminder_mail(kw.get('confirmed_date'))
-        if confirm_type == 'reception':
-            order_sudo._confirm_reception_mail()
-        if confirm_type == 'decline':
-            order_sudo._decline_reception_mail()
-
         if kw.get('acknowledge'):
             order_sudo.action_acknowledge()
-
 
         values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)
         update_date = kw.get('update')
