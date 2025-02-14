@@ -16,10 +16,10 @@
 # Leaanika Randmets, 2023
 # JanaAvalah, 2023
 # Mihkel avalah, 2023
-# Siim Raasuke, 2024
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
 # Anna, 2024
 # Stevin Lilla, 2024
+# Siim Raasuke, 2025
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
+"Last-Translator: Siim Raasuke, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,6 +93,13 @@ msgstr "%(participant)s just osalesid \"%(survey_title)s\"."
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (koopia)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -408,6 +415,11 @@ msgid "<i class=\"fa fa-square-o fa-lg me-2\"/>answer"
 msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>vastus"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Edit Survey"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Muuda küsitlust"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg "
@@ -695,15 +707,6 @@ msgid ""
 msgstr ""
 "<span>Antud sertifikaat esitatakse</span>\n"
 "                                <br/>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
-msgid ""
-"<span>This is a Test Survey Entry. </span><i class=\"oi oi-fw oi-arrow-"
-"right\"/>Edit Survey"
-msgstr ""
-"<span>See on test küsitluse kirje.</span><i class=\"oi oi-fw oi-arrow-"
-"right\"/>Muuda küsitlust"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -4841,6 +4844,11 @@ msgid ""
 msgstr ""
 "Seda koodi kasutavad teie osalejad, et jõuda teie seanssi. Võite seda vabalt"
 " kohandada, kuidas soovite!"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "This is a Test Survey Entry."
+msgstr ""
 
 #. module: survey
 #. odoo-javascript

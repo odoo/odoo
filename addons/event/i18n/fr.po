@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -2450,6 +2450,11 @@ msgstr ""
 "Afficher les sponsors et les exposants sur les pages de votre événement"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "Afficher le fuseau horaire"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "Afficher l'ordre"
@@ -2758,8 +2763,6 @@ msgid "Event: Reminder"
 msgstr "Événement : Rappel"
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.js:0
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -2768,7 +2771,6 @@ msgstr "Événement : Rappel"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
-#, python-format
 msgid "Events"
 msgstr "Événements"
 
@@ -3134,11 +3136,6 @@ msgid "In Progress"
 msgstr "En cours"
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Insert dynamic Google Maps in your email templates"
-msgstr "Insérer Google Maps dynamique dans vos modèles d'e-mail"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
 msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
@@ -3146,6 +3143,11 @@ msgid ""
 msgstr ""
 "Indique le fuseau horaire dans lequel les dates/horaires des événements "
 "seront affichés sur le site web."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Insert dynamic Google Maps in your email templates"
+msgstr "Insérer Google Maps dynamique dans vos modèles d'e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -4554,7 +4556,6 @@ msgstr ""
 "téléphone."
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Fuseau horaire"
@@ -4805,6 +4806,11 @@ msgid "Welcome to"
 msgstr "Bienvenue à"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr "Quoi de neuf ?"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_begin
 #: model:ir.model.fields,help:event.field_event_registration__event_begin_date
 msgid ""
@@ -4813,11 +4819,6 @@ msgid ""
 msgstr ""
 "Le moment auquel l'événement est prévu (selon votre fuseau horaire local "
 "dans la vue formulaire)."
-
-#. module: event
-#: model_terms:event.event,description:event.event_0
-msgid "What's new?"
-msgstr "Quoi de neuf ?"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing

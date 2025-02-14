@@ -38,13 +38,18 @@ class NilveraClient:
         start = datetime.utcnow()
         url = self.base_url + endpoint
 
-        response = self.__session.request(
-            method, url,
-            timeout=self.timeout_limit,
-            params=params,
-            json=json,
-            files=files,
-        )
+        try:
+            response = self.__session.request(
+                method, url,
+                timeout=self.timeout_limit,
+                params=params,
+                json=json,
+                files=files,
+            )
+        except requests.exceptions.RequestException as e:
+            _logger.error("Network error during request: %s", e)
+            raise UserError("Network connectivity issue. Please check your internet connection and try again.")
+
         end = datetime.utcnow()
         self._log_request(method, start, end, url, params, json, response)
 

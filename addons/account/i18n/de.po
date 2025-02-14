@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 12:08+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -444,7 +444,6 @@ msgstr "25,00 USD"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
 msgstr "27,00"
 
@@ -1131,7 +1130,6 @@ msgstr "<span> fällig am </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
 msgstr "<span> auf </span>"
 
@@ -1974,11 +1972,6 @@ msgid ""
 msgstr ""
 "Konto: Entwürfe mit aktivierter auto_post und Buchungsdatum bis zum heutigen"
 " Tag buchen"
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "Buchhalter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3468,6 +3461,7 @@ msgid "Billing"
 msgstr "Abrechnung"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Abrechnungsadministrator"
 
@@ -3518,11 +3512,6 @@ msgstr "Leer, wenn Null"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Blockierende Meldung"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Buchführer"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6086,6 +6075,7 @@ msgstr "Entwurfsbuchungen"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "Entwurfsbuchung"
@@ -7077,20 +7067,6 @@ msgstr ""
 "Übertrags dieses Ausdrucks (bei einem Ausdruck mit der Bezeichnung "
 "_carryover_*) festgelegt werden, falls es sich von der übergeordneten Zeile "
 "unterscheidet."
-
-#. module: account
-msgid ""
-"Formula in the form line_code.expression_label. This allows setting the "
-"target of the carryover for this expression (on a _carryover_*-labeled "
-"expression), in case it is different from the parent line. 'custom' is also "
-"allowed as value in case the carryover destination requires more complex "
-"logic."
-msgstr ""
-"Formel in der Form line_code.expression_label. Damit kann das Ziel des "
-"Übertrags dieses Ausdrucks (bei einem Ausdruck mit der Bezeichnung "
-"_carryover_*) festgelegt werden, falls es sich von der übergeordneten Zeile "
-"unterscheidet. Der Wert „benutzerdefiniert“ ist auch zulässig, wenn das Ziel"
-" des Übertrags eine komplexere Logik erfordert."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8542,6 +8518,12 @@ msgid "Is Between"
 msgstr "Ist zwischen"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr "Ist Kontenplan installiert"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
@@ -9501,7 +9483,6 @@ msgstr ""
 "\n"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr "Marc Demo"
@@ -11204,11 +11185,6 @@ msgid "Payment Receipt:"
 msgstr "Zahlungsbeleg:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr "Zahlungsref."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -11886,11 +11862,6 @@ msgstr "Bewertungen"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Neu sequenzieren"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Schreibgeschützt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12603,11 +12574,6 @@ msgid "Sample Memo"
 msgstr "Beispielvermerk"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr "Beispielref."
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12635,7 +12601,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Scannen Sie mich mit Ihrer Banking-App."
@@ -13132,8 +13097,11 @@ msgstr "Legen Sie einen Preis fest"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Legen Sie einen Wert, der größer als 0,0 ist, um eine Kreditlimitprüfung zu "
+"aktivieren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13229,6 +13197,7 @@ msgstr ""
 "Präfix benannt."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Buchhaltungsfunktionen anzeigen - schreibgeschützt"
 
@@ -13263,6 +13232,7 @@ msgid "Show Force Tax Included"
 msgstr "„Steuer inklusive erzwingen“ anzeigen"
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Vollständige Buchhaltungsfunktionen anzeigen"
 
@@ -14163,6 +14133,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+"Die Kontenplanvorlage %s sollte nicht direkt ausgewählt werden. Stattdessen "
+"solltest du direkt die Kontenplanvorlage für dein Land auswählen."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -14246,17 +14227,6 @@ msgid ""
 msgstr ""
 "Die Zahlungsbedingung muss mindestens eine Prozentzeile haben und die "
 "Prozentsumme muss 100 % betragen."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
-"Die Kontenplanvorlage %s sollte nicht direkt ausgewählt werden. Stattdessen "
-"solltest du direkt die Kontenplanvorlage für dein Land auswählen."
 
 #. module: account
 #. odoo-python
@@ -16000,9 +15970,14 @@ msgstr "Übertragung nach %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Auslösen von Warnungen bei der Erstellung von Rechnungen und "
+"Verkaufsaufträgen für Partner, deren Gesamtforderungsbetrag eine bestimmte "
+"Grenze überschreitet.                                      Legen Sie einen "
+"Wert, der größer als 0,0 ist, um eine Kreditlimitprüfung zu aktivieren."
 
 #. module: account
 #. odoo-python
@@ -17269,28 +17244,6 @@ msgid ""
 msgstr ""
 "Sie können innerhalb Ihres Steuerlandes keine Steuerposition mit "
 "ausländischer MwSt. anlegen, ohne ihr ein Bundesland/eine Region zuzuordnen."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
-"country."
-msgstr ""
-"Sie können innerhalb Ihres Steuerlandes keine Steuerposition mit einer "
-"ausländischen Umsatzsteuer anlegen."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position within your fiscal country with the same"
-" VAT number as the main one set on your company."
-msgstr ""
-"Sie können in Ihrem Steuerland keine Steuerposition mit der gleichen "
-"MwSt.-Nummer wie die Hauptnummer Ihres Unternehmens anlegen."
 
 #. module: account
 #. odoo-python

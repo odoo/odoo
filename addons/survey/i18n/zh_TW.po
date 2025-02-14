@@ -3,7 +3,7 @@
 # 	* survey
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # Tony Ng, 2025
 # 
 msgid ""
@@ -78,6 +78,13 @@ msgstr "%(participant)s 剛參與 %(survey_title)s 調查。"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -446,6 +453,11 @@ msgid "<i class=\"fa fa-square-o fa-lg me-2\"/>answer"
 msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>回答"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Edit Survey"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/> 編輯調查"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg "
@@ -727,13 +739,6 @@ msgid ""
 msgstr ""
 "<span>此認證頒發給</span>\n"
 "                                <br/>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
-msgid ""
-"<span>This is a Test Survey Entry. </span><i class=\"oi oi-fw oi-arrow-"
-"right\"/>Edit Survey"
-msgstr "<span>這是一個測試調查條目。</span><i class=\"oi oi-fw oi-arrow-right\"/>編輯調查"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -1491,7 +1496,7 @@ msgstr "撰寫電郵"
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "Computing score requires a question in arguments."
-msgstr "計算分數需要在參數中提出問題。"
+msgstr "計算分數需要在引數中提出問題。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -4795,6 +4800,11 @@ msgid ""
 "This code will be used by your attendees to reach your session. Feel free to"
 " customize it however you like!"
 msgstr "您的與會者將使用此代碼來參加您的會議。隨意自訂為你喜歡的！"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "This is a Test Survey Entry."
+msgstr "這是一個測試調查的條目。"
 
 #. module: survey
 #. odoo-javascript

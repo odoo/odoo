@@ -3,15 +3,15 @@
 # 	* account
 # 
 # Translators:
-# Sarah Park, 2024
 # Wil Odoo, 2024
+# Sarah Park, 2025
 # Daye Jeong, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 12:08+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -440,7 +440,6 @@ msgstr "25.00 USD"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
 msgstr "27.00"
 
@@ -1070,7 +1069,6 @@ msgstr "<span> 마감 기한 </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
 msgstr "<span> </span>"
 
@@ -1875,11 +1873,6 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
 msgstr "계정: 자동 발행 기능이 활성화되어 있고 회계일자가 금일까지로 설정되어 있는 미결 전표를 발행합니다"
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "회계사"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3335,6 +3328,7 @@ msgid "Billing"
 msgstr "청구"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "청구서 관리자"
 
@@ -3385,11 +3379,6 @@ msgstr "0인 경우 비워둠"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "차단 메시지"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "회계 담당자"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -5880,6 +5869,7 @@ msgstr "미결 전표"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "미결 항목"
@@ -6846,17 +6836,6 @@ msgid ""
 msgstr ""
 "수식은 `line_code.expression_label`로 구조화됩니다. 이 구성을 사용하면 `_carryover_`로 레이블이 지정된"
 " 표현식에 대한 이월 대상을 지정할 수 있습니다 (상위 줄과 다른 경우)."
-
-#. module: account
-msgid ""
-"Formula in the form line_code.expression_label. This allows setting the "
-"target of the carryover for this expression (on a _carryover_*-labeled "
-"expression), in case it is different from the parent line. 'custom' is also "
-"allowed as value in case the carryover destination requires more complex "
-"logic."
-msgstr ""
-"line_code.expression_label 형식의 수식입니다. 상위 행과 다른 경우, 이 표현식 (_carryover_* 레이블이 "
-"지정된 표현식)의 이월 대상을 설정할 수 있습니다. 이월 대상에서 더 복잡한 로직이 필요한 경우 'custom' 값도 허용하고 있습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8235,6 +8214,12 @@ msgid "Is Between"
 msgstr "다음 금액 범위에 있음"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr "Coa 설치됨"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
@@ -9162,7 +9147,6 @@ msgstr ""
 "SEPA 자동이체: 협력사 권한으로 SEPA 지역에서 결제가 가능합니다 (account_sepa 모듈 필수).\n"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr "Marc Demo"
@@ -10827,11 +10811,6 @@ msgid "Payment Receipt:"
 msgstr "지불 영수증:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr "결제 참조"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -11492,11 +11471,6 @@ msgstr "평가"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "재배치"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "읽기 전용"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12198,11 +12172,6 @@ msgid "Sample Memo"
 msgstr "메모 예시"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr "참조 예시"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12228,7 +12197,6 @@ msgstr "이 페이지를 저장 후 다시 돌아와서 기능을 설정하세�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "뱅킹 앱으로 스캔하십시오."
@@ -12704,8 +12672,9 @@ msgstr "가격을 설정하세요."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
-msgstr ""
+msgstr "신용 한도 확인 기능을 활성화하려면 0.0보다 큰 값을 설정하세요."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -12793,6 +12762,7 @@ msgid ""
 msgstr "표시용 줄임말입니다. 전표에 입력할 때도 이 머릿말을 기본값으로 이름을 지정합니다."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "회계 기능 표시 - 읽기 전용"
 
@@ -12827,6 +12797,7 @@ msgid "Show Force Tax Included"
 msgstr "고정세 포함 표시"
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "전체 회계 관리 기능 표시"
 
@@ -13696,6 +13667,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr "%s 차트 템플릿을 직접 선택할 수 없습니다. 대신 해당 국가에 맞는 차트 템플릿을 선택하세요."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -13769,15 +13749,6 @@ msgid ""
 "The Payment Term must have at least one percent line and the sum of the "
 "percent must be 100%."
 msgstr "지급 조건에는 백분율 항목이 있어야 하며 백분율 합계는 100% 이어야 합니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr "%s 차트 템플릿을 직접 선택할 수 없습니다. 대신 해당 국가에 맞는 차트 템플릿을 선택하세요."
 
 #. module: account
 #. odoo-python
@@ -15352,9 +15323,13 @@ msgstr "이동 후: %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"협력사의 미수금 총액 한도가 초과된 경우, 청구서나 판매주문서를 생성할 때 주의 알림이 표시됩니다."
+"                                           신용 한도 확인 기능을 활성화하려면 0.0보다 큰 값을 "
+"설정하세요."
 
 #. module: account
 #. odoo-python
@@ -16530,24 +16505,6 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr "주를 설정하지 않으면 해외 VAT 번호를 이용하여 회계 기준 국가 내에서 재정 위치를 생성할 수 없습니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
-"country."
-msgstr "해외 국가의 VAT 번호를 이용하여 회계 기준 국가 내에서 재정 위치를 생성할 수 없습니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position within your fiscal country with the same"
-" VAT number as the main one set on your company."
-msgstr "회계 기준 국가의 재정 위치 VAT 번호를 회사용으로 설정한 VAT 기본값과 동일하게 생성할 수 없습니다."
 
 #. module: account
 #. odoo-python

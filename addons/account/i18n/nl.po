@@ -7,17 +7,17 @@
 # Jolien De Paepe, 2024
 # Larissa Manderfeld, 2024
 # Wil Odoo, 2024
-# Manon Rondou, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Dylan Kiss, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 12:08+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dylan Kiss, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -450,7 +450,6 @@ msgstr "25,00 USD"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
 msgstr "27.00"
 
@@ -1138,7 +1137,6 @@ msgstr "<span> verschuldigd op </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
 msgstr "<span> op </span>"
 
@@ -1980,11 +1978,6 @@ msgid ""
 msgstr ""
 "Boekhouding: post conceptboekingen met auto_post ingeschakeld en "
 "boekhouddatum tot vandaag"
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "Accountant"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3468,6 +3461,7 @@ msgid "Billing"
 msgstr "Facturatie"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Facturatiebeheerder"
 
@@ -3518,11 +3512,6 @@ msgstr "Leeg indien nul"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Blokkerend bericht"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Boekhouder"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6073,6 +6062,7 @@ msgstr "Conceptinvoer"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "Conceptboeking"
@@ -7059,20 +7049,6 @@ msgstr ""
 " doel van de overdracht voor deze expressie in te stellen (op een "
 "_carryover_*-gelabelde expressie), in het geval dat deze verschilt van de "
 "bovenliggende regel."
-
-#. module: account
-msgid ""
-"Formula in the form line_code.expression_label. This allows setting the "
-"target of the carryover for this expression (on a _carryover_*-labeled "
-"expression), in case it is different from the parent line. 'custom' is also "
-"allowed as value in case the carryover destination requires more complex "
-"logic."
-msgstr ""
-"Formule in de vorm line_code.expression_label. Dit maakt het mogelijk om het"
-" doel van de overdracht voor deze expressie in te stellen (op een "
-"_carryover_*-gelabelde expressie), in het geval dat deze verschilt van de "
-"bovenliggende regel. 'custom' is ook toegestaan als waarde in het geval dat "
-"de overdrachtsbestemming complexere logica vereist."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8527,6 +8503,12 @@ msgid "Is Between"
 msgstr "Is tussen"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr "Is grootboekschema geïnstalleerd"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
@@ -9481,7 +9463,6 @@ msgstr ""
 "SEPA Direct Debit: Krijg betaald in de SEPA-zone dankzij een mandaat dat je relatie je hebt gegeven. Module account_sepa is noodzakelijk.\n"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr "Marc Demo"
@@ -11184,11 +11165,6 @@ msgid "Payment Receipt:"
 msgstr "Betalingsbewijs:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr "Betalingsreferentie"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -11863,11 +11839,6 @@ msgstr "Beoordelingen"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Hernummeren"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Alleen lezen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12575,11 +12546,6 @@ msgid "Sample Memo"
 msgstr "Voorbeeldmemo"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr "Voorbeeldref"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12607,7 +12573,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Scan met je bank app."
@@ -13103,8 +13068,11 @@ msgstr "Stel een prijs in"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Stel een waarde groter dan 0,0 in om een ​​kredietlimietcontrole te "
+"activeren"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13195,6 +13163,7 @@ msgstr ""
 "standaard ook een naam met dit voorvoegsel."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Toon volledige boekhoudkundige opties - Alleen lezen"
 
@@ -13229,6 +13198,7 @@ msgid "Show Force Tax Included"
 msgstr "Toon forceer inclusief BTW"
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Toon volledige boekhoudkundige opties"
 
@@ -14124,6 +14094,18 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+"Het %s grootboeschemasjabloon mag niet rechtstreeks worden geselecteerd. In "
+"plaats daarvan moet je rechtstreeks het grootboeschemasjabloon selecteren "
+"die betrekking heeft op het land."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -14206,18 +14188,6 @@ msgid ""
 msgstr ""
 "De betalingstermijnen moeten minstens één percentageregel hebben en de som "
 "van de percentages moet 100% zijn."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
-"Het %s grootboeschemasjabloon mag niet rechtstreeks worden geselecteerd. In "
-"plaats daarvan moet je rechtstreeks het grootboeschemasjabloon selecteren "
-"die betrekking heeft op het land."
 
 #. module: account
 #. odoo-python
@@ -15942,9 +15912,14 @@ msgstr "Overboeken naar %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Activeer waarschuwingen bij het aanmaken van facturen en klantorders voor "
+"partners met een totaal te ontvangen bedrag dat een limiet overschrijdt."
+"                                      Stel een waarde groter dan 0,0 in om "
+"een kredietlimietcontrole te activeren"
 
 #. module: account
 #. odoo-python
@@ -17204,28 +17179,6 @@ msgid ""
 msgstr ""
 "Je kunt geen fiscale positie aanmaken met een buitenlandse BTW binnen je "
 "fiscale land zonder er een staat aan toe te kennen."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
-"country."
-msgstr ""
-"Je kunt binnen het fiscale land geen fiscale positie aanmaken met een "
-"buitenlandse BTW."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position within your fiscal country with the same"
-" VAT number as the main one set on your company."
-msgstr ""
-"Je kunt geen fiscale positie aanmaken binnen het fiscale land met hetzelfde "
-"BTW-nummer als het hoofdnummer van je bedrijf."
 
 #. module: account
 #. odoo-python

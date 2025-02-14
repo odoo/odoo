@@ -18,6 +18,7 @@
 # Egon Raamat <egon@avalah.ee>, 2023
 # Aveli Kannel <aveli@avalah.ee>, 2023
 # Triine Aavik <triine@avalah.ee>, 2023
+# Katrin Kampura, 2023
 # Mihkel avalah, 2023
 # Andre Roomet <andreroomet@gmail.com>, 2024
 # Algo Kärp <algokarp@gmail.com>, 2024
@@ -28,22 +29,21 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2024
 # Leaanika Randmets, 2024
 # Tairi Tiimann, 2024
-# Anna, 2024
 # Siim Raasuke, 2024
-# Katrin Kampura, 2024
 # Karin Eelma, 2024
-# Birgit Vijar, 2024
 # Piia Paurson <piia@avalah.ee>, 2024
 # Stevin Lilla, 2024
 # Terttu Tammaru, 2025
+# Anna, 2025
+# Birgit Vijar, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 12:08+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Terttu Tammaru, 2025\n"
+"Last-Translator: Birgit Vijar, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -221,7 +221,7 @@ msgstr "%s Väljavõte %s"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "%s installment #%s"
-msgstr ""
+msgstr "%s osamakse #%s"
 
 #. module: account
 #. odoo-python
@@ -238,6 +238,9 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%s vigane staatus seoses seotud väljavõtte reaga.\n"
+"To be consistent, the journal entry must always have exactly one suspense line.\n"
+"Järjepidevuse tagamiseks peab üks andmiku kanne alati sisaldama tasakaalustamise rida."
 
 #. module: account
 #. odoo-python
@@ -469,7 +472,6 @@ msgstr "25.00 USD"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
 msgstr "27.00"
 
@@ -1103,7 +1105,6 @@ msgstr "<span> Tähtaeg</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
 msgstr "<span>   </span>"
 
@@ -1922,11 +1923,6 @@ msgid ""
 msgstr ""
 "Konto; Hilisema mustandi sisestused koos auto_post set to True kuni "
 "käesoleva hetkeni"
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "Raamatupidaja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3392,6 +3388,7 @@ msgid "Billing"
 msgstr "Arveldus"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Arvelduse Admin"
 
@@ -3442,11 +3439,6 @@ msgstr "Tühi kui null"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Veateade"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Raamatupidaja"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -5970,6 +5962,7 @@ msgstr "Mustand kanded"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "Mustandkanne"
@@ -6946,15 +6939,6 @@ msgid ""
 "Formula in the form line_code.expression_label. This allows setting the "
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
-msgstr ""
-
-#. module: account
-msgid ""
-"Formula in the form line_code.expression_label. This allows setting the "
-"target of the carryover for this expression (on a _carryover_*-labeled "
-"expression), in case it is different from the parent line. 'custom' is also "
-"allowed as value in case the carryover destination requires more complex "
-"logic."
 msgstr ""
 
 #. module: account
@@ -8377,6 +8361,12 @@ msgid "Is Between"
 msgstr "on vahemikus"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
@@ -9314,7 +9304,6 @@ msgstr ""
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr "Marc Demo"
@@ -10991,11 +10980,6 @@ msgid "Payment Receipt:"
 msgstr "Maksekviitung:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr "Makse selgitus"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -11665,11 +11649,6 @@ msgstr "Hinnangud"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Ümberjärjestamine"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Ainult lugemiseks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12373,11 +12352,6 @@ msgid "Sample Memo"
 msgstr "Näidismemo"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr "Näidisviide"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12403,7 +12377,6 @@ msgstr "Salvesta see leht ja tulge tagasi, et funktsiooni seadistada."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Skaneeri mind oma panga rakendusega."
@@ -12887,6 +12860,7 @@ msgstr "Määra hind"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
 
@@ -12972,6 +12946,7 @@ msgstr ""
 "registri kanded."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Näita raamatupidamise võimalusi - ainult vaatamiseks"
 
@@ -13006,6 +12981,7 @@ msgid "Show Force Tax Included"
 msgstr "Näita jõuga maksusisaldust"
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Näita kõiki raamatupidamise võimalusi"
 
@@ -13887,6 +13863,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -13964,15 +13949,6 @@ msgid ""
 msgstr ""
 "Maksetingimusel peab olema vähemalt üks % sisaldav rida ning kokku peab "
 "olema 100%"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15345,6 +15321,8 @@ msgid ""
 "validated. You should go on the partner bank account in order to validate "
 "it."
 msgstr ""
+"Maksete kinnitamiseks %s, peab saaja pangakonto olema manuaalselt "
+"kinnitatud. Selleks minge partneri pangakonto juurde ja kinnitage see."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -15598,7 +15576,8 @@ msgstr "Ülekanne kuni %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
 
@@ -16807,24 +16786,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
-"country."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position within your fiscal country with the same"
-" VAT number as the main one set on your company."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16930,6 +16891,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
+"Järgmisi välju ei saa muuta: %s.\n"
+"Järgnevad kanded on juba räsitud:\n"
+"%s"
 
 #. module: account
 #. odoo-python

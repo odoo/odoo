@@ -11,10 +11,10 @@
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # Larisa_nexterp, 2024
 # Simonel Criste <info@erpsystems.solutions>, 2024
-# Maria Muntean, 2024
 # Corina Calin, 2024
 # Wil Odoo, 2024
 # Lyall Kindmurr, 2024
+# Maria Muntean, 2025
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lyall Kindmurr, 2024\n"
+"Last-Translator: Maria Muntean, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,6 +88,13 @@ msgstr ""
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -401,6 +408,11 @@ msgid "<i class=\"fa fa-square-o fa-lg me-2\"/>answer"
 msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>răspuns"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Edit Survey"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Editați sondajul"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg "
@@ -666,13 +678,6 @@ msgstr "<span>Doar trecut</span>"
 msgid ""
 "<span>This certificate is presented to</span>\n"
 "                                <br/>"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
-msgid ""
-"<span>This is a Test Survey Entry. </span><i class=\"oi oi-fw oi-arrow-"
-"right\"/>Edit Survey"
 msgstr ""
 
 #. module: survey
@@ -4812,6 +4817,11 @@ msgid ""
 msgstr ""
 "Acest cod va fi utilizat de către participanții dvs. pentru a ajunge la "
 "sesiunea dvs. Simte-te liber să-l personalizezi oricum îți place!"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "This is a Test Survey Entry."
+msgstr ""
 
 #. module: survey
 #. odoo-javascript
