@@ -124,33 +124,22 @@
 }
 
 /* Style of the tiles allowing the user to load a sample survey. */
-.o_survey_sample_container  {
-    margin-top: .5rem;
-}
+.o_survey_sample_container {
+    pointer-events: auto;
 
-.o_survey_sample_tile {
-    max-width: 150px;
-    padding: 1rem;
-    font-size: .75rem;
-    .o_survey_sample_tile_cover {
-        display: none;
-        overflow-y: auto;
-        cursor: pointer;
-    }
-    &:hover {
-        .o_survey_sample_tile_cover {
-            display: flex;
-            flex-direction: column;
-            background: rgba(0, 0, 0, 0.9);
-            &::before, &::after {
-                content: '';
+    .survey_card {
+        &, * {
+            transition: all .15s;
+        }
+
+        cursor: pointer !important;
+
+        &:hover {
+            * {
+                color: #7C6576 !important;
             }
-            &::before {
-                margin-top: auto;
-            }
-            &::after {
-                margin-bottom: auto;
-            }
+            box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+            border-color: #7C6576 !important;
         }
     }
 }
@@ -158,4 +147,8 @@
 .o_form_label.o_form_label_readonly.o_survey_label_survey_start_url{
     opacity: 100;
     font-weight: 500;
+}
+
+.o_nocontent_help:has(.o_survey_sample_container) {
+    max-width: unset !important;
 }
