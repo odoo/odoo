@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
+
 from odoo.service.common import exp_version
 from odoo import http, _
 from odoo.http import request
@@ -7,7 +9,6 @@ from odoo.osv import expression
 from odoo.tools import float_round, py_to_js_locale, SQL
 from odoo.tools.image import image_data_uri
 
-import datetime
 
 class HrAttendance(http.Controller):
     @staticmethod
@@ -111,7 +112,7 @@ class HrAttendance(http.Controller):
                         'kiosk_mode': kiosk_mode,
                         'from_trial_mode': from_trial_mode,
                         'barcode_source': company.attendance_barcode_source,
-                        'lang': py_to_js_locale(company.partner_id.lang),
+                        'lang': py_to_js_locale(company.partner_id.lang or self.env.lang),
                         'server_version_info': version_info.get('server_version_info'),
                     },
                 }
