@@ -5546,13 +5546,13 @@ class BaseModel(metaclass=MetaModel):
                     elif comparator == 'not in':
                         ok = not (value and any(x in value for x in data))
                     elif comparator == '<':
-                        ok = any(x is not None and x < value for x in data)
+                        ok = value is not None and any(x is not None and x < value for x in data)
                     elif comparator == '>':
-                        ok = any(x is not None and x > value for x in data)
+                        ok = value is not None and any(x is not None and x > value for x in data)
                     elif comparator == '<=':
-                        ok = any(x is not None and x <= value for x in data)
+                        ok = value is not None and any(x is not None and x <= value for x in data)
                     elif comparator == '>=':
-                        ok = any(x is not None and x >= value for x in data)
+                        ok = value is not None and any(x is not None and x >= value for x in data)
                     elif comparator == 'ilike':
                         data = [(x or "").lower() for x in data]
                         ok = fnmatch.filter(data, '*' + (value_esc or '').lower() + '*')
