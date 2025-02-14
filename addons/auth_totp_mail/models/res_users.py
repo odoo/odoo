@@ -49,7 +49,10 @@ class ResUsers(models.Model):
         - Not enabled -> no alert
         """
         auth_info = super().authenticate(credential, user_agent_env)
+        self._notify_security_new_connection(auth_info)
+        return auth_info
 
+    def _notify_security_new_connection(self, auth_info):
         user = self.env(user=auth_info['uid']).user
 
         if request and user.email and user._mfa_type():
@@ -66,8 +69,6 @@ class ResUsers(models.Model):
                     content=_('A new device was used to sign in to your account.'),
                 )
                 _logger.info("New device alert email sent for user <%s> to <%s>", user.login, user.email)
-
-        return auth_info
 
     def _notify_security_setting_update_prepare_values(self, content, suggest_2fa=True, **kwargs):
         """" Prepare rendering values for the 'mail.account_security_alert' qweb template
