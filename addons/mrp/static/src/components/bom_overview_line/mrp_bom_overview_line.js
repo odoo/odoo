@@ -10,10 +10,7 @@ export class BomOverviewLine extends Component {
         showOptions: {
             type: Object,
             shape: {
-                availabilities: Boolean,
-                costs: Boolean,
-                operations: Boolean,
-                leadTimes: Boolean,
+                mode: String,
                 uom: Boolean,
                 attachments: Boolean,
             },
@@ -130,16 +127,8 @@ export class BomOverviewLine extends Component {
         return this.data.level - (this.hasFoldButton ? 1 : 0);
     }
 
-    get showAvailabilities() {
-        return this.props.showOptions.availabilities;
-    }
-
-    get showCosts() {
-        return this.props.showOptions.costs;
-    }
-
-    get showLeadTimes() {
-        return this.props.showOptions.leadTimes;
+    get forecastMode() {
+        return this.props.showOptions.mode == "forecast";
     }
 
     get showUom() {

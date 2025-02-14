@@ -21,16 +21,12 @@ export class BomOverviewComponent extends Component {
         this.warehouses = [];
         this.showVariants = false;
         this.uomName = "";
-        this.extraColumnCount = 0;
         this.unfoldedIds = new Set();
 
         this.state = useState({
             showOptions: {
+                mode: 'overview',
                 uom: false,
-                availabilities: false || Boolean(this.props.action.context.activate_availabilities),
-                costs: true,
-                operations: true,
-                leadTimes: true,
                 attachments: false,
             },
             currentWarehouse: null,
@@ -117,8 +113,8 @@ export class BomOverviewComponent extends Component {
         ids.forEach(id => this.unfoldedIds[operation](id));
     }
 
-    onChangeDisplay(displayInfo) {
-        this.state.showOptions[displayInfo] = !this.state.showOptions[displayInfo];
+    onChangeMode(mode) {
+        this.state.showOptions.mode = mode;
     }
 
     async onChangeBomQuantity(newQuantity) {
@@ -161,10 +157,7 @@ export class BomOverviewComponent extends Component {
 
     getReportName(printAll) {
         let reportName = "mrp.report_bom_structure?docids=" + this.activeId +
-                         "&availabilities=" + this.state.showOptions.availabilities +
-                         "&costs=" + this.state.showOptions.costs +
-                         "&operations=" + this.state.showOptions.operations +
-                         "&lead_times=" + this.state.showOptions.leadTimes +
+                         "&mode=" + this.state.showOptions.mode +
                          "&quantity=" + (this.state.bomQuantity || 1) +
                          "&unfolded_ids=" + JSON.stringify(Array.from(this.unfoldedIds)) +
                          "&warehouse_id=" + (this.state.currentWarehouse ? this.state.currentWarehouse.id : false);
