@@ -24,6 +24,8 @@ crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
 
 _dangerous_logger = logging.getLogger(__name__)  # use config._log() instead
 
+optparse._ = str  # disable gettext
+
 DEFAULT_SERVER_WIDE_MODULES = ['base', 'rpc', 'web']
 REQUIRED_SERVER_WIDE_MODULES = ['base', 'web']
 

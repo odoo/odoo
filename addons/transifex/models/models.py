@@ -8,14 +8,30 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     def get_field_translations(self, field_name, langs=None):
-        """ get model/model_term translations for records with transifex url
+        """
+        Get model/model_term translations for records with transifex url
+
         :param str field_name: field name
         :param list langs: languages
 
-        :return: (translations, context) where
-            translations: list of dicts like [{"lang": lang, "source": source_term, "value": value_term,
-                    "module": module, "transifexURL": transifex_url}]
-            context: {"translation_type": "text"/"char", "translation_show_source": True/False}
+        :return: a 2-items tuple ``(translations, context)`` where
+
+            translations:
+                list of dicts like::
+
+                    [{
+                        "lang": lang,
+                        "source": source_term,
+                        "value": value_term,
+                        "module": module,
+                        "transifexURL": transifex_url
+                    }]
+
+            context:
+                dict like::
+
+                    {"translation_type": "text"/"char",
+                     "translation_show_source": True/False}
         """
         translations, context = super().get_field_translations(field_name, langs=langs)
         external_id = self.get_external_id().get(self.id)

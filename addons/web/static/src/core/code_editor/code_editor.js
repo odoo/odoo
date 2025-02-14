@@ -23,6 +23,7 @@ export class CodeEditor extends Component {
         maxLines: { type: Number, optional: true },
         sessionId: { type: [Number, String], optional: true },
         initialCursorPosition: { type: Object, optional: true },
+        showLineNumbers: { type: Boolean, optional: true },
     };
     static defaultProps = {
         readonly: false,
@@ -31,6 +32,7 @@ export class CodeEditor extends Component {
         class: "",
         theme: "",
         sessionId: 1,
+        showLineNumbers: true,
     };
 
     static MODES = ["javascript", "xml", "qweb", "scss", "python"];
@@ -104,7 +106,7 @@ export class CodeEditor extends Component {
         );
 
         useEffect(
-            (readonly) => {
+            (readonly, showLineNumbers) => {
                 this.aceEditor.setOptions({
                     readOnly: readonly,
                     highlightActiveLine: !readonly,
@@ -113,14 +115,14 @@ export class CodeEditor extends Component {
 
                 this.aceEditor.renderer.setOptions({
                     displayIndentGuides: !readonly,
-                    showGutter: !readonly,
+                    showGutter: !readonly && showLineNumbers,
                 });
 
                 this.aceEditor.renderer.$cursorLayer.element.style.display = readonly
                     ? "none"
                     : "block";
             },
-            () => [this.props.readonly]
+            () => [this.props.readonly, this.props.showLineNumbers]
         );
 
         useEffect(

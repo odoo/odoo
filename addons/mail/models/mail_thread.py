@@ -1484,22 +1484,22 @@ class MailThread(models.AbstractModel):
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         """Called by ``message_process`` when a new message is received
-           for a given thread model, if the message did not belong to
-           an existing thread.
-           The default behavior is to create a new record of the corresponding
-           model (based on some very basic info extracted from the message).
-           Additional behavior may be implemented by overriding this method.
+        for a given thread model, if the message did not belong to
+        an existing thread.
+        The default behavior is to create a new record of the corresponding
+        model (based on some very basic info extracted from the message).
+        Additional behavior may be implemented by overriding this method.
 
-           :param dict msg_dict: a map containing the email details and
-                                 attachments. See ``message_process`` and
-                                ``mail.message.parse`` for details.
-           :param dict custom_values: optional dictionary of additional
-                                      field values to pass to create()
-                                      when creating the new thread record.
-                                      Be careful, these values may override
-                                      any other values coming from the message.
-           :rtype: int
-           :return: the id of the newly created thread object
+        :param dict msg_dict: a map containing the email details and
+                             attachments. See ``message_process`` and
+                             ``mail.message.parse`` for details.
+        :param dict custom_values: optional dictionary of additional
+                                  field values to pass to create()
+                                  when creating the new thread record.
+                                  Be careful, these values may override
+                                  any other values coming from the message.
+        :rtype: int
+        :return: the id of the newly created thread object
         """
         data = {}
         if isinstance(custom_values, dict):
@@ -1521,6 +1521,7 @@ class MailThread(models.AbstractModel):
            with update_vals taken from the incoming email.
            Additional behavior may be implemented by overriding this
            method.
+
            :param dict msg_dict: a map containing the email details and
                                attachments. See ``message_process`` and
                                ``mail.message.parse()`` for details.
@@ -1766,22 +1767,22 @@ class MailThread(models.AbstractModel):
         :return: A dict with the following structure, where each field may not
             be present if missing in original message::
 
-            { 'message_id': msg_id,
-              'subject': subject,
-              'email_from': from,
-              'to': to + delivered-to,
-              'cc': cc,
-              'recipients': delivered-to + to + cc + resent-to + resent-cc,
-              'body': unified_body,
-              'references': references,
-              'in_reply_to': in-reply-to,
-              'is_bounce': True if it has been detected as a bounce email
-              'parent_id': parent mail.message based on in_reply_to or references,
-              'is_internal': answer to an internal message (note),
-              'date': date,
-              'attachments': [('file1', 'bytes'),
-                              ('file2', 'bytes')}
-            }
+                { 'message_id': msg_id,
+                  'subject': subject,
+                  'email_from': from,
+                  'to': to + delivered-to,
+                  'cc': cc,
+                  'recipients': delivered-to + to + cc + resent-to + resent-cc,
+                  'body': unified_body,
+                  'references': references,
+                  'in_reply_to': in-reply-to,
+                  'is_bounce': True if it has been detected as a bounce email
+                  'parent_id': parent mail.message based on in_reply_to or references,
+                  'is_internal': answer to an internal message (note),
+                  'date': date,
+                  'attachments': [('file1', 'bytes'),
+                                  ('file2', 'bytes')}
+                }
         """
         if not isinstance(message, EmailMessage):
             raise ValueError(_('Message should be a valid EmailMessage instance'))
@@ -2529,17 +2530,19 @@ class MailThread(models.AbstractModel):
         through mail.thread and lessen usage of composer itself.
 
         Default values
-          * subtype_id: will be False, forced by composer in mass mode;
+
+        * subtype_id: will be False, forced by composer in mass mode;
 
         :param record/str source_ref: reference to a source for rendering.
           It can be one of
-            * a MailTemplate record. It will be used to render the various
-              message values (body, subject, recipients, ...). It should behave
-              like using the mail composer with a template;
-            * an IrUIView record. It will be used to render the content
-              (body). Other fields are left to the caller and/or default values
-              computation;
-            * an XmlID of a MailTemplate or of an IrUiView: see above;
+
+          * a MailTemplate record. It will be used to render the various
+            message values (body, subject, recipients, ...). It should behave
+            like using the mail composer with a template;
+          * an IrUIView record. It will be used to render the content
+            (body). Other fields are left to the caller and/or default values
+            computation;
+          * an XmlID of a MailTemplate or of an IrUiView: see above;
         :param dict render_values: additional rendering values for qweb context;
 
         :param str message_type: one of 'notification' or 'comment';
@@ -2603,18 +2606,20 @@ class MailThread(models.AbstractModel):
         body using QWeb.
 
         Default values
-          * subtype_id: if not given, fallback on ``note`` to be consistent
-            with what message_post does;
+
+        * subtype_id: if not given, fallback on ``note`` to be consistent
+          with what message_post does;
 
         :param record/str source_ref: reference to a source for rendering.
           It can be one of
-            * a MailTemplate record. It will be used to render the various
-              message values (body, subject, recipients, ...). It should behave
-              like using the mail composer with a template;
-            * an IrUIView record. It will be used to render the content
-              (body). Other fields are left to the caller and/or default values
-              computation;
-            * an XmlID of a MailTemplate or of an IrUiView: see above
+
+          * a MailTemplate record. It will be used to render the various
+            message values (body, subject, recipients, ...). It should behave
+            like using the mail composer with a template;
+          * an IrUIView record. It will be used to render the content
+            (body). Other fields are left to the caller and/or default values
+            computation;
+          * an XmlID of a MailTemplate or of an IrUiView: see above
         :param dict render_values: additional rendering values for qweb context;
 
         :param str message_type: one of 'notification' or 'comment';
