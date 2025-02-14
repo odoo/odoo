@@ -367,5 +367,5 @@ class TestMessageStore(MailCommon, HttpCase):
             'notification_status': 'exception',
             'failure_type': 'mail_email_invalid',
         })
-        res = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["failures"]})
+        res = self.make_jsonrpc_request("/mail/data", {"fetch_params": [["failures", None, None]]})
         self.assertEqual([t["display_name"] for t in res["mail.thread"]], ['Some description'])

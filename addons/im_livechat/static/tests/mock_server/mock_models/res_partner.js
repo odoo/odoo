@@ -7,7 +7,7 @@ export class ResPartner extends mailModels.ResPartner {
      * @override
      * @type {typeof mailModels.ResPartner["prototype"]["_search_for_channel_invite_to_store"]}
      */
-    _search_for_channel_invite_to_store(ids, store, channel_id) {
+    _search_for_channel_invite_to_store(ids, store, data_id, channel_id) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").DiscussChannelMember} */
@@ -21,7 +21,7 @@ export class ResPartner extends mailModels.ResPartner {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        super._search_for_channel_invite_to_store(ids, store, channel_id);
+        super._search_for_channel_invite_to_store(ids, store, data_id, channel_id);
         const [channel] = DiscussChannel.browse(channel_id);
         if (channel?.channel_type !== "livechat") {
             return;

@@ -186,7 +186,7 @@ class ThreadController(http.Controller):
             }
         # sudo: mail.thread - users can post on accessible threads
         message = thread.sudo().message_post(**self._prepare_post_data(post_data, thread, **kwargs))
-        store.add_data(data_id, message=Store.One(message, for_current_user=True))
+        store.add(message, for_current_user=True).resolve_data_request(data_id, message=message.id)
         return store.get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")

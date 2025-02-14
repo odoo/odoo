@@ -336,8 +336,7 @@ async function discuss_channel_sub_channel_fetch(request) {
     }
     return new mailDataHelpers.Store(subChannels)
         .add(MailMessage.browse(lastMessageIds))
-        .add("Data", {
-            id: data_id,
+        .resolve_data_request(data_id, {
             channels: subChannels.map((channel) => ({ id: channel.id, model: "discuss.channel" })),
         })
         .get_result();
@@ -892,9 +891,12 @@ async function search(request) {
             channels.add(channelId);
         }
     }
-    store.add("Data", {
-        id: data_id,
-        channels: mailDataHelpers.Store.many(DiscussChannel.browse([...channels])),
+    store.add(DiscussChannel.browse([...channels]));
+    store.resolve_data_request(data_id, {
+        channels: mailDataHelpers.Store.many(
+            DiscussChannel.browse([...channels]),
+            makeKwArgs({ only_id: true })
+        ),
     });
     ResPartner._search_for_channel_invite(store, data_id, term, undefined, limit);
     return store.get_result();
@@ -920,9 +922,9 @@ async function processRequest(request) {
     const store = new mailDataHelpers.Store();
     const args = await parseRequestParams(request);
     for (const fetchParam of args.fetch_params) {
-        const [name, params] =
+        const [name, params, data_id] =
             typeof fetchParam === "string" || fetchParam instanceof String
-                ? [fetchParam, undefined]
+                ? [fetchParam, undefined, undefined]
                 : fetchParam;
         if (name === "init_messaging") {
             if (!MailGuest._get_guest_from_context() || !ResUsers._is_public(this.env.uid)) {
@@ -994,39 +996,36 @@ async function processRequest(request) {
                 store.add(channel, makeKwArgs({ delete: true }));
             }
         }
-        mailDataHelpers._process_request_for_all.call(this, store, name, params);
-        mailDataHelpers._process_request_for_internal_user.call(this, store, name, params);
+        mailDataHelpers._process_request_for_all.call(this, store, name, params, data_id);
+        mailDataHelpers._process_request_for_internal_user.call(this, store, name, params, data_id);
     }
     return store;
 }
 
-function _process_request_for_all(store, name, params) {
+function _process_request_for_all(store, name, params, data_id) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
     if (name === "/discuss/channel/get_or_create_chat") {
         const channelId = DiscussChannel._get_or_create_chat(params.partners_to);
-        store.add("Data", {
-            id: params.data_id,
-            channel: mailDataHelpers.Store.one(channelId),
+        store.add(channelId).resolve_data_request(data_id, {
+            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
         });
     }
     if (name === "/discuss/channel/create_channel") {
-        const channelId = DiscussChannel._create_channel(name, params.group_id);
-        store.add("Data", {
-            id: params.data_id,
-            channel: mailDataHelpers.Store.one(channelId),
+        const channelId = DiscussChannel._create_channel(params.name, params.group_id);
+        store.add(channelId).resolve_data_request(data_id, {
+            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
         });
     }
     if (name === "/discuss/channel/create_group") {
-        const channelId = DiscussChannel._create_group(params.partners_to, name);
-        store.add("Data", {
-            id: params.data_id,
-            channel: mailDataHelpers.Store.one(channelId),
+        const channelId = DiscussChannel._create_group(params.partners_to, params.name);
+        store.add(channelId).resolve_data_request(data_id, {
+            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
         });
     }
 }
 
-function _process_request_for_internal_user(store, name, params) {
+function _process_request_for_internal_user(store, name, params, data_id) {
     /** @type {import("mock_models").ResUsers} */
     const ResUsers = this.env["res.users"];
     if (name === "systray_get_activities" && this.env.user?.partner_id) {
@@ -1259,6 +1258,13 @@ class Store {
             }
         }
         return res;
+    }
+
+    resolve_data_request(data_id, values) {
+        if (data_id) {
+            this.add("Data", { id: data_id, _resolve: true, ...values });
+        }
+        return this;
     }
 
     toJSON() {

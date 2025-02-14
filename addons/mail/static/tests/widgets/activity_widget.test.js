@@ -26,7 +26,11 @@ test("list activity widget with no activity", async () => {
     onRpc("/mail/data", async (request) => {
         const { params } = await request.json();
         expect(params).toEqual({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
+            fetch_params: [
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+            ],
             context: {
                 lang: "en",
                 tz: "taht",

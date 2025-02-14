@@ -49,14 +49,18 @@ test("sanity check", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
+            fetch_params: [
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+            ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["channels_as_member"],
+            fetch_params: [["channels_as_member", null, 4]],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
@@ -1096,7 +1100,7 @@ test("out-of-focus notif on needaction message in channel", async () => {
         },
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1142,7 +1146,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
         },
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1186,7 +1190,7 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
         },
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1321,7 +1325,7 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     mockService("presence", { isOdooFocused: () => false });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1361,7 +1365,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     });
     mockService("presence", { isOdooFocused: () => false });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1398,7 +1402,7 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
     mockService("presence", { isOdooFocused: () => false });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1451,7 +1455,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep("init_messaging");
         }
     });

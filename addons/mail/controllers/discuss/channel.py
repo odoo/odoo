@@ -29,9 +29,9 @@ class DiscussChannelWebclientController(WebclientController):
             # prefetch a lot of data that message format could use)
             store.add(channels._get_last_messages(), for_current_user=True)
 
-    def _process_request_for_all(self, store: Store, name, params):
+    def _process_request_for_all(self, store: Store, name, params, data_id):
         """Override to return channel as member and last messages."""
-        super()._process_request_for_all(store, name, params)
+        super()._process_request_for_all(store, name, params, data_id)
         if name == "init_messaging":
             member_domain = [("is_self", "=", True), ("rtc_inviting_session_id", "!=", False)]
             channel_domain = [("channel_member_ids", "any", member_domain)]
@@ -53,17 +53,17 @@ class DiscussChannelWebclientController(WebclientController):
             channel = request.env["discuss.channel"]._get_or_create_chat(
                 params["partners_to"], params.get("pin", True)
             )
-            store.add_data(params["data_id"], channel=Store.One(channel))
+            store.add(channel).resolve_data_request(data_id, channel=Store.One(channel, []))
         if name == "/discuss/channel/create_channel":
-            channel = request.env["discuss.channel"]._create_channel(name, params["group_id"])
-            store.add_data(params["data_id"], channel=Store.One(channel))
+            channel = request.env["discuss.channel"]._create_channel(params["name"], params["group_id"])
+            store.add(channel).resolve_data_request(data_id, channel=Store.One(channel, []))
         if name == "/discuss/channel/create_group":
             channel = request.env["discuss.channel"]._create_group(
                 params["partners_to"],
                 params.get("default_display_mode", False),
                 params.get("name", ""),
             )
-            store.add_data(params["data_id"], channel=Store.One(channel))
+            store.add(channel).resolve_data_request(data_id, channel=Store.One(channel, []))
 
 
 class ChannelController(http.Controller):
@@ -165,7 +165,11 @@ class ChannelController(http.Controller):
             domain.append(["id", "<", before])
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
-        return Store().add_data(data_id, attachments=Store.Many(attachments)).get_result()
+        return (
+            Store(attachments)
+            .resolve_data_request(data_id, attachments=attachments.ids)
+            .get_result()
+        )
 
     @http.route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -197,8 +201,8 @@ class ChannelController(http.Controller):
             domain &= Domain("name", "ilike", search_term)
         sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
         return (
-            Store()
-            .add_data(data_id, channels=Store.Many(sub_channels))
+            Store(sub_channels)
             .add(sub_channels._get_last_messages())
+            .resolve_data_request(data_id, channels=Store.Many(sub_channels, []))
             .get_result()
         )

@@ -1,5 +1,7 @@
 import { Record } from "@mail/core/common/record";
 
+import { Deferred } from "@web/core/utils/concurrency";
+
 export class Data extends Record {
     static id = "id";
     /** @type {Object.<string, import("models").Data>} */
@@ -21,6 +23,17 @@ export class Data extends Record {
     static _nextId = 0;
     /** @type {number} */
     id;
+    _isResolved = new Deferred();
+    /** @type {boolean} */
+    _resolve = Record.attr(undefined, {
+        /** @this {import("models").Data} */
+        onUpdate() {
+            if (this._resolve) {
+                this._isResolved.resolve({ ...this });
+                this.delete();
+            }
+        },
+    });
     /*
      * Fields are contextual to each data request.
      * They are generically added here to benefit from fields behavior as well

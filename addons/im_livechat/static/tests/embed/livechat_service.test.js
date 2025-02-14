@@ -119,9 +119,9 @@ test("Only necessary requests are made when creating a new chat", async () => {
         })}`,
         `/mail/data - ${JSON.stringify({
             fetch_params: [
-                "failures", // called because mail/core/web is loaded in test bundle
-                "systray_get_activities", // called because mail/core/web is loaded in test bundle
-                "init_messaging",
+                ["failures", null, 3], // called because mail/core/web is loaded in test bundle
+                ["systray_get_activities", null, 4], // called because mail/core/web is loaded in test bundle
+                ["init_messaging", null, 5],
             ],
             context: {
                 lang: "en",
@@ -146,7 +146,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
                 allowed_company_ids: [1],
                 temporary_id: 0.81,
             },
-            data_id: 3,
+            data_id: 6,
         })}`,
     ]);
 });
