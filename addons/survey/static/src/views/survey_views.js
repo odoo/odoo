@@ -32,7 +32,7 @@ export function useSurveyLoadSampleHook(selector) {
             }
             const handler = (ev) => {
                 if (!isLoadingSample) {
-                    const surveyMethod = ev.currentTarget.closest('.o_survey_sample_container').getAttribute('action');
+                    const surveyMethod = ev.currentTarget.closest('.o_survey_load_sample').getAttribute('action');
                     loadSample(surveyMethod);
                 }
             }
