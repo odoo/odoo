@@ -269,9 +269,10 @@ will update the cost of every lot/serial number in stock."),
     # -------------------------------------------------------------------------
     def action_revaluation(self):
         self.ensure_one()
-        ctx = dict(self._context, default_product_id=self.id, default_company_id=self.env.company.id)
+        ctx = dict(self._context, default_product_id=self.id, default_company_id=self.env.company.id, show_lot=self.lot_valuated)
+        title = _('Product Revaluation - %s', f"[{self.default_code}] {self.name}" if self.default_code else self.name)
         return {
-            'name': _("Product Revaluation"),
+            'name': title,
             'view_mode': 'form',
             'res_model': 'stock.valuation.layer.revaluation',
             'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,
