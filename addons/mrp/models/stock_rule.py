@@ -39,6 +39,31 @@ class StockRule(models.Model):
     def _should_auto_confirm_procurement_mo(self, p):
         return (not p.orderpoint_id and p.move_raw_ids) or (p.move_dest_ids.procure_method != 'make_to_order' and not p.move_raw_ids and not p.workorder_ids)
 
+    def _make_mo_get_domain(self, procurement, bom):
+        gpo = self.group_propagation_option
+        group = (gpo == 'fixed' and self.group_id) or \
+                (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
+        domain = (
+            ('bom_id', '=', bom.id),
+            ('product_id', '=', procurement.product_id.id),
+            ('state', 'in', ['draft', 'confirmed']),
+            ('is_planned', '=', False),
+            ('picking_type_id', '=', self.picking_type_id.id),
+            ('company_id', '=', procurement.company_id.id),
+            ('user_id', '=', False),
+        )
+        if procurement.values.get('orderpoint_id'):
+            procurement_date = datetime.combine(
+                fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay)),
+                datetime.max.time()
+            )
+            domain += ('|',
+                       '&', ('state', '=', 'draft'), ('date_deadline', '<=', procurement_date),
+                       '&', ('state', '=', 'confirmed'), ('date_start', '<=', procurement_date))
+        if group:
+            domain += (('procurement_group_id', '=', group.id),)
+        return domain
+
     @api.model
     def _run_manufacture(self, procurements):
         new_productions_values_by_company = defaultdict(lambda: defaultdict(list))
@@ -48,31 +73,8 @@ class StockRule(models.Model):
                 continue
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
 
-            mo = self.env['mrp.production']
-            if procurement.origin != 'MPS':
-                gpo = rule.group_propagation_option
-                group = (gpo == 'fixed' and rule.group_id) or \
-                        (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
-                domain = (
-                    ('bom_id', '=', bom.id),
-                    ('product_id', '=', procurement.product_id.id),
-                    ('state', 'in', ['draft', 'confirmed']),
-                    ('is_planned', '=', False),
-                    ('picking_type_id', '=', rule.picking_type_id.id),
-                    ('company_id', '=', procurement.company_id.id),
-                    ('user_id', '=', False),
-                )
-                if procurement.values.get('orderpoint_id'):
-                    procurement_date = datetime.combine(
-                        fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay)),
-                        datetime.max.time()
-                    )
-                    domain += ('|',
-                               '&', ('state', '=', 'draft'), ('date_deadline', '<=', procurement_date),
-                               '&', ('state', '=', 'confirmed'), ('date_start', '<=', procurement_date))
-                if group:
-                    domain += (('procurement_group_id', '=', group.id),)
-                mo = self.env['mrp.production'].sudo().search(domain, limit=1)
+            domain = rule._make_mo_get_domain(procurement, bom)
+            mo = self.env['mrp.production'].sudo().search(domain, limit=1)
             if not mo:
                 procurement_qty = procurement.product_qty
                 batch_size = procurement.values.get('batch_size', procurement_qty)
