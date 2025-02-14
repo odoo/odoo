@@ -3,7 +3,10 @@
 
     <t t-name="pos_self_order.OrderChangeReceipt">
         <div class="pos-receipt">
-            <div class="pos-receipt-order-data"><t t-esc="changes.name" /></div>
+            <div class="pos-receipt-title" t-if="changes.preset_name">
+                    <t t-esc="changes.preset_name"/> <t t-if="changes.preset_time">(<t t-esc="changes.preset_time"/>)</t>
+            </div>
+            <div class="pos-receipt-order-data"><t t-esc="changes.name"/></div>
             <t t-if="changes.tracker || changes.trackingNumber">
                 <br />
                 <div class="pos-receipt-title">
