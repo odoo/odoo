@@ -3,17 +3,17 @@
 # 	* portal
 # 
 # Translators:
-# Wil Odoo, 2024
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
 # Chloe Wang, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2025-02-10 13:25+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -628,10 +628,21 @@ msgid "Enter a description of and purpose for the key."
 msgstr "输入密钥的描述和用途."
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Expiration Date"
+msgstr "有效期"
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Forgot password?"
 msgstr "忘记密码？"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "Give a duration for the key's validity"
+msgstr "提供密钥有效期"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1140,6 +1151,12 @@ msgstr "联系人“%s”跟现有用户的电子邮件相同"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key cannot be retrieved later and provides"
 msgstr "以后无法检索密钥，并提供"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "The key will be deleted once this period has elapsed."
+msgstr "此期限过后，密钥将被删除。"
 
 #. module: portal
 #. odoo-python

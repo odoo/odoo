@@ -3719,12 +3719,7 @@ class AccountMove(models.Model):
             price_untaxed = self.currency_id.round(
                 remaining_amount / (((1.0 - discount_percentage / 100.0) * (taxes.amount / 100.0)) + 1.0))
         else:
-            tax_results = taxes.with_context(force_price_include=True).compute_all(remaining_amount)
-            price_untaxed = tax_results['total_excluded'] - sum(
-                tax_data['amount']
-                for tax_data in tax_results['taxes']
-                if tax_data['is_reverse_charge']
-            )
+            price_untaxed = taxes.with_context(force_price_include=True).compute_all(remaining_amount)['total_excluded']
         return {'account_id': account_id, 'tax_ids': taxes.ids, 'price_unit': price_untaxed}
 
     @api.onchange('quick_edit_mode', 'journal_id', 'company_id')
@@ -5103,6 +5098,7 @@ class AccountMove(models.Model):
                 'move_type': new_move_type,
                 'partner_bank_id': False,
                 'currency_id': move.currency_id.id,
+                'fiscal_position_id': move.fiscal_position_id.id,
             })
             if move.amount_total < 0:
                 move.write({

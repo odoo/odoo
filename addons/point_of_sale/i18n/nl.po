@@ -7,16 +7,16 @@
 # Lukas Van Cauter <cvl@odoo.com>, 2024
 # Tiffany Chang, 2024
 # Wil Odoo, 2025
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Manon Rondou, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1826,6 +1826,7 @@ msgstr "Client"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/sync_popup/sync_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2046,6 +2047,7 @@ msgstr "Configureer minstens één kassa."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/utils/money_details_popup/money_details_popup.xml:0
@@ -2856,15 +2858,15 @@ msgid "Edit Partner"
 msgstr "Partner bewerken"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+msgid "Edit Payment"
+msgstr "Bewerk betaling"
+
+#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action_edit_pos
 msgid "Edit Product"
 msgstr "Product bewerken"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "Edit payment"
-msgstr "Betaling bewerken"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_edited
@@ -3877,6 +3879,12 @@ msgid "Last printed state of the order"
 msgstr "Laatste afdruk van de order"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+msgid "Launch fake tours"
+msgstr "Lanceer neprondleidingen"
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.leather_jacket_product_template
 msgid "Leather Jacket"
 msgstr "Leren jas"
@@ -4369,13 +4377,13 @@ msgstr "Nog geen gegevens!"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "No existing serial/lot number"
-msgstr "Geen bestaand serie-/lotnummer"
+msgstr "Geen bestaand serie-/partijnummer"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/select_lot_popup/edit_list_input/edit_list_input.xml:0
 msgid "No existing serial/lot number matching..."
-msgstr "Geen overeenkomend serie-/lotnummer ..."
+msgstr "Geen overeenkomend serie-/partijnummer ..."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6539,7 +6547,6 @@ msgstr "Boterroomgebak met een hart van pure chocolade."
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/generic_components/order_widget/order_widget.xml:0
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Rounding"
 msgstr "Afronding"
@@ -6554,6 +6561,14 @@ msgstr "Afrondingsmethode"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Rounding error in payment lines"
 msgstr "Afrondingsfout in betalingsregels"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+msgid "Running a fake tour will create random orders. Use at your own risk."
+msgstr ""
+"Een neprondleiding uitvoeren zal willekeurige orders creëren. Gebruik op "
+"eigen risico."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_rye_bread_product_template
@@ -7593,7 +7608,7 @@ msgid ""
 "The existing serial/lot numbers could not be retrieved. \n"
 "Continue without checking the validity of serial/lot numbers ?"
 msgstr ""
-"De bestaande serie-/lotnummers konden niet worden opgehaald. \n"
+"De bestaande serie-/partijnummers konden niet worden opgehaald. \n"
 "Doorgaan zonder de geldigheid van de serie-/lotnummers te controleren?"
 
 #. module: point_of_sale
@@ -7994,8 +8009,8 @@ msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
 msgstr ""
-"Er is geen serie-/lotnummer voor het geselecteerde product. Het aanmaken van"
-" deze nummers is niet toegestaan in de Kassa-app."
+"Er is geen serie-/partijnummer voor het geselecteerde product. Het aanmaken "
+"van deze nummers is niet toegestaan in de Kassa-app."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8963,12 +8978,6 @@ msgstr "Je kunt een betaling voor een geplaatste order niet bewerken."
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_payment.py:0
-msgid "You cannot edit a payment for a printed order."
-msgstr "Je kunt een betaling voor een geprinte order niet bewerken."
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "Je kunt orders van verschillende bedrijven niet factureren."
@@ -9317,5 +9326,5 @@ msgid ""
 "{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
 "lot'}}"
 msgstr ""
-"{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
-"lot'}}"
+"{{ line.has_valid_product_lot() ? 'Geldige product partij' : 'Invalid "
+"product lot'}}"

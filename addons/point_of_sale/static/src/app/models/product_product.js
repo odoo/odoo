@@ -215,9 +215,7 @@ export class ProductProduct extends Base {
 
     exactMatch(searchWord) {
         const fields = ["barcode", "default_code"];
-        return fields.some(
-            (field) => this[field] && this[field].toLowerCase().includes(searchWord)
-        );
+        return fields.some((field) => this[field] && this[field].toLowerCase() == searchWord);
     }
 
     _isArchivedCombination(attributeValueIds) {

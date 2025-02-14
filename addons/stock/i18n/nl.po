@@ -455,7 +455,7 @@ msgstr "4 x 12"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_lots
 msgid "4 x 12 - One per lot/SN"
-msgstr "4 x 12 - Eén per lot/SN"
+msgstr "4 x 12 - Eén per serie-/partijnummer"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_units
@@ -1404,7 +1404,7 @@ msgstr "Leveringsbon automatisch afdrukken"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_lot_labels
 msgid "Auto Print Lot/SN Labels"
-msgstr "Automatisch afdrukken van lot-/SN-labels"
+msgstr "Automatisch afdrukken van serie-/partijnummer-labels"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_package_label
@@ -4073,8 +4073,9 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
 "of a picking when it is validated."
 msgstr ""
-"Als dit selectievakje is aangevinkt, zal Odoo automatisch de lot-/SN-labels "
-"van een pick-up afdrukken wanneer deze wordt gevalideerd."
+"Als dit selectievakje is aangevinkt, zal Odoo automatisch de "
+"serie-/partijnummer-labels van een pick-up afdrukken wanneer deze wordt "
+"gevalideerd."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
@@ -4219,12 +4220,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
 msgstr "Directe overdracht"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Records importeren"
 
 #. module: stock
 #. odoo-javascript
@@ -5194,7 +5189,7 @@ msgstr "Partij/Serienummer naam"
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid "Lot/Serial Number Relocated"
-msgstr "Lot-/serienummer verplaatst"
+msgstr "serie-/partijnummer verplaatst"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -6683,11 +6678,11 @@ msgstr "Aanwezigheid is afhankelijk van het type bewerking."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Druk op de knop NIEUW om het aantal voor elk product in de voorraad te "
-"definiëren of importeer ze vanuit een spreadsheet via de actieknop"
+"Klik op \"Nieuw\" om een producthoeveelheid in je voorraad in te voeren of "
+"importeer hoeveelheden via het menu Acties"
 
 #. module: stock
 #. odoo-javascript
@@ -9026,7 +9021,7 @@ msgid ""
 "Store and retrieve information regarding every Lot/Serial Number (condition,"
 " product info, ...)."
 msgstr ""
-"Informatie over elk lot/serienummer opslaan en opvragen (toestand, "
+"Informatie over elk serie-/partijnummer opslaan en opvragen (toestand, "
 "productinformatie, ...)."
 
 #. module: stock
@@ -9196,7 +9191,7 @@ msgid ""
 "The following combinations contain duplicates:\n"
 "%(error_lines)s"
 msgstr ""
-"De combinatie van lot/serienummer en product moet uniek zijn binnen een bedrijf, ook als er geen bedrijf is gedefinieerd.\n"
+"De combinatie van serie-/partijnummer en product moet uniek zijn binnen een bedrijf, ook als er geen bedrijf is gedefinieerd.\n"
 "De volgende combinaties bevatten duplicaten:\n"
 "%(error_lines)s"
 
@@ -11450,7 +11445,7 @@ msgid ""
 "You need to supply a Lot/Serial Number for product:\n"
 "%(products)s"
 msgstr ""
-"Je moet een lot-/serienummer opgeven voor het product:\n"
+"Je moet een serie-/partijnummer opgeven voor het product:\n"
 "%(products)s"
 
 #. module: stock
@@ -11535,7 +11530,7 @@ msgstr "ZPL-labels"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_lots
 msgid "ZPL Labels - One per lot/SN"
-msgstr "ZPL-labels - Eén per lot/SN"
+msgstr "ZPL-labels - Eén per serie-/partijnummer"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_units
