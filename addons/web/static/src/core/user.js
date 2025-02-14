@@ -51,6 +51,7 @@ export function _makeUser(session) {
         is_admin: isAdmin,
         is_internal_user: isInternalUser,
         is_system: isSystem,
+        is_public: isPublic,
         name,
         partner_id: partnerId,
         show_effect: showEffect,
@@ -60,6 +61,7 @@ export function _makeUser(session) {
         user_settings,
         partner_write_date: writeDate,
         user_companies: userCompanies,
+        groups = {},
     } = session;
     const settings = user_settings || {};
 
@@ -103,6 +105,7 @@ export function _makeUser(session) {
     delete session.user_settings;
     delete session.partner_write_date;
     delete session.user_companies;
+    delete session.groups;
 
     // Generate caches for has_group and has_access calls
     const getGroupCacheValue = (group, context) => {
@@ -123,6 +126,15 @@ export function _makeUser(session) {
     }
     if (isSystem !== undefined) {
         groupCache.cache["base.group_system"] = Promise.resolve(isSystem);
+    }
+    if (isAdmin !== undefined) {
+        groupCache.cache["base.group_erp_manager"] = Promise.resolve(isAdmin);
+    }
+    if (isPublic !== undefined) {
+        groupCache.cache["base.group_public"] = Promise.resolve(isPublic);
+    }
+    for (const group in groups) {
+        groupCache.cache[group] = Promise.resolve(!!groups[group]);
     }
     const getAccessRightCacheValue = (model, operation, ids, context) => {
         const url = `/web/dataset/call_kw/${model}/has_access`;
