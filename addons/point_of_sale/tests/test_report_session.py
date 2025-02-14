@@ -184,3 +184,36 @@ class TestReportSession(TestPoSCommon):
 
         self.assertEqual(order_report_lines_count_product1, 1)
         self.assertEqual(order_report_lines_count_product2, 1)
+
+    def test_report_session_3(self):
+        self.product1 = self.create_product('Product A', self.categ_basic, 100)
+        self.config.open_ui()
+        session_id = self.config.current_session_id.id
+        order_info = {'company_id': self.env.company.id,
+                'session_id': session_id,
+                'partner_id': self.partner_a.id,
+                'lines': [(0, 0, {
+                    'name': "OL/0001",
+                    'product_id': self.product1.id,
+                    'price_unit': 0,
+                    'discount': 0,
+                    'qty': 14.9,
+                    'tax_ids': [],
+                    'price_subtotal': 0,
+                    'price_subtotal_incl': 0,
+                })],
+                'pricelist_id': self.config.pricelist_id.id,
+                'amount_paid': 0.0,
+                'amount_total': 0.0,
+                'amount_tax': 0.0,
+                'amount_return': 0.0,
+                'to_invoice': False,
+                }
+        order = self.env['pos.order'].create(order_info)
+        self.make_payment(order, self.bank_pm1, 0)
+        order_info['lines'][0][2]['qty'] =  59.7
+        order = self.env['pos.order'].create(order_info)
+        self.make_payment(order, self.bank_pm1, 0)
+        self.config.current_session_id.action_pos_session_closing_control()
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
+        self.assertEqual(report['products'][0]['products'][0]['quantity'], 74.6, "Quantity of product should be 74.6, as we want the sum of the quantity of the two orders")
