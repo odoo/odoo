@@ -2435,18 +2435,18 @@ describe("link", () => {
             });
         });
 
-        test("should paste and transform an URL in a existing link if pasting valid url (collapsed)", async () => {
+        test("should paste and update an URL in a existing link if label and url are aligned", async () => {
             await testEditor({
                 contentBefore: '<p>a<a href="http://existing.com">[]c</a>d</p>',
                 stepFunction: async (editor) => {
                     pasteText(editor, "https://www.xyz.xdc");
                 },
-                contentAfter: '<p>a<a href="https://www.xyz.xdcc">https://www.xyz.xdc[]c</a>d</p>',
+                contentAfter: '<p>a<a href="http://existing.com">https://www.xyz.xdc[]c</a>d</p>',
             });
             await testEditor({
-                contentBefore: '<p>a<a href="http://existing.com">b[].com</a>d</p>',
+                contentBefore: '<p>a<a href="http://bo.com">bo[].com</a>d</p>',
                 stepFunction: async (editor) => {
-                    pasteText(editor, "oom");
+                    pasteText(editor, "om");
                 },
                 contentAfter: '<p>a<a href="http://boom.com">boom[].com</a>d</p>',
             });
@@ -2540,11 +2540,24 @@ describe("link", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(
                         editor,
-                        '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>'
+                        '<a href="www.odoo.com">odoo.com</a><br><a href="google.com">google.com</a>'
                     );
                 },
                 contentAfter:
                     '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com[]</a></p>',
+            });
+        });
+        test("should paste html content over an empty link (collapsed) (2)", async () => {
+            await testEditor({
+                contentBefore: '<p><a href="#">[]\u200B</a></p>',
+                stepFunction: async (editor) => {
+                    pasteHtml(
+                        editor,
+                        '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>'
+                    );
+                },
+                contentAfter:
+                    '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="www.google.com">google.com[]</a></p>',
             });
         });
 
@@ -2823,11 +2836,24 @@ describe("link", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(
                         editor,
-                        '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>'
+                        '<a href="www.odoo.com">odoo.com</a><br><a href="google.com">google.com</a>'
                     );
                 },
                 contentAfter:
                     '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com[]</a></p>',
+            });
+        });
+        test("should paste html content over a link if all of its contents is selected (not collapsed) (2)", async () => {
+            await testEditor({
+                contentBefore: '<p><a href="#">[xyz]</a></p>',
+                stepFunction: async (editor) => {
+                    pasteHtml(
+                        editor,
+                        '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>'
+                    );
+                },
+                contentAfter:
+                    '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="www.google.com">google.com[]</a></p>',
             });
         });
     });
