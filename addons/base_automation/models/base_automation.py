@@ -2,6 +2,7 @@
 
 import datetime
 import logging
+import psycopg2
 import traceback
 from collections import defaultdict
 from uuid import uuid4
@@ -694,6 +695,8 @@ class BaseAutomation(models.Model):
             for ctx in contexts:
                 try:
                     action.with_context(**ctx).run()
+                except psycopg2.Error:
+                    raise
                 except Exception as e:
                     self._add_postmortem(e)
                     raise
@@ -993,7 +996,8 @@ class BaseAutomation(models.Model):
                     is_process_to_run = last_run <= self._check_delay(automation, record, record_dt) < now
                 if is_process_to_run:
                     try:
-                        automation._process(record)
+                        with self._cr.savepoint():
+                            automation._process(record)
                     except Exception:
                         _logger.error(traceback.format_exc())
 
