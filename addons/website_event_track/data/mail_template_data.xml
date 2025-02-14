@@ -7,6 +7,7 @@
         <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}</field>
         <field name="use_default_to" eval="True"/>
         <field name="description">Sent to speakers whose track proposal is accepted (set the template on the right stage)</field>
+        <field name="email_layout_xmlid">mail.mail_notification_light</field>
         <field name="body_html" type="html">
 <div>
     Dear <t t-out="object.partner_id.name or object.partner_name or ''">Brandon Freeman</t><br/>
