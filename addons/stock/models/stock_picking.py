@@ -1475,9 +1475,7 @@ class Picking(models.Model):
             for move in picking.move_ids:
                 if move.quantity:
                     has_quantity = True
-                if move.scrapped:
-                    continue
-                if move.picked:
+                if move._is_manually_picked():
                     has_pick = True
                 if has_quantity and has_pick:
                     break
