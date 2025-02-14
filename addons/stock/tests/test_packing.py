@@ -1869,8 +1869,7 @@ class TestPacking(TestPackingCommon):
         already being reserved by an other picking.
         """
         pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
-        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0, package_id=pack)
-        destination_locations = self.env['stock.location'].create([
+        locations = self.env['stock.location'].create([
             {
                 'name': 'Depot 1',
                 'usage': 'internal',
@@ -1881,16 +1880,22 @@ class TestPacking(TestPackingCommon):
                 'usage': 'internal',
                 'location_id': self.warehouse.view_location_id.id,
             },
+            {
+                'name': 'Starting Depot',
+                'usage': 'internal',
+                'location_id': self.warehouse.view_location_id.id,
+            },
         ])
+        self.env['stock.quant']._update_available_quantity(self.productA, locations[-1], 10.0, package_id=pack)
         pickings = self.env['stock.picking'].create([
             {
                 'picking_type_id': self.warehouse.int_type_id.id,
-                'location_id': self.stock_location.id,
-                'location_dest_id': destination_locations[i].id,
+                'location_id': locations[-1].id,
+                'location_dest_id': locations[i].id,
                 'move_ids': [Command.create({
                     'name': self.productA.name,
                     'location_id':  self.stock_location.id,
-                    'location_dest_id': destination_locations[i].id,
+                    'location_dest_id': locations[i].id,
                     'product_id': self.productA.id,
                     'product_uom': self.productA.uom_id.id,
                     'product_uom_qty': 10,
@@ -1902,15 +1907,35 @@ class TestPacking(TestPackingCommon):
             pickings[i].move_ids.move_line_ids = [Command.create({
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
-                'location_id': self.stock_location.id,
-                'location_dest_id': destination_locations[i].id,
+                'location_id': locations[-1].id,
+                'location_dest_id': locations[i].id,
                 'quantity': 10.0,
                 'package_id': pack.id,
                 'result_package_id': pack.id,
-                'picked': True,
+                'picked': True, # to simulate barcode flows
             })]
-        pickings[0].button_validate()
-        self.assertEqual(pickings[0].state, 'done')
+        pickings[1].button_validate()
+        self.assertEqual(pickings[1].state, 'done')
+        # check that the package is in Depot 2 and can be moved from there
+        self.assertEqual(pack.location_id, pickings[1].location_dest_id)
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': locations[1].id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': self.productA.name,
+                'location_id': locations[1].id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': self.productA.id,
+                'product_uom': self.productA.uom_id.id,
+                'product_uom_qty': 10,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')
+        # check that the package is now in the Customer location
+        self.assertEqual(pack.location_id, delivery.location_dest_id)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
