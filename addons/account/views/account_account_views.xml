@@ -69,6 +69,8 @@
                                         <field name="internal_group" invisible="1" readonly="1"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                         <field name="deprecated"/>
+<!--                                        <field name="usable_on_product" invisible = "account_type in ('asset_receivable', 'liability_payable')"/>-->
+                                        <field name="usable_as_partner_account" invisible = "account_type not in ('asset_receivable', 'liability_payable')"/>
                                         <field name="group_id"/>
                                         <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
