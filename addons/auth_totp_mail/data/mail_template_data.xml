@@ -10,6 +10,7 @@
         <field name="use_default_to" eval="True"/>
         <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="auto_delete" eval="True"/>
+        <field name="email_layout_xmlid">mail.mail_notification_light</field>
         <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -39,6 +40,7 @@
         <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
         <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="auto_delete" eval="True"/>
+        <field name="email_layout_xmlid">mail.mail_notification_light</field>
         <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
 Dear <t t-out="object.partner_id.name or ''"></t><br/><br/>
