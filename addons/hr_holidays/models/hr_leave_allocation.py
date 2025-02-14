@@ -84,7 +84,7 @@ class HolidaysAllocation(models.Model):
     number_of_hours_display = fields.Float(
         'Duration (hours)', compute='_compute_number_of_hours_display', store=True,
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
-    duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display',
+    duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display', inverse='_inverse_duration_display',
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
     last_executed_carryover_date = fields.Date(export_string_translation=False)
     # details
@@ -118,7 +118,7 @@ class HolidaysAllocation(models.Model):
     ], string="Allocation Type", default="regular", required=True, readonly=True)
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan',
-        compute="_compute_accrual_plan_id", store=True, readonly=False, tracking=True,
+        compute="_compute_accrual_plan_id", inverse="_inverse_accrual_plan_id", store=True, readonly=False, tracking=True,
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
@@ -222,6 +222,14 @@ class HolidaysAllocation(models.Model):
                 else float_round(allocation.number_of_days_display, precision_digits=2)),
                 _('hours') if allocation.type_request_unit == 'hour' else _('days'))
 
+    def _inverse_duration_display(self):
+        for allocation in self:
+            value = allocation.duration_display.split(' ')[0].replace(',','.')
+            try:
+                allocation.number_of_days = float(value)
+            except:
+                raise ValidationError(_("Cannot convert allocated days/hours value : '%s' to float", value))
+
     @api.depends('state')
     def _compute_can_approve(self):
         for allocation in self:
@@ -284,6 +292,10 @@ class HolidaysAllocation(models.Model):
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
                 if allocation.holiday_status_id:
                     allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
+
+    def _inverse_accrual_plan_id(self):
+        for allocation in self:
+            allocation.allocation_type = "accrual" if allocation.accrual_plan_id else "regular"
 
     def _get_request_unit(self):
         self.ensure_one()
