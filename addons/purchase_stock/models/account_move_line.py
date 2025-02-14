@@ -214,7 +214,10 @@ class AccountMoveLine(models.Model):
                 aml = self
 
             aml_gross_price_unit = aml._get_gross_unit_price()
-            # convert from aml currency to company currency
+            # convert from aml currency to company currency:
+            # use the rate defined on the AML, as a conversion with ResCurrency._convert() might
+            # yield a wrong result (e.g., multiple currency rates over a series of days in tandem
+            # with postponing the `_post()` of a bill past time of reception)
             aml_price_unit = aml_gross_price_unit / aml.currency_rate
             aml_price_unit = aml.product_uom_id._compute_price(aml_price_unit, product_uom)
 
@@ -229,7 +232,7 @@ class AccountMoveLine(models.Model):
                 aml_vals_list += self._prepare_pdiff_aml_vals(out_qty_to_invoice, unit_valuation_difference_curr)
 
             # Generate the SVL values for the on hand quantities (and impact the parent layer)
-            po_pu_curr = po_line.currency_id._convert(po_line.price_unit, self.currency_id, self.company_id, self.move_id.invoice_date or self.date or fields.Date.context_today(self), round=False)
+            po_pu_curr = po_line.currency_id._convert(po_line.price_unit_discounted, self.currency_id, self.company_id, self.move_id.invoice_date or self.date or fields.Date.context_today(self), round=False)
             price_difference_curr = po_pu_curr - aml_gross_price_unit
             if not float_is_zero(unit_valuation_difference * qty_to_correct, precision_rounding=self.company_id.currency_id.rounding):
                 svl_vals = self._prepare_pdiff_svl_vals(layer, sign * qty_to_correct, unit_valuation_difference, price_difference_curr)
