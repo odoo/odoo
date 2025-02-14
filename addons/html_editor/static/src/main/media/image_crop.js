@@ -5,6 +5,7 @@ import {
     loadImage,
     loadImageInfo,
 } from "@html_editor/utils/image_processing";
+import { IMAGE_SHAPES } from "./image_plugin";
 import { _t } from "@web/core/l10n/translation";
 import {
     Component,
@@ -175,6 +176,17 @@ export class ImageCrop extends Component {
             this.aspectRatios[this.aspectRatio].value,
             this.media.dataset
         );
+
+        this.cropper.element.addEventListener("ready", () => {
+            const cropperMove = this.cropperWrapper.el.querySelector(".cropper-face.cropper-move");
+            for (const shape of IMAGE_SHAPES) {
+                if (this.media.classList.contains(shape)) {
+                    cropperMove.classList.add(shape);
+                } else {
+                    cropperMove.classList.remove(shape);
+                }
+            }
+        });
     }
     /**
      * Updates the DOM image with cropped data and associates required
@@ -244,7 +256,6 @@ export class ImageCrop extends Component {
         if (rect.top < viewportTop || viewportBottom - rect.bottom < 100) {
             await scrollTo(this.media, {
                 behavior: "smooth",
-                isAnchor: true,
                 ...(scrollable && { scrollable }),
             });
         }

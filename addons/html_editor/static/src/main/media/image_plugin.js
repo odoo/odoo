@@ -15,6 +15,13 @@ function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
 }
 
+export const IMAGE_SHAPES = [
+    "rounded",
+    "rounded-circle",
+    "shadow",
+    "img-thumbnail",
+];
+
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
