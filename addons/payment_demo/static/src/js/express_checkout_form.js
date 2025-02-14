@@ -55,6 +55,7 @@ paymentExpressCheckoutForm.include({
                 'zip': shippingInfo.querySelector('#o_payment_demo_shipping_zip').value,
                 'city': shippingInfo.querySelector('#o_payment_demo_shipping_city').value,
                 'country': shippingInfo.querySelector('#o_payment_demo_shipping_country').value,
+                'state': shippingInfo.querySelector('#o_payment_demo_shipping_state').value
             };
             // Call the shipping address update route to fetch the shipping options.
             const availableCarriers = await rpc(
@@ -85,7 +86,8 @@ paymentExpressCheckoutForm.include({
                     'street2': '23',
                     'country': 'BE',
                     'city':'Ramillies',
-                    'zip':'1367'
+                    'zip':'1367',
+                    'state': 'BE-WBR'
                 },
             }
         );
