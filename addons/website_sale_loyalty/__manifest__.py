@@ -12,7 +12,6 @@ Coupon & promotion programs can be edited in the Catalog menu of the Website app
     'version': '1.0',
     'depends': ['website_sale', 'website_links', 'sale_loyalty'],
     'data': [
-        'security/ir.model.access.csv',
 
         'views/loyalty_card_views.xml',
         'views/loyalty_program_views.xml',
@@ -22,6 +21,7 @@ Coupon & promotion programs can be edited in the Catalog menu of the Website app
 
         'wizard/coupon_share_views.xml',
         'wizard/res_config_settings_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/product_demo.xml',

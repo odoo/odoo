@@ -23,7 +23,7 @@ project.
     'data': [
         'data/transifex_data.xml',
         'views/code_translation_views.xml',
-        'security/ir.model.access.csv'
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

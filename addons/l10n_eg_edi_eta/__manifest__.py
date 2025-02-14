@@ -17,8 +17,6 @@ Special thanks to Plementus <info@plementus.com> for their help in developing th
         'data/l10n_eg_edi.activity.type.csv',
         'data/l10n_eg_edi.uom.code.csv',
         'data/uom.uom.csv',
-        'security/ir.model.access.csv',
-        'security/eta_thumb_drive_security.xml',
         'views/uom_uom_view.xml',
         'views/account_move_view.xml',
         'views/account_journal_view.xml',
@@ -27,6 +25,7 @@ Special thanks to Plementus <info@plementus.com> for their help in developing th
         'views/res_config_settings_view.xml',
         'views/report_invoice.xml',
         'data/res_country_data.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

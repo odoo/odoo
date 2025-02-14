@@ -7,13 +7,12 @@
     'summary': 'Get history of driven cars by employees',
     'depends': ['hr', 'fleet'],
     'data': [
-        'security/ir.model.access.csv',
-        'security/hr_fleet_security.xml',
         'views/employee_views.xml',
         'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_cost_views.xml',
         'wizard/hr_departure_wizard_views.xml',
          'data/hr_fleet_data.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_fleet_demo.xml',

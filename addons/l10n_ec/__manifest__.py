@@ -48,7 +48,6 @@ Master Data:
     ],
     'auto_install': ['account'],
     'data': [
-        'security/ir.model.access.csv',
         'data/account_tax_report_data.xml',
         'data/res.bank.csv',
         'data/l10n_latam_identification_type_data.xml',
@@ -61,6 +60,7 @@ Master Data:
         'views/l10n_ec_sri_payment.xml',
         'views/account_journal_view.xml',
         "views/res_partner_view.xml",
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

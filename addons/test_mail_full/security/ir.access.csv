@@ -1,0 +1,11 @@
+id,model_id,group_id/id,operation,domain,name
+access_mail_test_portal_group_user,mail.test.portal,base.group_user,rwcd,,mail.test.portal.user
+access_mail_test_portal_no_partner_group_portal,mail.test.portal.no.partner,base.group_portal,r,,mail.test.portal.no.partner.all
+access_mail_test_portal_no_partner_group_user,mail.test.portal.no.partner,base.group_user,rwcd,,mail.test.portal.no.partner.user
+access_mail_test_rating_group_portal,mail.test.rating,base.group_portal,r,"[('message_partner_ids', 'in', [user.partner_id.id])]",TestRating: Portal should follow
+access_mail_test_rating_group_user,mail.test.rating,base.group_user,rwcd,,mail.test.rating.user
+access_mail_test_rating_global,mail.test.rating,,rwcd,"[('company_id', 'in', company_ids + [False])]",TestRating: Multi Company
+access_mail_test_rating_thread_group_portal,mail.test.rating.thread,base.group_portal,r,,mail.test.rating.thread.portal
+access_mail_test_rating_thread_group_user,mail.test.rating.thread,base.group_user,rwcd,,mail.test.rating.thread.user
+access_mail_test_rating_thread_read_group_portal,mail.test.rating.thread.read,base.group_portal,r,,mail.test.rating.thread.read.portal
+access_mail_test_rating_thread_read_group_user,mail.test.rating.thread.read,base.group_user,rwcd,,mail.test.rating.thread.read.user

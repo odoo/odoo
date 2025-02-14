@@ -1,0 +1,5 @@
+id,model_id,group_id/id,operation,domain,name
+access_hr_timesheet_attendance_report_group_hr_timesheet_user,hr.timesheet.attendance.report,hr_timesheet.group_hr_timesheet_user,r,"[('employee_id', '=', user.employee_id.id)]",Timesheet attendance Report: User
+access_hr_timesheet_attendance_report_global,hr.timesheet.attendance.report,,rwcd," [('company_id', 'in', company_ids + [False])]",Restricted Timesheet attendance Record: multi-company
+access_hr_timesheet_attendance_report_group_hr_timesheet_approver,hr.timesheet.attendance.report,hr_timesheet.group_hr_timesheet_approver,r,,Timesheet attendance Report: Approver
+access_hr_timesheet_attendance_report_group_timesheet_manager,hr.timesheet.attendance.report,hr_timesheet.group_timesheet_manager,r,,Timesheet attendance Report: Administrator

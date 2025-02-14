@@ -1,0 +1,7 @@
+id,model_id,group_id/id,operation,domain,name
+access_event_lead_rule_group_event_registration_desk,event.lead.rule,event.group_event_registration_desk,r,,event.lead.rule.user
+access_event_lead_rule_group_event_user,event.lead.rule,event.group_event_user,r,,event.lead.rule.user
+access_event_lead_rule_group_event_manager,event.lead.rule,event.group_event_manager,rwcd,,event.lead.rule.manager
+access_event_lead_rule_group_sale_salesman,event.lead.rule,sales_team.group_sale_salesman,r,,event.lead.rule.salesman
+access_event_lead_rule_global,event.lead.rule,,rwcd,"[('company_id', 'in', company_ids + [False])]",Event CRM: Multi Company
+access_event_lead_request_group_system,event.lead.request,base.group_system,rwcd,,event.lead.request.system

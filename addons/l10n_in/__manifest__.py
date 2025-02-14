@@ -28,7 +28,6 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
     'auto_install': ['account'],
     'data': [
         'security/l10n_in_security.xml',
-        'security/ir.model.access.csv',
         "data/iap_service_data.xml",
         'data/account.account.tag.csv',
         'data/l10n_in_chart_data.xml',
@@ -57,6 +56,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/res_partner_views.xml',
         'views/account_tax_views.xml',
         'views/uom_uom_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/product_demo.xml',

@@ -9,8 +9,7 @@
     'depends': ['event', 'sms'],
     'data': [
         'data/sms_data.xml',
-        'security/ir.model.access.csv',
-        'security/sms_security.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'auto_install': True,

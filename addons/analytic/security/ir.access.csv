@@ -1,0 +1,10 @@
+id,model_id,group_id/id,operation,domain,name
+access_account_analytic_account_group_analytic_accounting,account.analytic.account,analytic.group_analytic_accounting,rwcd,,access_account_analytic_account
+access_account_analytic_account_global,account.analytic.account,,rwcd,"['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]",Analytic multi company rule
+access_account_analytic_line_group_analytic_accounting,account.analytic.line,analytic.group_analytic_accounting,rwcd,,access_account_analytic_line
+access_account_analytic_line_global,account.analytic.line,,rwcd,"[('company_id', 'in', company_ids)]",Analytic line multi company rule
+access_account_analytic_plan_group_analytic_accounting,account.analytic.plan,analytic.group_analytic_accounting,rwcd,,access_account_analytic_plan
+access_account_analytic_applicability_group_analytic_accounting,account.analytic.applicability,analytic.group_analytic_accounting,rwcd,,access_account_analytic_applicability
+access_account_analytic_applicability_global,account.analytic.applicability,,rwcd,"['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]",Analytic applicability multi company rule
+access_account_analytic_distribution_model_group_analytic_accounting,account.analytic.distribution.model,analytic.group_analytic_accounting,rwcd,,access_account_analytic_distribution_model
+access_account_analytic_distribution_model_global,account.analytic.distribution.model,,rwcd,"['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]",Analytic distribution model multi company rule

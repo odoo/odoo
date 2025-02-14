@@ -1,0 +1,7 @@
+id,model_id,group_id/id,operation,domain,name
+access_crm_reveal_rule_group_sale_manager,crm.reveal.rule,sales_team.group_sale_manager,rwcd,,CRM Reveal Rules: All Rules
+access_crm_reveal_rule_group_sale_salesman,crm.reveal.rule,sales_team.group_sale_salesman,r,"['|', ('user_id', '=', user.id), ('user_id', '=', False)]",CRM Reveal Rules: Personal / Global Rules
+access_crm_reveal_rule_group_sale_salesman_all_leads,crm.reveal.rule,sales_team.group_sale_salesman_all_leads,r,,CRM Reveal Rules: All Rules
+access_crm_reveal_view_group_sale_manager,crm.reveal.view,sales_team.group_sale_manager,rwcd,,CRM Reveal Views: All Views
+access_crm_reveal_view_group_sale_salesman,crm.reveal.view,sales_team.group_sale_salesman,r,"['|', ('reveal_rule_id.user_id', '=', user.id), ('reveal_rule_id.user_id', '=', False)]",CRM Reveal Views: Personal / Global Views
+access_crm_reveal_view_group_sale_salesman_all_leads,crm.reveal.view,sales_team.group_sale_salesman_all_leads,r,,CRM Reveal Views: All Views

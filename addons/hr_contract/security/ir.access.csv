@@ -1,0 +1,11 @@
+id,model_id,group_id/id,operation,domain,name
+access_resource_resource_group_hr_manager,resource.resource,hr.group_hr_manager,rwcd,,hr.employee.resource.manager
+access_resource_calendar_group_hr_user,resource.calendar,hr.group_hr_user,rwcd,,hr.employee.resource.calendar.user
+access_resource_calendar_attendance_group_hr_user,resource.calendar.attendance,hr.group_hr_user,rwcd,,hr.employee.resource.calendar.attendance.user
+access_hr_contract_group_hr_contract_manager,hr.contract,hr_contract.group_hr_contract_manager,rwcd,,HR Contract: Contract Manager
+access_hr_contract_group_hr_contract_employee_manager,hr.contract,hr_contract.group_hr_contract_employee_manager,r,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.user_id', '=', user.id)]",HR Contract: Employee Manager
+access_hr_contract_global,hr.contract,,rwcd,"[('company_id', 'in', company_ids)]",HR Contract: Multi Company
+access_hr_contract_history_group_hr_contract_manager,hr.contract.history,hr_contract.group_hr_contract_manager,r,,hr.contract.history.manager
+access_hr_contract_history_global,hr.contract.history,,rwcd,"['|', ('employee_id.company_id', '=', False), ('employee_id.company_id', 'in', company_ids)]",HR Contract History: Multi Company
+access_hr_payroll_structure_type_group_hr_contract_manager,hr.payroll.structure.type,hr_contract.group_hr_contract_manager,rwcd,,hr.payroll.structure.type.contract.manager
+access_hr_payroll_structure_type_global,hr.payroll.structure.type,,rwcd,"['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]",HR Payroll Structure Type: Multi Company

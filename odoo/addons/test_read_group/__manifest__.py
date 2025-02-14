@@ -5,6 +5,6 @@
     'category': 'Hidden/Tests',
     'version': '0.1',
     'depends': ['base', 'web'],
-    'data': ['ir.model.access.csv'],
+    'data': ['ir.access.csv'],
     'license': 'LGPL-3',
 }

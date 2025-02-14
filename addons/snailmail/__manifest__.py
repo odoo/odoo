@@ -18,7 +18,7 @@ Allows users to send documents by post
         'views/snailmail_views.xml',
         'wizard/snailmail_letter_format_error_views.xml',
         'wizard/snailmail_letter_missing_required_fields_views.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'assets': {
