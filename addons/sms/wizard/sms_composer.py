@@ -194,7 +194,7 @@ class SendSMS(models.TransientModel):
         if self.composition_mode == 'numbers':
             return self._action_send_sms_numbers()
         elif self.composition_mode == 'comment':
-            if records is None or not isinstance(records, self.pool['mail.thread']):
+            if not records or not isinstance(records, self.pool['mail.thread']):
                 return self._action_send_sms_numbers()
             if self.comment_single_recipient:
                 return self._action_send_sms_comment_single(records)
@@ -370,6 +370,9 @@ class SendSMS(models.TransientModel):
             records = self.env[self.res_model].browse(self.res_id)
         else:
             records = self.env[self.res_model]
+
+        if not isinstance(records, self.pool['mail.thread']):
+            records = records.mapped('partner_id')
 
         records = records.with_context(mail_notify_author=True)
         return records
