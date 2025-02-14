@@ -547,31 +547,38 @@ class Meeting(models.Model):
         all_models = self.env['ir.model'].sudo().browse(model_ids)
         valid_models = all_models.filtered(lambda m: m.is_mail_activity)
         if meeting_activity_types and not defaults.get('activity_ids'):
+            activity_ids_groups = {}
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
                 if values.get('activity_ids'):
                     continue
                 res_model_id = values.get('res_model_id', defaults.get('res_model_id'))
-                res_model = all_models.filtered(lambda m: m.id == res_model_id)
+                res_model = valid_models.filtered(lambda m: m.id == res_model_id)
                 res_id = values.get('res_id', defaults.get('res_id'))
                 user_id = values.get('user_id', defaults.get('user_id'))
-                if not res_model_id or not res_id:
-                    continue
-                if res_model not in valid_models:
+                if not res_model_id or not res_id or not res_model:
                     continue
                 meeting_activity_type = meeting_activity_types.filtered(
                     lambda act: act.res_model in {False, res_model.model}
                 )
+                activity_vals_tuple = (res_model_id, res_id, meeting_activity_type[:1].id, user_id)
+                if activity_vals_tuple not in activity_ids_groups:
+                    activity_ids_groups[activity_vals_tuple] = []
+                
+                activity_ids_groups[activity_vals_tuple].append(values)
+            
+            for activity_vals_tuple in activity_ids_groups:
                 activity_vals = {
-                    'res_model_id': res_model_id,
-                    'res_id': res_id,
-                    'activity_type_id': meeting_activity_type[:1].id,
+                    'res_model_id': activity_vals_tuple[0],
+                    'res_id': activity_vals_tuple[1],
+                    'activity_type_id': activity_vals_tuple[2],
+                    'user_id': activity_vals_tuple[3],
                 }
-                if user_id:
-                    activity_vals['user_id'] = user_id
-                values['activity_ids'] = [(0, 0, activity_vals)]
-        self._set_videocall_location(vals_list)
+                records = self.env['mail.activity'].create([activity_vals] * len(activity_ids_groups[activity_vals_tuple]))
+                for i, vals in enumerate(vals_list):
+                    values['activity_ids'] = [(6, 0, [records[i].id])]
 
+        self._set_videocall_location(vals_list)
         # Add commands to create attendees from partners (if present) if no attendee command
         # is already given (coming from Google event for example).
         # Automatically add the current partner when creating an event if there is none (happens when we quickcreate an event)
