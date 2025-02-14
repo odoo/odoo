@@ -1,42 +1,56 @@
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class L10nEsEdiVerifactuRecordDocument(models.Model):
+    """Veri*Factu Record Document
+    It represents an internal record / event in the Veri*Factu XML format as specified by the AEAT.
+    It i.e.:
+      * stores the XML we send
+      * is eventually associated with a "Veri*Factu Document" ('l10n_es_edi_verifactu.document') of type "Batch" to send it to the AEAT
+      * stores information extracted from the associated "Veri*Factu Document" about the received response"""
     _name = 'l10n_es_edi_verifactu.record_document'
-    _description = "Record object representing a Veri*Factu XML"
+    _description = "Veri*Factu Record Document"
     _order = 'response_time DESC, create_date DESC, id DESC'
 
     company_id = fields.Many2one(
+        string="Company",
         comodel_name='res.company',
         required=True,
+        readonly=True,
     )
     # `res_model` and `res_id` are used to link the object the document was created from
     res_model = fields.Char(
         string="Origin Model",
         required=True,
+        readonly=True,
     )
     res_id = fields.Integer(
         string="Origin ID",
-        required=True
-    )
-    document_id = fields.Many2one(
-        comodel_name='l10n_es_edi_verifactu.document',
-        string="Veri*Factu Document",
-        help="The document in which the record is sent to the AEAT.",
-        copy=False,
+        required=True,
         readonly=True,
     )
     record_identifier = fields.Json(
         string="Veri*Factu Record Identifier",
         help="Technical field containing the values used to identify records in the Veri*Factu system.",
+        readonly=True,
+    )
+    record_type = fields.Selection(
+        string='Record Type',
+        selection=[
+            ('submission', 'Submission'),
+            ('cancellation', 'Cancellation'),
+        ],
+        readonly=True,
+        required = True,
     )
     xml_attachment_id = fields.Many2one(
-        comodel_name='ir.attachment',
         string="XML Attachment",
-        copy=False,
+        comodel_name='ir.attachment',
         readonly=True,
     )
     state = fields.Selection(
+        string='Status',
         selection=[
             ('creating_failed', 'Creating Failed'),
             ('sending_failed', 'Sending Failed'),
@@ -52,8 +66,15 @@ class L10nEsEdiVerifactuRecordDocument(models.Model):
                 - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record
                 - Accepted: Registered by the AEAT without errors
                 - Cancelled: Registered by the AEAT as cancelled""",
-        string='Status',
         copy=False,
+        readonly=True,
+    )
+    document_id = fields.Many2one(
+        string="Veri*Factu Document",
+        comodel_name='l10n_es_edi_verifactu.document',
+        help="The document in which the record is sent to the AEAT.",
+        copy=False,
+        readonly=True,
     )
     response_time = fields.Datetime(
         string="Time of Response",
@@ -61,12 +82,14 @@ class L10nEsEdiVerifactuRecordDocument(models.Model):
         store=True,
         help="The date and time on which we received the response (or tried to send in case of failure).",
         copy=False,
+        readonly=True,
     )
     errors = fields.Html(
         string="Errors",
-        copy=False,
         compute='_compute_state_related_fields',
         store=True,
+        copy=False,
+        readonly=True,
     )
 
     @api.depends('record_identifier', 'document_id', 'document_id.response_info', 'xml_attachment_id')
@@ -107,3 +130,9 @@ class L10nEsEdiVerifactuRecordDocument(models.Model):
             return None, batch_errors
 
         return batch_xml, batch_errors
+
+    @api.ondelete(at_uninstall=False)
+    def _never_unlink_chained_record_documents(self):
+        for record_document in self:
+            if record_document.state != 'creating_failed':
+                raise UserError(_("You cannot delete Veri*Factu records that are part of the chain of all Veri*Factu records."))

@@ -32,8 +32,8 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             any_moves_require_verifactu = any(wizard.move_ids.mapped('l10n_es_edi_verifactu_required'))
             enable = any_moves_require_verifactu or any(move.country_code == 'ES' for move in wizard.move_ids)
-            checked_by_default = enable
-            readonly = not enable or any_moves_require_verifactu
+            checked_by_default = enable and any_moves_require_verifactu
+            readonly = True
             wizard.l10n_es_edi_verifactu_send_enable = enable
             wizard.l10n_es_edi_verifactu_send_readonly = readonly
             wizard.l10n_es_edi_verifactu_send_checkbox = checked_by_default
@@ -43,7 +43,7 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             waiting_moves = wizard.move_ids.filtered(lambda m: m.l10n_es_edi_verifactu_record_document_ids.filtered(lambda rd: not rd.state))
             wizard.l10n_es_edi_verifactu_warnings = _(
-                "The following entries will be skipped. They are already waiting to send records to the AEAT: %s",
+                "The following entries will be skipped. They are already waiting to send Veri*Factu records to the AEAT: %s",
                 ', '.join(waiting_moves.mapped('name'))
             ) if waiting_moves else False
 
@@ -55,7 +55,7 @@ class AccountMoveSend(models.TransientModel):
         invoices_to_send = self.env['account.move'].browse([
             invoice.id for invoice, invoice_data in invoices_data.items()
             if invoice_data.get('l10n_es_edi_verifactu_send')
-        ])
+        ]).filtered(lambda move: move.l10n_es_edi_verifactu_required)
 
         created_record_document = invoices_to_send.l10n_es_edi_verifactu_mark_for_next_batch()
 

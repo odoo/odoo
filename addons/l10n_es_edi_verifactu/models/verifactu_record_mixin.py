@@ -5,8 +5,11 @@ from odoo import _, api, fields, models
 
 
 class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
+    """"Veri*Factu Record Mixin"
+    It can be added to models from which we want to create Veri*Factu records ("Veri*Factu Record Document" / 'l10n_es_edi_verifactu.recorddocument'):
+    I.e. it can be added to Invoices ('account.move') and PoS Orders ('pos.order')"""
     _name = 'l10n_es_edi_verifactu.record_mixin'
-    _description = "Mixin that can be added to models from which we want to create Veri*Factu records (i.e. account.move / pos.order)"
+    _description = "Veri*Factu Record Mixin"
 
     l10n_es_edi_verifactu_required = fields.Boolean(
         string="Veri*Factu Required",
@@ -60,14 +63,19 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
     def _compute_l10n_es_edi_verifactu_state(self):
         for record in self:
             state = False
-            record_documents = record.l10n_es_edi_verifactu_record_document_ids.filtered(lambda rec: rec.state and rec.response_time).sorted()
-            last_succesful_record = record_documents.filtered(
-                lambda doc: doc.state in ('registered_with_errors', 'accepted', 'cancelled')
+            relevant_records = record.l10n_es_edi_verifactu_record_document_ids.filtered(
+                lambda rec: rec.state and rec.response_time and rec.record_type in ('submission', 'cancellation')
+            ).sorted()
+            last_succesful_record = relevant_records.filtered(
+                lambda doc: doc.state in ('registered_with_errors', 'accepted')
             )[:1]
             if last_succesful_record:
-                state = last_succesful_record.state
-            elif record_documents:
-                last_record = record_documents[0]
+                if last_succesful_record.record_type == 'cancellation':
+                    state = 'cancelled'
+                else:
+                    state = last_succesful_record.state
+            elif relevant_records:
+                last_record = relevant_records[0]
                 state = last_record.state
             record.l10n_es_edi_verifactu_state = state
 
@@ -136,6 +144,7 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
             'res_id': self.id,
             'res_model': self._name,
             'company_id': self.company_id.id,
+            'record_type': 'cancellation' if cancellation else 'submission',
         }
 
         generation_errors = render_info['errors']
@@ -161,24 +170,27 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
                 'name': f"verifactu_record_{record_document.id}.xml",
                 'res_id': self.id,
                 'res_model': self._name,
-               })
+            })
             self.l10n_es_edi_verifactu_record_document_ids.filtered(lambda rd: rd.state == 'creating_failed').unlink()
 
         return record_document
 
     def l10n_es_edi_verifactu_mark_for_next_batch(self, cancellation=False):
         result = {}
+        # TODO:?: lock company / record documents
         if self:
             for record in self:
                 waiting_record_documents = record.l10n_es_edi_verifactu_record_document_ids.filtered(lambda rd: not rd.state)
                 if waiting_record_documents:
                     continue
+
                 company = record.company_id
                 previous_record = company.l10n_es_edi_verifactu_last_record_document
                 record_document = record._l10n_es_edi_verifactu_create_record_document(
                     cancellation=cancellation, previous_record_identifier=previous_record.record_identifier
                 )
-                # TODO: why is it needed; else the new record_document is not available in _call_web_service_after_invoice_pdf_render
+                # TODO: why is it needed / the field not updated?
+                #       without this line the new record_document is not available in _call_web_service_after_invoice_pdf_render
                 record.invalidate_recordset(['l10n_es_edi_verifactu_record_document_ids'])
                 if record_document.state != 'creating_failed':
                     company.l10n_es_edi_verifactu_last_record_document = record_document

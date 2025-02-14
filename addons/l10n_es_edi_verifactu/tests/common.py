@@ -35,6 +35,7 @@ class TestEsEdiVerifactuCommon(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.es').id,
             'state_id': cls.env.ref('base.state_es_z').id,
             'vat': 'ES59962470K',
+            'l10n_es_edi_verifactu_required': True,
             'l10n_es_edi_verifactu_certificate_ids': [Command.set(cls.certificate.ids)],
             'l10n_es_edi_verifactu_test_environment': True,
         })

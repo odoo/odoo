@@ -10,16 +10,20 @@ class PosOrder(models.Model):
     def _compute_l10n_es_edi_verifactu_required(self):
         # Overrides verifactu_record_mixin.py
         for order in self:
-            order.l10n_es_edi_verifactu_required = order.country_code == 'ES'
+            order.l10n_es_edi_verifactu_required = order.country_code == 'ES' and order.company_id.l10n_es_edi_verifactu_required
 
     @api.depends('company_id', 'name', 'date_order', 'amount_total')
     def _compute_l10n_es_edi_verifactu_record_identifier(self):
         for order in self:
             if not order.l10n_es_edi_verifactu_required:
                 identifier = False
+            if not order.l10n_es_edi_verifactu_required:
+                identifier = {
+                    'errors': [_("Veri*Factu is not enabled for the point of sale order.")]
+                }
             elif order.state == 'draft':
                 identifier = {
-                    'errors': [_("The Point of Sale Order is in draft.")]
+                    'errors': [_("The point of sale order is in draft.")]
                 }
             else:
                 identifier = self.env['l10n_es_edi_verifactu.document']._record_identifier(
@@ -114,13 +118,19 @@ class PosOrder(models.Model):
         res = super()._generate_pos_order_invoice()
 
         for order in self:
-            invoice = order.account_move
+            # Cancel the order
             if order.l10n_es_edi_verifactu_state in ('accepted', 'registered_with_errors'):
                 order.l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
+            # Register the invoice instead
+            invoice = order.account_move
             if invoice.l10n_es_edi_verifactu_required and invoice and not invoice.l10n_es_edi_verifactu_record_document_ids:
                 invoice.l10n_es_edi_verifactu_mark_for_next_batch()
 
         return res
 
     def l10n_es_edi_verifactu_button_send(self):
-        self.l10n_es_edi_verifactu_mark_for_next_batch()
+        created_record_documents = self.l10n_es_edi_verifactu_mark_for_next_batch()
+        skipped_orders = self.filtered(lambda order: created_record_documents.get(order))
+        if skipped_orders and len(self) == 1:
+            raise UserError(self.env._("The order is waiting to send a Veri*Factu record to the AEAT already."))
+        # In other cases we just silently skip them

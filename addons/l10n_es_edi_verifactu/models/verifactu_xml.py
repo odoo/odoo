@@ -99,11 +99,7 @@ def _int_to_bytes(number):
 
 class L10nEsEdiVerifactuXml(models.AbstractModel):
     _name = 'l10n_es_edi_verifactu.xml'
-    _description = "Handles the generation of XML strings for Veri*Factu "
-
-    # -------------------------------------------------------------------------
-    # EXPORT
-    # -------------------------------------------------------------------------
+    _description = "Handles the generation of XML strings for Veri*Factu records ('l10n_es_edi_verifactu.record_document' and 'l10n_es_edi_verifactu.document')"
 
     @api.model
     def _format_date_fecha_type(self, date):
@@ -577,7 +573,7 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
         return xml_node, errors
 
     @api.model
-    def _batch_record_xmls(self, xml_list):
+    def _batch_record_xmls(self, xml_list, incident=False):
         errors = []
 
         company = self.env.company
@@ -591,15 +587,11 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
                 'NombreRazon': company_values['name'],
                 'NIF': company_NIF,
             },
+            'RemisionVoluntaria': {
+                'Incidencia': 'S' if incident else 'N',
+            },
         }
 
-        # TODO: do e.g when sending failed
-        incident = False
-        if incident:
-            cabecera["RemisionVoluntaria"] = {
-                'Incidencia': 'S' if incident else 'N',
-            }
- 
         vals = {
             'vals': {'Cabecera': cabecera},
             '_path_get': _path_get,

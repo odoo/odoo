@@ -12,8 +12,15 @@ BATCH_LIMIT = 1000
 
 
 class L10nEsEdiVerifactuDocument(models.Model):
+    """Veri*Factu Document
+    It represents a Veri*Factu request to the AEAT (and eventually information about the received response).
+    It i.e.:
+      * stores the XML we send
+        * A Batch document basically just aggregates one or several "Veri*Factu Record Documents" ('l10n_es_edi_verifactu.record_document').
+      * handles the sending to the AEAT
+      * and stores information about the received response (handled by the model "Veri*Factu Response Parser" / 'l10n_es_edi_verifactu.response_parser')"""
     _name = 'l10n_es_edi_verifactu.document'
-    _description = "Document object representing a Veri*Factu XML"
+    _description = "Veri*Factu Document"
     _order = 'response_time DESC, create_date DESC, id DESC'
 
     company_id = fields.Many2one(
@@ -23,7 +30,6 @@ class L10nEsEdiVerifactuDocument(models.Model):
     )
     document_type = fields.Selection(
         selection=[
-            ('record', 'Record'),
             ('query', 'Query'),
             ('batch', 'Batch'),
         ],
@@ -189,15 +195,22 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         record_document_domain = [
             ('state', '=', False),
+            ('response_time', '=', False),
         ]
         record_documents_per_company = self.env['l10n_es_edi_verifactu.record_document']._read_group(
-            record_document_domain, ['company_id'], ['id:recordset']
+            record_document_domain,
+            groupby=['company_id'],
+            aggregates=['id:recordset'],
         )
 
         if not record_documents_per_company:
             return
 
         for company, record_documents in record_documents_per_company:
+            # We sort the `record_documents` to batch them in the order they were chained (`create_date`).
+            # TODO: explicitly sorting by `create_date` may be better
+            record_documents = record_documents.sorted(reverse=True)
+
             # Send batches with size BATCH_LIMIT; they are not restricted by the waiting time
             record_count = len(record_documents)
             start_index = 0
@@ -266,7 +279,21 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         return info
 
+    def _had_incident(self):
+        self.ensure_one()
+        # TODO: also in case we send much later than next batch time?
+        return self.state == 'sending_failed'
+
     def _send(self):
+        self.ensure_one()
+
+        if self._had_incident():
+            # We send or even resend, but we need to set a flag in the XML
+            # TODO: regenerate XML / update XML for Incidencia
+            pass
+        elif self.response_time:
+            # Do not resend other documents
+            return
 
         info = self._send_request()
         self.response_time = info.pop('response_time', False)

@@ -5,15 +5,14 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 
 patch(PaymentScreen.prototype, {
     async validateOrder(isForceValidate) {
-        if (this.pos.config.is_spanish && !this.skipAutomaticInvoicing()) {
+        if (this.pos.config.is_spanish) {
             const order = this.currentOrder;
-            // TODO:
-            order.l10n_es_edi_verifactu_required = true;
+            order.l10n_es_edi_verifactu_required = this.pos.config.l10n_es_edi_verifactu_required;
         }
         return await super.validateOrder(...arguments);
     },
     async _postPushOrderResolve(order, order_server_ids) {
-        if (this.pos.config.is_spanish) {
+        if (this.pos.config.is_spanish && this.pos.config.l10n_es_edi_verifactu_required) {
             const [orderRead] = await this.orm.read(
                 'pos.order',
                 order_server_ids,

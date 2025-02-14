@@ -7,7 +7,9 @@ patch(Order.prototype, {
     //@override
     export_for_printing(baseUrl, headerData) {
         const result = super.export_for_printing(...arguments);
-        result.l10n_es_edi_verifactu_qr_code = this.l10n_es_edi_verifactu_qr_code;
+        if (this.pos.config.is_spanish && this.pos.config.l10n_es_edi_verifactu_required) {
+            result.l10n_es_edi_verifactu_qr_code = this.l10n_es_edi_verifactu_qr_code;
+        }
         return result;
     },
     export_as_JSON() {

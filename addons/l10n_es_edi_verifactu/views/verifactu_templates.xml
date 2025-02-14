@@ -35,13 +35,13 @@
         <sum:Cabecera
             xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
             xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
-            <sum1:RemisionVoluntaria t-if="_path_get(vals, 'RemisionVoluntaria')">
-                <sum1:Incidencia t-out="_path_get(vals, 'RemisionVoluntaria/Incidencia')"/>
-            </sum1:RemisionVoluntaria>
             <sum1:ObligadoEmision>
                 <sum1:NombreRazon t-out="_path_get(vals, 'ObligadoEmision/NombreRazon')"/>
                 <sum1:NIF t-out="_path_get(vals, 'ObligadoEmision/NIF')"/>
             </sum1:ObligadoEmision>
+            <sum1:RemisionVoluntaria t-if="_path_get(vals, 'RemisionVoluntaria')">
+                <sum1:Incidencia t-out="_path_get(vals, 'RemisionVoluntaria/Incidencia')"/>
+            </sum1:RemisionVoluntaria>
         </sum:Cabecera>
     </template>
 

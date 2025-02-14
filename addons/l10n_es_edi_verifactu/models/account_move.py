@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 class AccountMove(models.Model):
     _name = 'account.move'
@@ -15,14 +16,16 @@ class AccountMove(models.Model):
     def _compute_l10n_es_edi_verifactu_required(self):
         # Overrides verifactu_record_mixin.py
         for move in self:
-            move.l10n_es_edi_verifactu_required = move.country_code == 'ES'
+            move.l10n_es_edi_verifactu_required = move.country_code == 'ES' and move.company_id.l10n_es_edi_verifactu_required
 
     @api.depends('company_id', 'name', 'invoice_date', 'amount_total_signed')
     def _compute_l10n_es_edi_verifactu_record_identifier(self):
         # Overrides verifactu_record_mixin.py
         for move in self:
             if not move.l10n_es_edi_verifactu_required:
-                identifier = False
+                identifier = {
+                    'errors': [_("Veri*Factu is not enabled for the invoice.")]
+                }
             elif move.state == 'draft':
                 identifier = {
                     'errors': [_("The invoice is in draft.")]
@@ -93,4 +96,8 @@ class AccountMove(models.Model):
         return vals, errors
 
     def l10n_es_edi_verifactu_button_cancel(self):
-        self.l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
+        created_record_documents = self.l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
+        skipped_moves = self.filtered(lambda move: created_record_documents.get(move))
+        if skipped_moves and len(self) == 1:
+            raise UserError(self.env._("The entry is waiting to send a Veri*Factu record to the AEAT already."))
+        # In other cases we just silently skip them

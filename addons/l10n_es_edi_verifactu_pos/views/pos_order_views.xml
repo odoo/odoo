@@ -34,12 +34,14 @@
                 <xpath expr="//header" position="inside">
                     <button name="l10n_es_edi_verifactu_button_send" type="object"
                             string="Send Veri*Factu"
-                            invisible="account_move"/>
+                            invisible="account_move or not l10n_es_edi_verifactu_required"/>
                 </xpath>
                 <xpath expr="//group[@name='order_fields']" position="inside">
                     <field name="account_move" invisible="1"/>
+                    <field name="l10n_es_edi_verifactu_required" invisible="1"/>
                     <field name="l10n_es_edi_verifactu_state"
-                           invisible="account_move and not l10n_es_edi_verifactu_record_document_ids"/>
+                           invisible="   not l10n_es_edi_verifactu_required and not l10n_es_edi_verifactu_state
+                                      or account_move and not l10n_es_edi_verifactu_record_document_ids"/>
                 </xpath>
                 <xpath expr="//notebook" position="inside">
                     <page
