@@ -3,6 +3,7 @@
 import math
 import re
 
+import psycopg2
 from werkzeug import urls
 
 from odoo import http, tools, _, SUPERUSER_ID
@@ -185,11 +186,14 @@ class CustomerPortal(Controller):
             'error_message': [],
         })
 
+        login = None
         if post and request.httprequest.method == 'POST':
+            login = post.pop("login")
             if not partner.can_edit_vat():
                 post['country_id'] = str(partner.country_id.id)
 
             error, error_message = self.details_form_validate(post)
+            self.validate_login_field(login, error, error_message)
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
@@ -211,6 +215,7 @@ class CustomerPortal(Controller):
         states = request.env['res.country.state'].sudo().search([])
 
         values.update({
+            'login': login,
             'partner': partner,
             'countries': countries,
             'states': states,
@@ -368,6 +373,20 @@ class CustomerPortal(Controller):
             error_message.append("Unknown field '%s'" % ','.join(unknown))
 
         return error, error_message
+    
+    def validate_login_field(self, login, error, error_message):
+        if not login:
+            error["login"] = "missing"
+            error_message.append(_("Login ID can not be empty!"))
+        elif request.env.user.login != login:
+            try:
+                with request.env.cr.savepoint():
+                    request.env.user.write({"login": login})
+                # update session token so the user does not get logged out
+                request.session.session_token = request.env.user._compute_session_token(request.session.sid)
+            except (ValidationError, psycopg2.errors.UniqueViolation) as e:
+                error["login"] = "Duplicate"
+                error_message.append(_("You can not have two users with the same login."))
 
     def _get_mandatory_fields(self):
         """ This method is there so that we can override the mandatory fields """
