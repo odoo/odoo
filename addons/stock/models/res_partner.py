@@ -20,3 +20,12 @@ class ResPartner(models.Model):
     picking_warn = fields.Selection(WARNING_MESSAGE, 'Stock Picking', help=WARNING_HELP, default='no-message')
     picking_warn_msg = fields.Text('Message for Stock Picking')
 
+    def action_view_stock_serial(self):
+        action = self.env["ir.actions.act_window"]._for_xml_id("stock.action_production_lot_form")
+        action.update({
+            'domain': [('partner_ids', '=', self.id)],
+            'context': {
+                'default_partner_ids': self.id,
+            }
+        })
+        return action

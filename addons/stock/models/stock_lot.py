@@ -56,7 +56,7 @@ class StockLot(models.Model):
     company_id = fields.Many2one('res.company', 'Company', index=True, store=True, readonly=False, compute='_compute_company_id')
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
-    last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_last_delivery_partner_id')
+    partner_ids = fields.Many2many('res.partner', compute='_compute_partner_ids', search='_search_partner_ids')
     lot_properties = fields.Properties('Properties', definition='product_id.lot_properties_definition', copy=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False,
@@ -150,15 +150,13 @@ class StockLot(models.Model):
             lot.delivery_ids = delivery_ids_by_lot[lot.id]
             lot.delivery_count = len(lot.delivery_ids)
 
-    def _compute_last_delivery_partner_id(self):
-        serial_products = self.filtered(lambda l: l.product_id.tracking == 'serial')
-        delivery_ids_by_lot = serial_products._find_delivery_ids_by_lot()
-        (self - serial_products).last_delivery_partner_id = False
-        for lot in serial_products:
-            if lot.product_id.tracking == 'serial' and len(delivery_ids_by_lot[lot.id]) > 0:
-                lot.last_delivery_partner_id = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).sorted(key='date_done', reverse=True)[0].partner_id
+    def _compute_partner_ids(self):
+        delivery_ids_by_lot = self._find_delivery_ids_by_lot()
+        for lot in self:
+            if delivery_ids_by_lot[lot.id]:
+                lot.partner_ids = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).sorted(key='date_done', reverse=True).partner_id
             else:
-                lot.last_delivery_partner_id = False
+                lot.partner_ids = False
 
     @api.depends('quant_ids', 'quant_ids.quantity')
     def _compute_single_location(self):
@@ -240,6 +238,19 @@ class StockLot(models.Model):
         if include_zero:
             return ['|', ('id', 'in', ids), ('id', 'not in', lot_ids_w_qty)]
         return [('id', 'in', ids)]
+
+    def _search_partner_ids(self, operator, value):
+        domain = []
+        if isinstance(value, (int, list)):
+            domain.append(('id', operator, value))
+        elif isinstance(value, str):
+            domain.append(('name', operator, value))
+
+        if not domain:
+            return [('id', 'in', [])]
+        partners = self.env['res.partner'].search(domain)
+        filtered_lot_ids = self.env['stock.lot'].search([]).filtered(lambda lot: any(partner.id in partners.ids for partner in lot.partner_ids))
+        return [('id', 'in', filtered_lot_ids.ids)]
 
     def action_lot_open_quants(self):
         self = self.with_context(search_default_lot_id=self.id, create=False)
