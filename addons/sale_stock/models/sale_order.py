@@ -55,14 +55,39 @@ class SaleOrder(models.Model):
         if column_name != "warehouse_id":
             return super(SaleOrder, self)._init_column(column_name)
         field = self._fields[column_name]
-        default = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        value = field.convert_to_write(default, self)
-        value = field.convert_to_column(value, self)
-        if value is not None:
-            _logger.debug("Table '%s': setting default value of new column %s to %r",
-                self._table, column_name, value)
-            query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
-            self._cr.execute(query, (value,))
+        companies = self.env["res.company"].search([])
+        cases = []
+        params = []
+
+        warehouses = dict(self.env["stock.warehouse"]._read_group(
+            [('company_id', 'in', companies.ids)],
+            groupby=['company_id'], aggregates=['id:recordset']
+        ))
+        for company in companies:
+            warehouse = warehouses.get(company, [])[:1]
+            if not warehouse:
+                continue
+            warehouse_value = field.convert_to_write(warehouse, self)
+            warehouse_value = field.convert_to_column(warehouse_value, self)
+            cases.append(f"WHEN company_id = %s THEN %s")
+            params.extend([company.id, warehouse_value])
+
+        if not cases:
+            return
+
+        case_clause = "\n".join(cases)
+        query = f"""
+            UPDATE "{self._table}"
+            SET "{column_name}" = CASE
+                {case_clause}
+                ELSE %s
+            END
+            WHERE "{column_name}" IS NULL
+        """
+        params.append(warehouse_value)  # for the else clause we use the last warehouse_value as default
+
+        _logger.debug("Initializing column '%s' in table '%s'", column_name, self._table)
+        self._cr.execute(query, params)
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
