@@ -862,6 +862,35 @@ describe('Link', () => {
                 contentAfter: '<p>a<a href="exist"><span class="fa fa-star"></span></a>b</p>',
             });
         });
+        it('should not convert to telephone url while inserting digits inside link', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><a href="#">[]</a></p>',
+                stepFunction: async editor => {
+                    await insertText(editor, '1');
+                    await insertText(editor, '2');
+                    await insertText(editor, '3');
+                },
+                contentAfter: '<p><a href="#">123[]</a></p>',
+            });
+        });
+        it('should update url if existing url is telephone url while inserting', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><a href="tel:123">123[]</a></p>',
+                stepFunction: async editor => {
+                    await insertText(editor, '4');
+                },
+                contentAfter: '<p><a href="tel:1234">1234[]</a></p>',
+            });
+        });
+        it('should convert url to telephone url if label starts with tel protocol', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><a href="#">tel://[]</a></p>',
+                stepFunction: async editor => {
+                    await insertText(editor, '1');
+                },
+                contentAfter: '<p><a href="tel://1">tel://1[]</a></p>',
+            });
+        });
         // it('should select and replace all text and add the next char in bold', async () => {
         //     await testEditor(BasicEditor, {
         //         contentBefore: '<div><p>[]123</p><p><a href="#">abc</a></p></div>',
