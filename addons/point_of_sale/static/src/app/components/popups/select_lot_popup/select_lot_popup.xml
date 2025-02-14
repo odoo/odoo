@@ -30,20 +30,22 @@
        </Dialog>
     </t> -->
     <t t-name="point_of_sale.SelectLotPopup">
-        <Dialog title="props.title">
-            <t t-set-slot="header">
-                <h4 class="modal-title title" t-esc="props.title" />
-                <span class="sub-title" t-esc="props.name"/>
-            </t>
-                <!-- value="state.value" -->
-            <AutoComplete
-                placeholder.translate="'Serial/Lot Number'"
-                sources="getSources()"
-                onSelect.bind="(...x) => console.log(x)"
-                dropdown="true"
-                autoSelect="true"
-                autofocus="true"
-            />
+        <Dialog title="props.title" subtitle="props.name">
+            <div class="d-flex gap-1">
+                <TagsList tags="state.values.map(v=> ({
+                    text: v,
+                    onDelete: (...x) => state.values = state.values.filter(x=> x!= v)
+
+                }))"/>
+                <AutoComplete
+                    placeholder.translate="'Serial/Lot Number'"
+                    sources="getSources()"
+                    onSelect.bind="(...x) => state.values.push(x[0].id)"
+                    dropdown="true"
+                    autoSelect="true"
+                    autofocus="true"
+                />
+            </div>
        </Dialog>
     </t>
 </templates>

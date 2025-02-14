@@ -1,9 +1,11 @@
 import { Dialog } from "@web/core/dialog/dialog";
 // import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, xml } from "@odoo/owl";
 // import { EditListInput } from "@point_of_sale/app/components/popups/select_lot_popup/edit_list_input/edit_list_input";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { _t } from "@web/core/l10n/translation";
+import { TagsList } from "@web/core/tags_list/tags_list";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * Given a array of { id, text }, we show the user this popup to be able to modify this given array.
@@ -212,14 +214,46 @@ import { _t } from "@web/core/l10n/translation";
 // }
 
 export class SelectLotPopup extends Component {
-    static components = { Dialog, AutoComplete };
-    static template = "point_of_sale.SelectLotPopup";
+    static components = { Dialog, AutoComplete, TagsList };
+    // static template = "point_of_sale.SelectLotPopup";
+    static template = xml`
+        <Dialog title="props.title" subtitle="props.name">
+            <div class="d-flex gap-1">
+                <TagsList tags="state.values.map(v=> ({
+                    text: v,
+                    onDelete: (...x) => state.values = state.values.filter(x=> x!= v)
+
+                }))"/>
+                <AutoComplete
+                    placeholder.translate="'Serial/Lot Number'"
+                    sources="getSources()"
+                    onSelect.bind="(...x) =>{
+                        const lot = x[0].id
+                        if (props.canCreateLots || props.options.includes(lot)){
+                            state.values.push(lot)
+                        }
+                        else {
+                            this.notification.add({
+                                message: _t("The serial/lot number is not valid."),
+                                type: "danger",
+                            });
+                        }
+                    }"
+                    dropdown="true"
+                    autoSelect="true"
+                    autofocus="true"
+                />
+            </div>
+       </Dialog>
+    `;
 
     setup() {
         console.log(this.props);
         this.state = useState({
             value: "",
+            values: [],
         });
+        this.notification = useService("notification");
     }
 
     getSources() {

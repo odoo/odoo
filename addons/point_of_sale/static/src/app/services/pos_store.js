@@ -1982,7 +1982,7 @@ export class PosStore extends WithLazyGetterTrap {
             isSingleItem: isAllowOnlyOneLot,
             array: packLotLinesToEdit,
             options: existingLotsName,
-            customInput: canCreateLots,
+            canCreateLots,
             uniqueValues: product.tracking === "serial",
             isLotNameUsed: isLotNameUsed,
             //     isValid: (value) => {
