@@ -3,17 +3,17 @@ import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { BaseRecipientsList } from "@mail/core/web/base_recipients_list";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
-import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
+import { RecipientsInput } from "@mail/core/web/recipients_input";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
-
-import { useEffect } from "@odoo/owl";
+import { Deferred, KeepLast } from "@web/core/utils/concurrency";
+import { onWillStart, status, useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -24,6 +24,8 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
 import { usePopoutAttachment } from "@mail/core/common/attachment_view";
+import { rpc } from "@web/core/network/rpc";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export const DELAY_FOR_SPINNER = 1000;
 
@@ -34,10 +36,10 @@ Object.assign(Chatter.components, {
     Dropdown,
     FileUploader,
     FollowerList,
+    RecipientsInput,
     ScheduledMessage,
     SearchMessageInput,
     SearchMessageResult,
-    SuggestedRecipientsList,
 });
 
 Chatter.props.push(
@@ -53,7 +55,7 @@ Chatter.props.push(
     "isChatterAside?",
     "isInFormSheetBg?",
     "saveRecord?",
-    "webRecord?"
+    "record?"
 );
 
 Object.assign(Chatter.defaultProps, {
@@ -78,6 +80,29 @@ patch(Chatter.prototype, {
         this.messageHighlight = useMessageHighlight();
         super.setup(...arguments);
         this.orm = useService("orm");
+        this.keepLastSuggestedRecipientsUpdate = new KeepLast();
+        let mailImpactingFieldsPromise = new Deferred();
+        onWillStart(async () => {
+            const { partner_fields, primary_email_field } = await rpc(
+                "/mail/thread/recipients/fields",
+                {
+                    thread_model: this.props.threadModel,
+                }
+            );
+            this.mailImpactingFields = {
+                recordFields: partner_fields,
+                emailFields: primary_email_field,
+            };
+            mailImpactingFieldsPromise.resolve();
+        });
+
+        useRecordObserver(async (record) => {
+            if (mailImpactingFieldsPromise) {
+                await mailImpactingFieldsPromise;
+                mailImpactingFieldsPromise = null;
+            }
+            this.updateRecipients(record);
+        });
         this.attachmentPopout = usePopoutAttachment();
         Object.assign(this.state, {
             composerType: false,
@@ -85,6 +110,7 @@ patch(Chatter.prototype, {
             isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
+            showNotifiedBcc: false,
             showScheduledMessages: true,
         });
         this.messageSearch = useMessageSearch();
@@ -119,7 +145,7 @@ patch(Chatter.prototype, {
                     );
                     this.state.isAttachmentBoxOpened = true;
                 }
-            }
+            },
         });
         useEffect(
             () => {
@@ -158,6 +184,54 @@ patch(Chatter.prototype, {
                 this.state.aside = this.props.isChatterAside;
             },
             () => [this.props.isChatterAside]
+        );
+    },
+
+    async updateRecipients(record, mode = this.state.composerType) {
+        if (!record) {
+            return;
+        }
+        const partnerIds = []; // Ensure that we don't have duplicates
+        let email;
+        this.mailImpactingFields.recordFields.forEach((field) => {
+            const value = record._changes[field];
+            if (record.data[field] !== undefined && value) {
+                partnerIds.push(value[0]);
+            }
+        });
+        this.mailImpactingFields.emailFields.forEach((field) => {
+            const value = record._changes[field];
+            if (record.data[field] !== undefined && value) {
+                email = value;
+                return;
+            }
+        });
+        if ((!partnerIds.length && !email) || mode !== "message" || status(this) === "destroyed") {
+            return;
+        }
+        const recipients = await this.keepLastSuggestedRecipientsUpdate.add(
+            rpc("/mail/thread/recipients/get_suggested_recipients", {
+                thread_model: this.props.threadModel,
+                thread_id: this.props.threadId,
+                partner_ids: partnerIds,
+                main_email: email,
+            })
+        );
+        if (status(this) === "destroyed" && !this.state.thread) {
+            return;
+        }
+        this.state.thread.suggestedRecipients = recipients.map((result) => ({
+            email: result.email,
+            partner_id: result.partner_id,
+            name: result.name || result.email,
+            persona: result.partner_id ? { type: "partner", id: result.partner_id } : false,
+        }));
+        this.state.thread.additionalRecipients = this.state.thread.additionalRecipients.filter(
+            (additionalRecipient) =>
+                this.state.thread.suggestedRecipients.every(
+                    (suggestedRecipient) =>
+                        suggestedRecipient.partner_id !== additionalRecipient.partner_id
+                )
         );
     },
 
@@ -305,6 +379,7 @@ patch(Chatter.prototype, {
     onCloseFullComposerCallback() {
         this.toggleComposer();
         super.onCloseFullComposerCallback();
+        this.props.record?.load();
     },
 
     onFollowerChanged(thread) {
@@ -353,8 +428,8 @@ patch(Chatter.prototype, {
 
     async reloadParentView() {
         await this.props.saveRecord?.();
-        if (this.props.webRecord) {
-            await this.props.webRecord.load();
+        if (this.props.record) {
+            await this.props.record.load();
         }
     },
 
@@ -372,16 +447,23 @@ patch(Chatter.prototype, {
         }
     },
 
+    showNotifiedBcc() {
+        this.state.showNotifiedBcc = true;
+    },
+
     toggleActivities() {
         this.state.showActivities = !this.state.showActivities;
     },
 
     toggleComposer(mode = false) {
         this.closeSearch();
-        const toggle = () => {
+        const toggle = async () => {
             if (this.state.composerType === mode) {
                 this.state.composerType = false;
             } else {
+                if (mode === "message") {
+                    await this.updateRecipients(this.props.record, mode);
+                }
                 this.state.composerType = mode;
             }
         };

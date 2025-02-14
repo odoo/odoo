@@ -419,7 +419,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, _test_template = self._create_test_records()
         customer = self.env['res.partner'].browse(self.customer.ids)
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
-        with self.assertQueryCount(admin=15, employee=15):  # tm 14/14
+        with self.assertQueryCount(admin=20, employee=20):  # tm 14/14
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -540,7 +540,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_template.write({'attachment_ids': [(5, 0)]})
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=15, employee=15):  # tm 14/14
+        with self.assertQueryCount(admin=18, employee=18):  # tm 14/14
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -570,7 +570,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=15, employee=15):  # tm 14/14
+        with self.assertQueryCount(admin=18, employee=18):  # tm 14/14
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -1376,6 +1376,8 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "default_subject": "Test",
                                     "email_from": '"OdooBot" <odoobot@example.com>',
                                     "id": message.id,
+                                    "incoming_email_cc": False,
+                                    "incoming_email_to": False,
                                     "is_discussion": True,
                                     "is_note": False,
                                     "link_preview_ids": [],
@@ -1482,6 +1484,8 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "default_subject": "Test",
                                     "email_from": '"OdooBot" <odoobot@example.com>',
                                     "id": message.id,
+                                    "incoming_email_cc": False,
+                                    "incoming_email_to": False,
                                     "is_discussion": True,
                                     "is_note": False,
                                     "link_preview_ids": [],

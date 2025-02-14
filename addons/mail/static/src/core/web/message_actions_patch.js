@@ -3,8 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 
 messageActionsRegistry
     .add("reply-all", {
-        condition: (component) =>
-            component.props.message.canReplyAllandForward(component.props.thread),
+        condition: (component) => component.props.message.canReplyAll(component.props.thread),
         icon: "fa fa-reply",
         title: _t("Reply All"),
         onClick: (component) => {
@@ -13,8 +12,7 @@ messageActionsRegistry
         sequence: 71,
     })
     .add("forward", {
-        condition: (component) =>
-            component.props.message.canReplyAllandForward(component.props.thread),
+        condition: (component) => component.props.message.canForward(component.props.thread),
         icon: "fa fa-share",
         title: _t("Forward"),
         onClick: (component) => {

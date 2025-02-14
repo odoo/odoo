@@ -166,7 +166,10 @@ class MailComposeMessage(models.TransientModel):
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
         compute='_compute_partner_ids', readonly=False, store=True)
-    notified_bcc = fields.Char('Bcc', compute='_compute_notified_bcc', readonly=True, store=False)
+    notified_bcc = fields.Many2many(
+        string='Bcc', comodel_name='res.partner', compute='_compute_notified_bcc', readonly=True, store=False)
+    show_notified_bcc = fields.Boolean('Show BCC', store=False)
+
     # sending
     auto_delete = fields.Boolean(
         'Delete Emails',
@@ -559,14 +562,14 @@ class MailComposeMessage(models.TransientModel):
             recipients_data = self.env['mail.followers']._get_recipient_data(
                 record, composer.message_type, composer.subtype_id.id
             )[record.id]
-            bcc = [
-                f'{pdata["name"]}'
+            partner_ids = [
+                pid
                 for pid, pdata in recipients_data.items()
                 if (pid and pdata['active']
                     and pid != self.env.user.partner_id.id
                     and pdata['id'] not in composer.partner_ids.ids)
             ]
-            composer.notified_bcc = ', '.join(bcc[:5])
+            composer.notified_bcc = self.env['res.partner'].search([('id', 'in', partner_ids)])
 
     @api.depends('composition_mode', 'template_id')
     def _compute_auto_delete(self):
