@@ -44,3 +44,20 @@ $-editor-messages-margin-x: 2%;
         }
     }
 }
+
+.o-we-hint {
+    position: relative;
+
+    &:after {
+        content: attr(placeholder);
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        color: inherit;
+        opacity: 0.4;
+        pointer-events: none;
+        text-align: inherit;
+        width: 100%;
+    }
+}

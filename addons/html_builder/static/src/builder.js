@@ -59,7 +59,9 @@ export class Builder extends Component {
         this.notification = useService("notification");
 
         const editorBus = new EventBus();
-        const Plugins = [...MAIN_PLUGINS, ...CORE_PLUGINS, ...(this.props.Plugins || [])];
+
+        const mainPlugins = removePlugins([...MAIN_PLUGINS], ["PowerButtonsPlugin"]);
+        const Plugins = [...mainPlugins, ...CORE_PLUGINS, ...(this.props.Plugins || [])];
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
         this.editor = new Editor(
@@ -248,6 +250,17 @@ export class Builder extends Component {
             ...this.editor.editable.querySelectorAll(this.getInvisibleSelector(isMobile)),
         ];
     }
+}
+
+/**
+ * Removes the specified plugins from a given list of plugins.
+ *
+ * @param {Array<Plugin>} plugins the list of plugins
+ * @param {Array<string>} pluginsToRemove the names of the plugins to remove
+ * @returns {Array<Plugin>}
+ */
+function removePlugins(plugins, pluginsToRemove) {
+    return plugins.filter((p) => !pluginsToRemove.includes(p.name));
 }
 
 registry.category("lazy_components").add("website.Builder", Builder);
