@@ -28,6 +28,7 @@ export class MediaPlugin extends Plugin {
             {
                 id: "replaceImage",
                 title: _t("Replace media"),
+                icon: "fa-exchange",
                 run: this.replaceImage.bind(this),
             },
             {
@@ -48,7 +49,6 @@ export class MediaPlugin extends Plugin {
                 id: "replace_image",
                 groupId: "replace_image",
                 commandId: "replaceImage",
-                text: "Replace",
             },
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),

@@ -157,27 +157,26 @@ test("Can change an image size", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
     expect(queryOne("img").style.width).toBe("");
-    expect(".o-we-toolbar button[name='resize_default']").toHaveClass("active");
 
-    await click(".o-we-toolbar button[name='resize_100']");
+    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
     await animationFrame();
+    await click(".image_size_selector .dropdown-item:contains('100%')");
     expect(queryOne("img").style.width).toBe("100%");
-    expect(".o-we-toolbar button[name='resize_100']").toHaveClass("active");
 
-    await click(".o-we-toolbar button[name='resize_50']");
+    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
     await animationFrame();
+    await click(".image_size_selector .dropdown-item:contains('50%')");
     expect(queryOne("img").style.width).toBe("50%");
-    expect(".o-we-toolbar button[name='resize_50']").toHaveClass("active");
 
-    await click(".o-we-toolbar button[name='resize_25']");
+    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
     await animationFrame();
+    await click(".image_size_selector .dropdown-item:contains('25%')");
     expect(queryOne("img").style.width).toBe("25%");
-    expect(".o-we-toolbar button[name='resize_25']").toHaveClass("active");
 
-    await click(".o-we-toolbar button[name='resize_default']");
+    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
     await animationFrame();
+    await click(".image_size_selector .dropdown-item:contains('Default')");
     expect(queryOne("img").style.width).toBe("");
-    expect(".o-we-toolbar button[name='resize_default']").toHaveClass("active");
 });
 
 test("Can undo the image sizing", async () => {
@@ -187,10 +186,10 @@ test("Can undo the image sizing", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar button[name='resize_100']");
+    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
     await animationFrame();
+    await click(".image_size_selector .dropdown-item:contains('100%')");
     expect(queryOne("img").style.width).toBe("100%");
-    expect(".o-we-toolbar button[name='resize_100']").toHaveClass("active");
 
     undo(editor);
     expect(queryOne("img").style.width).toBe("");
@@ -203,34 +202,34 @@ test("Can change the padding of an image", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar div[name='image_padding'] button");
+    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
     await animationFrame();
     await click(".o_popover span:contains('Small')");
     await animationFrame();
     expect("img").toHaveClass("p-1");
 
-    await click(".o-we-toolbar div[name='image_padding'] button");
+    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
     await animationFrame();
     await click(".o_popover span:contains('Medium')");
     await animationFrame();
     expect("img").not.toHaveClass("p-1");
     expect("img").toHaveClass("p-2");
 
-    await click(".o-we-toolbar div[name='image_padding'] button");
+    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
     await animationFrame();
     await click(".o_popover span:contains('Large')");
     await animationFrame();
     expect("img").not.toHaveClass("p-2");
     expect("img").toHaveClass("p-3");
 
-    await click(".o-we-toolbar div[name='image_padding'] button");
+    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
     await animationFrame();
     await click(".o_popover span:contains('XL')");
     await animationFrame();
     expect("img").not.toHaveClass("p-3");
     expect("img").toHaveClass("p-5");
 
-    await click(".o-we-toolbar div[name='image_padding'] button");
+    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
     await animationFrame();
     await click(".o_popover span:contains('None')");
     await animationFrame();
@@ -244,7 +243,7 @@ test("Can undo the image padding", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar div[name='image_padding'] button");
+    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
     await animationFrame();
     await click(".o_popover span:contains('Small')");
     await animationFrame();
@@ -363,7 +362,9 @@ test("Image transformation scalers position", async () => {
     expect(".transfo-container").toHaveCount(1);
     checkScalersPositions(queryOne("img"));
     // resize by 25% update the position of the scalers
-    click('.o-we-toolbar [name="resize_25"]');
+    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
+    await animationFrame();
+    await click(".image_size_selector .dropdown-item:contains('25%')");
     await animationFrame();
     expect(".transfo-container").toHaveCount(0);
 });
