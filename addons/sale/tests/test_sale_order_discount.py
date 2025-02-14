@@ -123,3 +123,43 @@ class TestSaleOrderDiscount(SaleCommon):
         })
         self.wizard.action_apply_discount()
         self.assertEqual(self.sale_order.amount_untaxed, amount_with_line_discount * 0.9)
+
+    def test_apply_mixed_epd_discount(self):
+        tax_a = self.env['account.tax'].create({
+            'name': 'Test tax',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_excluded',
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+        self.early_payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'early_pay_discount_computation': 'mixed',
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'early_discount': True,
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 100,
+                    'nb_days': 20,
+                }),
+            ],
+        }
+        )
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'payment_term_id': self.early_payment_term.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 100,
+                    'tax_id': tax_a.ids,
+                }),
+            ],
+        })
+        self.assertEqual(sale_order.tax_totals['tax_amount'], 13.5)
+        self.assertEqual(sale_order.amount_untaxed, 100)
+        self.assertEqual(sale_order.amount_total, 113.5)
