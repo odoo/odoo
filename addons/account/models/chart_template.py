@@ -129,7 +129,7 @@ class AccountChartTemplate(models.AbstractModel):
     # Loading
     # --------------------------------------------------------------------------------
 
-    def try_loading(self, template_code, company, install_demo=False):
+    def try_loading(self, template_code, company, install_demo=False, force_create=True):
         """Check if the chart template can be loaded then proceeds installing it.
 
         :param template_code: code of the chart template to be loaded.
@@ -157,9 +157,9 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
             raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
 
-        return self._load(template_code, company, install_demo)
+        return self._load(template_code, company, install_demo, force_create)
 
-    def _load(self, template_code, company, install_demo):
+    def _load(self, template_code, company, install_demo, force_create):
         """Install this chart of accounts for the current company.
 
         :param template_code: code of the chart template to be loaded.
@@ -221,7 +221,7 @@ class AccountChartTemplate(models.AbstractModel):
             }
 
         if reload_template:
-            self._pre_reload_data(company, template_data, data)
+            self._pre_reload_data(company, template_data, data, force_create)
             install_demo = False
         data = self._pre_load_data(template_code, company, template_data, data)
         self._load_data(data)
@@ -252,7 +252,7 @@ class AccountChartTemplate(models.AbstractModel):
             self.sudo()._load_data(self._get_demo_data(company))
             self._post_load_demo_data(company)
 
-    def _pre_reload_data(self, company, template_data, data):
+    def _pre_reload_data(self, company, template_data, data, force_create):
         """Pre-process the data in case of reloading the chart of accounts.
 
         When we reload the chart of accounts, we only want to update fields that are main
@@ -330,11 +330,14 @@ class AccountChartTemplate(models.AbstractModel):
                                     not self.ref(src_id, raise_if_not_found=False)
                                     or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
                                 ):
-                                    new_tax_ids.append(element)
+                                    if force_create:
+                                        new_tax_ids.append(element)
                         if new_tax_ids:
                             values['tax_ids'] = new_tax_ids
 
                 elif model_name == 'account.tax':
+                    if xmlid not in xmlid2tax and not force_create:
+                        continue
                     # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
                         if self._context.get('force_new_tax_active'):
@@ -369,6 +372,9 @@ class AccountChartTemplate(models.AbstractModel):
                     account = self.ref(xmlid, raise_if_not_found=False)
                     normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
                     if not account or not re.match(f'^{values["code"]}0*$', account.code):
+                        if not force_create:
+                            skip_update.add((model_name, xmlid))  # Prevent creating new accounts
+                            continue
                         query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
                         account_code = self.with_company(company).env['account.account']._field_to_sql('account_account', 'code', query)
                         query.add_where(SQL("%s SIMILAR TO %s", account_code, f'{values["code"]}0*'))
