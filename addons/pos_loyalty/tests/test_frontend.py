@@ -2493,3 +2493,24 @@ class TestUi(TestPointOfSaleHttpCommon):
         coupon = loyalty_program.coupon_ids
         self.assertEqual(len(coupon), 1, "Coupon not generated")
         self.assertEqual(coupon.expiration_date, date.today() + timedelta(days=2), "Coupon not generated with correct expiration date")
+
+    def test_ewallet_loyalty_history(self):
+        """
+        This will test that all transactions made on an ewallet are registered in the loyalty history
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        # But activate the ewallet_product_50 because it's shared among new ewallet programs.
+        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        # Create ewallet program
+        ewallet_program = self.create_programs([('arbitrary_name', 'ewallet')])['arbitrary_name']
+        # Create test partners
+        partner_aaa = self.env['res.partner'].create({'name': 'AAAAAAA'})
+        # Run the tour to topup ewallets.
+        self.start_pos_tour("EWalletLoyaltyHistory")
+        # Check that ewallets are created for partner_aaa.
+        ewallet_aaa = self.env['loyalty.card'].search([('partner_id', '=', partner_aaa.id), ('program_id', '=', ewallet_program.id)])
+        loyalty_history = self.env['loyalty.history'].search([('card_id','=',ewallet_aaa.id)])
+        self.assertEqual(loyalty_history.mapped("issued"), [0.0, 50.0])
+        self.assertEqual(loyalty_history.mapped("used"), [12.0, 0.0])
