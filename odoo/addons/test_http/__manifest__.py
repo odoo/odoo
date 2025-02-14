@@ -8,8 +8,8 @@
     'installable': True,
     'data': [
         'data.xml',
-        'ir.model.access.csv',
-        'views.xml'
+        'views.xml',
+        'ir.access.csv',
     ],
     'license': 'LGPL-3',
 }

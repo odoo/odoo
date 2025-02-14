@@ -11,9 +11,9 @@
         "l10n_pe",
     ],
     "data": [
-        "security/ir.model.access.csv",
         "data/ir_model_fields.xml",
         "views/templates.xml",
+        'security/ir.access.csv',
     ],
     "assets": {
         "web.assets_frontend": [

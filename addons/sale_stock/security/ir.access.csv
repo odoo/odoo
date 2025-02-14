@@ -1,0 +1,17 @@
+id,model_id,group_id/id,operation,domain,name
+access_stock_picking_group_sale_salesman,stock.picking,sales_team.group_sale_salesman,rwc,,stock_picking salesman
+access_stock_picking_group_sale_manager,stock.picking,sales_team.group_sale_manager,rwcd,,stock.picking.sales
+access_stock_picking_group_portal,stock.picking,base.group_portal,r,"['|', '|', ('message_partner_ids', 'in', [user.partner_id.id]), ('partner_id', '=', user.partner_id.id), ('sale_id.partner_id', '=', user.partner_id.id)]",Portal Follower Transfers
+access_stock_move_group_sale_salesman,stock.move,sales_team.group_sale_salesman,rwc,,stock_move salesman
+access_stock_move_group_sale_manager,stock.move,sales_team.group_sale_manager,rwcd,,stock_move manager
+access_sale_order_group_stock_user,sale.order,stock.group_stock_user,rw,,sale.order stock worker
+access_sale_order_line_group_stock_user,sale.order.line,stock.group_stock_user,rw,,sale.order.line stock worker
+access_stock_warehouse_group_sale_salesman,stock.warehouse,sales_team.group_sale_salesman,r,,stock.warehouse.user
+access_stock_location_group_sale_salesman,stock.location,sales_team.group_sale_salesman,r,,stock.location.user
+access_stock_location_group_sale_manager,stock.location,sales_team.group_sale_manager,r,,stock.location sale manager
+access_stock_warehouse_orderpoint_group_sale_salesman,stock.warehouse.orderpoint,sales_team.group_sale_salesman,r,,stock.warehouse.orderpoint
+access_account_partial_reconcile_group_stock_manager,account.partial.reconcile,stock.group_stock_manager,rwcd,,account.partial.reconcile
+access_account_journal_group_stock_manager,account.journal,stock.group_stock_manager,rw,,account.journal
+access_stock_rule_group_sale_manager,stock.rule,sales_team.group_sale_manager,rwcd,,stock_rule salemanager
+access_stock_rule_group_sale_salesman,stock.rule,sales_team.group_sale_salesman,r,,stock.rule.flow
+access_stock_package_type_group_sale_salesman,stock.package.type,sales_team.group_sale_salesman,r,,stock_package_type salesman

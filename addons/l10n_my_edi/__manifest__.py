@@ -15,7 +15,6 @@
         'data/ir_cron.xml',
         'data/l10n_my_edi.industry_classification.csv',
         'data/my_ubl_templates.xml',
-        'security/ir.model.access.csv',
         'views/account_move_view.xml',
         'views/account_tax_view.xml',
         'views/l10n_my_edi_industrial_classification_views.xml',
@@ -24,6 +23,7 @@
         'views/res_config_settings_view.xml',
         'views/res_partner_view.xml',
         'wizard/l10n_my_edi_status_update_wizard.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'license': 'LGPL-3'

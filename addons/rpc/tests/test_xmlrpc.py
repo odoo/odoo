@@ -56,12 +56,13 @@ class TestXMLRPC(common.HttpCase):
     def test_xmlrpc_datetime(self):
         """ Test that native datetime can be sent over xmlrpc
         """
-        m = self.env.ref('base.model_res_device_log')
-        self.env['ir.model.access'].create({
+        model = self.env.ref('base.model_res_device_log')
+        group = self.env.ref('base.group_user')
+        self.env['ir.access'].create({
             'name': "w/e",
-            'model_id': m.id,
-            'perm_read': True,
-            'perm_create': True,
+            'model_id': model.id,
+            'group_id': group.id,
+            'operation': 'rc',
         })
 
         now = datetime.datetime.now()

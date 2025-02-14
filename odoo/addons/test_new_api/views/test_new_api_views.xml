@@ -380,7 +380,7 @@
             <field name="arch" type="xml">
                 <form>
                     <field name="a" readonly="not d" groups="base.group_erp_manager"/>
-                    <field name="a" readonly="not k" groups="base.group_public"/>  <!-- valid from 'ir.model.access': 'base.group_public' -->
+                    <field name="a" readonly="not k" groups="base.group_public"/>  <!-- valid from 'ir.access': 'base.group_public' -->
                     <field name="b" readonly="not d" groups="base.group_system"/>
                     <field name="c" readonly="d" groups="base.group_erp_manager,base.group_system"/>
                     <field name="d" readonly="a" groups="base.group_portal"/>

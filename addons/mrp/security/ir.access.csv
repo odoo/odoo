@@ -1,0 +1,71 @@
+id,model_id,group_id/id,operation,domain,name
+access_mrp_workcenter_productivity_loss_group_mrp_manager,mrp.workcenter.productivity.loss,mrp.group_mrp_manager,rwcd,,mrp.workcenter.productivity.loss
+access_mrp_workcenter_productivity_loss_group_mrp_user,mrp.workcenter.productivity.loss,mrp.group_mrp_user,r,,mrp.workcenter.productivity.loss
+access_mrp_workcenter_productivity_loss_type_group_mrp_user,mrp.workcenter.productivity.loss.type,mrp.group_mrp_user,r,,mrp.workcenter.productivity.loss.type
+access_mrp_workcenter_productivity_group_mrp_user,mrp.workcenter.productivity,mrp.group_mrp_user,rwcd,,mrp.workcenter.productivity
+access_mrp_workcenter_productivity_global,mrp.workcenter.productivity,,rwcd,"[('company_id', 'in', company_ids)]",mrp_workcenter_productivity multi-company
+access_mrp_workcenter_group_mrp_user,mrp.workcenter,mrp.group_mrp_user,r,,mrp.workcenter
+access_mrp_workcenter_group_mrp_manager,mrp.workcenter,mrp.group_mrp_manager,rwcd,,mrp.workcenter.manager
+access_mrp_workcenter_global,mrp.workcenter,,rwcd,"[('company_id', 'in', company_ids + [False])]",mrp_workcenter multi-company
+access_mrp_routing_workcenter_group_mrp_user,mrp.routing.workcenter,mrp.group_mrp_user,r,,mrp.routing.workcenter
+access_mrp_routing_workcenter_group_mrp_manager,mrp.routing.workcenter,mrp.group_mrp_manager,rwcd,,mrp.routing.workcenter.manager
+access_mrp_routing_workcenter_global,mrp.routing.workcenter,,rwcd,"[('company_id', 'in', company_ids + [False])]",mrp_routing_workcenter multi-company
+access_mrp_bom_group_mrp_user,mrp.bom,mrp.group_mrp_user,r,,mrp.bom
+access_mrp_bom_group_mrp_manager,mrp.bom,mrp.group_mrp_manager,rwcd,,mrp.bom.manager
+access_mrp_bom_group_stock_user,mrp.bom,stock.group_stock_user,r,,mrp.bom
+access_mrp_bom_global,mrp.bom,,rwcd,"[('company_id', 'in', company_ids + [False])]",mrp_bom multi-company
+access_mrp_bom_line_group_mrp_user,mrp.bom.line,mrp.group_mrp_user,r,,mrp.bom.line
+access_mrp_bom_line_group_mrp_manager,mrp.bom.line,mrp.group_mrp_manager,rwcd,,mrp.bom.line.manager
+access_mrp_bom_line_group_stock_user,mrp.bom.line,stock.group_stock_user,r,,mrp.bom.line
+access_mrp_bom_line_global,mrp.bom.line,,rwcd,"[('company_id', 'in', company_ids + [False])]",mrp_bom_line multi-company
+access_mrp_bom_byproduct_group_mrp_user,mrp.bom.byproduct,mrp.group_mrp_user,r,,mrp.bom.byproduct
+access_mrp_bom_byproduct_group_mrp_manager,mrp.bom.byproduct,mrp.group_mrp_manager,rwcd,,mrp.bom.byproduct manager
+access_mrp_bom_byproduct_global,mrp.bom.byproduct,,rwcd,"[('company_id', 'in', company_ids + [False])]",mrp_bom_byproduct multi-company
+access_mrp_production_group_mrp_user,mrp.production,mrp.group_mrp_user,rwcd,,mrp.production user
+access_mrp_production_group_stock_user,mrp.production,stock.group_stock_user,r,,mrp.production stock_worker
+access_mrp_production_group_mrp_manager,mrp.production,mrp.group_mrp_manager,r,,mrp.production manager
+access_mrp_production_global,mrp.production,,rwcd,"[('company_id', 'in', company_ids)]",mrp_production multi-company
+access_product_product_group_mrp_user,product.product,mrp.group_mrp_user,r,,product.product user
+access_product_product_group_mrp_manager,product.product,mrp.group_mrp_manager,rwcd,,product.product mrp_manager
+access_product_template_group_mrp_user,product.template,mrp.group_mrp_user,r,,product.template user
+access_product_template_group_mrp_manager,product.template,mrp.group_mrp_manager,rwcd,,product.template mrp_manager
+access_uom_uom_group_mrp_user,uom.uom,mrp.group_mrp_user,r,,uom.uom user
+access_uom_uom_group_mrp_manager,uom.uom,mrp.group_mrp_manager,rwcd,,uom.uom mrp_manager
+access_product_supplierinfo_group_mrp_user,product.supplierinfo,mrp.group_mrp_user,rwcd,,product.supplierinfo user
+access_product_supplierinfo_group_mrp_manager,product.supplierinfo,mrp.group_mrp_manager,r,,product.supplierinfo user
+access_res_partner_group_mrp_user,res.partner,mrp.group_mrp_user,r,,res.partner
+access_res_partner_group_mrp_manager,res.partner,mrp.group_mrp_manager,rwc,,res_partner group_mrp_manager
+access_mrp_workorder_group_mrp_user,mrp.workorder,mrp.group_mrp_user,rwcd,,mrp.workorder.user
+access_mrp_workorder_group_mrp_manager,mrp.workorder,mrp.group_mrp_manager,rwcd,,mrp.workorder
+access_mrp_workorder_global,mrp.workorder,,rwcd,"[('company_id', 'in', company_ids)]",mrp_workorder multi-company
+access_resource_calendar_leaves_group_mrp_user,resource.calendar.leaves,mrp.group_mrp_user,rwcd,,mrp.resource.calendar.leaves.user
+access_resource_calendar_leaves_group_mrp_manager,resource.calendar.leaves,mrp.group_mrp_manager,r,,mrp.resource.calendar.leaves.manager
+access_resource_calendar_attendance_group_mrp_user,resource.calendar.attendance,mrp.group_mrp_user,rwcd,,mrp.resource.calendar.attendance.mrp.user
+access_resource_calendar_attendance_group_mrp_manager,resource.calendar.attendance,mrp.group_mrp_manager,rwcd,,mrp.resource.calendar.attendance.manager
+access_resource_resource_group_mrp_user,resource.resource,mrp.group_mrp_user,r,,resource.resource
+access_resource_resource_group_mrp_manager,resource.resource,mrp.group_mrp_manager,rwcd,,resource.resource.manager
+access_product_category_group_mrp_manager,product.category,mrp.group_mrp_manager,rwcd,,product.category mrp_manager
+access_product_pricelist_group_mrp_manager,product.pricelist,mrp.group_mrp_manager,rwcd,,product.pricelist mrp_manager
+access_product_pricelist_item_group_mrp_manager,product.pricelist.item,mrp.group_mrp_manager,rwcd,,product.pricelist.item mrp_manager
+access_product_tag_group_mrp_manager,product.tag,mrp.group_mrp_manager,rwcd,,product.tag.mrp.manager
+access_resource_calendar_group_mrp_user,resource.calendar,mrp.group_mrp_user,r,,resource.calendar manufacturing.user
+access_mrp_unbuild_group_mrp_user,mrp.unbuild,mrp.group_mrp_user,rwcd,,mrp.unbuild
+access_mrp_unbuild_group_mrp_manager,mrp.unbuild,mrp.group_mrp_manager,rwcd,,mrp.unbuild manager
+access_mrp_unbuild_global,mrp.unbuild,,rwcd,"[('company_id', 'in', company_ids)]",mrp_unbuild multi-company
+access_product_document_group_mrp_manager,product.document,mrp.group_mrp_manager,rwcd,,product.document group_user
+access_product_document_group_mrp_user,product.document,mrp.group_mrp_user,rwcd,,product.document group_user
+access_change_production_qty_group_mrp_user,change.production.qty,mrp.group_mrp_user,rwc,,access.change.production.qty
+access_stock_warn_insufficient_qty_unbuild_group_mrp_user,stock.warn.insufficient.qty.unbuild,mrp.group_mrp_user,rwc,,access.stock.warn.insufficient.qty.unbuild
+access_mrp_production_backorder_group_mrp_user,mrp.production.backorder,mrp.group_mrp_user,rwc,,access.mrp.production.backorder
+access_mrp_production_backorder_line_group_mrp_user,mrp.production.backorder.line,mrp.group_mrp_user,rwc,,access.mrp.production.backorder.line
+access_mrp_consumption_warning_group_mrp_user,mrp.consumption.warning,mrp.group_mrp_user,rwc,,access.mrp.consumption.warning
+access_mrp_consumption_warning_line_group_mrp_user,mrp.consumption.warning.line,mrp.group_mrp_user,rwc,,access.mrp.consumption.warning.line
+access_mrp_workcenter_tag_group_mrp_user,mrp.workcenter.tag,mrp.group_mrp_user,r,,access.mrp.workcenter.tag
+access_mrp_workcenter_tag_group_mrp_manager,mrp.workcenter.tag,mrp.group_mrp_manager,rwcd,,access.mrp.workcenter.tag
+access_mrp_production_split_multi_group_mrp_user,mrp.production.split.multi,mrp.group_mrp_user,rwc,,access.mrp.production.split.multi
+access_mrp_production_split_group_mrp_user,mrp.production.split,mrp.group_mrp_user,rwc,,access.mrp.production.split
+access_mrp_production_split_line_group_mrp_user,mrp.production.split.line,mrp.group_mrp_user,rwcd,,access.mrp.production.split.line
+access_mrp_workcenter_capacity_group_mrp_manager,mrp.workcenter.capacity,mrp.group_mrp_manager,rwcd,,mrp.workcenter.capacity.manager
+access_mrp_workcenter_capacity_group_mrp_user,mrp.workcenter.capacity,mrp.group_mrp_user,r,,mrp.workcenter.capacity
+access_mrp_batch_produce_group_mrp_user,mrp.batch.produce,mrp.group_mrp_user,rwc,,access.mrp_batch_produce
+access_stock_move_group_mrp_user,stock.move,mrp.group_mrp_user,rwcd,,stock.move mrp_user

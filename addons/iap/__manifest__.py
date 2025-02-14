@@ -15,10 +15,9 @@ to support In-App purchases inside Odoo. """,
     ],
     'data': [
         'data/services.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
         'views/iap_views.xml',
         'views/res_config_settings.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'assets': {

@@ -16,7 +16,7 @@ This module allows to manage onboardings and their progress
         'views/onboarding_templates.xml',
         'views/onboarding_views.xml',
         'views/onboarding_menus.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

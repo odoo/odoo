@@ -1,0 +1,21 @@
+id,model_id,group_id/id,operation,domain,name
+access_hr_resume_line_group_hr_user,hr.resume.line,hr.group_hr_user,rwcd,,Resume: HR user: all
+access_hr_resume_line_group_user_r,hr.resume.line,base.group_user,r,,Resume: employee: read all
+access_hr_resume_line_group_user_wcd,hr.resume.line,base.group_user,wcd,"[('employee_id.user_id','=',user.id)]",Resume: employee: create/write/unlink own
+access_hr_resume_line_type_group_hr_user,hr.resume.line.type,hr.group_hr_user,rwcd,,hr.resume.line.type
+access_hr_resume_line_type_group_user,hr.resume.line.type,base.group_user,r,,hr.resume.line.type.employee
+access_hr_skill_type_group_hr_user,hr.skill.type,hr.group_hr_user,rwcd,,hr.skill.type
+access_hr_skill_type_group_user,hr.skill.type,base.group_user,r,,hr.skill.type.employee
+access_hr_skill_level_group_hr_user,hr.skill.level,hr.group_hr_user,rwcd,,hr.skill.level
+access_hr_skill_level_group_user,hr.skill.level,base.group_user,r,,hr.skill.level.employee
+access_hr_skill_group_hr_user,hr.skill,hr.group_hr_user,rwcd,,hr.skill
+access_hr_skill_group_user,hr.skill,base.group_user,rc,,hr.skill.employee
+access_hr_employee_skill_group_hr_user,hr.employee.skill,hr.group_hr_user,rwcd,,Employee skill: HR user: read all
+access_hr_employee_skill_group_user_r,hr.employee.skill,base.group_user,r,,Employee skill: employee: read all
+access_hr_employee_skill_group_user_wcd,hr.employee.skill,base.group_user,wcd,"[('employee_id.user_id','=',user.id)]",Employee skill: employee: create/write/unlink own
+access_hr_employee_skill_report_group_hr_user,hr.employee.skill.report,hr.group_hr_user,r,,Employee Skill Report: HR user
+access_hr_employee_skill_report_group_user,hr.employee.skill.report,base.group_user,r,"[('has_department_manager_access', '=', True)]",Employee Skill Report: employee's manager
+access_hr_employee_skill_report_global,hr.employee.skill.report,,rwcd,"[('company_id', 'in', company_ids + [False])]",Employee Skill Report: Multi-Company Rule
+access_hr_employee_skill_log_group_hr_user,hr.employee.skill.log,hr.group_hr_user,rwc,,hr.employee.skill.log
+access_hr_employee_skill_log_group_user,hr.employee.skill.log,base.group_user,r,,hr.employee.skill.log
+access_hr_employee_cv_wizard_group_user,hr.employee.cv.wizard,base.group_user,rwc,,access_hr_employee_cv_wizard

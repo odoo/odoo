@@ -59,7 +59,7 @@ class TestAccessRights(SaleCommon):
             so_as_sale_manager.id, SaleOrder.search([]).ids,
             'Sales manager should be able to delete the SO')
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_access_sales_person(self):
         """ Test Salesperson's access rights """
         SaleOrder = self.env['sale.order'].with_user(self.sale_user2)
@@ -92,7 +92,7 @@ class TestAccessRights(SaleCommon):
         # Salesperson can confirm the SO
         so_as_salesperson.action_confirm()
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_access_portal_user(self):
         """ Test portal user's access rights """
         SaleOrder = self.env['sale.order'].with_user(self.user_portal)
@@ -117,7 +117,7 @@ class TestAccessRights(SaleCommon):
         with self.assertRaises(AccessError):
             so_as_portal_user.unlink()
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_access_employee(self):
         """ Test classic employee's access rights """
         SaleOrder = self.env['sale.order'].with_user(self.user_internal)

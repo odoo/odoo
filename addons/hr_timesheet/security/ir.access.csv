@@ -1,0 +1,50 @@
+id,model_id,group_id/id,operation,domain,name
+access_account_analytic_line_group_hr_timesheet_user,account.analytic.line,hr_timesheet.group_hr_timesheet_user,rwcd,"[
+                ('user_id', '=', user.id),
+                ('project_id', '!=', False),
+                '|',
+                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]",account.analytic.line.timesheet.user
+access_account_analytic_line_group_project_manager_rwcd,account.analytic.line,project.group_project_manager,rwcd,"[
+                ('user_id', '=', user.id),
+                ('project_id', '!=', False),
+                '|',
+                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]",account.analytic.line.timesheet.user
+access_account_analytic_line_group_project_manager_rwcd1,account.analytic.line,project.group_project_manager,rwcd,"[
+                ('project_id', '!=', False),
+                '|',
+                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('project_id.message_partner_ids', 'in', [user.partner_id.id])
+            ]",account.analytic.line.timesheet.approver
+access_account_analytic_line_group_project_manager_rwcd2,account.analytic.line,project.group_project_manager,rwcd,"[('project_id', '!=', False)]",account.analytic.line.timesheet.manager
+access_account_analytic_line_group_hr_timesheet_approver,account.analytic.line,hr_timesheet.group_hr_timesheet_approver,rwcd,"[
+                ('project_id', '!=', False),
+                '|',
+                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('project_id.message_partner_ids', 'in', [user.partner_id.id])
+            ]",account.analytic.line.timesheet.approver
+access_account_analytic_line_group_timesheet_manager,account.analytic.line,hr_timesheet.group_timesheet_manager,rwcd,"[('project_id', '!=', False)]",account.analytic.line.timesheet.manager
+access_account_analytic_account_group_hr_timesheet_user,account.analytic.account,hr_timesheet.group_hr_timesheet_user,rw,,analytic.account.analytic.timesheet.user
+access_uom_uom_group_hr_timesheet_user,uom.uom,hr_timesheet.group_hr_timesheet_user,r,,uom.uom.timesheet.user
+access_project_project_group_hr_timesheet_user,project.project,hr_timesheet.group_hr_timesheet_user,r,,project.project.timesheet.user
+access_timesheets_analysis_report_group_user,timesheets.analysis.report,base.group_user,r,"[
+                ('has_department_manager_access', '=', True),
+            ]",Timesheets Analysis Report user
+access_timesheets_analysis_report_global,timesheets.analysis.report,,rwcd,"[('company_id', 'in', company_ids)]",Timesheets Analysis Report multi-company
+access_timesheets_analysis_report_group_hr_timesheet_user,timesheets.analysis.report,hr_timesheet.group_hr_timesheet_user,r,"[
+                ('user_id', '=', user.id),
+                '|',
+                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]",Timesheets Analysis Report user
+access_timesheets_analysis_report_group_hr_timesheet_approver,timesheets.analysis.report,hr_timesheet.group_hr_timesheet_approver,r,"[
+                '|',
+                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('project_id.message_partner_ids', 'in', [user.partner_id.id])
+            ]",Timesheets Analysis Report approver
+access_timesheets_analysis_report_group_timesheet_manager,timesheets.analysis.report,hr_timesheet.group_timesheet_manager,r,,Timesheets Analysis Report manager
+access_timesheets_analysis_report_group_project_manager,timesheets.analysis.report,project.group_project_manager,r,,Timesheets Analysis Report manager
+access_hr_employee_delete_wizard_group_hr_user,hr.employee.delete.wizard,hr.group_hr_user,rwc,,hr.employee.delete.wizard

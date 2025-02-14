@@ -764,7 +764,7 @@ class TestMailAliasMixin(TestMailAliasCommon):
     based on owner records. """
 
     @users('employee')
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_alias_mixin(self):
         """ Various base checks on alias mixin behavior """
         self.assertEqual(self.env.company.alias_domain_id, self.mail_alias_domain)
@@ -838,7 +838,7 @@ class TestMailAliasMixin(TestMailAliasCommon):
             'Search: both part search: search on name + domain')
 
     @users('employee')
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_alias_mixin_alias_id_management(self):
         """ Test alias_id being not mandatory """
         record_wo_alias, record_w_alias = self.env['mail.test.alias.optional'].create([

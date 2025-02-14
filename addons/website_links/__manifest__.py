@@ -12,7 +12,7 @@ Those trackers can be used in Google Analytics to track clicks and visitors, or 
         'views/link_tracker_views.xml',
         'views/website_links_template.xml',
         'views/website_links_graphs.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'assets': {

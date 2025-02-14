@@ -154,7 +154,7 @@ class TestMailGroup(TestMailListCommon):
         self.assertEqual(member.email, 'new_portal_email@example.com', 'Should have change the email of the partner')
         self.assertEqual(member.email_normalized, 'new_portal_email@example.com')
 
-    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('employee')
     def test_mail_group_access_mode_groups(self):
         test_group = self.env.ref('base.group_partner_manager')
@@ -192,7 +192,7 @@ class TestMailGroup(TestMailListCommon):
         with self.assertRaises(AccessError):
             mail_group.with_user(public_user).check_access('write')
 
-    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('employee')
     def test_mail_group_access_mode_public(self):
         mail_group = self.env['mail.group'].browse(self.test_group.ids)
@@ -210,7 +210,7 @@ class TestMailGroup(TestMailListCommon):
         mail_group.moderator_ids |= self.user_employee_2
         mail_group.with_user(self.user_employee_2).check_access('write')
 
-    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('employee')
     def test_mail_group_access_mode_members(self):
         mail_group = self.env['mail.group'].browse(self.test_group.ids)
@@ -238,7 +238,7 @@ class TestMailGroup(TestMailListCommon):
         mail_group.moderator_ids |= self.user_employee_2
         mail_group.with_user(self.user_employee_2).check_access('write')
 
-    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('employee')
     def test_mail_group_member_security(self):
         member = self.env['mail.group.member'].browse(self.test_group_member_1.ids)

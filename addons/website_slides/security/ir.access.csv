@@ -1,0 +1,107 @@
+id,model_id,group_id/id,operation,domain,name
+access_slide_slide_group_public,slide.slide,base.group_public,r,"[
+                    ('channel_id.website_published', '=', True),
+                    ('website_published', '=', True),
+                    ('channel_id.visibility', 'in', ['public', 'link']),
+                    '|',
+                        ('is_category','=', True),
+                        ('is_preview', '=', True),
+                ]
+            ",Slide: public: restricted to published or public/link-based channel & (category or previewable)
+access_slide_slide_group_portal,slide.slide,base.group_portal,r,"[
+                '&',
+                    '|',
+                        ('user_id', '=', user.id),
+                        '&',
+                            ('website_published', '=', True),
+                            ('channel_id.website_published', '=', True),
+                    '|',
+                        '&',
+                            '|',
+                                ('channel_id.visibility', 'in', ('public', 'connected',  'link')),
+                                ('channel_id.is_member_invited', '=', True),
+                            '|',
+                                ('is_category', '=', True),
+                                ('is_preview', '=', True),
+                        ('channel_id.is_member', '=', True),
+                ]
+            ","Slide: portal/user: restricted to published and connected user, (invited) attendee or link-based, if course visible to attendees only"
+access_slide_slide_group_user,slide.slide,base.group_user,r,"[
+                '&',
+                    '|',
+                        ('user_id', '=', user.id),
+                        '&',
+                            ('website_published', '=', True),
+                            ('channel_id.website_published', '=', True),
+                    '|',
+                        '&',
+                            '|',
+                                ('channel_id.visibility', 'in', ('public', 'connected',  'link')),
+                                ('channel_id.is_member_invited', '=', True),
+                            '|',
+                                ('is_category', '=', True),
+                                ('is_preview', '=', True),
+                        ('channel_id.is_member', '=', True),
+                ]
+            ","Slide: portal/user: restricted to published and connected user, (invited) attendee or link-based, if course visible to attendees only"
+access_slide_slide_group_website_slides_officer_r,slide.slide,website_slides.group_website_slides_officer,r,,Slide: officer: read all
+access_slide_slide_group_website_slides_officer_wc,slide.slide,website_slides.group_website_slides_officer,wc,"[('channel_id.user_id', '=', user.id)]",Slide: officer: create/write own only
+access_slide_slide_group_website_slides_manager,slide.slide,website_slides.group_website_slides_manager,rwcd,,Slide: manager: crud all
+access_slide_slide_global,slide.slide,,rwcd,,Slide: always visible (sub rules exist)
+access_slide_slide_partner_group_website_slides_officer_r,slide.slide.partner,website_slides.group_website_slides_officer,r,,slide.slide.partner.system
+access_slide_slide_partner_group_website_slides_officer_wcd,slide.slide.partner,website_slides.group_website_slides_officer,wcd,"[('channel_id.user_id', '=', user.id)]",Slide Partner: officer: create/write/unlink own only
+access_slide_slide_partner_group_website_slides_manager,slide.slide.partner,website_slides.group_website_slides_manager,rwcd,,Slide Partner: manager: crud all
+access_slide_question_group_public,slide.question,base.group_public,r,,slide.question.all
+access_slide_question_group_portal,slide.question,base.group_portal,r,,slide.question.all
+access_slide_question_group_user,slide.question,base.group_user,r,,slide.question.all
+access_slide_question_group_website_slides_officer,slide.question,website_slides.group_website_slides_officer,rwcd,,slide.question.officer
+access_slide_answer_group_website_slides_officer,slide.answer,website_slides.group_website_slides_officer,rwcd,,slide.answer.officer
+access_slide_tag_group_public,slide.tag,base.group_public,r,,slide.tag.all
+access_slide_tag_group_portal,slide.tag,base.group_portal,r,,slide.tag.all
+access_slide_tag_group_user,slide.tag,base.group_user,r,,slide.tag.all
+access_slide_tag_group_website_slides_officer,slide.tag,website_slides.group_website_slides_officer,rwcd,,slide.tag.officer
+access_slide_channel_tag_group_public,slide.channel.tag,base.group_public,r,"['&', ('color', '!=', False), ('color', '!=', 0)]",Channel Tag: public/portal: color = published
+access_slide_channel_tag_group_portal,slide.channel.tag,base.group_portal,r,"['&', ('color', '!=', False), ('color', '!=', 0)]",Channel Tag: public/portal: color = published
+access_slide_channel_tag_group_user,slide.channel.tag,base.group_user,r,,slide.channel.tag.all
+access_slide_channel_tag_group_website_slides_officer,slide.channel.tag,website_slides.group_website_slides_officer,rwcd,,slide.channel.tag.user
+access_slide_channel_tag_group_group_public,slide.channel.tag.group,base.group_public,r,,slide.channel.tag.group.all
+access_slide_channel_tag_group_group_portal,slide.channel.tag.group,base.group_portal,r,,slide.channel.tag.group.all
+access_slide_channel_tag_group_group_user,slide.channel.tag.group,base.group_user,r,,slide.channel.tag.group.all
+access_slide_channel_tag_group_group_website_slides_officer,slide.channel.tag.group,website_slides.group_website_slides_officer,rwcd,,slide.channel.tag.group.user
+access_slide_channel_group_public,slide.channel,base.group_public,r,"[('website_published', '=', True), ('visibility', 'in', ['public', 'link'])]",Channel: public: restricted to public/link-based and published
+access_slide_channel_group_portal,slide.channel,base.group_portal,r,"[
+                '&',
+                    ('website_published', '=', True),
+                    '|',
+                        ('visibility', 'in', ('public', 'connected', 'link')),
+                        '|',
+                            ('is_member_invited', '=', True),
+                            ('is_member', '=', True),
+                ]
+            ","Channel: portal/user: restricted to published, public or (invited) attendee or link-based, connected user"
+access_slide_channel_group_user,slide.channel,base.group_user,r,"[
+                '&',
+                    ('website_published', '=', True),
+                    '|',
+                        ('visibility', 'in', ('public', 'connected', 'link')),
+                        '|',
+                            ('is_member_invited', '=', True),
+                            ('is_member', '=', True),
+                ]
+            ","Channel: portal/user: restricted to published, public or (invited) attendee or link-based, connected user"
+access_slide_channel_group_website_slides_officer_r,slide.channel,website_slides.group_website_slides_officer,r,,Channel: officer: read all
+access_slide_channel_group_website_slides_officer_wc,slide.channel,website_slides.group_website_slides_officer,wc,"[('user_id', '=', user.id)]",Channel: officer: create/write own only
+access_slide_channel_group_website_slides_manager,slide.channel,website_slides.group_website_slides_manager,rwcd,,Channel: manager: crud all
+access_slide_channel_global,slide.channel,,rwcd,,Channel: always visible (sub rules exist)
+access_slide_channel_partner_group_website_slides_officer_r,slide.channel.partner,website_slides.group_website_slides_officer,r,,slide.channel.users.system
+access_slide_channel_partner_group_website_slides_officer_wcd,slide.channel.partner,website_slides.group_website_slides_officer,wcd,"[('channel_id.user_id', '=', user.id)]",Channel Partner: officer: create/write/unlink own only
+access_slide_channel_partner_group_website_slides_manager,slide.channel.partner,website_slides.group_website_slides_manager,rwcd,,Channel Partner: manager: crud all
+access_slide_embed_group_public,slide.embed,base.group_public,r,,slide.embed.all
+access_slide_embed_group_portal,slide.embed,base.group_portal,r,,slide.embed.all
+access_slide_embed_group_user,slide.embed,base.group_user,rwcd,,slide.embed.user
+access_slide_slide_resource_group_portal,slide.slide.resource,base.group_portal,r,"[('slide_id.channel_id.is_member', '=', True)]",Resource: read restricted to channel members and channel responsible
+access_slide_slide_resource_group_user,slide.slide.resource,base.group_user,r,"[('slide_id.channel_id.is_member', '=', True)]",Resource: read restricted to channel members and channel responsible
+access_slide_slide_resource_group_website_slides_officer_r,slide.slide.resource,website_slides.group_website_slides_officer,r,,Resource: officer: read all
+access_slide_slide_resource_group_website_slides_officer_rwcd,slide.slide.resource,website_slides.group_website_slides_officer,rwcd,"[('slide_id.channel_id.user_id', '=', user.id)]",Resource: officer: crud own only
+access_slide_slide_resource_group_website_slides_manager,slide.slide.resource,website_slides.group_website_slides_manager,rwcd,,Resource: manager: crud all
+access_slide_channel_invite_group_user,slide.channel.invite,base.group_user,rwc,,access.slide.channel.invite

@@ -1277,7 +1277,7 @@ class PropertiesCase(TestPropertiesMixin):
             }]
 
     @users('test')
-    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.fields')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.fields')
     def test_properties_field_many2many_filtering(self):
         # a user read a properties with a many2many and he doesn't have access to all records
         tags = self.env['test_new_api.multi.tag'].create(
@@ -1296,13 +1296,11 @@ class PropertiesCase(TestPropertiesMixin):
             }],
         })
 
-        self.env['ir.rule'].sudo().create({
+        self.env['ir.access'].sudo().create({
             'name': 'test_rule_tags',
             'model_id': self.env['ir.model']._get('test_new_api.multi.tag').id,
-            'domain_force': [('name', 'not in', tags[5:].mapped('name'))],
-            'perm_read': True,
-            'perm_create': True,
-            'perm_write': True,
+            'operation': 'rwcd',
+            'domain': str([('name', 'not in', tags[5:].mapped('name'))]),
         })
 
         self.env.invalidate_all()

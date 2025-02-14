@@ -18,7 +18,6 @@
     ],
     'data': [
         'security/hr_recruitment_security.xml',
-        'security/ir.model.access.csv',
         'data/digest_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
@@ -43,6 +42,7 @@
         'wizard/applicant_send_mail_views.xml',
         'wizard/candidate_send_mail_views.xml',
         'views/menuitems.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_recruitment_demo.xml',

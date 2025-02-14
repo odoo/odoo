@@ -6,6 +6,6 @@
     "description": """A module to test the RPC requests.""",
     "depends": ["web", "rpc"],
     "installable": True,
-    "data": ["ir.model.access.csv"],
+    "data": ['ir.access.csv'],
     'license': 'LGPL-3',
 }

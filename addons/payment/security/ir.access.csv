@@ -1,0 +1,17 @@
+id,model_id,group_id/id,operation,domain,name
+access_payment_capture_wizard_group_user,payment.capture.wizard,base.group_user,rwc,,payment.capture.wizard
+access_payment_capture_wizard_global,payment.capture.wizard,,rwcd,"[('create_uid', '=', user.id)]",Payment Capture Wizard
+access_payment_provider_onboarding_wizard_group_system,payment.provider.onboarding.wizard,base.group_system,rwc,,payment.provider.onboarding.wizard
+access_payment_provider_group_system,payment.provider,base.group_system,rwcd,,payment.provider.system
+access_payment_provider_global,payment.provider,,rwcd,"[('company_id', 'parent_of', company_ids)]",Access providers in own companies only
+access_payment_method_group_public,payment.method,base.group_public,r,,payment.method.all
+access_payment_method_group_portal,payment.method,base.group_portal,r,,payment.method.all
+access_payment_method_group_user,payment.method,base.group_user,r,,payment.method.all
+access_payment_method_group_system,payment.method,base.group_system,rwcd,,payment.method.system
+access_payment_token_group_public,payment.token,base.group_public,r,"[('partner_id', '=', user.partner_id.id)]",Users can access only their own tokens
+access_payment_token_group_portal,payment.token,base.group_portal,r,"[('partner_id', '=', user.partner_id.id)]",Users can access only their own tokens
+access_payment_token_group_user,payment.token,base.group_user,r,"[('partner_id', '=', user.partner_id.id)]",Users can access only their own tokens
+access_payment_token_group_system,payment.token,base.group_system,rwcd,"[('partner_id', '=', user.partner_id.id)]",Users can access only their own tokens
+access_payment_token_global,payment.token,,rwcd,"[('company_id', 'parent_of', company_ids)]",Access tokens in own companies only
+access_payment_transaction_group_system,payment.transaction,base.group_system,rwcd,,payment.transaction.system
+access_payment_transaction_global,payment.transaction,,rwcd,"[('company_id', 'in', company_ids)]",Access transactions in own companies only

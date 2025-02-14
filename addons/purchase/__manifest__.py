@@ -11,7 +11,6 @@
     'depends': ['account'],
     'data': [
         'security/purchase_security.xml',
-        'security/ir.model.access.csv',
         'data/digest_data.xml',
         'views/account_move_views.xml',
         'data/purchase_data.xml',
@@ -32,6 +31,7 @@
         'views/analytic_account_views.xml',
         'wizard/bill_to_po_wizard_views.xml',
         'data/purchase_tour.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/purchase_demo.xml',
