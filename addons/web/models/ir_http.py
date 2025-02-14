@@ -131,6 +131,7 @@ class IrHttp(models.AbstractModel):
             },
             'test_mode': config['test_enable'],
             'view_info': self.env['ir.ui.view'].get_view_info(),
+            'groups': {},
         }
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug
