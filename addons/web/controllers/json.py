@@ -25,7 +25,6 @@ _logger = logging.getLogger(__name__)
 
 
 class WebJsonController(http.Controller):
-
     # for /json, the route should work in a browser, therefore type=http
     @http.route('/json/<path:subpath>', auth='user', type='http', readonly=True)
     def web_json(self, subpath, **kwargs):
@@ -243,7 +242,6 @@ class WebJsonController(http.Controller):
         # update the context and return
         context.update(safe_eval(action.context, eval_context))
         return action, context, eval_context, record_id
-
 
 def get_view_id_and_type(action, view_type: str | None) -> tuple[int | None, str]:
     """Extract the view id from the action"""
