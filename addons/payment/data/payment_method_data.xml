@@ -294,38 +294,25 @@
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/amazon_pay.png"/>
-        <field name="support_tokenization">False</field>
+        <field name="support_tokenization">True</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
         <field name="support_refund">partial</field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
-                         ref('base.be'),
-                         ref('base.cy'),
-                         ref('base.dk'),
-                         ref('base.fr'),
-                         ref('base.hu'),
-                         ref('base.ie'),
-                         ref('base.it'),
-                         ref('base.lu'),
-                         ref('base.pt'),
-                         ref('base.es'),
-                         ref('base.uk'),
-                         ref('base.us'),
-                     ])]"
-        />
+        <field name="supported_country_ids" eval="[Command.clear()]"/>
         <field name="supported_currency_ids"
                eval="[Command.set([
-                         ref('base.EUR'),
                          ref('base.AUD'),
-                         ref('base.GBP'),
+                         ref('base.CHF'),
                          ref('base.DKK'),
+                         ref('base.EUR'),
+                         ref('base.GBP'),
                          ref('base.HKD'),
                          ref('base.JPY'),
-                         ref('base.NZD'),
                          ref('base.NOK'),
-                         ref('base.ZAR'),
+                         ref('base.NZD'),
+                         ref('base.SEK'),
                          ref('base.USD'),
+                         ref('base.ZAR'),
                      ])]"
         />
     </record>
