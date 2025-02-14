@@ -5,7 +5,40 @@
             title="props.display_name"
             contentClass="'sale-combo-configurator-dialog'"
         >
-            <div t-foreach="props.combos" t-as="combo" t-key="combo.id">
+            <span
+                class="d-inline-block mt-4 mb-3 h4"
+            >
+                Included
+            </span>
+            <tbody name="preselected_options">
+                <t t-foreach="props.preselected_combos" t-as="comboItem" t-key="comboItem.id">
+                    <t t-set="product" t-value="comboItem.combo_items[0].product"/>
+                    <tr>
+                        <td class="o_sale_combo_configurator_img px-0">
+                            <img
+                                class="w-100"
+                                t-attf-src="/web/image/product.product/{{product.id}}/image_1024"
+                                alt="Product Image"
+                            />
+                        </td>
+                        <td class="p-3">
+                            <div class="mb-4 text-break">
+                                <span
+                                    name="combo_configurator_product_name"
+                                    class="h6 fw-bold"
+                                    t-out="product.display_name"
+                                />
+                                <div
+                                    t-if="product.description"
+                                    t-out="product.description"
+                                    class="text-muted small"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+            <div t-foreach="props.configurable_combos" t-as="combo" t-key="combo.id">
                 <span
                     name="sale_combo_configurator_title"
                     class="d-inline-block mt-4 mb-3 h4"

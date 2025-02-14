@@ -54,6 +54,16 @@ export class ComboConfiguratorDialog extends Component {
         this._initSelectedComboItems();
         this.getPriceUrl = '/sale/combo_configurator/get_price';
         useSubEnv({ currency: { id: this.props.currency_id } });
+        this.props.preselected_combos = this.props.combos.filter(
+            combo => combo.combo_items.length == 1 && combo.combo_items[0].is_selected
+        );
+
+        // when combo item is a product with custom attribute then it won't be pre selected but
+        // may be the only choice
+        this.props.configurable_combos = this.props.combos.filter(
+            combo => combo.combo_items.length > 1 || !combo.combo_items[0].is_selected
+        );
+
     }
 
     /**

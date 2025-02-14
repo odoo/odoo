@@ -69,4 +69,8 @@ class SaleOrderLine(models.Model):
             if self.order_id.website_id.show_line_subtotals_tax_selection == 'tax_excluded'
             else 'price_total'
         )
-        return sum(self.linked_line_ids.mapped(price_type)) if is_combo else self[price_type]
+        if is_combo:
+            combo_lines = self.linked_line_ids.filtered(lambda line: line.combo_item_id)
+            return sum(combo_lines.mapped(price_type))
+        else:
+            return self[price_type]
