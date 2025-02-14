@@ -37,7 +37,19 @@ class StockMove(models.Model):
                 remaining_moves -= move
         return super(StockMove, remaining_moves)._compute_picking_type_id()
 
-    @api.depends('repair_id', 'repair_id.location_dest_id')
+    @api.depends('repair_id.location_id', 'repair_line_type')
+    def _compute_location_id(self):
+        ids_to_super = set()
+        for move in self:
+            if move.repair_id and move.repair_line_type:
+                move.location_id = move.repair_id[
+                    MAP_REPAIR_LINE_TYPE_TO_MOVE_LOCATIONS_FROM_REPAIR[move.repair_line_type]['location_id']
+                ]
+            else:
+                ids_to_super.add(move.id)
+        return super(StockMove, self.browse(ids_to_super))._compute_location_id()
+
+    @api.depends('repair_id.location_dest_id', 'repair_line_type')
     def _compute_location_dest_id(self):
         ids_to_super = set()
         for move in self:
@@ -73,11 +85,6 @@ class StockMove(models.Model):
                 continue
             repair_id = self.env['repair.order'].browse([vals['repair_id']])
             vals['name'] = repair_id.name
-            src_location, dest_location = self._get_repair_locations(vals['repair_line_type'], repair_id)
-            if not vals.get('location_id'):
-                vals['location_id'] = src_location.id
-            if not vals.get('location_dest_id'):
-                vals['location_dest_id'] = dest_location.id
         moves = super().create(vals_list)
         repair_moves = self.env['stock.move']
         for move in moves:
@@ -106,8 +113,6 @@ class StockMove(models.Model):
             if not move.repair_id:
                 continue
             # checks vals update
-            if 'repair_line_type' in vals or 'picking_type_id' in vals and move.repair_line_type:
-                move.location_id, move.location_dest_id = move._get_repair_locations(move.repair_line_type)
             if not move.sale_line_id and 'sale_line_id' not in vals and move.repair_line_type == 'add':
                 moves_to_create_so_line |= move
             if move.sale_line_id and ('repair_line_type' in vals or 'product_uom_qty' in vals):
