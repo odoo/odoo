@@ -7017,6 +7017,39 @@ X[]
                     contentAfter: '<p>ab<a href="#">cd</a>[]ef</p>',
                 });
             });
+            it('should pass through next non zws character (1)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>\ufeff<a>[]\ufeffabc\ufeff</a>\ufeff</p>',
+                    stepFunction: async editor => {
+                        const ev = await triggerEvent(editor.editable, 'keydown', { key: 'ArrowRight' });
+                        window.chai.expect(ev.defaultPrevented).to.be.equal(false)
+                    },
+                    contentAfterEdit: '<p>\ufeff<a class="o_link_in_selection">\ufeff[]abc\ufeff</a>\ufeff</p>',
+                    // Final state: '<p>\ufeff<a class="o_link_in_selection">\ufeffa[]bc\ufeff</a>\ufeff</p>'
+                });
+            });
+            it('should pass through next non zws character (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>\ufeff[]<a>\ufeffabc\ufeff</a>\ufeff</p>',
+                    stepFunction: async editor => {
+                        const ev = await triggerEvent(editor.editable, 'keydown', { key: 'ArrowRight' });
+                        window.chai.expect(ev.defaultPrevented).to.be.equal(false)
+                    },
+                    contentAfterEdit: '<p>\ufeff<a class="o_link_in_selection">\ufeff[]abc\ufeff</a>\ufeff</p>',
+                    // Final state: '<p>\ufeff<a class="o_link_in_selection">\ufeffa[]bc\ufeff</a>\ufeff</p>'
+                });
+            });
+            it('should stop at the start of next block', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>a[]</div><div>a</div>',
+                    stepFunction: async editor => {
+                        const ev = await triggerEvent(editor.editable, 'keydown', { key: 'ArrowRight' });
+                        window.chai.expect(ev.defaultPrevented).to.be.equal(false)
+                    },
+                    contentAfterEdit: '<div>a[]</div><div>a</div>',
+                    // Final state: '<div>a</div><div>[]a</div>'
+                });
+            });
         });
         describe('ArrowLeft', () => {
             it('should move past a zws (collapsed)', async () => {
@@ -7227,6 +7260,39 @@ X[]
                         '\ufeff' + // after zwnbsp
                     'ef</p>',
                     contentAfter: '<p>ab<a href="#">cd[]</a>ef</p>',
+                });
+            });
+            it('should pass through next non zws character (1)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>\ufeff<a>\ufeffabc\ufeff[]</a>\ufeff</p>',
+                    stepFunction: async editor => {
+                        const ev = await triggerEvent(editor.editable, 'keydown', { key: 'ArrowLeft' });
+                        window.chai.expect(ev.defaultPrevented).to.be.equal(false)
+                    },
+                    contentAfterEdit: '<p>\ufeff<a class="o_link_in_selection">\ufeffabc[]\ufeff</a>\ufeff</p>',
+                    // Final state: '<p>\ufeff<a class="o_link_in_selection">\ufeffab[]c\ufeff</a>\ufeff</p>'
+                });
+            });
+            it('should pass through next non zws character (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>\ufeff<a>\ufeffabc\ufeff</a>[]\ufeff</p>',
+                    stepFunction: async editor => {
+                        const ev = await triggerEvent(editor.editable, 'keydown', { key: 'ArrowLeft' });
+                        window.chai.expect(ev.defaultPrevented).to.be.equal(false)
+                    },
+                    contentAfterEdit: '<p>\ufeff<a class="o_link_in_selection">\ufeffabc[]\ufeff</a>\ufeff</p>',
+                    // Final state: '<p>\ufeff<a class="o_link_in_selection">\ufeffab[]c\ufeff</a>\ufeff</p>'
+                });
+            });
+            it('should stop at the start of next block', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>a</div><div>[]a</div>',
+                    stepFunction: async editor => {
+                        const ev = await triggerEvent(editor.editable, 'keydown', { key: 'ArrowLeft' });
+                        window.chai.expect(ev.defaultPrevented).to.be.equal(false)
+                    },
+                    contentAfterEdit: '<div>a</div><div>[]a</div>',
+                    // Final state: '<div>a[]</div><div>a</div>'
                 });
             });
         });
