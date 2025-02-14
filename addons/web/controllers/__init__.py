@@ -7,6 +7,7 @@ from . import dataset
 from . import domain
 from . import export
 from . import json
+from . import json2
 from . import home
 from . import model
 from . import pivot
