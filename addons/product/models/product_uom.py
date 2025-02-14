@@ -15,8 +15,6 @@ class ProductUom(models.Model):
     barcode = fields.Char(index='btree_not_null', required=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
 
-    _barcode_uniq = models.Constraint('unique(barcode)', 'A barcode can only be assigned to one packaging.')
-
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):
         """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
@@ -24,6 +22,11 @@ class ProductUom(models.Model):
         domain = [('barcode', 'in', [b for b in self.mapped('barcode') if b])]
         if self.env['product.product'].search_count(domain, limit=1):
             raise ValidationError(_("A product already uses the barcode"))
+        elif self.env['product.uom'].search_count(domain) > 1:
+            raise ValidationError(_(
+                "Oops! That's like using the same key for two different locks. "
+                "You can't allow the same barcode for multiple product packaging."
+            ))
 
     def _compute_display_name(self):
         if not self.env.context.get('show_variant_name'):
