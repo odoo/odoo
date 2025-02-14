@@ -749,6 +749,13 @@ patch(PosOrder.prototype, {
                 if (points < reward.required_points) {
                     continue;
                 }
+                // Skip if the reward program is of type 'coupons' and there is already an reward orderline linked to the current reward to avoid multiple reward apply
+                if (
+                    reward.program_id.program_type === "coupons" &&
+                    this.lines.find((rewardline) => rewardline.reward_id?.id === reward.id)
+                ) {
+                    continue;
+                }
                 if (auto && this.uiState.disabledRewards.has(reward.id)) {
                     continue;
                 }
