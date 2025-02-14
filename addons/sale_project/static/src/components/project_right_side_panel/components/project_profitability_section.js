@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onWillStart } from "@odoo/owl";
 import { formatFloat, formatFloatTime } from "@web/views/fields/formatters";
 
 export class ProjectProfitabilitySection extends Component {
@@ -12,6 +12,7 @@ export class ProjectProfitabilitySection extends Component {
         onClick: Function,
         projectId: Number,
         context: Object,
+        foldState: { type: Object, optional: true },
     };
     static template = "sale_project.ProjectProfitabilitySection";
 
@@ -24,6 +25,14 @@ export class ProjectProfitabilitySection extends Component {
             displayLoadMore: null,
         });
         this.sale_items = [];
+
+        onWillStart(() => {
+            if (Object.keys(this.props.foldState).length && this.state.isFolded) {
+                this.sale_items = [...this.props.foldState.sol_items];
+                this.state.displayLoadMore = this.props.foldState.displayLoadMore;
+                this.state.isFolded = !this.state.isFolded;
+            }
+        });
     }
 
     get revenue() {
