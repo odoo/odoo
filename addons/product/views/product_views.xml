@@ -8,13 +8,7 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form string="Product">
-                <header>
-                    <button string="Print Labels"
-                        type="object"
-                        name="action_open_label_layout"
-                        invisible="type == 'service'"
-                    />
-                </header>
+                <header></header>
                 <sheet name="product_form">
                     <field name='product_variant_count' invisible='1'/>
                     <field name='is_product_variant' invisible='1'/>
@@ -65,7 +59,7 @@
                         <label for="name" string="Product"/>
                         <h1>
                             <div class="d-flex">
-                                <field name="is_favorite" widget="boolean_favorite" class="me-3" nolabel="1"/>
+                                <field name="is_favorite" widget="boolean_favorite" class="me-2" nolabel="1"/>
                                 <field class="text-break" name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Cheese Burger"/>
                             </div>
                         </h1>
@@ -75,7 +69,10 @@
                             <field name="sale_ok"/>
                             <label for="sale_ok"/>
                         </span>
-                        <span class="d-inline-flex" invisible="type == 'combo'">
+                        <span
+                            name="purchase_option"
+                            class="d-inline-flex"
+                            invisible="type == 'combo'">
                             <field name="purchase_ok"/>
                             <label for="purchase_ok"/>
                         </span>
@@ -214,12 +211,12 @@
                                 <group name="group_lots_and_weight" string="Logistics" invisible="type != 'consu'">
                                     <label for="weight" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
                                     <div class="o_row" name="weight" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                                        <field name="weight" class="oe_inline"/>
+                                        <field name="weight" class="oe_inline" style="max-width: 7rem;"/>
                                         <field name="weight_uom_name"/>
                                     </div>
                                     <label for="volume" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
                                     <div class="o_row" name="volume" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                                        <field name="volume" string="Volume" class="oe_inline"/>
+                                        <field name="volume" string="Volume" class="oe_inline" style="max-width: 7rem;"/>
                                         <field name="volume_uom_name"/>
                                     </div>
                                 </group>
@@ -241,9 +238,11 @@
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', raw_value)]"/>
                 <field name="product_tag_ids" string="Tags"/>
                 <separator/>
-                <filter string="Services" name="services" domain="[('type','=','service')]"/>
                 <filter string="Goods" name="goods" domain="[('type', '=', 'consu')]"/>
+                <filter string="Services" name="services" domain="[('type','=','service')]"/>
                 <filter string="Combo" name="combo" domain="[('type', '=', 'combo')]"/>
+                <separator/>
+                <filter string="Favorites" name="favorites" domain="[('is_favorite', '=', True)]"/>
                 <separator/>
                 <filter string="Sales" name="filter_to_sell" domain="[('sale_ok','=',True)]"/>
                 <filter string="Purchase" name="filter_to_purchase" domain="[('purchase_ok', '=', True)]"/>
@@ -258,7 +257,6 @@
                     domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                     ]"/>
                 <separator/>
-                <filter string="Favorites" name="favorites" domain="[('is_favorite', '=', True)]"/>
                 <separator/>
                 <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
@@ -330,11 +328,6 @@
                 <form string="Variant Information" duplicate="false">
                     <header>
                         <field name="type" invisible="1"/>
-                        <button string="Print Labels"
-                            type="object"
-                            name="action_open_label_layout"
-                            invisible="type == 'service'"
-                        />
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
@@ -527,7 +520,7 @@
                 </field>
                 <field name="uom_ids" position="attributes">
                     <attribute name="context">{'product_id': id}</attribute>
-                </field> 
+                </field>
             </field>
         </record>
 
