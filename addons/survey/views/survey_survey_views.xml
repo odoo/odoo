@@ -402,56 +402,35 @@
             <p>
                 No Survey Found
             </p><p>
-                Ready to test? Pick a sample or create one from scratch...
+                Pick a sample or <a action="action_load_sample_custom" class="o_survey_load_sample">Start from scratch</a>.
             </p>
-            <div class="row mb-4">
-                <div class="col-sm-3 o_survey_sample_container" action="action_load_sample_survey">
-                    <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
+            <div class="row mb-4 w-100 px-5 justify-content-center">
+                <div class="col-md-3 p-2 flex-row o_survey_load_sample survey_sample_card card rounded m-3 flex-wrap cursor-pointer" action="action_load_sample_survey">
+                    <div class="col-lg-4 p-3">
                         <img src="/survey/static/src/img/survey_sample_survey.png" class="img-fluid"/>
-                        <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
-                            Gather feedbacks from your employees and customers
-                        </div>
                     </div>
-                    <div class="my-3">
-                        <a class="o_survey_load_sample h3 text-center text-primary">Survey</a>
+                    <div class="col-lg-8 p-3 text-start">
+                        <h3>Survey</h3>
+                        <p>Gather feedbacks from your employees and customers</p>
                     </div>
-                    <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
                 </div>
-                <div class="col-sm-3 o_survey_sample_container" action="action_load_sample_assessment">
-                    <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
+                <div class="col-md-3 p-2 flex-row o_survey_load_sample survey_sample_card card rounded m-3 flex-wrap cursor-pointer" action="action_load_sample_assessment">
+                    <div class="col-lg-4 p-3">
                         <img src="/survey/static/src/img/survey_sample_assessment.png" class="img-fluid"/>
-                        <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
-                            Handle quiz &amp; certifications
-                        </div>
                     </div>
-                    <div class="my-3">
-                        <a class="o_survey_load_sample h3 text-center text-primary">Assessment</a>
+                    <div class="col-lg-8 p-3 text-start">
+                        <h3>Assessment</h3>
+                        <p>Handle quiz &amp; certifications</p>
                     </div>
-                    <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
                 </div>
-                <div class="col-sm-3 o_survey_sample_container" action="action_load_sample_live_session">
-                    <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
+                <div class="col-md-3 p-2 flex-row o_survey_load_sample survey_sample_card card rounded m-3 flex-wrap cursor-pointer" action="action_load_sample_live_session">
+                    <div class="col-lg-4 p-3">
                         <img src="/survey/static/src/img/survey_sample_live_session.png" class="img-fluid"/>
-                        <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
-                            Add some fun to your presentations by sharing questions live
-                        </div>
                     </div>
-                    <div class="my-3">
-                        <a class="o_survey_load_sample h3 text-center text-primary">Live Session</a>
+                    <div class="col-lg-8 p-3 text-start">
+                        <h3>Live Session</h3>
+                        <p>Make your presentations more fun by sharing questions live</p>
                     </div>
-                    <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
-                </div>
-                <div class="col-sm-3 o_survey_sample_container" action="action_load_sample_custom">
-                    <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
-                        <img src="/survey/static/src/img/survey_sample_custom.png" class="img-fluid"/>
-                        <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
-                            Create a custom survey from scratch
-                        </div>
-                    </div>
-                    <div class="my-3">
-                        <a class="o_survey_load_sample h3 text-center text-primary">Custom</a>
-                    </div>
-                    <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
                 </div>
             </div>
         </field>
