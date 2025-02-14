@@ -22,18 +22,18 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
 # Martin Trigaux, 2024
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
-# hrvoje sić <hrvoje.sic@gmail.com>, 2024
 # Servisi RAM d.o.o. <support@servisiram.hr>, 2024
-# Bole <bole@dajmi5.com>, 2024
 # Jurica Pomper, 2024
+# Bole <bole@dajmi5.com>, 2025
+# hrvoje sić <hrvoje.sic@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jurica Pomper, 2024\n"
+"Last-Translator: hrvoje sić <hrvoje.sic@gmail.com>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +107,7 @@ msgstr "%(pos_name)s (ne koristi se)"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 #, python-format
 msgid "%(vatLabel)s: %(vatId)s"
-msgstr ""
+msgstr "%(vatLabel)s: %(vatId)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -311,6 +311,8 @@ msgid ""
 "<p>Dear %(client_name)s,<br/>Here is your electronic ticket for the "
 "%(pos_name)s. </p>"
 msgstr ""
+"<p>Dragi/a %(client_name)s,<br/>Evo vaše elektroničke karte za %(pos_name)s."
+" </p>"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3912,6 +3914,11 @@ msgid "Newspaper Rack"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kaldendarski događaj slijedeće aktivnosti"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Krajnji rok slijedeće aktivnosti"
@@ -5729,6 +5736,11 @@ msgstr ""
 #, python-format
 msgid "REFUNDED:"
 msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
+msgid "Ratings"
+msgstr "Ocjene"
 
 #. module: point_of_sale
 #. odoo-javascript

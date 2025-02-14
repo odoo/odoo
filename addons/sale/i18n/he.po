@@ -17,7 +17,6 @@
 # Amit Spilman <amit@laylinetech.com>, 2023
 # NoaFarkash, 2023
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # Roy Sayag, 2024
 # Orel Nahmany, 2024
 # yael terner, 2024
@@ -28,14 +27,15 @@
 # Yoram Lavi, 2024
 # Jonathan Spier, 2024
 # or balmas, 2025
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: or balmas, 2025\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4674,6 +4674,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s is "
 "cancelled. You cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"הזמנת הלקוח %(order)s קשורה לחשבון אנליטי %(account)s מבוטלת. אינך יכול "
+"לרשום הוצאה על הזמנת לקוח שבוטלה."
 
 #. module: sale
 #. odoo-python
@@ -4684,6 +4686,9 @@ msgid ""
 "currently locked. You cannot register an expense on a locked Sales Order. "
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
+"הזמנת הלקוח %(order)s קשורה לחשבון אנליטי %(account)s נעולה כרגע. אינך יכול "
+"לרשום הוצאה על הזמנת לקוח נעולה. אנא צור הזמנת לקוח חדשה המקושרת לחשבון "
+"אנליטי זה."
 
 #. module: sale
 #. odoo-python
@@ -4693,6 +4698,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
 " validated before registering expenses."
 msgstr ""
+"הזמנת הלקוח %(order)s קשורה לחשבון אנליטי %(account)s חייבת להיות מאומתת "
+"לפני רישום הוצאות."
 
 #. module: sale
 #. odoo-python
@@ -4732,12 +4739,12 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"לא ניתן להגביל את המוצרים הבאים לחברה %s מכיוון שכבר נעשה בהם שימוש בהצעות מחיר או הזמנות לקוח בחברה אחרת:\n"
-"%s\n"
+"לא ניתן להגביל את המוצרים הבאים לחברה %(company)s מכיוון שכבר נעשה בהם שימוש בהצעות מחיר או הזמנות לקוח בחברה אחרת:\n"
+"%(used_products)s\n"
 "באפשרותך להעביר אותם לארכיון וליצור אותם מחדש עם הגבלת החברה שלך או להשאיר אותם כמוצרים משותפים."
 
 #. module: sale

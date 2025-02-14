@@ -3,16 +3,16 @@
 # 	* pos_viva_wallet
 # 
 # Translators:
-# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2024-02-07 08:49+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,10 +75,9 @@ msgstr "Mensaje de Viva Wallet: %s"
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
-msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
-msgstr "Solo 'group_pos_user' puede conseguir un token de Viva Wallet"
+msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
+msgstr "Solo 'group_pos_user' tiene permitido cancelar un pago de Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -88,6 +87,24 @@ msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
 "Solo 'group_pos_user' puede conseguir el estado más reciente de la "
 "transacción"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
+msgstr "Solo 'group_pos_user' puede obtener el estado de pago de Viva Wallet"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgstr ""
+"Solo 'group_pos_user' tiene permitido enviar una solicitud de pago de Viva "
+"Wallet"
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method

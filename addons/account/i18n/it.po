@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 12:08+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -448,7 +448,6 @@ msgstr "25.00 USD"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
 msgstr "27.00"
 
@@ -1133,7 +1132,6 @@ msgstr "<span> previsto il </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
 msgstr "<span> su </span>"
 
@@ -1976,11 +1974,6 @@ msgid ""
 msgstr ""
 "Conto: pubblica registrazioni in bozza con auto_post attivato e date "
 "contabili fino a oggi"
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "Contabile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3471,6 +3464,7 @@ msgid "Billing"
 msgstr "Fatturazione"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Responsabile fatturazione"
 
@@ -3521,11 +3515,6 @@ msgstr "Vuoto se zero"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Messaggio di blocco"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Contabile"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6084,6 +6073,7 @@ msgstr "Registrazioni in bozza"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "Registrazione in bozza"
@@ -7076,20 +7066,6 @@ msgstr ""
 "La formula nel modulo  line_code.expression_label. Questo permette di "
 "configurare l'etichetta del riporto per quest'espressione (su un'espressione"
 " etichettata come _carryover_*), in caso differisca dalla riga principale."
-
-#. module: account
-msgid ""
-"Formula in the form line_code.expression_label. This allows setting the "
-"target of the carryover for this expression (on a _carryover_*-labeled "
-"expression), in case it is different from the parent line. 'custom' is also "
-"allowed as value in case the carryover destination requires more complex "
-"logic."
-msgstr ""
-"La formula nel modulo  line_code.expression_label. Questo permette di "
-"configurare l'etichetta del riporto per quest'espressione (su un'espressione"
-" etichettata come _carryover_*), in caso differisca dalla riga padre. È "
-"possibile inserire anche il valore 'custom' in caso la destinazione del "
-"riporto richieda una logica più complicata."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8544,6 +8520,12 @@ msgid "Is Between"
 msgstr "È tra"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr "COA installato"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
@@ -9497,7 +9479,6 @@ msgstr ""
 "Addebito diretto SEPA: ricevi pagamenti nella zona SEPA grazie ad un mandato che il partner deve garantirti. È necessario il modulo account_sepa.\n"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr "Marc Demo"
@@ -11199,11 +11180,6 @@ msgid "Payment Receipt:"
 msgstr "Ricevuta di pagamento:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr "Rif. pagamento"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -11878,11 +11854,6 @@ msgstr "Valutazioni"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Riordina sequenza"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Sola lettura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12591,11 +12562,6 @@ msgid "Sample Memo"
 msgstr "Promemoria campione"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr "Rif campione"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12621,7 +12587,6 @@ msgstr "Salvare la pagina e tornare qui per impostare la funzionalità."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Lettura tramite app bancaria."
@@ -13116,8 +13081,11 @@ msgstr "Imposta un prezzo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Configura un valore maggiore di 0,0 per attivare la verifica del limite di "
+"credito"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13209,6 +13177,7 @@ msgstr ""
 "saranno anche nominate usando questo prefisso per impostazione predefinita."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Mostrare funzionalità contabili - Sola lettura"
 
@@ -13243,6 +13212,7 @@ msgid "Show Force Tax Included"
 msgstr "Mostra forza imposta inclusa"
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Mostrare funzionalità contabili complete"
 
@@ -14141,6 +14111,18 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+"Il modello di grafico %s non dovrebbe essere selezionato direttamente. "
+"Tuttavia, è possibile selezionare direttamente il modello di grafico "
+"collegato al tuo Paese."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -14225,18 +14207,6 @@ msgid ""
 msgstr ""
 "I termini di pagamento devono avere almeno una riga percentuale e la somma "
 "della percentuale deve essere 100%."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
-"Il modello di grafico %s non dovrebbe essere selezionato direttamente. "
-"Tuttavia, è possibile selezionare direttamente il modello di grafico "
-"collegato al tuo Paese."
 
 #. module: account
 #. odoo-python
@@ -15967,9 +15937,13 @@ msgstr "Trasferimento a %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Mostra avvisi durante la creazione di fatture e ordini di vendita per i "
+"partner con un importo totale del credito superiore a un limite. Configura "
+"un valore maggiore di 0,0 per attivare un controllo del limite di credito."
 
 #. module: account
 #. odoo-python
@@ -17234,28 +17208,6 @@ msgid ""
 msgstr ""
 "Non è possibile creare una posizione di bilancio con un'IVA estera "
 "all'interno del Paese fiscale senza aver assegnato uno stato."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
-"country."
-msgstr ""
-"Non è possibile creare una posizione di bilancio con un'IVA estera "
-"all'interno del Paese fiscale."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position within your fiscal country with the same"
-" VAT number as the main one set on your company."
-msgstr ""
-"Non è possibile creare una posizione di bilancio all'interno del Paese di "
-"tassazione con lo stesso numero di partita IVA indicato per la tua azienda."
 
 #. module: account
 #. odoo-python

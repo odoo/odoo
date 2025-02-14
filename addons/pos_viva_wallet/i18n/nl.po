@@ -5,14 +5,15 @@
 # Translators:
 # Jolien De Paepe, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2024-02-07 08:49+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,10 +76,9 @@ msgstr "Bericht van Viva Wallet: %s"
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
-msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
-msgstr "Alleen 'group_pos_user' mogen de token ophalen via Viva Wallet"
+msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
+msgstr "Alleen een 'group_pos_user' mag een Viva Wallet-betaling annuleren"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -87,6 +87,24 @@ msgstr "Alleen 'group_pos_user' mogen de token ophalen via Viva Wallet"
 msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
 "Alleen 'group_pos_user' mogen de laatste status van de transactie ophalen"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
+msgstr ""
+"Alleen een 'group_pos_user' mag de betalingsstatus van Viva Wallet ophalen"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgstr ""
+"Alleen een 'group_pos_user' mag een betalingsverzoek naar Viva Wallet sturen"
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method

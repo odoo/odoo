@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2024-02-07 08:49+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -75,11 +75,11 @@ msgstr "Message de Viva Wallet : %s"
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
-msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
+msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
 msgstr ""
-"Seul 'group_pos_user' est autorisé à récupérer des jetons depuis Viva Wallet"
+"Seuls les membres de 'group_pos_user' sont autorisés à annuler un paiement "
+"Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -89,6 +89,26 @@ msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
 "Seul 'group_pos_user' est autorisé à obtenir le dernier statut des "
 "transactions"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
+msgstr ""
+"Seuls les membres de 'group_pos_user' sont autorisés à obtenir le statut de "
+"paiement depuis Viva Wallet"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgstr ""
+"Seuls les membres de 'group_pos_user' sont autorisés à envoyer une demande "
+"de paiement Viva Wallet"
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method

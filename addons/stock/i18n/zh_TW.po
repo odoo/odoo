@@ -380,11 +380,6 @@ msgid "54326786758"
 msgstr "54326786758"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 #, python-format
@@ -2369,7 +2364,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
 msgid "Days"
-msgstr "天內"
+msgstr "天"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
@@ -2458,7 +2453,7 @@ msgstr "預設退貨位置"
 #: model:ir.model.fields,help:stock.field_stock_storage_category_capacity__product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
-msgstr "所有庫存商品的預設單位。"
+msgstr "所有庫存操作使用的預設計量單位。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_stock
@@ -3901,13 +3896,6 @@ msgstr "如果不勾選，允許您隱藏規則而無需刪除."
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
 msgstr "立即調撥"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "Import"
-msgstr "匯入"
 
 #. module: stock
 #. odoo-javascript
@@ -6276,9 +6264,9 @@ msgstr "是否存在要取決於操作類型。"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
-msgstr "按建立按鈕定義庫存中每個產品的數量，或從整個收藏夾中的試算表匯入它們"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -6581,7 +6569,7 @@ msgstr "產品類型"
 #. module: stock
 #: model:ir.model,name:stock.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "產品測量單位"
+msgstr "產品計量單位"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
@@ -6611,7 +6599,7 @@ msgstr "此批號/序號包含的產品.如果它已經被移動了，您就不�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_uom_name
 msgid "Product unit of measure label"
-msgstr "產品量度單位標籤"
+msgstr "產品計量單位標籤"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_tracking
@@ -9603,7 +9591,7 @@ msgstr "單位"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
-msgstr "測量單位"
+msgstr "計量單位"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -9665,7 +9653,7 @@ msgstr "量度單位"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
-msgstr "測量單位類別"
+msgstr "計量單位類別"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -10058,7 +10046,7 @@ msgstr "重量單位"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "重量單位計量摘要"
+msgstr "重量計量單位標籤"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__weight
@@ -10087,17 +10075,17 @@ msgstr "當所有產品就緒時"
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form."
-msgstr "勾選後，可以在“產品”表單的“庫存”分頁選項中選擇路線."
+msgstr "若勾選，此路線將可在產品表單的庫存分頁中選擇。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
-msgstr "勾選後，可以在產品類別中選擇路線."
+msgstr "若勾選，產品類別將可選擇此路線。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__packaging_selectable
 msgid "When checked, the route will be selectable on the Product Packaging."
-msgstr "勾選後，可以在產品包裝上選擇路線."
+msgstr "若勾選，產品包裝將可選擇此路線。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -10906,7 +10894,7 @@ msgstr "後進先出"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "manually to trigger the reordering rules right now."
-msgstr "立即手動觸發訂貨規則."
+msgstr "手動執行，以立即觸發重新訂購規則。"
 
 #. module: stock
 #. odoo-javascript

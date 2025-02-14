@@ -17,14 +17,15 @@
 # Betty Keresztesi, 2024
 # Maria Muntean, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
-# Lyall Kindmurr, 2024
+# Lyall Kindmurr, 2025
+# Wil Odoo, 2025
 # Dorin Hongu <dhongu@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -100,7 +101,7 @@ msgstr "%(pos_name)s (nefolosit)"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 #, python-format
 msgid "%(vatLabel)s: %(vatId)s"
-msgstr ""
+msgstr "%(vatLabel)s: %(vatId)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -306,6 +307,8 @@ msgid ""
 "<p>Dear %(client_name)s,<br/>Here is your electronic ticket for the "
 "%(pos_name)s. </p>"
 msgstr ""
+"<p>Dragă %(client_name)s,<br/>Aici este bonul dvs. electronic pentru "
+"%(pos_name)s. </p>"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3952,6 +3955,11 @@ msgid "Newspaper Rack"
 msgstr "Raft pentru ziare"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Următoarea activitate din calendar"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Data limită pentru următoarea activitate"
@@ -5793,6 +5801,11 @@ msgstr "MOTIV"
 #, python-format
 msgid "REFUNDED:"
 msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
+msgid "Ratings"
+msgstr "Ratings"
 
 #. module: point_of_sale
 #. odoo-javascript

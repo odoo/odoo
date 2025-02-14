@@ -20,27 +20,27 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
 # Jonatan Gk, 2023
 # Martin Trigaux, 2023
-# marcescu, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # Carles Antoli <carlesantoli@hotmail.com>, 2023
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2024
 # Arnau Ros, 2024
 # Iván Infantes Castarnado, 2024
-# Ivan Espinola, 2024
-# Óscar Fonseca <tecnico@pyming.com>, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
-# Noemi Pla, 2024
 # Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Josep Anton Belchi, 2024
 # Xavier, 2024
+# Noemi Pla, 2025
+# marcescu, 2025
+# Ivan Espinola, 2025
+# Óscar Fonseca <tecnico@pyming.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Xavier, 2024\n"
+"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2014,7 +2014,7 @@ msgstr "Descompte:"
 #: code:addons/sale/wizard/sale_order_discount.py:0
 #, python-format
 msgid "Discount: %(percent)s%%"
-msgstr ""
+msgstr "Descompte: %(percent)s%%"
 
 #. module: sale
 #. odoo-python
@@ -2098,7 +2098,7 @@ msgstr "Producte de la bestreta"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Bestreta: %(date)s (esborrany)"
 
 #. module: sale
 #. odoo-python
@@ -2932,7 +2932,7 @@ msgstr "Falten camps obligatoris a la línia de venda comptabilitzable. "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -4725,6 +4725,9 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s is "
 "cancelled. You cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"La comanda de venda %(order)s vinculada al compte analític %(account)s s'ha "
+"cancel·lat. No podeu registrar una despesa en una comanda de venda "
+"cancel·lada."
 
 #. module: sale
 #. odoo-python
@@ -4735,6 +4738,10 @@ msgid ""
 "currently locked. You cannot register an expense on a locked Sales Order. "
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
+"La comanda de venda %(order)s enllaçada al compte analític %(account)s està "
+"actualment bloquejada. No podeu registrar una despesa en una comanda de "
+"venda bloquejada. Si us plau, crei una nova venda vinculada a aquest compte "
+"analític."
 
 #. module: sale
 #. odoo-python
@@ -4744,6 +4751,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
 " validated before registering expenses."
 msgstr ""
+"La comanda de vendes %(order)senllaçat al compte analític%(account)s s'ha de"
+" validar abans de registrar les despeses."
 
 #. module: sale
 #. odoo-python
@@ -4785,12 +4794,12 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Els productes següents no es poden restringir a l'empresa %s perquè ja s'han utilitzat en quotes o comandes de vendes en una altra empresa:\n"
-"%s\n"
+"Els productes següents no es poden restringir a l'empresa %(company)s perquè ja s'han utilitzat en quotes o comandes de vendes en una altra empresa:\n"
+"%(used_products)s\n"
 "Pots arxivar aquests productes i recrear-los amb la restricció de la teva empresa, o deixar-los com a productes compartits."
 
 #. module: sale

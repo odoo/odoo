@@ -5,17 +5,17 @@
 # Translators:
 # Mads Søndergaard, 2023
 # Ejner Sønniksen <ejner@vkdata.dk>, 2024
-# Martin Trigaux, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Mads Søndergaard, 2025
+# Martin Trigaux, 2025
 # Sammi Iversen <sammi@vkdata.dk>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Sammi Iversen <sammi@vkdata.dk>, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -742,7 +742,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Betalt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -757,7 +757,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Udløbet"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Afventer betaling"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
@@ -3418,7 +3418,7 @@ msgstr "Anden info"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "PDF Quote"
-msgstr ""
+msgstr "PDF Tilbud"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
@@ -4857,12 +4857,12 @@ msgstr "Følgende ordrer er ikke i en tilstand, der kræver bekræftelse: %s"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"De følgende produkter kan ikke begrænses til virksomheden %s, fordi de allerede er blevet brugt i tilbud eller salgsordre i en anden virksomhed:\n"
-"%s\n"
+"De følgende produkter kan ikke begrænses til virksomheden %(company)s, fordi de allerede er blevet brugt i tilbud eller salgsordre i en anden virksomhed:\n"
+"%(used_products)s\n"
 "Du kan arkivere disse produkter og genoprette dem med din virksomheds begrænsning i stedet, eller lade dem være som delte produkter."
 
 #. module: sale
@@ -5534,7 +5534,7 @@ msgstr "Du kan ikke annullere en låst ordre. Den skal låses op først."
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot change the pricelist of a confirmed order !"
-msgstr ""
+msgstr "Du kan ikke ændre prislisten for en bekræftet ordre!"
 
 #. module: sale
 #. odoo-python

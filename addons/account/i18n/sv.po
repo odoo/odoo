@@ -38,9 +38,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 12:08+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -473,7 +473,6 @@ msgstr "25.00 USD"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
 msgstr "27.00"
 
@@ -1159,7 +1158,6 @@ msgstr "<span> förfaller den </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
 msgstr "<span> på </span>"
 
@@ -1990,11 +1988,6 @@ msgid ""
 msgstr ""
 "Konto: Bokför utkastposter med auto_post aktiverat och bokföringsdatum fram "
 "till idag"
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "Redovisningsekonom"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3468,6 +3461,7 @@ msgid "Billing"
 msgstr "Fakturering"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Faktureringsadministratör"
 
@@ -3518,11 +3512,6 @@ msgstr "Blank om noll"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Spärrmeddelande"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Bokförare"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6068,6 +6057,7 @@ msgstr "Utkast till poster"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "Verifikatutkast"
@@ -7052,19 +7042,6 @@ msgstr ""
 "Formel i formen line_code.expression_label. Detta gör det möjligt att ange "
 "målet för överföringen för detta uttryck (på ett _carryover_*-märkt "
 "uttryck), om det skiljer sig från den överordnade raden."
-
-#. module: account
-msgid ""
-"Formula in the form line_code.expression_label. This allows setting the "
-"target of the carryover for this expression (on a _carryover_*-labeled "
-"expression), in case it is different from the parent line. 'custom' is also "
-"allowed as value in case the carryover destination requires more complex "
-"logic."
-msgstr ""
-"Formel i formen ine_code.expression_label. Detta tillåter inställning av "
-"målet för överföringen för detta uttryck (på ett carryover*-märkt uttryck), "
-"i händelse av att det skiljer sig från föräldraraden. ’custom’ är också "
-"tillåtet som värde om överföringsdestinationen kräver mer komplex logik."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8507,6 +8484,12 @@ msgid "Is Between"
 msgstr "Är mellan"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
@@ -9454,7 +9437,6 @@ msgstr ""
 "SEPA Direktbetalning: Få betalt i SEPA-zonen tack vare ett mandat din partner kommer att ha beviljat dig. Modulen account_sepa är nödvändig.\n"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr "Marc Demo"
@@ -11144,11 +11126,6 @@ msgid "Payment Receipt:"
 msgstr "Betalningskvitto:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr "Betalning Ref"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -11823,11 +11800,6 @@ msgstr "Betyg"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Omsekvensera"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Skrivskyddad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12534,11 +12506,6 @@ msgid "Sample Memo"
 msgstr "Exempel på memo"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr "Prov Ref"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12565,7 +12532,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Skanna mig med din bank app."
@@ -13056,6 +13022,7 @@ msgstr "Ange ett pris"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
 
@@ -13145,6 +13112,7 @@ msgstr ""
 "också att namnges med detta prefix som standard."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Visa redovisningsfunktioner - endast läsrättigheter"
 
@@ -13179,6 +13147,7 @@ msgid "Show Force Tax Included"
 msgstr "Visa Tvinga Skatt Inkluderad"
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Visa fullständiga redovisningsfunktioner"
 
@@ -14075,6 +14044,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -14157,15 +14135,6 @@ msgid ""
 msgstr ""
 "Betalningsvillkoret måste ha minst en procentrad och summan av "
 "procentenheterna måste vara 100%."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15875,7 +15844,8 @@ msgstr "Överför till %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
 
@@ -17120,27 +17090,6 @@ msgid ""
 msgstr ""
 "Du kan inte skapa en skatteposition med utländsk moms inom ditt skatteland "
 "utan att tilldela det en stat."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
-"country."
-msgstr ""
-"Du kan inte skapa en skatteposition med utländsk moms inom ditt skatteland."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position within your fiscal country with the same"
-" VAT number as the main one set on your company."
-msgstr ""
-"Du kan inte skapa en skatteposition inom ditt skatteland med samma "
-"momsnummer som det huvudsakliga som är inställt på ditt företag."
 
 #. module: account
 #. odoo-python

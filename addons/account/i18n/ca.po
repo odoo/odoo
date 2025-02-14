@@ -3,16 +3,17 @@
 # 	* account
 # 
 # Translators:
+# CristianCruzParra, 2023
 # César López Ramírez <cesar.lopez@coopdevs.org>, 2023
 # Lluís Dalmau <lluis.dalmau@guifi.net>, 2023
 # Susanna Pujol, 2023
 # Albert Parera, 2023
-# CristianCruzParra, 2023
 # M Palau <mpalau@tda.ad>, 2023
 # Xavi Ivars <xavi.ivars@gmail.com>, 2023
 # oscaryuu, 2023
+# xean, 2023
 # martioodo hola, 2023
-# Josep Sànchez <papapep@gmx.com>, 2023
+# Josep Sànchez <papapep@pinatell.net>, 2023
 # Sandra Franch <sandra.franch@upc.edu>, 2023
 # jabiri7, 2023
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
@@ -33,21 +34,21 @@
 # Ivan Espinola, 2024
 # Arnau Ros, 2024
 # Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
-# xean, 2024
 # Óscar Fonseca <tecnico@pyming.com>, 2024
 # marcescu, 2024
 # Josep Anton Belchi, 2024
 # Eugeni Chafer <eugeni@chafer.cat>, 2024
 # Jordi S, 2025
 # Xavier, 2025
+# Quim, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 12:08+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Xavier, 2025\n"
+"Last-Translator: Quim, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -479,7 +480,6 @@ msgstr "25,00USD"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
 msgstr "27,00"
 
@@ -682,6 +682,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Estimat/da\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Aquí tens la teva\n"
+"        <t t-if=\"object.name\">\n"
+"            factura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            factura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (amb referència: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        per un total de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Aquesta factura ja està pagada.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Si us plau, faci el pagament el més aviat possible.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                Si us plau, usi aquesta referència per al pagament: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    al compte <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            PD: pot revisar el temps imputat  <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">en el portal.</a>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        No dubti a contactar amb nosaltres si té cap pregunta.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -1113,7 +1162,6 @@ msgstr "<span> venç el</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
 msgstr "<span> a </span>"
 
@@ -1957,11 +2005,6 @@ msgid ""
 msgstr ""
 "Compte: Publica les entrades en esborrany amb l'auto_post activat i data "
 "comptable fins el dia d'avui"
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "Comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3448,6 +3491,7 @@ msgid "Billing"
 msgstr "Facturació"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Administrador de facturació"
 
@@ -3498,11 +3542,6 @@ msgstr "En blanc si és zero"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Missatge de bloqueig"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Comptable"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6056,6 +6095,7 @@ msgstr "Entrades d'esborrany"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "Esborrany d'Entrada"
@@ -7045,20 +7085,6 @@ msgstr ""
 "Fòrmula al formulari line_code.expression_label. Això permet establir "
 "l'objetiu del traspàs per a aquesta expresió (en una expresió etiquetada com"
 " a _carryover_* ), en cas de que sigui diferent de la línia pare."
-
-#. module: account
-msgid ""
-"Formula in the form line_code.expression_label. This allows setting the "
-"target of the carryover for this expression (on a _carryover_*-labeled "
-"expression), in case it is different from the parent line. 'custom' is also "
-"allowed as value in case the carryover destination requires more complex "
-"logic."
-msgstr ""
-"Fórmula en el formulari line_code.expression_label. Permet establir "
-"l'objectiu de la portada per a aquesta expressió (en una expressió "
-"etiquetada _carryover_*), en cas que sigui diferent de la línia pare. "
-"'Personalitzat' és també un valor permès si l'objectiu d'ajornament demana "
-"una lògica més complexa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8508,6 +8534,12 @@ msgid "Is Between"
 msgstr "Es troba entre"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
@@ -9458,7 +9490,6 @@ msgstr ""
 "Dèbit directe SEPA: Es paga a la zona SEPA gràcies a un mandat que el vostre soci us haurà concedit. El mòdul account_sepa és necessari.\n"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr "Marc Demo"
@@ -11158,11 +11189,6 @@ msgid "Payment Receipt:"
 msgstr "Rebut de pagament:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr "Pagament Ref"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -11841,11 +11867,6 @@ msgid "Re-Sequence"
 msgstr "Re-seqüència"
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Només lectura"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
 msgstr "Motiu que es mostra a la factura rectificativa"
@@ -11918,6 +11939,7 @@ msgstr "Data de reconeixement"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
 msgstr ""
+"Recalcula tots els impostos i comptes en funció d'aquesta posició fiscal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -12553,11 +12575,6 @@ msgid "Sample Memo"
 msgstr "Anotació de mostra"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr "Referència de mostra"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12583,7 +12600,6 @@ msgstr "Guardeu aquesta pàgina i torneu per a configurar la característica."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Escanegeu-me amb la vostra aplicació bancària."
@@ -13080,8 +13096,11 @@ msgstr "Establir un preu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Estableixi un valor major que 0,0 per activar una validació de límit de "
+"crèdit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13170,6 +13189,7 @@ msgstr ""
 "anomenades usant aquest prefix per omissió."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Mostrar funcions de comptabilitat: només lectura"
 
@@ -13204,6 +13224,7 @@ msgid "Show Force Tax Included"
 msgstr "Mostra els impostos inclosos"
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Mostra les funcions comptables completes"
 
@@ -14103,6 +14124,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+"El tipus de diagrama %s no pot ser seleccionat directament. En el seu lloc, "
+"mireu de seleccionar el tipus de diagrama adequat a la vostra ubicació."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -14182,15 +14214,6 @@ msgid ""
 msgstr ""
 "El terme de pagament ha de tenir com a mínim una línia de percentatge i la "
 "suma dels percentatges ha de ser 100%."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15589,6 +15612,8 @@ msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
 msgstr ""
+"Això actualitzarà tots els impostos i comptes en funció de la posició fiscal"
+" seleccionada."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15913,7 +15938,8 @@ msgstr "Transferir a %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
 
@@ -17170,28 +17196,6 @@ msgid ""
 msgstr ""
 "No podeu crear una posició fiscal amb un IVA estranger dins del vostre país "
 "fiscal sense assignar-la a un estat."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
-"country."
-msgstr ""
-"No podeu crear una posició fiscal amb un IVA estranger dins del vostre país "
-"fiscal."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position within your fiscal country with the same"
-" VAT number as the main one set on your company."
-msgstr ""
-"No podeu crear una posició fiscal dins del vostre país fiscal amb el mateix "
-"número d'IVA que el principal establert a la vostra empresa."
 
 #. module: account
 #. odoo-python

@@ -41,9 +41,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 12:08+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Faraz Sadri Alamdari <ifarazir@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -474,7 +474,6 @@ msgstr "25.00 دلار آمریکا"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
 msgstr "27.00"
 
@@ -1156,7 +1155,6 @@ msgstr "<span> سررسید در </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
 msgstr "<span> روشن </span>"
 
@@ -1987,11 +1985,6 @@ msgid ""
 msgstr ""
 "حساب: ورودی های پیشنویس را با استفاده از auto_post و تاریخ حسابداری تا امروز"
 " ارسال کنید"
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "حسابدار"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3469,6 +3462,7 @@ msgid "Billing"
 msgstr "صدور صورت‌حساب"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "مسئول صدور صورت‌حساب"
 
@@ -3519,11 +3513,6 @@ msgstr "اگر صفر بود خالی بماند"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "مسدود کردن پیام"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "کتابدار"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6060,6 +6049,7 @@ msgstr "اسناد پیشنویس"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "سند پیشنویس"
@@ -7040,19 +7030,6 @@ msgstr ""
 "فرمول به صورت `line_code.expression_label`. این امکان را می‌دهد که هدف "
 "انتقال برای این فرمول (در یک فرمول با برچسب _carryover_*) تنظیم شود، در "
 "صورتی که متفاوت از خط والد باشد."
-
-#. module: account
-msgid ""
-"Formula in the form line_code.expression_label. This allows setting the "
-"target of the carryover for this expression (on a _carryover_*-labeled "
-"expression), in case it is different from the parent line. 'custom' is also "
-"allowed as value in case the carryover destination requires more complex "
-"logic."
-msgstr ""
-"فرمول به شکل سطر_کد.عبارت_برچسب. این گونه امکان تعیین هدف انتقال برای این "
-"عبارت فراهم می‌شود (روی یک عبارت برچسب دار *-)، در صورتی که با سطر اصلی "
-"متفاوت باشد. سفارشی سازی نیز در صورتی مجاز است که مقصد انتقال نیازمند منطق "
-"پیچیده‌تری باشد."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8485,6 +8462,12 @@ msgid "Is Between"
 msgstr "میان ... قرار دارد"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
@@ -9430,7 +9413,6 @@ msgstr ""
 "حق برداشت مستقیم از SEPA: پرداخت از طریق حوزه‌ی SEPA با کمک وکالت‌نامه‌ای که شریک‌تان به شما می‌دهد. استفاده از ماژول حساب SEPA ضروری است. \n"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr "دموی مارچ"
@@ -11121,11 +11103,6 @@ msgid "Payment Receipt:"
 msgstr "رسید پرداخت:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr "شماره پیگیری پرداخت"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -11794,11 +11771,6 @@ msgstr "رتبه‌بندی‌ها"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "توالی مجدد"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "فقط خواندنی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12506,11 +12478,6 @@ msgid "Sample Memo"
 msgstr "یادداشت نمونه"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr "مرجه نمونه"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12536,7 +12503,6 @@ msgstr "این صفحه را ذخیره کنید و برای تنظیم این �
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "با برنامه بانکی خود مرا اسکن کنید."
@@ -13025,6 +12991,7 @@ msgstr "تعیین یک قیمت"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
 
@@ -13112,6 +13079,7 @@ msgstr ""
 " طور پیش فرض با استفاده از این پیشوند نامگذاری می شوند."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "نمایش ویژگی‌های حسابداری - فقط خواندنی"
 
@@ -13146,6 +13114,7 @@ msgid "Show Force Tax Included"
 msgstr "نمایش شامل مالیات تکلیفی"
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "نمایش خصوصیات حسابداری کامل"
 
@@ -14040,6 +14009,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -14118,15 +14096,6 @@ msgid ""
 "percent must be 100%."
 msgstr ""
 "عبارت پرداخت باید حداقل شامل یک سطر بوده و مجموع درصد باید 100 درصد باشد. "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15792,7 +15761,8 @@ msgstr "انتقال به %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
 
@@ -17032,28 +17002,6 @@ msgid ""
 msgstr ""
 "شما نمی‌توانید یک موقعیت مالی که دارای کد مالیاتی ارزش افزوده در کشور "
 "مالی‌تان است را بدون تعیین وضعیت آن ایجاد کنید."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
-"country."
-msgstr ""
-"شما نمی‌توانید موقعیت مالی را با یک کد مالیات بر ارزش افزوده در کشور مالی "
-"خود ایجاد کنید."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position within your fiscal country with the same"
-" VAT number as the main one set on your company."
-msgstr ""
-"نمی‌توانید یک موقعیت مالی را با همان کد مالیات بر ارزش افزوده‌ی ثبت شده در "
-"شرکت، در کشور مالی خود ایجاد کنید."
 
 #. module: account
 #. odoo-python

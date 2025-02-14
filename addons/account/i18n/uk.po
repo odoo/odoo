@@ -8,16 +8,16 @@
 # Larissa Manderfeld, 2024
 # Wil Odoo, 2024
 # Yana Bystrytska, 2024
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # Bohdan Lisnenko, 2025
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 12:08+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Bohdan Lisnenko, 2025\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -448,7 +448,6 @@ msgstr "25.00 USD"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
 msgstr "27.00"
 
@@ -1132,7 +1131,6 @@ msgstr "<span> через </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
 msgstr "<span> на </span>"
 
@@ -1959,11 +1957,6 @@ msgid ""
 msgstr ""
 "Рахунок: публікуйте чернетки з увімкненим auto_post і датою бухобліку до "
 "сьогоднішнього дня"
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "Головний бухгалтер"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3446,6 +3439,7 @@ msgid "Billing"
 msgstr "Виставлення рахунку постачальникам"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Адміністратор рахунків"
 
@@ -3496,11 +3490,6 @@ msgstr "Пусто, якщо нуль"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Блокування повідомлення"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Бухгалтер"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6049,6 +6038,7 @@ msgstr "Чорнові записи"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "Запис чернетки"
@@ -7037,19 +7027,6 @@ msgstr ""
 "Формула у вигляді line_code.expression_label. Це дозволяє встановити ціль "
 "перенесення для цього виразу (у виразі з міткою _carryover_*), якщо він "
 "відрізняється від батьківського рядка."
-
-#. module: account
-msgid ""
-"Formula in the form line_code.expression_label. This allows setting the "
-"target of the carryover for this expression (on a _carryover_*-labeled "
-"expression), in case it is different from the parent line. 'custom' is also "
-"allowed as value in case the carryover destination requires more complex "
-"logic."
-msgstr ""
-"Формула у вигляді line_code.expression_label. Це дозволяє встановити ціль "
-"перенесення для цього виразу (у виразі з _carryover_*-labeled), якщо він "
-"відрізняється від батьківського рядка. \"custom\" також дозволяється як "
-"значення у випадку, якщо місце призначення потребує складнішої логіки."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8500,6 +8477,12 @@ msgid "Is Between"
 msgstr "Між"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr "Чи встановлена Coa"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
@@ -9449,7 +9432,6 @@ msgstr ""
 "Прямий дебет SEPA: отримуйте оплату в зоні SEPA завдяки дорученню, яке вам надасть ваш партнер. Необхідний модуль account_sepa.\n"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr "Marc Demo"
@@ -11145,11 +11127,6 @@ msgid "Payment Receipt:"
 msgstr "Квитанція про оплату:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr "Референс платежу"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -11824,11 +11801,6 @@ msgstr "Оцінювання"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Повторна послідовність"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Лише для читання"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12534,11 +12506,6 @@ msgid "Sample Memo"
 msgstr "Зразок пам'ятки"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr "Реф. зразка"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12565,7 +12532,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Відскануйте мене за допомогою вашого банківського додатку."
@@ -13057,8 +13023,10 @@ msgstr "Встановіть ціну"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Встановіть значення більше 0,0, щоб активувати перевірку кредитного ліміту"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13150,6 +13118,7 @@ msgstr ""
 "будуть названі, використовуючи цей префікс за замовчуванням."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Показати функцію бухобліку - лише читання"
 
@@ -13184,6 +13153,7 @@ msgid "Show Force Tax Included"
 msgstr "Показати податок на примусовий збір"
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Показати всі функції бухобліку"
 
@@ -14082,6 +14052,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+"Шаблон діаграми %s не потрібно обирати безпосередньо. Натомість вам слід "
+"вибрати шаблон діаграми, що стосується вашої країни."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -14164,17 +14145,6 @@ msgid ""
 msgstr ""
 "Термін платежу повинен мати принаймні один відсотковий рядок, а сума "
 "відсотків має становити 100%."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
-"Шаблон діаграми %s не потрібно обирати безпосередньо. Натомість вам слід "
-"вибрати шаблон діаграми, що стосується вашої країни."
 
 #. module: account
 #. odoo-python
@@ -15875,7 +15845,8 @@ msgstr "Перемістити до %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
 
@@ -17131,28 +17102,6 @@ msgid ""
 msgstr ""
 "Ви не можете створити схему оподаткування з іноземним ПДВ у вашій фіскальній"
 " країні, не призначивши їй область."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
-"country."
-msgstr ""
-"Ви не можете створити схему оподаткування з іноземним ПДВ у вашій фіскальній"
-" країні."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position within your fiscal country with the same"
-" VAT number as the main one set on your company."
-msgstr ""
-"Ви не можете створити схему оподаткування у вашій фіскальній країні з тим "
-"самим номером ПДВ, що й основний, встановлений у вашій компанії."
 
 #. module: account
 #. odoo-python
