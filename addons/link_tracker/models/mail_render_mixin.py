@@ -45,7 +45,7 @@ class MailRenderMixin(models.AbstractModel):
             if long_url.startswith(short_schema):
                 continue
             # Don't shorten urls present in blacklist (aka to skip list)
-            if blacklist and any(s in long_url for s in blacklist):
+            if blacklist and any(re.search(s + r'([#?/]|$)', long_url) for s in blacklist):
                 continue
             label = (match[3] or '').strip()
 
@@ -76,7 +76,7 @@ class MailRenderMixin(models.AbstractModel):
                 continue
             # support blacklist items in path, like /u/
             parsed = urls.url_parse(original_url, scheme='http')
-            if blacklist and any(item in parsed.path for item in blacklist):
+            if blacklist and any(re.search(item + r'([#?/]|$)', parsed.path) for item in blacklist):
                 continue
 
             create_vals = dict(link_tracker_vals, url=unescape(original_url))
