@@ -154,10 +154,6 @@ class PurchaseOrder(models.Model):
         precompute=True,
     )
 
-    mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
-    mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
-    mail_reception_declined = fields.Boolean("Reception Declined", readonly=True, copy=False, help="True if PO reception is declined by the vendor.")
-
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email', store=True, readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
 
@@ -559,7 +555,7 @@ class PurchaseOrder(models.Model):
         purchase_orders_with_invoices = self.filtered(lambda po: any(i.state not in ('cancel', 'draft') for i in po.invoice_ids))
         if purchase_orders_with_invoices:
             raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", format_list(self.env, purchase_orders_with_invoices.mapped('display_name'))))
-        self.write({'state': 'cancel', 'mail_reminder_confirmed': False})
+        self.write({'state': 'cancel'})
 
     def button_unlock(self):
         self.write({'state': 'purchase'})
@@ -1026,9 +1022,9 @@ class PurchaseOrder(models.Model):
         return self.search([
             ('partner_id', '!=', False),
             ('state', 'in', ['purchase', 'done']),
-            ('mail_reminder_confirmed', '=', False)
-        ]).filtered(lambda p: p.partner_id.with_company(p.company_id).receipt_reminder_email and\
-            p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
+            ('acknowledged', '=', False),
+            ('receipt_reminder_email', '=', True)
+        ]).filtered(lambda p: p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
 
     def _default_order_line_values(self, child_field=False):
         default_data = super()._default_order_line_values(child_field)
@@ -1113,13 +1109,10 @@ class PurchaseOrder(models.Model):
 
     def get_confirm_url(self, confirm_type=None):
         """Create url for confirm reminder or purchase reception email for sending
-        in mail."""
+        in mail. Unsuported anymore. We only use the acknowledge mechanism. Keep it
+        for backward compatibility"""
         if confirm_type in ['reminder', 'reception', 'decline']:
-            param = url_encode({
-                'confirm': confirm_type,
-                'confirmed_date': self.date_planned and self.date_planned.date(),
-            })
-            return self.get_portal_url(query_string='&%s' % param)
+            return self.get_acknowledge_url()
         return self.get_portal_url()
 
     def get_update_url(self):
@@ -1127,13 +1120,6 @@ class PurchaseOrder(models.Model):
         order lines."""
         update_param = url_encode({'update': 'True'})
         return self.get_portal_url(query_string='&%s' % update_param)
-
-    def confirm_reminder_mail(self, confirmed_date=False):
-        for order in self:
-            if order.state in ['purchase', 'done'] and not order.mail_reminder_confirmed:
-                order.mail_reminder_confirmed = True
-                date_planned = order.get_localized_date_planned(confirmed_date).date()
-                order.message_post(body=_("%(vendor)s confirmed the receipt will take place on %(date)s.", vendor=order.partner_id.name, date=date_planned))
 
     def _approval_allowed(self):
         """Returns whether the order qualifies to be approved by the current user"""
@@ -1145,27 +1131,6 @@ class PurchaseOrder(models.Model):
                     self.company_id.po_double_validation_amount, self.currency_id, self.company_id,
                     self.date_order or fields.Date.today()))
             or self.env.user.has_group('purchase.group_purchase_manager'))
-
-    def _confirm_reception_mail(self):
-        for order in self:
-            if order.state in ['purchase', 'done'] and not order.mail_reception_confirmed:
-                order.mail_reception_confirmed = True
-                order.message_post(body=_("The order receipt has been acknowledged by %s.", order.partner_id.name))
-            elif order.state == 'sent' and not order.mail_reception_confirmed:
-                order.mail_reception_confirmed = True
-                order.message_post(body=_("The RFQ has been acknowledged by %s.", order.partner_id.name))
-
-    def _decline_reception_mail(self):
-        for order in self:
-            if order.state in ['purchase', 'done'] and not order.mail_reception_declined:
-                order.mail_reception_declined = True
-                order.activity_schedule(
-                    'mail.mail_activity_data_todo',
-                    note=_('The vendor asked to decline this confirmed RfQ, if you agree on that, cancel this PO'))
-                order.message_post(body=_("The order receipt has been declined by %s.", order.partner_id.name))
-            elif order.state  == 'sent' and not order.mail_reception_declined:
-                order.mail_reception_declined = True
-                order.message_post(body=_("The RFQ has been declined by %s.", order.partner_id.name))
 
     def get_localized_date_planned(self, date_planned=False):
         """Returns the localized date planned in the timezone of the order's user or the

@@ -169,13 +169,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertTrue(messages_send)
         self.assertTrue(po.partner_id in messages_send.mapped('partner_ids'))
 
-        # check confirm button + date planned localized in message
-        old_messages = po.message_ids
-        po.confirm_reminder_mail()
-        messages_send = po.message_ids - old_messages
-        self.assertTrue(po.mail_reminder_confirmed)
-        self.assertEqual(len(messages_send), 1)
-        self.assertIn(str(localized_date_planned.date()), messages_send.body)
+        po.action_acknowledge()
+        self.assertTrue(po.acknowledged)
 
     def test_reminder_2(self):
         """Set to send reminder tomorrow, check if no reminder can be send.
