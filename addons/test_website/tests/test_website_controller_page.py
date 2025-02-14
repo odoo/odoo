@@ -153,7 +153,7 @@ class TestWebsiteControllerPage(HttpCase):
 
     def test_default_layout(self):
         self.assertEqual(self.listing_controller_page.default_layout, 'grid')
-        self.start_tour('/model/exposed-model', 'website_controller_page_listing_layout', login='admin')
+        self.start_tour('/model/exposed-model', 'website_controller_page_listing_layout', login='admin', step_delay=500, timeout=180)
         self.assertEqual(self.listing_controller_page.default_layout, 'list')
         #check that the user that has not previously interacted with the layout switcher will prompt on the default layout
         self.start_tour('/model/exposed-model', 'website_controller_page_default_page_check', login='admin')

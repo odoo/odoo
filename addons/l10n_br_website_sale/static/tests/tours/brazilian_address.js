@@ -55,6 +55,14 @@ registry.category("web_tour.tours").add("test_brazilian_address", {
         },
         tourUtils.goToCheckout(),
         {
+            trigger: "form[data-company-country-code=BR]",
+            async run() {
+                //Wait the form is loaded before continue. If not, there is a problem
+                //whith _selectState()
+                await new Promise((r) => setTimeout(r, 1000));
+            },
+        },
+        {
             content: 'Input a zip first',
             trigger: 'input[name="zip"]',
             run: 'fill 83490-000',

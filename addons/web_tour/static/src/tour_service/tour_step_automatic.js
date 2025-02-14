@@ -4,7 +4,43 @@ import { callWithUnloadCheck } from "./tour_utils";
 import { TourHelpers } from "./tour_helpers";
 import { TourStep } from "./tour_step";
 import { getTag } from "@web/core/utils/xml";
-import { browser } from "@web/core/browser/browser";
+import { waitForStable } from "@web/core/macro";
+
+function formatValue(attrName, value, max = 250) {
+    value = value || "";
+    if (value.includes(";base64")) {
+        max = 100;
+    } else if (["class"].includes(attrName.toLowerCase())) {
+        max = 0;
+    }
+    if (max > 0) {
+        return value.substring(0, max);
+    }
+    return value;
+}
+
+function serializeMutation(mutation, initialElement) {
+    const { attributeName, type, target, oldValue } = mutation;
+    if (mutation.type === "attributes") {
+        const valueBefore = initialElement.getAttribute(attributeName);
+        const valueAfter = mutation.target.getAttribute(attributeName);
+        return {
+            type,
+            target: formatValue("target", target.outerHTML, 1000),
+            attributeName,
+            before: formatValue(attributeName, valueBefore),
+            after: formatValue(attributeName, valueAfter),
+        };
+    }
+    return {
+        type,
+        target: formatValue("target", target.outerHTML, 1000),
+        addedNodes: [...mutation.addedNodes].map((node) => node.outerHTML || node.nodeValue),
+        removedNodes: [...mutation.removedNodes].map((node) => node.outerHTML || node.nodeValue),
+        attributeName,
+        oldValue,
+    };
+}
 
 export class TourStepAutomatic extends TourStep {
     skipped = false;
@@ -15,26 +51,23 @@ export class TourStepAutomatic extends TourStep {
         this.tourConfig = tourState.getCurrentConfig();
     }
 
-    async checkForUndeterminisms() {
-        const delay = this.tourConfig.delayToCheckUndeterminisms;
+    async checkForUndeterminisms(delay) {
         if (delay > 0 && this.element) {
+            const tagName = this.element.tagName?.toLowerCase();
+            if (["body", "html"].includes(tagName) || !tagName) {
+                return;
+            }
             const snapshot = this.element.cloneNode(true);
-            return new Promise((resolve, reject) => {
-                browser.setTimeout(() => {
-                    if (this.element.isEqualNode(snapshot)) {
-                        resolve();
-                    } else {
-                        reject(
-                            new Error(
-                                [
-                                    ...this.describeWhyIFailed,
-                                    `UNDETERMINISM: two differents elements have been found in ${delay}ms for trigger ${this.trigger}`,
-                                ].join("\n")
-                            )
-                        );
-                    }
-                }, delay);
-            });
+            const mutations = await waitForStable(this.element, delay);
+            if (!this.element.isEqualNode(snapshot) && mutations.length) {
+                throw new Error(`
+${JSON.stringify(
+    mutations.map((mutation) => serializeMutation(mutation, snapshot)),
+    null,
+    2
+)}
+UNDETERMINISM: element (${tagName}) has changed in ${delay}ms for trigger ${this.trigger}`);
+            }
         }
     }
 
@@ -54,6 +87,9 @@ export class TourStepAutomatic extends TourStep {
                 errors.push(
                     `BUT: Element is not enabled. TIP: You can use :enable to wait the element is enabled before doing action on it.`
                 );
+            }
+            if (!this.parentFrameIsReady) {
+                errors.push(`BUT: parent frame is not ready ([is-ready='false']).`);
             }
         } else {
             const checkElement = hoot.queryFirst(this.trigger);
@@ -108,21 +144,38 @@ export class TourStepAutomatic extends TourStep {
         }
         const visible = !/:(hidden|visible)\b/.test(this.trigger);
         this.element = hoot.queryFirst(this.trigger, { visible });
-        return !this.isUIBlocked && this.elementIsEnabled && this.elementIsInModal
-            ? this.element
-            : false;
+        if (this.element) {
+            return !this.isUIBlocked &&
+                this.elementIsEnabled &&
+                this.elementIsInModal &&
+                this.parentFrameIsReady
+                ? this.element
+                : false;
+        }
+        return false;
     }
 
     get isUIBlocked() {
         return (
-            document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI")
+            document.body.classList.contains("o_lazy_js_waiting") ||
+            document.body.classList.contains("o_ui_blocked") ||
+            document.querySelector(".o_blockUI")
         );
     }
 
-    get elementIsInModal() {
-        if (!this.element) {
-            return false;
+    get parentFrameIsReady() {
+        let parentFrame;
+        try {
+            parentFrame = hoot.getParentFrame(this.element);
+        } catch {
+            /* empty */
         }
+        return parentFrame && parentFrame.hasAttribute("is-ready")
+            ? parentFrame.getAttribute("is-ready") === "true"
+            : true;
+    }
+
+    get elementIsInModal() {
         if (this.hasAction) {
             const overlays = hoot.queryFirst(".popover, .o-we-command, .o_notification");
             const modal = hoot.queryFirst(".modal:visible:not(.o_inactive_modal):last");
@@ -138,9 +191,6 @@ export class TourStepAutomatic extends TourStep {
 
     get elementIsEnabled() {
         const isTag = (array) => array.includes(getTag(this.element, true));
-        if (!this.element) {
-            return false;
-        }
         if (this.hasAction) {
             if (isTag(["input", "textarea"])) {
                 return hoot.isEditable(this.element);

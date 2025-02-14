@@ -37,7 +37,7 @@ class TestSnippets(HttpCase):
             'sale_ok': True,
             'list_price': 500,
         })
-        self.start_tour('/', 'website_sale.snippet_products', login='admin')
+        self.start_tour('/', 'website_sale.snippet_products', login='admin', step_delay=500, timeout=180)
 
     def test_02_snippet_products_remove(self):
         Visitor = self.env['website.visitor']

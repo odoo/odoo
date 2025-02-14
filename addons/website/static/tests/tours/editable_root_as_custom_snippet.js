@@ -33,7 +33,7 @@ registerWebsitePreviewTour("editable_root_as_custom_snippet", {
     },
     {
         content: "Wait to land on homepage",
-        trigger: ':iframe a[href="/"].nav-link.active',
+        trigger: 'body.o_web_client:has(.o_main_navbar .o_menu_toggle:visible):has([is-ready=true]:iframe a[href="/"].nav-link.active)',
     },
     ...clickOnEditAndWaitEditMode(),
     ...insertSnippet({id: "s_title", name: "Custom Title", groupName: "Custom"}),

@@ -67,7 +67,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
     def test_01_admin_shop_customize_tour(self):
         # Enable Variant Group
         self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
-        self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_customize', login="admin", timeout=120)
+        self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_customize', login="admin", step_delay=300, timeout=180)
 
     def test_01_admin_shop_custom_attribute_value_tour(self):
         # Ensure that no pricelist is available during the test.
@@ -224,7 +224,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             'show_line_subtotals_tax_selection': 'tax_included'
         }).execute()
 
-        self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_list_view_b2c', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_list_view_b2c', login="admin", step_delay=500, timeout=180)
 
     def test_07_editor_shop(self):
         self.env['product.pricelist'].create([

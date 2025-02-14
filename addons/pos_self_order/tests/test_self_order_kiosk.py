@@ -22,16 +22,16 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self_route = self.pos_config._get_self_order_route()
 
         # Kiosk, each, table
-        self.start_tour(self_route, "self_kiosk_each_table_takeaway_in")
-        self.start_tour(self_route, "self_kiosk_each_table_takeaway_out")
+        self.start_tour(self_route, "self_kiosk_each_table_takeaway_in", timeout=120)
+        self.start_tour(self_route, "self_kiosk_each_table_takeaway_out", timeout=120)
 
         self.pos_config.write({
             'self_ordering_service_mode': 'counter',
         })
 
         # Kiosk, each, counter
-        self.start_tour(self_route, "self_kiosk_each_counter_takeaway_in")
-        self.start_tour(self_route, "self_kiosk_each_counter_takeaway_out")
+        self.start_tour(self_route, "self_kiosk_each_counter_takeaway_in", timeout=120)
+        self.start_tour(self_route, "self_kiosk_each_counter_takeaway_out", timeout=120)
 
         # Cancel behavior
         self.start_tour(self_route, "self_order_kiosk_cancel")

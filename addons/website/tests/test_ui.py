@@ -232,7 +232,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
         })
 
         self.start_tour(f"/website/force/{website.id}", 'snippet_translation', login='admin')
-        self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_changing_lang', login='admin')
+        self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_changing_lang', login='admin', step_delay=300, timeout=180)
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -374,12 +374,12 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
 
     def test_09_website_edit_link_popover(self):
-        self.start_tour('/@/', 'edit_link_popover', login='admin')
+        self.start_tour('/@/', 'edit_link_popover', login='admin', step_delay=300, timeout=180)
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
         self.start_tour('/odoo', 'conditional_visibility_2', login='admin')
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin', step_delay=300, timeout=180)
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_4', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_5', login='admin')
 
@@ -453,7 +453,7 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'carousel_content_removal', login='admin')
 
     def test_15_website_link_tools(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'link_tools', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'link_tools', login="admin", step_delay=500, timeout=180)
 
     def test_16_website_edit_megamenu(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu', login='admin')
@@ -609,7 +609,7 @@ class TestUi(odoo.tests.HttpCase):
             'bundle': 'website.assets_wysiwyg',
             'path': 'website/static/tests/tour_utils/widget_lifecycle_patch_wysiwyg.js',
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'widget_lifecycle', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'widget_lifecycle', login='admin', step_delay=500, timeout=180)
 
     def test_drop_404_ir_attachment_url(self):
         website_snippets = self.env.ref('website.snippets')

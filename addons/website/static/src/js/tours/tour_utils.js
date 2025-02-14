@@ -6,6 +6,7 @@ import { cookie } from "@web/core/browser/cookie";
 
 import { markup } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
+import { waitForStable } from "@web/core/macro";
 
 export function addMedia(position = "right") {
     return {
@@ -197,7 +198,7 @@ export function clickOnEditAndWaitEditMode(position = "bottom") {
         run: "click",
     }, {
         content: "Check that we are in edit mode",
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
     }];
 }
 
@@ -220,7 +221,7 @@ export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") 
         run: "click",
     }, {
         content: "Check that we are in edit mode",
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
     }];
 }
 
@@ -245,7 +246,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
     ];
 }
 
-export function clickOnSave(position = "bottom", timeout) {
+export function clickOnSave(position = "bottom", timeout = 50000) {
     return [
         {
             trigger: "#oe_snippets:not(:has(.o_we_ongoing_insertion))",
@@ -255,8 +256,7 @@ export function clickOnSave(position = "bottom", timeout) {
             noPrepend: true,
         },
         {
-            trigger:
-                'div:not(.o_loading_dummy) > #oe_snippets button[data-action="save"]:not([disabled])',
+            trigger: "button[data-action=save]:enabled:contains(save)",
             // TODO this should not be needed but for now it better simulates what
             // an human does. By the time this was added, it's technically possible
             // to drag and drop a snippet then immediately click on save and have
@@ -266,18 +266,17 @@ export function clickOnSave(position = "bottom", timeout) {
             // in related commit message.
         content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
             tooltipPosition: position,
-            timeout: timeout,
-            run: "click",
+            async run(actions) {
+                await actions.click();
+                await waitForStable(document, 5000);
+            },
+            timeout,
         },
         {
             trigger:
-                "body:not(.editor_enable):not(.editor_has_snippets):not(:has(.o_notification_bar))",
+                "body:not(.editor_has_dummy_snippets):not(.o_website_navbar_hide):not(.editor_has_snippets):not(:has(.o_notification_bar))",
             noPrepend: true,
-            timeout: timeout,
-        },
-        {
-            trigger: "[is-ready=true]:iframe",
-            noPrepend: true,
+            timeout,
         },
     ];
 }
@@ -313,7 +312,7 @@ export function clickOnText(snippet, element, position = "bottom") {
 export function insertSnippet(snippet, position = "bottom") {
     const blockEl = snippet.groupName || snippet.name;
     const insertSnippetSteps = [{
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
         noPrepend: true,
     }];
     if (snippet.groupName) {
@@ -454,7 +453,8 @@ export function registerWebsitePreviewTour(name, options, steps) {
             if (options.edition) {
                 tourSteps.unshift({
                     content: "Wait for the edit mode to be started",
-                    trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+                    trigger:
+                        ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
                     timeout: 30000,
                 });
             } else {
