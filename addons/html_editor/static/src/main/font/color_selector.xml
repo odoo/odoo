@@ -12,17 +12,17 @@
             <t t-set-slot="content">
                 <div class="o_font_color_selector user-select-none" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true">
                     <div class="mb-1 d-flex">
-                        <button class="btn btn-sm btn-light ms-1"
+                        <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab"
                             t-att-class="{active: state.activeTab === 'solid'}"
                             t-on-click="() => this.setTab('solid')">
                             Solid
                         </button> 
-                        <button class="btn btn-sm btn-light"
+                        <button class="btn btn-sm btn-light text-truncate btn-tab"
                             t-att-class="{active: state.activeTab === 'custom'}"
                             t-on-click="() => this.setTab('custom')">
                             Custom
                         </button> 
-                        <button class="btn btn-sm btn-light"
+                        <button class="btn btn-sm btn-light text-truncate btn-tab"
                             t-att-class="{active: state.activeTab === 'gradient'}"
                             t-on-click="() => this.setTab('gradient')">
                             Gradient
@@ -77,7 +77,8 @@
                                 <ColorPicker
                                     defaultColor="this.defaultColor"
                                     onColorSelect.bind="(color) => this.applyColor(color.hex)"
-                                    onColorPreview.bind="onColorPreview" />
+                                    onColorPreview.bind="onColorPreview"
+                                    hideRgbaField="true" />
                             </div>
                         </t>
                         <t t-if="state.activeTab==='gradient'">
@@ -87,8 +88,8 @@
                                 </t>
                             </div>
                             <div class="px-2">
-                                <button t-attf-style="background-image: {{ getCurrentGradientColor() }};" class="w-50 border btn" title="Define a custom gradient">Custom</button>
-                                <GradientPicker onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>
+                                <button t-attf-style="background-image: {{ getCurrentGradientColor() }};" class="w-50 border btn mb-1" title="Define a custom gradient" t-on-click="this.toggleGradientPicker">Custom</button>
+                                <GradientPicker t-if="state.showGradientPicker" onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>
                             </div>
                         </t>
                     </div>

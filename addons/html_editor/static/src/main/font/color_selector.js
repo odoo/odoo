@@ -6,6 +6,7 @@ import { isCSSColor } from "@web/core/utils/colors";
 import { isColorGradient } from "@html_editor/utils/color";
 import { GradientPicker } from "./gradient_picker";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 const DEFAULT_COLORS = [
@@ -30,6 +31,11 @@ const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
 ];
 
+const htmlStyle = getHtmlStyle(document);
+const DEFAULT_THEME_COLORS = ["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"].map(
+    (color) => getCSSVariableValue(`${color}`, htmlStyle)
+);
+
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
     static components = { Dropdown, ColorPicker, GradientPicker };
@@ -47,23 +53,44 @@ export class ColorSelector extends Component {
     setup() {
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
+        this.DEFAULT_THEME_COLORS = DEFAULT_THEME_COLORS;
         this.dropdown = useDropdownState({
             onClose: () => this.props.applyColorResetPreview(),
         });
 
         this.mode = this.props.type === "foreground" ? "color" : "backgroundColor";
 
-        this.state = useState({ activeTab: "solid" });
         this.colorWrapperEl = useRef("colorsWrapper");
         this.selectedColors = useState(this.props.getSelectedColors());
         this.defaultColor = this.selectedColors[this.mode];
         this.currentCustomColor = useState({ color: this.selectedColors[this.mode] });
+        this.state = useState({
+            activeTab: this.getCorrespondingColorTab(this.currentCustomColor.color),
+            showGradientPicker: false,
+        });
 
         this.usedCustomColors = this.props.getUsedCustomColors();
     }
 
     setTab(tab) {
         this.state.activeTab = tab;
+    }
+
+    getCorrespondingColorTab(color) {
+        if (
+            !color ||
+            [
+                ...this.DEFAULT_COLORS.flat(),
+                ...this.DEFAULT_THEME_COLORS,
+                getCSSVariableValue("body-color", htmlStyle), // Default applied color
+            ].includes(color.toUpperCase())
+        ) {
+            return "solid";
+        } else if (isColorGradient(color)) {
+            return "gradient";
+        } else {
+            return "custom";
+        }
     }
 
     processColorFromEvent(ev) {
@@ -121,5 +148,9 @@ export class ColorSelector extends Component {
             }; border-image-slice: 1`;
         }
         return `border-bottom: 2px solid ${this.selectedColors[this.mode]}`;
+    }
+
+    toggleGradientPicker() {
+        this.state.showGradientPicker = !this.state.showGradientPicker;
     }
 }
