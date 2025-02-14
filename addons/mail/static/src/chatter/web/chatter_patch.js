@@ -101,7 +101,7 @@ patch(Chatter.prototype, {
                 await mailImpactingFieldsPromise;
                 mailImpactingFieldsPromise = null;
             }
-            this.updateRecipients(record);
+            return this.updateRecipients(record);
         });
         this.attachmentPopout = usePopoutAttachment();
         Object.assign(this.state, {
