@@ -629,7 +629,11 @@ export class Configurator extends Component {
 
         onWillStart(async () => {
             this.websiteId = (await this.orm.call('website', 'get_current_website')).match(/\d+/)[0];
-
+            const [configurator_status] = await this.orm.searchRead("website", [["id", "=", this.websiteId]], ["configurator_done"]);
+            if (configurator_status && configurator_status.configurator_done) {
+                this.router.redirect('/')
+                return Promise.reject();
+            }
             await store.start(() => this.getInitialState());
             this.updateStorage(store);
             if (!store.industries) {
