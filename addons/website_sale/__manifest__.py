@@ -30,6 +30,7 @@
         # QWeb templates
         'views/delivery_form_templates.xml',
         'views/templates.xml',
+        'views/gmc_templates.xml',
 
         # Model views.
         'views/account_move_views.xml',
@@ -152,6 +153,7 @@
             'website_sale/static/src/js/tours/website_sale_shop.js',
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/scss/kanban_record.scss',
+            'website_sale/static/src/js/components/copy_button.js',
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
