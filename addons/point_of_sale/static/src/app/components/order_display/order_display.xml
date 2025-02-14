@@ -10,7 +10,7 @@
                         <Orderline t-else="" line="line" mode="this.props.mode" />
                     </t>
                     <div t-if="order.general_customer_note"
-                        t-attf-class="{{this.props.mode === 'receipt' ? 'mt-1 bg-opacity-75 p-0 ' : 'customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25 mt-0'}}">
+                        t-attf-class="{{this.props.mode === 'receipt' ? 'mt-1 bg-opacity-75 p-0 ' : 'customer-note w-100 p-2 rounded text-break text-bg-warning bg-opacity-25 mt-0'}}">
                         <div class="row flex-wrap w-100 m-0">
                             <div class="col-auto px-1">
                                 <i class="fa fa-sticky-note me-1 fa-lg" role="img"
@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <div t-if="order.internal_note"
-                        class="internal-note-container d-flex gap-2 flex-wrap">
+                        class="internal-note-container d-flex gap-2 flex-wrap m-1">
                         <t t-foreach="order.internal_note.split('\n') or []" t-as="note"
                             t-key="note_index">
                             <li t-if="note.trim() !== ''" t-esc="note"
