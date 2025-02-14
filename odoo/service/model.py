@@ -44,6 +44,10 @@ def get_public_method(model: BaseModel, name: str):
     not prefixed with "_") and are not decorated with `@api.private`.
     """
     assert isinstance(model, BaseModel)
+    e = f"Private methods (such as '{model._name}.{name}') cannot be called remotely."
+    if name.startswith('_'):
+        raise AccessError(e)
+
     cls = type(model)
     method = getattr(cls, name, None)
     if not callable(method):
@@ -52,8 +56,8 @@ def get_public_method(model: BaseModel, name: str):
     for mro_cls in cls.mro():
         if not (cla_method := getattr(mro_cls, name, None)):
             continue
-        if name.startswith('_') or getattr(cla_method, '_api_private', False):
-            raise AccessError(f"Private methods (such as '{model._name}.{name}') cannot be called remotely.")  # pylint: disable=missing-gettext
+        if getattr(cla_method, '_api_private', False):
+            raise AccessError(e)
 
     return method
 
