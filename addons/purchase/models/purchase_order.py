@@ -413,10 +413,11 @@ class PurchaseOrder(models.Model):
         return groups
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
-                                                   force_email_company=False, force_email_lang=False):
+                                                   force_email_company=False, force_email_lang=False, force_header=False, force_footer=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
             message, msg_vals=msg_vals, model_description=model_description,
-            force_email_company=force_email_company, force_email_lang=force_email_lang
+            force_email_company=force_email_company, force_email_lang=force_email_lang,
+            force_header=force_header, force_footer=force_footer,
         )
         subtitles = [render_context['record'].name]
         # don't show price on RFQ mail
