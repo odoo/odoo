@@ -24,6 +24,7 @@ The system is able to add and compute the shipping line.
         'views/delivery_carrier_views.xml',
         'views/delivery_price_rule_views.xml',
         'views/delivery_zip_prefix_views.xml',
+        'views/payment_form_templates.xml',
         'views/payment_provider_views.xml',
         'views/res_partner_views.xml',
         'views/sale_order_views.xml',
@@ -31,13 +32,13 @@ The system is able to add and compute the shipping line.
         'wizard/res_config_settings_views.xml',
         'wizard/choose_delivery_carrier_views.xml',
     ],
-    'uninstall_hook': 'uninstall_hook',
+    'demo': ['data/delivery_demo.xml'],
     'assets': {
         'web.assets_frontend': [
             'delivery/static/src/**/*',
         ],
     },
-    'demo': ['data/delivery_demo.xml'],
+    'uninstall_hook': 'uninstall_hook',
     'installable': True,
     'license': 'LGPL-3',
 }

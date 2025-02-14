@@ -3,6 +3,16 @@ import PaymentForm from '@payment/js/payment_form';
 
 PaymentForm.include({
 
+    /**
+     * @override
+     */
+    async start() {
+        this.submitButton = document.querySelector('[adapt-label-for-cod="True"]');
+        this.submitButtonDefaultLabel = this.submitButton.textContent;
+        await this._super(...arguments);
+    },
+
+
      /**
      * Override of `payment`.
      *
@@ -11,12 +21,11 @@ PaymentForm.include({
      * @return {void}
      */
      async _expandInlineForm(radio) {
-         const submitButton = document.querySelector('[name="o_payment_submit_button"]');
          if (radio.dataset.paymentMethodCode === 'cash_on_delivery') {
-             submitButton.textContent = _t("Place order");
+             this.submitButton.textContent = _t("Place order");
          }
          else {
-             submitButton.textContent = _t("Pay Now");
+             this.submitButton.textContent = this.submitButtonDefaultLabel;
          }
          return await this._super(...arguments);
      }

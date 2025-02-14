@@ -3,7 +3,7 @@
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.delivery.tests.common import CashOnDeliveryCommon
+from odoo.addons.delivery.tests.cash_on_delivery_common import CashOnDeliveryCommon
 
 
 @tagged('post_install', '-at_install')

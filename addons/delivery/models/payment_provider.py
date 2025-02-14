@@ -15,7 +15,7 @@ class PaymentProvider(models.Model):
     def _get_compatible_providers(self, *args, sale_order_id=None, report=None, **kwargs):
         """ Override of payment to exclude COD providers if the delivery method doesn't match.
 
-        :param int sale_order_id: The sale order to be paid, if any, as a `sale.order` id.
+        :param int sale_order_id: The sales order to be paid, if any, as a `sale.order` id.
         :param dict report: The availability report.
         :return: The compatible providers.
         :rtype: payment.provider
