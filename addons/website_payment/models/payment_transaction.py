@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+from lxml import etree
 
 from odoo import _, fields, models
 
@@ -12,12 +13,25 @@ class PaymentTransaction(models.Model):
 
     def _post_process(self):
         super()._post_process()
+        view = self.env['ir.ui.view'].search([('name', '=', 'website_payment.payment_form')])
+        field_names = []
+        if len(view) > 1:
+            view = view[1]
+            # Parse the QWeb HTML
+            html_tree = etree.HTML(view.arch)
+            # Find all elements with class 's_website_form_fields'
+            form_fields = html_tree.xpath("//input[contains(@class, 's_website_form_input')] | //select[contains(@class, 's_website_form_input')]")
+            # Extract the names of fields or any relevant attributes
+            field_names = [field.get('name') for field in form_fields if field.get('name')]
+        else:
+            field_names = ['company_id', 'partner_id', 'partner_name', 'partner_country_id', 'partner_email']
         for donation_tx in self.filtered(lambda tx: tx.state == 'done' and tx.is_donation):
             donation_tx._send_donation_email()
             msg = [_('Payment received from donation with following details:')]
-            for field in ['company_id', 'partner_id', 'partner_name', 'partner_country_id', 'partner_email']:
-                field_name = donation_tx._fields[field].string
-                value = donation_tx[field]
+            for field in field_names:
+                match_key = f'partner_{field}' if f'partner_{field}' in donation_tx._fields else field
+                field_name = donation_tx._fields[match_key].string
+                value = donation_tx[match_key]
                 if value:
                     if hasattr(value, 'name'):
                         value = value.name

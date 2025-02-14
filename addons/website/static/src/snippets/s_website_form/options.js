@@ -726,6 +726,16 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
     /**
      * @override
      */
+    _computeWidgetVisibility: function (widgetName, params) {
+        switch (widgetName) {
+            case "payment_form_opt":
+                return !this.$target[0].classList.contains("o_payment_field_form");
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     _renderCustomXML: function (uiFragment) {
         if (this.modelCantChange) {
             return;
