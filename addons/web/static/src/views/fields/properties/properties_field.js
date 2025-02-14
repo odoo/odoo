@@ -218,6 +218,11 @@ export class PropertiesField extends Component {
         return propertiesValues.filter((definition) => !definition.definition_deleted);
     }
 
+    // for overrides
+    get propertyDefinitionProps() {
+        return {};
+    }
+
     /**
      * Return the current properties value splitted in multiple groups/columns.
      * Each properties are splitted in groups, thanks to the separators, and
@@ -906,6 +911,7 @@ export class PropertiesField extends Component {
             isNewlyCreated: isNewlyCreated,
             propertyIndex: propertyIndex,
             propertiesSize: propertiesList.length,
+            ...this.propertyDefinitionProps,
         });
     }
 
