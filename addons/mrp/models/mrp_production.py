@@ -278,6 +278,12 @@ class MrpProduction(models.Model):
         ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
     ]
 
+    quantity_produced_issues = fields.Boolean("Quantity Produced Issues", compute='_compute_quantity_produced_issues', readonly=True)
+
+    def _compute_quantity_produced_issues(self):
+        for production in self:
+            production.quantity_produced_issues = bool(production._get_quantity_produced_issues())
+
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids',
                  'procurement_group_id.stock_move_ids.move_orig_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_child_count(self):
