@@ -3,6 +3,10 @@
 
     <t t-name="website_hr_recruitment.BooleanToggleFieldLabeled" t-inherit="web.BooleanToggleField" >
         <xpath expr="//CheckBox" position="inside">
+            <!-- Add the label values to be available in the traslation -->
+            <label invisible='1' string="Not Published" />
+            <label invisible='1' string="Published" />
+
             <t t-out="this.state.label"></t>
         </xpath>
     </t>
