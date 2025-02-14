@@ -1,3 +1,5 @@
+from num2words import num2words
+
 from odoo import models
 
 
@@ -40,7 +42,13 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'line_count_numeric': len(invoice.line_ids),
             'order_issue_date': invoice.invoice_date,
         })
+        vals['vals']['note_vals'].append(self._get_amount_in_text(invoice.amount_residual_signed, self.env.ref('base.TRY')))
+        if vals['invoice'].currency_id.name != 'TRY':
+            vals['vals']['note_vals'].append(self._get_amount_in_text(invoice.amount_residual, vals['invoice'].currency_id))
         return vals
+
+    def _get_amount_in_text(self, amount, currency):
+        return {'note': f'YALNIZ : {num2words(amount, lang="tr")} {currency.name}', 'note_attrs': {}}
 
     def _get_partner_party_identification_vals_list(self, partner):
         # EXTENDS account.edi.xml.ubl_21
