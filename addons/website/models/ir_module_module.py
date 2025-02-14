@@ -601,7 +601,7 @@ class IrModuleModule(models.Model):
             create_values = [values for values in create_values if values]
 
             keys = [values['key'] for values in create_values]
-            existing_primary_template_keys = self.env['ir.ui.view'].search_fetch([
+            existing_primary_template_keys = self.env['ir.ui.view'].with_context(active_test=False).search_fetch([
                 ('mode', '=', 'primary'), ('key', 'in', keys),
             ], ['key']).mapped('key')
             missing_create_values = [values for values in create_values if values['key'] not in existing_primary_template_keys]
