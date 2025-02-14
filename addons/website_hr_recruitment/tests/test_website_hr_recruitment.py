@@ -89,7 +89,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             'partner_phone': '12345678',
             'job_id': developer_job.id,
             'department_id': research_and_development_department.id,
-            'description': 'This is a short introduction',
+            'applicant_notes': 'This is a short introduction',
             'Additional info': 'Test',
         }
         self.authenticate(None, None)
@@ -101,10 +101,4 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(applicant.partner_name, 'Georges')
         self.assertEqual(applicant.email_from, 'georges@test.com')
         self.assertEqual(applicant.partner_phone, '12345678')
-        self.assertTrue(
-            any(
-                html2plaintext(message.body) == 'Other Information:\n___________\n\ndescription : This is a short introduction\nAdditional info : Test'
-                for message in applicant.message_ids
-            ),
-            "One message in the chatter should contain the extra information filled in by the applicant"
-        )
+        self.assertEqual(html2plaintext(applicant.applicant_notes), 'This is a short introduction\n\n\nOther Information:\n___________\n\nAdditional info : Test')
