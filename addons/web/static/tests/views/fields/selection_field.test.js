@@ -65,7 +65,13 @@ class Product extends models.Model {
         },
     ];
 }
-defineModels([Partner, Product]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+defineModels([Partner, Product, User]);
 
 test("SelectionField in a list view", async () => {
     Partner._records.forEach((r) => (r.color = "red"));

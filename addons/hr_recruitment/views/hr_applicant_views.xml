@@ -595,7 +595,7 @@
         <field name="name">Send Email</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="code">action = records.action_send_email()</field>
     </record>
@@ -604,7 +604,7 @@
         <field name="name">Refuse</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_view_types">list,form</field>
+        <field name="binding_view_types">list,kanban,form</field>
         <field name="state">code</field>
         <field name="code">
 if records:

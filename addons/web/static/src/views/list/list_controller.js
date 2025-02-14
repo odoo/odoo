@@ -1,14 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
-import {
-    deleteConfirmationMessage,
-    ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
-import { download } from "@web/core/network/download";
-import { rpc } from "@web/core/network/rpc";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
 import { unique } from "@web/core/utils/arrays";
-import { useService, useBus } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
@@ -21,13 +15,14 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
-import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 import { ListConfirmationDialog } from "./list_confirmation_dialog";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { session } from "@web/session";
 import { ListCogMenu } from "./list_cog_menu";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { SelectionBox } from "@web/views/view_components/selection_box";
+import { useExportRecords } from "@web/views/view_hook";
 
 import {
     Component,
@@ -53,6 +48,7 @@ export class ListController extends Component {
         SearchBar,
         CogMenu: ListCogMenu,
         DropdownItem,
+        SelectionBox,
     };
     static props = {
         ...standardViewProps,
@@ -175,19 +171,18 @@ export class ListController extends Component {
 
         useEffect(
             () => {
-                if (this.props.onSelectionChanged) {
-                    const resIds = this.model.root.selection.map((record) => record.resId);
-                    this.props.onSelectionChanged(resIds);
-                }
+                this.onSelectionChanged();
             },
-            () => [this.model.root.selection.length]
+            () => [this.model.root.selection.length, this.model.root.isDomainSelected]
         );
         this.searchBarToggler = useSearchBarToggler();
         this.firstLoad = true;
         onWillPatch(() => {
             this.firstLoad = false;
         });
-        useBus(this.env.searchModel, "direct-export-data", this.onDirectExportData.bind(this));
+        this.exportRecords = useExportRecords(this.env, this.props.context, () =>
+            this.getExportableFields()
+        );
     }
 
     get modelParams() {
@@ -241,6 +236,29 @@ export class ListController extends Component {
         };
     }
 
+    get archiveDialogProps() {
+        return {};
+    }
+
+    get deleteConfirmationDialogProps() {
+        return {};
+    }
+
+    getExportableFields() {
+        return unique(
+            this.props.archInfo.columns
+                .filter((col) => col.type === "field")
+                .filter((col) => !col.optional || this.optionalActiveFields[col.name])
+                .filter((col) => !evaluateBooleanExpr(col.column_invisible, this.props.context))
+                .map((col) => this.props.fields[col.name])
+                .filter((field) => field.exportable !== false)
+        );
+    }
+
+    onDeleteSelectedRecords() {
+        this.model.root.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps);
+    }
+
     /**
      * onRecordSaved is a callBack that will be executed after the save
      * if it was done. It will therefore not be executed if the record
@@ -248,6 +266,13 @@ export class ListController extends Component {
      * @param {Record} record
      */
     async onRecordSaved(record) {}
+
+    async onSelectionChanged() {
+        if (this.props.onSelectionChanged) {
+            const resIds = await this.model.root.getResIds(true);
+            this.props.onSelectionChanged(resIds);
+        }
+    }
 
     /**
      * onWillSaveRecord is a callBack that will be executed before the
@@ -347,10 +372,6 @@ export class ListController extends Component {
         }
     }
 
-    getSelectedResIds() {
-        return this.model.root.getResIds(true);
-    }
-
     getStaticActionMenuItems() {
         return {
             export: {
@@ -358,30 +379,29 @@ export class ListController extends Component {
                 sequence: 10,
                 icon: "fa fa-upload",
                 description: _t("Export"),
-                callback: () => this.onExportData(),
+                callback: () => this.exportRecords(),
             },
             archive: {
                 isAvailable: () => this.archiveEnabled,
                 sequence: 20,
                 icon: "oi oi-archive",
                 description: _t("Archive"),
-                callback: () => {
-                    this.dialogService.add(ConfirmationDialog, this.archiveDialogProps);
-                },
+                callback: () =>
+                    this.model.root.toggleArchiveWithConfirmation(true, this.archiveDialogProps),
             },
             unarchive: {
                 isAvailable: () => this.archiveEnabled,
                 sequence: 30,
                 icon: "oi oi-unarchive",
                 description: _t("Unarchive"),
-                callback: () => this.toggleArchiveState(false),
+                callback: () => this.model.root.toggleArchiveWithConfirmation(false),
             },
             duplicate: {
                 isAvailable: () => this.activeActions.duplicate,
                 sequence: 35,
                 icon: "fa fa-clone",
                 description: _t("Duplicate"),
-                callback: () => this.duplicateRecords(),
+                callback: () => this.model.root.duplicateRecords(),
             },
             delete: {
                 isAvailable: () => this.activeActions.delete,
@@ -390,17 +410,6 @@ export class ListController extends Component {
                 description: _t("Delete"),
                 callback: () => this.onDeleteSelectedRecords(),
             },
-        };
-    }
-
-    get archiveDialogProps() {
-        return {
-            body: _t("Are you sure that you want to archive all the selected records?"),
-            confirmLabel: _t("Archive"),
-            confirm: () => {
-                this.toggleArchiveState(true);
-            },
-            cancel: () => {},
         };
     }
 
@@ -422,19 +431,12 @@ export class ListController extends Component {
         };
     }
 
-    async onSelectDomain() {
-        await this.model.root.selectDomain(true);
-        if (this.props.onSelectionChanged) {
-            const resIds = await this.model.root.getResIds(true);
-            this.props.onSelectionChanged(resIds);
-        }
+    get hasSelectedRecords() {
+        return this.model.root.selection.length || this.isDomainSelected;
     }
 
-    onUnselectAll() {
-        this.model.root.selection.forEach((record) => {
-            record.toggleSelection(false);
-        });
-        this.model.root.selectDomain(false);
+    get isDomainSelected() {
+        return this.model.root.isDomainSelected;
     }
 
     evalViewModifier(modifier) {
@@ -443,39 +445,6 @@ export class ListController extends Component {
 
     get className() {
         return this.props.className;
-    }
-
-    get hasSelectedRecords() {
-        return this.nbSelected || this.isDomainSelected;
-    }
-
-    get nbSelected() {
-        return this.model.root.selection.length;
-    }
-
-    get isPageSelected() {
-        const root = this.model.root;
-        return root.selection.length === root.records.length;
-    }
-
-    get isDomainSelected() {
-        return this.model.root.isDomainSelected;
-    }
-
-    get nbTotal() {
-        const list = this.model.root;
-        return list.isGrouped ? list.recordCount : list.count;
-    }
-
-    get defaultExportList() {
-        return unique(
-            this.props.archInfo.columns
-                .filter((col) => col.type === "field")
-                .filter((col) => !col.optional || this.optionalActiveFields[col.name])
-                .filter((col) => !evaluateBooleanExpr(col.column_invisible, this.props.context))
-                .map((col) => this.props.fields[col.name])
-                .filter((field) => field.exportable !== false)
-        );
     }
 
     get display() {
@@ -490,116 +459,6 @@ export class ListController extends Component {
                 layoutActions: !this.hasSelectedRecords,
             },
         };
-    }
-
-    async downloadExport(fields, import_compat, format) {
-        let ids = false;
-        if (!this.isDomainSelected) {
-            const resIds = await this.getSelectedResIds();
-            ids = resIds.length > 0 && resIds;
-        }
-        const exportedFields = fields.map((field) => ({
-            name: field.name || field.id,
-            label: field.label || field.string,
-            store: field.store,
-            type: field.field_type || field.type,
-        }));
-        if (import_compat) {
-            exportedFields.unshift({
-                name: "id",
-                label: _t("External ID"),
-            });
-        }
-        await download({
-            data: {
-                data: JSON.stringify({
-                    import_compat,
-                    context: this.props.context,
-                    domain: this.model.root.domain,
-                    fields: exportedFields,
-                    groupby: this.model.root.groupBy,
-                    ids,
-                    model: this.model.root.resModel,
-                }),
-            },
-            url: `/web/export/${format}`,
-        });
-    }
-
-    async getExportedFields(model, import_compat, parentParams) {
-        let domain = parentParams ? [] : this.model.root.domain;
-        if (!this.isDomainSelected) {
-            const resIds = await this.getSelectedResIds();
-            const ids = resIds.length > 0 && resIds;
-            domain = [["id", "in", ids]];
-        }
-        return await rpc("/web/export/get_fields", {
-            ...parentParams,
-            model,
-            domain,
-            import_compat,
-        });
-    }
-
-    /**
-     * Opens the Export Dialog
-     *
-     * @private
-     */
-    async onExportData() {
-        const dialogProps = {
-            context: this.props.context,
-            defaultExportList: this.defaultExportList,
-            download: this.downloadExport.bind(this),
-            getExportedFields: this.getExportedFields.bind(this),
-            root: this.model.root,
-        };
-        this.dialogService.add(ExportDataDialog, dialogProps);
-    }
-    /**
-     * Export Records in a xls file
-     *
-     * @private
-     */
-    async onDirectExportData() {
-        await this.downloadExport(this.defaultExportList, false, "xlsx");
-    }
-    /**
-     * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
-     *
-     * @private
-     * @param {boolean} archive
-     * @returns {Promise}
-     */
-    async toggleArchiveState(archive) {
-        if (archive) {
-            return this.model.root.archive(true);
-        }
-        return this.model.root.unarchive(true);
-    }
-
-    async duplicateRecords() {
-        return this.model.root.duplicateRecords();
-    }
-
-    get deleteConfirmationDialogProps() {
-        const root = this.model.root;
-        let body = deleteConfirmationMessage;
-        if (root.isDomainSelected || root.selection.length > 1) {
-            body = _t("Are you sure you want to delete these records?");
-        }
-        return {
-            title: _t("Bye-bye, record!"),
-            body,
-            confirmLabel: _t("Delete"),
-            confirm: () => this.model.root.deleteRecords(),
-            cancel: () => {},
-            cancelLabel: _t("No, keep it"),
-        };
-    }
-
-    async onDeleteSelectedRecords() {
-        this.dialogService.add(ConfirmationDialog, this.deleteConfirmationDialogProps);
     }
 
     discardSelection() {

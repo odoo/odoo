@@ -41,7 +41,14 @@ class Partner extends models.Model {
     };
 }
 
-defineModels([Partner]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+
+defineModels([Partner, User]);
 
 test("can execute server actions from db ID", async () => {
     defineActions([
@@ -57,9 +64,10 @@ test("can execute server actions from db ID", async () => {
             views: [[1, "kanban"]],
         },
     ]);
-    onRpc("/web/action/run", async () => {
-        return 1; // execute action 1
-    });
+    onRpc(
+        "/web/action/run",
+        async () => 1 // execute action 1
+    );
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -74,6 +82,7 @@ test("can execute server actions from db ID", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 });
 
@@ -92,9 +101,7 @@ test("handle server actions returning false", async function (assert) {
             views: [[false, "form"]],
         },
     ]);
-    onRpc("/web/action/run", async () => {
-        return false;
-    });
+    onRpc("/web/action/run", async () => false);
     stepAllNetworkCalls();
     await mountWithCleanup(WebClient);
     // execute an action in target="new"
@@ -128,15 +135,13 @@ test("action with html help returned by a server action", async () => {
             type: "ir.actions.server",
         },
     ]);
-    onRpc("/web/action/run", async () => {
-        return {
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "kanban"]],
-            help: "<p>I am not a helper</p>",
-            domain: [[0, "=", 1]],
-        };
-    });
+    onRpc("/web/action/run", async () => ({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+        help: "<p>I am not a helper</p>",
+        domain: [[0, "=", 1]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);

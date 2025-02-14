@@ -1,4 +1,8 @@
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    deleteConfirmationMessage,
+    AlertDialog,
+    ConfirmationDialog,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { DataPoint } from "./datapoint";
 import { Record } from "./record";
@@ -198,6 +202,37 @@ export class DynamicList extends DataPoint {
 
     unarchive(isSelected) {
         return this.model.mutex.exec(() => this._toggleArchive(isSelected, false));
+    }
+
+    toggleArchiveWithConfirmation(archive, dialogProps = {}) {
+        const isSelected = this.isDomainSelected || this.selection.length > 0;
+        if (archive) {
+            const defaultProps = {
+                body: _t("Are you sure that you want to archive all the selected records?"),
+                cancel: () => {},
+                confirm: () => this.archive(isSelected),
+                confirmLabel: _t("Archive"),
+            };
+            this.model.dialog.add(ConfirmationDialog, { ...defaultProps, ...dialogProps });
+        } else {
+            this.unarchive(isSelected);
+        }
+    }
+
+    deleteRecordsWithConfirmation(dialogProps = {}, records) {
+        let body = deleteConfirmationMessage;
+        if (this.model.root.isDomainSelected || this.model.root.selection.length > 1) {
+            body = _t("Are you sure you want to delete these records?");
+        }
+        const defaultProps = {
+            body,
+            cancel: () => {},
+            cancelLabel: _t("No, keep it"),
+            confirm: () => this.deleteRecords(records),
+            confirmLabel: _t("Delete"),
+            title: _t("Bye-bye, record!"),
+        };
+        this.model.dialog.add(ConfirmationDialog, { ...defaultProps, ...dialogProps });
     }
 
     // -------------------------------------------------------------------------

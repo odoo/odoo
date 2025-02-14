@@ -75,7 +75,7 @@
         <field name="name">Resend</field>
         <field name="model_id" ref="sms.model_sms_sms"/>
         <field name="binding_model_id" ref="sms.model_sms_sms"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="code">action = records.resend_failed()</field>
     </record>

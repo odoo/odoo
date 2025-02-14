@@ -5,7 +5,7 @@
         <field name="name">Invite to use two-factor authentication</field>
         <field name="model_id" ref="base.model_res_users"/>
         <field name="binding_model_id" ref="base.model_res_users"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="code">
             action = records.action_totp_invite()

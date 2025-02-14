@@ -467,7 +467,7 @@ in this location. That leads to a negative stock.
         <field name="name">Set to quantity on hand</field>
         <field name="model_id" ref="model_stock_quant"/>
         <field name="binding_model_id" ref="stock.model_stock_quant"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
@@ -479,7 +479,7 @@ in this location. That leads to a negative stock.
         <field name="name">Set to 0</field>
         <field name="model_id" ref="model_stock_quant"/>
         <field name="binding_model_id" ref="stock.model_stock_quant"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="groups_id" eval="[(4, ref('stock.group_stock_manager'))]"/>
         <field name="code">

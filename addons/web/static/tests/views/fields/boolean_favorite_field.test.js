@@ -9,6 +9,13 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+
 class Partner extends models.Model {
     bar = fields.Boolean({ default: true });
 
@@ -21,7 +28,7 @@ class Partner extends models.Model {
     ];
 }
 
-defineModels([Partner]);
+defineModels([Partner, User]);
 
 test("FavoriteField in kanban view", async () => {
     await mountView({
