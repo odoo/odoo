@@ -4,6 +4,7 @@ from . import action
 from . import binary
 from . import database
 from . import dataset
+from . import doc
 from . import domain
 from . import export
 from . import json

@@ -379,4 +379,21 @@
             <owl-component name="web.install_scoped_app" />
         </t>
     </template>
+
+    <template id="web.doc">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="title">Odoo Runtime Doc</t>
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+                    odoo.__session_info__.isDoc = true;
+                </script>
+
+                <t t-call-assets="web.assets_doc" />
+            </t>
+        </t>
+    </template>
 </odoo>

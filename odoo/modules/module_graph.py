@@ -308,3 +308,12 @@ class ModuleGraph:
                 if log_dependents:
                     _logger.info('module %s: its direct/indirect dependency is skipped, skipped', another)
                 self._remove(another)
+
+
+def get_sorted_installed_modules(env):
+    names = env['ir.module.module'].sudo().search([
+        ('state', '=', 'installed')
+    ]).mapped('name')
+    graph = ModuleGraph(env.cr)
+    graph.extend(names)
+    return [p.name for p in graph]
