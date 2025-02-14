@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="hr_employee_history_form" model="ir.ui.view">
+        <field name="name">hr.employee.history.form</field>
+        <field name="model">hr.employee.history</field>
+        <field name="arch" type="xml">
+            <form string="Employee History">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="employee_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_employee_history_views" model="ir.actions.act_window">
+        <field name="name">Employee History</field>
+        <field name="res_model">hr.employee.history</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" eval="False"/>
+    </record>
+
+</odoo>
