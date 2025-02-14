@@ -169,3 +169,15 @@ export function lte(a, b, { decimals } = {}) {
 export function lt(a, b, { decimals } = {}) {
     return floatCompare(a, b, { decimals }) < 0;
 }
+
+const FILETYPE_BASE64_MAGICWORD = {
+    "/": "jpg",
+    R: "gif",
+    i: "png",
+    P: "svg+xml",
+    U: "webp",
+};
+
+export function imageDataUri(base64_source) {
+    return `data:image/${FILETYPE_BASE64_MAGICWORD[base64_source[0]]};base64,${base64_source}`;
+}
