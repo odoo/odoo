@@ -17,6 +17,127 @@ export class ProductProduct extends Base {
             ""
         );
     }
+<<<<<<< saas-18.1
+||||||| d99e44f22634ac589a940d85fab84ca2b2e85332
+
+    getTemplateImageUrl() {
+        return (
+            (this.image_128 &&
+                `/web/image?model=product.template&field=image_128&id=${this.raw.product_tmpl_id}&unique=${this.write_date}`) ||
+            ""
+        );
+    }
+
+    get searchString() {
+        const fields = ["display_name"];
+        return fields
+            .map((field) => this[field] || "")
+            .filter(Boolean)
+            .join(" ");
+    }
+
+    exactMatch(searchWord) {
+        const fields = ["barcode", "default_code"];
+        return fields.some(
+            (field) => this[field] && this[field].toLowerCase().includes(searchWord)
+        );
+    }
+
+    _isArchivedCombination(attributeValueIds) {
+        if (!this._archived_combinations) {
+            return false;
+        }
+        const excludedPTAV = new Set();
+        let isCombinationArchived = false;
+        for (const archivedCombination of this._archived_combinations) {
+            const ptavCommon = archivedCombination.filter((ptav) =>
+                attributeValueIds.includes(ptav)
+            );
+            if (ptavCommon.length === attributeValueIds.length) {
+                // all attributes must be disabled from each other
+                archivedCombination.forEach((ptav) => excludedPTAV.add(ptav));
+            } else if (ptavCommon.length === attributeValueIds.length - 1) {
+                // In this case we only need to disable the remaining ptav
+                const disablePTAV = archivedCombination.find(
+                    (ptav) => !attributeValueIds.includes(ptav)
+                );
+                excludedPTAV.add(disablePTAV);
+            }
+            if (ptavCommon.length === attributeValueIds.length) {
+                isCombinationArchived = true;
+            }
+        }
+        this.attribute_line_ids.forEach((attribute_line) => {
+            attribute_line.product_template_value_ids.forEach((ptav) => {
+                ptav["excluded"] = excludedPTAV.has(ptav.id);
+            });
+        });
+        return isCombinationArchived;
+    }
+
+    get productDisplayName() {
+        return this.default_code ? `[${this.default_code}] ${this.name}` : this.name;
+    }
+    get canBeDisplayed() {
+        return this.active && this.available_in_pos;
+    }
+=======
+
+    getTemplateImageUrl() {
+        return (
+            (this.image_128 &&
+                `/web/image?model=product.template&field=image_128&id=${this.raw.product_tmpl_id}&unique=${this.write_date}`) ||
+            ""
+        );
+    }
+
+    get searchString() {
+        const fields = ["display_name", "barcode", "default_code"];
+        return fields
+            .map((field) => this[field] || "")
+            .filter(Boolean)
+            .join(" ");
+    }
+
+    _isArchivedCombination(attributeValueIds) {
+        if (!this._archived_combinations) {
+            return false;
+        }
+        const excludedPTAV = new Set();
+        let isCombinationArchived = false;
+        for (const archivedCombination of this._archived_combinations) {
+            const ptavCommon = archivedCombination.filter((ptav) =>
+                attributeValueIds.includes(ptav)
+            );
+            if (ptavCommon.length === attributeValueIds.length) {
+                // all attributes must be disabled from each other
+                archivedCombination.forEach((ptav) => excludedPTAV.add(ptav));
+            } else if (ptavCommon.length === attributeValueIds.length - 1) {
+                // In this case we only need to disable the remaining ptav
+                const disablePTAV = archivedCombination.find(
+                    (ptav) => !attributeValueIds.includes(ptav)
+                );
+                excludedPTAV.add(disablePTAV);
+            }
+            if (ptavCommon.length === attributeValueIds.length) {
+                isCombinationArchived = true;
+            }
+        }
+        this.attribute_line_ids.forEach((attribute_line) => {
+            attribute_line.product_template_value_ids.forEach((ptav) => {
+                ptav["excluded"] = excludedPTAV.has(ptav.id);
+            });
+        });
+        return isCombinationArchived;
+    }
+
+    get productDisplayName() {
+        return this.default_code ? `[${this.default_code}] ${this.name}` : this.name;
+    }
+    get canBeDisplayed() {
+        return this.active && this.available_in_pos;
+    }
+>>>>>>> 6b1ed53527430304b9651f1dee01a41ea1409216
 }
 
 const ProductProductTemplateProxy = new Proxy(ProductProduct, {
