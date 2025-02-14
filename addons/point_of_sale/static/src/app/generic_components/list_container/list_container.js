@@ -2,6 +2,7 @@ import { Component, useRef, xml } from "@odoo/owl";
 import { useIsChildLarger, useReactivePopover } from "@point_of_sale/app/utils/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
 
 class ListContainerPopover extends Component {
     static props = {
@@ -20,10 +21,13 @@ class ListContainerPopover extends Component {
 class ListContainerDialog extends ListContainerPopover {
     static components = { ListContainerPopover, Dialog };
     static template = xml`
-        <Dialog title="'Choose an order'" footer="false">
+        <Dialog title="title" footer="false">
             <ListContainerPopover t-props="props" t-on-click="props.close"/>
         </Dialog>
     `;
+    setup() {
+        this.title = _t("Choose an order");
+    }
 }
 export class ListContainer extends Component {
     static props = {
