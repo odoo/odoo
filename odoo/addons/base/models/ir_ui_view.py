@@ -18,8 +18,8 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.http import request
-from odoo.models import check_method_name
 from odoo.modules.module import get_resource_from_path
+from odoo.service.model import get_public_method
 from odoo.osv.expression import expression
 from odoo.tools import config, pycompat, lazy_property, frozendict, SQL
 from odoo.tools.convert import _fix_multiple_roots
@@ -1633,8 +1633,8 @@ actual arch.
                     )
                     self._raise_view_error(msg, node)
                 try:
-                    check_method_name(name)
-                except AccessError:
+                    get_public_method(name_manager.model, name)
+                except (AttributeError, AccessError):
                     msg = _(
                         "%(method)s on %(model)s is private and cannot be called from a button",
                         method=name, model=name_manager.model._name,
