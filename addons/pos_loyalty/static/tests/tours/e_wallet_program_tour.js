@@ -147,3 +147,30 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsEwallet", {
             PosLoyalty.finalizeOrder("Cash", "90.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("EWalletLoyaltyHistory", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Top-up eWallet"),
+            PosLoyalty.orderTotalIs("50.00"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartner("AAAAAAA"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
+
+            ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),
+            PosLoyalty.eWalletButtonState({ highlighted: false }),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAAAAA"),
+            PosLoyalty.eWalletButtonState({
+                highlighted: true,
+                text: getEWalletText("Pay"),
+                click: true,
+            }),
+            PosLoyalty.orderTotalIs("0.00"),
+            PosLoyalty.finalizeOrder("Cash", "0"),
+        ].flat(),
+});
