@@ -517,7 +517,7 @@ describe("transform", () => {
     test("should transform space preceding by a hashtag to heading 1", async () => {
         const { el, editor } = await setupEditor("<p>[]</p>");
         await insertText(editor, "# ");
-        expect(getContent(el)).toBe(`<h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1>`);
+        expect(getContent(el)).toBe(`<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]<br></h1>`);
 
         undo(editor);
         expect(getContent(el)).toBe(`<p># []</p>`);
@@ -526,13 +526,13 @@ describe("transform", () => {
     test("should transform space preceding by two hashtags to heading 2", async () => {
         const { el, editor } = await setupEditor("<p>[]</p>");
         await insertText(editor, "## ");
-        expect(getContent(el)).toBe(`<h2 placeholder="Heading 2" class="o-we-hint">[]<br></h2>`);
+        expect(getContent(el)).toBe(`<h2 o-we-hint-text="Heading 2" class="o-we-hint">[]<br></h2>`);
     });
 
     test("should transform space preceding by three hashtags to heading 3", async () => {
         const { el, editor } = await setupEditor("<p>[]<br></p>");
         await insertText(editor, "### ");
-        expect(getContent(el)).toBe(`<h3 placeholder="Heading 3" class="o-we-hint">[]<br></h3>`);
+        expect(getContent(el)).toBe(`<h3 o-we-hint-text="Heading 3" class="o-we-hint">[]<br></h3>`);
     });
 
     test("should transform space preceding by a hashtag at the starting of text to heading 1", async () => {

@@ -85,7 +85,6 @@ export class DomPlugin extends Plugin {
             commandId: "insertSeparator",
         },
         /** Handlers */
-        clean_handlers: this.removeEmptyClassAndStyleAttributes.bind(this),
         clean_for_save_handlers: ({ root }) => {
             this.removeEmptyClassAndStyleAttributes(root);
             for (const el of root.querySelectorAll("hr[contenteditable]")) {
@@ -93,6 +92,7 @@ export class DomPlugin extends Plugin {
             }
         },
         normalize_handlers: this.normalize.bind(this),
+        content_for_clipboard_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
     };
     contentEditableToRemove = new Set();
 
@@ -473,15 +473,13 @@ export class DomPlugin extends Plugin {
      * @param {HTMLElement} target
      */
     copyAttributes(source, target) {
-        this.dispatchTo("clean_handlers", source);
         if (source?.nodeType !== Node.ELEMENT_NODE || target?.nodeType !== Node.ELEMENT_NODE) {
             return;
         }
-        // TODO: provide a resource to ignore some attributes.
-        const ignoredAttrs = new Set();
+        const ignoredAttrs = new Set(this.getResource("system_attributes"));
         const ignoredClasses = new Set(this.getResource("system_classes"));
         for (const attr of source.attributes) {
-            if (ignoredAttrs.has(attr)) {
+            if (ignoredAttrs.has(attr.name)) {
                 continue;
             }
             if (attr.name !== "class" || ignoredClasses.size === 0) {

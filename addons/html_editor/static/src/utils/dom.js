@@ -142,6 +142,15 @@ export function removeClass(element, ...classNames) {
     }
 }
 
+export function removeStyle(element, ...styleProperties) {
+    const propsToRemoveSet = new Set(styleProperties);
+    if ([...element.style].every((prop) => propsToRemoveSet.has(prop))) {
+        element.removeAttribute("style");
+    } else {
+        styleProperties.forEach((prop) => element.style.removeProperty(prop));
+    }
+}
+
 /**
  * Add a BR in the given node if its closest ancestor block has nothing to make
  * it visible, and/or add a zero-width space in the given node if it's an empty
