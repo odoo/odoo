@@ -3,7 +3,6 @@ import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
-import { isObject } from "@web/core/utils/objects";
 import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions, globalCachedFetch, registerModelToFetch } from "../module_set.hoot";
 import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
@@ -161,7 +160,7 @@ const ensureError = (error) => (error instanceof Error ? error : new Error(error
 const getAssignAction = (options) => {
     const shouldAdd = options?.mode === "add";
     return function assign(target, key, value) {
-        if (shouldAdd && isObject(target[key])) {
+        if (shouldAdd && target[key] instanceof Object) {
             // Add value
             if (Array.isArray(target[key])) {
                 target[key].push(...value);
