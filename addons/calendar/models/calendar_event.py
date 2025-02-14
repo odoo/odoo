@@ -534,34 +534,38 @@ class Meeting(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # Prevent sending update notification when _inverse_dates is called
-        self = self.with_context(is_calendar_event_new=True)
-        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
+        self = self.with_context(is_calendar_event_new=True, mail_activity_quick_generation=True)
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'partner_ids'])
 
         vals_list = [  # Else bug with quick_create when we are filter on an other user
             dict(vals, user_id=defaults.get('user_id', self.env.user.id)) if not 'user_id' in vals else vals
             for vals in vals_list
         ]
-        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
         # get list of models ids and filter out None values directly
+        meeting_activity_types = self.env['mail.activity.type'].search([('category', '=', 'meeting')])
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
-        model_name = defaults.get('res_model')
-        valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
-        if meeting_activity_type and not defaults.get('activity_ids'):
+        all_models = self.env['ir.model'].sudo().browse(model_ids)
+        valid_models = all_models.filtered(lambda m: m.is_mail_activity)
+        if meeting_activity_types and not defaults.get('activity_ids'):
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
                 if values.get('activity_ids'):
                     continue
                 res_model_id = values.get('res_model_id', defaults.get('res_model_id'))
+                res_model = all_models.filtered(lambda m: m.id == res_model_id)
                 res_id = values.get('res_id', defaults.get('res_id'))
                 user_id = values.get('user_id', defaults.get('user_id'))
                 if not res_model_id or not res_id:
                     continue
-                if res_model_id not in valid_activity_model_ids:
+                if res_model not in valid_models:
                     continue
+                meeting_activity_type = meeting_activity_types.filtered(
+                    lambda act: act.res_model in {False, res_model.model}
+                )
                 activity_vals = {
                     'res_model_id': res_model_id,
                     'res_id': res_id,
-                    'activity_type_id': meeting_activity_type.id,
+                    'activity_type_id': meeting_activity_type[:1].id,
                 }
                 if user_id:
                     activity_vals['user_id'] = user_id
