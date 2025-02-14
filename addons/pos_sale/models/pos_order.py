@@ -166,8 +166,8 @@ class PosOrder(models.Model):
             }
         return order_line
 
-    def _get_invoice_lines_values(self, line_values, pos_line):
-        inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line)
+    def _get_invoice_lines_values(self, line_values, pos_line, move_type):
+        inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line, move_type)
 
         if pos_line.sale_order_origin_id:
             origin_line = pos_line.sale_order_line_id
