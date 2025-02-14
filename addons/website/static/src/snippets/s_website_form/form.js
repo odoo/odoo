@@ -288,7 +288,10 @@ export class Form extends Interaction {
         // Prepare form inputs
         const formFields = [];
         new FormData(this.el).forEach((value, key) => {
-            formFields.push({ name: key, value: value });
+            const inputElement = this.el.querySelector(`[name="${CSS.escape(key)}"]`);
+            if (inputElement && inputElement.type !== 'file') {
+                formFields.push({ name: key, value: value });
+            }
         });
         let outerIndex = 0;
         for (const inputEl of this.el.querySelectorAll("input[type=file]:not([disabled])")) {
