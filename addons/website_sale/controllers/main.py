@@ -21,7 +21,7 @@ from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.web_editor.tools import get_video_thumbnail
-from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.controllers.main import QueryURL, Website as WebsiteController
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.models.website import PRICELIST_SESSION_CACHE_KEY
 
@@ -2030,3 +2030,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'currency_id': website.currency_id.id,
             'pricelist_id': request.pricelist.id,
         })
+
+
+class Website(WebsiteController):
+    @route()
+    def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
+        filter_dicts = super().get_dynamic_snippet_filters(model_name, search_domain)
+        for filter_dict, filter in zip(
+            filter_dicts,
+            request.env['website.snippet.filter'].sudo().browse([f['id'] for f in filter_dicts])
+        ):
+            if filter.help:
+                filter_dict['help'] = filter.help
+        return filter_dicts

@@ -15,6 +15,11 @@ class WebsiteSnippetFilter(models.Model):
         help="True only for product filters that require a product_id because they relate to"
             " cross selling",
     )
+    help = fields.Text(
+        string="Filter Description",
+        help="Optional help text for the users describing the filter usage and/or purpose.",
+        translate=True,
+    )
 
     def _prepare_values(self, **kwargs):
         website = self.env['website'].get_current_website()
