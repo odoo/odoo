@@ -26,6 +26,7 @@ export class PaymentInterface {
         this.pos = pos;
         this.payment_method_id = payment_method_id;
         this.supports_reversals = false;
+        this.fast_payments = true;
     }
 
     /**
@@ -35,6 +36,16 @@ export class PaymentInterface {
      */
     enable_reversals() {
         this.supports_reversals = true;
+    }
+
+    /**
+     * Call this function to disable the automatic calling of
+     * send_payment_request upon selecting the payment method.
+     * This allows manual input of an amount before sending
+     * the request to the terminal.
+     */
+    disable_fast_payments() {
+        this.fast_payments = false;
     }
 
     /**

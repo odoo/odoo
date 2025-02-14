@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="pos_tyro.PairTyroTerminal">
+        <div class="d-flex flex-column align-items-center m-4">
+            <h2>
+                <t t-if="state.status !== 'inProgress'" t-out="state.status.toUpperCase() + ': '"/>
+                <t t-out="state.message"/>
+            </h2>
+            <div style="height: 10px">
+                <i t-if="state.status === 'inProgress'" class="fa fa-spinner fa-spin"></i>
+            </div>
+        </div>
+        <footer class="modal-footer justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
+            <button class="btn btn-primary" t-on-click="dialog.closeAll" t-att-disabled="state.status === 'inProgress'">Close</button>
+        </footer>
+    </t>
+
+</templates>
