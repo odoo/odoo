@@ -52,6 +52,13 @@ class SurveySurvey(models.Model):
     description_done = fields.Html(
         "End Message", translate=True,
         help="This message will be displayed when survey is completed")
+    end_message_selection = fields.Selection(
+        [('unique', 'Unique'), ('most_answered', 'Most Answered')],
+        string="End Message Selection", required=True, default='unique',
+        help="If Most Answered is selected you can configure an end message for each question answer tag you create.\
+             The message showed to the participants will match with the most common tag associated to their answers.")
+    answer_tag_ids = fields.One2many(
+        'survey.question.answer.tag', 'survey_id', string="Question Answer Tags", copy=True)
     background_image = fields.Image("Background Image")
     background_image_url = fields.Char('Background Url', compute="_compute_background_image_url")
     active = fields.Boolean("Active", default=True)
