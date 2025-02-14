@@ -18,6 +18,16 @@ class TestError(common.HttpCase):
         # Reset the admin's lang to avoid breaking tests due to admin not in English
         self.rpc("res.users", "write", [uid], {"lang": False})
 
+    def test_01_private(self):
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', '_create')
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', 'private_method')
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', 'init')
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', 'filtered', ['id'])
+
     def test_01_create(self):
         """ Create: mandatory field not provided """
         self.rpc("test_rpc.model_b", "create", {"name": "B1"})
