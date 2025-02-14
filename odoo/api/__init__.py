@@ -12,6 +12,7 @@ from odoo.orm.decorators import (
     onchange,
     ondelete,
     readonly,
+    private,
 )
 from odoo.orm.environments import Environment
 

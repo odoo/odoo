@@ -9,9 +9,9 @@ from functools import partial
 from psycopg2 import IntegrityError, OperationalError, errorcodes, errors
 
 import odoo
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
+from odoo.models import BaseModel
 from odoo.http import request
-from odoo.models import BaseModel, check_method_name
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
 
@@ -70,6 +70,24 @@ def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
 
     return result
 
+def get_public_method(model, name):
+    """ Get the public unbound method from a model.
+    When the method does not exist or is inaccessible, raise appropriate errors.
+    Accessible methods are public (in sense that python defined it:
+    not prefixed with "_") and are not decorated with `@api.private`.
+    """
+    assert isinstance(model, BaseModel), f"{model!r} is not a BaseModel for {name}"
+    cls = type(model)
+    method = getattr(cls, name, None)
+    if not callable(method):
+        raise AttributeError(f"The method '{model._name}.{name}' does not exist")  # noqa: TRY004
+    for mro_cls in cls.mro():
+        cla_method = getattr(mro_cls, name, None)
+        if not cla_method:
+            continue
+        if name.startswith('_') or getattr(cla_method, '_api_private', False):
+            raise AccessError(f"Private methods (such as '{model._name}.{name}') cannot be called remotely.")  # pylint: disable=missing-gettext
+    return method
 
 def dispatch(method, params):
     db, uid, passwd = params[0], int(params[1]), params[2]
@@ -96,6 +114,7 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     recs = env.get(obj)
     if recs is None:
         raise UserError(env._("Object %s doesn't exist", obj))
+    get_public_method(recs, method) # Don't use the result, call_kw will redo the getattr
     result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
@@ -111,7 +130,6 @@ def execute_kw(db, uid, obj, method, args, kw=None):
 def execute(db, uid, obj, method, *args, **kw):
     # TODO could be conditionnaly readonly as in _call_kw_readonly
     with Registry(db).cursor() as cr:
-        check_method_name(method)
         res = execute_cr(cr, uid, obj, method, *args, **kw)
         if res is None:
             _logger.info('The method %s of the object %s can not return `None`!', method, obj)
