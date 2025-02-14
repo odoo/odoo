@@ -1,4 +1,4 @@
-import { isColorGradient } from "./color";
+import { isColorGradient } from "@web/core/utils/colors";
 
 /**
  * Extracts url and gradient parts from the background-image CSS property.
