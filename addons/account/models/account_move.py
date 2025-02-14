@@ -1321,16 +1321,29 @@ class AccountMove(models.Model):
                 '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
             ]
 
+            bank_journal_ids = self.env['account.journal'].search([('type', '=', 'bank')]).ids
+
+            # Bank line search
+            bank_domain = [
+                ('journal_id', 'in', bank_journal_ids),
+                ('parent_state', '=', 'posted'),
+                ('partner_id', '=', move.commercial_partner_id.id),
+                ('reconciled', '=', False),
+                '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
+            ]
+
             payments_widget_vals = {'outstanding': True, 'content': [], 'move_id': move.id}
 
             if move.is_inbound():
+                bank_domain.append(('balance', '>', 0.0))
                 domain.append(('balance', '<', 0.0))
                 payments_widget_vals['title'] = _('Outstanding credits')
             else:
+                bank_domain.append(('balance', '<', 0.0))
                 domain.append(('balance', '>', 0.0))
                 payments_widget_vals['title'] = _('Outstanding debits')
 
-            for line in self.env['account.move.line'].search(domain):
+            for line in self.env['account.move.line'].search(expression.OR([domain, bank_domain])):
 
                 if line.currency_id == move.currency_id:
                     # Same foreign currency.
