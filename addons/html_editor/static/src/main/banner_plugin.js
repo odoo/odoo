@@ -124,8 +124,17 @@ export class BannerPlugin extends Plugin {
             const zws = document.createTextNode("\u200B");
             bannerElement.before(zws);
         }
+<<<<<<< saas-18.1
         this.dependencies.selection.setCursorEnd(
             bannerElement.querySelector(`.o_editor_banner > div > ${baseContainer.tagName}`)
+||||||| 636d76d6dcbbe472b9d57cbe403d0758d94ad81d
+        this.dependencies.selection.setCursorStart(
+            bannerElement.querySelector(".o_editor_banner > div > p")
+=======
+        const baseContainerName = this.dependencies.baseContainer.getDefaultNodeName();
+        this.dependencies.selection.setCursorStart(
+            bannerElement.querySelector(`.o_editor_banner > div > ${baseContainerName}`)
+>>>>>>> f3215f6780b1c858ecb3307286677ce72b4f561e
         );
         this.dependencies.history.addStep();
     }
