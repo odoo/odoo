@@ -70,7 +70,7 @@
                 <div t-field="o.l10n_hu_payment_mode"/>
             </div>
         </xpath>
-        <xpath expr="//table[@name='invoice_line_table']//span[@t-field='line.quantity']" position="attributes">
+        <xpath expr="//table[@name='invoice_line_table']//span[@t-out='format_number(line.quantity)']" position="attributes">
             <attribute name="t-field"/>
             <attribute name="t-out">line.quantity * sign if line.quantity != 0 else line.quantity</attribute>
         </xpath>

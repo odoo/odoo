@@ -25,6 +25,7 @@
                 <span>Request for Quotation <span t-field="o.name"/></span>
             </t>
 
+            <t t-set="format_number" t-value="lambda x: int(x) if x.is_integer() else x"/>
             <table class="table table-borderless">
                 <thead style="display: table-row-group">
                     <tr>
@@ -44,7 +45,7 @@
                                     <span t-field="order_line.date_planned" t-options="{'date_only': 'true'}"/>
                                 </td>
                                 <td class="text-end">
-                                    <span t-field="order_line.product_qty"/>
+                                    <span t-out="format_number(order_line.product_qty)"/>
                                     <span t-field="order_line.product_uom_id" groups="uom.group_uom"/>
                                     <span t-if="order_line.product_uom_id != order_line.product_id.uom_id" class="text-muted small">
                                     <br/>
