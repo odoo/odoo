@@ -545,7 +545,11 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         self.env.user.partner_id.property_product_pricelist = self.w1_pl_code_select
         with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code):
             pls = self.website.get_pricelist_available()
-        self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, but not the partner pricelist as it is website compliant but not GeoIP compliant.")
+        self.assertEqual(
+            pls,
+            self.website1_be_pl + self.w1_pl_code_select,
+            "Website-compliant BE pricelists & non-BE partner pricelist should be available",
+        )
 
     def test_get_pricelist_available_geoip4(self):
         # Test get all available with geoip and visible pricelists + promo pl

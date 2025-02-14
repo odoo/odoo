@@ -181,7 +181,6 @@ class Website(models.Model):
                 lambda pl:
                     pl._is_available_on_website(self)
                     and check_pricelist(pl)
-                    and pl._is_available_in_country(country_code)
             )
             pricelists |= partner_pricelist
 
