@@ -517,6 +517,12 @@ table.table_desc tr td {
 .s_carousel,
 .s_quotes_carousel {
 
+    &.carousel-fade {
+        .carousel-item {
+            transition: transform 3s ease-in, opacity 0.2s ease-out !important;
+        }
+    }
+
     // Controls
     .carousel-control-prev,
     .carousel-control-next {
