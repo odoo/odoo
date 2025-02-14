@@ -1590,7 +1590,6 @@ class ProjectTask(models.Model):
             res['stage_id'] = (test_task.stage_id.mail_template_id, {
                 'auto_delete_keep_log': False,
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-                'email_layout_xmlid': 'mail.mail_notification_light'
             })
         return res
 

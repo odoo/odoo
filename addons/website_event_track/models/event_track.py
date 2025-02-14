@@ -566,7 +566,6 @@ class EventTrack(models.Model):
             res['stage_id'] = (track.stage_id.mail_template_id, {
                 'auto_delete_keep_log': False,
                 'composition_mode': 'comment',
-                'email_layout_xmlid': 'mail.mail_notification_light',
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             })
         return res

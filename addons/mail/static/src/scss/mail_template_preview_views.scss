@@ -1,9 +1,31 @@
 .o_mail_template_preview_form_view {
+    @media screen and (max-width: 1400px) {
+        .o_form_renderer, .o_form_sheet_bg {
+            height: 100%;
+        }
+    }
+    .o_form_sheet {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
     .o_form_label.o_form_label_readonly {
-        opacity: 1;
         font-weight: 500;
     }
     .o_attachment {
         max-width: 325px;
     }
+    div[name="lang"] .o_select_menu_caret::after {
+        visibility: visible;
+    }
+    iframe {
+        min-height: 100% !important;
+        width: 100%;
+    }
+}
+
+.modal-content:has(> main > .o_mail_template_preview_form_view) {
+    // We don't want dialog size based on content, rather template's preview body grows until it
+    // reaches the bottom of the dialog.
+    height: 100%;
 }
