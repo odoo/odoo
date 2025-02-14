@@ -39,10 +39,8 @@ test("many2many_avatar_user in kanban view", async () => {
             </kanban>
         `,
     });
-    await click(".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty", {
-        text: "+2",
-    });
-    await click(".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty");
+    expect(".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty").toHaveText("+2");
+    await click(".o_kanban_record .o_field_many2many_avatar_user .o_quick_assign");
     await contains(".o_popover > .o_field_tags > .o_tag", { count: 4 });
     await contains(".o_popover > .o_field_tags > :nth-child(1 of .o_tag)", { text: "Tapu" });
     await contains(".o_popover > .o_field_tags > :nth-child(2 of .o_tag)", { text: "Luigi" });
