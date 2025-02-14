@@ -260,6 +260,17 @@ class PosGlobalState extends PosModel {
         }
         correspondingProduct.applicablePricelistItems[pricelist.id].push(pricelistItem);
     }
+    _getParentCategIds(categ) {
+      let parent_categ_ids = [];
+      let parent_categ = categ.parent;
+      while (parent_categ) { 
+          if (parent_categ) {
+              parent_categ_ids.push(parent_categ.id);
+          }
+          parent_categ = parent_categ.parent;
+      }
+      return parent_categ_ids;
+    }
     _loadProductProduct(products) {
         const productMap = {};
         const productTemplateMap = {};
@@ -271,7 +282,8 @@ class PosGlobalState extends PosModel {
             productTemplateMap[product.product_tmpl_id[0]] = (productTemplateMap[product.product_tmpl_id[0]] || []).concat(product);
             return Product.create(product);
         });
-
+        
+        let category_parent_lists = [];
         for (let pricelist of this.pricelists) {
             for (const pricelistItem of pricelist.items) {
                 if (pricelistItem.product_id) {
@@ -290,7 +302,22 @@ class PosGlobalState extends PosModel {
                 }
                 else {
                     for (const correspondingProduct of products) {
-                        this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                        if (pricelistItem.categ_id) {
+                            let product_categ_id = correspondingProduct.categ.id; 
+                            let pricelistItem_categ_id = pricelistItem.categ_id[0];
+
+                            if (!category_parent_lists[product_categ_id]) {
+                                category_parent_lists[product_categ_id] = this._getParentCategIds(correspondingProduct.categ);
+                            }
+
+                            let parent_categ_ids = category_parent_lists[product_categ_id];
+                            if (_.contains(parent_categ_ids.concat(product_categ_id), pricelistItem_categ_id)) {
+                                this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                            }
+                        } 
+                        else {
+                            this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                        }
                     }
                 }
             }
