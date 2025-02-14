@@ -1,22 +1,27 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import inspect
 import logging
 from collections import defaultdict
+from collections.abc import Callable, Mapping, Sequence
 from datetime import date
 from http import HTTPStatus
+from typing import Any
 from urllib.parse import urlencode
 
 import psycopg2.errors
 from dateutil.relativedelta import relativedelta
 from lxml import etree
-from werkzeug.exceptions import BadRequest, NotFound
+from werkzeug.exceptions import HTTPException, BadRequest, NotFound, MethodNotAllowed
 
 from odoo import http
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, AccessDenied, UserError
 from odoo.http import request
 from odoo.models import check_object_name
 from odoo.osv import expression
+from odoo.service.model import get_public_method
+from odoo.tools import frozendict
 from odoo.tools.safe_eval import safe_eval
 
 from .utils import get_action_triples
@@ -24,8 +29,50 @@ from .utils import get_action_triples
 _logger = logging.getLogger(__name__)
 
 
-class WebJsonController(http.Controller):
+class Json2RpcDispatcher(http.Dispatcher):
+    routing_type = '/json/2/rpc'
 
+    @classmethod
+    def is_compatible_with(cls, request):
+        return (
+            request.httprequest.mimetype == 'application/json'
+            or not request.httprequest.content_length
+        )
+
+    def dispatch(self, endpoint, args):
+        try:
+            self.request.params = args
+            if self.request.httprequest.content_length:
+                self.request.params |= self.request.get_json_data()
+        except ValueError as exc:
+            exc.error_response = self.request.make_json_response(
+                exc.args[0], status=HTTPStatus.BAD_REQUEST)
+            raise
+        if self.request.db:
+            result = self.request.registry['ir.http']._dispatch(endpoint)
+        else:
+            result = endpoint(**self.request.params)
+        return self.request.make_json_response(result)
+
+    def handle_error(self, exc: Exception) -> Callable:
+        if isinstance(exc, HTTPException):
+            return exc
+        if isinstance(exc, http.SessionExpiredException):
+            return http.HttpDispatcher.handle_error(self, exc)
+
+        if isinstance(exc, (AccessDenied, AccessError)):
+            msg = exc.args[0]
+            status = HTTPStatus.FORBIDDEN
+        elif isinstance(exc, UserError):
+            msg = exc.args[0]
+            status = HTTPStatus.UNPROCESSABLE_ENTITY
+        else:
+            msg = "internal server error"
+            status = HTTPStatus.INTERNAL_SERVER_ERROR
+        return self.request.make_json_response(msg, status=status)
+
+
+class WebJsonController(http.Controller):
     # for /json, the route should work in a browser, therefore type=http
     @http.route('/json/<path:subpath>', auth='user', type='http', readonly=True)
     def web_json(self, subpath, **kwargs):
@@ -244,6 +291,61 @@ class WebJsonController(http.Controller):
         context.update(safe_eval(action.context, eval_context))
         return action, context, eval_context, record_id
 
+    def _web_json_2_rpc_readonly(self):
+        try:
+            model_name = request.httprequest.args['model']
+            method_name = request.httprequest.args['method']
+            Model = request.env[model_name]
+        except KeyError:
+            return False
+        for cls in Model.mro():
+            method = getattr(cls, method_name, None)
+            if method is not None and hasattr(method, '_readonly'):
+                return method._readonly
+        return False
+
+    @http.route(
+        '/json/2/<model>/<method>',
+        #methods=['POST'],  # must accept all methods, otherwise /json/<path:subpath> takes over
+        auth='bearer',
+        type='/json/2/rpc',
+        readonly=_web_json_2_rpc_readonly,
+        save_session=False
+    )
+    def web_json_2_rpc(
+        self,
+        model: str,
+        method: str,
+        ids: Sequence[int] = (),
+        kwargs: Mapping[str, Any] = frozendict(),
+        context: Mapping[str, Any] = frozendict(),
+    ):
+        if request.httprequest.method != 'POST':
+            raise MethodNotAllowed(response=request.make_json_response(
+                MethodNotAllowed.description, status=HTTPStatus.METHOD_NOT_ALLOWED))
+
+        try:
+            Model = request.env[model]
+        except KeyError as exc:
+            exc.error_response = request.make_json_response(
+                f"The model {model!r} does not exist", status=HTTPStatus.NOT_FOUND)
+            raise
+        # call_kw doesn't sanitize nor the ids, nor the context, so we don't
+        records = Model.with_context(context).browse(ids)
+        try:
+            func = get_public_method(records, method)
+        except AttributeError as exc:
+            exc.error_response = request.make_json_response(
+                exc.args[0], status=HTTPStatus.NOT_FOUND)
+            raise
+        signature = inspect.signature(func)
+        try:
+            signature.bind(records, **kwargs)
+        except TypeError as exc:
+            exc.error_response = request.make_json_response(
+                exc.args[0], status=HTTPStatus.UNPROCESSABLE_ENTITY)
+            raise
+        return func(records, **kwargs)
 
 def get_view_id_and_type(action, view_type: str | None) -> tuple[int | None, str]:
     """Extract the view id from the action"""
