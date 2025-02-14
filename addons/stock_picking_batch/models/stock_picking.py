@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from odoo import _, api, Command, fields, models
 from odoo.osv import expression
 from odoo.exceptions import ValidationError
@@ -45,6 +46,7 @@ class StockPickingType(models.Model):
 
     def action_batch(self):
         action = self.env['ir.actions.act_window']._for_xml_id("stock_picking_batch.stock_picking_batch_action")
+        action['domain'] = expression.AND([ast.literal_eval(action.get('domain', '[]')), [('state', 'not in', ('done', 'cancel')), ('picking_type_id', '=', self.id)]])
         if self.env.context.get("view_mode"):
             del action["mobile_view_mode"]
             del action["views"]

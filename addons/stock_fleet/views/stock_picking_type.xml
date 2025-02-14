@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//div[@name='kanban_menu_section']" position="after">
-                        <t t-if="record.code.raw_value == 'incoming' or record.code.raw_value == 'outgoing'">
+                        <t t-if="record.code.raw_value == 'incoming' or record.code.raw_value == 'outgoing' or record.code.raw_value == 'internal'">
                             <div class="col-6">
                                 <h5 role="menuitem" class="o_kanban_card_manage_title" style="white-space: nowrap;">
                                     <a>Transport Management</a>
