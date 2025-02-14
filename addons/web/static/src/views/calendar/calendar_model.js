@@ -13,8 +13,11 @@ import { Model } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
+import { useDebounced } from "@web/core/utils/timing";
 
 export class CalendarModel extends Model {
+    static DEBOUNCED_LOAD_DELAY = 600;
+
     setup(params, services) {
         /** @protected */
         this.keepLast = new KeepLast();
@@ -39,6 +42,9 @@ export class CalendarModel extends Model {
             records: {},
             unusualDays: [],
         };
+
+        const debouncedLoadDelay = this.constructor.DEBOUNCED_LOAD_DELAY;
+        this.debouncedLoad = useDebounced((params) => this.load(params), debouncedLoadDelay);
     }
     async load(params = {}) {
         Object.assign(this.meta, params);
@@ -195,9 +201,16 @@ export class CalendarModel extends Model {
     }
     async unlinkFilter(fieldName, recordId) {
         const info = this.meta.filtersInfo[fieldName];
+        const section = this.data.filterSections[fieldName];
+        if (section) {
+            // remove the filter directly, to provide a direct feedback to the user
+            this.keepLast.add(Promise.resolve());
+            section.filters = section.filters.filter((f) => f.recordId !== recordId);
+            this.notify();
+        }
         if (info && info.writeResModel) {
             await this.orm.unlink(info.writeResModel, [recordId]);
-            await this.load();
+            await this.debouncedLoad();
         }
     }
     async unlinkRecord(recordId) {
@@ -205,29 +218,28 @@ export class CalendarModel extends Model {
         await this.load();
     }
     async updateFilters(fieldName, filters, active) {
-        const section = this.data.filterSections[fieldName];
-        if (section) {
-            const info = this.meta.filtersInfo[fieldName];
-            if (info && info.writeFieldName && info.writeResModel && info.filterFieldName) {
-                const userFilter = filters.find((f) => f.type === "user");
-                if (userFilter) {
-                    userFilter.active = active;
-                }
-                const filterIds = filters.filter((f) => f.type === "record").map((f) => f.recordId);
-                if (filterIds) {
-                    const data = {
-                        [info.filterFieldName]: active,
-                    };
-                    const context = this.meta.context;
-                    await this.orm.write(info.writeResModel, filterIds, data, { context });
-                }
-            } else {
-                for (const filter of filters) {
-                    filter.active = active;
-                }
+        // update filters directly, to provide a direct feedback to the user
+        this.keepLast.add(Promise.resolve());
+        for (const filter of filters) {
+            filter.active = active;
+        }
+        this.notify();
+        const info = this.meta.filtersInfo[fieldName];
+        if (info && info.writeFieldName && info.writeResModel && info.filterFieldName) {
+            const userFilter = filters.find((f) => f.type === "user");
+            if (userFilter) {
+                userFilter.active = active;
+            }
+            const filterIds = filters.filter((f) => f.type === "record").map((f) => f.recordId);
+            if (filterIds) {
+                const data = {
+                    [info.filterFieldName]: active,
+                };
+                const context = this.meta.context;
+                await this.orm.write(info.writeResModel, filterIds, data, { context });
             }
         }
-        await this.load();
+        await this.debouncedLoad();
     }
     async updateRecord(record, options = {}) {
         const rawRecord = this.buildRawRecord(record, options);
