@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import json
 
@@ -180,7 +181,8 @@ class PosController(PortalAccount):
         user_is_connected = not request.env.user._is_public()
 
         # Validate the form by ensuring required fields are filled and the VAT is correct.
-        form_values = {'error': {}, 'error_message': {}, 'extra_field_values': {}}
+        form_values = {'extra_field_values': {}}
+        partner = (user_is_connected and request.env.user.partner_id) or pos_order.partner_id
         if kwargs and request.httprequest.method == 'POST':
             form_values.update(kwargs)
             # Extract the additional fields values from the kwargs now as they can't be there when validating the 'regular' partner form.
@@ -190,34 +192,27 @@ class PosController(PortalAccount):
             invoice_values, prefixed_invoice_values = _parse_additional_values(additional_invoice_fields, 'invoice_', kwargs)
             form_values['extra_field_values'].update(prefixed_invoice_values)
             # Check the basic form fields if the user is not connected as we will need these information to create the new user.
-            if not user_is_connected:
-                error, error_message = self.details_form_validate(kwargs, partner_creation=True)
-            else:
-                # Check that the billing information of the user are filled.
-                error, error_message = {}, []
-                partner = request.env.user.partner_id
-                for field in self._get_mandatory_fields():
-                    if not partner[field]:
-                        error[field] = 'error'
-                        error_message.append(_('The %s must be filled in your details.', request.env['ir.model.fields']._get('res.partner', field).field_description))
-            # Check that the "optional" additional fields are filled.
-            error, error_message = self.extra_details_form_validate(partner_values, additional_partner_fields, error, error_message)
-            error, error_message = self.extra_details_form_validate(invoice_values, additional_invoice_fields, error, error_message)
-            if not error:
-                return self._get_invoice(partner_values, invoice_values, pos_order, additional_invoice_fields, kwargs)
-            else:
-                form_values.update({'error': error, 'error_message': error_message})
+            partner, feedback_dict = self._create_or_update_address(partner, **(kwargs | partner_values))
+            form_values.update(feedback_dict)
+            missing_fields, error_messages = self._validate_extra_form_details(
+                partner_values | invoice_values,
+                additional_partner_fields + additional_invoice_fields
+            )
+            form_values.update({
+                'invalid_field': form_values.get('invalid_fields', []) + list(missing_fields),
+                'messages': form_values.get('messages', []) + error_messages
+            })
+            if not form_values.get('invalid_fields'):
+                return self._get_invoice(partner, invoice_values, pos_order, additional_invoice_fields, kwargs)
 
         elif user_is_connected:
-            return self._get_invoice({}, {}, pos_order, additional_invoice_fields, kwargs)
+            return self._get_invoice(partner, {}, pos_order, additional_invoice_fields, kwargs)
 
         # Most of the time, the country of the customer will be the same as the order. We can prefill it by default with the country of the company.
-        if 'country_id' not in form_values:
-            form_values['country_id'] = pos_order_country.id
+        if 'country' not in form_values:
+            form_values['country'] = pos_order_country
 
-        partner = request.env['res.partner']
         # Prefill the customer extra values if there is any and an user is connected
-        partner = (user_is_connected and request.env.user.partner_id) or pos_order.partner_id
         if partner:
             if additional_partner_fields:
                 form_values['extra_field_values'] = {'partner_' + field.name: partner[field.name] for field in additional_partner_fields if field.name not in form_values['extra_field_values']}
@@ -230,39 +225,31 @@ class PosController(PortalAccount):
                 form_values['partner_address'] = partner._display_address()
 
         return request.render("point_of_sale.ticket_validation_screen", {
+            **self._prepare_address_form_values(partner, **kwargs),
             'partner': partner,
             'address_url': f'/my/account?redirect=/pos/ticket/validate?access_token={access_token}',
             'user_is_connected': user_is_connected,
             'format_amount': format_amount,
             'env': request.env,
-            'countries': request.env['res.country'].sudo().search([]),
-            'states': request.env['res.country.state'].sudo().search([]),
-            'partner_can_edit_vat': True,
             'pos_order': pos_order,
             'invoice_required_fields': additional_invoice_fields,
             'partner_required_fields': additional_partner_fields,
             'access_token': access_token,
-            'invoice_sending_methods': {'email': _('by Email')},
+            'invoice_sending_methods': {'email': _("by Email")},
             **form_values,
         })
 
-    def _get_invoice(self, partner_values, invoice_values, pos_order, additional_invoice_fields, kwargs):
-        # If the user is not connected, then we will simply create a new partner with the form values.
-        # Matching with existing partner was tried, but we then can't update the values, and it would force the user to use the ones from the first invoicing.
-        if request.env.user._is_public() and not pos_order.partner_id.id:
-            partner_values.update({key: kwargs[key] for key in self._get_mandatory_fields()})
-            partner_values.update({key: kwargs[key] for key in self._get_optional_fields() if key in kwargs})
-            for field in {'country_id', 'state_id'} & set(partner_values.keys()):
-                try:
-                    partner_values[field] = int(partner_values[field])
-                except Exception:
-                    partner_values[field] = False
-            partner_values.update({'zip': partner_values.pop('zipcode', '')})
-            partner = request.env['res.partner'].sudo().create(partner_values)  # In this case, partner_values contains the whole partner info form.
-        # If the user is connected, then we can update if needed its fields with the additional localized fields if any, then proceed.
-        else:
-            partner = pos_order.partner_id or (not request.env.user._is_public() and request.env.user.partner_id)
-            partner.write(partner_values)  # In this case, partner_values only contains the additional fields that can be updated.
+    def _validate_extra_form_details(self, addtional_form_values, additional_required_fields):
+        """ Ensure that all additional required fields have a value in the data. """
+        missing_fields = {}
+        error_messages = []
+        for field in additional_required_fields:
+            if field.name not in addtional_form_values or not addtional_form_values[field.name]:
+                missing_fields.add(field.name)
+                error_messages.append(_("The field %s must be filled.", field.field_description.lower()))
+        return missing_fields, error_messages
+
+    def _get_invoice(self, partner, invoice_values, pos_order, additional_invoice_fields, kwargs):
 
         pos_order.partner_id = partner
         # Get the required fields for the invoice and add them to the context as default values.

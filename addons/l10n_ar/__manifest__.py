@@ -97,6 +97,7 @@ Master Data:
         'views/uom_uom_view.xml',
         'views/account_journal_view.xml',
         'views/l10n_latam_document_type_view.xml',
+        'views/portal_address_templates.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_view.xml',
         'report/invoice_report_view.xml',

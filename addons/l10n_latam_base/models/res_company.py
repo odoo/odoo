@@ -18,3 +18,7 @@ class ResCompany(models.Model):
             if country_vat_type:
                 company.partner_id.l10n_latam_identification_type_id = country_vat_type
         return companies
+
+    def _is_latam(self):
+        """Return whether the given company belong to latam countries or not."""
+        return False

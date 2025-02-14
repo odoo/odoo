@@ -88,7 +88,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "Add a billing address",
-        trigger: '.all_billing a[href^="/shop/address"]:contains("Add address")',
+        trigger: '.o_portal_address_row a[href^="/shop/address?address_type=billing"]:contains("Add address")',
         run: "click",
     },
     {
@@ -143,7 +143,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "Click for edit billing address",
-        trigger: '.all_billing .js_edit_address:first',
+        trigger: '.o_portal_address_row a[href^="/shop/address?address_type=billing"] .js_edit_address:first',
         run: "click",
     },
     {

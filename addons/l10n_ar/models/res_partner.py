@@ -79,6 +79,12 @@ class ResPartner(models.Model):
             raise UserError(_('No VAT configured for partner [%i] %s', self.id, self.name))
         return self.l10n_ar_vat
 
+    def _get_frontend_writable_fields(self):
+        frontend_writable_fields = super()._get_frontend_writable_fields()
+        frontend_writable_fields.add('l10n_ar_afip_responsibility_type_id')
+
+        return frontend_writable_fields
+
     def _get_validation_module(self):
         self.ensure_one()
         if self.l10n_latam_identification_type_id.l10n_ar_afip_code in ['80', '86']:
