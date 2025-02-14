@@ -1,10 +1,11 @@
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { FileInput } from "@web/core/file_input/file_input";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { Component } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { useX2ManyCrud } from "@web/views/fields/relational_utils";
+import { dataUrlToBlob } from "@mail/core/common/attachment_uploader_hook";
 
 export class MailAttachments extends Component {
     static template = "mail.MailComposerAttachmentSelector";
@@ -13,31 +14,36 @@ export class MailAttachments extends Component {
 
     setup() {
         this.notification = useService("notification");
+        this.mailStore = useService("mail.store");
+        this.attachmentUploadService = useService("mail.attachment_upload");
+        this.operations = useX2ManyCrud(() => {
+            return this.props.record.data["attachment_ids"];
+        }, true);
     }
 
     get attachments() {
         return this.props.record.data[this.props.name] || [];
     }
 
-    onFileUploaded(files) {
-        let extraFiles = [];
-        for (const file of files) {
-            if (file.error) {
-                return this.notification.add(file.error, {
-                    title: _t("Uploading error"),
-                    type: "danger",
-                });
-            }
+    async onFileUploaded(files) {
+        let { name, data, type } = files;
+        const resIds = JSON.parse(this.props.record.data.res_ids);
+        const thread = await this.mailStore.Thread.insert({
+            model: this.props.record.data.model,
+            id: resIds[0],
+        });
 
-            extraFiles.push({
-                id: file.id,
-                name: file.filename,
-                mimetype: file.mimetype,
-                placeholder: false,
-                manual: true,
-            });
-        }
-        this.props.record.update({ [this.props.name]: this.attachments.concat(extraFiles) });
+        const file = new File([dataUrlToBlob(data, type)], name, { type });
+        const attachment = await this.attachmentUploadService.upload(thread, thread.composer, file);
+
+        let fileDict = {
+            id: attachment.id,
+            name: attachment.name,
+            mimetype: attachment.mimetype,
+            placeholder: false,
+            manual: true,
+        };
+        this.props.record.update({ [this.props.name]: this.attachments.concat([fileDict]) });
     }
 }
 
