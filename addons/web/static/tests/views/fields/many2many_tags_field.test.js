@@ -779,7 +779,7 @@ test("Many2ManyTagsField keeps focus when being edited", async () => {
     expect(".o_field_many2many_tags input").toBeFocused();
 });
 
-test("Many2ManyTagsField: tags title attribute", async () => {
+test("Many2ManyTagsField: tags data-tooltip attribute", async () => {
     Turtle._records[0].partner_ids = [2];
 
     await mountView({
@@ -795,7 +795,7 @@ test("Many2ManyTagsField: tags title attribute", async () => {
             </form>`,
     });
 
-    expect(".o_field_many2many_tags .o_tag.badge").toHaveAttribute("title", "second record");
+    expect(".o_field_many2many_tags .o_tag.badge").toHaveAttribute("data-tooltip", "second record");
 });
 
 test("Many2ManyTagsField: toggle colorpicker with multiple tags", async () => {
@@ -818,13 +818,13 @@ test("Many2ManyTagsField: toggle colorpicker with multiple tags", async () => {
     await contains(".o_field_many2many_tags .badge").click();
     expect(".o_colorlist").toHaveCount(1);
 
-    await contains(".o_field_many2many_tags [title=silver]").click();
+    await contains(".o_field_many2many_tags [data-tooltip=silver]").click();
     expect(".o_colorlist").toHaveCount(1);
 
-    await contains(".o_field_many2many_tags [title=silver]").click();
+    await contains(".o_field_many2many_tags [data-tooltip=silver]").click();
     expect(".o_colorpicker").toHaveCount(0);
 
-    await contains(".o_field_many2many_tags [title=silver]").click();
+    await contains(".o_field_many2many_tags [data-tooltip=silver]").click();
     expect(".o_colorlist").toHaveCount(1);
 
     await contains(getFixture()).click();
