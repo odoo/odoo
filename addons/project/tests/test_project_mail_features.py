@@ -1,7 +1,7 @@
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
-from odoo.tests import tagged, users
+from odoo.tests import tagged, users, new_test_user
 from odoo.tools import formataddr, mute_logger
 from odoo.fields import Command
 
@@ -204,7 +204,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 self.assertFalse(new_partner_customer)
 
                 self.assertIn('Please call me as soon as possible', task.description)
-                self.assertEqual(task.email_cc, f'"New Cc" <new.cc@test.agrolait.com>, {self.partner_2.email_formatted}')
+                self.assertEqual(task.email_cc, f'"New Cc" <new.cc@test.agrolait.com>, {self.partner_2.email_formatted}, {self.partner_1.email_formatted}, "New Customer" <new.customer@test.agrolait.com>')
                 self.assertEqual(task.name, f'Test from {author.email_formatted}')
                 self.assertEqual(task.partner_id, author)
                 self.assertEqual(task.project_id, self.project_followers)
@@ -412,7 +412,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 self.assertEqual(
                     task.email_cc,
                     '"Another Cc" <another.cc@test.agrolait.com>, valid.poilboeuf@gmail.com, "New Cc" <new.cc@test.agrolait.com>, '
-                    '"Valid Poilvache" <valid.other@gmail.com>',
+                    '"Valid Poilvache" <valid.other@gmail.com>, "Valid Lelitre" <valid.lelitre@agrolait.com>, "New Customer" <new.customer@test.agrolait.com>',
                     'Updated with new Cc')
                 self.assertEqual(len(task.message_ids), 4, 'Incoming email + acknowledgement + chatter reply + customer reply')
                 self.assertEqual(
@@ -564,3 +564,33 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
 
         self.assertIn(self.user_portal.partner_id, self.task_1.message_partner_ids,
                     "Portal user's partner should be added as a follower after sharing")
+
+    def test_mail_alais_assignees_from_recipient_list(self):
+        # including all types of users in recipient list
+        new_user = new_test_user(self.env, 'int_user')
+        incoming_to = (
+            f"{self.project_goats.alias_name}@{self.project_goats.alias_domain_id.name},"
+            f"{self.user_public.email},"
+            f"{self.user_projectmanager.email},"
+            f"{self.user_portal.email},"
+            f"{self.user_projectuser.email},"
+        )
+        with self.mock_mail_gateway():
+            task = self.format_and_process(
+                MAIL_TEMPLATE,
+                self.user_employee.email,
+                incoming_to,
+                cc=f"{new_user.email}",
+                subject='Test task assignees from email to address',
+                target_model='project.task',
+            )
+            self.flush_tracking()
+        self.assertTrue(task, "Task has not been created from a incoming email")
+        # only internal users are set as asssignees
+        self.assertEqual(task.user_ids, self.user_projectmanager + self.user_projectuser, "Assignees have not been set from the to address of the mail")
+        # public and portal users are ignored
+        self.assertNotIn(task.user_ids, self.user_public + self.user_portal, "Assignees should not be set for user other than internal users")
+        # sender should not be added as user in the task
+        self.assertNotIn(task.user_ids, self.user_employee, "Sender can never be in assignees")
+        # internal users in cc of mail shoudl be added in email_cc field
+        self.assertEqual(task.email_cc, new_user.email, "The internal user in CC is not added into email_cc field")
