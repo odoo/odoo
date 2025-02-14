@@ -582,6 +582,42 @@ class TestProcRule(TransactionCase):
         stock_move._action_confirm()
         self.assertEqual(orderpoint.qty_to_order, 6)
 
+    def test_correct_route_help_message(self):
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        mto_rule = self.env['stock.rule'].create({
+            'name': 'Rule Supplier MTO',
+            'route_id': warehouse.reception_route_id.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
+            'action': 'pull',
+            'delay': 9.0,
+            'procure_method': 'make_to_order',
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+        mtso_rule = self.env['stock.rule'].create({
+            'name': 'Rule Supplier MTSO',
+            'route_id': warehouse.reception_route_id.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
+            'action': 'pull',
+            'delay': 9.0,
+            'procure_method': 'mts_else_mto',
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+
+        mts_rule = self.env['stock.rule'].create({
+            'name': 'Rule Supplier',
+            'route_id': warehouse.reception_route_id.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
+            'action': 'pull',
+            'delay': 9.0,
+            'procure_method': 'make_to_stock',
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+        self.assertGreater(len(mtso_rule.rule_message), len(mts_rule.rule_message), 'The help message should display all information')
+        self.assertGreater(len(mto_rule.rule_message), len(mts_rule.rule_message), 'The help message should display all information')
+
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
