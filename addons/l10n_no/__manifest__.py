@@ -10,6 +10,8 @@
     'description': """This is the module to manage the accounting chart for Norway in Odoo.
 
 Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
+
+Updated for Odoo 18 by Loym AS <www.loym.com>
 """,
     'depends': [
         'base_iban',
