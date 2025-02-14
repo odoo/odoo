@@ -124,7 +124,7 @@ export class DiscussChannel extends models.ServerModel {
             if (partner.id === this.env.user.partner_id) {
                 continue; // adding 'yourself' to the conversation is handled below
             }
-            const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
+            const body = `<div class="o_mail_notification">${this.env.user.name} invited ${partner.name} to the channel</div>`;
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";
             this.message_post(channel.id, makeKwArgs({ body, message_type, subtype_xmlid }));
