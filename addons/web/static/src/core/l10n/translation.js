@@ -1,6 +1,7 @@
 import { markup } from "@odoo/owl";
 
 import { Deferred } from "@web/core/utils/concurrency";
+import { isObject } from "@web/core/utils/objects";
 import { escape, sprintf } from "@web/core/utils/strings";
 
 export const translationLoaded = Symbol("translationLoaded");
@@ -111,7 +112,7 @@ export async function loadLanguages(orm) {
  */
 function _safeSprintf(str, ...values) {
     let hasMarkup;
-    if (values.length === 1 && Object.prototype.toString.call(values[0]) === "[object Object]") {
+    if (values.length === 1 && isObject(values[0])) {
         hasMarkup = Object.values(values[0]).some((v) => v instanceof Markup);
     } else {
         hasMarkup = values.some((v) => v instanceof Markup);
@@ -130,7 +131,7 @@ function _safeSprintf(str, ...values) {
  * @returns {any[]|[Object]}
  */
 function _escapeNonMarkup(values) {
-    if (Object.prototype.toString.call(values[0]) === "[object Object]") {
+    if (isObject(values[0])) {
         const sanitized = {};
         for (const [key, value] of Object.entries(values[0])) {
             sanitized[key] = value instanceof Markup ? value : escape(value);
