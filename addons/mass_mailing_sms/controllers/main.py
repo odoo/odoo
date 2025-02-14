@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import werkzeug
 from werkzeug.exceptions import NotFound
 
 from odoo import http, _
@@ -29,11 +30,47 @@ class MailingSMSController(http.Controller):
     @http.route(['/sms/<int:mailing_id>/<string:trace_code>'], type='http', website=True, auth='public')
     def blacklist_page(self, mailing_id, trace_code, **post):
         check_res = self._check_trace(mailing_id, trace_code)
+        country_code = request.geoip.country_code
+        country = request.env['res.country'].search([('code', '=', country_code)], limit=1)
+        sms_number = post.get('sms_number', '').strip()
         if not check_res.get('trace'):
             return request.redirect('/odoo')
+
+        if sms_number:
+            try:
+                # Sanitize the phone number
+                sanitized_number = phone_validation.phone_format(
+                    sms_number,
+                    country.code,
+                    country.phone_code,
+                    force_format='E164',
+                    raise_exception=True,
+                )
+            except Exception:  # noqa: BLE001
+                sanitized_number = False
+
+            trace = check_res['trace'][:1] if sanitized_number else False
+            # Redirect if trace exists
+            if trace:
+                params = werkzeug.urls.url_encode({'sms_number': sanitized_number})
+                return request.redirect(f'/sms/{mailing_id}/unsubscribe/{trace_code}?{params}')
+
+            # Handle unsubscribe errors
+            unsubscribe_error = _('Oops! The phone number seems to be incorrect. Please make sure to include the country code.')\
+                if not sanitized_number else _('Oops! Number not found')
+            return request.render('mass_mailing_sms.blacklist_main', {
+                'mailing_id': mailing_id,
+                'trace_code': trace_code,
+                'sms_number': sms_number,
+                'unsubscribe_error': unsubscribe_error,
+            })
+
+        # Render the form if no SMS number was provided
         return request.render('mass_mailing_sms.blacklist_main', {
             'mailing_id': mailing_id,
+            'sms_number': post.get('sms_number', '').strip(),
             'trace_code': trace_code,
+            'unsubscribe_error': post.get('unsubscribe_error', False),
         })
 
     @http.route(['/sms/<int:mailing_id>/unsubscribe/<string:trace_code>'], type='http', website=True, auth='public')
@@ -43,21 +80,12 @@ class MailingSMSController(http.Controller):
             return request.redirect('/odoo')
         # parse and validate number
         sms_number = post.get('sms_number', '').strip(' ')
-        country = request.env['res.country'].search([('code', '=', request.geoip.country_code)], limit=1)
-        sanitized = phone_validation.phone_format(
-            sms_number,
-            country.code,
-            country.phone_code,
-            force_format='E164',
-            raise_exception=False,
-        )
-        tocheck_number = sanitized or sms_number
+        tocheck_number = sms_number
 
-        trace = check_res['trace'].filtered(lambda r: r.sms_number == tocheck_number)[:1] if tocheck_number else False
+        trace = check_res['trace'][:1] if tocheck_number else False
         # compute opt-out / blacklist information
         lists_optout = request.env['mailing.list'].sudo()
         lists_optin = request.env['mailing.list'].sudo()
-        unsubscribe_error = False
         if tocheck_number and trace:
             mailing_list_ids = trace.mass_mailing_id.contact_list_ids
             if mailing_list_ids:
@@ -77,10 +105,6 @@ class MailingSMSController(http.Controller):
                 ('list_id', 'not in', mailing_list_ids.ids),
                 ('opt_out', '=', False),
             ]).mapped('list_id')
-        elif tocheck_number:
-            unsubscribe_error = _('Number %s not found', tocheck_number)
-        else:
-            unsubscribe_error = _('Invalid number %s', post.get('sms_number', ''))
 
         return request.render('mass_mailing_sms.blacklist_number', {
             'mailing_id': mailing_id,
@@ -88,7 +112,6 @@ class MailingSMSController(http.Controller):
             'sms_number': sms_number,
             'lists_optin': lists_optin,
             'lists_optout': lists_optout,
-            'unsubscribe_error': unsubscribe_error,
         })
 
     @http.route('/r/<string:code>/s/<int:sms_id_int>', type='http', auth="public")
