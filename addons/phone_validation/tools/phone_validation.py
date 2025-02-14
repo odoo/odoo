@@ -89,20 +89,38 @@ try:
             phone_fmt = phonenumbers.PhoneNumberFormat.NATIONAL
         return phonenumbers.format_number(phone_nbr, phone_fmt)
 
+    def _phone_get_region_data_from_phone_obj(phone_obj):
+        if phone_obj:
+            zeros = ''
+            if phone_obj.italian_leading_zero:
+                zeros = '0'
+                if phone_obj.number_of_leading_zeros:
+                    zeros = '0' * phone_obj.number_of_leading_zeros
+            return {
+                'code': phonenumbers.phonenumberutil.region_code_for_number(phone_obj),
+                'national_number': str(zeros + f'{phone_obj.national_number}'),
+                'phone_code': str(phone_obj.country_code),
+            }
+        return {
+            'code': '',
+            'national_number': '',
+            'phone_code': '',
+        }
+
     def phone_get_region_data_for_number(number):
         try:
             phone_obj = phone_parse(number, None)
         except (phonenumbers.phonenumberutil.NumberParseException, UserError):
-            return {
-                'code': '',
-                'national_number': '',
-                'phone_code': '',
-            }
-        return {
-            'code': phonenumbers.phonenumberutil.region_code_for_number(phone_obj),
-            'national_number': str(phone_obj.national_number),
-            'phone_code': str(phone_obj.country_code),
-        }
+            return _phone_get_region_data_from_phone_obj(None)
+        return _phone_get_region_data_from_phone_obj(phone_obj)
+
+    def phone_get_region_data_for_number_without_check(number):
+        # We may want to extract country code of impossible/invalid phone numbers
+        try:
+            phone_obj = phonenumbers.parse(number, None)
+        except phonenumbers.phonenumberutil.NumberParseException:
+            return _phone_get_region_data_from_phone_obj(None)
+        return _phone_get_region_data_from_phone_obj(phone_obj)
 
 except ImportError:
 
@@ -119,9 +137,15 @@ except ImportError:
             _phonenumbers_lib_warning = True
         return number
 
-    def phone_get_region_code_for_number(number):
+    def _phone_get_region_data_from_phone_obj(phone_obj):
         return {
             'code': '',
             'national_number': '',
             'phone_code': '',
         }
+
+    def phone_get_region_code_for_number(number):
+        return _phone_get_region_data_from_phone_obj(None)
+
+    def phone_get_region_code_for_number_without_check(number):
+        return _phone_get_region_data_from_phone_obj(None)
