@@ -30,12 +30,9 @@
     <t t-name="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
         <xpath expr="//t[@t-foreach='visibleTags']" position="before">
             <t t-if="canDisplayQuickAssignAvatar">
-                <a t-on-click.stop.prevent="openPopover" tabIndex="-1" href="#" title="Assign"
+                <a t-on-click.stop.prevent="openPopover" tabIndex="-1" href="#" data-tooltip="Assign"
                    aria-label="Assign" class="o_quick_assign fa fa-user-plus o_m2m_avatar btn-link d-flex align-items-center text-dark" role="button"/>
             </t>
-        </xpath>
-        <xpath expr="//span[hasclass('o_m2m_avatar_empty')]" position="attributes">
-            <attribute name="t-on-click.stop.prevent">openPopover</attribute>
         </xpath>
     </t>
 

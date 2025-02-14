@@ -34,9 +34,7 @@ class Turtle extends models.Model {
     ];
 }
 
-onRpc("has_group", () => {
-    return true;
-});
+onRpc("has_group", () => true);
 
 defineModels([Partner, Turtle]);
 
@@ -261,10 +259,10 @@ test("widget many2many_tags_avatar in kanban view", async () => {
         ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar img"
     ).toHaveCount(2);
     expect(
-        `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(1) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/5/avatar_128']`
+        `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(1 of .o_tag) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/5/avatar_128']`
     ).toHaveCount(1);
     expect(
-        `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128']`
+        `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(2 of .o_tag) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128']`
     ).toHaveCount(1);
     expect(
         ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
@@ -283,7 +281,7 @@ test("widget many2many_tags_avatar in kanban view", async () => {
         ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
     ).toHaveText("9+");
     expect(".o_field_many2many_tags_avatar .o_field_many2many_selection").toHaveCount(0);
-    await contains(".o_kanban_record:nth-child(3) .o_field_tags > .o_m2m_avatar_empty").click();
+    await contains(".o_kanban_record:nth-child(3) .o_quick_assign", { visible: false }).click();
     await animationFrame();
     expect(".o-overlay-container input").toBeFocused();
     expect(".o-overlay-container .o_tag").toHaveCount(4);

@@ -13,7 +13,8 @@
                 t-attf-class="{{ !tag.img ? 'o_tag_color_' + (tag.colorIndex ? tag.colorIndex : '0') : '' }}"
                 tabindex="-1"
                 t-att-data-color="tag.colorIndex"
-                t-att-title="tag.title || tag.text"
+                t-att-aria-label="tag.title || tag.text"
+                t-att-data-tooltip="tag.title || tag.text"
                 t-on-click="(ev) => tag.onClick and tag.onClick(ev)"
                 t-on-keydown="tag.onKeydown">
 
@@ -44,7 +45,7 @@
                             'btn btn-link position-relative py-0 px-1 text-danger opacity-0': tag.img,
                             'ps-1 opacity-75': !tag.img
                         }"
-                    title="Delete"
+                    data-tooltip="Delete"
                     aria-label="Delete"
                     tabIndex="-1"
                     href="#">
@@ -52,7 +53,7 @@
                 </a>
             </span>
         </t>
-        <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded text-center fw-bold" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo">
+        <span t-if="otherTags.length" class="o_m2m_avatar_empty rounded text-center fw-bold cursor-default" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo" t-on-click.stop="">
             <span t-if="otherTags.length > 9" t-esc="'9+'" />
             <span t-else="" t-esc="'+' + otherTags.length" />
         </span>
