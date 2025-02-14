@@ -5,10 +5,14 @@ import { ModelEdit } from "./cached_model_utils";
 
 export class CachedModelPlugin extends Plugin {
     static id = "CachedModel";
-    static shared = ["ormRead", "useModelEdit"];
+    static shared = ["ormRead", "ormSearchRead", "useModelEdit"];
     setup() {
         this.ormReadCache = new Cache(
             ({ model, ids, fields }) => this.services.orm.read(model, ids, fields),
+            JSON.stringify
+        );
+        this.ormSearchReadCache = new Cache(
+            ({ model, domain, fields }) => this.services.orm.searchRead(model, domain, fields),
             JSON.stringify
         );
         this.modelEditCache = new Cache(({ model, recordId }) => {
@@ -19,10 +23,14 @@ export class CachedModelPlugin extends Plugin {
     }
     destroy() {
         this.ormReadCache.invalidate();
+        this.ormSearchReadCache.invalidate();
         this.modelEditCache.invalidate();
     }
     ormRead(model, ids, fields) {
         return this.ormReadCache.read({ model, ids, fields });
+    }
+    ormSearchRead(model, domain, fields) {
+        return this.ormSearchReadCache.read({ model, domain, fields });
     }
     useModelEdit({ model, recordId, field }) {
         const modelEdit = this.modelEditCache.read({ model, recordId, field });
