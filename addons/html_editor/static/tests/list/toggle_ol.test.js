@@ -324,6 +324,16 @@ describe("Range not collapsed", () => {
                 contentAfter: "<ol><li>a[b</li><li>cd</li><li>e]f</li><li>gh</li></ol>",
             });
         });
+
+        test("should turn a list into an ordered list with text alignment", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul><li style="text-align: center;">[abc</li><li style="text-align: center;">def]</li></ul>',
+                stepFunction: toggleOrderedList,
+                contentAfter:
+                    '<ol><li style="text-align: center;">[abc</li><li style="text-align: center;">def]</li></ol>',
+            });
+        });
     });
     describe("Remove", () => {
         test("should turn a list into a paragraph", async () => {

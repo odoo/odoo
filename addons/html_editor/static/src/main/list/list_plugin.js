@@ -414,12 +414,7 @@ export class ListPlugin extends Plugin {
         // Clear list style (@todo @phoenix - why??)
         newList.style.removeProperty("list-style");
         for (const li of newList.children) {
-            if (li.style.listStyle !== "none") {
-                li.style.listStyle = null;
-                if (!li.style.all) {
-                    li.removeAttribute("style");
-                }
-            }
+            li.style.removeProperty("list-style");
         }
         removeClass(newList, "o_checklist");
         if (newMode === "CL") {
