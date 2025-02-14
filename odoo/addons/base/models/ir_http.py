@@ -138,12 +138,14 @@ class IrHttp(models.AbstractModel):
     _description = "HTTP Routing"
 
     @classmethod
-    def _slugify_one(cls, value: str, max_length: int = 0) -> str:
+    def _slugify_one(cls, value: str, max_length: int = None) -> str:
         """ Transform a string to a slug that can be used in a url path.
             This method will first try to do the job with python-slugify if present.
-            Otherwise it will process string by stripping leading and ending spaces,
-            converting unicode chars to ascii, lowering all chars and replacing spaces
-            and underscore with hyphen "-".
+            Otherwise it will process string by replacing spaces and underscores with
+            dashes '-',removing every character that is not a word or a dash,
+            collapsing multiple dashes like --- into a single dash, removing leading
+            and trailing dashes and converting to lowercase.
+            Example: ^h☺e$#!l(%l}o 你好& becomes hello-你好
         """
         if slugify_lib:
             # There are 2 different libraries only python-slugify is supported
@@ -151,12 +153,19 @@ class IrHttp(models.AbstractModel):
                 return slugify_lib.slugify(value, max_length=max_length)
             except TypeError:
                 pass
-        uni = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
-        slug_str = re.sub(r'[\W_]+', '-', uni).strip('-').lower()
-        return slug_str[:max_length] if max_length > 0 else slug_str
+        uni = unicodedata.normalize('NFKD', value)
+        slugified_segments = []
+        for slug in re.split('-|_| ', uni):
+            slug = re.sub(r'([^\w-])+', '', slug)
+            slug = re.sub(r'--+', '-', slug)
+            slug = slug.strip('-')
+            if slug:
+                slugified_segments.append(slug.lower())
+        slugified_str = '-'.join(slugified_segments)
+        return slugified_str[:max_length]
 
     @classmethod
-    def _slugify(cls, value: str, max_length: int = 0, path: bool = False) -> str:
+    def _slugify(cls, value: str, max_length: int = None, path: bool = False) -> str:
         if not path:
             return cls._slugify_one(value, max_length=max_length)
         else:
