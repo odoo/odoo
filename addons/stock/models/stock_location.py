@@ -567,7 +567,7 @@ class StockRoute(models.Model):
 
     def write(self, vals):
         if 'active' in vals:
-            rules = self.with_context(active_test=False).rule_ids
+            rules = self.with_context(active_test=False).rule_ids.sudo().filtered(lambda rule: rule.location_dest_id.active)
             if vals['active']:
                 rules.action_unarchive()
             else:
