@@ -103,8 +103,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
     def _get_partner_party_identification_vals_list(self, partner):
         return [{
-            'id_attrs': {'schemeID': 'TN'},
-            'id': partner.vat,
+            'id_attrs': {'schemeID': 'TN' if partner.country_code == 'JO' else 'PN'},
+            'id': partner.vat or '',
         }]
 
     def _get_partner_address_vals(self, partner):
