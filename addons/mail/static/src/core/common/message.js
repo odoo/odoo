@@ -34,6 +34,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
+import { setElementContent } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
@@ -145,7 +146,9 @@ export class Message extends Component {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
                 const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
                 const shadowStyle = document.createElement("style");
-                shadowStyle.innerHTML = `
+                setElementContent(
+                    shadowStyle,
+                    markup(`
                     * {
                         background-color: transparent !important;
                         color: ${color} !important;
@@ -159,7 +162,8 @@ export class Message extends Component {
                     .o-mail-Message-searchHighlight {
                         background: ${this.constructor.SHADOW_HIGHLIGHT_COLOR} !important;
                     }
-                `;
+                `)
+                );
                 if (cookie.get("color_scheme") === "dark") {
                     this.shadowRoot.appendChild(shadowStyle);
                 }
@@ -169,10 +173,13 @@ export class Message extends Component {
             () => {
                 if (this.shadowBody.el) {
                     const body = document.createElement("span");
-                    body.innerHTML = this.state.showTranslation
-                        ? this.message.translationValue
-                        : this.props.messageSearch?.highlight(this.message.body) ??
-                          this.message.body;
+                    setElementContent(
+                        body,
+                        this.state.showTranslation
+                            ? this.message.translationValue
+                            : this.props.messageSearch?.highlight(this.message.body) ??
+                                  this.message.body
+                    );
                     this.prepareMessageBody(body);
                     this.shadowRoot.appendChild(body);
                     return () => {
