@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_pos_order_filter" model="ir.ui.view">
+            <field name="name">pos.order.list.select</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='status']" position="inside">
+                    <filter string="Veri*Factu State"
+                            name="l10n_es_edi_verifactu_state"
+                            context="{'group_by': 'l10n_es_edi_verifactu_state'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_pos_order_tree" model="ir.ui.view">
+            <field name="name">pos.order.tree</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="l10n_es_edi_verifactu_state" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_pos_order_form_inherit_l10n_es_pos_verifactu" model="ir.ui.view">
+            <field name="name">pos.order.form.inherit.l10n_es_edi_verifactu_pos</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="l10n_es_edi_verifactu_button_send" type="object"
+                            string="Send Veri*Factu"
+                            invisible="account_move or not l10n_es_edi_verifactu_required"/>
+                </xpath>
+                <xpath expr="//group[@name='order_fields']" position="inside">
+                    <field name="account_move" invisible="1"/>
+                    <field name="l10n_es_edi_verifactu_required" invisible="1"/>
+                    <field name="l10n_es_edi_verifactu_state"
+                           invisible="   not l10n_es_edi_verifactu_required and not l10n_es_edi_verifactu_state
+                                      or account_move and not l10n_es_edi_verifactu_record_document_ids"/>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page
+                        id="verifactu_tab"
+                        string="Veri*Factu"
+                        invisible="account_move and not l10n_es_edi_verifactu_record_document_ids"
+                    >
+                        <field name="l10n_es_edi_verifactu_record_document_ids"
+                               string="Veri*Factu Records"
+                               readonly="True">
+                            <tree string="Veri*Factu Records">
+                                <field name="create_date"/>
+                                <field name="id"/>
+                                <field name="response_time"/>
+                                <field name="state"/>
+                                <button type="object" name="unlink" class="fa fa-fw" icon="fa-trash" title="Delete"
+                                        confirm="This operation is irreversible. Do you really want to delete the document?"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

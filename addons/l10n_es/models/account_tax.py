@@ -34,3 +34,8 @@ class AccountTax(models.Model):
         string="Tax Type (Spain)", default='sujeto'
     )
     l10n_es_bien_inversion = fields.Boolean('Bien de Inversion', default=False)
+
+
+    def _get_sujeto_tax_types(self):
+        # TODO: other sujeto types; e.g. 'sujeto_agricultura'?
+        return ('sujeto', 'sujeto_isp')
