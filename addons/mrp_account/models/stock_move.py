@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import models
 
 
@@ -44,6 +46,13 @@ class StockMove(models.Model):
     def _is_production_consumed(self):
         self.ensure_one()
         return self.location_dest_id.usage == 'production' and self.location_id._should_be_valued()
+
+    def _create_out_svl(self, forced_quantity=None):
+        product_unbuild_map = defaultdict(self.env['mrp.unbuild'].browse)
+        for move in self:
+            if move.unbuild_id:
+                product_unbuild_map[move.product_id] |= move.unbuild_id
+        return super(StockMove, self.with_context(product_unbuild_map=product_unbuild_map))._create_out_svl(forced_quantity)
 
     def _get_out_svl_vals(self, forced_quantity):
         unbuild_moves = self.filtered('unbuild_id')
