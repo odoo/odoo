@@ -13,7 +13,7 @@ export const start = [
     {
         content: "Say hello!",
         trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-        run: "edit Hello Sir!",
+        run: "composer Hello Sir!",
     },
     {
         content: "Send the message",

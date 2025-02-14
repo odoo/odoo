@@ -2,7 +2,7 @@ import { isProtected, isProtecting, isUnprotecting } from "./utils/dom_info";
 
 /**
  * @typedef { import("./editor").Editor } Editor
- * @typedef { import("./plugin_sets").SharedMethods } SharedMethods
+ * @typedef { import("./plugin_sets_others").SharedMethods } SharedMethods
  */
 
 export class Plugin {

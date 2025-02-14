@@ -107,6 +107,10 @@ export class ChatWindow extends Component {
         if (ev.target.closest(".o-dropdown") || ev.target.closest(".o-dropdown--menu")) {
             return;
         }
+        const isOverlayOpen = document.querySelector(".o-overlay-item .overlay");
+        if (isOverlayOpen && (ev.key === "Tab" || ev.key === "Enter")) {
+            return;
+        }
         ev.stopPropagation(); // not letting home menu steal my CTRL-C
         switch (ev.key) {
             case "Escape":

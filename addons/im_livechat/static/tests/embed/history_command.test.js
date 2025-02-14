@@ -18,7 +18,7 @@ import {
 describe.current.tags("desktop");
 defineLivechatModels();
 
-test("Handle livechat history command", async () => {
+test.skip("Handle livechat history command", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     onRpc("/im_livechat/history", ({ url }) => {

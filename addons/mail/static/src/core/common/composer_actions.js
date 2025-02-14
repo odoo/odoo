@@ -143,7 +143,7 @@ composerActionsRegistry
                 .find(([delimiter]) => delimiter === "::"),
         icon: "fa fa-file-text-o",
         name: _t("Insert a Canned response"),
-        onClick: (component, action, ev) => component.onClickInsertCannedResponse(ev),
+        onClick: (component, action) => component.onClickInsertCannedResponse(),
         sequence: 5,
     });
 

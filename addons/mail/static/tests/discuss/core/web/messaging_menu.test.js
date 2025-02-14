@@ -11,7 +11,6 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
 import {
     Command,
     getService,
@@ -116,7 +115,7 @@ test("channel preview ignores transient message", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
-    await press("Enter");
+    await click("button[title='Send']");
     await contains(".o_mail_notification", { text: "You are alone in this channel." });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-NotificationItem-text", { text: "Demo: test" });

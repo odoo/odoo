@@ -1,6 +1,6 @@
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { CollaborationPlugin } from "@html_editor/others/collaboration/collaboration_plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 import { createDOMPathGenerator } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { after, expect } from "@odoo/hoot";
@@ -65,9 +65,7 @@ export const setupMultiEditor = async (spec) => {
         };
         peerInfos[peerId] = peerInfo;
         let n = 0;
-        HistoryPlugin.prototype.generateId = () => {
-            return `fake_id_${n++}`;
-        };
+        HistoryPlugin.prototype.generateId = () => `fake_id_${n++}`;
         let selection;
         const defaultPlugins = MAIN_PLUGINS;
         const base = await setupEditor(spec.contentBefore, {
@@ -221,9 +219,9 @@ export function renderTextualSelection(peerInfos) {
     }
 
     for (const nodeId of Object.keys(cursorNodes)) {
-        cursorNodes[nodeId] = cursorNodes[nodeId].sort((a, b) => {
-            return b.offset - a.offset || b.peerId.localeCompare(a.peerId);
-        });
+        cursorNodes[nodeId] = cursorNodes[nodeId].sort(
+            (a, b) => b.offset - a.offset || b.peerId.localeCompare(a.peerId)
+        );
     }
 
     for (const peerInfo of peerInfosList) {

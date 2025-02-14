@@ -131,15 +131,18 @@ test("can close confirm livechat with keyboard", async () => {
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
+    await focus(".o-mail-Composer-input");
     await insertText(".o-mail-Composer-input", "Hello");
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello" });
+    await focus(".o-mail-Composer-input");
     await triggerHotkey("Escape");
     await contains(".o-livechat-CloseConfirmation", {
         text: "Leaving will end the livechat. Proceed leaving?",
     });
     await triggerHotkey("Escape");
     await contains(".o-livechat-CloseConfirmation", { count: 0 });
+    await focus(".o-mail-Composer-input");
     await triggerHotkey("Escape");
     await contains(".o-livechat-CloseConfirmation", {
         text: "Leaving will end the livechat. Proceed leaving?",

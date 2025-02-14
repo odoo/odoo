@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 import { expect, test } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
 import { press } from "@odoo/hoot-dom";

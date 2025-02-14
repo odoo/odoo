@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
-import { isTextNode } from "@web/views/view_compiler";
 import { Toolbar } from "./toolbar";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
@@ -200,8 +199,8 @@ export class ToolbarPlugin extends Plugin {
     }
 
     destroy() {
-        this.debouncedUpdateToolbar.cancel();
-        this.overlay.close();
+        this.debouncedUpdateToolbar?.cancel();
+        this.overlay?.close();
         super.destroy();
     }
 
@@ -275,9 +274,10 @@ export class ToolbarPlugin extends Plugin {
     }
 
     getFilterTraverseNodes() {
+        // nodeType === 3: text node
         return this.dependencies.selection
             .getTraversedNodes()
-            .filter((node) => !isTextNode(node) || (node.textContent !== "\n" && !isZWS(node)));
+            .filter((node) => node.nodeType !== 3 || (node.textContent !== "\n" && !isZWS(node)));
     }
 
     updateToolbarVisibility(selectionData) {

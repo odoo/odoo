@@ -88,7 +88,7 @@ test("can post a message on a record thread", async () => {
         const expected = {
             context: args.context,
             post_data: {
-                body: "hey",
+                body: "<p>hey</p>",
                 email_add_signature: true,
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_comment",
@@ -119,7 +119,7 @@ test("can post a note on a record thread", async () => {
         const expected = {
             context: args.context,
             post_data: {
-                body: "hey",
+                body: "<p>hey</p>",
                 email_add_signature: true,
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_note",
@@ -190,7 +190,7 @@ test("Textarea content is kept when switching from aside to bottom", async () =>
     await insertText(".o-mail-Composer-input", "Hello world !");
     await patchUiSize({ size: SIZES.LG });
     await contains(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
-    await contains(".o-mail-Composer-input", { value: "Hello world !" });
+    await contains(".o-mail-Composer-input", { text: "Hello world !" });
 });
 
 test("Composer type is kept when switching from aside to bottom", async () => {
@@ -665,7 +665,7 @@ test("Mentions in composer should still work when using pager", async () => {
     await click(".o_pager_next");
     await insertText(".o-mail-Composer-input", "@");
     // all records in DB: Mitchell Admin | Hermit | Public user except OdooBot
-    await contains(".o-mail-Composer-suggestion", { count: 3 });
+    await contains(".o-mail-Suggestion", { count: 3 });
 });
 
 test("form views in dialogs do not have chatter", async () => {
