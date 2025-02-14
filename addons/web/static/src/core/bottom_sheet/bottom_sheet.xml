@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BottomSheet">
+        <div
+            class="o_bottom_sheet"
+            t-att-class="{
+                'o_bottom_sheet_ready': state.isPositionedReady,
+                'o_bottom_sheet_extended': state.isExtended,
+                'o_bottom_sheet_dismissing': state.isDismissing,
+                'o_bottom_sheet_snapping': state.isSnapping
+            }"
+            t-att-data-sheet-id="props.id"
+            t-ref="container"
+            >
+            <!-- Scroll container that handles drag gestures -->
+            <div class="o_bottom_sheet_rail" t-ref="scrollRail">
+                <!-- Backdrop overlay -->
+                <div class="o_bottom_sheet_backdrop" t-on-click="slideOut"/>
+
+                <!-- Dismiss area - used for scroll snap -->
+                <div class="o_bottom_sheet_dismiss"/>
+
+                <!-- Spacer area - used for scroll snap -->
+                <div class="o_bottom_sheet_spacer"/>
+
+                <!-- Sheet container -->
+                <div class="o_bottom_sheet_sheet offcanvas position-relative overflow-hidden pb-3"
+                     t-attf-class="{{ props.sheetClasses || '' }}"
+                     t-ref="sheet">
+
+                    <!-- Handle bar -->
+                    <div class="o_bottom_sheet_handle text-center d-flex align-items-center justify-content-center py-1 opacity-50"
+                         t-on-click.stop="state.isExtended ? collapseSheet : expandSheet">
+                        <div class="o_bottom_sheet_handle_bar pt-1 mx-auto rounded-pill d-inline-block px-4 opacity-25"/>
+                    </div>
+
+                    <!-- Header (optional) -->
+                    <t t-if="props.title || props.showBackBtn || props.showCloseBtn">
+                        <div class="offcanvas-header">
+                            <button
+                                t-att-class="{invisible: !props.showBackBtn}"
+                                type="button"
+                                class="btn px-0 py-1 me-auto"
+                                t-on-click="back"
+                                aria-label="Back">
+                                <i class="oi oi-arrow-left oi-large" role="img"/>
+                            </button>
+                            <div class="offcanvas-title text-center flex-grow-1" t-esc="props.title"/>
+                            <button
+                                t-att-class="{invisible: !props.showCloseBtn}"
+                                type="button"
+                                class="btn-close"
+                                t-on-click="slideOut"
+                                aria-label="Close"/>
+                        </div>
+                    </t>
+
+                    <!-- Body content -->
+                    <div class="offcanvas-body"
+                         t-attf-class="{{ props.withBodyPadding !== false ? '' : 'p-0' }}"
+                         t-ref="sheetBody">
+
+                        <!-- Render dynamic component if provided -->
+                        <t t-if="props.component">
+                            <t t-component="props.component" t-props="props.componentProps || {}"/>
+                        </t>
+
+                        <!-- Render slot content if provided -->
+                        <t t-else="">
+                            <t t-slot="default" close="close" back="back"/>
+                        </t>
+
+                        <div class="o-offcanvas-footer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

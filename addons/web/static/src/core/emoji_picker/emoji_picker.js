@@ -24,6 +24,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Deferred } from "../utils/concurrency";
 import { Dialog } from "../dialog/dialog";
+import { BottomSheet } from "@web/core/bottom_sheet/bottom_sheet";
 import { getTemplate } from "@web/core/templates";
 
 /**
@@ -504,7 +505,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
     const targets = [];
     const state = useState({ isOpen: false });
     const ui = useService("ui");
-    const dialog = useService("dialog");
+    const bottomSheet = useService("bottomSheet");
     let remove;
     const newOptions = {
         ...options,
@@ -551,33 +552,36 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                 onSelect: (...args) => {
                     const func = openProps?.onSelect ?? props?.onSelect;
                     const res = func?.(...args);
-                    def.resolve(true);
+                    
+                    // If onSelect doesn't return false, close the picker after selection
+                    if (res !== false) {
+                        setTimeout(() => {
+                            close();
+                            def.resolve(true);
+                        }, 100);
+                    }
                     return res;
                 },
             };
-            if (ref.el) {
-                pickerMobileProps.close = () => remove();
-                const app = new App(PickerMobile, {
-                    name: "Popout",
-                    env: component.env,
-                    props: pickerMobileProps,
-                    getTemplate,
-                });
-                app.mount(ref.el);
-                remove = () => {
-                    state.isOpen = false;
-                    props.onClose?.();
-                    app.destroy();
-                };
-            } else {
-                remove = dialog.add(PickerMobileInDialog, pickerMobileProps, {
-                    context: component,
+
+            remove = bottomSheet.add(
+                PickerMobileInDialog,
+                pickerMobileProps,
+                {
+                    // Sheet configuration
+                    showCloseBtn: true,
+                    startExpanded: true,
+                    withBodyPadding: false,
+                    sheetClasses: "o-EmojiPicker-BottomSheet",
+
+                    // Service options
                     onClose: () => {
                         state.isOpen = false;
-                        return def.resolve(false);
-                    },
-                });
-            }
+                        props.onClose?.();
+                        def.resolve(false);
+                    }
+                }
+            );
             return def;
         }
         return popover.open(ref.el, { ...props, ...openProps });
@@ -646,29 +650,37 @@ class PickerMobile extends Component {
 }
 
 class PickerMobileInDialog extends PickerMobile {
-    static components = { Dialog };
     static props = [...PICKER_PROPS, "onClose?"];
     static template = xml`
-        <Dialog size="'lg'" header="false" footer="false" contentClass="'o-discuss-mobileContextMenu d-flex position-absolute bottom-0 rounded-0 h-50 bg-100'" bodyClass="'p-1'">
-            <div class="h-100" t-ref="root">
-                <t t-component="props.PickerComponent" t-props="pickerProps"/>
-            </div>
-        </Dialog>
+        <div class="h-100" t-ref="root">
+            <t t-component="props.PickerComponent" t-props="pickerProps"/>
+        </div>
     `;
 
     setup() {
         super.setup();
         this.root = useRef("root");
-        useExternalListener(
-            window,
-            "click",
-            (ev) => {
-                if (ev.target !== this.root.el && !this.root.el.contains(ev.target)) {
-                    this.props.close?.();
-                }
-            },
-            { capture: true }
-        );
+        useExternalListener(window, "click", (ev) => {
+            if (ev.target !== this.root.el && !this.root.el.contains(ev.target)) {
+                this.props.close?.();
+            }
+        }, { capture: true });
+    }
+
+    get pickerProps() {
+        const {
+            PickerComponent,
+            onSelect,
+            onClose,
+            close,
+            ...emojiPickerProps
+        } = this.props;
+
+        return {
+            ...emojiPickerProps,
+            onSelect: (...args) => this.props.onSelect(...args),
+            mobile: true,
+        };
     }
 }
 

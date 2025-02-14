@@ -167,37 +167,24 @@
 }
 
 .o-form-buttonbox-small {
-    --button-box-gap: 1px;
-    --button-box-per-row: 2;
-    --button-box-border-color: #{map-get(map-get($o-btns-bs-outline-override, 'secondary'), 'border')};
-    --button-box-spacing: #{map-get($spacers, 3)};
+    .o_stat_info, .o_stat_text, .o_stat_value {
+        display: inline-block;
 
-    display: grid;
-    grid-template-columns: repeat(var(--button-box-per-row), minmax(0, 1fr));
-    overflow: hidden;
-    gap: var(--button-box-gap);
-
-    &:has(.o-dropdown-item:only-child) {
-        --button-box-per-row: 1;
+        + .o_stat_text, + .o_stat_value {
+            margin-left: map-get($spacers, 1);
+        }
     }
-    &:not(:has(.o-dropdown-item:only-child)) {
-        width: calc(100vw - var(--button-box-spacing) * 2) !important;
-        left: var(--button-box-spacing) !important;
-        right: var(--button-box-spacing) !important;
+    .o_status {
+        --Status-size: 1em;
+
+        // arbitrary margin to "match" .fa-fw size
+        margin-left: 0.15em !important;
     }
 
-    > span .o_field_widget, .o_stat_info, .o_stat_value {
-        @include text-truncate;
-    }
-
-    .oe_stat_button,
-    .oe_stat_button > button {
-        border-color: transparent;
-        border-radius: 0;
-    }
-
-    > .o-dropdown-item {
-        outline: $btn-border-width solid var(--button-box-border-color);
+    .o_button_icon + {
+        .o_stat_info, .o_field_widget {
+            margin-left: map-get($spacers, 2);
+        }
     }
 }
 

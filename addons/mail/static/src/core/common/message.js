@@ -125,6 +125,7 @@ export class Message extends Component {
         this.store = useService("mail.store");
         this.shadowBody = useRef("shadowBody");
         this.dialog = useService("dialog");
+        this.bottomSheet = useService("bottomSheet");
         this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
@@ -463,7 +464,8 @@ export class Message extends Component {
         }
         ev?.stopPropagation();
         this.state.actionMenuMobileOpen = true;
-        this.dialog.add(
+
+        this.bottomSheet.add(
             MessageActionMenuMobile,
             {
                 message: this.props.message,
@@ -473,7 +475,10 @@ export class Message extends Component {
                 openReactionMenu: () => this.openReactionMenu(),
                 state: this.state,
             },
-            { context: this, onClose: () => (this.state.actionMenuMobileOpen = false) }
+            {
+                context: this,
+                onClose: () => (this.state.actionMenuMobileOpen = false),
+            }
         );
     }
 

@@ -1,0 +1,220 @@
+// Bottom Sheet Component
+.o_bottom_sheet {
+    --BottomSheet-slideIn-duration: #{$o_BottomSheet_slideIn_duration};
+    --BottomSheet-slideOut-duration: #{$o_BottomSheet_slideOut_duration};
+    --BottomSheet-slideIn-easing: #{$o_BottomSheet_slideIn_easing};
+    --BottomSheet-slideOut-easing: #{$o_BottomSheet_slideOut_easing};
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100svh;
+    z-index: $zindex-offcanvas;
+    opacity: 0;
+    transform-style: preserve-3d;
+    contain: layout paint;
+
+    // Scroll container for gesture handling
+    &_rail {
+        @include o-position-absolute(0, 0, 0, 0);
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        touch-action: pan-y;
+        pointer-events: auto;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    // Enable snap behavior only when snapping is active
+    &.o_bottom_sheet_snapping &_rail {
+        scroll-snap-type: y mandatory;
+    }
+
+    // Backdrop overlay
+    &_backdrop {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+        opacity: var(--BottomSheet-progress, 0);
+        transition: opacity 0.2s ease;
+        pointer-events: auto;
+        touch-action: none;
+        z-index: $zindex-offcanvas - 1;
+    }
+
+    &_dismiss, &_spacer, &_sheet {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+
+    // Dismiss area (used for scroll snap)
+    &_dismiss {
+        height: var(--dismiss-height, 50svh);
+    }
+
+    // Spacer area
+    &_spacer {
+        height: calc(100svh - var(--sheet-initial-height, 50svh));
+        pointer-events: none;
+    }
+
+    // The actual sheet
+    &_sheet {
+        --offcanvas-box-shadow: #{$box-shadow};
+        border-radius: $border-radius-lg $border-radius-lg 0 0;
+        max-width: map-get($grid-breakpoints, sm);
+        margin: 0 map-get($spacers, 2);
+        min-height: var(--sheet-initial-height, 50svh);
+        max-height: var(--sheet-max-height, 90svh);
+        visibility: visible;
+        transition: none;
+        will-change: transform;
+        border: $border-width solid $border-color;
+        border-bottom-width: 0;
+
+        @include media-breakpoint-up(sm) {
+            margin: 0 auto;
+        }
+
+        .o_bottom_sheet_handle {
+            width: 100%;
+            padding: 0.5rem 0;
+            user-select: none;
+            cursor: pointer;
+
+            .o_bottom_sheet_handle_bar {
+                height: 4px;
+                width: 2rem;
+                background-color: currentColor;
+                transition: width 0.2s ease;
+            }
+
+            &:hover .o_bottom_sheet_handle_bar {
+                width: 2.5rem;
+            }
+        }
+
+        .offcanvas-header {
+            --offcanvas-padding-y: 0;
+        }
+
+        .offcanvas-body {
+            overflow-y: hidden; // Initially hidden, will be 'auto' when extended
+            flex: 1;
+        }
+
+        .o-offcanvas-footer {
+            min-height: 2rem;
+        }
+
+        // Inner content
+        &, .list-group.list-group-flush {
+            --list-group-bg: transparent;
+            --list-group-color: inherit;
+            --list-group-item-padding-y: #{map-get($spacers, 3)};
+            --list-group-item-padding-x: #{$offcanvas-padding-x * .5};
+            --list-group-border-width: 0;
+        }
+
+        .list-group-flush {
+            margin-left: $offcanvas-padding-x * -.5;
+            margin-right: $offcanvas-padding-x * -.5;
+        }
+
+        .list-group:where(:not(.list-group-flush)) {
+            --list-group-border-radius: #{$border-radius-lg};
+            --list-group-item-padding-y: #{map-get($spacers, 3)};
+            --list-group-item-padding-x: #{map-get($spacers, 3)};
+        }
+
+        .list-group-item {
+            font-weight: $o-font-weight-medium;
+            font-size: $h5-font-size;
+        }
+
+        --dropdown-divider-bg: #{$border-color};
+
+        &.o-dropdown-bottom-sheet {
+            .dropdown-item {
+                --dropdown-item-padding-y: #{map-get($spacers, 3)};
+                --dropdown-item-padding-x: #{$offcanvas-padding-x * .5};
+
+                font-size: $h5-font-size;
+                font-weight: $o-font-weight-medium;
+
+                &.active:before {
+                    font-size: .9em !important;
+                    transform: translate(-1.2em, 134%) !important;
+                }
+            }
+        }
+    }
+
+    &.o_bottom_sheet_extended .o_bottom_sheet_sheet {
+        --offcanvas-box-shadow: #{$box-shadow-lg};
+    }
+
+    // When sheet is ready to display
+    &.o_bottom_sheet_ready {
+        opacity: 1;
+
+        .o_bottom_sheet_sheet {
+            animation: var(--BottomSheet-slideIn-duration, 500ms) bottom-sheet-in var(--BottomSheet-slideIn-easing, ease-out) forwards;
+            // box-shadow: 0 -2px 10px rgba(0, 0, 0, calc(0.1 + (var(--BottomSheet-progress, 0) * 0.1)));
+        }
+    }
+
+    // When sheet is dismissing
+    &.o_bottom_sheet_dismissing {
+        .o_bottom_sheet_sheet {
+            animation: var(--BottomSheet-slideOut-duration, 300ms) bottom-sheet-out var(--BottomSheet-slideOut-easing, ease-in) forwards;
+        }
+
+        .o_bottom_sheet_backdrop {
+            opacity: 0;
+            transition: opacity var(--BottomSheet-slideOut-duration, 300ms) var(--BottomSheet-slideOut-easing, ease-in);
+        }
+    }
+
+    @keyframes bottom-sheet-in {
+        from {
+            transform: translateY(100%) translateZ(0);
+        }
+        to {
+            transform: translateY(0) translateZ(0);
+        }
+    }
+
+    @keyframes bottom-sheet-out {
+        from {
+            transform: translateY(0) translateZ(0);
+        }
+        to {
+            transform: translateY(100%) translateZ(0);
+        }
+    }
+
+    // When bottom sheet is open, apply styles to the body
+    @at-root .bottom-sheet-open {
+        overflow: hidden;
+
+        // Scale down the main content
+        .o_navbar, .o_action_manager {
+            transition: transform $o_BottomSheet_slideIn_duration ease;
+            transform: scale(.95) translateZ(0);
+            transform-origin: center top;
+        }
+
+        &:has(.o_bottom_sheet_dismissing) {
+            .o_navbar, .o_action_manager {
+                transition: transform $o_BottomSheet_slideOut_duration ease;
+                transform: scale(1) translateZ(0);
+            }
+        }
+    }
+}
