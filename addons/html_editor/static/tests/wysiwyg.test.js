@@ -1,4 +1,4 @@
-import { CORE_PLUGINS } from "@html_editor/plugin_sets";
+import { CORE_PLUGINS } from "@html_editor/plugin_sets_core_main";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";

@@ -5,7 +5,7 @@ import { Component, xml } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { Plugin } from "../src/plugin";
-import { MAIN_PLUGINS } from "../src/plugin_sets";
+import { MAIN_PLUGINS } from "../src/plugin_sets_core_main";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText, tripleClick } from "./_helpers/user_actions";

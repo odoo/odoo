@@ -14,7 +14,7 @@ portal.
 This module contains most code coming from odoo v10 website_portal. Purpose
 of this module is to allow the display of a customer portal without having
 a dependency towards website editing and customization capabilities.""",
-    'depends': ['web', 'web_editor', 'http_routing', 'mail', 'auth_signup'],
+    'depends': ['web', 'http_routing', 'mail', 'auth_signup'],
     'data': [
         'security/ir.model.access.csv',
         'data/mail_template_data.xml',
@@ -38,6 +38,8 @@ a dependency towards website editing and customization capabilities.""",
         'web.assets_frontend': [
             'portal/static/src/interactions/**/*',
             'portal/static/src/scss/portal.scss',
+
+            "web_editor/static/src/scss/**/*",
             'portal/static/src/js/portal.js',
             'portal/static/src/xml/portal_chatter.xml',
             'portal/static/src/js/portal_security.js',
@@ -54,6 +56,21 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/tests/**/*',
         ],
         "portal.assets_chatter_helpers": [
+
+            'web/static/lib/dompurify/DOMpurify.js',
+
+            'html_editor/static/src/wysiwyg.xml',
+            'html_editor/static/src/local_overlay_container.xml',
+            'html_editor/static/src/local_overlay_container.js',
+            'html_editor/static/src/plugin_sets_core_main.js',
+            'html_editor/static/src/plugin.js',
+            'html_editor/static/src/position_hook.js',
+            'html_editor/static/src/core/**/*',
+            'html_editor/static/src/main/**/*',
+            'html_editor/static/src/utils/**/*',
+            'html_editor/static/src/wysiwyg.js',
+            'html_editor/static/src/editor.js',
+
             "web/static/src/views/view_dialogs/form_view_dialog.js",
             "web/static/src/core/debug/*",
             "web/static/src/core/commands/command_hook.js",
@@ -108,6 +125,7 @@ a dependency towards website editing and customization capabilities.""",
             "mail/static/src/core/common/**/*.scss",
             "mail/static/src/chatter/web_portal/**/*.scss",
             ("remove", "mail/static/src/**/*.dark.scss"),
+            # "portal/static/src/chatter/scss/wysiwyg.scss",
             "portal/static/src/chatter/scss/shadow.scss",
         ],
     },

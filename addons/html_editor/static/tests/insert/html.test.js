@@ -5,7 +5,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { dispatchClean } from "../_helpers/dispatch";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_main";
 import { addStep } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 

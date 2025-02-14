@@ -4,7 +4,7 @@ import { unformat } from "../_helpers/format";
 import { strong } from "../_helpers/tags";
 import { setFontSize } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
 

@@ -357,7 +357,9 @@ export class SelectionPlugin extends Plugin {
      * @return { SelectionData }
      */
     getSelectionData() {
-        const selection = this.document.getSelection();
+        const root = this.editable.getRootNode();
+        const selection =
+            root instanceof ShadowRoot ? root.getSelection() : document.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         const documentSelection = selection
             ? Object.freeze({

@@ -391,11 +391,6 @@ test("link preview request is only made when message contains URL", async () => 
         text: "Hello, this message does not contain any link",
     });
     await waitForSteps([]);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-NavigableList-item", { text: "Sales" });
-    await press("Enter");
-    await contains(".o-mail-Message", { text: "Sales" });
-    await waitForSteps([]);
     await insertText(".o-mail-Composer-input", "https://www.odoo.com");
     await press("Enter");
     await waitForSteps(["/mail/link_preview"]);
