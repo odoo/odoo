@@ -39,21 +39,6 @@
                             </div>
                         </setting>
                         <t invisible="not l10n_in_is_gst_registered">
-                            <setting name="india_production_setting"
-                                     company_dependent="1"
-                                     string="Production Environment"
-                                     help="Activate this to start using Indian services in the production environment.">
-                                <field name="l10n_in_edi_production_env"/>
-                                <div class='mt8'
-                                    invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not l10n_in_gstin_status_feature and not module_l10n_in_ewaybill and not l10n_in_gst_efiling_feature)">
-                                    <button name="l10n_in_edi_buy_iap"
-                                            title="Costs 1 credit per transaction. Free 200 credits will be available for the first time."
-                                            icon="fa-arrow-right"
-                                            type="object"
-                                            string="Buy credits"
-                                            class="btn-link"/>
-                                </div>
-                            </setting>
                             <setting name="electronic_invoices_in"
                                      help="Connect to NIC (National Informatics Center) to submit invoices on posting."
                                      company_dependent="1"
