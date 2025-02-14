@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 
 from collections import defaultdict
 from datetime import timedelta, datetime, date
+from dateutil.relativedelta import relativedelta
 import calendar
 
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.osv import expression
 from odoo.tools import date_utils, format_list, SQL
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
@@ -747,7 +746,7 @@ class ResCompany(models.Model):
             code -= 1
         return self.env['account.account']._load_records([
             {
-                'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
+                'xml_id': f"account.{self.id!s}_unaffected_earnings_account",
                 'values': {
                               'code': str(code),
                               'name': _('Undistributed Profits/Losses'),
@@ -1030,3 +1029,7 @@ class ResCompany(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             company.company_vat_placeholder = placeholder
+
+    def get_last_fiscal_year(self):
+        fiscalyear_date_range = self.env.company.compute_fiscalyear_dates(fields.Date.today())
+        return fiscalyear_date_range['date_from'] - relativedelta(years=1)
