@@ -185,9 +185,20 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
         },
     },
     {
-        content: "Edit link",
+        content: "Click 'edit link' button if URL input is now shown",
         trigger: "#create-link",
-        run: "click",
+        async run(actions) {
+            // Note: the 'create-link' button is always here, however the input 
+            // for the URL might not be.
+            // We have to consider both cases:
+            // 1. Single-app website build: a few menu, so no extra menu added 
+            //    and the URL input is shown
+            // 2. Multi-app website build:  many menu, so extra menu added 
+            //    and the URL input is not shown
+            if (!document.querySelector("#o_link_dialog_url_input")) {
+                await actions.click();
+            }
+        },
     },
     {
         content: "Change the link",
