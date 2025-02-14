@@ -13,6 +13,7 @@ import { Model } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
+import { useDebounced } from "@web/core/utils/timing";
 
 export class CalendarModel extends Model {
     setup(params, services) {
@@ -39,6 +40,8 @@ export class CalendarModel extends Model {
             records: {},
             unusualDays: [],
         };
+
+        this.scheduleLoad = useDebounced((params) => this.load(params), 400);
     }
     async load(params = {}) {
         Object.assign(this.meta, params);
@@ -196,9 +199,15 @@ export class CalendarModel extends Model {
     }
     async unlinkFilter(fieldName, recordId) {
         const info = this.meta.filtersInfo[fieldName];
+        const section = this.data.filterSections[fieldName];
+        if (section) {
+            // remove the filter directly, to provide a direct feedback to the user
+            section.filters = section.filters.filter((f) => f.recordId !== recordId);
+            this.notify();
+        }
         if (info && info.writeResModel) {
             await this.orm.unlink(info.writeResModel, [recordId]);
-            await this.load();
+            await this.scheduleLoad();
         }
     }
     async unlinkRecord(recordId) {
