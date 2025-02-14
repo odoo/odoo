@@ -2029,12 +2029,10 @@
 
     <template id="cart_combo_item_line">
         <div class="d-flex align-items-center">
-            <div t-field="combo_item_line.product_id.image_128"
-                 t-options="{
-                    'widget': 'image',
-                    'qweb_img_responsive': False,
-                    'class': 'o_image_64_max rounded',
-                 }"
+            <img
+                t-att-src="image_data_uri(combo_item_line.product_id.image_128)"
+                class="o_image_64_max img rounded"
+                t-att-alt="combo_item_line.name_short"
             />
             <div class="ms-3">
                 <a t-att-href="combo_item_line.product_id.website_url">
