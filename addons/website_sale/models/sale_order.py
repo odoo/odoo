@@ -239,7 +239,7 @@ class SaleOrder(models.Model):
             return self.env['website'].browse(website_id).get_base_url()
         return super()._get_note_url()
 
-    def _update_address(self, partner_id, fnames=None):
+    def _update_address(self, partner_id, fnames=None, update_session=True):
         if not fnames:
             return
 
@@ -261,10 +261,10 @@ class SaleOrder(models.Model):
             # Pricelist may have been recomputed by the `partner_id` field update
             # we need to recompute the prices to match the new pricelist if it changed
             self._recompute_prices()
-
-            new_pricelist = self.pricelist_id
-            request.session[PRICELIST_SESSION_CACHE_KEY] = new_pricelist.id
-            request.pricelist = new_pricelist
+            if update_session:
+                new_pricelist = self.pricelist_id
+                request.session[PRICELIST_SESSION_CACHE_KEY] = new_pricelist.id
+                request.pricelist = new_pricelist
 
         if self.carrier_id and 'partner_shipping_id' in fnames and self._has_deliverable_products():
             # Update the delivery method on shipping address change.

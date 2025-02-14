@@ -37,6 +37,9 @@
                         t-att-disabled="!this.props.selectedLocationId"
                         t-on-click="this.props.validateSelection"
                         t-out="chooseLocationButtonLabel"/>
+                    <div class="alert alert-warning mt-3" t-if="this.props.isCountryChanged">
+                        <span t-out="this.props.addressChangeWarning" />
+                    </div>
                 </div>
 
                 <!-- Schedule -->

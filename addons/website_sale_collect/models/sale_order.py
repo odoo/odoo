@@ -29,6 +29,13 @@ class SaleOrder(models.Model):
         self.pickup_location_data = json.loads(pickup_location_data)
         if self.pickup_location_data:
             self.warehouse_id = self.pickup_location_data['id']
+            partner_id = self.warehouse_id.partner_id
+            dummy_order = self.env['sale.order'].new(origin=self)
+            dummy_order._update_address(partner_id.id, ['partner_id'], update_session=False)
+            self.write({
+                'fiscal_position_id': dummy_order.fiscal_position_id.id,
+                'order_line': dummy_order.order_line.ids,
+            })
         else:
             self._compute_warehouse_id()
 
