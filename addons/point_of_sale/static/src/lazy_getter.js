@@ -1,21 +1,6 @@
 import { effect } from "@web/core/utils/reactive";
+import { getAllClassGetters } from "@point_of_sale/utils";
 import { getDisabler } from "./proxy_trap";
-
-function getAllGetters(proto) {
-    const getterNames = new Set();
-    const getters = new Set();
-    while (proto !== null) {
-        const descriptors = Object.getOwnPropertyDescriptors(proto);
-        for (const [name, descriptor] of Object.entries(descriptors)) {
-            if (descriptor.get && !getterNames.has(name)) {
-                getterNames.add(name);
-                getters.add([name, descriptor.get]);
-            }
-        }
-        proto = Object.getPrototypeOf(proto);
-    }
-    return getters;
-}
 
 const classGetters = new Map();
 
@@ -26,7 +11,7 @@ export function clearGettersCache() {
 function getGetters(Class) {
     if (!classGetters.has(Class)) {
         const getters = new Map();
-        for (const [name, func] of getAllGetters(Class.prototype)) {
+        for (const [name, func] of getAllClassGetters(Class)) {
             if (name.startsWith("__") && name.endsWith("__")) {
                 continue;
             }
