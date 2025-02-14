@@ -19,6 +19,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'data/account_data.xml',
+        'data/account_payment_method_line.xml',
         'data/digest_data.xml',
         'views/account_report.xml',
         'data/mail_template_data.xml',

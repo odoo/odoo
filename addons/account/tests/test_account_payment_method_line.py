@@ -109,7 +109,7 @@ class TestAccountPaymentMethodLine(AccountTestInvoicingCommon):
         # Test with two moves with different partners and different payment method lines
         self.assertRegisterPayment(
             self.bank_journal_1,
-            None,  # We will get in the assertRegisterPayment the first payment method line of the journal
+            self.inbound_payment_method_line_without_journal,  # We will get in the assertRegisterPayment the first payment method line of the journal
             self.move_partner_a + self.move_partner_b,
         )
 

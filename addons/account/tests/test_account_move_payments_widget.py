@@ -160,10 +160,13 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         out_invoice.action_post()
 
         # Payment at exchange rate 2:1. 300 GOL -> 150 USD
-        payment = self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=out_invoice.ids)\
-            .create({'payment_date': '2017-01-01'})\
-            ._create_payments()
+        payment = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=out_invoice.ids
+        ).create({
+            'payment_date': '2017-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
 
         expected_amounts = {payment.move_id.id: 300.0}
         # Get the exchange difference move.
@@ -192,10 +195,13 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         out_invoice.action_post()
 
         # Payment at exchange rate 3:1. 300 GOL -> 100 USD
-        payment = self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=out_invoice.ids)\
-            .create({'payment_date': '2016-01-01'})\
-            ._create_payments()
+        payment = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=out_invoice.ids,
+        ).create({
+            'payment_date': '2016-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
 
         expected_amounts = {payment.move_id.id: 300.0}
         # Get the exchange difference move.

@@ -646,12 +646,11 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # make payment
         payment = self.env['account.payment'].create({
             'payment_type': 'inbound',
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
             'partner_type': 'customer',
             'partner_id': self.partner_a.id,
             'amount': 1100,
             'date': move.date,
-            'journal_id': self.company_data['default_journal_bank'].id,
         })
         payment.action_post()
         (payment.move_id + move).line_ids.filtered(lambda x: x.account_id == self.company_data['default_account_receivable']).reconcile()

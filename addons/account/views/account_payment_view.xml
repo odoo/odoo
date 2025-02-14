@@ -181,8 +181,8 @@
                         <field name="reconciled_invoices_type" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <field name="paired_internal_transfer_payment_id" invisible="1"/>
-                        <field name="available_journal_ids" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
+                        <field name="journal_id" invisible="1"/>
 
                         <div class="oe_button_box" name="button_box">
                             <!-- Invoice stat button -->
@@ -270,15 +270,10 @@
                                 <field name="memo" string="Memo"/>
                             </group>
                             <group name="group2">
-                                <field name="journal_id"
-                                       domain="[('id', 'in', available_journal_ids)]"
-                                       readonly="state != 'draft'"/>
                                 <field name="payment_method_line_id"
-                                       context="{'hide_payment_journal_id': 1}"
                                        options="{'no_create': True, 'no_open': True}"
                                        required="1"
                                        readonly="state != 'draft'"/>
-
                                 <field name="partner_bank_id" string="Customer Bank Account"
                                       context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                         invisible="not show_partner_bank_account or partner_type != 'customer' or payment_type == 'inbound'"

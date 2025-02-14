@@ -26,6 +26,7 @@
                     <field name="currency_id" invisible="1" />
                     <field name="custom_user_amount" invisible="1" />
                     <field name="custom_user_currency_id" invisible="1" />
+                    <field name="journal_id" invisible="1"/>
 
                     <field name="show_partner_bank_account" invisible="1"/>
                     <field name="require_partner_bank_account" invisible="1"/>
@@ -56,10 +57,35 @@
                     </div>
                     <group>
                         <group name="group1">
-                            <field name="journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>
+                            <label for="amount"/>
+                            <div name="amount_div" class="o_row">
+                                <field name="amount"
+                                 force_save="1"
+                                 readonly="not can_edit_wizard or can_group_payments and not group_payment"/>
+                                <field name="currency_id"
+                                       required="1"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       invisible="not can_edit_wizard or can_group_payments and not group_payment"
+                                       groups="base.group_multi_currency"/>
+                            </div>
+                            <field
+                                name="installments_switch_html"
+                                string=""
+                                widget="account_payment_register_html"
+                                invisible="not installments_switch_html"
+                            />
+                            <field name="payment_date"/>
+                            <field name="communication"
+                                   invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
+                        </group>
+                        <field name="qr_code" invisible="1"/>
+                        <div invisible="not qr_code" colspan="2" class="text-center">
+                            <field name="qr_code"/>
+                        </div>
+                        <group name="group2">
                             <field name="payment_method_line_id"
-                                   context="{'hide_payment_journal_id': 1}"
-                                   required="1"  options="{'no_create': True, 'no_open': True}"/>
+                                   required="1"  options="{'no_create': True, 'no_open': True}"
+                                   invisible="not can_edit_payment_method_line"/>
                             <field name="partner_bank_id"
                                    invisible="not show_partner_bank_account or not can_edit_wizard or (can_group_payments and not group_payment)"
                                    readonly="payment_type == 'inbound'"
@@ -103,32 +129,6 @@
                                 </div>
                             </div>
                         </group>
-                        <group name="group2">
-                            <label for="amount"/>
-                            <div name="amount_div" class="o_row">
-                                <field name="amount"
-                                 force_save="1"
-                                 readonly="not can_edit_wizard or can_group_payments and not group_payment"/>
-                                <field name="currency_id"
-                                       required="1"
-                                       options="{'no_create': True, 'no_open': True}"
-                                       invisible="not can_edit_wizard or can_group_payments and not group_payment"
-                                       groups="base.group_multi_currency"/>
-                            </div>
-                            <field
-                                name="installments_switch_html"
-                                string=""
-                                widget="account_payment_register_html"
-                                invisible="not installments_switch_html"
-                            />
-                            <field name="payment_date"/>
-                            <field name="communication"
-                                   invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
-                        </group>
-                        <field name="qr_code" invisible="1"/>
-                        <div invisible="not qr_code" colspan="2" class="text-center">
-                            <field name="qr_code"/>
-                        </div>
                     </group>
                     <footer>
                         <button string="Create Payments" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount == 1"/>
