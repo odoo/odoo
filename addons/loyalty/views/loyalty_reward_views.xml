@@ -37,6 +37,7 @@
 
                         <group string="Discount" invisible="reward_type != 'discount' or program_type in ('gift_card','ewallet')">
                             <field name="discount_max_amount"/>
+<<<<<<< saas-18.1
                             <field
                                 name="tax_ids"
                                 placeholder="Untaxed discount"
@@ -45,6 +46,18 @@
                                 invisible="discount_applicability != 'order' or
                                     discount_mode not in ('per_order','per_point')"
                             />
+||||||| 122d228a9540cf73ab5eff0c917c4f99a5e50180
+                            <field
+                                name="tax_ids"
+                                placeholder="Untaxed discount"
+                                widget="many2many_tags"
+                                options="{'no_create': True}"
+                                invisible="discount_applicability != 'order' or
+                                    discount_mode not in ('per_order','per_point')"
+                            />
+=======
+                            <field name="tax_ids" invisible="1"/>
+>>>>>>> 905f2bb1dd07cf5141fbc769d92ed079c064a6ac
                             <field name="discount_product_domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}" invisible="discount_applicability != 'specific'"/>
                             <field name="discount_product_ids" widget="many2many_tags" invisible="discount_applicability != 'specific'"/>
                             <field name="discount_product_category_id" invisible="discount_applicability != 'specific'"/>
@@ -83,7 +96,7 @@
         <field name="model">loyalty.reward</field>
         <field name="arch" type="xml">
             <kanban>
-                <field name="company_id"/>
+                <field name="company_id" invisible="1"/>
                 <field name="currency_id"/>
                 <field name="reward_type"/>
                 <field name="discount_applicability"/>
