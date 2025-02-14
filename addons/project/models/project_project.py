@@ -8,7 +8,7 @@ from odoo import api, Command, fields, models
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.rating.models import rating_data
 from odoo.exceptions import UserError
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, OR
 from odoo.tools import get_lang, SQL
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
@@ -642,6 +642,43 @@ class Project(models.Model):
                     'to align with the stage\'s company or remove the company designation from the stage', project.stage_id.company_id.name)
                 )
 
+    @api.model
+    def remove_accounts_from_projects(self, account_ids, plan_id):
+        fnames = self._get_plan_fnames()
+        projects = self.search([('auto_account_id', 'in', account_ids)])
+        plan = self.env['account.analytic.plan'].browse(plan_id)
+        for project in projects:
+            for fname in fnames:
+                account = project[fname]
+                if account and account.id in account_ids and account.root_plan_id != plan.root_id:
+                    project[fname] = False
+
+    @api.model
+    def get_projects_name_from_account(self, account_ids, plan_id):
+        """
+        :param account_ids: the accounts selected on the list view/ the active account of the form view
+                plan_id: the new plan that will be set on the account(s)
+        :return: projects_name_per_account: a dict with 2 keys (account_id, other_plan) which contains the names of
+        the projects on which at least one of the account is set. This separation is done in order to display an accurate
+        warning message.
+        """
+        projects = self.search([('auto_account_id', 'in', account_ids)])
+        if not projects:
+            return False
+        fnames = self._get_plan_fnames()
+        plan = self.env['account.analytic.plan'].browse(plan_id)
+        projects_name_per_account = {'account_id': [], 'other_plan': []}
+        for project in projects:
+            for fname in fnames:
+                account = project[fname]
+                if account and account.id in account_ids and account.root_plan_id != plan.root_id:
+                    if fname == "account_id":
+                        projects_name_per_account['account_id'].append(project.name)
+                    else:
+                        projects_name_per_account['other_plan'].append(project.name)
+                    break
+        return projects_name_per_account
+
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------
@@ -971,7 +1008,17 @@ class Project(models.Model):
     @api.constrains(lambda self: self._get_plan_fnames())
     def _check_account_id(self):
         # Overriden from 'analytic.plan.fields.mixin'
-        pass
+        # check that the analytic accounts are set on the correct plan.
+        plan_column_names = self._get_plan_fnames()
+        for project in self:
+            for plan_column_name in plan_column_names:
+                account = project[plan_column_name]
+                if not account:
+                    continue
+                if account.root_plan_id._column_name() != plan_column_name:
+                    raise UserError(_("The account '%(account_name)s' is linked to the root plan '%(plan_name)s'. "
+                                      "You are not allowed to set it on other root plan on your projects.",
+                                    account_name=account.name, plan_name=account.plan_id.name))
 
     def _get_plan_domain(self, plan):
         return AND([super()._get_plan_domain(plan), ['|', ('company_id', '=', False), ('company_id', '=?', unquote('company_id'))]])
