@@ -70,7 +70,14 @@ class SaleOrderLine extends models.Model {
     });
 }
 
-defineModels([Product, SaleOrderLine]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+
+defineModels([Product, SaleOrderLine, User]);
 
 beforeEach(() => {
     mockUserAgent("android");

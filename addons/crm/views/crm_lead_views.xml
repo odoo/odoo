@@ -669,7 +669,7 @@
     'default_composition_mode': 'mass_mail',
                 }</field>
             <field name="binding_model_id" ref="model_crm_lead"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">list,kanban</field>
         </record>
 
         <!--
@@ -1237,7 +1237,7 @@
             <field name="target">new</field>
             <field name="context">{'default_res_model': 'crm.lead', 'default_res_ids': active_ids}</field>
             <field name="binding_model_id" ref="model_crm_lead"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">list,kanban</field>
         </record>
 
 </odoo>

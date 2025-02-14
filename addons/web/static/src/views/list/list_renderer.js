@@ -1694,23 +1694,21 @@ export class ListRenderer extends Component {
         }
         const isRecordPresent = this.props.list.records.includes(this.lastCheckedRecord);
         if (this.shiftKeyMode && isRecordPresent) {
-            this.toggleRecordShiftSelection(record);
+            this.toggleRangeSelection(record);
         } else {
             record.toggleSelection();
         }
         this.lastCheckedRecord = record;
     }
 
-    toggleRecordShiftSelection(record) {
+    toggleRangeSelection(record) {
         const { records } = this.props.list;
         const recordIndex = records.indexOf(record);
         const lastCheckedRecordIndex = records.indexOf(this.lastCheckedRecord);
         const start = Math.min(recordIndex, lastCheckedRecordIndex);
         const end = Math.max(recordIndex, lastCheckedRecordIndex);
-        const { selected } = record;
-
         for (let i = start; i <= end; i++) {
-            records[i].toggleSelection(!selected);
+            records[i].toggleSelection(!record.selected);
         }
     }
 

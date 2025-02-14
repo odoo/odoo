@@ -658,6 +658,7 @@ describe(`new urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
+            "has_group",
             "Update the state without updating URL, nextState: actionStack,action",
         ]);
     });
@@ -768,6 +769,7 @@ describe(`new urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
+            "has_group",
             "Update the state without updating URL, nextState: actionStack,action,view_type",
         ]);
     });
@@ -954,6 +956,7 @@ describe(`new urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
+            "has_group",
             "pushState http://example.com/odoo/action-1",
         ]);
     });
@@ -1573,6 +1576,7 @@ describe(`legacy urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
+            "has_group",
         ]);
     });
 
@@ -1666,6 +1670,7 @@ describe(`legacy urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
+            "has_group",
         ]);
     });
 
@@ -1786,6 +1791,7 @@ describe(`legacy urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
+            "has_group",
         ]);
     });
 

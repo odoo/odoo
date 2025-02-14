@@ -181,7 +181,14 @@ class Category extends models.Model {
     ];
 }
 
-defineModels([Partner, Company, Category]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+
+defineModels([Partner, Company, Category, User]);
 
 defineActions([
     {

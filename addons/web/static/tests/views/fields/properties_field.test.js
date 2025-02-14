@@ -275,6 +275,10 @@ class User extends models.Model {
             name: "Eve",
         },
     ];
+
+    has_group() {
+        return true;
+    }
 }
 
 defineModels([Partner, ResCompany, User]);
@@ -528,12 +532,10 @@ test("properties: selection", async () => {
         "Selection"
     );
 
-    const getOptions = () => {
-        return queryAll(".o_property_field_popover .o_field_property_selection_option");
-    };
-    const getOptionsValues = () => {
-        return queryAllValues(".o_property_field_popover .o_field_property_selection_option input");
-    };
+    const getOptions = () =>
+        queryAll(".o_property_field_popover .o_field_property_selection_option");
+    const getOptionsValues = () =>
+        queryAllValues(".o_property_field_popover .o_field_property_selection_option input");
 
     // Create a new selection option
     await click(".o_field_property_selection .fa-plus");
@@ -590,13 +592,12 @@ test("properties: selection", async () => {
         message: "Should have added a new option at the correct spot",
     });
 
-    const getOptionDraggableElement = (index) => {
-        return queryFirst(
+    const getOptionDraggableElement = (index) =>
+        queryFirst(
             `.o_field_property_selection_option:nth-child(${
                 index + 1
             }) .o_field_property_selection_drag`
         );
-    };
 
     await contains(getOptionDraggableElement(0)).dragAndDrop(getOptionDraggableElement(2));
     expect(getOptionsValues()).toEqual(["C", "New option 2", "A", "New option"]);
@@ -2082,11 +2083,8 @@ test("properties: separators move properties", async () => {
     await makePropertiesGroupView([false, true, true, false, true, true, false]);
 
     // return true if the given separator is folded
-    const foldState = (separatorName) => {
-        return !queryFirst(
-            `div[property-name='${separatorName}'] .o_field_property_label .fa-caret-down`
-        );
-    };
+    const foldState = (separatorName) =>
+        !queryFirst(`div[property-name='${separatorName}'] .o_field_property_label .fa-caret-down`);
 
     const assertFolded = (values) => {
         expect(values.length).toBe(4);
@@ -2267,9 +2265,8 @@ test("properties: separators drag and drop", async () => {
         ],
     ]);
 
-    const getPropertyHandleElement = (propertyName) => {
-        return queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
-    };
+    const getPropertyHandleElement = (propertyName) =>
+        queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
 
     // if we move properties inside the same column, do not generate the group
     await contains(getPropertyHandleElement("property_1"), { visible: false }).dragAndDrop(

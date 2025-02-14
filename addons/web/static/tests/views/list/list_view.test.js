@@ -284,19 +284,19 @@ test(`select record range with shift click`, async () => {
         arch: `<list><field name="foo"/><field name="int_field"/></list>`,
     });
     await contains(`.o_data_row .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
-    expect(`.o_list_selection_box`).toHaveText("1\nselected");
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
+    expect(`.o_selection_box`).toHaveText("1\nselected");
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(1);
 
     // shift click the 4th record to have 0-1-2-3 toggled
     await contains(`.o_data_row .o_list_record_selector input:eq(3)`).click({ shiftKey: true });
-    expect(`.o_list_selection_box`).toHaveText("4\nselected");
+    expect(`.o_selection_box`).toHaveText("4\nselected");
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(4);
 
     // shift click the 3rd record to untoggle 2-3
     await contains(`.o_data_row .o_list_record_selector input:eq(2)`).click({ shiftKey: true });
-    expect(`.o_list_selection_box`).toHaveText("2\nselected");
+    expect(`.o_selection_box`).toHaveText("2\nselected");
     expect(`.o_data_row.o_data_row_selected`).toHaveCount(2);
 
     // shift click the 1st record to untoggle 0-1
@@ -919,21 +919,21 @@ test(`list view: action button in controlPanel basic rendering on desktop`, asyn
         `,
     });
     expect(`.o_control_panel_actions button[name=x]`).toHaveCount(0);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
     expect(`.o_control_panel_actions button[name="y"]`).toHaveCount(0);
 
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     expect(`.o_control_panel_actions button[name=x]`).toHaveCount(1);
     expect(`.o_control_panel_actions button[name=x]`).toHaveClass("btn btn-secondary plaf");
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
     expect(queryFirst(`.o_control_panel_actions button[name=x]`).previousElementSibling).toBe(
-        queryFirst(`.o_control_panel_actions .o_list_selection_box`)
+        queryFirst(`.o_control_panel_actions .o_selection_box`)
     );
     expect(`.o_control_panel_actions button[name=y]`).toHaveCount(0);
 
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     expect(`.o_control_panel_actions button[name=x]`).toHaveCount(0);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
     expect(`.o_control_panel_actions button[name="y"]`).toHaveCount(0);
 });
 
@@ -1292,7 +1292,7 @@ test(`list view: action button executes action on click with domain selected: co
         `,
     });
     await clickRecordSelector();
-    await contains(`.o_list_select_domain`).click();
+    await contains(`.o_select_domain`).click();
     expect.verifySteps([]);
 
     await clickControlPanelAction("x");
@@ -3612,28 +3612,28 @@ test(`selection box is properly displayed (single page)`, async () => {
         arch: `<list><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(4);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 
     // select a record
     await contains(`.o_data_row .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
-    expect(`.o_list_selection_box`).toHaveText("1\nselected");
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
+    expect(`.o_selection_box`).toHaveText("1\nselected");
 
     // select all records of first page
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
-    expect(`.o_list_selection_box`).toHaveText("4\nselected");
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
+    expect(`.o_selection_box`).toHaveText("4\nselected");
 
     // unselect a record
     await contains(`.o_data_row .o_list_record_selector input:eq(1)`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
-    expect(`.o_list_selection_box`).toHaveText("3\nselected");
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
+    expect(`.o_selection_box`).toHaveText("3\nselected");
 
-    await contains(`.o_list_unselect_all`).click();
-    expect(`.o_list_selection_box`).toHaveCount(0, {
+    await contains(`.o_unselect_all`).click();
+    expect(`.o_selection_box`).toHaveCount(0, {
         message: "selection options are no longer visible",
     });
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
@@ -3649,27 +3649,27 @@ test(`selection box is properly displayed (multi pages) on desktop`, async () =>
         arch: `<list limit="3"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(3);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 
     // select a record
     await contains(`.o_data_row .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
-    expect(`.o_list_selection_box`).toHaveText("1\nselected");
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
+    expect(`.o_selection_box`).toHaveText("1\nselected");
 
     // select all records of first page
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(1);
-    expect(`.o_list_selection_box`).toHaveText("3\nselected\n Select all 4");
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
+    expect(`.o_selection_box`).toHaveText("3\nselected\n Select all 4");
 
     // select all domain
-    await contains(`.o_list_selection_box .o_list_select_domain`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    await contains(`.o_selection_box .o_select_domain`).click();
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 
-    await contains(`.o_list_unselect_all`).click();
-    expect(`.o_list_selection_box`).toHaveCount(0, {
+    await contains(`.o_unselect_all`).click();
+    expect(`.o_selection_box`).toHaveCount(0, {
         message: "selection options are no longer visible",
     });
 });
@@ -3689,16 +3689,16 @@ test("selection box is properly displayed (multi pages) on mobile", async () => 
     });
 
     expect(".o_data_row").toHaveCount(3);
-    expect(".o_list_selection_box").toHaveCount(0);
+    expect(".o_selection_box").toHaveCount(0);
 
     // select a record
     await contains(".o_data_row:nth-child(1)").drag();
     await animationFrame();
 
-    expect(".o_list_selection_box").toHaveCount(1);
-    expect(".o_list_selection_box .o_list_select_domain").toHaveCount(1);
-    expect(".o_list_selection_box").toHaveText("1\nselected\nAll");
-    expect(".o_list_selection_box").toHaveCount(1);
+    expect(".o_selection_box").toHaveCount(1);
+    expect(".o_selection_box .o_select_domain").toHaveCount(1);
+    expect(".o_selection_box").toHaveText("1\nselected\nAll");
+    expect(".o_selection_box").toHaveCount(1);
     expect("div.o_control_panel .o_cp_action_menus").toHaveCount(1);
 
     await toggleActionMenu();
@@ -3709,16 +3709,16 @@ test("selection box is properly displayed (multi pages) on mobile", async () => 
     await contains(".o_data_row:nth-child(3)").drag();
     await animationFrame();
 
-    expect(".o_list_selection_box").toHaveCount(1);
-    expect(".o_list_selection_box .o_list_select_domain").toHaveCount(1);
-    expect(".o_list_selection_box").toHaveText("3\nselected\nAll");
+    expect(".o_selection_box").toHaveCount(1);
+    expect(".o_selection_box .o_select_domain").toHaveCount(1);
+    expect(".o_selection_box").toHaveText("3\nselected\nAll");
 
-    expect(".o_list_select_domain").toHaveCount(1);
+    expect(".o_select_domain").toHaveCount(1);
 
     // select all domain
-    await contains(".o_list_selection_box .o_list_select_domain").click();
-    expect(".o_list_selection_box").toHaveCount(1);
-    expect(".o_list_selection_box").toHaveText("All 4 selected");
+    await contains(".o_selection_box .o_select_domain").click();
+    expect(".o_selection_box").toHaveCount(1);
+    expect(".o_selection_box").toHaveText("All 4 selected");
 });
 
 test.tags("desktop");
@@ -3730,30 +3730,30 @@ test(`selection box is properly displayed (group list)`, async () => {
         groupBy: ["foo"],
     });
     expect(`.o_group_header`).toHaveCount(3);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 
     // open first group
     await contains(`.o_group_header`).click();
 
     // select a record
     await contains(`.o_data_row .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
-    expect(`.o_list_selection_box`).toHaveText("1\nselected");
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
+    expect(`.o_selection_box`).toHaveText("1\nselected");
 
     // select all records of first page
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(1);
-    expect(`.o_list_selection_box`).toHaveText("2\nselected\n Select all 4");
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
+    expect(`.o_selection_box`).toHaveText("2\nselected\n Select all 4");
 
     // select all domain
-    await contains(`.o_list_selection_box .o_list_select_domain`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    await contains(`.o_selection_box .o_select_domain`).click();
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 
-    await contains(`.o_list_unselect_all`).click();
-    expect(`.o_list_selection_box`).toHaveCount(0, {
+    await contains(`.o_unselect_all`).click();
+    expect(`.o_selection_box`).toHaveCount(0, {
         message: "selection options are no longer visible",
     });
 });
@@ -3769,29 +3769,29 @@ test(`selection box: grouped list, all groups folded`, async () => {
     expect(`.o_group_header`).toHaveCount(3);
     expect(`.o_data_row`).toHaveCount(0);
     expect(`.o_searchview`).toHaveCount(1);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
     expect(`.o_control_panel_breadcrumbs_actions .o_cp_action_menus`).toHaveCount(1);
 
     // click on the checkbox in the thead
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
     expect(`.o_control_panel_breadcrumbs_actions .o_cp_action_menus`).toHaveCount(0);
     expect(`.o_searchview`).toHaveCount(0);
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 
     // remove selection by clicking on the cross in the selection box
-    await contains(`.o_list_unselect_all`).click();
-    expect(`.o_list_selection_box`).toHaveCount(0);
+    await contains(`.o_unselect_all`).click();
+    expect(`.o_selection_box`).toHaveCount(0);
 
     // click again on the checkbox in the thead
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 
     // remove selection by clicking on the checkbox in the thead
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_searchview`).toHaveCount(1);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -3804,7 +3804,7 @@ test(`selection box in grouped list, multi pages`, async () => {
     });
 
     expect(".o_group_header").toHaveCount(2);
-    expect(".o_list_selection_box").toHaveCount(0);
+    expect(".o_selection_box").toHaveCount(0);
     expect(".o_pager_value").toHaveText("1-2");
     expect(".o_pager_limit").toHaveText("4");
 
@@ -3812,16 +3812,16 @@ test(`selection box in grouped list, multi pages`, async () => {
     await contains(".o_group_header").click();
     expect(".o_data_row").toHaveCount(1);
     await contains("thead .o_list_record_selector input").click();
-    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(1);
-    expect(".o_list_selection_box .o_list_select_domain").toHaveCount(1);
-    expect(queryOne(".o_list_selection_box").innerText.replace(/\s+/g, " ").trim()).toBe(
+    expect(".o_control_panel_actions .o_selection_box").toHaveCount(1);
+    expect(".o_selection_box .o_select_domain").toHaveCount(1);
+    expect(queryOne(".o_selection_box").innerText.replace(/\s+/g, " ").trim()).toBe(
         "1 selected Select all" // we don't know the total count, so we don't display it
     );
 
     // select all domain
-    await contains(".o_list_selection_box .o_list_select_domain").click();
-    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(1);
-    expect(".o_list_selection_box").toHaveText("All 4 selected");
+    await contains(".o_selection_box .o_select_domain").click();
+    expect(".o_control_panel_actions .o_selection_box").toHaveCount(1);
+    expect(".o_selection_box").toHaveText("All 4 selected");
 });
 
 test.tags("desktop");
@@ -3835,11 +3835,11 @@ test(`selection box: grouped list, select domain, open group`, async () => {
 
     expect(".o_group_header").toHaveCount(3);
     expect(".o_data_row").toHaveCount(0);
-    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(0);
+    expect(".o_control_panel_actions .o_selection_box").toHaveCount(0);
 
     // select all domain by ticking the thead checkbox
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 
     // open first group
     await contains(".o_group_header").click();
@@ -3863,23 +3863,23 @@ test(`selection box: grouped list, select domain, use pager (inside group)`, asy
 
     expect(".o_group_header").toHaveCount(2);
     expect(".o_data_row").toHaveCount(0);
-    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(0);
+    expect(".o_control_panel_actions .o_selection_box").toHaveCount(0);
 
     // open second group and select all domain
     await contains(queryAll(".o_group_header")[1]).click();
     await contains("thead .o_list_record_selector input").click();
-    await contains(".o_list_selection_box .o_list_select_domain").click();
+    await contains(".o_selection_box .o_select_domain").click();
     expect(".o_data_row").toHaveCount(2);
     expect(".o_group_header .o_pager_value").toHaveText("1-2");
     expect(".o_group_header .o_pager_limit").toHaveText("3");
-    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(1);
-    expect(".o_list_selection_box").toHaveText("All 4 selected");
+    expect(".o_control_panel_actions .o_selection_box").toHaveCount(1);
+    expect(".o_selection_box").toHaveText("All 4 selected");
 
     // click pager next in the opened group
     await contains(".o_group_header .o_pager_next").click();
     expect(".o_data_row").toHaveCount(1);
     expect(".o_data_row .o_list_record_selector input:checked").toHaveCount(1);
-    expect(".o_list_selection_box").toHaveText("All 4 selected");
+    expect(".o_selection_box").toHaveText("All 4 selected");
 });
 
 test.tags("desktop");
@@ -3893,17 +3893,17 @@ test(`selection box: grouped list, select domain, use main pager`, async () => {
 
     expect(".o_group_header").toHaveCount(2);
     expect(".o_data_row").toHaveCount(0);
-    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(0);
+    expect(".o_control_panel_actions .o_selection_box").toHaveCount(0);
 
     // select all domain by ticking the thead checkbox
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 
     // go to second page
     await contains(".o_pager_next").click();
     expect(".o_group_header").toHaveCount(1);
     expect(".o_data_row").toHaveCount(0);
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 
     // open a group
     await contains(".o_group_header").click();
@@ -3915,7 +3915,7 @@ test(`selection box: grouped list, select domain, use main pager`, async () => {
     await contains(".o_pager_next").click();
     expect(".o_data_row").toHaveCount(1);
     expect(".o_data_row .o_list_record_selector input:checked").toHaveCount(1);
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 });
 
 test.tags("desktop");
@@ -3929,17 +3929,17 @@ test(`selection box: grouped list, select domain, reduce limit`, async () => {
 
     expect(".o_group_header").toHaveCount(3);
     expect(".o_data_row").toHaveCount(0);
-    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(0);
+    expect(".o_control_panel_actions .o_selection_box").toHaveCount(0);
 
     // select all domain by ticking the thead checkbox
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 
     // reduce limit to 2
     await contains(".o_pager_value").click();
     await contains("input.o_pager_value").edit("1-2");
     expect(".o_group_header").toHaveCount(2);
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 });
 
 test.tags("desktop");
@@ -3959,16 +3959,16 @@ test(`selection box is displayed as first action button`, async () => {
         `,
     });
     expect(`.o_data_row`).toHaveCount(4);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 
     // select a record
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
     const firstElement = queryFirst(`.o_control_panel_actions > div`).firstElementChild;
-    expect(firstElement).toBe(queryFirst(`.o_control_panel_actions .o_list_selection_box`), {
+    expect(firstElement).toBe(queryFirst(`.o_control_panel_actions .o_selection_box`), {
         message: "last element should selection box",
     });
-    expect(`.o_list_selection_box`).toHaveText("1\nselected");
+    expect(`.o_selection_box`).toHaveText("1\nselected");
 });
 
 test.tags("desktop");
@@ -3979,26 +3979,24 @@ test(`selection box: select domain, then untick a record`, async () => {
         arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(2);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 
     // select all records of first page
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(1);
-    expect(queryOne(".o_list_selection_box").innerText.replace(/\s+/g, " ").trim()).toBe(
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
+    expect(queryOne(".o_selection_box").innerText.replace(/\s+/g, " ").trim()).toBe(
         "2 selected Select all 4"
     );
 
     // select domain
-    await contains(`.o_list_selection_box .o_list_select_domain`).click();
-    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+    await contains(`.o_selection_box .o_select_domain`).click();
+    expect(`.o_selection_box`).toHaveText("All 4 selected");
 
     // untick a record
     await contains(`.o_data_row .o_list_record_selector input`).click();
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
-    expect(queryOne(`.o_list_selection_box`).innerText.replace(/\s+/g, " ").trim()).toBe(
-        "1 selected"
-    );
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
+    expect(queryOne(`.o_selection_box`).innerText.replace(/\s+/g, " ").trim()).toBe("1 selected");
     expect(`thead .o_list_record_selector input`).not.toBeChecked();
 });
 
@@ -4010,13 +4008,13 @@ test(`selection box is not removed after multi record edition`, async () => {
         arch: `<list multi_edit="1"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(4, { message: "there should be 4 records" });
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0, {
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0, {
         message: "list selection box should not be displayed",
     });
 
     // select all records
     await contains(`.o_list_record_selector input`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1, {
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1, {
         message: "list selection box should be displayed",
     });
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(4, {
@@ -4027,7 +4025,7 @@ test(`selection box is not removed after multi record edition`, async () => {
     await contains(`.o_data_row .o_data_cell`).click();
     await contains(`.o_data_row [name=foo] input`).edit("legion");
     await contains(`.modal-dialog button.btn-primary`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1, {
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1, {
         message: "list selection box should still be displayed",
     });
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(4, {
@@ -4047,7 +4045,7 @@ test(`selection is reset on reload`, async () => {
             </list>
         `,
     });
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
     expect(`tfoot .o_list_number`).toHaveText("32", {
         message: "total should be 32 (no record selected)",
     });
@@ -4057,7 +4055,7 @@ test(`selection is reset on reload`, async () => {
     expect(`tbody .o_list_record_selector input:eq(0)`).toBeChecked({
         message: "first row should be selected",
     });
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
     expect(`tfoot .o_list_number`).toHaveText("10", {
         message: "total should be 10 (first record selected)",
     });
@@ -4067,7 +4065,7 @@ test(`selection is reset on reload`, async () => {
     expect(`tbody .o_list_record_selector input:eq(0)`).not.toBeChecked({
         message: "first row should be selected",
     });
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
     expect(`tfoot .o_list_number`).toHaveText("32", {
         message: "total should be 10 (first record selected)",
     });
@@ -4088,13 +4086,13 @@ test(`selection is kept on render without reload`, async () => {
         actionMenus: {},
     });
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 
     // open blip grouping and check all lines
     await contains(`.o_group_header:contains(blip (2))`).click();
     await contains(`.o_data_row input`).click();
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
 
     // open yop grouping and verify blip are still checked
     await contains(`.o_group_header:contains(yop (1))`).click();
@@ -4102,7 +4100,7 @@ test(`selection is kept on render without reload`, async () => {
         message: "opening a grouping does not uncheck others",
     });
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
 
     // close and open blip grouping and verify blip are unchecked
     await contains(`.o_group_header:contains(blip (2))`).click();
@@ -4111,7 +4109,7 @@ test(`selection is kept on render without reload`, async () => {
         message: "opening and closing a grouping uncheck its elements",
     });
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -4126,13 +4124,13 @@ test(`select a record in list grouped by date with granularity`, async () => {
         actionMenus: {},
     });
     expect(`.o_group_header`).toHaveCount(2);
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 
     await contains(`.o_group_header`).click();
     expect(`.o_data_row`).toHaveCount(1);
 
     await contains(`.o_data_row .o_list_record_selector`).click();
-    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -4171,7 +4169,7 @@ test(`aggregates are computed correctly on desktop`, async () => {
     expect(queryAllTexts(`tfoot td`)).toEqual(["", "", "32", "1.50"]);
 
     // Let's update the view to dislay NO records
-    await contains(`.o_list_unselect_all`).click();
+    await contains(`.o_unselect_all`).click();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
     expect(queryAllTexts(`tfoot td`)).toEqual(["", "", "", ""]);
@@ -4982,9 +4980,7 @@ test(`custom delete confirmation dialog`, async () => {
     class CautiousController extends listView.Controller {
         get deleteConfirmationDialogProps() {
             const props = super.deleteConfirmationDialogProps;
-            props.body = markup(
-                `<span class="text-danger">These are the consequences</span><br/>${props.body}`
-            );
+            props.body = markup(`<span class="text-danger">These are the consequences</span>`);
             return props;
         }
     }
@@ -5004,7 +5000,7 @@ test(`custom delete confirmation dialog`, async () => {
 
     await toggleActionMenu();
     await toggleMenuItem("Delete");
-    expect(`.modal:contains(you sure) .text-danger:contains(consequences)`).toHaveCount(1, {
+    expect(`.modal .text-danger:contains(consequences)`).toHaveCount(1, {
         message: "confirmation dialog should have markup and more",
     });
 
@@ -5066,9 +5062,9 @@ test(`delete all records matching the domain`, async () => {
 
     await contains(`thead .o_list_record_selector input`).click();
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
 
-    await contains(`.o_list_selection_box .o_list_select_domain`).click();
+    await contains(`.o_selection_box .o_select_domain`).click();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
@@ -5109,9 +5105,9 @@ test(`delete all records matching the domain (limit reached)`, async () => {
 
     await contains(`thead .o_list_record_selector input`).click();
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
 
-    await contains(`.o_list_selection_box .o_list_select_domain`).click();
+    await contains(`.o_selection_box .o_select_domain`).click();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
@@ -5232,9 +5228,9 @@ test(`archive all records matching the domain`, async () => {
 
     await contains(`thead .o_list_record_selector input`).click();
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
 
-    await contains(`.o_list_selection_box .o_list_select_domain`).click();
+    await contains(`.o_selection_box .o_select_domain`).click();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Archive");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
@@ -5277,9 +5273,9 @@ test(`archive all records matching the domain (limit reached)`, async () => {
 
     await contains(`thead .o_list_record_selector input`).click();
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
 
-    await contains(`.o_list_selection_box .o_list_select_domain`).click();
+    await contains(`.o_selection_box .o_select_domain`).click();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Archive");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
@@ -8843,14 +8839,14 @@ test(`execute ActionMenus actions with correct params (multi pages)`, async () =
     // select all records
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(3);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(1);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Custom Action");
 
     // select all domain
-    await contains(`.o_list_selection_box .o_list_select_domain`).click();
+    await contains(`.o_selection_box .o_select_domain`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(3);
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
@@ -8860,13 +8856,13 @@ test(`execute ActionMenus actions with correct params (multi pages)`, async () =
     await contains(`thead .o_list_record_selector input`).click();
     await toggleSearchBarMenu();
     await toggleMenuItem("bar");
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
 
     // select all domain
     await contains(`thead .o_list_record_selector input`).click();
-    await contains(`.o_list_selection_box .o_list_select_domain`).click();
+    await contains(`.o_selection_box .o_select_domain`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(3);
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Custom Action");
@@ -10536,7 +10532,7 @@ test(`editable list view: multi edition`, async () => {
         message: "no field should be editable anymore",
     });
     // discard selection
-    await contains(`.o_list_unselect_all`).click();
+    await contains(`.o_unselect_all`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected anymore",
     });
@@ -11104,7 +11100,7 @@ test(`editable list view: multi edition when the domain is selected`, async () =
 
     // select all records, and then select all domain
     await contains(`.o_list_record_selector input`).click();
-    await contains(`.o_list_selection_box .o_list_select_domain`).click();
+    await contains(`.o_selection_box .o_select_domain`).click();
 
     // edit a field
     await contains(`.o_data_row .o_data_cell:eq(1)`).click();
@@ -14176,11 +14172,11 @@ test(`optional fields do not disappear even after listview reload`, async () => 
     expect(`th[data-name=m2o]`).toHaveCount(1);
 
     await contains(`tbody .o_list_record_selector input`).click();
-    expect(`.o_list_selection_box`).toHaveCount(1);
+    expect(`.o_selection_box`).toHaveCount(1);
 
     await contains(`.o_pager_value`).click();
     await contains(`input.o_pager_value`).edit("1-4");
-    expect(`.o_list_selection_box`).toHaveCount(0);
+    expect(`.o_selection_box`).toHaveCount(0);
     expect(`th`).toHaveCount(5, {
         message:
             "should have 5 th 1 for selector, 3 for columns, 1 for optional columns ever after listview reload",
@@ -17326,14 +17322,14 @@ test.tags("desktop")("select records range with shift click on several page", as
     await contains(`.o_data_row .o_list_record_selector input:eq(0)`).click();
     expect(`.o_data_row:eq(0) .o_list_record_selector input`).toBeChecked();
 
-    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
-    expect(`.o_list_selection_box`).toHaveText("1\nselected");
+    expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
+    expect(`.o_selection_box`).toHaveText("1\nselected");
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(1);
     // click the pager next button
     await contains(".o_pager_next").click();
     // shift click the first record of the second page
     await contains(`.o_data_row .o_list_record_selector input`).click({ shiftKey: true });
-    expect(`.o_list_selection_box`).toHaveText("1\nselected\n Select all 4");
+    expect(`.o_selection_box`).toHaveText("1\nselected\n Select all 4");
 });
 
 test("open record, with invalid record in list", async () => {
@@ -17422,24 +17418,24 @@ test("selection is properly displayed (single page) on mobile", async () => {
     });
 
     expect(".o_data_row").toHaveCount(4);
-    expect(".o_list_selection_box").toHaveCount(0);
+    expect(".o_selection_box").toHaveCount(0);
     expect(".o_control_panel .fa-search").toHaveCount(1);
 
     // select a record
     await contains(".o_data_row:nth-child(1)").drag();
-    expect(".o_list_selection_box").toHaveCount(1);
-    expect(".o_list_selection_box .o_list_select_domain").toHaveCount(1);
+    expect(".o_selection_box").toHaveCount(1);
+    expect(".o_selection_box .o_select_domain").toHaveCount(1);
     expect(".o_control_panel .o_cp_searchview").toHaveCount(0);
-    expect(queryFirst(".o_list_selection_box")).toHaveText("1\nselected\nAll");
+    expect(queryFirst(".o_selection_box")).toHaveText("1\nselected\nAll");
 
     // unselect a record
     await contains(".o_data_row:nth-child(1)").drag();
-    expect(".o_list_selection_box .o_list_select_domain").toHaveCount(0);
+    expect(".o_selection_box .o_select_domain").toHaveCount(0);
 
     // select 2 records
     await contains(".o_data_row:nth-child(1)").drag();
     await contains(".o_data_row:nth-child(2)").drag();
-    expect(queryFirst(".o_list_selection_box")).toHaveText("2\nselected\nAll");
+    expect(queryFirst(".o_selection_box")).toHaveText("2\nselected\nAll");
 
     expect("div.o_control_panel .o_cp_action_menus").toHaveCount(1);
 
@@ -17448,7 +17444,7 @@ test("selection is properly displayed (single page) on mobile", async () => {
 
     // unselect all
     await unselectAllRecords();
-    expect(".o_list_selection_box").toHaveCount(0);
+    expect(".o_selection_box").toHaveCount(0);
     expect(".o_control_panel .fa-search").toHaveCount(1);
 });
 

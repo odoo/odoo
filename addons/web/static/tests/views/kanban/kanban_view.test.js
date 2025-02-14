@@ -5,6 +5,8 @@ import {
     drag,
     edit,
     hover,
+    keyDown,
+    keyUp,
     leave,
     pointerDown,
     press,
@@ -16,7 +18,15 @@ import {
     resize,
     setInputFiles,
 } from "@odoo/hoot-dom";
-import { Deferred, advanceFrame, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
+import {
+    Deferred,
+    advanceFrame,
+    advanceTime,
+    animationFrame,
+    mockTouch,
+    runAllTimers,
+    tick,
+} from "@odoo/hoot-mock";
 import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import {
     MockServer,
@@ -216,7 +226,14 @@ class Currency extends models.Model {
     ];
 }
 
-defineModels([Partner, Product, Category, Currency, IrAttachment]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+
+defineModels([Partner, Product, Category, Currency, IrAttachment, User]);
 
 beforeEach(() => {
     patchWithCleanup(AnimatedNumber, { enableAnimations: false });
@@ -526,80 +543,6 @@ test("basic grouped rendering with no record", async () => {
         message:
             "There should be a 'New' button even though there is no column when groupby is not a many2one",
     });
-});
-
-test("grouped rendering with active field (archivable by default)", async () => {
-    // add active field on partner model and make all records active
-    Partner._fields.active = fields.Boolean({ default: true });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["bar"],
-    });
-
-    const clickColumnAction = await toggleKanbanColumnActions(1);
-
-    // check archive/restore all actions in kanban header's config dropdown
-    expect(".o_column_archive_records").toHaveCount(1, { root: getKanbanColumnDropdownMenu(0) });
-    expect(".o_column_unarchive_records").toHaveCount(1, { root: getKanbanColumnDropdownMenu(0) });
-    expect(".o_kanban_group").toHaveCount(2);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3);
-
-    await clickColumnAction("Archive All");
-    expect(".o_dialog").toHaveCount(1);
-
-    await contains(".o_dialog footer .btn-primary").click();
-
-    expect(".o_kanban_group").toHaveCount(2);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(0);
-});
-
-test("grouped rendering with active field (archivable true)", async () => {
-    // add active field on partner model and make all records active
-    Partner._fields.active = fields.Boolean({ default: true });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban archivable="true">
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["bar"],
-    });
-
-    const clickColumnAction = await toggleKanbanColumnActions(0);
-
-    // check archive/restore all actions in kanban header's config dropdown
-    expect(".o_column_archive_records").toHaveCount(1, { root: getKanbanColumnDropdownMenu(0) });
-    expect(".o_column_unarchive_records").toHaveCount(1, { root: getKanbanColumnDropdownMenu(0) });
-    expect(".o_kanban_group").toHaveCount(2);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3);
-
-    await clickColumnAction("Archive All");
-    expect(".o_dialog").toHaveCount(1);
-
-    await contains(".o_dialog footer .btn-primary").click();
-
-    expect(".o_kanban_group").toHaveCount(2);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(0);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3);
 });
 
 test.tags("desktop");
@@ -1117,6 +1060,7 @@ test("pager, ungrouped, with count limit reached", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 
     await contains(".o_pager_limit").click();
@@ -1151,6 +1095,7 @@ test("pager, ungrouped, with count limit reached, click next", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 
     await contains(".o_pager_next").click();
@@ -1211,6 +1156,7 @@ test("pager, ungrouped, with count limit reached, click next (2)", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 
     await contains(".o_pager_next").click();
@@ -1283,6 +1229,7 @@ test("pager, ungrouped, with count limit reached, click previous", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 
     await contains(".o_pager_previous").click();
@@ -1347,6 +1294,7 @@ test("pager, ungrouped, with count limit reached, edit pager", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 
     await contains("span.o_pager_value").click();
@@ -1394,6 +1342,7 @@ test("count_limit attrs set in arch", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 
     await contains(".o_pager_limit").click();
@@ -1605,6 +1554,7 @@ test("kanban with an action id as on_create attrs", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
         "doAction some.action",
         "web_search_read",
     ]);
@@ -1844,6 +1794,7 @@ test("quick create record without quick_create_view", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
         "onchange", // quick create
@@ -1911,6 +1862,7 @@ test("quick create record with quick_create_view", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
         "get_views", // form view in quick create
@@ -2151,6 +2103,7 @@ test("quick create record in grouped on m2o (no quick_create_view)", async () =>
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
         "onchange", // quick create
@@ -2217,6 +2170,7 @@ test("quick create record in grouped on m2o (with quick_create_view)", async () 
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
         "get_views", // form view in quick create
@@ -2262,6 +2216,7 @@ test("quick create record in grouped on m2m (no quick_create_view)", async () =>
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
         "onchange", // quick create
@@ -2309,6 +2264,7 @@ test("quick create record in grouped on m2m in the None column", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
         "web_search_read", // read records when unfolding 'None'
@@ -2362,6 +2318,7 @@ test("quick create record in grouped on m2m (field not in template)", async () =
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
         "get_views", // get form view
@@ -2421,6 +2378,7 @@ test("quick create record in grouped on m2m (field in the form view)", async () 
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
         "get_views", // get form view
@@ -2454,6 +2412,7 @@ test("quick create record validation: stays open when invalid", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
     ]);
@@ -2523,6 +2482,7 @@ test("quick create record with default values and onchanges", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
         "get_views", // form view in quick create
@@ -2602,6 +2562,7 @@ test("quick create record with onchange of field marked readonly", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
     ]);
@@ -4243,6 +4204,7 @@ test("many2many_tags in kanban views", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 
     // Checks that second records has only one tag as one should be hidden (color 0)
@@ -4407,6 +4369,7 @@ test("o2m loaded in only one batch", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_read_group",
@@ -4441,6 +4404,7 @@ test("kanban with many2many, load and reload", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_read_group",
@@ -4479,6 +4443,7 @@ test("kanban with reference field", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_read_group",
@@ -5614,6 +5579,7 @@ test("delete a column in grouped on m2o", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "unlink",
@@ -6386,6 +6352,7 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "onchange",
         "name_create",
         "web_read",
@@ -6424,41 +6391,6 @@ test("ungrouped kanban view can be grouped, then ungrouped", async () => {
     await toggleMenuItem("GroupBy Product");
 
     expect(".o_kanban_renderer").not.toHaveClass("o_kanban_grouped");
-});
-
-test("no content helper when archive all records in kanban group", async () => {
-    // add active field on partner model to have archive option
-    Partner._fields.active = fields.Boolean({ default: true });
-    // remove last records to have only one column
-    Partner._records = Partner._records.slice(0, 3);
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        noContentHelp: '<p class="hello">click to add a partner</p>',
-        groupBy: ["bar"],
-    });
-
-    // check that the (unique) column contains 3 records
-    expect(".o_kanban_group:last-child .o_kanban_record").toHaveCount(3);
-
-    // archive the records of the last column
-    const clickColumnAction = await toggleKanbanColumnActions(0);
-    await clickColumnAction("Archive All");
-
-    expect(".o_dialog").toHaveCount(1);
-    await contains(".o_dialog footer .btn-primary").click();
-
-    // check no content helper is exist
-    expect(".o_view_nocontent").toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -7114,6 +7046,7 @@ test("empty grouped kanban with sample data and many2many_tags", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
+        "has_group",
     ]);
 });
 
@@ -7577,6 +7510,7 @@ test("button executes action and reloads", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
     expect("button.a1").toHaveCount(4);
     expect("button.a1:first").not.toHaveAttribute("disabled");
@@ -8576,6 +8510,7 @@ test("column progressbars properly work", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
     ]);
@@ -8673,6 +8608,7 @@ test('column progressbars: "false" bar is clickable', async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -8722,6 +8658,7 @@ test('column progressbars: "false" bar with sum_field', async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_read_group",
@@ -8756,6 +8693,7 @@ test("column progressbars should not crash in non grouped views", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 });
 
@@ -8793,6 +8731,7 @@ test("column progressbars: creating a new column should create a new progressbar
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "name_create",
@@ -8836,6 +8775,7 @@ test("column progressbars on quick create properly update counter", async () => 
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "onchange",
@@ -8877,6 +8817,7 @@ test("column progressbars are working with load more", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -8922,6 +8863,7 @@ test("column progressbars with an active filter are working with load more", asy
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "read_progress_bar",
@@ -8949,6 +8891,7 @@ test("column progressbars on archiving records update counter", async () => {
                 </templates>
             </kanban>`,
         groupBy: ["bar"],
+        loadActionMenus: true,
     });
 
     expect(getKanbanCounters()).toEqual(["-4", "36"]);
@@ -8957,9 +8900,15 @@ test("column progressbars on archiving records update counter", async () => {
     });
 
     // archive all records of the second columns
-    const clickColumnAction = await toggleKanbanColumnActions(1);
-    await clickColumnAction("Archive All");
-    await contains(".o_dialog footer .btn-primary").click(); // confirm
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(1)").click();
+    await keyUp("alt");
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(2)").click();
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(3)").click();
+    await contains(".o_cp_action_menus button").click();
+    await contains(".o_menu_item:contains(Archive)").click();
+    await contains(".modal-footer .btn-primary").click();
 
     expect(getKanbanCounters()).toEqual(["-4", "0"]);
     expect(queryAll(".progress-bar", { root: getKanbanColumn(1) })).toHaveCount(0, {
@@ -8971,6 +8920,7 @@ test("column progressbars on archiving records update counter", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "action_archive",
@@ -8999,14 +8949,19 @@ test("kanban with progressbars: correctly update env when archiving records", as
                 </templates>
             </kanban>`,
         groupBy: ["bar"],
+        loadActionMenus: true,
     });
 
     expect(getKanbanRecordTexts()).toEqual(["4", "1", "2", "3"]);
 
     // archive all records of the first column
-    const clickColumnAction = await toggleKanbanColumnActions(0);
-    await clickColumnAction("Archive All");
-    await contains(".o_dialog footer .btn-primary").click(); // confirm
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:nth-of-type(1) .o_kanban_record:nth-of-type(1)").click();
+    await keyUp("alt");
+    await contains(".o_cp_action_menus button").click();
+    await contains(".o_menu_item:contains(Archive)").click();
+    await contains(".modal-footer .btn-primary").click();
 
     expect(getKanbanRecordTexts()).toEqual(["1", "2", "3"]);
     expect.verifySteps([
@@ -9015,6 +8970,7 @@ test("kanban with progressbars: correctly update env when archiving records", as
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "action_archive",
@@ -9051,6 +9007,7 @@ test("RPCs when (re)loading kanban view progressbars", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         // reload
@@ -9096,6 +9053,7 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_read_group domain []",
         "web_search_read",
         "web_search_read",
@@ -9170,6 +9128,7 @@ test("drag & drop records grouped by m2o with progressbar", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -9232,6 +9191,7 @@ test("d&d records grouped by date with progressbar with aggregates", async () =>
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_save",
@@ -9270,6 +9230,7 @@ test("progress bar subgroup count recompute", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -9312,6 +9273,7 @@ test("progress bar recompute after d&d to and from other column", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_save",
@@ -9354,6 +9316,7 @@ test("progress bar recompute after filter selection", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
     ]);
@@ -9407,6 +9370,7 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
     ]);
@@ -9540,7 +9504,7 @@ test("progress bar with aggregates: activate bars (grouped by date)", async () =
     expect(getKanbanCounters()).toEqual(["15"]);
 });
 
-test("progress bar with aggregates: Archive All in a column", async () => {
+test("progress bar with aggregates: Archive all in a column", async () => {
     Partner._fields.active = fields.Boolean({ default: true });
     Partner._records = [
         { foo: "yop", bar: true, int_field: 1, active: true },
@@ -9564,24 +9528,27 @@ test("progress bar with aggregates: Archive All in a column", async () => {
                 </t></templates>
             </kanban>`,
         groupBy: ["bar"],
+        loadActionMenus: true,
     });
 
     expect(getKanbanColumnTooltips(1)).toEqual(["2 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["268", "15"]);
-
-    const clickColumnAction = await toggleKanbanColumnActions(1);
-    await clickColumnAction("Archive All");
-
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(1)").click();
+    await keyUp("alt");
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(2)").click();
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(3)").click();
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(4)").click();
+    await contains(".o_cp_action_menus button").click();
+    await contains(".o_menu_item:contains(Archive)").click();
     expect(".o_dialog").toHaveCount(1);
     def = new Deferred();
-    await contains(".o_dialog footer .btn-primary").click();
-
+    await contains(".modal-footer .btn-primary").click();
     expect(getKanbanColumnTooltips(1)).toEqual(["2 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["268", "15"]);
-
     def.resolve();
     await animationFrame();
-
     expect(getKanbanColumnTooltips(1)).toEqual([]);
     expect(getKanbanCounters()).toEqual(["268", "0"]);
 });
@@ -9657,6 +9624,7 @@ test("column progressbars on quick create with quick_create_view", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "get_views",
@@ -9727,6 +9695,7 @@ test("progressbars and active filter with quick_create_view", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_read_group",
@@ -10680,6 +10649,7 @@ test("progressbar filter state is kept unchanged when domain is updated (records
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -10765,6 +10735,7 @@ test("progressbar filter state is kept unchanged when domain is updated (emptyin
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -10839,6 +10810,7 @@ test("filtered column counters when dropping in non-matching record", async () =
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -10884,6 +10856,7 @@ test("filtered column is reloaded when dragging out its last record", async () =
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
     ]);
@@ -10973,6 +10946,7 @@ test("action/type attributes on kanban arch, type='object'", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
     await contains(".o_kanban_record p").click();
     expect.verifySteps(["doActionButton type object name a1", "web_search_read"]);
@@ -11006,6 +10980,7 @@ test("action/type attributes on kanban arch, type='action'", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
     await contains(".o_kanban_record p").click();
     expect.verifySteps(["doActionButton type action name a1", "web_search_read"]);
@@ -11325,6 +11300,7 @@ test("basic rendering with 2 groupbys", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
     ]);
@@ -11362,6 +11338,7 @@ test("basic rendering with a date groupby with a granularity", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
     ]);
@@ -11626,6 +11603,7 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -11719,6 +11697,7 @@ test("update field on which progress bars are computed", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -12078,6 +12057,7 @@ test("fieldDependencies support for fields: dependence on a relational field", a
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 });
 
@@ -12219,6 +12199,7 @@ test("drag record to folded column, with progressbars", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_save",
@@ -12280,6 +12261,7 @@ test("quick create record in grouped kanban in a form view dialog", async () => 
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group", // initial web_read_group
+        "has_group",
         "web_search_read", // initial search_read (first column)
         "web_search_read", // initial search_read (second column)
         "onchange", // quick create
@@ -12503,6 +12485,7 @@ test("d&d records grouped by m2o with m2o displayed in records", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
     ]);
@@ -12586,17 +12569,17 @@ test("rerenders only once after resequencing records", async () => {
         ".o_kanban_group:nth-child(2)"
     );
 
-    expect(renderCounts).toEqual({ 1: 3, 2: 1, 3: 1, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 2, 2: 1, 3: 1, 4: 1 });
 
     saveDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 1, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 3, 2: 1, 3: 1, 4: 1 });
 
     resequenceDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 1, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 1, 4: 1 });
 
     // drag gnap to the second column
     saveDef = new Deferred();
@@ -12605,23 +12588,24 @@ test("rerenders only once after resequencing records", async () => {
         ".o_kanban_group:nth-child(2)"
     );
 
-    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 2, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 2, 4: 1 });
 
     saveDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 3, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 3, 4: 1 });
 
     resequenceDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 4, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 4, 4: 1 });
 
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "web_save",
@@ -12699,7 +12683,13 @@ test("scroll on group unfold and progressbar click", async () => {
         groupBy: ["product_id"],
     });
 
-    expect.verifySteps(["get_views", "read_progress_bar", "web_read_group", "web_search_read"]);
+    expect.verifySteps([
+        "get_views",
+        "read_progress_bar",
+        "web_read_group",
+        "has_group",
+        "web_search_read",
+    ]);
     queryOne(".o_content").scrollTo = (params) => {
         expect.step("scrolled");
         expect(params.top).toBe(0);
@@ -13502,4 +13492,120 @@ test("display the field's falsy_value_label for false group, if defined", async 
     });
 
     expect(".o_kanban_group:first-child .o_column_title").toHaveText("I'm the false group\n(1)");
+});
+
+test("selection can be enabled with the 'alt' key", async () => {
+    Product._records[1].fold = true;
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+        groupBy: ["product_id"],
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    await keyDown("alt");
+    await animationFrame();
+    expect(".o_kanban_record").toHaveClass("o_record_selection_available");
+    expect(".o_kanban_record > .o_record_selection_tooltip").toHaveText("Click to select");
+    await contains(".o_kanban_record:nth-of-type(1)").click();
+    expect(".o_selection_box").toHaveCount(1);
+    await keyUp("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:nth-of-type(2)").click();
+    expect(".o_selection_box span > b").toHaveText("2", {
+        message: "selection counter has the right number of selected items",
+    });
+    expect(".o_record_selected").toHaveCount(2);
+});
+
+test.tags("desktop");
+test("selection is reset when dragging is effective", async () => {
+    mockTouch(true);
+    Product._records[1].fold = true;
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+        groupBy: ["product_id"],
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    const { moveTo } = await drag(".o_kanban_record:nth-of-type(1)");
+    await advanceTime(600);
+    expect(".o_selection_box").toHaveCount(1);
+    await moveTo(".o_kanban_group:nth-of-type(2)");
+    await runAllTimers();
+    expect(".o_selection_box").toHaveCount(0);
+});
+
+test("selection can be enabled by long touch", async () => {
+    mockTouch(true);
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    await drag(".o_kanban_record:nth-of-type(2)");
+    await advanceTime(400);
+    expect(".o_selection_box").toHaveCount(1);
+});
+
+test("selection can be enabled by long touch with drag & drop enabled", async () => {
+    mockTouch(true);
+    Product._records[1].fold = true;
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+        groupBy: ["product_id"],
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    const { drop } = await drag(".o_kanban_record:nth-of-type(1)");
+    await advanceTime(400);
+    expect(".o_selection_box").toHaveCount(0, {
+        message: "touch delay is longer when drag & drop is enabled",
+    });
+    await drop();
+    const { drop: secondDrop } = await drag(".o_kanban_record:nth-of-type(1)");
+    await advanceTime(600);
+    expect(".o_selection_box").toHaveCount(1);
+    await secondDrop();
+    await contains(".o_kanban_record:nth-of-type(2)").click();
+    expect(".o_selection_box span > b").toHaveText("2", {
+        message: "selection counter has the right number of selected items",
+    });
+    expect(".o_record_selected").toHaveCount(2);
+    await contains(".o_kanban_record:nth-of-type(1)").click();
+    expect(".o_record_selected").toHaveCount(1);
 });
