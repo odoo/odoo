@@ -944,7 +944,6 @@ class PosOrder(models.Model):
                 _logger.exception("An error occurred when processing the PoS order %s", order_name)
                 pos_session = self.env['pos.session'].browse(order['data']['pos_session_id'])
                 pos_session._handle_order_process_fail(order, e, draft)
-                raise
         res = self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
         _logger.info("Finish PoS synchronisation #%d with result: %s", sync_token, res)
         return res
