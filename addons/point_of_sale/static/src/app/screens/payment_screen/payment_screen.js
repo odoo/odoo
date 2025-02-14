@@ -14,7 +14,6 @@ import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/p
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
-import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { sprintf } from "@web/core/utils/strings";
@@ -505,7 +504,7 @@ export class PaymentScreen extends Component {
         }
 
         if (
-            !floatIsZero(this.currentOrder.getTotalWithTax(), this.pos.currency.decimal_places) &&
+            !this.pos.currency.isZero(this.currentOrder.getTotalWithTax()) &&
             this.currentOrder.payment_ids.length === 0
         ) {
             this.notification.add(_t("Select a payment method to validate the order."));
@@ -592,7 +591,7 @@ export class PaymentScreen extends Component {
         if (
             isPaymentSuccessful &&
             currentOrder.isPaid() &&
-            floatIsZero(currentOrder.getDue(), currency.decimal_places) &&
+            currency.isZero(currentOrder.getDue()) &&
             config.auto_validate_terminal_payment &&
             !currentOrder.isRefundInProcess()
         ) {
@@ -644,12 +643,8 @@ export class PaymentScreen extends Component {
             }
 
             const amountPaid = payment.getAmount();
-            const expectedAmountPaid = roundPrecision(
-                amountPaid,
-                cashRounding.rounding,
-                cashRounding.rounding_method
-            );
-            if (floatIsZero(expectedAmountPaid - amountPaid, currency.decimal_places)) {
+            const expectedAmountPaid = cashRounding.round(amountPaid);
+            if (currency.isZero(expectedAmountPaid - amountPaid)) {
                 continue;
             }
 
