@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import qrcode
+import qrcode.image.svg
 import zipfile
 from io import BytesIO
 
@@ -84,7 +85,7 @@ class ResConfigSettings(models.TransientModel):
             "domain": ['|', ['pos_config_ids', 'in', self.pos_config_id.id], ["pos_config_ids", "=", False]],
         }
 
-    def _generate_single_qr_code(self, url):
+    def _generate_single_qr_code(self, url, format="PNG"):
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -93,6 +94,9 @@ class ResConfigSettings(models.TransientModel):
         )
         qr.add_data(url)
         qr.make(fit=True)
+        if format == "SVG":
+            image_factory = qrcode.image.svg.SvgImage
+            return qr.make_image(fill_color="black", back_color="transparent", image_factory=image_factory)
         return qr.make_image(fill_color="black", back_color="transparent")
 
     def generate_qr_codes_zip(self):
@@ -108,13 +112,17 @@ class ResConfigSettings(models.TransientModel):
                 raise ValidationError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
 
             for table in table_ids:
+                url = url_unquote(self.pos_config_id._get_self_order_url(table.id))
                 qr_images.append({
-                    'image': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url(table.id))),
+                    'image': self._generate_single_qr_code(url),
+                    'svg': self._generate_single_qr_code(url, format="SVG"),
                     'name': f"{table.floor_id.name} - {table.table_number}",
                 })
         else:
+            url = url_unquote(self.pos_config_id._get_self_order_url())
             qr_images.append({
-                'image': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url())),
+                'image': self._generate_single_qr_code(url),
+                'svg': self._generate_single_qr_code(url, format="SVG"),
                 'name': "generic",
             })
 
@@ -124,6 +132,8 @@ class ResConfigSettings(models.TransientModel):
             for index, qr_image in enumerate(qr_images):
                 with zip_file.open(f"{qr_image['name']} ({index + 1}).png", "w") as buf:
                     qr_image['image'].save(buf, format="PNG")
+                with zip_file.open(f"{qr_image['name']} ({index + 1}).svg", "w") as buf:
+                    qr_image['svg'].save(buf)
         zip_buffer.seek(0)
 
         # Delete previous attachments
