@@ -8,11 +8,12 @@
             <field name="inherit_id" ref="base.view_server_action_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='create_action']" position="replace">
-                    <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight" invisible="state != 'code'"/>
                 </xpath>
                 <xpath expr="//button[@name='unlink_action']" position="replace">
                 </xpath>
                 <xpath expr="//button[@name='run']" position="replace">
+                    <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight" invisible="state != 'code'"/>
+                    <button name="reset_stats" type="object" string="Reset Stats" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//group[@name='action_content']" position="inside">
                     <field name="user_id"/>
@@ -24,6 +25,21 @@
                     <field name="active" widget="boolean_toggle"/>
                     <field name="nextcall"/>
                     <field name="priority"/>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Run Stats">
+                        <group name="cron_stats">
+                            <field name="stat_last_duration"/>
+                            <field name="stat_mean_duration"/>
+                            <field name="stat_variance_duration"/>
+                            <field name="stat_total_duration"/>
+                            <field name="stat_total_count"/>
+                            <field name="stat_total_failure_count"/>
+                            <field name="stat_progress_frequency" widget="percentage" groups="base.group_no_one"/>
+                            <field name="stat_date" groups="base.group_no_one"/>
+                            <field name="stat_first_date"/>
+                        </group>
+                    </page>
                 </xpath>
                 <field name="state" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -38,10 +54,16 @@
                     <field name="priority"/>
                     <field name="name"/>
                     <field name="model_id"/>
+                    <field name="lastcall" optional="show"/>
                     <field name="nextcall"/>
                     <field name="interval_number"/>
                     <field name="interval_type"/>
                     <field name="active"/>
+                    <field name="stat_total_count" optional="hide"/>
+                    <field name="stat_last_duration" optional="show"/>
+                    <field name="stat_mean_duration" optional="hide"/>
+                    <field name="stat_variance_duration" optional="hide"/>
+                    <field name="stat_progress_frequency" widget="percentage" groups="base.group_no_one" optional="hide"/>
                 </list>
             </field>
         </record>
