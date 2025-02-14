@@ -1649,6 +1649,29 @@ class ProjectTask(models.Model):
             res.update(super(ProjectTask, leftover)._notify_get_reply_to(default=default, author_id=author_id))
         return res
 
+    def _find_internal_users_from_address_mail(self, emails, project_id=False):
+        sanitized_email_dict = self._mail_cc_sanitized_raw_dict(emails)
+        matched_partners = self.env['res.partner']._find_or_create_from_emails(
+            sanitized_email_dict.keys(),
+            no_create=True
+        )
+        partners = self.env['res.partner'].concat(*matched_partners)
+        unresolved_emails = set(sanitized_email_dict) - set(partners.mapped("email"))
+        unmatched_partner_emails = [sanitized_email_dict.get(email) for email in unresolved_emails]
+        if project_id:
+            project = self.env["project.project"].browse(project_id)
+            project_alias_address = project.alias_name + "@" + project.alias_domain_id.name
+            # Removing project alias from unmatched_partner_emails as this will be added to cc_mail address and when
+            # a mail is sent unnecessary partner is created in the name of project_alias
+            unmatched_partner_emails.remove(project_alias_address)
+
+        users = partners.user_ids
+        internal_user_ids = users.filtered(lambda u: not u.share).ids
+
+        partner_emails_without_internal_users = (partners - users.partner_id).mapped("email_formatted")
+
+        return internal_user_ids, partner_emails_without_internal_users, unmatched_partner_emails
+
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         # remove default author when going through the mail gateway. Indeed we
@@ -1668,12 +1691,22 @@ class ProjectTask(models.Model):
             'name': msg_dict.get('subject') or _("No Subject"),
             'allocated_hours': 0.0,
             'partner_id': msg_dict.get('author_id'),
+            'email_cc': ", ".join(self._mail_cc_sanitized_raw_dict(msg_dict.get('cc')).values()) if custom_values.get('project_id') else ""
+
         }
         defaults.update(custom_values)
 
+        # users having email address matched from emails recepients are filtered out and added as assignees to the task
+        if msg_dict.get('to'):
+            internal_users, partner_emails_without_users, unmatched_partner_emails = self._find_internal_users_from_address_mail(msg_dict.get('to'), defaults.get('project_id'))
+            # set only internal users as assignees
+            defaults['user_ids'] = defaults.get('user_ids', []) + internal_users
+            if custom_values.get("project_id") and (partner_emails_without_users or unmatched_partner_emails):
+                defaults["email_cc"] = defaults.get("email_cc", "") + ", " + ", ".join(partner_emails_without_users + unmatched_partner_emails)
         task = super(ProjectTask, self.with_context(create_context)).message_new(msg_dict, custom_values=defaults)
         partners = task._partner_find_from_emails_single(tools.email_split((msg_dict.get('to') or '') + ',' + (msg_dict.get('cc') or '')), no_create=True)
-        task.message_subscribe(partners.ids)
+        if task.project_id:
+            task.message_subscribe(partners.ids)
         return task
 
     def message_update(self, msg_dict, update_vals=None):
