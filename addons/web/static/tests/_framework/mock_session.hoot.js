@@ -33,9 +33,6 @@ const makeSession = ({
     can_insert_in_spreadsheet: true,
     db,
     home_action_id: false,
-    is_admin: true,
-    is_internal_user: true,
-    is_system: true,
     max_file_upload_size: 134217728,
     name: partnerName,
     partner_display_name: partnerName,
@@ -63,6 +60,11 @@ const makeSession = ({
     username: "admin",
     ["web.base.url"]: "http://localhost:8069",
     view_info,
+    groups: {
+        "base.group_system": true, // system
+        "base.group_erp_manager": true, // admin
+        "base.group_user": true, // internal
+    },
 });
 
 //-----------------------------------------------------------------------------

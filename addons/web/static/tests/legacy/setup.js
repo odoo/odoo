@@ -240,14 +240,17 @@ function patchSessionInfo() {
             tz: "taht",
         },
         db: "test",
-        is_admin: true,
-        is_system: true,
         username: "thewise@odoo.com",
         name: "Mitchell",
         partner_id: 7,
         uid: 7,
         server_version: "1.0",
         server_version_info: [1, 0, 0, "final", 0, ""],
+        groups: {
+            "base.group_system": true, // system
+            "base.group_erp_manager": true, // admin
+            "base.group_user": true, // internal
+        },
     });
     const mockedUser = _makeUser(sessionInfo);
     patchWithCleanup(user, mockedUser);
