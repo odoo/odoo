@@ -3,7 +3,7 @@ from markupsafe import Markup
 from odoo import _, models, Command
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr, format_list
+from odoo.tools import float_repr
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
@@ -237,7 +237,7 @@ class AccountEdiCommon(models.AbstractModel):
         :return: an Error message or None
         """
         if not record:
-            return custom_warning_message or _("The element %(record)s is required on %(field_list)s.", record=record, field_list=format_list(self.env, field_names))
+            return custom_warning_message or _("The element %(record)s is required on %(field_list)s.", record=record, field_list=field_names)
 
         if not isinstance(field_names, (list, tuple)):
             field_names = (field_names,)
@@ -252,7 +252,7 @@ class AccountEdiCommon(models.AbstractModel):
             return custom_warning_message or _(
                 "The element %(record)s is required on %(field_list)s.",
                 record=record,
-                field_list=format_list(self.env, field_names),
+                field_list=field_names,
             )
 
         display_field_names = record.fields_get(field_names)
@@ -260,7 +260,7 @@ class AccountEdiCommon(models.AbstractModel):
             display_field = f"'{display_field_names[field_names[0]]['string']}'"
             return _("The field %(field)s is required on %(record)s.", field=display_field, record=record.display_name)
         else:
-            display_fields = format_list(self.env, [f"'{display_field_names[x]['string']}'" for x in display_field_names])
+            display_fields = [f"'{display_field_names[x]['string']}'" for x in display_field_names]
             return _("At least one of the following fields %(field_list)s is required on %(record)s.", field_list=display_fields, record=record.display_name)
 
     # -------------------------------------------------------------------------

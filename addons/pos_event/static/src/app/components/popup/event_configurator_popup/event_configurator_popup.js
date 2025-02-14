@@ -32,10 +32,10 @@ export class EventConfiguratorPopup extends Component {
     }
     get dialogTitle() {
         const event = this.props.tickets[0].event_id;
-        let title = _t("Select tickets for %s", [event.name]);
+        let title = _t("Select tickets for %s", event.name);
 
         if (event.seats_limited) {
-            title += _t(" (%s seats available)", [event.seats_available]);
+            title += _t(" (%s seats available)", event.seats_available);
         }
 
         return title;
