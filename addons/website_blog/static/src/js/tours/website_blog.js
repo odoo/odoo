@@ -27,11 +27,9 @@ registerWebsitePreviewTour("blog", {
     run: "edit Test",
 },
 {
-    isActive: ["auto"],
     trigger: 'div.o_field_widget[name="blog_id"]',
 },
 {
-    isActive: ["auto"],
     trigger: "button.o_form_button_save",
     content: _t("Select the blog you want to add the post to."),
     // Without demo data (and probably in most user cases) there is only
@@ -44,7 +42,6 @@ registerWebsitePreviewTour("blog", {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: "#oe_snippets.o_loaded",
     timeout: 15000,
 },
@@ -55,7 +52,6 @@ registerWebsitePreviewTour("blog", {
     run: "editor Test",
 },
 {
-    isActive: ["auto"],
     trigger: `:iframe #wrap h1[data-oe-expression="blog_post.name"]:not(:contains(''))`,
 },
 {
@@ -87,7 +83,6 @@ registerWebsitePreviewTour("blog", {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_website_preview.o_is_mobile",
 },
 {
@@ -97,7 +92,6 @@ registerWebsitePreviewTour("blog", {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ":iframe body:not(.editor_enable)",
 },
 {
@@ -106,7 +100,6 @@ registerWebsitePreviewTour("blog", {
     content: markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
     run: "click",
 }, {
-    isActive: ["auto"],
     trigger: '.o_menu_systray_item a:contains("Published")',
 }
 ]);

@@ -80,6 +80,9 @@
 
                 <div class="before-footer" />
 
+                <!-- This prevents missing receipt elements in modules like `l10n_fr_pos_cert`, `l10n_co_pos`, etc. -->
+                <div class="pos-receipt-order-data" />
+
                 <div t-if="props.data.pos_qr_code">
                     <br/>
                     <div class="pos-receipt-order-data mb-2">

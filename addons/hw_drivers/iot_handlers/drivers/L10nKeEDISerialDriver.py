@@ -159,6 +159,7 @@ class TremolG03Driver(SerialDriver):
                 request = struct.pack('B%ds2sB' % (len(core_message)), STX, core_message, self.generate_checksum(core_message), ETX)
                 time.sleep(self._protocol.commandDelay)
                 self._connection.write(request)
+                _logger.debug('Debug send request: %s', request)
                 # If we know the expected output size, we can set the read
                 # buffer to match the size of the output.
                 output_size = COMMAND_OUTPUT_SIZE.get(msg[0])
@@ -171,6 +172,7 @@ class TremolG03Driver(SerialDriver):
                 else:
                     time.sleep(self._protocol.measureDelay)
                     response = self._connection.read_all()
+                _logger.debug('Debug send response: %s', response)
                 if not response:
                     self.data['status'] = "No response"
                     _logger.error("Sent request: %s,\n Received no response", request)
@@ -211,7 +213,9 @@ class TremolG03Driver(SerialDriver):
         abort = struct.pack('BBB', 35, self.message_number + 32, 0x39)
         request = struct.pack('B3s2sB', STX, abort, self.generate_checksum(abort), ETX)
         self._connection.write(request)
+        _logger.debug('Debug abort_post request: %s', request)
         response = self._connection.read(COMMAND_OUTPUT_SIZE[0x39])
+        _logger.debug('Debug abort_post response: %s', response)
         if response and response[0] == 0x02:
             self.data['status'] += "\n The invoice was successfully cancelled"
             _logger.info("Invoice successfully cancelled")

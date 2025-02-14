@@ -179,7 +179,7 @@ export const tourService = {
             );
 
             if (tourConfig.mode === "auto") {
-                new TourAutomatic(tour).start(pointer);
+                new TourAutomatic(tour).start();
             } else {
                 new TourInteractive(tour).start(pointer, async () => {
                     pointer.stop();

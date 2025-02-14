@@ -859,6 +859,8 @@ export class SelectionPlugin extends Plugin {
         if (documentSelectionIsInEditable) {
             return;
         }
+        // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
+        this.editable.focus();
         const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
         const selection = this.document.getSelection();
         if (selection) {

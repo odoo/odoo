@@ -337,9 +337,11 @@
             </div>
         </div>
 
+        <t t-set="layout_background_url"
+           t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
         <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_striped o_table_striped o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
-             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
-                           '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
+             t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
@@ -390,10 +392,11 @@
                 </div>
             </div>
         </div>
-
+        <t t-set="layout_background_url"
+           t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
         <div t-attf-class="article o_report_layout_boxed o_table_boxed o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
-             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
-                           '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
+             t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
@@ -448,9 +451,11 @@
             </div>
         </div>
 
+        <t t-set="layout_background_url"
+           t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
         <div t-attf-class="article o_report_layout_bold o_table_bold o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
-             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
-                           '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
+             t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
@@ -505,10 +510,11 @@
                 </div>
             </div>
         </div>
-
+        <t t-set="layout_background_url"
+           t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
         <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
-             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
-                           '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
+             t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
@@ -580,10 +586,12 @@
         </div>
 
         <!-- BODY -->
+        <t t-set="layout_background_url"
+           t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
         <div t-attf-class="article o_report_layout_folder o_table_striped o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
              t-attf-style="{{report_type != 'pdf' and 'margin-top:' + header_shape_height + 'px;'}}
-                           background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
-                           '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
+                {{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
@@ -646,10 +654,12 @@
         </div>
 
         <!-- BODY -->
+        <t t-set="layout_background_url"
+           t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
         <div t-attf-class="article o_report_layout_wave o_table_striped o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
              t-attf-style="{{report_type != 'pdf' and 'margin-top:' + header_shape_height + 'px;'}}
-                           background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
-                           '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
+                {{ 'background-image: url(%s);' % layout_background_url if layout_background_url else ''}}"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
@@ -710,9 +720,11 @@
         </div>
 
         <!-- BODY -->
+        <t t-set="layout_background_url"
+           t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
         <div t-attf-class="article o_report_layout_bubble o_table_boxed-rounded o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
-             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
-                           '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
+             t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">

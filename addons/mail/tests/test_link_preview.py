@@ -20,7 +20,7 @@ class TestLinkPreview(MailCommon):
         cls.test_partner = cls.env['res.partner'].create({'name': 'a partner'})
         cls.existing_message = cls.test_partner.message_post(body='Test')
         cls.title = 'Test title'
-        cls.og_title = 'Test OG title'
+        cls.og_title = 'Le carousel ne démarre pas.webm'
         cls.og_description = 'Test OG description'
         cls.og_image = 'https://dummy-image-url.nothing'
         cls.source_url = 'https://thisdomainedoentexist.nothing'
@@ -35,6 +35,7 @@ class TestLinkPreview(MailCommon):
         response = requests.Response()
         response.status_code = 200
         response._content = content
+        response.encoding = 'utf-8'
         # To handle chunks read on stream requests
         response.raw = io.BytesIO(response._content)
         response.headers["Content-Type"] = content_type
@@ -45,7 +46,7 @@ class TestLinkPreview(MailCommon):
         <html>
         <head>
         <title>Test title</title>
-        <meta property="og:title" content="Test OG title">
+        <meta property="og:title" content="Le carousel ne d\xc3\xa9marre pas.webm">
         <meta property="og:description" content="Test OG description">
         <meta property="og:image" content="https://dummy-image-url.nothing">
         </head>

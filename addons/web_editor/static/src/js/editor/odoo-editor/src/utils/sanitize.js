@@ -24,6 +24,7 @@ import {
     getTraversedNodes,
     ZERO_WIDTH_CHARS_REGEX,
     isVisible,
+    cleanZWS,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -122,7 +123,7 @@ export function deduceURLfromText(text, link) {
    // Check for telephone url.
    match = label.match(PHONE_REGEX);
    if (match) {
-        return (match[1] ? match[0] : "tel://" + match[0]).replace(/\s+/g, "");
+        return (match[1] ? match[0] : "tel:" + match[0]).replace(/\s+/g, "");
    }
    return null;
 }
@@ -146,6 +147,20 @@ function sanitizeNode(node, root) {
     // contenteditable=false to avoid any hiccup.
     if (isArtificialVoidElement(node) && node.getAttribute('contenteditable') !== 'false') {
         node.setAttribute('contenteditable', 'false');
+    }
+
+    // Ensure zws and data-oe-zws-empty-inline flag is removed if content other
+    // than zws is present in the node.
+    if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        node.hasAttribute("data-oe-zws-empty-inline") &&
+        node.textContent !== "\u200B"
+    ) {
+        const restoreCursor =
+            shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+        cleanZWS(node);
+        delete node.dataset.oeZwsEmptyInline;
+        restoreCursor && restoreCursor();
     }
 
     // Remove empty class/style attributes.

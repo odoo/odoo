@@ -126,3 +126,20 @@ class ResPartnerBank(models.Model):
             else:
                 value = sanitize_account_number(value)
         return super()._condition_to_sql(alias, fname, operator, value, query)
+
+    def action_archive_bank(self):
+        """
+            Custom archive function because the basic action_archive don't trigger a re-rendering of the page, so
+            the archived value is still visible in the view.
+        """
+        self.ensure_one()
+        self.action_archive()
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    def unlink(self):
+        """
+            Instead of deleting a bank account, we want to archive it since we cannot delete bank account that is linked
+            to any entries
+        """
+        self.action_archive()
+        return True

@@ -1,4 +1,4 @@
-import { after, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test } from "@odoo/hoot";
 import {
     defineParams,
     makeMockEnv,
@@ -11,7 +11,7 @@ import {
 import { _t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, markup, xml } from "@odoo/owl";
 const { DateTime } = luxon;
 
 const frenchTerms = { Hello: "Bonjour" };
@@ -158,4 +158,32 @@ test("_t fills the format specifiers in lazy translated terms with its extra arg
         "Due in %s days": "Échéance dans %s jours",
     });
     expect(translatedStr.toString()).toBe("Échéance dans 513 jours");
+});
+
+describe("_t with markups", () => {
+    test("non-markup values are escaped", () => {
+        translatedTerms[translationLoaded] = true;
+        const maliciousUserInput = "<script>alert('This should've been escaped')</script>";
+        const translatedStr = _t(
+            "FREE %(blink_start)sROBUX%(blink_end)s, please contact %(email)s",
+            {
+                blink_start: markup("<blink>"),
+                blink_end: markup("</blink>"),
+                email: maliciousUserInput,
+            }
+        );
+        expect(translatedStr).toBeInstanceOf(markup().constructor);
+        expect(translatedStr.valueOf()).toBe(
+            "FREE <blink>ROBUX</blink>, please contact &lt;script&gt;alert(&#x27;This should&#x27;ve been escaped&#x27;)&lt;/script&gt;"
+        );
+    });
+    test("translations are escaped", () => {
+        translatedTerms[translationLoaded] = true;
+        const maliciousTranslation = "<script>document.write('pizza hawai')</script> %s";
+        patchTranslations({ "I love %s": maliciousTranslation });
+        const translatedStr = _t("I love %s", markup("<blink>Mario Kart</blink>"));
+        expect(translatedStr.valueOf()).toBe(
+            "&lt;script&gt;document.write(&#x27;pizza hawai&#x27;)&lt;/script&gt; <blink>Mario Kart</blink>"
+        );
+    });
 });

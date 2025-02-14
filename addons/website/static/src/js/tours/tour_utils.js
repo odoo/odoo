@@ -196,7 +196,6 @@ export function clickOnEditAndWaitEditMode(position = "bottom") {
         tooltipPosition: position,
         run: "click",
     }, {
-        isActive: ["auto"], // Checking step only for automated tests
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     }];
@@ -220,7 +219,6 @@ export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") 
         tooltipPosition: position,
         run: "click",
     }, {
-        isActive: ["auto"], // Checking step only for automated tests
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     }];
@@ -272,14 +270,12 @@ export function clickOnSave(position = "bottom", timeout) {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger:
                 "body:not(.editor_enable):not(.editor_has_snippets):not(:has(.o_notification_bar))",
             noPrepend: true,
             timeout: timeout,
         },
         {
-            isActive: ["auto"],
             trigger: "[is-ready=true]:iframe",
             noPrepend: true,
         },
@@ -417,8 +413,15 @@ export function clickOnExtraMenuItem(stepOptions, backend = false) {
             content: "Click on the extra menu dropdown toggle if it is there and not shown",
             trigger: `${
                 backend ? ":iframe" : ""
-            } ul.top_menu .o_extra_menu_items a[role=menuitem]:not(.show)`,
-            run: "click",
+            } ul.top_menu`,
+            run(actions) {
+                // Note: the button might not exist (it only appear if there is many menu items)
+                const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
+                // Don't click on the extra menu button if it's already visible.
+                if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
+                    actions.click(extraMenuButton);
+                }
+            },
         },
         stepOptions
     );
@@ -450,7 +453,6 @@ export function registerWebsitePreviewTour(name, options, steps) {
             // of course.
             if (options.edition) {
                 tourSteps.unshift({
-                    isActive: ["auto"],
                     content: "Wait for the edit mode to be started",
                     trigger: ".o_website_preview.editor_enable.editor_has_snippets",
                     timeout: 30000,

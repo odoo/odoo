@@ -613,7 +613,7 @@ describe('Link', () => {
                 contentAfter: '<p><a href="#/">[]abc</a></p>',
             });
         });
-        it('should zwnbsp-pad simple text link', async () => {
+        describe('should zwnbsp-pad simple text link', () => {
             const removeZwnbsp = editor => {
                 for (const descendant of descendants(editor.editable)) {
                     if (descendant.nodeType === Node.TEXT_NODE && descendant.textContent === '\ufeff') {
@@ -621,68 +621,78 @@ describe('Link', () => {
                     }
                 }
             }
-            await testEditor(BasicEditor, {
-                contentBefore: '<p>a[]<a href="#/">bc</a>d</p>',
-                contentBeforeEdit: '<p>a[]\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeffd</p>',
-                stepFunction: async editor => {
-                    removeZwnbsp(editor);
-                    const p = editor.editable.querySelector('p');
-                    setSelection(p, 1, p, 1, false); // set the selection via the parent
-                    editor.sanitize(); // insert the zwnbsp again
-                },
-                contentAfterEdit: '<p>a[]\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeffd</p>',
+            it('should zwnbsp-pad simple text link (1)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a[]<a href="#/">bc</a>d</p>',
+                    contentBeforeEdit: '<p>a[]\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeffd</p>',
+                    stepFunction: async editor => {
+                        removeZwnbsp(editor);
+                        const p = editor.editable.querySelector('p');
+                        setSelection(p, 1, p, 1, false); // set the selection via the parent
+                        editor.sanitize(); // insert the zwnbsp again
+                    },
+                    contentAfterEdit: '<p>a[]\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeffd</p>',
+                });
             });
-            await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="#/">[]bc</a>d</p>',
-                contentBeforeEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]bc\ufeff</a>\ufeffd</p>',
-                stepFunction: async editor => {
-                    removeZwnbsp(editor);
-                    const a = editor.editable.querySelector('a');
-                    setSelection(a, 0, a, 0, false); // set the selection via the parent
-                    await nextTick();
-                    editor.sanitize(); // insert the zwnbsp again
-                },
-                contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">[]\ufeffbc\ufeff</a>\ufeffd</p>',
+            it('should zwnbsp-pad simple text link (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="#/">[]bc</a>d</p>',
+                    contentBeforeEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]bc\ufeff</a>\ufeffd</p>',
+                    stepFunction: async editor => {
+                        removeZwnbsp(editor);
+                        const a = editor.editable.querySelector('a');
+                        setSelection(a, 0, a, 0, false); // set the selection via the parent
+                        await nextTick();
+                        editor.sanitize(); // insert the zwnbsp again
+                    },
+                    contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">[]\ufeffbc\ufeff</a>\ufeffd</p>',
+                });
             });
-            await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="#/">b[]</a>d</p>',
-                contentBeforeEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffb[]\ufeff</a>\ufeffd</p>',
-                stepFunction: async editor => {
-                    const a = editor.editable.querySelector('a');
-                    // Insert an extra character as a text node so we can set
-                    // the selection between the characters while still
-                    // targetting their parent.
-                    a.appendChild(document.createTextNode('c'));
-                    removeZwnbsp(editor);
-                    setSelection(a, 1, a, 1, false); // set the selection via the parent
-                    await nextTick();
-                    editor.sanitize(); // insert the zwnbsp again
-                },
-                contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffb[]c\ufeff</a>\ufeffd</p>',
+            it('should zwnbsp-pad simple text link (3)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="#/">b[]</a>d</p>',
+                    contentBeforeEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffb[]\ufeff</a>\ufeffd</p>',
+                    stepFunction: async editor => {
+                        const a = editor.editable.querySelector('a');
+                        // Insert an extra character as a text node so we can set
+                        // the selection between the characters while still
+                        // targetting their parent.
+                        a.appendChild(document.createTextNode('c'));
+                        removeZwnbsp(editor);
+                        setSelection(a, 1, a, 1, false); // set the selection via the parent
+                        await nextTick();
+                        editor.sanitize(); // insert the zwnbsp again
+                    },
+                    contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffb[]c\ufeff</a>\ufeffd</p>',
+                });
             });
-            await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="#/">bc[]</a>d</p>',
-                contentBeforeEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffbc[]\ufeff</a>\ufeffd</p>',
-                stepFunction: async editor => {
-                    removeZwnbsp(editor);
-                    const a = editor.editable.querySelector('a');
-                    setSelection(a, 1, a, 1, false); // set the selection via the parent
-                    await nextTick();
-                    editor.sanitize(); // insert the zwnbsp again
-                },
-                contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffbc\ufeff[]</a>\ufeffd</p>',
+            it('should zwnbsp-pad simple text link (4)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="#/">bc[]</a>d</p>',
+                    contentBeforeEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffbc[]\ufeff</a>\ufeffd</p>',
+                    stepFunction: async editor => {
+                        removeZwnbsp(editor);
+                        const a = editor.editable.querySelector('a');
+                        setSelection(a, 1, a, 1, false); // set the selection via the parent
+                        await nextTick();
+                        editor.sanitize(); // insert the zwnbsp again
+                    },
+                    contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffbc\ufeff[]</a>\ufeffd</p>',
+                });
             });
-            await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="#/">bc</a>[]d</p>',
-                contentBeforeEdit: '<p>a\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeff[]d</p>',
-                stepFunction: async editor => {
-                    descendants(editor.editable).forEach(c => c.nodeType === Node.TEXT_NODE && c.textContent === '\ufeff' && c.remove()); // remove the zwnbsp
-                    const p = editor.editable.querySelector('p');
-                    setSelection(p, 2, p, 2, false); // set the selection via the parent
-                    await nextTick();
-                    editor.sanitize(); // insert the zwnbsp again
-                },
-                contentAfterEdit: '<p>a\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeff[]d</p>',
+            it('should zwnbsp-pad simple text link (5)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="#/">bc</a>[]d</p>',
+                    contentBeforeEdit: '<p>a\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeff[]d</p>',
+                    stepFunction: async editor => {
+                        descendants(editor.editable).forEach(c => c.nodeType === Node.TEXT_NODE && c.textContent === '\ufeff' && c.remove()); // remove the zwnbsp
+                        const p = editor.editable.querySelector('p');
+                        setSelection(p, 2, p, 2, false); // set the selection via the parent
+                        await nextTick();
+                        editor.sanitize(); // insert the zwnbsp again
+                    },
+                    contentAfterEdit: '<p>a\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeff[]d</p>',
+                });
             });
         });
         it('should not zwnbsp-pad nav-link', async () => {

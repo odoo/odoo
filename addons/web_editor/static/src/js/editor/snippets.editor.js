@@ -4349,7 +4349,7 @@ class SnippetsMenu extends Component {
      * @param {Event} ev - a touch event
      */
     _onTouchEvent(ev) {
-        if (ev.touches.length > 1) {
+        if (ev.touches.length > 1 || ev.changedTouches.length < 1) {
             // Ignore multi-touch events.
             return;
         }

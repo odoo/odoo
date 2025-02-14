@@ -16,7 +16,7 @@ class ResPartner(models.Model):
             ('03', '03 To other VAT Collectors other than the Treasurer'),
             ('04', '04 Other Value of VAT Imposition Base'),
             ('05', '05 Specified Amount (Article 9A Paragraph (1) VAT Law)'),
-            ('06', '06 Other Deliveries'),
+            ('06', '06 to individuals holding foreign passports'),
             ('07', '07 Deliveries that the VAT is not Collected'),
             ('08', '08 Deliveries that the VAT is Exempted'),
             ('09', '09 Deliveries of Assets (Article 16D of VAT Law)'),

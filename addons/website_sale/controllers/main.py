@@ -1694,11 +1694,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return None:
         """
         country = request.env["res.country"].search([
-            ('code', '=', address.pop('country'))
+            ('code', '=', address.pop('country')),
         ], limit=1)
-        state = request.env["res.country.state"].search([
-            ('code', '=', address.pop('state', ''))
-        ], limit=1)
+        if state_code := address.pop('state'):
+            state = request.env['res.country.state'].search([
+                ('code', '=', state_code),
+                ('country_id', '=', country.id),
+            ], limit=1)
+        else:
+            state = request.env['res.country.state']
         address.update(country_id=country.id, state_id=state.id)
 
     @route('/shop/update_address', type='json', auth='public', website=True)

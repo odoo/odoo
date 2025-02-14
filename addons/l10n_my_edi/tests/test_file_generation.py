@@ -339,6 +339,52 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             self.partner_b.commercial_partner_id.l10n_my_identification_number,
         )
 
+    def test_07_tax_exempt(self):
+        """
+        Check that the file is correct with an exempt tax.
+        """
+        exempt_tax = self.env['account.tax'].create({
+            'name': 'Tax Exempt',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 0,
+            'l10n_my_tax_type': 'E',
+        })
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner_b, products=self.product_a, taxes=exempt_tax,
+        )
+        invoice.l10n_my_edi_exemption_reason = "Exempt Customer"
+        invoice.action_post()
+
+        file, errors = invoice._l10n_my_edi_generate_invoice_xml()
+        self.assertFalse(errors)
+        self.assertTrue(file)
+        root = etree.fromstring(file)
+        # The tax exemption info should be on the line.
+        item_root = root.xpath('cac:InvoiceLine/cac:Item', namespaces=NS_MAP)[0]
+        self._assert_node_values(
+            item_root,
+            'cac:ClassifiedTaxCategory/cbc:Name',
+            invoice.l10n_my_edi_exemption_reason,
+        )
+        self._assert_node_values(
+            item_root,
+            'cac:ClassifiedTaxCategory/cbc:TaxExemptionReason',
+            invoice.l10n_my_edi_exemption_reason,
+        )
+        # And also on the tax total
+        tax_subtotal_root = root.xpath('cac:TaxTotal/cac:TaxSubtotal', namespaces=NS_MAP)[0]
+        self._assert_node_values(
+            tax_subtotal_root,
+            'cac:TaxCategory/cbc:Name',
+            invoice.l10n_my_edi_exemption_reason,
+        )
+        self._assert_node_values(
+            tax_subtotal_root,
+            'cac:TaxCategory/cbc:TaxExemptionReason',
+            invoice.l10n_my_edi_exemption_reason,
+        )
+
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
 
