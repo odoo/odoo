@@ -31,16 +31,14 @@ const {
     document,
     fetch,
     Headers,
-    Map,
     Math: { max: $max, min: $min },
-    Object: { assign: $assign, create: $create, entries: $entries, fromEntries: $fromEntries },
+    Object: { assign: $assign, create: $create, entries: $entries },
     ProgressEvent,
     Request,
     Response,
-    SharedWorker,
+    Set,
     URL,
     WebSocket,
-    Worker,
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -68,42 +66,9 @@ const dispatchMessage = async (target, data, transfer) => {
 };
 
 /**
- * @param {NetworkInstance} instance
+ * @param {...NetworkInstance} instances
  */
-const isOpen = (instance) => openNetworkInstances.has(instance);
-
-/**
- * @param {SharedWorker | Worker} worker
- */
-const makeWorkerScope = (worker) => {
-    const execute = async () => {
-        const scope = new MockDedicatedWorkerGlobalScope(worker);
-        const keys = Reflect.ownKeys(scope);
-        const values = $fromEntries(keys.map((key) => [key, globalThis[key]]));
-        $assign(globalThis, scope);
-
-        script(scope);
-        mockWorkerConnection(worker);
-
-        if (typeof globalThis.onconnect === "function") {
-            globalThis.onconnect();
-        }
-
-        $assign(globalThis, values);
-    };
-
-    const load = async () => {
-        await Promise.resolve();
-
-        const response = await globalThis.fetch(worker.url);
-        const content = await response.text();
-        script = new Function("self", content);
-    };
-
-    let script = () => {};
-
-    return { execute, load };
-};
+const isOpen = (...instances) => instances.every((i) => openNetworkInstances.has(i));
 
 /**
  * @param {NetworkInstance} instance
@@ -114,23 +79,9 @@ const markClosed = (instance) => openNetworkInstances.delete(instance);
  * @param {NetworkInstance} instance
  * @param {Promise<any> | null} [promise]
  */
-const markOpen = (instance, promise) => {
-    openNetworkInstances.set(instance, promise ?? null);
+const markOpen = (instance) => {
+    openNetworkInstances.add(instance);
     return instance;
-};
-
-/**
- * @param {any} networkInstance
- * @param {() => any} callback
- */
-const whenReady = async (networkInstance, callback) => {
-    const readyPromise = openNetworkInstances.get(networkInstance);
-    if (readyPromise) {
-        await readyPromise;
-    }
-    if (isOpen(networkInstance)) {
-        callback();
-    }
 };
 
 const DEFAULT_URL = "https://www.hoot.test/";
@@ -142,12 +93,12 @@ const R_EQUAL = /\s*=\s*/;
 const R_INTERNAL_URL = /^(blob|file):/;
 const R_SEMICOLON = /\s*;\s*/;
 
-/** @type {Map<NetworkInstance, Promise<any> | null>} */
-const openNetworkInstances = new Map();
+/** @type {Set<NetworkInstance>} */
+const openNetworkInstances = new Set();
 
 /** @type {(typeof fetch) | null} */
 let mockFetchFn = null;
-/** @type {((worker: Worker | MessagePort) => any) | null} */
+/** @type {((worker: SharedWorker | Worker) => any) | null} */
 let mockWorkerConnection = null;
 /** @type {((websocket: ServerWebSocket) => any) | null} */
 let mockWebSocketConnection = null;
@@ -163,12 +114,9 @@ export function cleanupNetwork() {
     mockWorkerConnection = null;
 
     // Network instances
-    for (const instance of openNetworkInstances.keys()) {
+    for (const instance of openNetworkInstances) {
         if (instance instanceof AbortController) {
             instance.abort();
-        } else if (instance instanceof MockMessageChannel) {
-            instance.port1.close();
-            instance.port2.close();
         } else if (
             instance instanceof MockBroadcastChannel ||
             instance instanceof MockMessagePort ||
@@ -177,7 +125,7 @@ export function cleanupNetwork() {
         ) {
             instance.close();
         } else if (instance instanceof MockSharedWorker) {
-            instance.port.close();
+            instance.port.close(); // Will also close `MockMessageChannel` instances
         } else if (instance instanceof MockWorker) {
             instance.terminate();
         }
@@ -598,12 +546,7 @@ export class MockMessagePort extends MockEventTarget {
 
     /**
      * @private
-     * @type {(() => any) | null}
-     */
-    _execute;
-    /**
-     * @private
-     * @type {MessageChannel | SharedWorker}
+     * @type {MessageChannel}
      */
     _owner;
     /**
@@ -613,44 +556,39 @@ export class MockMessagePort extends MockEventTarget {
     _target = this;
 
     /**
-     * @param {MessageChannel | SharedWorker} owner
-     * @param {() => any} [execute]
+     * @param {MessageChannel} owner
      */
-    constructor(owner, execute) {
+    constructor(owner) {
         super();
 
         this._owner = owner;
-        this._execute = execute || null;
     }
 
     /** @type {MessagePort["close"]} */
     close() {
+        // Closing a message port also closes its sibling port & parent channel.
         markClosed(this);
+        markClosed(this._target);
         markClosed(this._owner);
     }
 
     /** @type {MessagePort["postMessage"]} */
     postMessage(message, transfer) {
-        if (!isOpen(this)) {
+        if (!isOpen(this, this._owner, this._target)) {
             return;
         }
-        whenReady(this._owner, async () => {
-            if (this._owner._mutex) {
-                this._owner._mutex = this._owner._mutex.then(() =>
-                    dispatchMessage(this._target, message, transfer)
-                );
-            } else {
-                dispatchMessage(this._target, message, transfer);
-            }
-        });
+        if (this._owner._mutex) {
+            this._owner._mutex = this._owner._mutex.then(() =>
+                dispatchMessage(this._target, message, transfer)
+            );
+        } else {
+            dispatchMessage(this._target, message, transfer);
+        }
     }
 
     /** @type {MessagePort["start"]} */
     start() {
         markOpen(this);
-        if (this._execute) {
-            whenReady(this._owner, this._execute);
-        }
     }
 }
 
@@ -714,23 +652,30 @@ export class MockSharedWorker extends MockEventTarget {
     static publicListeners = ["error"];
 
     /**
+     * @private
+     */
+    _messageChannel = new MockMessageChannel();
+
+    get port() {
+        return this._messageChannel.port1;
+    }
+
+    /**
      * @param {string | URL} scriptURL
      * @param {WorkerOptions} [options]
      */
     constructor(scriptURL, options) {
-        if (!mockWorkerConnection) {
-            return markOpen(new SharedWorker(...arguments));
-        }
-
         super();
-
-        const { execute, load } = makeWorkerScope(this);
-
-        markOpen(this, load());
 
         this.url = String(scriptURL);
         this.name = options?.name || "";
-        this.port = new MockMessagePort(this, execute);
+
+        markOpen(this);
+
+        // First port has to be started manually
+        this._messageChannel.port2.start();
+
+        mockWorkerConnection?.(this);
     }
 }
 
@@ -745,9 +690,9 @@ export class MockWebSocket extends MockEventTarget {
 
     /**
      * @private
-     * @type {ServerWebSocket | null}
+     * @type {ServerWebSocket}
      */
-    _serverWs = null;
+    _serverWs;
     /**
      * @private
      * @type {ReturnType<typeof makeNetworkLogger>}
@@ -767,27 +712,32 @@ export class MockWebSocket extends MockEventTarget {
      * @param {string | string[]} [protocols]
      */
     constructor(url, protocols) {
-        if (!mockWebSocketConnection) {
-            return new WebSocket(url, protocols);
-        }
-
         super();
 
         this.url = String(url);
         this.protocols = ensureArray(protocols || "");
+
         this._logger = makeNetworkLogger("WS", this.url);
         this._serverWs = new ServerWebSocket(this, this._logger);
 
-        this.addEventListener("open", () => {
-            markOpen(this);
-            this._readyState = WebSocket.OPEN;
-        });
-        this.addEventListener("close", () => {
+        this.addEventListener("close", (ev) => {
             markClosed(this);
+
             this._readyState = WebSocket.CLOSED;
+
+            if (isOpen(this._serverWs)) {
+                this._serverWs.dispatchEvent(new CloseEvent("close", ev));
+            }
         });
 
-        queueMicrotask(() => this.dispatchEvent(new Event("open")));
+        queueMicrotask(() => {
+            markOpen(this);
+
+            this._readyState = WebSocket.OPEN;
+            this._logger.logRequest(() => "connection open");
+
+            this.dispatchEvent(new Event("open"));
+        });
     }
 
     /** @type {WebSocket["close"]} */
@@ -797,7 +747,6 @@ export class MockWebSocket extends MockEventTarget {
         }
         this._readyState = WebSocket.CLOSING;
         this.dispatchEvent(new CloseEvent("close", { code, reason }));
-        this._serverWs.dispatchEvent(new CloseEvent("close", { code, reason }));
     }
 
     /** @type {WebSocket["send"]} */
@@ -814,31 +763,43 @@ export class MockWorker extends MockEventTarget {
     static publicListeners = ["error", "message"];
 
     /**
+     * @private
+     */
+    _messageChannel = new MockMessageChannel();
+
+    /**
      * @param {string | URL} scriptURL
      * @param {WorkerOptions} [options]
      */
     constructor(scriptURL, options) {
-        if (!mockWorkerConnection) {
-            return markOpen(new Worker(...arguments));
-        }
-
         super();
-
-        const { execute, load } = makeWorkerScope(this);
 
         this.url = String(scriptURL);
         this.name = options?.name || "";
 
-        markOpen(this, load().then(execute));
+        markOpen(this);
+
+        this._messageChannel.port1.start();
+        this._messageChannel.port2.start();
+
+        mockWorkerConnection?.(this);
     }
 
     /** @type {Worker["postMessage"]} */
     postMessage(message, transfer) {
-        whenReady(this, () => dispatchMessage(this, message, transfer));
+        if (!isOpen(this, this._messageChannel.port1)) {
+            return;
+        }
+        this._messageChannel.port1.postMessage(message, transfer);
     }
 
     /** @type {Worker["terminate"]} */
     terminate() {
+        if (!isOpen(this, this._messageChannel.port1)) {
+            return;
+        }
+        this._messageChannel.port1.close();
+
         markClosed(this);
     }
 }
@@ -948,21 +909,21 @@ export class MockXMLHttpRequestUpload extends MockEventTarget {
 export class ServerWebSocket extends MockEventTarget {
     /**
      * @private
-     * @type {WebSocket | null}
+     * @type {MockWebSocket}
      */
-    _clientWs = null;
+    _clientWs;
     /**
      * @private
      * @type {ReturnType<typeof makeNetworkLogger>}
      */
     _logger = null;
-    /**
-     * @private
-     */
-    _readyState = WebSocket.CONNECTING;
 
     get readyState() {
-        return this._readyState;
+        return this._clientWs.readyState;
+    }
+
+    get url() {
+        return this._clientWs.url;
     }
 
     /**
@@ -974,35 +935,31 @@ export class ServerWebSocket extends MockEventTarget {
 
         this._clientWs = websocket;
         this._logger = logger;
-        this.url = this._clientWs.url;
 
-        this.addEventListener("open", () => {
-            markOpen(this);
-            mockWebSocketConnection(this);
-            this._logger.logRequest(() => "connection open");
-            this._readyState = WebSocket.OPEN;
-        });
-        this.addEventListener("close", () => {
+        this.addEventListener("close", (ev) => {
             markClosed(this);
-            this._readyState = WebSocket.CLOSED;
+
+            if (isOpen(this._clientWs)) {
+                this._clientWs.dispatchEvent(new CloseEvent("close", ev));
+            }
         });
 
-        queueMicrotask(() => this.dispatchEvent(new Event("open")));
+        markOpen(this);
+        mockWebSocketConnection(this);
+        this.dispatchEvent(new Event("open"));
     }
 
     /** @type {WebSocket["close"]} */
     close(code, reason) {
-        if (this.readyState !== WebSocket.OPEN) {
+        if (!isOpen(this)) {
             return;
         }
-        this._readyState = WebSocket.CLOSING;
         this.dispatchEvent(new CloseEvent("close", { code, reason }));
-        this._clientWs.dispatchEvent(new CloseEvent("close", { code, reason }));
     }
 
     /** @type {WebSocket["send"]} */
     send(data) {
-        if (this.readyState !== WebSocket.OPEN) {
+        if (!isOpen(this, this._clientWs)) {
             return;
         }
         this._logger.logResponse(() => data);
