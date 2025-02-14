@@ -30,7 +30,7 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_company_partners:
                 alerts['account_edi_ubl_cii_configure_company'] = {
-                    'message': _("Please configure your company to generate a complete XML file."),
+                    'message': _("Please fill in your company's VAT or Peppol Address to generate a complete XML file."),
                     'level': 'info',
                     'action_text': _("Configure"),
                     'action': not_configured_company_partners._get_records_action(),
@@ -40,20 +40,11 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_partners:
                 alerts['account_edi_ubl_cii_configure_partner'] = {
-                    'message': _("Please fill in your VAT or Peppol Address"),
+                    'message': _("Please fill in partner's VAT or Peppol Address."),
                     'level': 'info',
                     'action_text': _("View Partner(s)"),
                     'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))
                 }
-
-        ubl_formats = set(self.env['res.partner']._get_ubl_cii_formats())
-        if moves_without_bank := moves.filtered(lambda m: m.move_type == 'out_invoice' and moves_data[m]['invoice_edi_format'] in ubl_formats and not m.partner_bank_id):
-            alerts['account_edi_ubl_cii_configure_bank'] = {
-                'message': _("Please add a Recipient bank in the 'Other Info' tab to generate a complete file."),
-                'level': 'danger' if len(moves_without_bank) == 1 else 'warning',
-                'action_text': _("View Invoice(s)"),
-                'action': moves_without_bank._get_records_action(name=_("Check Invoice(s)")),
-            }
         return alerts
 
     # -------------------------------------------------------------------------
