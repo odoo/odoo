@@ -24,6 +24,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Deferred } from "../utils/concurrency";
 import { Dialog } from "../dialog/dialog";
+import { BottomSheet } from "@web/core/bottom_sheet/bottom_sheet";
 import { getTemplate } from "@web/core/templates";
 
 /**
@@ -646,14 +647,14 @@ class PickerMobile extends Component {
 }
 
 class PickerMobileInDialog extends PickerMobile {
-    static components = { Dialog };
+    static components = { BottomSheet };
     static props = [...PICKER_PROPS, "onClose?"];
     static template = xml`
-        <Dialog size="'lg'" header="false" footer="false" contentClass="'o-discuss-mobileContextMenu d-flex position-absolute bottom-0 rounded-0 h-50 bg-100'" bodyClass="'p-1'">
+        <BottomSheet showBackBtn="true" visibleInitialMax="70" forceExtendedFullHeight="true">
             <div class="h-100" t-ref="root">
                 <t t-component="props.PickerComponent" t-props="pickerProps"/>
             </div>
-        </Dialog>
+        </BottomSheet>
     `;
 
     setup() {

@@ -25,10 +25,12 @@ messageActionsRegistry
         condition: (component) => component.props.message.canAddReaction(component.props.thread),
         icon: "oi oi-smile-add",
         title: _t("Add a Reaction"),
-        onClick: async (component, action) =>
+        onClick: async (component, action) => {
             component.reactionPicker.open({
                 el: component.root?.el?.querySelector(`[name="${action.id}"]`),
-            }),
+            });
+            return true; // Signal to MessageActionMenuMobile that it should close
+        },
         setup() {
             const component = useComponent();
             component.reactionPicker = useEmojiPicker(undefined, {
@@ -45,6 +47,7 @@ messageActionsRegistry
             });
         },
         sequence: 10,
+        mobileCloseAfterClick: true,
     })
     .add("reply-to", {
         condition: (component) => component.props.message.canReplyTo(component.props.thread),

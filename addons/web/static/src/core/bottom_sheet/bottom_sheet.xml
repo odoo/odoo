@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BottomSheet">
+        <div class="o_bottom_sheet"
+            t-att-id="id"
+            t-att-class="{ o_inactive_bottom_sheet: !data.isActive, o_bottom_sheet_ready: this.state.isPositionedReady }"
+            t-ref="bottomSheetRootRef"
+            t-on-scroll="onScrollDebounced"
+            t-on-scrollend="onScrollEnd"
+            >
+            <div class="o_bottom_sheet_backdrop" t-on-click="dismiss"/>
+            <div class="o_bottom_sheet_dismiss"/>
+            <div class="o_bottom_sheet_spacer"/>
+
+            <div
+                t-attf-class="o_bottom_sheet_sheet offcanvas position-relative {{ props.sheetClasses }}"
+            >
+                <!-- tabindex="-1" -->
+                <!-- t-ref="autofocus" -->
+                <div class="o_bottom_sheet_handle text-center d-flex align-items-center justify-content-center py-1">
+                    <div class="o_bottom_sheet_handle_bar pt-1 mx-auto rounded-pill d-inline-block px-4 opacity-25"/>
+                </div>
+
+                <t t-if="props.header or props.showBackBtn or props.showCloseBtn or props.title">
+                    <div class="offcanvas-header pb-0">
+                        <t t-slot="header">
+                            <button
+                                t-if="props.showBackBtn"
+                                type="button"
+                                class="btn px-0 py-1 me-auto"
+                                t-on-click="dismiss"
+                                aria-label="Back"
+                                >
+                                <i class="oi oi-arrow-left oi-large" role="img"/>
+                            </button>
+                            <div class="offcanvas-title text-center" t-esc="props.title"/>
+                            <button
+                                t-if="props.showCloseBtn"
+                                type="button"
+                                class="btn-close"
+                                t-on-click="dismiss"
+                                aria-label="Close"
+                            />
+                        </t>
+                    </div>
+                </t>
+
+                <div
+                    class="offcanvas-body"
+                    t-attf-class="{{ props.bodyClass }} {{ !props.withBodyPadding ? 'p-0': '' }}"
+                    >
+                    <t t-slot="default" close="() => this.data.close()" />
+                </div>
+
+                <t t-if="props.footer">
+                    <div
+                        class="o_bottom_sheet_footer offcanvas-body flex-grow-0 d-flex justify-content-start gap-2 p-3 border-top"
+                        >
+                        <t t-slot="footer" close="() => this.data.close()"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
