@@ -5,6 +5,7 @@ import json
 
 from datetime import datetime
 
+from werkzeug import urls
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
@@ -206,10 +207,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return fuzzy_search_term, product_count, search_result
 
     def _shop_get_query_url_kwargs(
-        self, category, search, min_price, max_price, order=None, tags=None, attribute_value=None, **post
+        self, search, min_price, max_price, order=None, tags=None, attribute_value=None, **kwargs
     ):
         return {
-            'category': category,
             'search': search,
             'tags': tags,
             'min_price': min_price,
@@ -232,9 +232,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
         '/shop/category/<model("product.public.category"):category>',
         '/shop/category/<model("product.public.category"):category>/page/<int:page>',
     ], type='http', auth="public", website=True, sitemap=sitemap_shop)
-    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
+    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, **post):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
+
+        is_category_in_query = isinstance(category, str)
+        category = self._validate_and_get_category(category)
+        if is_category_in_query:
+            query = self._get_filtered_query_string(
+                request.httprequest.query_string.decode(), keys_to_remove=['category']
+            )
+            return request.redirect(f'{self._get_shop_path(category, page)}?{query}', code=301)
 
         try:
             min_price = float(min_price)
@@ -245,27 +253,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         except ValueError:
             max_price = 0
 
-        Category = request.env['product.public.category']
-        if category:
-            category = Category.search([('id', '=', int(category))], limit=1)
-            if not category or not category.can_access_from_current_website():
-                raise NotFound()
-        else:
-            category = Category
-
         website = request.env['website'].get_current_website()
         website_domain = website.website_domain()
-        if ppg:
-            try:
-                ppg = int(ppg)
-                post['ppg'] = ppg
-            except ValueError:
-                ppg = False
-        if not ppg:
-            ppg = website.shop_ppg or 20
 
+        ppg = website.shop_ppg or 20
         ppr = website.shop_ppr or 4
-
         gap = website.shop_gap or "16px"
 
         request_args = request.httprequest.args
@@ -287,7 +279,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 post['tags'] = None
                 tags = {}
 
-        keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
+        keep = QueryURL(
+            self._get_shop_path(category),
+            **self._shop_get_query_url_kwargs(search, min_price, max_price, **post),
+        )
 
         # Check if we need to refresh the cached pricelist
         now = datetime.timestamp(datetime.now())
@@ -306,7 +301,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             conversion_rate = 1
 
-        url = '/shop'
         if search:
             post['search'] = search
 
@@ -363,6 +357,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             all_tags = ProductTag
 
+        Category = request.env['product.public.category']
         categs_domain = [('parent_id', '=', False)] + website_domain
         if search:
             search_categories = Category.search(
@@ -373,8 +368,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             search_categories = Category
         categs = lazy(lambda: Category.search(categs_domain))
 
-        if category:
-            url = "/shop/category/%s" % request.env['ir.http']._slug(category)
+        url = self._get_shop_path(category)
 
         pager = website.pager(url=url, total=product_count, page=page, step=ppg, scope=5, url_args=post)
         offset = pager['offset']
@@ -448,11 +442,37 @@ class WebsiteSale(payment_portal.PaymentPortal):
         values.update(self._get_additional_extra_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
-    @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products, readonly=True)
-    def product(self, product, category='', search='', **kwargs):
+    @route(
+        [
+            '/shop/<model("product.template"):product>',
+            '/shop/<model("product.public.category"):category>/<model("product.template"):product>',
+        ],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=sitemap_products,
+        readonly=True,
+    )
+    def product(self, product, category=None, search='', **kwargs):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
 
+        is_category_in_query = isinstance(category, str)
+        category = self._validate_and_get_category(category)
+        if (
+            category
+            and not product.filtered_domain([('public_categ_ids', 'child_of', category.id)])
+        ):
+            return request.redirect(
+                _build_url_w_params(self._get_product_path(product), request.params), code=301
+            )
+        if is_category_in_query:
+            query = self._get_filtered_query_string(
+                request.httprequest.query_string.decode(), keys_to_remove=['category']
+            )
+            return request.redirect(
+                f'{self._get_product_path(product, category)}?{query}', code=301
+            )
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
 
     @route(
@@ -468,13 +488,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         document = request.env['product.document'].browse(document_id).sudo().exists()
         if not document or not document.active:
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         if not document.shown_on_product_page or not (
             document.res_id == product_template.id
             and document.res_model == 'product.template'
         ):
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         return request.env['ir.binary']._get_stream_from(
             document.ir_attachment_id,
@@ -483,7 +503,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
     def old_product(self, product, category='', search='', **kwargs):
         # Compatibility pre-v14
-        return request.redirect(_build_url_w_params("/shop/%s" % request.env['ir.http']._slug(product), request.params), code=301)
+        category = self._validate_and_get_category(category)
+        query = self._get_filtered_query_string(
+            request.httprequest.query_string.decode(), keys_to_remove=['category']
+        )
+        return request.redirect(f'{self._get_product_path(product, category)}?{query}', code=301)
 
     @route(['/shop/product/extra-media'], type='jsonrpc', auth='user', website=True)
     def add_product_media(self, media, type, product_product_id, product_template_id, combination_ids=None):
@@ -649,9 +673,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # In sudo mode to check fields and conditions not accessible to the customer directly.
         return product.sudo()._is_add_to_cart_allowed()
 
-    def _product_get_query_url_kwargs(self, category, search, **kwargs):
+    def _product_get_query_url_kwargs(self, search, **kwargs):
         return {
-            'category': category,
             'search': search,
             'tags': kwargs.get('tags'),
             'min_price': kwargs.get('min_price'),
@@ -662,18 +685,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductCategory = request.env['product.public.category']
         product_markup_data = [product._to_markup_data(request.website)]
         if category:
-            category = ProductCategory.browse(int(category)).exists()
             # Add breadcrumb's SEO data.
             product_markup_data.append(self._prepare_breadcrumb_markup_data(
                 request.website.get_base_url(), category, product.name
             ))
         keep = QueryURL(
-            '/shop',
-            **self._product_get_query_url_kwargs(
-                category=category and category.id,
-                search=search,
-                **kwargs,
-            ),
+            self._get_shop_path(category),
+            **self._product_get_query_url_kwargs(search=search, **kwargs),
         )
 
         # Needed to trigger the recently viewed product rpc
@@ -712,13 +730,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     '@type': 'ListItem',
                     'position': 1,
                     'name': 'All Products',
-                    'item': f'{base_url}/shop',
+                    'item': f'{base_url}{self._get_shop_path()}',
                 },
                 {
                     '@type': 'ListItem',
                     'position': 2,
                     'name': category.name,
-                    'item': f'{base_url}/shop/category/{self.env["ir.http"]._slug(category)}',
+                    'item': f'{base_url}{self._get_shop_path(category)}',
                 },
                 {
                     '@type': 'ListItem',
@@ -768,7 +786,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         pass
                     redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
             self._apply_pricelist(pricelist)
-        return request.redirect(redirect_url or '/shop')
+        return request.redirect(redirect_url or self._get_shop_path())
 
     @route('/shop/pricelist', type='http', auth='public', website=True, sitemap=False)
     def pricelist(self, promo, **post):
@@ -1694,7 +1712,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             assert order_sudo.id == request.session.get('sale_last_order_id')
 
         if not order_sudo:
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         errors = self._get_shop_payment_errors(order_sudo)
         if errors:
@@ -1704,7 +1722,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         tx_sudo = order_sudo.get_portal_last_transaction()
         if order_sudo.amount_total and not tx_sudo:
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         if not order_sudo.amount_total and not tx_sudo:
             if order_sudo.state != 'sale':
@@ -1718,7 +1736,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset()
         if tx_sudo and tx_sudo.state == 'draft':
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         return request.redirect('/shop/confirmation')
 
@@ -1736,7 +1754,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             values = self._prepare_shop_payment_confirmation_values(order)
             return request.render("website_sale.confirmation", values)
-        return request.redirect('/shop')
+        return request.redirect(self._get_shop_path())
 
     def _prepare_shop_payment_confirmation_values(self, order):
         """
@@ -1756,7 +1774,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             pdf, _ = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [sale_order_id])
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', '%s' % len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
-        return request.redirect('/shop')
+        return request.redirect(self._get_shop_path())
 
     # === CHECK METHODS === #
 
@@ -1790,7 +1808,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not order_sudo or order_sudo.state != 'draft':
             request.session['sale_order_id'] = None
             request.session['sale_transaction_id'] = None
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         # Check that the cart is not empty.
         if not order_sudo.order_line:
@@ -2030,3 +2048,61 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'currency_id': website.currency_id.id,
             'pricelist_id': request.pricelist.id,
         })
+
+    @staticmethod
+    def _validate_and_get_category(category):
+        """ Validate and return the `product.public.category` record corresponding to the provided
+        category, which can be a record, a record id, or a slug.
+
+        - If no category is provided, return an empty recordset.
+        - If a category is provided, but it doesn't exist or can't be accessed, raise a 404.
+        - If a valid category is provided, return the corresponding record.
+
+        :param str|product.public.category category: The category to validate and return.
+        :rtype: product.public.category
+        :return: The validated category.
+        """
+        Category = request.env['product.public.category']
+        if category:
+            category = Category.search([('id', '=', int(category))], limit=1)
+            if not category or not category.can_access_from_current_website():
+                raise NotFound
+            return category
+        else:
+            return Category
+
+    @staticmethod
+    def _get_shop_path(category=None, page=0):
+        slug = request.env['ir.http']._slug
+        path = '/shop'
+        if category:
+            path += f'/category/{slug(category)}'
+        if page:
+            path += f'/page/{page}'
+        return path
+
+    @staticmethod
+    def _get_product_path(product, category=None):
+        slug = request.env['ir.http']._slug
+        path = '/shop'
+        if category:
+            path += f'/{slug(category)}'
+        path += f'/{slug(product)}'
+        return path
+
+    @staticmethod
+    def _get_filtered_query_string(query_string, keys_to_remove):
+        """ Return a filtered copy of the provided query string, where all keys in `keys_to_remove`
+        are removed.
+
+        Note: the query string shouldn't include the leading '?'.
+
+        :param str query_string: The query string to filter.
+        :param list(str) keys_to_remove: The keys to remove from the query string.
+        :rtype: str
+        :return: The filtered query string.
+        """
+        query = urls.url_parse(f'?{query_string}').decode_query()
+        for key in keys_to_remove:
+            query.pop(key)
+        return urls.url_encode(query)

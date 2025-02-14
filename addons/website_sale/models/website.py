@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import lazy, ormcache
+from odoo.tools import ormcache
 from odoo.tools.translate import LazyTranslate, _
-
 
 _lt = LazyTranslate(__name__)
 
@@ -625,3 +623,11 @@ class Website(models.Model):
     def has_ecommerce_access(self):
         """ Return whether the current user is allowed to access eCommerce-related content. """
         return not (self.env.user._is_public() and self.ecommerce_access == 'logged_in')
+
+    def _get_canonical_url(self):
+        return super()._get_canonical_url()
+        # TODO(loti): strip "category" from product page path. Strip "page" from path?
+        canonical_url = super()._get_canonical_url()
+        rule, _ = self.registry['ir.http']._match(self.httprequest.path)
+        if rule == '/shop/<model("product.public.category"):category>/<model("product.template"):product>':
+            path = request.httprequest.path
