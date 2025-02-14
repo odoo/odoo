@@ -120,6 +120,8 @@ class Home(http.Controller):
 
         if request.httprequest.method == 'POST':
             try:
+                if 'login' in request.params and not request.env['res.users'].sudo().search([('login', '=', request.params['login'])]):
+                    request.params['login'] = request.params['login'].strip().lower()
                 credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS and value}
                 credential.setdefault('type', 'password')
                 auth_info = request.session.authenticate(request.env, credential)
