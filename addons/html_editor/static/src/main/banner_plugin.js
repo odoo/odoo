@@ -4,14 +4,18 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
+import { closestBlock } from "@html_editor/utils/blocks";
+import { isParagraphRelatedElement } from "../utils/dom_info";
 
 function isAvailable(selection) {
     return !closestElement(selection.anchorNode, ".o_editor_banner");
 }
 export class BannerPlugin extends Plugin {
     static id = "banner";
-    static dependencies = ["baseContainer", "history", "dom", "emoji", "selection"];
+    static dependencies = ["baseContainer", "history", "dom", "emoji", "selection", "sanitize"];
     resources = {
+        normalize_handlers: this.normalize.bind(this),
+        banner_container_predicates: (node) => closestElement(node, ".o_editor_banner"),
         user_commands: [
             {
                 id: "banner_info",
@@ -86,19 +90,35 @@ export class BannerPlugin extends Plugin {
     }
 
     insertBanner(title, emoji, alertClass) {
-        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        fillShrunkPhrasingParent(baseContainer);
+        const selection = this.dependencies.selection.getEditableSelection();
+        const blockEl = closestBlock(selection.anchorNode);
+        let baseContainer;
+        if (isParagraphRelatedElement(blockEl)) {
+            baseContainer = this.document.createElement(blockEl.nodeName);
+            baseContainer.append(...blockEl.childNodes);
+        } else if (blockEl.nodeName === "LI") {
+            baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.append(...blockEl.childNodes);
+            fillShrunkPhrasingParent(blockEl);
+        } else {
+            baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            fillShrunkPhrasingParent(baseContainer);
+        }
         const baseContainerHtml = baseContainer.outerHTML;
         const bannerElement = parseHTML(
             this.document,
-            `<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status" contenteditable="false">
+            `<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="${title}">${emoji}</i>
-                <div class="w-100 px-3" contenteditable="true">
+                <div class="w-100 px-3 o_editable">
                     ${baseContainerHtml}
                 </div>
-            </div`
+            </div>`
         ).childNodes[0];
         this.dependencies.dom.insert(bannerElement);
+        const nextNode = this.dependencies.baseContainer.isCandidateForBaseContainer(blockEl)
+            ? blockEl.nodeName
+            : "DIV";
+        this.dependencies.dom.setTag({ tagName: nextNode });
         // If the first child of editable is contenteditable false element
         // a chromium bug prevents selecting the container. Prepend a
         // zero-width space so it's no longer the first child.
@@ -106,8 +126,8 @@ export class BannerPlugin extends Plugin {
             const zws = document.createTextNode("\u200B");
             bannerElement.before(zws);
         }
-        this.dependencies.selection.setCursorStart(
-            bannerElement.querySelector(".o_editor_banner > div > p")
+        this.dependencies.selection.setCursorEnd(
+            bannerElement.querySelector(`.o_editor_banner > div > ${baseContainer.tagName}`)
         );
         this.dependencies.history.addStep();
     }
@@ -120,5 +140,9 @@ export class BannerPlugin extends Plugin {
                 this.dependencies.history.addStep();
             },
         });
+    }
+
+    normalize(root) {
+        this.dependencies.sanitize.restoreSanitizedContentEditable(root);
     }
 }
