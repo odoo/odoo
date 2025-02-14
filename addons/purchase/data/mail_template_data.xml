@@ -108,6 +108,12 @@
             <span style="font-weight:bold;">undefined</span>.
         </t>
         Could you please confirm it will be delivered on time?
+        <br/><br/>
+        <a t-att-href="object.get_acknowledge_url()"
+            target="_blank"
+            style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+            Acknowledge</a>
+        <br/><br/>
         <t t-if="not is_html_empty(object.user_id.signature)">
             <br/><br/>
             <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
