@@ -18,6 +18,7 @@ Activates:
 - Tax Report
     """,
     'author': 'Odoo S.A., Drysharks Consulting and Trading Ltd.',
+    'post_init_hook': '_l10n_tr_post_init',
     'depends': [
         'account',
     ],
