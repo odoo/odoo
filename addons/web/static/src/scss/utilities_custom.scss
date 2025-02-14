@@ -185,10 +185,13 @@ $utilities: map-merge(
 
 // Define opacity:hover classes while defining the triggerer behavior.
 // Use'.opacity-trigger-hover' class to allow hovered parents to
-// trigger their children ':hover' opacity state.
+// trigger their children ':hover' and ':focus-visible' opacity states.
 @each $-opacity-key, $-opacity-level in $utilities-opacity {
     .opacity-#{$-opacity-key}-hover {
-        &:hover, .opacity-trigger-hover:hover & {
+        &:hover,
+        &:focus-visible,
+        .opacity-trigger-hover:hover &,
+        .opacity-trigger-hover:focus-visible & {
             opacity: $-opacity-level!important;
         }
     }
