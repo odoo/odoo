@@ -210,7 +210,13 @@
             </div>
         </t>
         <t t-else="">
-            <div class="oe_structure" id="oe_structure_website_forum_header_1"/>
+            <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THE AVAILABLE ACROSS ALL FORUMS.</t>
+            <t t-set="tooltip_message">Shared between all forums</t>
+            <div class="oe_structure"
+                id="oe_structure_website_forum_header_1"
+                t-att-data-editor-message="editor_message"
+                t-att-data-tooltip-message="tooltip_message"
+            />
             <div id="wrap" t-attf-class="o_wforum_wrapper position-relative container row mx-auto px-0 #{ 'h-100' if forum_welcome_message else ''} #{website_forum_action}">
                 <t t-set="_forum_slug" t-value="slug(forum) if forum else 'all'"/>
                 <t t-set="_forum_path" t-value="url_for('/forum') + '/' + _forum_slug"/>
@@ -353,8 +359,8 @@
 </template>
 
 <template id="header_welcome_message" inherit_id="website_forum.header" name="Forum Welcome Message (oe_structure_forum_top)">
-    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_website_forum_header_1']" position="replace">
-        <div t-if="forum" class="oe_structure oe_empty" id="oe_structure_website_forum_header_1">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_website_forum_header_1']" position="inside">
+        <div t-if="forum" class="oe_structure oe_empty" t-ignore="true">
             <section t-if="editable or (is_public_user and not forum_welcome_message)" t-attf-class="s_cover parallax s_parallax_is_fixed bg-black-50 pt48 pb48 #{'css_non_editable_mode_hidden' if editable else 'forum_intro'}" data-scroll-background-ratio="1" data-snippet="s_cover">
                 <span t-if="forum.image_1920" class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{request.website.image_url(forum, 'image_1920')}'); background-position: center;"/>
                 <div t-if="forum.image_1920" class="o_we_bg_filter bg-black-50"/>
