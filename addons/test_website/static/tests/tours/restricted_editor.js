@@ -9,7 +9,7 @@ import {
 
 const checkNoTranslate = {
     content: "Check there is no translate button",
-    trigger: ".o_menu_systray:not(:contains(.o_translate_website_container))",
+    trigger: ".o_menu_systray:not(:has(.o_translate_website_container)):contains(edit)",
 };
 const translate = [{
     content: "Open Edit menu",
