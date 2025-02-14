@@ -156,7 +156,6 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
-            isActive: ["auto"],
             content: "wait for save completion",
             trigger: ".o_form_readonly, .o_form_saved",
         },
