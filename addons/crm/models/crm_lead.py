@@ -2062,11 +2062,11 @@ class CrmLead(models.Model):
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False,
-                                                   force_record_name=False):
+                                                   force_record_name=False, force_header=False, force_footer=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
             message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang,
-            force_record_name=force_record_name,
+            force_header=force_header, force_footer=force_footer, force_record_name=force_record_name,
         )
         if self.date_deadline:
             render_context['subtitles'].append(
