@@ -489,3 +489,20 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             ProductScreen.productIsDisplayed("Test Product 2"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("ParentCategoryDisplayed", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            {
+                trigger: '.category-button:eq(3) > span:contains("Parent")',
+                run: "click",
+            },
+            {
+                trigger: '.category-button:eq(4) > span:contains("Child")',
+            },
+            ProductScreen.productIsDisplayed("test_product"),
+        ].flat(),
+});
