@@ -181,7 +181,7 @@ export class AddPageTemplatePreview extends Component {
             }
             mainEl.appendChild(wrapEl);
             await ensureJQuery();
-            await wUtils.onceAllImagesLoaded($(wrapEl));
+            await wUtils.onceAllImagesLoaded(wrapEl);
             // Restore image lazy loading.
             for (const imgEl of lazyLoadedImgEls) {
                 imgEl.setAttribute("loading", "lazy");
