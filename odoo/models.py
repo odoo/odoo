@@ -3457,6 +3457,7 @@ class BaseModel(metaclass=MetaModel):
         if parent_path_compute:
             self._parent_store_compute()
 
+    @api.private
     def init(self):
         """ This method is called after :meth:`~._auto_init`, and may be
             overridden to create or modify a model's database schema.
@@ -6210,7 +6211,14 @@ class BaseModel(metaclass=MetaModel):
     # Conversion methods
     #
 
+<<<<<<< 18.0
     def ensure_one(self) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def ensure_one(self):
+=======
+    @api.private
+    def ensure_one(self):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """Verify that the current recordset holds a single record.
 
         :raise odoo.exceptions.ValueError: ``len(self) != 1``
@@ -6223,7 +6231,14 @@ class BaseModel(metaclass=MetaModel):
         except ValueError:
             raise ValueError("Expected singleton: %s" % self)
 
+<<<<<<< 18.0
     def with_env(self, env: api.Environment) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def with_env(self, env):
+=======
+    @api.private
+    def with_env(self, env):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """Return a new version of this recordset attached to the provided environment.
 
         :param env:
@@ -6262,7 +6277,14 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(su=flag))
 
+<<<<<<< 18.0
     def with_user(self, user) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def with_user(self, user):
+=======
+    @api.private
+    def with_user(self, user):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """ with_user(user)
 
         Return a new version of this recordset attached to the given user, in
@@ -6273,7 +6295,14 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(user=user, su=False))
 
+<<<<<<< 18.0
     def with_company(self, company) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def with_company(self, company):
+=======
+    @api.private
+    def with_company(self, company):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """ with_company(company)
 
         Return a new version of this recordset with a modified context, such that::
@@ -6307,7 +6336,14 @@ class BaseModel(metaclass=MetaModel):
 
         return self.with_context(allowed_company_ids=allowed_company_ids)
 
+<<<<<<< 18.0
     def with_context(self, *args, **kwargs) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def with_context(self, *args, **kwargs):
+=======
+    @api.private
+    def with_context(self, *args, **kwargs):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """ with_context([context][, **overrides]) -> Model
 
         Returns a new version of this recordset attached to an extended
@@ -6346,7 +6382,14 @@ class BaseModel(metaclass=MetaModel):
             context['allowed_company_ids'] = self._context['allowed_company_ids']
         return self.with_env(self.env(context=context))
 
+<<<<<<< 18.0
     def with_prefetch(self, prefetch_ids=None) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def with_prefetch(self, prefetch_ids=None):
+=======
+    @api.private
+    def with_prefetch(self, prefetch_ids=None):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """ with_prefetch([prefetch_ids]) -> records
 
         Return a new version of this recordset that uses the given prefetch ids,
@@ -6423,6 +6466,7 @@ class BaseModel(metaclass=MetaModel):
             vals = func(self)
             return vals if isinstance(vals, BaseModel) else []
 
+    @api.private
     def mapped(self, func):
         """Apply ``func`` on all records in ``self``, and return the result as a
         list or a recordset (if ``func`` return recordsets). In the latter
@@ -6461,7 +6505,14 @@ class BaseModel(metaclass=MetaModel):
         else:
             return self._mapped_func(func)
 
+<<<<<<< 18.0
     def filtered(self, func) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def filtered(self, func):
+=======
+    @api.private
+    def filtered(self, func):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """Return the records in ``self`` satisfying ``func``.
 
         :param func: a function or a dot-separated sequence of field names
@@ -6483,6 +6534,7 @@ class BaseModel(metaclass=MetaModel):
                 return self.browse(rec.id for rec in self if rec[func])
         return self.browse(rec.id for rec in self if func(rec))
 
+    @api.private
     def grouped(self, key):
         """Eagerly groups the records of ``self`` by the ``key``, returning a
         dict from the ``key``'s result to recordsets. All the resulting
@@ -6510,7 +6562,14 @@ class BaseModel(metaclass=MetaModel):
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
         return {key: browse(tuple(ids)) for key, ids in collator.items()}
 
+<<<<<<< 18.0
     def filtered_domain(self, domain) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def filtered_domain(self, domain):
+=======
+    @api.private
+    def filtered_domain(self, domain):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """Return the records in ``self`` satisfying the domain and keeping the same order.
 
         :param domain: :ref:`A search domain <reference/orm/domains>`.
@@ -6666,7 +6725,14 @@ class BaseModel(metaclass=MetaModel):
         [result_ids] = stack
         return self.browse(id_ for id_ in self._ids if id_ in result_ids)
 
+<<<<<<< 18.0
     def sorted(self, key=None, reverse=False) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def sorted(self, key=None, reverse=False):
+=======
+    @api.private
+    def sorted(self, key=None, reverse=False):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """Return the recordset ``self`` ordered by ``key``.
 
         :param key: either a function of one argument that returns a
@@ -6697,6 +6763,7 @@ class BaseModel(metaclass=MetaModel):
         for name, value in values.items():
             self[name] = value
 
+    @api.private
     def flush_model(self, fnames=None):
         """ Process the pending computations and database updates on ``self``'s
         model.  When the parameter is given, the method guarantees that at least
@@ -6708,6 +6775,7 @@ class BaseModel(metaclass=MetaModel):
         self._recompute_model(fnames)
         self._flush(fnames)
 
+    @api.private
     def flush_recordset(self, fnames=None):
         """ Process the pending computations and database updates on the records
         ``self``.   When the parameter is given, the method guarantees that at
@@ -6791,7 +6859,14 @@ class BaseModel(metaclass=MetaModel):
     #
 
     @api.model
+<<<<<<< 18.0
     def new(self, values=None, origin=None, ref=None) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def new(self, values=None, origin=None, ref=None):
+=======
+    @api.private
+    def new(self, values=None, origin=None, ref=None):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """ new([values], [origin], [ref]) -> record
 
         Return a new record instance attached to the current environment and
@@ -6873,7 +6948,14 @@ class BaseModel(metaclass=MetaModel):
         """ Return the concatenation of two recordsets. """
         return self.concat(other)
 
+<<<<<<< 18.0
     def concat(self, *args) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def concat(self, *args):
+=======
+    @api.private
+    def concat(self, *args):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """ Return the concatenation of ``self`` with all the arguments (in
             linear time complexity).
         """
@@ -6917,7 +6999,14 @@ class BaseModel(metaclass=MetaModel):
         """
         return self.union(other)
 
+<<<<<<< 18.0
     def union(self, *args) -> Self:
+||||||| 9ec34b6336cf03d6c1598ed8cd045c7b9cd9432a
+    def union(self, *args):
+=======
+    @api.private
+    def union(self, *args):
+>>>>>>> e514664926e557ed6c9d1f7ba8e6b3770761067a
         """ Return the union of ``self`` with all the arguments (in linear time
             complexity, with first occurrence order preserved).
         """
@@ -7044,6 +7133,7 @@ class BaseModel(metaclass=MetaModel):
         # the sake of code simplicity.
         return self.browse(ids)
 
+    @api.private
     def invalidate_model(self, fnames=None, flush=True):
         """ Invalidate the cache of all records of ``self``'s model, when the
         cached values no longer correspond to the database values.  If the
@@ -7058,6 +7148,7 @@ class BaseModel(metaclass=MetaModel):
             self.flush_model(fnames)
         self._invalidate_cache(fnames)
 
+    @api.private
     def invalidate_recordset(self, fnames=None, flush=True):
         """ Invalidate the cache of the records in ``self``, when the cached
         values no longer correspond to the database values.  If the parameter
