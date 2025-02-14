@@ -104,7 +104,7 @@ class ChatbotScriptStep(models.Model):
         message = self._process_step_forward_operator(discuss_channel, users=users)
         operator_partner = discuss_channel.livechat_operator_id
         if operator_partner != self.chatbot_script_id.operator_partner_id:
-            user = next(user for user in users if user.partner_id == operator_partner)
+            user = next((user for user in users if user.partner_id == operator_partner), self.env.user)
             lead.user_id = user
             lead.team_id = next(team for team in teams if user in team.crm_team_member_ids.user_id)
             msg = self.env._("Created a new lead: %s", lead._get_html_link())
