@@ -20,6 +20,14 @@
     }
 }
 
+.product-card {
+    aspect-ratio: 3 / 4;
+}
+
+.show-product-images-false {
+    aspect-ratio: 4 / 3;
+}
+
 .product-name {
 
     box-sizing: border-box;
@@ -28,8 +36,7 @@
     -webkit-line-clamp: 2;
 
     &.no-image {
-        -webkit-line-clamp: 7;
-        aspect-ratio: 4 / 3;
+        -webkit-line-clamp: 5;
     }
 }
 
@@ -37,6 +44,12 @@
     .product:active {
         box-shadow: 0 0 0 2px $primary;
     }
+}
+
+.product-cart-qty {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
 }
 
 .product-information-tag {
