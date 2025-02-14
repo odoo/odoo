@@ -54,6 +54,7 @@ export class CalendarFilterPanel extends Component {
                 this.props.model.createFilter(section.fieldName, option.value);
             },
             value: "",
+            class: "mt-1",
         };
     }
 
@@ -67,7 +68,7 @@ export class CalendarFilterPanel extends Component {
             operator: "ilike",
             args: domain,
             limit: 8,
-            context: {},
+            context: section.context,
         });
 
         const options = records.map((result) => ({
@@ -102,7 +103,7 @@ export class CalendarFilterPanel extends Component {
                 name: request,
                 args: domain,
                 operator: "ilike",
-                context: {},
+                context: section.context,
             });
             dynamicFilters.push({
                 description: _t("Quick search: %s", request),
@@ -115,7 +116,7 @@ export class CalendarFilterPanel extends Component {
             noCreate: true,
             multiSelect: true,
             resModel,
-            context: {},
+            context: section.context,
             domain,
             onSelected: (resId) => this.props.model.createFilter(section.fieldName, resId),
             dynamicFilters,
@@ -135,7 +136,7 @@ export class CalendarFilterPanel extends Component {
     }
 
     isAllActive(section) {
-        let active = true;
+        let active = !!section.filters.length;
         for (const filter of section.filters) {
             if (filter.type !== "all" && !filter.active) {
                 active = false;
@@ -168,9 +169,7 @@ export class CalendarFilterPanel extends Component {
     }
 
     toggleSection(section) {
-        if (section.canCollapse) {
-            this.state.collapsed[section.fieldName] = !this.state.collapsed[section.fieldName];
-        }
+        this.state.collapsed[section.fieldName] = !this.state.collapsed[section.fieldName];
     }
 
     isSectionCollapsed(section) {
@@ -178,27 +177,14 @@ export class CalendarFilterPanel extends Component {
     }
 
     onFilterInputChange(section, filter, ev) {
-        this.props.model.updateFilters(section.fieldName, {
-            [filter.value]: ev.target.checked,
-        });
+        this.props.model.updateFilters(section.fieldName, [filter], ev.target.checked);
     }
 
     onAllFilterInputChange(section, ev) {
-        const filters = {};
-        for (const filter of section.filters) {
-            if (filter.type !== "all") {
-                filters[filter.value] = ev.target.checked;
-            }
-        }
-        this.props.model.updateFilters(section.fieldName, filters);
+        this.props.model.updateFilters(section.fieldName, section.filters, ev.target.checked);
     }
 
     onFilterRemoveBtnClick(section, filter) {
         this.props.model.unlinkFilter(section.fieldName, filter.recordId);
-    }
-
-    onFieldChanged(fieldName, filterValue) {
-        this.state.fieldRev += 1;
-        this.props.model.createFilter(fieldName, filterValue);
     }
 }

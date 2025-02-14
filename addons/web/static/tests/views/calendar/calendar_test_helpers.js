@@ -59,7 +59,6 @@ export const FAKE_FILTER_SECTIONS = [
             model: "filter_partner",
             field: "partner_id",
         },
-        canCollapse: true,
         canAddFilter: true,
         filters: [
             {
@@ -71,16 +70,6 @@ export const FAKE_FILTER_SECTIONS = [
                 recordId: null,
                 canRemove: false,
                 hasAvatar: true,
-            },
-            {
-                type: "all",
-                label: "Everybody's calendar",
-                active: false,
-                value: "all",
-                colorIndex: null,
-                recordId: null,
-                canRemove: false,
-                hasAvatar: false,
             },
             {
                 type: "record",
@@ -116,7 +105,6 @@ export const FAKE_FILTER_SECTIONS = [
             model: null,
             field: null,
         },
-        canCollapse: false,
         canAddFilter: false,
         filters: [
             {
