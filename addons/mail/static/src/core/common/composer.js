@@ -178,7 +178,7 @@ export class Composer extends Component {
                     this.ref.el.focus();
                 }
             },
-            () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
+            () => [this.autofocus + this.props.composer.autofocus, this.props.placeholder]
         );
         useEffect(
             (rThread, cThread) => {
@@ -221,6 +221,10 @@ export class Composer extends Component {
 
     get isMultiUpload() {
         return true;
+    }
+
+    get autofocus() {
+        return this.props.autofocus;
     }
 
     get placeholder() {
