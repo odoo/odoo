@@ -1018,6 +1018,12 @@ export class PosOrder extends Base {
     get showChange() {
         return !floatIsZero(this.orderChange, this.currency.decimal_places) && this.finalized;
     }
+    get hasItemsOrPayLater() {
+        return (
+            this.lines.length > 0 ||
+            this.payment_ids.some((p) => p.payment_method_id.type === "pay_later")
+        );
+    }
 }
 
 registry.category("pos_available_models").add(PosOrder.pythonModel, PosOrder);
