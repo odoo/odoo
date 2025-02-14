@@ -1,7 +1,7 @@
 import { tourState } from "./tour_state";
 import { config as transitionConfig } from "@web/core/transition";
 import { TourStepAutomatic } from "./tour_step_automatic";
-import { Macro } from "@web/core/macro";
+import { Macro, MacroActionError, MacroTimeoutError, MacroTriggerError } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import * as hoot from "@odoo/hoot-dom";
@@ -44,9 +44,6 @@ export class TourAutomatic {
                         } else {
                             console.log(step.describeMe);
                         }
-                        // This delay is important for making the current set of tour tests pass.
-                        // IMPROVEMENT: Find a way to remove this delay.
-                        await new Promise((resolve) => requestAnimationFrame(resolve));
                         if (stepDelay > 0) {
                             await hoot.delay(stepDelay);
                         }
@@ -55,10 +52,10 @@ export class TourAutomatic {
                 {
                     initialDelay: () => (this.previousStepIsJustACheck ? 0 : null),
                     trigger: step.trigger ? () => step.findTrigger() : null,
-                    timeout: (step.timeout || 10000) + stepDelay,
+                    timeout: step.timeout || this.timeout || 10000,
                     action: async () => {
-                        if (delayToCheckUndeterminisms > 0) {
-                            await step.checkForUndeterminisms();
+                        if (step.hasAction && delayToCheckUndeterminisms) {
+                            await step.checkForUndeterminisms(delayToCheckUndeterminisms);
                         }
                         this.previousStepIsJustACheck = !step.hasAction;
                         if (this.debugMode) {
@@ -105,10 +102,18 @@ export class TourAutomatic {
 
         this.macro = new Macro({
             name: this.name,
-            checkDelay: this.checkDelay || 200,
             steps: macroSteps,
             onError: (error) => {
-                this.throwError([error]);
+                if (error instanceof MacroTriggerError) {
+                    this.throwError([`ERROR during find trigger:`, error.message]);
+                } else if (error instanceof MacroActionError) {
+                    this.throwError([`ERROR during perform action:`, error.message]);
+                } else if (error instanceof MacroTimeoutError) {
+                    this.throwError([
+                        ...this.currentStep.describeWhyIFailed,
+                        `TIMEOUT step failed to complete within ${error.message} ms.`,
+                    ]);
+                }
                 end();
             },
             onComplete: () => {
@@ -119,13 +124,6 @@ export class TourAutomatic {
                 msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
                 msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
                 browser.console.log(`\n\n${msg.join("\n")}\n`);
-                end();
-            },
-            onTimeout: (timeout) => {
-                this.throwError([
-                    ...this.currentStep.describeWhyIFailed,
-                    `TIMEOUT: The step failed to complete within ${timeout} ms.`,
-                ]);
                 end();
             },
         });

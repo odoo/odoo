@@ -2,24 +2,32 @@
 
 import { barcodeGenericHandlers } from "@barcodes/barcode_handlers";
 import { barcodeService } from "@barcodes/barcode_service";
-import {
-    editInput,
-    getFixture,
-    mockTimeout,
-    nextTick,
-    patchWithCleanup,
-} from "@web/../tests/helpers/utils";
+import { editInput, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { simulateBarCode } from "../helpers";
+import { Macro } from "@web/core/macro";
 
 const serviceRegistry = registry.category("services");
 
 let serverData;
 let target;
+let macro;
+
+async function macroIsComplete(macro) {
+    while (!macro.isComplete) {
+        await nextTick();
+    }
+}
 
 QUnit.module("Barcodes", (hooks) => {
     hooks.beforeEach(() => {
+        patchWithCleanup(Macro.prototype, {
+            start() {
+                super.start(...arguments);
+                macro = this;
+            },
+        });
         target = getFixture();
         serverData = {
             models: {
@@ -171,8 +179,6 @@ QUnit.module("Barcodes", (hooks) => {
     });
 
     QUnit.test("pager buttons", async function (assert) {
-        const mock = mockTimeout();
-
         await makeView({
             type: "form",
             resModel: "product",
@@ -201,8 +207,7 @@ QUnit.module("Barcodes", (hooks) => {
         // OCDPAGERLAST
         simulateBarCode(["O","C","D","P","A","G","E","R","L","A","S","T","Enter"]);
         // need to await 2 macro steps
-        await mock.advanceTime(50);
-        await mock.advanceTime(50);
+        await macroIsComplete(macro);
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "Cabinet with Doors"
@@ -211,8 +216,7 @@ QUnit.module("Barcodes", (hooks) => {
         // OCDPAGERFIRST
         simulateBarCode(["O","C","D","P","A","G","E","R","F","I","R","S","T","Enter"]);
         // need to await 2 macro steps
-        await mock.advanceTime(50);
-        await mock.advanceTime(50);
+        await macroIsComplete(macro);
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "Large Cabinet");
     });
 });
