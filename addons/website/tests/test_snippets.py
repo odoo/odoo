@@ -121,3 +121,6 @@ class TestSnippets(HttpCase):
             'url': base + '/web/image/website.s_banner_default_image',
         })
         self.start_tour('/', 'snippet_image_gallery_thumbnail_update', login='admin')
+
+    def test_custom_popup_snippet(self):
+        self.start_tour(self.env["website"].get_client_action_url("/"), "custom_popup_snippet", login="admin")
