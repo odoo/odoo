@@ -119,38 +119,22 @@
 }
 
 /* Style of the tiles allowing the user to load a sample survey. */
-.o_survey_sample_container  {
-    margin-top: .5rem;
-}
 
-.o_survey_sample_tile {
-    max-width: 150px;
-    padding: 1rem;
-    font-size: .75rem;
-    .o_survey_sample_tile_cover {
-        display: none;
-        overflow-y: auto;
-        cursor: pointer;
-    }
+.survey_sample_card {
     &:hover {
-        .o_survey_sample_tile_cover {
-            display: flex;
-            flex-direction: column;
-            background: rgba(0, 0, 0, 0.9);
-            &::before, &::after {
-                content: '';
-            }
-            &::before {
-                margin-top: auto;
-            }
-            &::after {
-                margin-bottom: auto;
-            }
+        * { 
+            color: $primary !important;
         }
+        box-shadow: $box-shadow;
+        border-color: $primary !important;
     }
 }
 
 .o_form_label.o_form_label_readonly.o_survey_label_survey_start_url{
     opacity: 100;
     font-weight: 500;
+}
+
+.o_nocontent_help:has(.o_survey_load_sample) {
+    max-width: unset !important;
 }
