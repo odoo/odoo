@@ -23,8 +23,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="use_expiration_date" column_invisible="True"/>
-                <field name="expiration_date" optional="hide" column_invisible="context.get('hide_removal_date')"/>
-                <field name="removal_date" optional="hide" column_invisible="context.get('hide_removal_date')"/>
+                <field name="expiration_date" optional="hide" column_invisible="context.get('hide_removal_date')" decoration-danger="expiration_date &lt; current_date"/>
+                <field name="removal_date" optional="hide" column_invisible="context.get('hide_removal_date')" decoration-danger="removal_date &lt; current_date"/>
             </xpath>
         </field>
     </record>

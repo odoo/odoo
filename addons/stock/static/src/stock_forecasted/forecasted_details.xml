@@ -59,7 +59,7 @@
                                     Reserve
                                 </button>
                             </t>
-                            <t t-else="">Free Stock</t>
+                            <t t-else="" t-out="freeStockLabel"/>
                         </t>
                         <span t-else="" class="text-muted">Not Available</span>
                     </td>
