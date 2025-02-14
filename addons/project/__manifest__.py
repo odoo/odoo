@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -7,7 +6,7 @@
     'website': 'https://www.odoo.com/app/project',
     'category': 'Services/Project',
     'sequence': 45,
-    'summary': 'Organize and plan your projects',
+    'summary': 'Manage projects collaboratively and meet deadlines.',
     'depends': [
         'analytic',
         'base_setup',
