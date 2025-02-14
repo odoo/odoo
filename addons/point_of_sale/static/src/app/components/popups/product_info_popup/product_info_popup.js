@@ -27,6 +27,6 @@ export class ProductInfoPopup extends Component {
         this.props.close();
     }
     get allowProductEdition() {
-        return true; // Overrided in pos_hr
+        return this.pos.allowProductCreation();
     }
 }
