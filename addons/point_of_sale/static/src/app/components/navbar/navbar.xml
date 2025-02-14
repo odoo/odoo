@@ -19,21 +19,21 @@
                     </div>
                     <div t-if="!ui.isSmall" class="navbar-separator"/>
                 </div>
-                <div class="d-flex flex-column flex-sm-row gap-1 gap-sm-2">
-                    <OrderTabs orders="getOrderTabs()"/>
-                    <button class="btn btn-secondary d-flex align-items-center gap-1 h-100 py-1 py-sm-2" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
-                        <i class="fa fa-clock-o" aria-hidden="true"/>
-                        <span class="fw-bolder lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
-                    </button>
-                </div>
+                <OrderTabs orders="getOrderTabs()"/>
+                <button class="btn btn-light d-flex align-items-center gap-2 h-100 fs-3" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    <div class="d-inline lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
+                </button>
             </div>
-            <div class="pos-centerheader d-none d-xl-flex justify-content-center overflow-hidden">
+            <div class="pos-centerheader d-none d-xl-flex -content-center overflow-hidden">
                 <img class="pos-logo mw-100" height="42" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
             </div>
-            <div class="pos-rightheader w-100">
+            <div class="pos-rightheader d-flex justify-content-end"
+                t-att-class="{ 'ms-auto': !ui.isSmall, 'end-0 flex-grow-1 pos-nav-small': ui.isSmall }"
+            >
                 <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
                     <Input tModel="[pos, 'searchProductWord']"
-                    class="ui.isSmall ? 'p-0' : 'w-100 w-xl-50 me-0 me-lg-2'"
+                    class="ui.isSmall ? 'p-0' : 'p-0 search-input-reduced'"
                     isSmall="ui.isSmall"
                     placeholder.translate="Search products..."
                     icon="{type: 'fa', value: 'fa-search fa-lg fa-fw'}"
