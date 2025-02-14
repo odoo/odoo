@@ -111,8 +111,8 @@ class FleetVehicle(models.Model):
     car_value = fields.Float(string="Catalog Value (VAT Incl.)", tracking=True)
     net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()
-    plan_to_change_car = fields.Boolean(related='driver_id.plan_to_change_car', store=True, readonly=False)
-    plan_to_change_bike = fields.Boolean(related='driver_id.plan_to_change_bike', store=True, readonly=False)
+    plan_to_change_car = fields.Boolean()
+    plan_to_change_bike = fields.Boolean()
     vehicle_type = fields.Selection(related='model_id.vehicle_type')
     frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], string="Bike Frame Type")
     electric_assistance = fields.Boolean(compute='_compute_model_fields', store=True, readonly=False)
@@ -313,9 +313,11 @@ class FleetVehicle(models.Model):
                 if not state_waiting_list or state_waiting_list.id not in states:
                     future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
                     if self.vehicle_type == 'bike':
-                        future_driver.sudo().write({'plan_to_change_bike': True})
+                        for vehicle in self.env['fleet.vehicle'].search([('driver_id', '=', future_driver), ('vehicle_type', '=', 'bike')]):
+                            vehicle.write({'plan_to_change_bike': True})
                     if self.vehicle_type == 'car':
-                        future_driver.sudo().write({'plan_to_change_car': True})
+                        for vehicle in self.env['fleet.vehicle'].search([('driver_id', '=', future_driver), ('vehicle_type', '=', 'car')]):
+                            vehicle.write({'plan_to_change_car': True})
         return vehicles
 
     def write(self, vals):
@@ -338,9 +340,11 @@ class FleetVehicle(models.Model):
             if not state_waiting_list or state_waiting_list.id not in states:
                 future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
                 if self.vehicle_type == 'bike':
-                    future_driver.sudo().write({'plan_to_change_bike': True})
+                    for vehicle in self.env['fleet.vehicle'].search([('driver_id', '=', future_driver), ('vehicle_type', '=', 'bike')]):
+                        vehicle.write({'plan_to_change_bike': True})
                 if self.vehicle_type == 'car':
-                    future_driver.sudo().write({'plan_to_change_car': True})
+                    for vehicle in self.env['fleet.vehicle'].search([('driver_id', '=', future_driver), ('vehicle_type', '=', 'car')]):
+                        vehicle.write({'plan_to_change_car': True})
 
         if 'active' in vals and not vals['active']:
             self.env['fleet.vehicle.log.contract'].search([('vehicle_id', 'in', self.ids)]).active = False
@@ -371,12 +375,17 @@ class FleetVehicle(models.Model):
         # remove their driver_id and close their history using current date
         vehicles = self.search([('driver_id', 'in', self.mapped('future_driver_id').ids), ('vehicle_type', '=', self.vehicle_type)])
         vehicles.write({'driver_id': False})
+        for vehicle in vehicles:
+            if vehicle.vehicle_type == 'car':
+                vehicle.write({'plan_to_change_car': False})
+            elif vehicle.vehicle_type == 'bike':
+                vehicle.write({'plan_to_change_bike': False})                  
 
         for vehicle in self:
-            if vehicle.vehicle_type == 'bike':
-                vehicle.future_driver_id.sudo().write({'plan_to_change_bike': False})
             if vehicle.vehicle_type == 'car':
-                vehicle.future_driver_id.sudo().write({'plan_to_change_car': False})
+                vehicle.write({'plan_to_change_car': False})
+            elif vehicle.vehicle_type == 'bike':
+                vehicle.write({'plan_to_change_bike': False}) 
             vehicle.driver_id = vehicle.future_driver_id
             vehicle.future_driver_id = False
 
