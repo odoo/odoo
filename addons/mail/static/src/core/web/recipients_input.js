@@ -6,7 +6,7 @@ import { isEmail } from "@web/core/utils/strings";
 import { useService } from "@web/core/utils/hooks";
 import { useOpenMany2XRecord, useSelectCreate } from "@web/views/fields/relational_utils";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 
 export class RecipientsInput extends Component {
@@ -18,10 +18,6 @@ export class RecipientsInput extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({
-            thread: this.props.thread,
-        });
-
         this.openFormViewToCreateResPartner = useOpenMany2XRecord({
             fieldString: _t("Additional Contact"),
             resModel: "res.partner",
@@ -155,8 +151,8 @@ export class RecipientsInput extends Component {
                     if (isEmail(email)) {
                         createOption.onSelectOption = async () => {
                             const partners = await rpc("/mail/partner/from_email", {
-                                thread_model: this.state.thread.model,
-                                thread_id: this.state.thread.id,
+                                thread_model: this.props.thread.model,
+                                thread_id: this.props.thread.id,
                                 emails: [email],
                             });
                             if (partners.length) {
@@ -218,7 +214,7 @@ export class RecipientsInput extends Component {
                     }
                 },
                 onDelete: () => {
-                    this.state.thread[recipientField] = this.state.thread[recipientField].filter(
+                    this.props.thread[recipientField] = this.props.thread[recipientField].filter(
                         (additionalOrSuggestedRecipient) =>
                             additionalOrSuggestedRecipient.partner_id !== recipient.partner_id ||
                             additionalOrSuggestedRecipient.email !== recipient.email
@@ -226,10 +222,10 @@ export class RecipientsInput extends Component {
                 },
             });
         };
-        for (const recipient of this.state.thread.suggestedRecipients) {
+        for (const recipient of this.props.thread.suggestedRecipients) {
             createTagForRecipient(recipient, "suggestedRecipients");
         }
-        for (const recipient of this.state.thread.additionalRecipients) {
+        for (const recipient of this.props.thread.additionalRecipients) {
             createTagForRecipient(recipient, "additionalRecipients");
         }
         return tags;
@@ -238,8 +234,8 @@ export class RecipientsInput extends Component {
     /** @return {Array[SuggestedRecipient]}*/
     getAllMailThreadRecipients() {
         return [
-            ...this.state.thread.suggestedRecipients,
-            ...this.state.thread.additionalRecipients,
+            ...this.props.thread.suggestedRecipients,
+            ...this.props.thread.additionalRecipients,
         ];
     }
 
@@ -258,14 +254,14 @@ export class RecipientsInput extends Component {
         if (this.hasRecipient(recipient)) {
             return;
         }
-        this.state.thread.additionalRecipients.push(recipient);
+        this.props.thread.additionalRecipients.push(recipient);
     }
 
     /** @returns {string} */
     getPlaceholder() {
         const hasRecipients =
-            this.state.thread.suggestedRecipients.length ||
-            this.state.thread.additionalRecipients.length;
+            this.props.thread.suggestedRecipients.length ||
+            this.props.thread.additionalRecipients.length;
         return hasRecipients ? "" : _t("Followers only");
     }
 
