@@ -233,12 +233,6 @@ export class ListRenderer extends Component {
         this.isRTL = localization.direction === "rtl";
     }
 
-    displaySaveNotification() {
-        this.notificationService.add(_t("Please save your changes first"), {
-            type: "danger",
-        });
-    }
-
     getActiveColumns(list) {
         return this.allColumns.filter((col) => {
             if (list.isGrouped && col.widget === "handle") {

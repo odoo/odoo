@@ -11301,12 +11301,14 @@ test(`action button in x2many should display a notification if the record is vir
     expect.verifySteps([`danger:Please save your changes first`]);
 });
 
-test(`open form view action in x2many should display a notification if the record is virtual`, async () => {
-    mockService("notification", {
-        add(message, { type }) {
-            expect.step(`${type}:${message}`);
+test(`open form view action in x2many should work if the record is virtual`, async () => {
+    mockService("action", {
+        async doAction(actionRequest) {
+            expect.step(actionRequest.type);
         },
     });
+
+    onRpc("web_save", () => expect.step(`web_save`));
 
     await mountView({
         resModel: "partner",
@@ -11324,7 +11326,7 @@ test(`open form view action in x2many should display a notification if the recor
 
     await contains(`.o_field_one2many .o_field_x2many_list_row_add a`).click();
     await contains(`.o_list_record_open_form_view`).click();
-    expect.verifySteps([`danger:Please save your changes first`]);
+    expect.verifySteps(["web_save", "ir.actions.act_window"]);
 });
 
 test(`prevent recreating a deleted record`, async () => {
