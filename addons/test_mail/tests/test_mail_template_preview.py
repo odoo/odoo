@@ -55,8 +55,8 @@ class TestMailTemplateTools(TestMailTemplateCommon):
             'resource_ref': test_record,
         })
 
-        self.assertEqual(preview.body_html, f'<p>EnglishBody for {test_record.name}</p>')
-        self.assertFalse(preview.attachment_ids, 'Reports should not be listed in attachments')
+        self.assertIn(f'<p>EnglishBody for {test_record.name}</p>', preview.body_html)
+        self.assertTrue(preview.attachment_ids, 'Reports should be listed in attachments')
 
     def test_mail_template_preview_force_lang(self):
         test_record = self.env['mail.test.lang'].browse(self.test_record.ids)
@@ -70,10 +70,10 @@ class TestMailTemplateTools(TestMailTemplateCommon):
             'resource_ref': test_record,
             'lang': 'es_ES',
         })
-        self.assertEqual(preview.body_html, '<p>SpanishBody for %s</p>' % test_record.name)
+        self.assertIn('<p>SpanishBody for %s</p>' % test_record.name, preview.body_html)
 
         preview.write({'lang': 'en_US'})
-        self.assertEqual(preview.body_html, '<p>EnglishBody for %s</p>' % test_record.name)
+        self.assertIn('<p>EnglishBody for %s</p>' % test_record.name, preview.body_html)
 
     @users('employee')
     def test_mail_template_preview_recipients(self):

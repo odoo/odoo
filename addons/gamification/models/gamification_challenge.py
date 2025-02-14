@@ -615,7 +615,6 @@ class GamificationChallenge(models.Model):
                 if not lines:
                     continue
 
-                body_html = challenge.report_template_id.with_user(user).with_context(challenge_lines=lines)._render_field('body_html', challenge.ids)[challenge.id]
 
                 # notify message only to users, do not post on the challenge
                 challenge.message_notify(
