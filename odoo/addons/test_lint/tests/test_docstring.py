@@ -154,29 +154,6 @@ class TestDocstring(BaseCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        # The docstrings can use many more roles and directives than the
-        # one present natively in docutils. That's because we use Sphinx
-        # to render them in the documentation, and Sphinx defines the
-        # "Python Domain", a set of additional rules and directive to
-        # understand the python language.
-        #
-        # It is not desirable to add a dependency on Sphinx in
-        # community, at least not only for this linter.
-        #
-        # The following code adds a bunch of dummy elements for the
-        # missing roles and directives, so docutils is able to parse
-        # them with no warning.
-
-        def role_function(name, rawtext, text, lineno, inliner, options=None, content=None):
-            return [docutils.nodes.inline(rawtext, text)], []
-
-        for role in ('attr', 'class', 'func', 'meth', 'ref', 'const', 'samp', 'term'):
-            docutils.parsers.rst.roles.register_local_role(role, role_function)
-
-        for directive in ('attribute', 'deprecated'):
-            docutils.parsers.rst.directives.register_directive(
-                directive, docutils.parsers.rst.directives.admonitions.Note)
-
         doctree = docutils.core.publish_doctree("", settings_overrides={
             'report_level': DOCUTILS_CRITICAL,
             'halt_level': DOCUTILS_CRITICAL,

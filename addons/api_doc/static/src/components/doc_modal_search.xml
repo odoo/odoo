@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.DocSearchModal">
+    <div class="modal-bg flex justify-content-center align-items-center">
+        <div class="modal p-2 flex flex-column mb-1" style="height: 40rem; width: 40rem" t-ref="modalRef">
+            <input
+                class="mb-1"
+                type="text"
+                autocorrect="off"
+                placeholder="Find anything..."
+                t-on-input="onInput"
+                t-ref="seachRef"
+            />
+
+            <div class="flex gap-1 mb-1 align-items-center">
+                <div
+                    t-foreach="state.activeFilters"
+                    t-as="filter"
+                    t-key="filter"
+                    class="flex align-items-center cursor-pointer btn"
+                    t-on-click="() => this.onFilterClick(filter)"
+                >
+                    <input class="me-1" type="checkbox" t-att-id="filter" t-att-checked="state.activeFilters[filter]"/>
+                    <label class="text-ellipsis" t-att-for="filter" t-out="filter" t-on-click.prevent=""></label>
+                </div>
+                <div class="text-muted me-1">
+                    <t t-out="this.state.resultCount"/>
+                    results
+                </div>
+            </div>
+
+            <div class="flex flex-column w-100 overflow-auto flex-grow" t-ref="scrollRef" t-on-scroll="(ev) => this.onScroll(ev.target)">
+                <div class="overflow-hidden" t-att-style="`min-height: ${this.state.scrollHeight}px`">
+                    <div t-att-style="`transform: translateY(${this.state.scrollOffsetY}px)`">
+                        <button
+                            t-foreach="state.results"
+                            t-as="result"
+                            t-key="result_index + result.type + '/' + result.label + '/' + result.path"
+                            class="btn mb-1 text-start w-100 flex flex-row"
+                            t-on-click="() => this.onSelect(result)"
+                            t-att-style="`min-height: ${itemHeight}px; max-height: ${itemHeight}px; margin-bottom: ${itemMargin}px`"
+                        >
+                            <div class="h-100 flex-grow">
+                                <h4 t-out="result.label" class="text-ellipsis"></h4>
+                                <div class="text-muted text-ellipsis" t-out="result.path"></div>
+                            </div>
+                            <span class="text-muted h-100" t-out="result.type"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>
