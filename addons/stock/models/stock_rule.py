@@ -75,8 +75,10 @@ class StockRule(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True, check_company=True,
-        domain="[('code', '=?', picking_type_code_domain)]")
-    picking_type_code_domain = fields.Char(compute='_compute_picking_type_code_domain')
+        domain="[('id', 'in', picking_type_code_ids)]")
+    picking_type_code_domain = fields.Char()
+    picking_type_code_ids = fields.Many2many(
+        'stock.picking.type', compute='_compute_picking_type_code_ids')
     delay = fields.Integer('Lead Time', default=0, help="The expected date of the created transfer will be computed based on this lead time.")
     partner_address_id = fields.Many2one(
         'res.partner', 'Partner Address',
@@ -176,8 +178,8 @@ class StockRule(models.Model):
         (self - action_rules).rule_message = None
 
     @api.depends('action')
-    def _compute_picking_type_code_domain(self):
-        self.picking_type_code_domain = False
+    def _compute_picking_type_code_ids(self):
+        self.picking_type_code_ids = self.env['stock.picking.type'].search([])
 
     def _run_push(self, move):
         """ Apply a push rule on a move.

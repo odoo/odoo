@@ -26,14 +26,14 @@ class StockRule(models.Model):
         return message_dict
 
     @api.depends('action')
-    def _compute_picking_type_code_domain(self):
+    def _compute_picking_type_code_ids(self):
         remaining = self.browse()
         for rule in self:
             if rule.action == 'manufacture':
-                rule.picking_type_code_domain = 'mrp_operation'
+                rule.picking_type_code_ids = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])
             else:
                 remaining |= rule
-        super(StockRule, remaining)._compute_picking_type_code_domain()
+        super(StockRule, remaining)._compute_picking_type_code_ids()
 
     def _should_auto_confirm_procurement_mo(self, p):
         return (not p.orderpoint_id and p.move_raw_ids) or (p.move_dest_ids.procure_method != 'make_to_order' and not p.move_raw_ids and not p.workorder_ids)
