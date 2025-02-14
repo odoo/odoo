@@ -174,6 +174,50 @@ describe('applyColor', () => {
             `),
         });
     });
+    it("should apply text color whithout interrupting gradient background color on selected text", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "color"),
+            contentAfter: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
+        });
+    });
+    it("should apply background color whithout interrupting gradient text color on selected text", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+            contentAfter: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="background-color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
+        });
+    });
+    it("should apply background color whithout interrupting gradient background color on selected text", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+            contentAfter: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="background-color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
+        });
+    });
+    it("should apply text color whithout interrupting gradient text color on selected text", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "color"),
+            contentAfter:  '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="-webkit-text-fill-color: rgb(255, 0, 0); color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
+        });
+    });
+    it("should break gradient color on selected text", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
+            stepFunction: setColor("linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)", "backgroundColor"),
+            contentAfter:  '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab</font>' +
+                            '<font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ca]</font>' +
+                            '<font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">bc</font></p>',
+        });
+    });
+    it("should update the gradient background and remove the child background color", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><font style="background-color: rgb(255, 0, 0);">[abc]</font></font></p>',
+            stepFunction: setColor("linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)", "backgroundColor"),
+            contentAfter:  '<p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[abc]</font></p>',
+        });
+    });
 });
 describe('rgbToHex', () => {
     it('should convert an rgb color to hexadecimal', async () => {
