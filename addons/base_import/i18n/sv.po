@@ -6,15 +6,15 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2024
 # Robin Calvin, 2024
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
-# Kim Asplund <kim.asplund@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Simon S, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Claes-Johan Dahlin, 2024
 # Daniel Löfgren, 2024
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
 # Lasse L, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Kim Asplund <kim.asplund@gmail.com>, 2025
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,7 +159,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Column %(column)s contains incorrect values (value: %(value)s)"
-msgstr ""
+msgstr "Kolumn %(column)s innehåller inkorrekt värde (värde: %(value)s)"
 
 #. module: base_import
 #. odoo-python
@@ -168,6 +168,8 @@ msgid ""
 "Column %(column)s contains incorrect values. Error in line %(line)d: "
 "%(error)s"
 msgstr ""
+"Kolumn %(column)s innehåller inkorrekta värden. Fel på rad %(line)d: "
+"%(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -290,13 +292,13 @@ msgstr "Teckenkodning:"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
-msgstr ""
+msgstr "Fel vid datumanalys [%(field)s:L %(line)d]:%(error)s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Error at row %(row)s: \"%(error)s\""
-msgstr ""
+msgstr "Fel på rad %(row)s: \"%(error)s\""
 
 #. module: base_import
 #. odoo-python
@@ -313,6 +315,9 @@ msgid ""
 "title row has %(title_row_entries)d entries while the first row has "
 "%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
+"Fel vid import av poster: alla rader ska vara av samma storlek, men "
+"titelraden har %(title_row_entries)d poster medan den första raden har "
+"%(first_row_entries)d. Du kan behöva ändra tecknet för separator."
 
 #. module: base_import
 #. odoo-javascript

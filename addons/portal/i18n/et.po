@@ -7,7 +7,6 @@
 # Rivo Zängov <eraser@eraser.ee>, 2024
 # Katrin Kampura, 2024
 # Leaanika Randmets, 2024
-# JanaAvalah, 2024
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
 # Martin Trigaux, 2024
@@ -16,14 +15,15 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2024
 # Anna, 2024
 # Stevin Lilla, 2024
+# JanaAvalah, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2025-02-10 13:25+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
+"Last-Translator: JanaAvalah, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -566,10 +566,21 @@ msgid "Enter a description of and purpose for the key."
 msgstr "Sisestage võtme kirjeldus ja eesmärk."
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Expiration Date"
+msgstr "Aegumiskuupäev"
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Forgot password?"
 msgstr "Unustasid parooli?"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "Give a duration for the key's validity"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1083,6 +1094,12 @@ msgstr "Kontaktil \"%s\" on sama e-posti aadress nagu olemasoleval kasutajal"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key cannot be retrieved later and provides"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "The key will be deleted once this period has elapsed."
 msgstr ""
 
 #. module: portal

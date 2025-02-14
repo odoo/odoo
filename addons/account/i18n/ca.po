@@ -5,7 +5,7 @@
 # Translators:
 # César López Ramírez <cesar.lopez@coopdevs.org>, 2024
 # Sandra Franch <sandra.franch@upc.edu>, 2024
-# Josep Sànchez <papapep@gmx.com>, 2024
+# Josep Sànchez <papapep@pinatell.net>, 2024
 # Xavi Ivars <xavi.ivars@gmail.com>, 2024
 # Jonathan Pasquier <jpasquier@fundesplai.org>, 2024
 # 7b9408628f00af852f513eb4f12c005b_f9c6891, 2024
@@ -27,29 +27,31 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
 # Pere Martínez, 2024
 # Braulio D. López Vázquez <bdl@odoo.com>, 2024
-# Ivan Espinola, 2024
 # marcescu, 2024
 # Martin Trigaux, 2024
 # Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
-# Jonatan Gk, 2024
-# Santiago Payà <santiagopim@gmail.com>, 2024
 # Juande Gutierrez <juni55mcyt@gmail.com>, 2024
 # eriiikgt, 2024
 # Eugeni Chafer <eugeni@chafer.cat>, 2024
-# EstudiTIC - estuditic.com <odoo@estuditic.com>, 2024
-# Wil Odoo, 2025
-# Xavier, 2025
 # Josep Anton Belchi, 2025
+# Quim, 2025
+# EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
+# Xavier, 2025
+# Noemi Pla, 2025
+# Wil Odoo, 2025
 # Óscar Fonseca <tecnico@pyming.com>, 2025
+# Santiago Payà <santiagopim@gmail.com>, 2025
+# Ivan Espinola, 2025
+# Jonatan Gk, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2025\n"
+"Last-Translator: Jonatan Gk, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,9 +71,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"El moviment (%(move)s) no està quadrat.\n"
-"El total de Deure és igual a %(debit_total)s i el total de crèdit és igual a %(credit_total)s.\n"
-"Potser voleu especificar un compte per defecte al diari \"%(journal)s\" per saldar cada moviment de forma automàtica."
+"El moviment (%(move)s) no està equilibrat.\n"
+"El total del deure és igual a %(debit_total)s i el total de l'haver és igual a %(credit_total)s.\n"
+"Potser vol especificar un compte per defecte al diari \"%(journal)s\" per saldar cada moviment de forma automàtica."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -84,10 +86,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Seleccioni 'Vendes' per diaris de factures de client.\n"
-"        Seleccioni 'Compres' per diaris de factures de proveïdor.\n"
-"        Seleccioni  \"Caixa\", \"Banc\" o \"Targeta de crèdit\" per veure els diaris que es fan servir per a pagaments de clients i proveïdors.\n"
-"        Seleccioni \"General\" per veure els diaris amb diverses operacions.\n"
+"        Seleccioni «Vendes» per diaris de factures de client.\n"
+"        Seleccioni «Compres» per diaris de factures de proveïdor.\n"
+"        Seleccioni «Caixa», «Banc» o «Targeta de crèdit» per veure els diaris que es fan servir per a pagaments de clients i proveïdors.\n"
+"        Seleccioni «General» per veure els diaris amb diverses operacions.\n"
 "        "
 
 #. module: account
@@ -171,6 +173,14 @@ msgstr "%(amount)s Incl. Impostos"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s vençut %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -539,6 +549,11 @@ msgstr "3,00"
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr "30 dies"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% d'avançament a final del mes següent"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -1696,6 +1711,11 @@ msgid "A warning can be set on a partner (Account)"
 msgstr "Es pot definir un avís en un client (Compte)"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__aba_routing
+msgid "ABA/Routing"
+msgstr "ABA/Enrutament"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 msgid "Abnormal Amount Partner"
 msgstr "Contacte d'import anormal"
@@ -1937,6 +1957,11 @@ msgstr "Número de compte"
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
 msgstr "Compte a pagar"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
+msgid "Account Prefix Placeholder"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -2783,6 +2808,11 @@ msgid ""
 msgstr ""
 "Import positiu sempre afectat per aquesta concordança expressat a la línia "
 "de dèbit en moneda estrangera."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__aba_routing
+msgid "American Bankers Association Routing Number"
+msgstr "Número d'encaminament de l'American Bankers Association"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
@@ -3754,6 +3784,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
 msgid "Based on Payment"
 msgstr "Basat en Pagament"
+
+#. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "Bàsic"
 
 #. module: account
 #. odoo-python
@@ -6130,6 +6165,26 @@ msgid "Delivery Date"
 msgstr "Data de lliurament"
 
 #. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "Compte del CEO de prova"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "Compte de prova Capital"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "Demo Sale of Land Account"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "Compte d'estoc de prova"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "Depending moves"
@@ -7328,8 +7383,8 @@ msgstr "Compte financer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
-msgid "Financial Accounts Prefix"
-msgstr "Prefix dels comptes financers"
+msgid "Financial Accounts Prefixes"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -8808,6 +8863,11 @@ msgid "Invalid fiscal year last day"
 msgstr "L'últim dia de l'any fiscal no és vàlid"
 
 #. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "Valoració del inventari"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
 msgstr "Valor de l'inventari"
@@ -8898,7 +8958,7 @@ msgstr "Format Edi de factura"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format_store
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_edi_format_store
 msgid "Invoice Edi Format Store"
-msgstr ""
+msgstr "Factures en format EDI"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -9188,11 +9248,6 @@ msgstr "Coincidència perfecta de factures"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "Facturació"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -9988,6 +10043,11 @@ msgid "Line \"%s\" defines itself as its parent."
 msgstr "La línia \"%s\" es defineix a si mateixa com la seva línia principal."
 
 #. module: account
+#: model:account.reconcile.model,name:account.1_reconcile_from_label
+msgid "Line with Bank Fees"
+msgstr "Línia amb comissions bancàries"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
 msgid "Lines"
 msgstr "Línies"
@@ -10204,7 +10264,7 @@ msgstr "Manualment"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
-msgstr ""
+msgstr "Mapeig"
 
 #. module: account
 #: model:ir.model,name:account.model_account_code_mapping
@@ -10738,6 +10798,16 @@ msgid "Newest first"
 msgstr "El més nou primer"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Pròxim esdeveniment del calendari d'activitats"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_move__activity_date_deadline
@@ -11153,6 +11223,11 @@ msgstr "Saldos inactius"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__off_balance
 msgid "Off-Balance Sheet"
 msgstr "Full de sortida"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "Mobiliari de l'oficina"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
@@ -12084,6 +12159,11 @@ msgstr ""
 "sota de 7 dies"
 
 #. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "Termes de pagament: 30% d' acabat de seguir el mes"
+
+#. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr "Termini de pagament: 30% ara, resta 60 dies"
@@ -12466,7 +12546,7 @@ msgstr "Imprimir"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Print & Send"
-msgstr ""
+msgstr "Imprimeix i Envia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__print_on_new_page
@@ -12561,13 +12641,13 @@ msgstr "Compte de guanys"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
-msgstr ""
+msgstr "Línia de mètode de pagament entrant de la propietat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_outbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_outbound_payment_method_line_id
 msgid "Property Outbound Payment Method Line"
-msgstr ""
+msgstr "Línia de mètode de pagament sortint de la propietat"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -12613,7 +12693,7 @@ msgstr "Impost de compra"
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Purchase Taxes"
-msgstr ""
+msgstr "Impostos de Compra"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -12689,6 +12769,20 @@ msgid "RD Expenses"
 msgstr "Despeses en RD"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "Valoracions"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Re-seqüència"
@@ -12696,7 +12790,7 @@ msgstr "Re-seqüència"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__reason
 msgid "Reason"
-msgstr "Raó"
+msgstr "Motiu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12762,11 +12856,6 @@ msgid "Recipient Bank Account"
 msgstr "Compte bancari beneficiari"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
-msgid "Recipients"
-msgstr "Destinataris"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Recognition Date"
 msgstr "Data de reconeixement"
@@ -12775,6 +12864,7 @@ msgstr "Data de reconeixement"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
 msgstr ""
+"Recalcula tots els impostos i comptes en funció d'aquesta posició fiscal"
 
 #. module: account
 #. odoo-python
@@ -13958,8 +14048,11 @@ msgstr "Establir un preu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Estableixi un valor major que 0,0 per activar una validació de límit de "
+"crèdit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -15018,6 +15111,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
+"El tipus de diagrama %s no pot ser seleccionat directament. En el seu lloc, "
+"mireu de seleccionar el tipus de diagrama adequat a la vostra ubicació."
 
 #. module: account
 #. odoo-python
@@ -15031,7 +15126,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The Bill/Refund date is required to validate this document."
-msgstr "Es requereix la data Bill/Refund per validar aquest document."
+msgstr ""
+"Es requereix la data de facturació/reemborsament per validar aquest "
+"document."
 
 #. module: account
 #. odoo-python
@@ -15119,12 +15216,14 @@ msgid ""
 "The Unit of Measure (UoM) '%(uom)s' you have selected for product "
 "'%(product)s', is incompatible with its category : %(category)s."
 msgstr ""
+"La Unitat de mesura (UdM) «%(uom)s» que heu seleccionat per al producte "
+"«%(product)s», és incompatible amb la seva categoria: %(category)s."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "El compte %(name)s (%(code)s) està obsolet."
 
 #. module: account
 #. odoo-python
@@ -15341,6 +15440,9 @@ msgid ""
 "%(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
+"El total actual és %(current_total)s però el total esperat és "
+"%(expected_total)s. Per tal de publicar la factura/mil·li, podeu ajustar les"
+" seves línies o el total esperat (inc. d'impostos)."
 
 #. module: account
 #. odoo-python
@@ -15413,7 +15515,7 @@ msgstr "Els document(s) que han generat la factura."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
-msgstr ""
+msgstr "L'assentament %(name)s (id %(id)s) ha de ser un esborrany."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
@@ -16475,6 +16577,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
 msgstr ""
+"Aquest moviment està configurat per ser publicat automàticament el %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16557,6 +16660,8 @@ msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
 msgstr ""
+"Això actualitzarà tots els impostos i comptes en funció de la posició fiscal"
+" seleccionada."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -16598,6 +16703,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "To"
 msgstr "Fins a"
@@ -16667,6 +16773,9 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to"
 " validate it."
 msgstr ""
+"Per enregistrar pagaments amb %(payment_method)s, el compte bancari del "
+"beneficiari ha de ser validat manualment. Heu d'anar al compte bancari del "
+"contacte per a validar-lo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -16927,7 +17036,8 @@ msgstr "Transferir a %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
 
@@ -18005,6 +18115,9 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"No es pot crear un nou pagament sense un compte de pagaments/cobraments "
+"establert en l'empresa o en el mètode %(payment_method)s del diari "
+"%(journal)s."
 
 #. module: account
 #. odoo-python
@@ -18060,6 +18173,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
+"No pots tenir dues línies de mètode de pagament del mateix tipus de pagament"
+" (%(payment_type)s) i amb el mateix nom (%(name)s) en un sol diari."
 
 #. module: account
 #. odoo-python
@@ -18842,6 +18957,7 @@ msgstr "p. ex. GEBABEBB"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_analytic_distribution_model.py:0
+#: code:addons/account/models/account_analytic_plan.py:0
 msgid "e.g. %(prefix)s"
 msgstr "p.e. %(prefix)s"
 

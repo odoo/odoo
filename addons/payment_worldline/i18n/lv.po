@@ -78,7 +78,9 @@ msgstr ""
 #. module: payment_worldline
 #. odoo-python
 #: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "Received invalid transaction status %(status)s."
+msgid ""
+"Received invalid transaction status %(status)s with error code "
+"%(error_code)s."
 msgstr ""
 
 #. module: payment_worldline
@@ -97,6 +99,18 @@ msgstr "Maksājumu sniedzēja tehniskais kods."
 #: code:addons/payment_worldline/models/payment_transaction.py:0
 msgid "The transaction is not linked to a token."
 msgstr "Darījums nav saistīts ar atslēgkodu."
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "Transaction cancelled with error code %(error_code)s."
+msgstr ""
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "Transaction declined with error code %(error_code)s."
+msgstr ""
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
