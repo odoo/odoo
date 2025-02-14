@@ -263,8 +263,15 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         total_done = 0  # number of processed messages
         total_remaining = len(servers)  # number of remaining messages + number of unchecked servers
         result_exception = None
+
+        def commit_progress():
+            self.env['ir.cron']._notify_progress(done=total_done, remaining=total_remaining)
+            self.env.cr.commit()
+
+        commit_progress()  # notify before starting
         for server in self:
             total_remaining -= 1  # the server is checked
+            # XXX lock server
             if not server.filtered_domain(MAIL_SERVER_DOMAIN):
                 _logger.info('skip checking for new mails on mail server id %d (unavailable)', server.id)
                 continue
@@ -273,8 +280,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             MailThread = server.env['mail.thread'].with_context(default_fetchmail_server_id=server.id)
             model = server.object_id.model
             thread_process_message = functools.partial(
-                MailThread.message_process,
-                model,
+                MailThread.message_process.__func__,
                 save_original=server.original,
                 strip_attachments=(not server.attach),
             )
@@ -289,16 +295,17 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                     count += 1
                     total_remaining -= 1
                     try:
-                        thread_process_message(message)
+                        # new transaction to keep locks on the server
+                        with self.env.registry.cursor() as msg_cr:
+                            mail_thread = MailThread.with_env(MailThread.env(cr=msg_cr))
+                            thread_process_message(mail_thread, model, message)
                         total_done += 1
-                        self.env['ir.cron']._notify_progress(done=total_done, remaining=total_remaining)
-                        self.env.cr.commit()
                     except Exception:
-                        self.env.cr.rollback()
                         failed += 1
                         _logger.info('Failed to process mail from %s server %s.', *server_type_and_name, exc_info=True)
                     else:
                         server_connection.handled_message(message_num)
+                    commit_progress()
             except Exception as e:
                 result_exception = e
                 _logger.info("General failure when trying to fetch mail from %s server %s.", *server_type_and_name, exc_info=True)
@@ -310,10 +317,8 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                     _logger.warning('Failed to properly finish %s connection: %s.', *server_type_and_name, exc_info=True)
             if count:
                 _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, *server_type_and_name, (count - failed), failed)
-                total_done += count
             server.write({'date': fields.Datetime.now()})
-            self.env['ir.cron']._notify_progress(done=total_done, remaining=total_remaining)
-            self.env.cr.commit()
+            commit_progress()
         return result_exception
 
     def _get_connection_type(self):
