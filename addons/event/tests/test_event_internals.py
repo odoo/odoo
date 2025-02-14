@@ -58,7 +58,7 @@ class TestEventData(TestEventInternalsCommon):
 
     @users('user_eventmanager')
     def test_event_configuration_question_from_type(self):
-        """ Enure configuration & translations are copied from Event Type on Event creation """
+        """ Ensure configuration & translations are copied from Event Type on Event creation """
         self.env['res.lang'].sudo()._activate_lang('nl_NL')
 
         event_type = self.event_type_questions.with_user(self.env.user)
