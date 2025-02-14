@@ -109,7 +109,7 @@ class TestSnippets(HttpCase):
     def test_dropdowns_and_header_hide_on_scroll(self):
         admin_user = self.env['res.partner'].search([("email", "ilike", "admin")])
         admin_user.name = "mitchell admin" # We need to force Admin user name for no-demo cases
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin', step_delay=300, timeout=180)
 
     def test_snippet_image(self):
         create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')

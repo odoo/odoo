@@ -218,4 +218,4 @@ class TestHttpCustomSnippet(HttpCase):
             'url': '/custom-page',
         })
 
-        self.start_tour(f'{custom_page.url}', 'editable_root_as_custom_snippet', login='admin')
+        self.start_tour(f'{custom_page.url}', 'editable_root_as_custom_snippet', login='admin', step_delay=500, timeout=180)

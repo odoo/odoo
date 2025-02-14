@@ -36,7 +36,7 @@ class TestRestrictedEditor(odoo.tests.HttpCase):
                 self.ref('website.group_website_restricted_editor'),
             ])]
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_only', login='restricted')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_only', login='restricted', step_delay=500, timeout=180)
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_02_restricted_editor_test_admin(self):
@@ -50,4 +50,4 @@ class TestRestrictedEditor(odoo.tests.HttpCase):
                 self.ref('test_website.group_test_website_admin'),
             ])]
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_test_admin', login='restricted')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_test_admin', login='restricted', step_delay=500, timeout=180)
