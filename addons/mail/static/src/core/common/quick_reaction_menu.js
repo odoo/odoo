@@ -28,7 +28,7 @@ export class QuickReactionMenu extends Component {
         this.store = useService("mail.store");
         this.picker = useEmojiPicker(
             null,
-            { onSelect: this.toggleReaction.bind(this), class: "overflow-hidden rounded-2" },
+            { onSelect: this.toggleReaction.bind(this), class: "overflow-hidden" },
             {
                 position: "bottom-middle",
                 popoverClass: "o-mail-QuickReactionMenu-pickerPopover",
