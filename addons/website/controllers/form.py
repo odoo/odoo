@@ -3,6 +3,7 @@
 
 import base64
 import json
+import logging
 import re
 
 from markupsafe import escape
@@ -15,6 +16,8 @@ from odoo.tools import plaintext2html
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
+
+_logger = logging.getLogger(__name__)
 
 
 class WebsiteForm(http.Controller):
@@ -61,6 +64,16 @@ class WebsiteForm(http.Controller):
             })
 
         try:
+            if model_name == 'mail.mail':
+                form_has_email_cc = {'email_cc', 'email_bcc'} & kwargs.keys() or \
+                    'email_cc' in kwargs["website_form_signature"]
+                # remove the email_cc information from the signature
+                kwargs["website_form_signature"] = kwargs["website_form_signature"].split(':')[0]
+                if kwargs.get("email_to"):
+                    value = kwargs['email_to'] + (':email_cc' if form_has_email_cc else '')
+                    hash_value = hmac(model_record.env, 'website_form_signature', value)
+                    if not consteq(kwargs["website_form_signature"], hash_value):
+                        raise AccessDenied('invalid website_form_signature')
             data = self.extract_data(model_record, kwargs)
         # If we encounter an issue while extracting data
         except ValidationError as e:
@@ -74,15 +87,6 @@ class WebsiteForm(http.Controller):
                 # in case of an email, we want to send it immediately instead of waiting
                 # for the email queue to process
                 if model_name == 'mail.mail':
-                    form_has_email_cc = {'email_cc', 'email_bcc'} & kwargs.keys() or \
-                        'email_cc' in kwargs["website_form_signature"]
-                    # remove the email_cc information from the signature
-                    kwargs["website_form_signature"] = kwargs["website_form_signature"].split(':')[0]
-                    if kwargs.get("email_to"):
-                        value = kwargs['email_to'] + (':email_cc' if form_has_email_cc else '')
-                        hash_value = hmac(model_record.env, 'website_form_signature', value)
-                        if not consteq(kwargs["website_form_signature"], hash_value):
-                            raise AccessDenied('invalid website_form_signature')
                     request.env[model_name].sudo().browse(id_record).send()
 
         # Some fields have additional SQL constraints that we can't check generically
@@ -237,7 +241,9 @@ class WebsiteForm(http.Controller):
     def insert_record(self, request, model, values, custom, meta=None):
         model_name = model.sudo().model
         if model_name == 'mail.mail':
-            email_from = _('"%s form submission" <%s>') % (request.env.company.name, request.env.company.email)
+            if not request.env.company.email:
+                _logger.info('Form submitted by email: company email is empty, using the email_to as email_from')
+            email_from = _('"%s form submission" <%s>', request.env.company.name, request.env.company.email or values.get('email_to'))
             values.update({'reply_to': values.get('email_from'), 'email_from': email_from})
         record = request.env[model_name].with_user(SUPERUSER_ID).with_context(
             mail_create_nosubscribe=True,
