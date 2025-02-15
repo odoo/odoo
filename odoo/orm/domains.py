@@ -51,6 +51,7 @@ possible condition:
 from __future__ import annotations
 
 import collections
+import enum
 import itertools
 import logging
 import typing
@@ -157,6 +158,13 @@ Handled differently because of null values."""
 
 _TRUE_LEAF = (1, '=', 1)
 _FALSE_LEAF = (0, '=', 1)
+
+
+class OptimizationLevel(enum.IntEnum):
+    """Indicator whether the domain was optimized."""
+    NONE = 0
+    BASIC = enum.auto()
+    FOR_SQL = enum.auto()
 
 
 # --------------------------------------------------
@@ -342,18 +350,39 @@ class Domain:
     def validate(self, model: BaseModel) -> None:
         """Validates that the current domain is correct or raises an exception"""
         # just execute the optimization code that goes through all the fields
-        self._optimize(model)
+        self._optimize_for_sql(model)
 
     def _optimize(self, model: BaseModel) -> Domain:
-        """Perform optimizations of the node given a model to resolve the fields
+        """Perform optimizations of the node given a model.
 
-        You should not use this method directly in business code.
-        It is used mostly as a pre-processing before executing SQL.
+        The optimizations are essentially model agnostic and transaction
+        independent. This means that they only depend on the model's fields
+        definitions. No model-specific override is used, and the resulting
+        domain may be reused in another transaction without semantic impact.
+        The model's fields are used to validate conditions and apply
+        type-dependent optimizations.
 
-        The model is used to validate fields and perform additional type-dependent optimizations.
-        Some executions may be performed, like executing `search` for non-stored fields.
+        This optimization level may be useful to simplify a domain that is sent
+        to the client-side, thereby reducing its payload/complexity.
+
+        It is a pre-processing step to rewrite the domain into a logically
+        equivalent domain that is a more canonical representation of the
+        predicate. Multiple conditions can be merged together.
         """
         return self
+
+    def _optimize_for_sql(self, model: BaseModel) -> Domain:
+        """Perform optimizations required by `_to_sql`.
+
+        Basic optimizations are performed. Then, ...
+
+        Additional optimizations may rely on model specific overrides (search
+        methods of fields, etc.) and the semantic equivalence is only guaranteed
+        at the given point in a transaction.
+        We resolve inherited and non-stored fields (using their search method)
+        to transform the conditions.
+        """
+        return self._optimize(model)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         """Build the SQL to inject into the query.  The domain should be optimized first."""
@@ -455,24 +484,44 @@ class DomainNot(Domain):
         if isinstance(child, (DomainNary, DomainNot)):
             # invert implemented in the child domain
             return (~child)._optimize(model)
-        # first optimize the child
-        # check constant and operator negation
+        # run optimization for the children
         child = child._optimize(model)
-        if isinstance(child, DomainCondition):
-            # inverse of the operators in handled by construction
-            # except for inequalities for which we must know the field's type
-            if ineq_operator := _INVERSE_INEQUALITY.get(child.operator):
-                # Inverse and add a condition "or field is null"
-                # when the field does not have a falsy value.
-                # Having a falsy value is handled correctly in the SQL generation.
-                child = (
-                    Domain(child.field_expr, 'in', OrderedSet([False])) if child._field().falsy_value is None else _FALSE_DOMAIN
-                ) | Domain(child.field_expr, ineq_operator, child.value)
-                return child._optimize(model)
-        result = ~child
-        if isinstance(result, DomainNot) and result.child is self.child:
+        result = self._rewrite_inverse_condition(child, model)
+        if result is not child:
+            return result._optimize(model)
+        if child is self.child:
             return self
-        return result
+        return ~child
+
+    def _optimize_for_sql(self, model: BaseModel) -> Domain:
+        domain = self._optimize(model)
+        if domain is not self:
+            return domain._optimize_for_sql(model)
+        # run optimization for the children
+        child = self.child._optimize_for_sql(model)
+        result = self._rewrite_inverse_condition(child, model)
+        if result is not child:
+            return result._optimize_for_sql(model)
+        if child is self.child:
+            return self
+        return ~child
+
+    @staticmethod
+    def _rewrite_inverse_condition(condition: Domain, model: BaseModel) -> Domain:
+        if not isinstance(condition, DomainCondition):
+            return condition
+        # inverse of the operators is handled by construction
+        # except for inequalities for which we must know the field's type
+        if ineq_operator := _INVERSE_INEQUALITY.get(condition.operator):
+            # Inverse and add a condition "or field is null"
+            # when the field does not have a falsy value.
+            # Having a falsy value is handled correctly in the SQL generation.
+            return (
+                Domain(condition.field_expr, 'in', OrderedSet([False])) if condition._field(model).falsy_value is None else _FALSE_DOMAIN
+            ) | Domain(condition.field_expr, ineq_operator, condition.value)
+        if isinstance(result := ~condition, DomainCondition):
+            return result
+        return condition
 
     def __eq__(self, other):
         return isinstance(other, DomainNot) and self.child == other.child
@@ -491,17 +540,16 @@ class DomainNary(Domain):
     OPERATOR_SQL: SQL = SQL(" ??? ")
     ZERO: DomainBool = _FALSE_DOMAIN  # default for lint checks
 
-    __slots__ = ('_model_optimized', 'children')
+    __slots__ = ('children', '_opt_level')  # noqa: RUF023
     children: list[Domain]
-    # to speed up optimizations, we keep the last optimized model
-    _model_optimized: str
+    _opt_level: OptimizationLevel
 
-    def __new__(cls, children: list[Domain], _model_name: str = ''):
+    def __new__(cls, children: list[Domain], *, _level: OptimizationLevel = OptimizationLevel.NONE):
         """Create the n-ary domain with at least 2 conditions."""
         assert len(children) >= 2
         self = object.__new__(cls)
         self.children = children
-        self._model_optimized = _model_name
+        self._opt_level = _level
         return self
 
     @classmethod
@@ -546,7 +594,7 @@ class DomainNary(Domain):
         return hash(self.OPERATOR) ^ hash(tuple(self.children))
 
     @classproperty
-    def INVERSE(cls) -> typing.Type[DomainNary]:
+    def INVERSE(cls) -> type[DomainNary]:
         """Return the inverted nary type, AND/OR"""
         raise NotImplementedError
 
@@ -560,25 +608,28 @@ class DomainNary(Domain):
     def map_conditions(self, function) -> Domain:
         return self.apply(child.map_conditions(function) for child in self.children)
 
-    def _optimize(self, model: BaseModel) -> Domain:
+    def _optimize(self, model: BaseModel, *, level: OptimizationLevel = OptimizationLevel.BASIC) -> Domain:
         """Optimization step.
 
         Optimize all children with the given model.
         Run the registered optimizations until a fixed point is found.
         See :function:`nary_optimization` for details.
         """
-        # check if already optimized
-        if self._model_optimized:
-            if model._name == self._model_optimized:
-                return self
-            _logger.warning(
-                "Optimizing with different models %s and %s",
-                self._model_optimized, model._name,
-            )
         assert isinstance(self, DomainNary)
-        cls = type(self)  # cls used for optimizations and rebuilding
+        # check if already optimized
+        if self._opt_level >= level:
+            return self
         # optimize children
-        children: Iterable[Domain] | Domain = (c._optimize(model) for c in self.children)
+        children: Iterable[Domain] | Domain
+        if level > OptimizationLevel.BASIC:
+            # start first with basic optimization
+            dom = self._optimize(model, level=OptimizationLevel.BASIC)
+            if dom is not self:
+                return dom._optimize_for_sql(model)
+            children = (c._optimize_for_sql(model) for c in self.children)
+        else:
+            children = (c._optimize(model) for c in self.children)
+        cls = type(self)  # cls used for optimizations and rebuilding
         while True:
             children = self._flatten(children)
             if len(children) == 1:
@@ -588,17 +639,20 @@ class DomainNary(Domain):
             for merge_optimization in _CONDITION_MERGE_OPTIMIZATIONS:
                 # group by field_name and whether to apply the function to the operator
                 # we have already sorted by field name, operator type, operator
-                children = merge_optimization(cls, model, children)
+                children = merge_optimization(cls, model, level, children)
                 # persist children to ease debugging
                 if _logger.isEnabledFor(logging.DEBUG):
                     children = list(children)
             children = list(children)
             if len(children) == len(children_previous):
                 # optimized
-                return cls(children, model._name or '')
+                return cls(children, _level=level)
+
+    def _optimize_for_sql(self, model: BaseModel) -> Domain:
+        # code is exactly the same
+        return self._optimize(model, level=OptimizationLevel.FOR_SQL)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
-        assert self.children, "No children, optimize() probably not executed"
         return SQL("(%s)", self.OPERATOR_SQL.join(
             c._to_sql(model, alias, query)
             for c in self.children
@@ -613,7 +667,7 @@ class DomainAnd(DomainNary):
     ZERO = _TRUE_DOMAIN
 
     @classproperty
-    def INVERSE(cls) -> typing.Type[DomainNary]:
+    def INVERSE(cls) -> type[DomainNary]:
         return DomainOr
 
     def __and__(self, other):
@@ -638,7 +692,7 @@ class DomainOr(DomainNary):
     ZERO = _FALSE_DOMAIN
 
     @classproperty
-    def INVERSE(cls) -> typing.Type[DomainNary]:
+    def INVERSE(cls) -> type[DomainNary]:
         return DomainAnd
 
     def __or__(self, other):
@@ -661,13 +715,14 @@ class DomainCondition(Domain):
     A field (or expression) is compared to a value. The list of supported
     operators are described in CONDITION_OPERATORS.
     """
-    __slots__ = ('_field_descriptor', 'field_expr', 'operator', 'value')
-    _field_descriptor: Field | None  # mutable cached property
+    __slots__ = ('field_expr', 'operator', 'value', '_field_instance', '_opt_level')  # noqa: RUF023
+    _field_instance: Field | None  # mutable cached property
+    _opt_level: OptimizationLevel  # mutable cached property
     field_expr: str
     operator: str
     value: typing.Any
 
-    def __new__(cls, field_expr: str, operator: str, value, /):
+    def __new__(cls, field_expr: str, operator: str, value, /, *, level=OptimizationLevel.NONE):
         """Init a new simple condition (internal init)
 
         :param field_expr: Field name or field path
@@ -678,7 +733,8 @@ class DomainCondition(Domain):
         self.field_expr = field_expr
         self.operator = operator
         self.value = value
-        self._field_descriptor = None
+        self._field_instance = None
+        self._opt_level = level
         return self
 
     def checked(self) -> DomainCondition:
@@ -754,12 +810,12 @@ class DomainCondition(Domain):
         message += ' in condition (%r, %r, %r)'
         raise error(message % (*args, self.field_expr, self.operator, self.value))
 
-    def _field(self) -> Field:
-        """Cached Field instance for the expression. Set during optimization."""
-        # not a @property because of typing thinking we want to call __get__
-        if self._field_descriptor is None:  # type: ignore[arg-type]
-            self._raise("Unknown field")
-        return self._field_descriptor  # type: ignore[arg-type]
+    def _field(self, model: BaseModel) -> Field:
+        """Cached Field instance for the expression."""
+        field = self._field_instance  # type: ignore[arg-type]
+        if field is None or field.model_name != model._name:
+            field, _ = self.__get_field(model)
+        return field
 
     def __get_field(self, model: BaseModel) -> tuple[Field, str]:
         """Get the field or raise an exception"""
@@ -768,6 +824,8 @@ class DomainCondition(Domain):
             field = model._fields[field_name]
         except KeyError:
             self._raise("Invalid field %s.%s", model._name, field_name)
+        # cache field value, with this hack to bypass immutability
+        object.__setattr__(self, '_field_instance', field)
         return field, (props[0] if props else '')
 
     def _optimize(self, model: BaseModel) -> Domain:
@@ -783,15 +841,37 @@ class DomainCondition(Domain):
         - Run optimizations.
         - Check the output.
         """
+        if self._opt_level >= OptimizationLevel.BASIC:
+            return self
+
         # optimize path
-        field = self._field_descriptor   # type: ignore[arg-type]
-        if field is None or field.model_name != model._name:
-            field, property_name = self.__get_field(model)
-            if property_name and field.relational:
-                sub_domain = DomainCondition(property_name, self.operator, self.value)
-                return DomainCondition(field.name, 'any', sub_domain)._optimize(model)
-            # cache field value, with this hack to bypass immutability
-            object.__setattr__(self, '_field_descriptor', field)
+        field, property_name = self.__get_field(model)
+        if property_name and field.relational:
+            sub_domain = DomainCondition(property_name, self.operator, self.value)
+            return DomainCondition(field.name, 'any', sub_domain)._optimize(model)
+
+        # optimizations based on operator
+        for opt in _CONDITION_OPTIMIZATIONS_BY_OPERATOR[self.operator]:
+            dom = opt(self, model)
+            if dom is not self:
+                return dom._optimize(model)
+
+        # optimizations based on field type
+        for opt in _CONDITION_OPTIMIZATIONS_BY_FIELD_TYPE[field.type]:
+            dom = opt(self, model)
+            if dom is not self:
+                return dom._optimize(model)
+
+        object.__setattr__(self, '_opt_level', OptimizationLevel.BASIC)
+        return self
+
+    def _optimize_for_sql(self, model: BaseModel) -> Domain:
+        if self._opt_level >= OptimizationLevel.FOR_SQL:
+            return self
+        dom = self._optimize(model)
+        if dom is not self:
+            return dom._optimize_for_sql(model)
+        field = self._field(model)
 
         # resolve inherited fields
         # inherits implies both Field.delegate=True and Field.auto_join=True
@@ -801,48 +881,39 @@ class DomainCondition(Domain):
             assert related_field.model_name, f"No co-model for inherited field {field!r}"
             parent_model = model.env[related_field.model_name]
             parent_fname = model._inherits[parent_model._name]
-            parent_domain = self._optimize(parent_model)
-            return DomainCondition(parent_fname, 'any', parent_domain)
+            parent_domain = self._optimize_for_sql(parent_model)
+            return DomainCondition(parent_fname, 'any', parent_domain, level=OptimizationLevel.FOR_SQL)
 
         # handle non-stored fields (replace by searchable/stored items)
-        if not field.store and self.field_expr == field.name:
+        if not field.store:
+            # check that we have just the field (basic optimization only)
+            if field.name != self.field_expr:
+                object.__setattr__(self, '_opt_level', OptimizationLevel.FOR_SQL)
+                return self
             # find the implementation of search and execute it
             if not field.search:
                 _logger.error("Non-stored field %s cannot be searched.", field, stack_info=_logger.isEnabledFor(logging.DEBUG))
                 return _TRUE_DOMAIN
             computed_domain = field.determine_domain(model, self.operator, self.value)
-            return Domain(computed_domain)._optimize(model)
+            return Domain(computed_domain)._optimize_for_sql(model)
 
         # optimizations based on operator
-        for opt in _CONDITION_OPTIMIZATIONS_BY_OPERATOR[self.operator]:
+        for opt in _CONDITION_OPTIMIZATIONS_FOR_SQL_BY_OPERATOR[self.operator]:
             dom = opt(self, model)
             if dom is not self:
-                return dom._optimize(model)
-
-        if not field.store:
-            # just hope _condition_to_sql handles this expression that has a property
-            return self
+                return dom._optimize_for_sql(model)
 
         # optimizations based on field type
-        for opt in _CONDITION_OPTIMIZATIONS_BY_FIELD_TYPE[field.type]:
+        for opt in _CONDITION_OPTIMIZATIONS_FOR_SQL_BY_FIELD_TYPE[field.type]:
             dom = opt(self, model)
             if dom is not self:
-                return dom._optimize(model)
+                return dom._optimize_for_sql(model)
 
-        # asserts after optimization
-        operator = self.operator
-        if operator not in STANDARD_CONDITION_OPERATORS:
+        # final checks
+        if self.operator not in STANDARD_CONDITION_OPERATORS:
             self._raise("Not standard operator left")
 
-        if (
-            not field.relational
-            and operator in ('any', 'not any')
-            and field.name != 'id'  # can use 'id'
-            # Odoo internals use ('xxx', 'any', Query), check only Domain
-            and (not field.store or isinstance(self.value, Domain))
-        ):
-            self._raise("Cannot use 'any' with non-relational fields")
-
+        object.__setattr__(self, '_opt_level', OptimizationLevel.FOR_SQL)
         return self
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
@@ -855,9 +926,13 @@ class DomainCondition(Domain):
 
 ANY_TYPES = (Domain, Query, SQL)
 
-_CONDITION_OPTIMIZATIONS_BY_OPERATOR: dict[str, list[Callable[[DomainCondition, BaseModel], Domain]]] = collections.defaultdict(list)
-_CONDITION_OPTIMIZATIONS_BY_FIELD_TYPE: dict[str, list[Callable[[DomainCondition, BaseModel], Domain]]] = collections.defaultdict(list)
-_CONDITION_MERGE_OPTIMIZATIONS: list[Callable[[type[DomainNary], BaseModel, Iterable[Domain]], Iterable[Domain]]] = list()
+if typing.TYPE_CHECKING:
+    ConditionOptimization = Callable[[DomainCondition, BaseModel], Domain]
+_CONDITION_OPTIMIZATIONS_BY_OPERATOR: dict[str, list[ConditionOptimization]] = collections.defaultdict(list)
+_CONDITION_OPTIMIZATIONS_BY_FIELD_TYPE: dict[str, list[ConditionOptimization]] = collections.defaultdict(list)
+_CONDITION_OPTIMIZATIONS_FOR_SQL_BY_OPERATOR: dict[str, list[ConditionOptimization]] = collections.defaultdict(list)
+_CONDITION_OPTIMIZATIONS_FOR_SQL_BY_FIELD_TYPE: dict[str, list[ConditionOptimization]] = collections.defaultdict(list)
+_CONDITION_MERGE_OPTIMIZATIONS: list[Callable[[type[DomainNary], BaseModel, OptimizationLevel, Iterable[Domain]], Iterable[Domain]]] = list()
 
 
 def _optimize_nary_sort_key(domain: Domain) -> tuple[str, str, str]:
@@ -893,7 +968,7 @@ def _optimize_nary_sort_key(domain: Domain) -> tuple[str, str, str]:
         return '~', '', domain.OPERATOR
 
 
-def nary_optimization(optimization: Callable[[type[DomainNary], BaseModel, Iterable[Domain]], Iterable[Domain]]):
+def nary_optimization(optimization: Callable[[type[DomainNary], BaseModel, OptimizationLevel, Iterable[Domain]], Iterable[Domain]]):
     """Register an optimization to a list of children of an nary domain.
 
     The function will take an iterable containing optimized children of a
@@ -926,7 +1001,7 @@ def nary_condition_optimization(*, operators: Collection[str], field_condition: 
     """
     def register(optimization: Callable[[type[DomainNary], BaseModel, list[DomainCondition]], Iterable[Domain]]):
         @nary_optimization
-        def optimizer(cls, model, conditions: Iterable[Domain]):
+        def optimizer(cls, model, level, conditions: Iterable[Domain]):
             for (field_expr, apply_operator), conds in itertools.groupby(
                 conditions, lambda c: (c.field_expr, True) if isinstance(c, DomainCondition) and c.operator in operators else ('', False)
             ):
@@ -938,7 +1013,11 @@ def nary_condition_optimization(*, operators: Collection[str], field_condition: 
                 ):
                     list_conds: list[DomainCondition] = list(conds)  # type: ignore[arg-type]
                     if len(list_conds) > 1:
-                        yield from optimization(cls, model, list_conds)
+                        for cond in optimization(cls, model, list_conds):
+                            if level > OptimizationLevel.BASIC:
+                                yield cond._optimize_for_sql(model)
+                            else:
+                                yield cond._optimize(model)
                     else:
                         yield from list_conds
                 else:
@@ -947,24 +1026,26 @@ def nary_condition_optimization(*, operators: Collection[str], field_condition: 
     return register
 
 
-def operator_optimization(operators: Collection[str]):
+def operator_optimization(operators: Collection[str], level: OptimizationLevel = OptimizationLevel.BASIC):
     """Register a condition operator optimization for (condition, model)"""
     assert operators, "Missing operator to register"
     CONDITION_OPERATORS.update(operators)
 
     def register(optimization: Callable[[DomainCondition, BaseModel], Domain]):
+        optimizations = _CONDITION_OPTIMIZATIONS_BY_OPERATOR if level <= OptimizationLevel.BASIC else _CONDITION_OPTIMIZATIONS_FOR_SQL_BY_OPERATOR
         for operator in operators:
-            _CONDITION_OPTIMIZATIONS_BY_OPERATOR[operator].append(optimization)
+            optimizations[operator].append(optimization)
         return optimization
     return register
 
 
-def field_type_optimization(field_types: Collection[str]):
+def field_type_optimization(field_types: Collection[str], level: OptimizationLevel = OptimizationLevel.BASIC):
     """Register a condition optimization by field type for (condition, model)"""
 
     def register(optimization: Callable[[DomainCondition, BaseModel], Domain]):
+        optimizations = _CONDITION_OPTIMIZATIONS_BY_FIELD_TYPE if level <= OptimizationLevel.BASIC else _CONDITION_OPTIMIZATIONS_FOR_SQL_BY_FIELD_TYPE
         for field_type in field_types:
-            _CONDITION_OPTIMIZATIONS_BY_FIELD_TYPE[field_type].append(optimization)
+            optimizations[field_type].append(optimization)
         return optimization
     return register
 
@@ -1056,20 +1137,6 @@ def _operator_equal_as_in(condition, _):
     return DomainCondition(condition.field_expr, operator, value)
 
 
-@operator_optimization(['any', 'not any'])
-def _optimize_id_any_condition(condition, _):
-    """ Any condition on 'id'
-
-    id ANY domain  <=>  domain
-    id NOT ANY domain  <=>  ~domain
-    """
-    if condition.field_expr == 'id' and isinstance(domain := condition.value, Domain):
-        if condition.operator == 'not any':
-            domain = ~domain
-        return domain
-    return condition
-
-
 @operator_optimization(['in', 'not in'])
 def _optimize_in_list(condition, _):
     """Make sure the value is a collection or use 'any' operator"""
@@ -1092,21 +1159,51 @@ def _optimize_in_list(condition, _):
 def _optimize_any_domain(condition, model):
     """Make sure the value is an optimized domain (or Query or SQL)"""
     value = condition.value
-    if not isinstance(value, Domain) and isinstance(value, ANY_TYPES):
+    if isinstance(value, Domain):
+        domain = value
+    elif isinstance(value, ANY_TYPES):
         return condition
+    else:
+        domain = Domain(value)
+    field = condition._field(model)
+    if field.name == 'id':
+        """
+        id ANY domain  <=>  domain
+        id NOT ANY domain  <=>  ~domain
+        """
+        if condition.operator == 'not any':
+            domain = ~domain
+        return domain
     # get the model to optimize with
     try:
-        field = condition._field()
         comodel = model.env[field.comodel_name]
     except KeyError:
-        raise ValueError(f"Cannot determine the relation for {condition.field_expr!r}")
-    domain = Domain(value)._optimize(comodel)
+        condition._raise("Cannot determine the comodel relation")
+    domain = domain._optimize(comodel)
     # const if the domain is empty, the result is a constant
     # if the domain is True, we keep it as is
     if domain.is_false():
         return Domain(condition.operator == 'not any')
     # if unchanged, return the condition
     if domain is value:
+        return condition
+    return DomainCondition(condition.field_expr, condition.operator, domain)
+
+
+@operator_optimization(['any', 'not any'], OptimizationLevel.FOR_SQL)
+def _optimize_any_domain_for_sql(condition, model):
+    domain = condition.value
+    if not isinstance(domain, Domain):
+        return condition
+    field = condition._field(model)
+    if not field.relational:
+        condition._raise("Cannot use 'any' with non-relational fields")
+    try:
+        comodel = model.env[field.comodel_name]
+    except KeyError:
+        condition._raise("Cannot determine the comodel relation")
+    domain = domain._optimize_for_sql(comodel)
+    if domain is condition.value:
         return condition
     return DomainCondition(condition.field_expr, condition.operator, domain)
 
@@ -1119,7 +1216,7 @@ def _optimize_like_str(condition, model):
         # =like matches only empty string (inverse the condition)
         result = (condition.operator in NEGATIVE_CONDITION_OPERATORS) == ('=' in condition.operator)
         # relational and non-relation fields behave differently
-        if condition._field().relational or '=' in condition.operator:
+        if condition._field(model).relational or '=' in condition.operator:
             return DomainCondition(condition.field_expr, '!=' if result else '=', False)
         return Domain(result)
     if isinstance(value, (str, SQL)):
@@ -1130,7 +1227,7 @@ def _optimize_like_str(condition, model):
     return DomainCondition(condition.field_expr, condition.operator, str(value))
 
 
-@field_type_optimization(['many2one', 'one2many', 'many2many'])
+@field_type_optimization(['many2one', 'one2many', 'many2many'], OptimizationLevel.FOR_SQL)
 def _optimize_relational_name_search(condition, model):
     """Search using display_name; see _value_to_ids."""
     operator = condition.operator
@@ -1156,7 +1253,7 @@ def _optimize_relational_name_search(condition, model):
     positive_operator = NEGATIVE_CONDITION_OPERATORS.get(operator, operator)
     positive = operator == positive_operator
     # get the comodel
-    field = condition._field()
+    field = condition._field(model)
     comodel = model.env[field.comodel_name]
     # access rules will be checked by the _search method (in _value_to_ids),
     # we can just return the values if we have a list of ids
@@ -1176,8 +1273,8 @@ def _optimize_relational_name_search(condition, model):
 
 
 @field_type_optimization(['boolean'])
-def _optimize_in_boolean(condition, model):
-    """b in [True, False]  =>  True"""
+def _optimize_boolean_in(condition, model):
+    """b in boolean_values"""
     value = condition.value
     operator = condition.operator
     if operator in ('=', '!='):
@@ -1188,6 +1285,7 @@ def _optimize_in_boolean(condition, model):
     if operator not in ('in', 'not in') or not isinstance(value, COLLECTION_TYPES):
         return condition
     if not all(isinstance(v, bool) for v in value):
+        # parse the values
         if any(isinstance(v, str) for v in value):
             # TODO make a warning
             _logger.debug("Comparing boolean with a string in %s", condition)
@@ -1195,13 +1293,20 @@ def _optimize_in_boolean(condition, model):
             str2bool(v.lower(), False) if isinstance(v, str) else bool(v)
             for v in value
         }
-    if set(value) == {False, True}:
-        # tautology is simplified to a boolean
-        # note that this optimization removes fields (like active) from the domain
-        return Domain(operator == 'in')
     if value is condition.value:
         return condition
     return DomainCondition(condition.field_expr, operator, value)
+
+
+@field_type_optimization(['boolean'], OptimizationLevel.FOR_SQL)
+def _optimize_boolean_in_all(condition, model):
+    """b in [True, False]  =>  True"""
+    if isinstance(condition.value, COLLECTION_TYPES) and set(condition.value) == {False, True}:
+        # tautology is simplified to a boolean
+        # note that this optimization removes fields (like active) from the domain
+        # so we do this only on FOR_SQL level to avoid removing it from sub-domains
+        return Domain(condition.operator == 'in')
+    return condition
 
 
 def _value_to_date(value):
@@ -1269,7 +1374,6 @@ def _optimize_type_datetime(condition, _):
     value, is_day = _value_to_datetime(condition.value)
     if value is False and operator[0] in ('<', '>'):
         # comparison to False results in an empty domain
-        # TODO we should raise an error, but it's currently used
         return _FALSE_DOMAIN
     if value == condition.value:
         assert not is_day
@@ -1296,7 +1400,7 @@ def _optimize_type_datetime(condition, _):
 
 @field_type_optimization(['binary'])
 def _optimize_type_binary_attachment(condition, model):
-    field = condition._field()
+    field = condition._field(model)
     operator = condition.operator
     value = condition.value
     if operator in ('=', '!='):
@@ -1314,7 +1418,7 @@ def _optimize_type_binary_attachment(condition, model):
     return condition
 
 
-@operator_optimization(['parent_of', 'child_of'])
+@operator_optimization(['parent_of', 'child_of'], OptimizationLevel.FOR_SQL)
 def _operator_hierarchy(condition, model):
     """Transform a hierarchy operator into a simpler domain.
 
@@ -1336,13 +1440,13 @@ def _operator_hierarchy(condition, model):
         hierarchy = _operator_child_of_domain
     value = condition.value
     if value is False:
-        _logger.warning('Using %s with False value, the result will be empty', condition.operator)
+        return _FALSE_DOMAIN
     # Get:
     # - field: used in the resulting domain)
     # - parent (str | None): field name to find parent in the hierarchy
     # - comodel_sudo: used to resolve the hierarchy
     # - comodel: used to search for ids based on the value
-    field = condition._field()
+    field = condition._field(model)
     if field.type == 'many2one':
         comodel = model.env[field.comodel_name].with_context(active_test=False)
     elif field.type in ('one2many', 'many2many'):
@@ -1434,7 +1538,7 @@ def _optimize_merge_many2one_any(cls, model, conditions):
         return conditions
     field_expr = merge_conditions[0].field_expr
     sub_domain = cls([c.value for c in merge_conditions])
-    return [DomainCondition(field_expr, 'any', sub_domain)._optimize(model), *other_conditions]
+    return [DomainCondition(field_expr, 'any', sub_domain), *other_conditions]
 
 
 @nary_condition_optimization(operators=('not any',), field_condition=lambda f: f.type == 'many2one')
@@ -1452,7 +1556,7 @@ def _optimize_merge_many2one_not_any(cls, model, conditions):
         return conditions
     field_expr = merge_conditions[0].field_expr
     sub_domain = cls.INVERSE([c.value for c in merge_conditions])
-    return [DomainCondition(field_expr, 'not any', sub_domain)._optimize(model), *other_conditions]
+    return [DomainCondition(field_expr, 'not any', sub_domain), *other_conditions]
 
 
 @nary_condition_optimization(operators=('any',), field_condition=lambda f: f.type.endswith('2many'))
@@ -1489,7 +1593,7 @@ def _optimize_merge_x2many_not_any(cls, model, conditions):
 
 
 @nary_optimization
-def _optimize_same_conditions(cls, model, conditions: Iterable[Domain]):
+def _optimize_same_conditions(cls, model, level, conditions: Iterable[Domain]):
     """Merge (adjacent) conditions that are the same.
 
     Quick optimization for some conditions, just compare if we have the same
