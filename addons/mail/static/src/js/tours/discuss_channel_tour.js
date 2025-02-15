@@ -76,7 +76,6 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o-discuss-ChannelSelector",
         },
     ],

@@ -116,10 +116,8 @@ class TestPeppolParticipant(TransactionCase):
         vals = self._get_participant_vals()
         vals['peppol_eas'] = '0208'
         wizard = self.env['peppol.registration'].create(vals)
-        with self.assertRaises(UserError), self.cr.savepoint():
-            wizard.button_peppol_sender_registration()
-            wizard.verification_code = '123456'
-            wizard.button_check_peppol_verification_code()
+        self.assertFalse(wizard.smp_registration)
+        wizard.button_register_peppol_participant()
 
     def test_create_success_sender(self):
         # should be possible to apply with all data

@@ -6,17 +6,17 @@
 # Noma Yuki, 2024
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# Wil Odoo, 2025
 # Andy Yiu, 2025
 # Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,6 +140,14 @@ msgstr "%(amount)sの期限は%(date)sです"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
 msgstr "%(exception)s  %(user)s%(end_datetime_string)s%(reason)s."
@@ -184,7 +192,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
-msgstr "%(partner_name)sは以下の与信限度額に達しました: %(credit_limit)s"
+msgstr "%(partner_name)sは以下の信用限度額に達しました: %(credit_limit)s"
 
 #. module: account
 #. odoo-python
@@ -499,6 +507,11 @@ msgstr "3.00"
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr "30日以内"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30%前払、残りは翌月末"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -1618,6 +1631,11 @@ msgid "A warning can be set on a partner (Account)"
 msgstr "取引先に警告を設定できます （会計）"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__aba_routing
+msgid "ABA/Routing"
+msgstr "ABA/工順"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 msgid "Abnormal Amount Partner"
 msgstr "異常な金額の取引先"
@@ -1851,6 +1869,11 @@ msgid "Account Payable"
 msgstr "買掛金勘定"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
+msgid "Account Prefix Placeholder"
+msgstr "勘定科目プレースホルダ"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Account Properties"
 msgstr "勘定属性"
@@ -2000,7 +2023,7 @@ msgstr "税額を記入する勘定科目"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
 msgid "Account prefixes can determine account groups."
-msgstr "アカウントの頭文字でアカウントグループを特定できます。"
+msgstr "勘定科目のプレフィックスで勘定科目グループを特定できます。"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
@@ -2657,6 +2680,11 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the debit "
 "line foreign currency."
 msgstr "デビットライン、外国通貨で表されるこの突合に関係する常に正の金額。"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__aba_routing
+msgid "American Bankers Association Routing Number"
+msgstr "米国銀行協会ルーティング番号"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
@@ -3597,6 +3625,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
 msgid "Based on Payment"
 msgstr "支払いに基づく"
+
+#. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "基本"
 
 #. module: account
 #. odoo-python
@@ -5135,12 +5168,12 @@ msgstr "クレジットカード: 残高"
 #: model:ir.model.fields,field_description:account.field_res_partner__credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__credit_limit
 msgid "Credit Limit"
-msgstr "与信限度"
+msgstr "信用限度額"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Credit Limits"
-msgstr "与信限度"
+msgstr "信用限度額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_move_id
@@ -5208,7 +5241,7 @@ msgstr "この仕訳項目とマッチしている貸方仕訳項目。"
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
 #: model:ir.model.fields,help:account.field_res_users__credit_limit
 msgid "Credit limit specific to this partner."
-msgstr "この取引先に特定された与信限度額。"
+msgstr "この取引先特有の信用限度額。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -5714,7 +5747,7 @@ msgstr "デフォルト勘定科目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_default_credit_limit
 msgid "Default Credit Limit"
-msgstr "デフォルト与信限度額"
+msgstr "デフォルト信用限度額"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5902,6 +5935,26 @@ msgstr "配送先"
 #: model:ir.model.fields,field_description:account.field_account_move__delivery_date
 msgid "Delivery Date"
 msgstr "配送日"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "CEO 賃金勘定のデモ"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "資本勘定デモ"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "土地売却勘定デモ"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "株式勘定デモ"
 
 #. module: account
 #. odoo-python
@@ -6686,7 +6739,7 @@ msgstr "PEPPOLを有効化"
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,help:account.field_res_config_settings__account_use_credit_limit
 msgid "Enable the use of credit limit on partners."
-msgstr "取引先に与信限度額を有効にします。"
+msgstr "取引先に対して信用限度額を有効にします。"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__by_default
@@ -7074,8 +7127,8 @@ msgstr "財務会計勘定科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
-msgid "Financial Accounts Prefix"
-msgstr "勘定科目のプレフィックス"
+msgid "Financial Accounts Prefixes"
+msgstr "財務会計勘定科目プレフィクス"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -8489,6 +8542,11 @@ msgid "Invalid fiscal year last day"
 msgstr "無効な会計年度最終日"
 
 #. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "在庫評価"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
 msgstr "在庫金額"
@@ -8859,11 +8917,6 @@ msgstr "顧客請求書/取引先請求書 完全突合"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "請求"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr "請求 & 銀行"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -9648,6 +9701,11 @@ msgid "Line \"%s\" defines itself as its parent."
 msgstr "明細 \"%s\"はその親同様にそれ自体を定義します。"
 
 #. module: account
+#: model:account.reconcile.model,name:account.1_reconcile_from_label
+msgid "Line with Bank Fees"
+msgstr "銀行手数料の明細"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
 msgid "Lines"
 msgstr "行"
@@ -10392,6 +10450,16 @@ msgid "Newest first"
 msgstr "最新順"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_move__activity_date_deadline
@@ -10793,6 +10861,11 @@ msgstr "オフバランス"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__off_balance
 msgid "Off-Balance Sheet"
 msgstr "オフバランスシート"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "オフィス家具"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
@@ -11365,7 +11438,7 @@ msgstr "取引先クレジット"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_credit_warning
 #: model:ir.model.fields,field_description:account.field_account_move__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr "取引先与信限度警告"
+msgstr "取引先信用限度警告"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
@@ -11703,6 +11776,11 @@ msgstr "支払条件: 30日以内"
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
 msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
 msgstr "支払条件：30日、7日未満2％早期支払割引"
+
+#. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "支払条件: 30%前払、残り翌月末"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
@@ -12297,6 +12375,20 @@ msgid "RD Expenses"
 msgstr "研究開発費"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "評価"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "再付番"
@@ -12368,11 +12460,6 @@ msgstr "受取人の銀行"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
 msgid "Recipient Bank Account"
 msgstr "受取人の銀行口座"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
-msgid "Recipients"
-msgstr "宛先"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -12978,7 +13065,7 @@ msgstr "販売"
 #: model:ir.model.fields,field_description:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_use_credit_limit
 msgid "Sales Credit Limit"
-msgstr "販売与信限度額"
+msgstr "販売信用限度額"
 
 #. module: account
 #: model:account.account,name:account.1_expense_sales
@@ -13532,8 +13619,9 @@ msgstr "価格を設定します。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
-msgstr ""
+msgstr "0.0より大きい値を設定すると、信用限度額のチェックが有効化されます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13623,7 +13711,7 @@ msgstr "会計機能を表示する - 読み取り専用"
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
-msgstr "与信限度額を表示"
+msgstr "信用限度額を表示"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
@@ -15587,7 +15675,7 @@ msgid ""
 "The entries from journal prefixes containing them will not be secured: "
 "%(prefix_info)s"
 msgstr ""
-"選択した日付より前の未消込の銀行明細行が残っています。それらを含む仕訳帳プレフィクスからの仕訳は保護されません。%(prefix_info)s"
+"選択した日付より前の未消込の銀行明細行が残っています。それらを含む仕訳帳プレフィックスからの仕訳は保護されません。%(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -15835,7 +15923,7 @@ msgstr "こちらは会計ダッシュボードです"
 msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
-msgstr "与信限度額が指定されていない取引先に対して、このデフォルト与信限度額が使用されます。"
+msgstr "信用限度額が指定されていない取引先に対して、このデフォルト信用限度額が使用されます。"
 
 #. module: account
 #. odoo-python
@@ -16003,6 +16091,7 @@ msgstr "ヒント: 必要なドキュメントを追いかけるのを止めま�
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "To"
 msgstr "終了日"
@@ -16333,9 +16422,12 @@ msgstr "%sの振替"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"請求書および販売オーダ作成時に、取引先に対する請求総額が限度額を超える場合、アラートをトリガします。"
+"                                      0.0より大きい値を設定して、信用限度額チェックを有効化します。"
 
 #. module: account
 #. odoo-python
@@ -18088,6 +18180,7 @@ msgstr "例 GEBABEBB"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_analytic_distribution_model.py:0
+#: code:addons/account/models/account_analytic_plan.py:0
 msgid "e.g. %(prefix)s"
 msgstr "例: %(prefix)s"
 

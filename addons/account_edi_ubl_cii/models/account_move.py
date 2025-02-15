@@ -33,6 +33,12 @@ class AccountMove(models.Model):
     # BUSINESS
     # -------------------------------------------------------------------------
 
+    def _get_fields_to_detach(self):
+        # EXTENDS account
+        fields_list = super()._get_fields_to_detach()
+        fields_list.append("ubl_cii_xml_file")
+        return fields_list
+
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
         # EXTENDS account
         if filetype == 'ubl':

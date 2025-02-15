@@ -11,6 +11,7 @@ import logging
 from markupsafe import Markup
 import math
 import re
+import os
 from textwrap import shorten
 
 from odoo import api, fields, models, _, Command, SUPERUSER_ID, modules, tools
@@ -3718,12 +3719,7 @@ class AccountMove(models.Model):
             price_untaxed = self.currency_id.round(
                 remaining_amount / (((1.0 - discount_percentage / 100.0) * (taxes.amount / 100.0)) + 1.0))
         else:
-            tax_results = taxes.with_context(force_price_include=True).compute_all(remaining_amount)
-            price_untaxed = tax_results['total_excluded'] - sum(
-                tax_data['amount']
-                for tax_data in tax_results['taxes']
-                if tax_data['is_reverse_charge']
-            )
+            price_untaxed = taxes.with_context(force_price_include=True).compute_all(remaining_amount)['total_excluded']
         return {'account_id': account_id, 'tax_ids': taxes.ids, 'price_unit': price_untaxed}
 
     @api.onchange('quick_edit_mode', 'journal_id', 'company_id')
@@ -5102,6 +5098,7 @@ class AccountMove(models.Model):
                 'move_type': new_move_type,
                 'partner_bank_id': False,
                 'currency_id': move.currency_id.id,
+                'fiscal_position_id': move.fiscal_position_id.id,
             })
             if move.amount_total < 0:
                 move.write({
@@ -5244,6 +5241,37 @@ class AccountMove(models.Model):
         self.mapped('line_ids.analytic_line_ids').unlink()
         self.mapped('line_ids').remove_move_reconcile()
         self.state = 'draft'
+
+        self._detach_attachments()
+
+    def _get_fields_to_detach(self):
+        """"
+        Returns a list of field names to detach on resetting an invoice to draft. Can be overridden by other modules to
+        add more fields.
+        """
+        return ['invoice_pdf_report_file']
+
+    def _detach_attachments(self):
+        """
+        Called by button_draft to detach specific attachments for the current journal entries to allow regeneration.
+        """
+        files_to_detach = self.sudo().env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', 'in', self.ids),
+            ('res_field', 'in', self._get_fields_to_detach()),
+        ])
+        if files_to_detach:
+            files_to_detach.res_field = False
+            today = format_date(self.env, fields.Date.context_today(self))
+            for attachment in files_to_detach:
+                attachment_name, attachment_extension = os.path.splitext(attachment.name)
+                attachment.name = _(
+                    '%(attachment_name)s (detached by %(user)s on %(date)s)%(attachment_extension)s',
+                    attachment_name=attachment_name,
+                    attachment_extension=attachment_extension,
+                    user=self.env.user.name,
+                    date=today,
+                )
 
     def _check_draftable(self):
         exchange_move_ids = set()

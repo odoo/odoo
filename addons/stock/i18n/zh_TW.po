@@ -2523,7 +2523,7 @@ msgstr "天"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
 msgid "Days"
-msgstr "天內"
+msgstr "天"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
@@ -2596,7 +2596,7 @@ msgstr "預設出庫路線"
 #: model:ir.model.fields,help:stock.field_stock_storage_category_capacity__product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
-msgstr "所有庫存商品的預設單位。"
+msgstr "所有庫存操作使用的預設計量單位。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_stock
@@ -3760,7 +3760,7 @@ msgstr "高(Z)"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_height
 msgid "Height must be positive"
-msgstr "高度必須是正數"
+msgstr "高度必須是大於 0 的正數"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__snoozed_until
@@ -4057,12 +4057,6 @@ msgstr "如果不勾選，允許您隱藏規則而無需刪除."
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
 msgstr "立即調撥"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "匯入"
 
 #. module: stock
 #. odoo-javascript
@@ -4801,7 +4795,7 @@ msgstr "長度"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_length
 msgid "Length must be positive"
-msgstr "長度必須大於0"
+msgstr "長度必須是大於 0 的正數"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__length_uom_name
@@ -5164,7 +5158,7 @@ msgstr "最大重量"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_max_weight
 msgid "Max Weight must be positive"
-msgstr "最大重量必須是正數"
+msgstr "重量上限必須是大於 0 的正數"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_positive_max_weight
@@ -6475,9 +6469,9 @@ msgstr "是否存在要取決於操作類型。"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
-msgstr "按建立按鈕定義庫存中每個產品的數量，或從整個收藏夾中的試算表匯入它們"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -6762,7 +6756,7 @@ msgstr "產品追溯"
 #. module: stock
 #: model:ir.model,name:stock.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "產品測量單位"
+msgstr "產品計量單位"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
@@ -6796,7 +6790,7 @@ msgstr "此批號/序號包含的產品.如果它已經被移動了，您就不�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_uom_name
 msgid "Product unit of measure label"
-msgstr "產品量度單位標籤"
+msgstr "產品計量單位標籤"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_tracking
@@ -7666,7 +7660,7 @@ msgstr "退回"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return All"
-msgstr ""
+msgstr "退回所有"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -7734,8 +7728,8 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"可重複使用的包裝用於批量揀選，然後清空以重複使用.在條碼模組中，掃描可重複使用的包裝將增加此包裝中的產品.\n"
-"        一次性包裝不會重複使用，在條碼模組中掃描一次性包裝時，包含的產品會添加到調撥中."
+"可重複使用的包裝用於批量揀選，然後清空以重複使用.在條碼模組中，掃瞄可重複使用的包裝將增加此包裝中的產品.\n"
+"        一次性包裝不會重複使用，在條碼模組中掃瞄一次性包裝時，包含的產品會添加到調撥中."
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_inventory_adjustment
@@ -8386,7 +8380,7 @@ msgstr "大小"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Size: Length × Width × Height"
-msgstr "尺寸: 長×寬×高"
+msgstr "尺寸：長 × 寬 × 高"
 
 #. module: stock
 #. odoo-javascript
@@ -8951,7 +8945,7 @@ msgstr "將根據此提前期計算建立調撥的預期日期."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
 msgid "The first in the sequence is the default one."
-msgstr "第一個序列中是預設的."
+msgstr "預設使用序列中的第一個項目。"
 
 #. module: stock
 #. odoo-python
@@ -9889,7 +9883,7 @@ msgstr "單位"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
-msgstr "測量單位"
+msgstr "計量單位"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -9960,7 +9954,7 @@ msgstr "量度單位"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
-msgstr "測量單位類別"
+msgstr "計量單位類別"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__uom_id
@@ -10373,7 +10367,7 @@ msgstr "重量單位"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "重量單位計量摘要"
+msgstr "重量計量單位標籤"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__weight
@@ -10403,17 +10397,17 @@ msgstr "當所有產品就緒時"
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form."
-msgstr "勾選後，可以在“產品”表單的“庫存”分頁選項中選擇路線."
+msgstr "若勾選，此路線將可在產品表單的庫存分頁中選擇。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
-msgstr "勾選後，可以在產品類別中選擇路線."
+msgstr "若勾選，產品類別將可選擇此路線。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__packaging_selectable
 msgid "When checked, the route will be selectable on the Product Packaging."
-msgstr "勾選後，可以在產品包裝上選擇路線."
+msgstr "若勾選，產品包裝將可選擇此路線。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -10523,7 +10517,7 @@ msgstr "寬"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_width
 msgid "Width must be positive"
-msgstr "寬度必須是正數"
+msgstr "寬度必須是大於 0 的正數"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__wizard_id

@@ -355,7 +355,7 @@ msgstr ""
 "* Địa điểm nội bộ: Địa điểm thực trong kho của bạn\n"
 "* Địa điểm khách hàng: Địa điểm ảo đại diện cho địa điểm đích của các sản phẩm được gửi tới khách hàng của bạn\n"
 "* Thất thoát tồn kho: Địa điểm ảo đóng vai trò là đối ứng cho các hoạt động tồn kho được sử dụng để điều chỉnh lượng hàng tồn kho (Tồn kho thực)\n"
-"* Sản xuất: Địa điểm đối ứng ảo cho hoạt động sản xuất: địa điểm này tiêu thụ các nguyên liệu và sản xuất thành phẩm\n"
+"* Sản xuất: Địa điểm đối ứng ảo cho hoạt động sản xuất: địa điểm này tiêu thụ các thành phần và sản xuất thành phẩm\n"
 "* Địa điểm trung chuyển: Địa điểm đối ứng được sử dụng trong hoạt động giữa các công ty hoặc giữa các kho hàng"
 
 #. module: stock
@@ -1038,8 +1038,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"Thêm và tùy chỉnh hoạt động theo tuyến để xử lý các điều chuyển sản phẩm trong (các) kho hàng của bạn: ví dụ: dỡ hàng> kiểm soát chất lượng> tồn kho cho các sản phẩm đang về hàng, lấy hàng > đóng gói > giao hàng.\n"
-"Bạn cũng có thể thiết lập chiến lược lưu kho trong các địa điểm của kho hàng để chuyển sản phẩm đang về hàng đến các địa điểm phụ cụ thể ngay lập tức (ví dụ: thùng, giá đỡ cụ thể)."
+"Thêm và tùy chỉnh hoạt động theo tuyến để xử lý các điều chuyển sản phẩm trong (các) kho hàng của bạn: ví dụ: dỡ hàng> kiểm soát chất lượng> tồn kho cho các sản phẩm sắp nhập, lấy hàng > đóng gói > giao hàng.\n"
+"Bạn cũng có thể thiết lập chiến lược lưu kho trong các địa điểm của kho hàng để chuyển sản phẩm sắp nhập đến các địa điểm phụ cụ thể ngay lập tức (ví dụ: thùng, giá đỡ cụ thể)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1052,10 +1052,10 @@ msgid ""
 msgstr ""
 "Thêm và tùy chỉnh hoạt động theo tuyến để xử lý các điều chuyển sản phẩm "
 "trong (các) kho hàng của bạn: ví dụ: dỡ hàng> kiểm soát chất lượng> tồn kho "
-"cho các sản phẩm đang về hàng, lấy hàng > đóng gói > giao hàng. Bạn cũng có "
-"thể thiết lập chiến lược lưu kho trong các địa điểm của kho hàng để chuyển "
-"sản phẩm đang về hàng đến các địa điểm phụ cụ thể ngay lập tức (ví dụ: "
-"thùng, giá đỡ cụ thể)."
+"cho các sản phẩm sắp nhập, lấy hàng > đóng gói > giao hàng. Bạn cũng có thể "
+"thiết lập chiến lược lưu kho trong các địa điểm của kho hàng để chuyển sản "
+"phẩm sắp nhập đến các địa điểm phụ cụ thể ngay lập tức (ví dụ: thùng, giá đỡ"
+" cụ thể)."
 
 #. module: stock
 #. odoo-javascript
@@ -4190,12 +4190,6 @@ msgid "Immediate Transfer"
 msgstr "Lệnh chuyển hàng ngay"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Nhập"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -4317,7 +4311,7 @@ msgstr "Đầu vào"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_input_stock_loc_id
 msgid "Input Location"
-msgstr "Địa điểm đầu vào"
+msgstr "Vị trí nhập kho"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
@@ -6196,7 +6190,7 @@ msgstr "Đầu ra"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_output_stock_loc_id
 msgid "Output Location"
-msgstr "Địa điểm đầu ra"
+msgstr "Vị trí xuất kho"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.stock_picking_type_menu
@@ -6643,11 +6637,9 @@ msgstr "Sự hiện diện phụ thuộc vào loại hoạt động."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Nhấn nút TẠO để xác định số lượng cho từng sản phẩm trong tồn kho của bạn "
-"hoặc nhập chúng từ bảng tính trong phần Yêu thích"
 
 #. module: stock
 #. odoo-javascript
@@ -7851,7 +7843,7 @@ msgstr "Trả hàng"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return All"
-msgstr ""
+msgstr "Trả tất cả"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking

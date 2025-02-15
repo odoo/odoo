@@ -374,7 +374,7 @@ msgstr "在自動清點估價的情況下建立會計分錄的日期。如果為
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "所有庫存商品的預設單位。"
+msgstr "所有庫存操作使用的預設計量單位。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
@@ -510,9 +510,9 @@ msgstr "已連結至"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Lot %(lot)s has a negative quantity in stock. Correct this"
-"                         quantity before enabling lot valuation"
-msgstr "批次 %(lot)s 的庫存數量為負數。進行批次估值之前，請更正此數量。"
+"Lot %(lot)s has a negative quantity in stock.\n"
+"Correct this quantity before enabling/disabling lot valuation."
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
@@ -604,6 +604,14 @@ msgstr "出向"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "商品"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Please assign lots to all your quantities before enabling lot valuation."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category

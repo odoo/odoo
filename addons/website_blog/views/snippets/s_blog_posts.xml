@@ -56,7 +56,7 @@
 <template id="dynamic_filter_template_blog_post_horizontal" name="Horizontal">
     <div t-foreach="records" t-as="data" class="s_blog_posts_post w-100" data-number-of-elements="1">
         <t t-set="record" t-value="data['_record']"/>
-        <div t-attf-class="pb-4 {{record_last and 'border-0' or 'border-bottom'}}">
+        <div t-attf-class="pb-4 {{not data_last and 'border-bottom'}}">
             <div class="row flex-md-nowrap">
                 <div class="s_blog_posts_post_cover_col col mb-2 mb-md-0">
                     <a class="d-block h-100 text-decoration-none" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">

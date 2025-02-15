@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Ryanto The <ry.the77@gmail.com>, 2024
-# Wil Odoo, 2025
 # Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Abe Manyo, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,6 +135,14 @@ msgstr "%(amount)s Termasuk. Pajak"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s jatuh tempo %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -501,6 +509,11 @@ msgstr "3.00"
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr "30 Hari"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% Pembayaran di Muka pada Akhir Bulan Berikutnya"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -1660,6 +1673,11 @@ msgid "A warning can be set on a partner (Account)"
 msgstr "Peringatan bisa diatur pada partner (Akun)"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__aba_routing
+msgid "ABA/Routing"
+msgstr "ABA/Routing"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 msgid "Abnormal Amount Partner"
 msgstr "Abnormal Amount Partner"
@@ -1897,6 +1915,11 @@ msgstr "Nomor Rekening"
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
 msgstr "Akun Utang"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
+msgid "Account Prefix Placeholder"
+msgstr "Placeholder Awalan Akun"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -2737,6 +2760,11 @@ msgid ""
 msgstr ""
 "Selalu jumlah positif karena terkait pencocokan yang dinyatakan dalam "
 "company currency."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__aba_routing
+msgid "American Bankers Association Routing Number"
+msgstr "Nomor Routing American Bankers Association"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
@@ -3705,6 +3733,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
 msgid "Based on Payment"
 msgstr "Berdasarkan pada Pembayaran"
+
+#. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "Dasar"
 
 #. module: account
 #. odoo-python
@@ -6073,6 +6106,26 @@ msgid "Delivery Date"
 msgstr "Tanggal Pengiriman"
 
 #. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "Demo Akun Gaji CEO"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "Demo Capital Account"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "Demo Sale of Land Account"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "Demo Akun Stok"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "Depending moves"
@@ -7269,8 +7322,8 @@ msgstr "Akun Finansial"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
-msgid "Financial Accounts Prefix"
-msgstr "Prefix Akun Keuangan"
+msgid "Financial Accounts Prefixes"
+msgstr "Awalan Akun Keuangan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -8761,6 +8814,11 @@ msgid "Invalid fiscal year last day"
 msgstr "Invalid fiscal year last day"
 
 #. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "Penilaian Stok Persediaan"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
 msgstr "Nilai Stok Persediaan"
@@ -9143,11 +9201,6 @@ msgstr "Faktur/Tagihan Cocok Sempurna"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "Penagihan"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr "Faktur & Bank"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -9949,6 +10002,11 @@ msgid "Line \"%s\" defines itself as its parent."
 msgstr "Baris \"%s\" mendefinisikan dirinya sebagai induk."
 
 #. module: account
+#: model:account.reconcile.model,name:account.1_reconcile_from_label
+msgid "Line with Bank Fees"
+msgstr "Baris dengan Biaya Bank"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
 msgid "Lines"
 msgstr "Baris"
@@ -10703,6 +10761,16 @@ msgid "Newest first"
 msgstr "Paling baru terlebih dahulu"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kalender Acara Aktivitas Berikutnya"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_move__activity_date_deadline
@@ -11116,6 +11184,11 @@ msgstr "Off Balance"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__off_balance
 msgid "Off-Balance Sheet"
 msgstr "Off-Balance Sheet"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "Perabotan Kantor"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
@@ -12044,6 +12117,11 @@ msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
 msgstr "Termin pembayaran: 30 Hari, 2% Diskon Pembayaran Awal di bawah 7 hari"
 
 #. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "Termin pembayaran: 30% Di Muka pada Akhir Bulan Berikutnya"
+
+#. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr "Termin pembayaran: 30% Sekarang, Balance 60 Hari"
@@ -12650,6 +12728,20 @@ msgid "RD Expenses"
 msgstr "Pengeluaran Litbang"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "Rating"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Re-Sequence"
@@ -12721,11 +12813,6 @@ msgstr "Bank Penerima"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
 msgid "Recipient Bank Account"
 msgstr "Nomor Rekening Bank Penerima"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
-msgid "Recipients"
-msgstr "Penerima"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13917,8 +14004,11 @@ msgstr "Tetapkan harga."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Tetapkan nilai lebih besar dari 0.0 untuk mengaktifkan pemeriksaan batas "
+"kredit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -16602,6 +16692,7 @@ msgstr "Tip: Berhenti mengejar Dokumen yang Anda butuhkan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "To"
 msgstr "Kepada"
@@ -16942,9 +17033,14 @@ msgstr "Transfer ke %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Picu peringatan saat membuat faktur dan Sale Order untuk Partner dengan "
+"jumlah Total Piutang yang melebihi limit tertentu."
+"                                      Tetapkan nilai lebih besar dari 0.0 "
+"untuk mengaktifkan pemeriksaan limit kredit"
 
 #. module: account
 #. odoo-python
@@ -17936,7 +18032,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Anda hanya dapat membuat dokumen sales."
 
 #. module: account
 #. odoo-python
@@ -18069,7 +18165,7 @@ msgstr "Anda tidak dapat menghapus laporan yang memiliki varian."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "Anda tidak dapat membuat faktur yang tidak dipost."
 
 #. module: account
 #. odoo-python
@@ -18870,6 +18966,7 @@ msgstr "contohnya GEBABEBB"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_analytic_distribution_model.py:0
+#: code:addons/account/models/account_analytic_plan.py:0
 msgid "e.g. %(prefix)s"
 msgstr "contoh. %(prefix)s"
 

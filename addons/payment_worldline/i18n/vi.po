@@ -77,8 +77,10 @@ msgstr "Dữ liệu đã nhận bị thiếu mã %(ref)s."
 #. module: payment_worldline
 #. odoo-python
 #: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "Received invalid transaction status %(status)s."
-msgstr "Đã nhận trạng thái giao dịch không hợp lệ: %(status)s."
+msgid ""
+"Received invalid transaction status %(status)s with error code "
+"%(error_code)s."
+msgstr ""
 
 #. module: payment_worldline
 #. odoo-python
@@ -96,6 +98,18 @@ msgstr "Mã kỹ thuật của nhà cung cấp dịch vụ thanh toán này."
 #: code:addons/payment_worldline/models/payment_transaction.py:0
 msgid "The transaction is not linked to a token."
 msgstr "Giao dịch không được liên kết với token."
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "Transaction cancelled with error code %(error_code)s."
+msgstr ""
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "Transaction declined with error code %(error_code)s."
+msgstr ""
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form

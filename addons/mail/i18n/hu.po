@@ -10,21 +10,22 @@
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2024
 # Tamás Dombos, 2024
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2024
-# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2024
 # Kovács Tibor <kovika@gmail.com>, 2024
 # gezza <geza.nagy@oregional.hu>, 2024
 # Ákos Nagy <akos.nagy@oregional.hu>, 2024
 # Martin Trigaux, 2024
 # krnkris, 2024
-# Tamás Németh <ntomasz81@gmail.com>, 2024
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2025
+# Tamás Németh <ntomasz81@gmail.com>, 2025
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-02-10 13:23+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2024\n"
+"Last-Translator: 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +87,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.js:0
 msgid "%(candidateType)s (%(protocol)s)"
-msgstr ""
+msgstr "%(candidateType)s (%(protocol)s)"
 
 #. module: mail
 #. odoo-python
@@ -193,13 +194,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/typing/common/typing.js:0
 msgid "%(user1)s and %(user2)s are typing..."
-msgstr ""
+msgstr "%(user1)s és %(user2)s gépel..."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/typing/common/typing.js:0
 msgid "%(user1)s, %(user2)s and more are typing..."
-msgstr ""
+msgstr "%(user1)s, %(user2)s és mások gépelnek..."
 
 #. module: mail
 #. odoo-python
@@ -230,7 +231,7 @@ msgstr "%s létrehozva"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.js:0
 msgid "%s days overdue"
-msgstr ""
+msgstr "%s nap késés"
 
 #. module: mail
 #. odoo-javascript
@@ -1513,6 +1514,11 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
+msgid "Available for all Companies"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
@@ -2124,12 +2130,6 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "Click here to retry"
 msgstr "Kattintson ide a válaszhoz"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Click on your message"
-msgstr "Kattintson az üzenetére"
 
 #. module: mail
 #. odoo-javascript
@@ -3285,7 +3285,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.js:0
 msgid "Due in %s days"
-msgstr ""
+msgstr "Esedékes %s napon belül."
 
 #. module: mail
 #. odoo-javascript
@@ -3750,12 +3750,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Expand"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Expand options"
 msgstr ""
 
 #. module: mail
@@ -4429,6 +4423,12 @@ msgstr "Előzmények"
 #: model:ir.model.fields,help:mail.field_fetchmail_server__server
 msgid "Hostname or IP of the mail server"
 msgstr "Levelező szerver hostneve vagy IP címe"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Hover on your message and mark as todo"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__voice_active_duration
@@ -6084,14 +6084,6 @@ msgstr "Üzenetek"
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Messages Search"
 msgstr "Üzenetek keresése"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Messages can be <b>starred</b> to remind you to check back later."
-msgstr ""
-"Üzenetek lehetnek <b>kedvencek</b> emlékeztessenek a későbbi "
-"visszatekintésre."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
