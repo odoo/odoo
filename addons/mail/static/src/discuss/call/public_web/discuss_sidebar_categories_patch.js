@@ -10,16 +10,13 @@ patch(DiscussSidebarChannel.prototype, {
     get attClass() {
         return {
             ...super.attClass,
-            "o-ongoingCall": this.thread.rtcSessions.length > 0,
+            "o-ongoingCall rounded-bottom-0": this.thread.rtcSessions.length > 0,
         };
     },
     get attClassContainer() {
         return {
-            ...super.attClassContainer,
             "o-selfInCall": this.store.rtc.selfSession?.in(this.thread.rtcSessions),
+            "border border-dark rounded-2 o-bordered": this.thread.rtcSessions.length > 0,
         };
-    },
-    get bordered() {
-        return super.bordered || this.thread.rtcSessions.length > 0;
     },
 });
