@@ -125,6 +125,8 @@ class EventTrack(models.Model):
     website_image_url = fields.Char(
         string='Image URL', compute='_compute_website_image_url',
         compute_sudo=True, store=False)
+    header_visible = fields.Boolean(related='event_id.header_visible', readonly=False)
+    footer_visible = fields.Boolean(related='event_id.footer_visible', readonly=False)
     # wishlist / visitors management
     event_track_visitor_ids = fields.One2many(
         'event.track.visitor', 'track_id', string="Track Visitors",
