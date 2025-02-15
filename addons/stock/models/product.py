@@ -980,15 +980,9 @@ class ProductTemplate(models.Model):
         product_templates = super().create(vals_list)
 
         if any(product_tmpl_quantities):
-            warehouse = self.env['stock.warehouse'].search(
-                [('company_id', '=', self.env.company.id)], limit=1
-            )
-            stock_quant = self.env['stock.quant']
             for product_tmpl, qty in zip(product_templates, product_tmpl_quantities):
                 if qty > 0 and product_tmpl.tracking == 'none':
-                    stock_quant._update_available_quantity(
-                        product_tmpl.product_variant_id, warehouse.lot_stock_id, qty
-                    )
+                    product_tmpl.product_variant_id.qty_available = qty
         return product_templates
 
     def write(self, vals):
