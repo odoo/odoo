@@ -432,6 +432,8 @@ class Many2one(_Relational[M]):
 
             if operator == 'not any':
                 sql = value._to_sql(comodel, coalias, query)
+                if self.required and model.env.registry.can_rely_on_null_constraints:
+                    return SQL("(%s) IS NOT TRUE", sql)
                 return SQL("(%s IS NULL OR (%s) IS NOT TRUE)", sql_field, sql)
             return value._to_sql(comodel, coalias, query)
 

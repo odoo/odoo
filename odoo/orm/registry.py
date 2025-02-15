@@ -233,6 +233,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # company dependent
         self.many2one_company_dependents: Collector[str, tuple[Field, ...]] = Collector()  # {model_name: (field1, field2, ...)}
 
+        # constraint checks
+        self.can_rely_on_null_constraints = False
+
         # cache of methods get_field_trigger_tree() and is_modifying_relations()
         self._field_trigger_trees: dict[Field, TriggerTree] = {}
         self._is_modifying_relations: dict[Field, bool] = {}
@@ -651,6 +654,22 @@ class Registry(Mapping[str, type["BaseModel"]]):
             del self._post_init_queue
             del self._foreign_keys
             del self._is_install
+
+    def check_null_constraints(self, cr: Cursor) -> None:
+        """ Check that all not-null constraints are set. """
+        cr.execute("SELECT table_name, column_name FROM information_schema.columns WHERE is_nullable = 'NO' AND table_schema = 'public'")
+        not_null_columns = set(cr.fetchall())
+
+        self.can_rely_on_null_constraints = True
+        for Model in self.models.values():
+            if Model._auto and not Model._abstract:
+                for field in Model._fields.values():
+                    if (
+                        field.column_type and field.store and field.required
+                        and (Model._table, field.name) not in not_null_columns
+                    ):
+                        _schema.error("Missing not-null constraint on %s, some optimizations may not be applied.", field)
+                        self.can_rely_on_null_constraints = False
 
     def check_indexes(self, cr: Cursor, model_names: Iterable[str]) -> None:
         """ Create or drop column indexes for the given models. """
