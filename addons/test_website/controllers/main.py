@@ -177,3 +177,7 @@ class WebsiteTest(Home):
     ], type='http', auth='public', website=True, sitemap=sitemap_test)
     def test_sitemap(self, rec=None, **kwargs):
         return request.make_response('Sitemap Testing Page')
+
+    @http.route('/test_model/<model("test.model"):test_model>', type='http', auth='public', website=True, sitemap=False)
+    def test_model(self, test_model, **kwargs):
+        return request.render('test_website.test_model_page_layout', {'main_object': test_model, 'test_model': test_model})
