@@ -16,6 +16,7 @@ from weakref import WeakSet
 from odoo.exceptions import AccessError, UserError, CacheMiss
 from odoo.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL
+from odoo.tools.sql import SQLable
 from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
 from odoo.tools.misc import StackMap, SENTINEL
 
@@ -485,17 +486,18 @@ class Environment(Mapping[str, "BaseModel"]):
         for model_name, field_names in fnames_to_flush.items():
             self[model_name].flush_model(field_names)
 
-    def execute_query(self, query: SQL) -> list[tuple]:
+    def execute_query(self, query: SQLable) -> list[tuple]:
         """ Execute the given query, fetch its result and it as a list of tuples
         (or an empty list if no result to fetch).  The method automatically
         flushes all the fields in the metadata of the query.
         """
-        assert isinstance(query, SQL)
-        self.flush_query(query)
-        self.cr.execute(query)
+        assert isinstance(query, SQLable)
+        sql = SQL("%s", query)
+        self.flush_query(sql)
+        self.cr.execute(sql)
         return [] if self.cr.description is None else self.cr.fetchall()
 
-    def execute_query_dict(self, query: SQL) -> list[dict]:
+    def execute_query_dict(self, query: SQLable) -> list[dict]:
         """ Execute the given query, fetch its results as a list of dicts.
         The method automatically flushes fields in the metadata of the query.
         """

@@ -57,7 +57,7 @@ import typing
 import warnings
 from datetime import date, datetime, time, timedelta
 
-from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
+from odoo.tools import SQL, OrderedSet, Query, IdentifierBuilder, classproperty, partition, str2bool
 from .identifiers import NewId
 from .utils import COLLECTION_TYPES
 
@@ -186,7 +186,7 @@ class Domain:
         a field (str), the operator (str) and a value for the condition.
         """
         if len(args) > 1:
-            if isinstance(args[0], str):
+            if isinstance(args[0], str | IdentifierBuilder):
                 return DomainCondition(*args).checked()
             # special cases like True/False constants
             if args == _TRUE_LEAF:
@@ -683,7 +683,7 @@ class DomainCondition(Domain):
 
     def checked(self) -> DomainCondition:
         """Validate `self` and return it if correct, otherwise raise an exception."""
-        if not isinstance(self.field_expr, str) or not self.field_expr:
+        if not isinstance(self.field_expr, str | IdentifierBuilder) or not self.field_expr:
             self._raise("Empty field name", error=TypeError)
         operator = self.operator.lower()
         if operator != self.operator:
@@ -783,6 +783,8 @@ class DomainCondition(Domain):
         - Run optimizations.
         - Check the output.
         """
+        if isinstance(self.field_expr, IdentifierBuilder):
+            return self
         # optimize path
         field = self._field_descriptor   # type: ignore[arg-type]
         if field is None or field.model_name != model._name:
@@ -846,6 +848,8 @@ class DomainCondition(Domain):
         return self
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
+        if isinstance(self.field_expr, IdentifierBuilder):
+            model = model.env[self.field_expr.model]
         return model._condition_to_sql(alias, self.field_expr, self.operator, self.value, query)
 
 
@@ -886,7 +890,10 @@ def _optimize_nary_sort_key(domain: Domain) -> tuple[str, str, str]:
             order = "like"
         else:
             order = positive_op
-        return domain.field_expr, order, operator
+        field_expr = domain.field_expr
+        if isinstance(domain.field_expr, IdentifierBuilder):
+            field_expr = domain.field_expr.fname
+        return field_expr, order, operator
     else:
         # in python; '~' > any letter
         assert hasattr(domain, 'OPERATOR') and isinstance(domain.OPERATOR, str)

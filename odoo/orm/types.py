@@ -2,6 +2,7 @@
 import typing
 from collections.abc import Mapping
 
+from odoo.tools import IdentifierBuilder
 from .domains import Domain
 from .environments import Environment
 from .fields import Field
@@ -17,7 +18,7 @@ except ImportError:
     except ImportError:
         Self = typing.TypeVar("Self")  # type: ignore
 
-DomainType = Domain | list[str | tuple[str, str, typing.Any]]
+DomainType = Domain | list[str | tuple[str | IdentifierBuilder, str, typing.Any]]
 ContextType = Mapping[str, typing.Any]
 ValuesType = dict[str, typing.Any]
 ModelType = typing.TypeVar("ModelType", bound=BaseModel)
