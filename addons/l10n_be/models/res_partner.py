@@ -17,7 +17,7 @@ class ResPartner(models.Model):
         for partner in self.filtered(lambda p: p._deduce_country_code() == 'BE' and p.vat):
             vat_country, vat_number = self._split_vat(partner.vat)
             if vat_country.isnumeric():
-                vat_country = 'be'
+                vat_country = 'BE'
                 vat_number = partner.vat
-            if vat_country == 'be' and self.simple_vat_check(vat_country, vat_number):
+            if vat_country == 'BE' and self._check_vat_number(vat_country, vat_number):
                 partner.company_registry = vat_number
