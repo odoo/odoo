@@ -14,17 +14,13 @@ Auto-complete partner companies' data
         'iap_mail',
     ],
     'data': [
-        'security/ir.model.access.csv',
-        'views/res_partner_views.xml',
         'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
-        'data/cron.xml',
         'data/iap_service_data.xml',
     ],
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'partner_autocomplete/static/src/scss/*',
             'partner_autocomplete/static/src/js/*',
             'partner_autocomplete/static/src/xml/*',
         ],

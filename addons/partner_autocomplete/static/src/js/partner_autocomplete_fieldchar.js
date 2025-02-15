@@ -1,5 +1,5 @@
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { useChildRef } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { CharField, charField } from "@web/views/fields/char/char_field";
@@ -16,19 +16,15 @@ export class PartnerAutoCompleteCharField extends CharField {
     setup() {
         super.setup();
 
-        this.partner_autocomplete = usePartnerAutocomplete();
+        this.orm = useService("orm");
+        this.partnerAutocomplete = usePartnerAutocomplete();
 
         this.inputRef = useChildRef();
         useInputField({ getValue: () => this.props.record.data[this.props.name] || "", parse: (v) => this.parse(v), ref: this.inputRef});
     }
 
     async validateSearchTerm(request) {
-        if (this.props.name == 'vat') {
-            return this.partner_autocomplete.isTAXNumber(request);
-        }
-        else {
-            return request && request.length > 2;
-        }
+        return request && request.length > 2;
     }
 
     get sources() {
@@ -36,7 +32,8 @@ export class PartnerAutoCompleteCharField extends CharField {
             {
                 options: async (request) => {
                     if (await this.validateSearchTerm(request)) {
-                        const suggestions = await this.partner_autocomplete.autocomplete(request);
+                        const queryCountryId = this.props.record.data?.country_id ? this.props.record.data.country_id[0] : false;
+                        const suggestions = await this.partnerAutocomplete.autocomplete(request, queryCountryId);
                         suggestions.forEach((suggestion) => {
                             suggestion.classList = "partner_autocomplete_dropdown_char";
                         });
@@ -53,19 +50,14 @@ export class PartnerAutoCompleteCharField extends CharField {
     }
 
     async onSelect(option) {
-        const data = await this.partner_autocomplete.getCreateData(Object.getPrototypeOf(option));
+        let data = await this.partnerAutocomplete.getCreateData(Object.getPrototypeOf(option));
+        if (!data?.company) {
+            return;
+        }
 
         if (data.logo) {
             const logoField = this.props.record.resModel === 'res.partner' ? 'image_1920' : 'logo';
             data.company[logoField] = data.logo;
-        }
-
-        // Some fields are unnecessary in res.company
-        if (this.props.record.resModel === 'res.company') {
-            const fields = ['comment', 'child_ids', 'additional_info'];
-            fields.forEach((field) => {
-                delete data.company[field];
-            });
         }
 
         // Format the many2one fields
@@ -75,7 +67,27 @@ export class PartnerAutoCompleteCharField extends CharField {
                 data.company[field] = [data.company[field].id, data.company[field].display_name];
             }
         });
-        this.props.record.update(data.company);
+
+        // Save UNSPSC codes (tags)
+        const unspsc_codes = data.company.unspsc_codes
+
+        // Delete useless fields before updating record
+        data.company = this.partnerAutocomplete.removeUselessFields(data.company, Object.keys(this.props.record.fields));
+
+        // Update record with retrieved values
+        await this.props.record.update({name: data.company.name});  // Needed otherwise name it is not saved
+        await this.props.record.update(data.company);
+
+        // Add UNSPSC codes (tags)
+        if (this.props.record.resModel === 'res.partner' && unspsc_codes) {
+            // We must first save the record so that we can then create the tags (many2many)
+            const saved = await this.props.record.save();
+            if (saved){
+                await this.props.record.load();
+                await this.orm.call("res.partner", "iap_partner_autocomplete_add_tags", [this.props.record.resId, unspsc_codes]);
+                await this.props.record.load();
+            }
+        }
         if (this.props.setDirty) {
             this.props.setDirty(false);
         }
