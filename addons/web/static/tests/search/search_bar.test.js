@@ -40,6 +40,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { cookie } from "@web/core/browser/cookie";
 import { pick } from "@web/core/utils/objects";
+import { patch } from "@web/core/utils/patch";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 class Partner extends models.Model {
@@ -576,6 +577,36 @@ test("the search value is trimmed to remove unnecessary spaces", async () => {
     await editSearch("   bar ");
     await validateSearch();
     expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "bar"]]);
+});
+
+test("search facets of type unremovable cannot be removed from searchbar", async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search></search>
+        `,
+    });
+    const myUnremovableFacet = {
+        icon: "fa fa-globe",
+        type: "unremovable",
+        values: ["Foo"],
+    };
+
+    patch(searchBar.env.searchModel, {
+        _getFacets() {
+            const facets = super._getFacets();
+            facets.unshift(myUnremovableFacet);
+            return facets;
+        },
+    });
+    await validateSearch();
+
+    expect(searchBar.env.searchModel.facets).toEqual([myUnremovableFacet]);
+    // Unremovable facets should not be removed
+    await expect(removeFacet(myUnremovableFacet.values[0])).rejects.toThrow();
+    expect(searchBar.env.searchModel.facets).toEqual([myUnremovableFacet]);
 });
 
 test("reference fields are supported in search view", async () => {

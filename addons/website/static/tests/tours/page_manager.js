@@ -48,6 +48,9 @@ const checkWebsiteFilter = [{
 	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('Test Website')",
     run: "click",
 }, {
+    content: "Check if active website facet shows 'Test Website'",
+    trigger: ".o_searchview_facet small.o_facet_value:contains('Test Website')",
+}, {
 	content: "Check that the homepage is now the one of Test Website",
 	trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
 			 "~ .o_data_cell[name=website_id]:contains('Test Website')",
@@ -59,10 +62,50 @@ const checkWebsiteFilter = [{
 	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website')",
     run: "click",
 }, {
+    content: "Check if active website facet shows 'My Website'",
+    trigger: ".o_searchview_facet small.o_facet_value:contains('My Website')",
+}, {
 	content: "Check that the homepage is now the one of My Website",
 	trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
 			 "~ .o_data_cell[name=website_id]:contains('My Website'):not(:contains('2'))",
 }];
+
+const checkActiveWebsiteFilter = [
+    {
+        content: "Click on Site",
+        trigger: "button.dropdown-toggle[data-menu-xmlid='website.menu_site']",
+        run: "click",
+    },
+    {
+        content: "Click on Homepage",
+        trigger: "a.dropdown-item[data-menu-xmlid='website.menu_website_preview']",
+        run: "click",
+    },
+    {
+        content: "Click on Website selector dropdown",
+        trigger: ".o_website_switcher_container button",
+        run: "click",
+    },
+    {
+        content: "Select 'Website 2'",
+        trigger: "span.o-dropdown-item[data-website-id]:contains('Website 2')",
+        run: "click",
+    },
+    {
+        content: "Click on Site",
+        trigger: "button.dropdown-toggle[data-menu-xmlid='website.menu_site']",
+        run: "click",
+    },
+    {
+        content: "Click on Pages",
+        trigger: "a.dropdown-item[data-menu-xmlid='website.menu_website_pages_list']",
+        run: "click",
+    },
+    {
+        content: "Check if active website facet shows 'Website 2'",
+        trigger: ".o_searchview_facet small.o_facet_value:contains('My Website 2')",
+    },
+];
 
 const deleteSelectedPage = [
     {
@@ -178,6 +221,7 @@ registerWebsitePreviewTour('website_page_manager', {
     },
     ...checkKanbanGroupBy,
     ...checkWebsiteFilter,
+    ...checkActiveWebsiteFilter,
     {
         content: "Click on Home Page",
         trigger: `.o_list_renderer ${homePage} td.o_list_record_selector input[type="checkbox"]`,

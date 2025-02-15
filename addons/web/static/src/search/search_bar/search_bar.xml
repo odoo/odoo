@@ -21,7 +21,8 @@
                         'text-bg-action': facet.type == 'groupBy',
                         'btn': facet.type == 'groupBy' and env.searchModel.canOrderByCount,
                         'btn btn-primary': facet.type == 'field' || facet.type == 'filter',
-                        'btn btn-favourite': facet.type == 'favorite'
+                        'btn btn-favourite': facet.type == 'favorite',
+                        'btn btn-secondary': facet.type == 'unremovable'
                     }"
                     >
                     <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
@@ -45,9 +46,10 @@
                 <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap overflow-hidden">
                     <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                         <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
-                        <small class="o_facet_value text-truncate" t-esc="facetValue" t-att-title="facetValue"/>
+                        <small class="o_facet_value text-truncate" t-att-class="{'pe-3': facet.type == 'unremovable' and facetValue_last}" t-out="facetValue" t-att-title="facetValue"/>
                     </t>
-                    <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger d-print-none"
+                    <button t-if="facet.type != 'unremovable'"
+                        class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger d-print-none"
                         role="button"
                         aria-label="Remove"
                         title="Remove"
