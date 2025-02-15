@@ -9,6 +9,7 @@ from __future__ import annotations
 import base64
 import concurrent.futures
 import contextlib
+import copy
 import difflib
 import importlib
 import inspect
@@ -224,6 +225,7 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 
 def loaded_demo_data(env):
     return bool(env.ref('base.user_demo', raise_if_not_found=False))
+
 
 class RecordCapturer:
     def __init__(self, model, domain):
@@ -942,7 +944,10 @@ class TransactionCase(BaseCase):
             cb._funcs = funcs
             cb.data = data
         for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
-            self.addCleanup(_reset, callback, deque(callback._funcs), dict(callback.data))
+            data_copy = dict(callback.data)
+            if 'ensure_exists' in data_copy:
+                data_copy['ensure_exists'] = copy.deepcopy(data_copy['ensure_exists'])  # DefaultDict[str, Set[int]]
+            self.addCleanup(_reset, callback, deque(callback._funcs), data_copy)
 
         # flush everything in setUpClass before introducing a savepoint
         self.env.flush_all()
