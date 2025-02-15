@@ -286,8 +286,11 @@ def translate_xml_node(node, callback, parse, serialize):
 
         # translate the attributes of the node
         for key, val in node.attrib.items():
-            if nonspace(val) and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node):
-                node.set(key, callback(val.strip()) or val)
+            if nonspace(val):
+                if key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node):
+                    node.set(key, callback(val.strip()) or val)
+                elif key.startswith('t-argt-'):
+                    node.set(key, callback(val.strip()) or val)
 
     process(node)
 
@@ -1102,7 +1105,7 @@ def _extract_translatable_qweb_terms(element, callback):
             # component nodes
             is_component = el.tag[0].isupper() or "t-component" in el.attrib or "t-set-slot" in el.attrib
             for attr in el.attrib:
-                if (not is_component and attr in TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
+                if (not is_component and (attr in TRANSLATED_ATTRS or attr.startswith('t-argt-'))) or (is_component and attr.endswith(".translate")):
                     _push(callback, el.attrib[attr], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
