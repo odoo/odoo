@@ -104,12 +104,27 @@ class SaleOrderDiscount(models.TransientModel):
         discount_product = self._get_discount_product()
 
         if self.discount_type == 'amount':
+            total_price_per_tax_groups = defaultdict(float)
+            for line in self.sale_order_id.order_line:
+                if not line.product_uom_qty or not line.price_unit:
+                    continue
+                total_price_per_tax_groups[line.tax_id] += (line.price_unit * line.product_uom_qty)
+
+            if not total_price_per_tax_groups:
+                # No valid lines on which the discount can be applied
+                return
+            
+            total_ht = sum(total_price_per_tax_groups.values())
             vals_list = [
                 self._prepare_discount_line_values(
                     product=discount_product,
-                    amount=self.discount_amount,
-                    taxes=self.tax_ids,
-                )
+                    amount=self.discount_amount * (subtotal / total_ht),  # Proportionnel à chaque montant HT
+                    taxes=taxes,
+                    description=_(
+                        "Discount: Proportional amount on products with the following taxes %(taxes)s",
+                        taxes=", ".join(taxes.mapped('name'))  # "Remise : Montant proportionnel sur les produits avec les taxes suivantes %(taxes)s"
+                    ),
+                ) for taxes, subtotal in total_price_per_tax_groups.items()
             ]
         else: # so_discount
             total_price_per_tax_groups = defaultdict(float)
