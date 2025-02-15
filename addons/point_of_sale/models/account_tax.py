@@ -24,5 +24,5 @@ class AccountTax(models.Model):
                         'It is forbidden to modify a tax used in a POS order not posted. '
                         'You must close the POS sessions before modifying the tax.'
                     ))
-                lines_chunk.invalidate_cache(['tax_ids'], lines_chunk.ids)
+                lines_chunk.invalidate_recordset(['tax_ids'])
         return super(AccountTax, self).write(vals)
