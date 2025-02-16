@@ -842,9 +842,10 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.picking_ids.mapped('state'), ['cancel', 'cancel', 'cancel', 'done', 'done'])
         self.assertEqual(sale_order.pos_order_line_ids.order_id.picking_ids.mapped('state'), ['waiting', 'waiting', 'assigned'])
 
-    def test_settle_order_ship_later_delivered_qty(self):
+    def test_settle_order_ship_later_effect_on_so(self):
         """This test create an order, settle it in the PoS and ship it later.
-            We need to make sure that the quantity delivered on the original sale is updated correctly
+            We need to make sure that the quantity delivered on the original sale is updated correctly,
+            And that the picking associated to the original sale order is cancelled.
         """
 
         product_a = self.env['product.product'].create({
@@ -873,13 +874,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'price_unit': product_a.lst_price,
             })],
         })
-        sale_order.action_confirm()
 
         self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
 
         self.main_pos_config.ship_later = True
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderShipLater', login="accountman")
+
+        self.assertEqual(sale_order.picking_ids.state, 'cancel')
 
         # The pos order is being shipped later so the qty_delivered should still be 0
         self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
