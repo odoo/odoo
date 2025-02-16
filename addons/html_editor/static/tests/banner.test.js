@@ -37,6 +37,29 @@ test("should insert a banner with focus inside followed by a paragraph", async (
     });
 });
 
+test("should insert a banner with DIV as basecontainer and focus inside it", async () => {
+    const { el, editor } = await setupEditor("<div>Test[]</div>", {
+        config: { baseContainer: "DIV" },
+    });
+    await insertText(editor, "/banner");
+    await animationFrame();
+    expect(".active .o-we-command-name").toHaveText("Banner Info");
+
+    await press("enter");
+    expect(unformat(getContent(el))).toBe(
+        unformat(
+            `<div class="o-paragraph">Test</div>
+            <div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
+                <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
+                <div class="w-100 px-3" contenteditable="true">
+                    <div class="o-paragraph o-we-hint" placeholder='Type "/" for commands'>[]<br></div>
+                </div>
+            </div>
+            <div class="o-paragraph"><br></div>`
+        )
+    );
+});
+
 test("press 'ctrl+a' inside a banner should select all the banner content", async () => {
     const { el, editor } = await setupEditor("<p>Test[]</p>");
     await insertText(editor, "/bannerinfo");
