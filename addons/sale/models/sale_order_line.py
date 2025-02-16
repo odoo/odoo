@@ -306,12 +306,14 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_name(self):
         for line in self:
-            if not line.product_id:
+            if not line.product_id and not line.is_downpayment:
                 continue
+
             lang = line.order_id._get_lang()
             if lang != self.env.lang:
                 line = line.with_context(lang=lang)
             name = line._get_sale_order_line_multiline_description_sale()
+
             if line.is_downpayment and not line.display_type:
                 context = {'lang': lang}
                 dp_state = line._get_downpayment_state()
@@ -714,14 +716,14 @@ class SaleOrderLine(models.Model):
     def _get_downpayment_state(self):
         self.ensure_one()
 
-        if self.display_type:
+        invoice_lines = self._get_invoice_lines()
+        if self.display_type or (self.invoice_status == 'invoiced' and not invoice_lines):
             return ''
 
-        invoice_lines = self._get_invoice_lines()
-        if all(line.parent_state == 'draft' for line in invoice_lines):
-            return 'draft'
         if all(line.parent_state == 'cancel' for line in invoice_lines):
             return 'cancel'
+        if all(line.parent_state == 'draft' for line in invoice_lines):
+            return 'draft'
 
         return ''
 
