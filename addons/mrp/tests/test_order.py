@@ -4339,7 +4339,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_update_mo_from_bom_with_kit(self):
         """
-        Test that an MO can be updated from BoM when the finished product has a kit as a component.
+        Test updating an MO from BoM when the finished product has a kit as a component.
         """
         # Test that the finished product has a kit as a component
         kit_bom_line = self.bom_3.bom_line_ids.filtered(lambda line: line.product_id.is_kits)
@@ -4360,9 +4360,84 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(self.bom_3.bom_line_ids, kit_bom_line)
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 2, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 3, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 8, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 12, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
         ])
+        # Check propagation upon update of the kit quantity
+        kit_bom_line.product_qty = 3
+        kit_bom.bom_line_ids[0].product_qty = 4
+        mo.action_update_bom()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 24, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 18, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+        ])
+
+        # Check when adding a variant of some other kit product to the BoM
+        other_kit_product, other_comp = self.env['product.template'].create([{'name': 'Stone spear'}, {'name': 'Pointy stone'}])
+        other_kit_product_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': other_kit_product.id,
+            'product_uom_id': other_kit_product.uom_id.id,
+            'consumption': 'flexible',
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': self.product_4.id, 'product_qty': 1}),
+                Command.create({'product_id': other_comp.id, 'product_qty': 1}),
+            ],
+        })
+        # Add variants to the kit
+        color_attribute = self.env['product.attribute'].search([('name', '=', 'Color')], limit=1)
+        colors = color_attribute.value_ids
+        with Form(other_kit_product) as prod:
+            with prod.attribute_line_ids.new() as attr_line:
+                attr_line.attribute_id = color_attribute
+                attr_line.value_ids = colors
+        self.assertEqual(other_kit_product.product_variant_count, len(colors))
+        # Add lines to the kit bom for its' different variants
+        paint_products = [
+            self.env['product.product'].create({'name': f"{color.name} paint"})
+            for color in colors
+        ]
+        other_kit_product_bom.write({
+            'product_id': False,
+            'bom_line_ids': [Command.create({
+                'product_id': paint_products[iter].id,
+                'product_qty': iter + 1,
+                'bom_product_template_attribute_value_ids': other_kit_product.product_variant_ids[iter].product_template_variant_value_ids.ids,
+            }) for iter in range(len(colors))],
+        })
+        self.assertEqual(len(other_kit_product_bom.bom_line_ids), 4)
+        # Add the variant of the kit to the main BoM
+        with Form(self.bom_3) as main_bom:
+            with main_bom.bom_line_ids.new() as bom_line:
+                bom_line.product_id = other_kit_product.product_variant_ids[0]
+                bom_line.product_qty = 1
+        self.assertEqual(len(self.bom_3.bom_line_ids), 2)
+        mo.action_update_bom()
+        self.assertRecordValues(mo.move_raw_ids,
+            [
+                {
+                    'product_id': kit_bom.bom_line_ids[0].product_id.id,
+                    'product_qty': 24,
+                },
+                {
+                    'product_id': kit_bom.bom_line_ids[1].product_id.id,
+                    'product_qty': 18,
+                },
+                {
+                    'product_id': self.product_4.id,
+                    'product_qty': 1,
+                },
+                {
+                    'product_id': other_comp.id,
+                    'product_qty': 1,
+                },
+                {
+                    'product_id': paint_products[0].id,
+                    'product_qty': 1,
+                },
+            ]
+        )
 
     @freeze_time('2024-11-26 9:00')
     def test_workorder_planning_validity_with_workcenters(self):
