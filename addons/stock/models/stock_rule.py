@@ -544,7 +544,7 @@ class ProcurementGroup(models.Model):
         if packaging_uom_id:
             packaging_routes = packaging_uom_id.package_type_id.route_ids
             valid_route_ids |= set(packaging_routes.ids)
-        valid_route_ids |= set((product_id.route_ids | product_id.categ_id.total_route_ids).ids)
+        valid_route_ids |= set(self._get_product_routes(product_id).ids)
         if warehouse_ids:
             valid_route_ids |= set(warehouse_ids.route_ids.ids)
         if valid_route_ids:
@@ -578,7 +578,7 @@ class ProcurementGroup(models.Model):
             if packaging_routes:
                 res = Rule.search(Domain('route_id', 'in', packaging_routes.ids) & domain, order='route_sequence, sequence', limit=1)
         if not res:
-            product_routes = product_id.route_ids | product_id.categ_id.total_route_ids
+            product_routes = self._get_product_routes(product_id) | product_id.categ_id.total_route_ids
             if product_routes:
                 res = Rule.search(Domain('route_id', 'in', product_routes.ids) & domain, order='route_sequence, sequence', limit=1)
         if not res and warehouse_id:
@@ -586,6 +586,18 @@ class ProcurementGroup(models.Model):
             if warehouse_routes:
                 res = Rule.search(Domain('route_id', 'in', warehouse_routes.ids) & domain, order='route_sequence, sequence', limit=1)
         return res
+
+    def _get_product_routes(self, product):
+        """ Get valid routes for a product based on the following conditions:
+            - If `purchase_ok` is enabled and the product has a vendor, select the 'Buy' route.
+            - If the product has a Bill of Materials (BOM), select the 'Manufacturing' route.
+            - If the product is a component of a subcontracting BOM and has sufficient stock,
+            select the 'Resupply Subcontractor on Order' route.
+        """
+        if not product:
+            return self.env["stock.route"]
+        route_ids = product.categ_id.total_route_ids | product.route_ids
+        return route_ids
 
     @api.model
     def _get_rule(self, product_id, location_id, values):
@@ -631,7 +643,7 @@ class ProcurementGroup(models.Model):
             if not res and packaging_uom_id:
                 res = extract_rule(rule_dict, packaging_uom_id.package_type_id.route_ids, warehouse_id, location_dest_id)
             if not res:
-                res = extract_rule(rule_dict, product_id.route_ids | product_id.categ_id.total_route_ids, warehouse_id, location_dest_id)
+                res = extract_rule(rule_dict, self._get_product_routes(product_id), warehouse_id, location_dest_id)
             if not res and warehouse_id:
                 res = extract_rule(rule_dict, warehouse_id.route_ids, warehouse_id, location_dest_id)
             return res
