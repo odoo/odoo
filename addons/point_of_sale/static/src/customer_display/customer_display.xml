@@ -13,6 +13,7 @@
                 <OrderWidget t-if="!order.finalized" lines="order.lines" t-slot-scope="scope" class="'gap-0 p-0 mx-2 pb-3 bg-view'" style="'scroll-snap-type: y mandatory;'" generalNote="order.generalNote or ''">
                     <Orderline line="scope.line" class="{
                             'o_customer_display_orderline bg-white fs-3 rounded-0': true,
+                            'selected': scope.line.isSelected
                         }"
                     />
                     <t t-set-slot="emptyCart">
