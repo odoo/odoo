@@ -5,6 +5,9 @@
         <field name="model">hr.applicant</field>
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
         <field name="arch" type="xml">
+            <field name="categ_ids" position="after">
+                <field name="matching_score" invisible="not expected_skill_ids" widget="percentage"/>
+            </field>
             <notebook position="inside">
                 <page string="Skills">
                     <div class="row ms-2">
