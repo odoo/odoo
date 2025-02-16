@@ -1050,6 +1050,11 @@ class CalendarEvent(models.Model):
         """Overridable getter to identify whether to send invitation/cancelation emails."""
         return False
 
+    def _get_responsible(self):
+        """Overridable getter to define who the notification emails should be sent as."""
+        self.ensure_one()
+        return self.user_id
+
     def _get_attendee_emails(self):
         """ Get comma-separated attendee email addresses. """
         self.ensure_one()
