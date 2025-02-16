@@ -158,7 +158,7 @@ class BarcodeNomenclature(models.Model):
                     if operator == 'not in':
                         sub_domain = ~sub_domain
                     return sub_domain
-                if operator in ('in', 'not in'):
+                if operator in ('in', 'not in') and len(value) == 1:
                     operator = '=' if operator == 'in' else '!='
                     value = next(iter(value))
                 elif operator not in ('ilike', 'not ilike', '=', '!='):
