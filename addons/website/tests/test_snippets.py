@@ -125,3 +125,6 @@ class TestSnippets(HttpCase):
 
     def test_rating_snippet(self):
         self.start_tour(self.env["website"].get_client_action_url("/"), "snippet_rating", login="admin")
+
+    def test_snippet_cards(self):
+        self.start_tour(self.env["website"].get_client_action_url("/"), "snippet_layouts_test", login="admin")
