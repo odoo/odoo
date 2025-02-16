@@ -777,7 +777,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(so_line_1.qty_delivered, 5)
         self.assertEqual(so_line_1.price_unit, 55.0)
         self.assertEqual(so_line_2.product_id.id, product_inv_on_delivered.id)
-        self.assertEqual(so_line_2.product_uom_qty, 0)
+        self.assertEqual(so_line_2.product_uom_qty, 5)
         self.assertEqual(so_line_2.qty_delivered, 5)
         self.assertEqual(
             so_line_2.price_unit, 70.0,

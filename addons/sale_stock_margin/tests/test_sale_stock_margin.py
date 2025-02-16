@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields
+from odoo import Command, fields
 
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
@@ -318,3 +318,36 @@ class TestSaleStockMargin(TestStockValuationCommon):
 
         self.assertEqual(so.state, 'sent')
         self.assertEqual(so.order_line[0].purchase_price, 15)
+
+    def test_add_product_on_delivery_price_unit_on_sale(self):
+        """ Adding a product directly on a sale order's delivery (when it's invoiced on delivered
+        quantity) should update the order total.
+        """
+        products = [self._create_product() for _ in range(2)]
+        for product, cost, price in zip(products, [20, 10], [25, 20]):
+            product.categ_id.property_cost_method = 'standard'
+            product.write({
+                'standard_price': cost,
+                'list_price': price,
+                'invoice_policy': 'delivery',
+            })
+        sale_order = self._create_sale_order()
+        self._create_sale_order_line(sale_order, products[0], 10, products[0].list_price)
+        sale_order.action_confirm()
+        delivery = sale_order.picking_ids[0]
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids_without_package.new() as move:
+                move.product_id = products[1]
+                move.product_uom_qty = 10
+        delivery.move_ids.quantity = 10
+        delivery.button_validate()
+        self.assertRecordValues(
+            sale_order.order_line.filtered(lambda sol: sol.product_id == products[1]),
+            [{
+                'price_unit': products[1].list_price,
+                'price_subtotal': products[1].list_price * 10,
+                'purchase_price': products[1].standard_price,
+                'margin': 100,
+            }]
+        )
+        self.assertAlmostEqual(sale_order.amount_total, 517.5)

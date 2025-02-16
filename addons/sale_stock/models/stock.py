@@ -130,6 +130,8 @@ class StockPicking(models.Model):
                 so_line = sale_order.order_line.filtered(lambda sol: sol.product_id == product)
                 if so_line:
                     so_line_vals['price_unit'] = so_line[0].price_unit
+                # Let the new SOL fully update price info on the SO
+                so_line_vals['product_uom_qty'] = move.quantity
             elif product.invoice_policy == 'order':
                 # No unit price if the product is invoiced on the ordered qty.
                 so_line_vals['price_unit'] = 0
