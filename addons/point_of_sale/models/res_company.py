@@ -16,7 +16,7 @@ class ResCompany(models.Model):
             help="At the session closing: A picking is created for the entire session when it's closed\n In real time: Each order sent to the server create its own picking")
     point_of_sale_use_ticket_qr_code = fields.Boolean(
         string='Self-service invoicing',
-        help="Print information on the receipt to allow the costumer to easily request the invoice anytime, from Odoo's portal")
+        help="Print information on the receipt to allow the customer to easily access the invoice anytime, from Odoo's portal.")
     point_of_sale_ticket_unique_code = fields.Boolean(
         string='Generate a code on ticket',
         help="Add a 5-digit code on the receipt to allow the user to request the invoice for an order on the portal.")
