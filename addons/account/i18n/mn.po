@@ -27,15 +27,15 @@
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2023
 # Munkhbaatar Gombosuren, 2023
 # Martin Trigaux, 2024
-# Torbat Jargalsaikhan, 2024
 # Bayarkhuu Bataa, 2024
+# Torbat Jargalsaikhan, 2025
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
@@ -186,6 +186,8 @@ msgstr "%s (бүхэлчлэл)"
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
 msgstr ""
+"%s - %s; %s Нэхэмжлэл үүссэн, %s хэмжээгээр, нэгж бүрийн %s үнээр хүлээн "
+"авсан"
 
 #. module: account
 #. odoo-python
@@ -193,6 +195,7 @@ msgstr ""
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
 msgstr ""
+"%s - %s; %s тоогоор нэхэмжилсэн, %s тоогоор  %s нэгж бүрийн үнээр хүргэгдсэн"
 
 #. module: account
 #. odoo-python
@@ -241,6 +244,8 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%s нь холбогдох тайлангийн мөртэй холбоотойгоор хүчин төгөлдөр бус төлөвт орсон байна.\n"
+"Нягтлан бодох бүртгэлийн журналд нэг л таамагласан мөр байх ёстой."
 
 #. module: account
 #. odoo-python
@@ -2921,6 +2926,7 @@ msgstr "Автоматаар батлах"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/company.py:0
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Automatic Balancing Line"
@@ -7833,7 +7839,7 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Invalid domain for expression '%s' of line '%s': %s"
-msgstr ""
+msgstr "'%s' нэртэй '%s' мөрийн domain илэрхийлэл буруу байна: %s"
 
 #. module: account
 #. odoo-python
@@ -8175,6 +8181,12 @@ msgstr "Нэхэмжлэл Апп-ын залгамж"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__match_amount__between
 msgid "Is Between"
 msgstr "Хооронд"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -9000,6 +9012,8 @@ msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
 msgstr ""
+"\"%s\" мөр нь \"%s\" мөрийг эцэг мөр болгон тодорхойлсон боловч тайлан дээр "
+"түүнээс өмнө гарч ирж байна. Эцэг мөр нь үргэлж эхэлж байрлах ёстой."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
@@ -9655,6 +9669,16 @@ msgstr "Шинэ утга"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
 msgstr "Шинэ нь эхэнд нь байрлах"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Календар дээрх дараагийн Үйл ажиллагаа"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -12659,8 +12683,8 @@ msgid "Set a price"
 msgstr "Үнэ оруулах"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
 
@@ -13860,6 +13884,8 @@ msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
 "incompatible with its category : %s."
 msgstr ""
+"'%s' бүтээгдэхүүнд сонгосон '%s' хэмжих нэгж (х.н) нь '%s' ангилалд "
+"тохирохгүй байна."
 
 #. module: account
 #. odoo-python
@@ -14109,6 +14135,9 @@ msgid ""
 "The current total is %s but the expected total is %s. In order to post the "
 "invoice/bill, you can adjust its lines or the expected Total (tax inc.)."
 msgstr ""
+"Одоогийн нийт дүн %s байгаа бол хүлээгдэж буй дүн %s байна. Нэхэмжлэх эсвэл "
+"төлбөрийг батлахын тулд, түүний мөрүүдийг эсвэл хүлээгдэж буй нийт дүнг "
+"(татвар орсон) тааруулж засварлана уу."
 
 #. module: account
 #. odoo-python
@@ -15555,11 +15584,9 @@ msgstr "%s-д шилжүүлж хийх"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
-"Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.\n"
+"                                        <br/><small>Set a value greater than 0.0 to activate a credit limit check</small>"
 msgstr ""
-"Нийт авлагын дүн хязгаараас хэтэрсэн харилцагчдад нэхэмжлэл болон "
-"борлуулалтын захиалга үүсгэх үед сэрэмжлүүлэг үүсгэнэ."
 
 #. module: account
 #. odoo-python
@@ -16501,6 +16528,9 @@ msgid ""
 "account set either on the company or the %s payment method in the %s "
 "journal."
 msgstr ""
+"Төлбөрийн дутуу авлага/төлбөрийн данс нь аль компанийн тохиргоонд, эсвэл %s "
+"журнал дахь %s төлбөрийн аргад тохируулагдаагүй тохиолдолд шинэ төлбөр "
+"үүсгэх боломжгүй."
 
 #. module: account
 #. odoo-python
@@ -16537,6 +16567,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."
 msgstr ""
+"Нэг журналд ижил төлбөрийн төрөл (%s) болон ижил нэртэй (%s) хоёр төлбөрийн "
+"аргын мөр байж болохгүй."
 
 #. module: account
 #. odoo-python
@@ -16811,6 +16843,8 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
+"Дараах талбаруудыг засах боломжгүй: %s. \n"
+"Учир нь дараах бичилтүүд аль хэдийн хэшлэгдсэн байна: %s."
 
 #. module: account
 #. odoo-python

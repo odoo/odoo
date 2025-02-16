@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -1870,6 +1870,11 @@ msgstr "Näyttönimi"
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "Näytä sponsorit ja näytteilleasettajat tapahtumasivuillasi"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "Näytä aikavyöhyke"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -3823,7 +3828,6 @@ msgid "Tickets can be printed or scanned directly from your phone."
 msgstr "Liput voi tulostaa tai skannata suoraan puhelimella."
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Aikavyöhyke"
@@ -4036,6 +4040,11 @@ msgid "Weeks"
 msgstr "Viikot"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr "Mikä on uutta?"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_begin
 #: model:ir.model.fields,help:event.field_event_registration__event_begin_date
 msgid ""
@@ -4044,11 +4053,6 @@ msgid ""
 msgstr ""
 "Milloin tapahtuman on tarkoitus tapahtua (ilmaistuna paikallisena "
 "aikavyöhykkeenä lomakkeen näkymässä)."
-
-#. module: event
-#: model_terms:event.event,description:event.event_0
-msgid "What's new?"
-msgstr "Mikä on uutta?"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
