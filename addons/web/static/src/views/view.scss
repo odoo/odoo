@@ -50,6 +50,27 @@
     }
 }
 
+// the nocontent helper in fields specially for hr employee view form
+.o_field_nocontent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 200px;
+    width: 100%;
+
+    .o_nocontent_help {
+        @include o-nocontent-empty;
+
+        .o_view_nocontent_sad_face:before {
+            @extend %o-nocontent-init-image;
+            width: 120px;
+            height: 140px;
+            background: transparent url(/web/static/img/sad.svg) no-repeat center;
+        }
+    }
+}
+
 // Naive heuristic to leave enough space for the nocontent helper in dialogs
 .o_dialog {
     .o_content:has(.o_view_nocontent) {
