@@ -214,7 +214,6 @@ export const stepUtils = {
                 run: "click",
             },
             {
-                isActive: ["auto"],
                 content: "wait for save completion",
                 trigger: ".o_form_readonly, .o_form_saved",
             },
@@ -235,7 +234,6 @@ export const stepUtils = {
                 run: "click",
             },
             {
-                isActive: ["auto"],
                 content: "wait for cancellation to complete",
                 trigger:
                     ".o_view_controller.o_list_view, .o_form_view > div > main > .o_form_readonly, .o_form_view > div > main > .o_form_saved",

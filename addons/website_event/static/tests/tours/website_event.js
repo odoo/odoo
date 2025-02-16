@@ -42,7 +42,6 @@ function websiteCreateEventTourSteps() {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".modal-dialog input[type=text]:not(:value(''))",
         },
         {
