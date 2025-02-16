@@ -259,10 +259,13 @@ class AccountBankStatementLine(models.Model):
         # NOTE: assert self._fields['sequence'].column_type[1] == 'int4'
         # if for any reason it changes (how unlikely), we need to update this code
 
-        for st_line in self.filtered(lambda line: line._origin.id):
-            st_line.internal_index = f'{st_line.date.strftime("%Y%m%d")}' \
-                                      f'{MAXINT - st_line.sequence:0>10}' \
-                                      f'{st_line._origin.id:0>10}'
+        for st_line in self:
+            if not st_line._origin.id:
+                st_line.internal_index = ''
+            else:
+                st_line.internal_index = f'{st_line.date.strftime("%Y%m%d")}' \
+                                        f'{MAXINT - st_line.sequence:0>10}' \
+                                        f'{st_line._origin.id:0>10}'
 
     @api.depends('journal_id', 'currency_id', 'amount', 'foreign_currency_id', 'amount_currency',
                  'move_id.to_check',
