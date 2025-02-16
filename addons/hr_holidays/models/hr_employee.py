@@ -133,6 +133,12 @@ class HrEmployee(models.Model):
                 ('department_ids', '=', False),
                 ('department_ids', 'parent_of', self.department_id.id),
             ]
+            if self.job_id:
+                domain += [
+                    '|',
+                    ('job_ids', '=', False),
+                    ('job_ids', 'in', self.job_id.id),
+                ]
         else:
             domain += [('department_ids', '=', False)]
 
