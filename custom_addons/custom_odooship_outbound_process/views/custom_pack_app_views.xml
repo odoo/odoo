@@ -16,6 +16,11 @@
                                 type="object"
                                 string="Pack Products"
                                 class="btn-primary"/>
+                        <button name="button_action_done"
+                                type="object"
+                                string="Done"
+                                invisible="state in ('draft', 'done')"
+                                class="btn-primary"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <group>
@@ -23,7 +28,8 @@
                             <field name="name"/>
                         </group>
                         <group>
-                            <field name="site_code_id"/>
+                            <field name="automation_bulk_manual"/>
+                            <field name="site_code_id" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -59,15 +65,14 @@
         </field>
     </record>
 
-    <!--    Tree View of Crate Barcode Configuration-->
+<!--        Tree View of Crate Barcode Configuration-->
 <!--    <record id="view_custom_pack_app" model="ir.ui.view">-->
 <!--        <field name="name">custom.pack.app.tree</field>-->
 <!--        <field name="model">custom.pack.app</field>-->
 <!--        <field name="arch" type="xml">-->
-<!--            <tree>-->
+<!--            <tree string="">-->
 <!--                <field name="name"/>-->
-<!--&lt;!&ndash;                <field name="pc_container_status"/>&ndash;&gt;-->
-<!--                <field name="site_code_id"/>-->
+<!--                <field name="automation_bulk_manual"/>-->
 <!--            </tree>-->
 <!--        </field>-->
 <!--    </record>-->

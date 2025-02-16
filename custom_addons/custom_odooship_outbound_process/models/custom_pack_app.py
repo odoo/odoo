@@ -24,7 +24,12 @@ class PackAPP(models.Model):
         ('draft', 'Draft'),
         ('in_progress', 'In Progress'),
         ('done', 'Done'),
-    ], string='Status', readonly=True, tracking=True)
+    ], default='draft',string='Status', readonly=True, tracking=True)
+    automation_bulk_manual = fields.Selection([
+        ('automation','Automation'),
+        ('automation_bulk','Automation Bulk'),
+        ('manual','Manual'),
+    ], string='Automation Bulk Manual')
 
 
     @api.model_create_multi
@@ -41,13 +46,20 @@ class PackAPP(models.Model):
         """
         self.state = 'in_progress'
         return {
-            'name': _('Pack Bench Wizard'),
+            'name': _('Pack Screen'),
             'type': 'ir.actions.act_window',
             'res_model': 'custom.pack.app.wizard',
             'view_mode': 'form',
             'target': 'new',
             'context': {'active_id': self.id},
         }
+
+    def button_action_done(self):
+        """
+        Validate State from In Progress to Done when User hits this Done button
+        """
+        for order in self:
+            order.state = 'done'
 
 
 
