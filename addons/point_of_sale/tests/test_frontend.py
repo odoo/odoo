@@ -1629,6 +1629,26 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.main_pos_config.with_user(self.pos_user).open_ui()
             self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchMoreCustomer', login="pos_user")
 
+    def test_order_sharing_with_trusted_config(self):
+        second_pos_config = self.env['pos.config'].create({
+            'name': 'Shop 2',
+            'module_pos_restaurant': False,
+            'trusted_config_ids': [self.main_pos_config.id],
+        })
+        self.main_pos_config.write({
+            'trusted_config_ids': [second_pos_config.id]
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ShareOpenOrdersTour1', login="pos_user")
+        last_order = self.env['pos.order'].search([], limit=1, order="id desc")
+        self.assertEqual(last_order.config_id.id, self.main_pos_config.id)
+
+        self.start_tour("/pos/ui?config_id=%d" % second_pos_config.id, 'ShareOpenOrdersTour2', login="pos_user")
+        # Check chnage of config after payment
+        self.assertEqual(last_order.config_id.id, second_pos_config.id)
+        self.assertEqual(last_order.state, 'paid')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

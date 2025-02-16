@@ -279,3 +279,29 @@ registry.category("web_tour.tours").add("LotTour", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("ShareOpenOrdersTour1", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
+            Chrome.createFloatingOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ShareOpenOrdersTour2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuOption("Orders"),
+            TicketScreen.selectOrderByPrice("5.10"),
+            TicketScreen.loadSelectedOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
