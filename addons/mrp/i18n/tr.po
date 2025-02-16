@@ -5142,7 +5142,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce_all
 msgid "Show Produce All"
-msgstr ""
+msgstr "Tümünü Üret'i Göster"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -6944,6 +6944,15 @@ msgid ""
 "                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Bu ürünlerden beklenenden farklı bir miktar kullandınız.\n"
+"                        <b invisible=\"consumption == 'strict'\">\n"
+"                            Farkında olduğunuzu teyit ediniz.\n"
+"                        </b>\n"
+"                        <b invisible=\"consumption != 'strict'\">\n"
+"                            Malzeme kullanımınızı teyit ediniz veya müdürünüzden doğrulamasını isteyiniz\n"
+"                            <span invisible=\"mrp_production_count != 1\">bu üretim emri</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">bu üretim emirleri</span>.\n"
+"                        </b>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production

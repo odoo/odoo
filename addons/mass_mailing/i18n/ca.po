@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Sandra Franch <sandra.franch@upc.edu>, 2023
-# Josep Sànchez <papapep@gmx.com>, 2023
+# Josep Sànchez <papapep@pinatell.net>, 2023
 # Eric Antones <eantones@users.noreply.github.com>, 2023
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
 # M Palau <mpalau@tda.ad>, 2023
@@ -13,7 +13,7 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2023
 # martioodo hola, 2023
 # jabiri7, 2023
-# Harcogourmet, 2023
+# Xavier, 2023
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2023
 # Susanna Pujol, 2023
 # Albert Parera, 2023
@@ -24,7 +24,7 @@
 # eriiikgt, 2023
 # Martin Trigaux, 2023
 # Carles Antoli <carlesantoli@hotmail.com>, 2023
-# Quim - eccit <quim@eccit.com>, 2023
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2023
 # Ivan Espinola, 2023
 # Santiago Payà <santiagopim@gmail.com>, 2024
 # Josep Anton Belchi, 2024
@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Arnau Ros, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -1063,6 +1063,22 @@ msgstr "Arxiva les llistes de correu font"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Archived"
 msgstr "Arxivat"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Are you sure you want to unsubscribe from our mailing list?"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid ""
+"Are you sure you want to unsubscribe from the mailing list "
+"\"%(unsubscribed_lists)s\"?"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-python
@@ -3098,6 +3114,13 @@ msgid "Manage Mass Mailing Campaigns"
 msgstr "Gestionar les campanyes de correu massiu"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Manage Subscriptions"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage mass mailing campaigns"
 msgstr "Gestionar les campanyes de correu massiu"
@@ -4586,6 +4609,13 @@ msgid "Successfully Unsubscribed"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Successfully unsubscribed!"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__tag_ids
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "Tags"
@@ -4991,9 +5021,12 @@ msgid "Unknown error"
 msgstr "Error desconegut"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+#, python-format
 msgid "Unsubscribe"
 msgstr "Donar-se de baixa"
 
