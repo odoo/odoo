@@ -24,6 +24,7 @@ class MailActivity(models.Model):
             'default_user_id': self.user_id.id,
             'initial_date': self.date_deadline,
             'default_calendar_event_id': self.calendar_event_id.id,
+            'orig_activity_ids': self.ids,
         }
         return action
 
