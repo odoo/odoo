@@ -24,9 +24,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     site_code_id = fields.Many2one(related='pc_container_code_id.site_code_id', store=True)
     picking_ids = fields.Many2many('stock.picking', string='Pick Numbers', store=True)
     line_ids = fields.One2many('custom.pack.app.wizard.line', 'wizard_id', string='Product Lines')
-    pack_bench_id = fields.Many2one('pack.bench.configuration', string='Pack Bench')
+    pack_bench_id = fields.Many2one('pack.bench.configuration', string='Pack Bench', required=True)
     package_box_type_id = fields.Many2one(
-        'package.box.configuration', string='Package Box Type', help="Select packaging box for single picking."
+        'package.box.configuration', string='Package Box Type',
+        help="Select packaging box for single picking.",
+        required=True
     )
     show_package_box_in_lines = fields.Boolean(compute="_compute_show_package_box_in_lines", store=True)
     picking_id = fields.Many2one('stock.picking', string='Select Receipt')
@@ -36,24 +38,59 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         compute='_compute_tenant_code',
         store=True
     )
+    line_count = fields.Integer(string="Line Count", compute="_compute_fields_based_on_picking_ids", store=True)
+    updated_line_count = fields.Integer(
+        string="Updated Line Count", compute='_compute_updated_line_count', store=True
+    )
+
+    @api.depends('line_ids')
+    def _compute_updated_line_count(self):
+        """
+        Compute the number of lines each time the line items are updated.
+        """
+        for wizard in self:
+            wizard.updated_line_count = len(wizard.line_ids)
+            _logger.info(f"Computed updated line count: {wizard.updated_line_count}")
+
+    @api.depends('updated_line_count')
+    def check_and_pack_products(self):
+        """
+        Checks if the conditions are met to pack products and then packs them.
+        """
+        for wizard in self:
+            if wizard.line_count == wizard.updated_line_count:
+                _logger.info(f"Conditions met for packing products in wizard {wizard.id}. Executing pack_products.")
+                return wizard.pack_products()
+            else:
+                _logger.info(
+                    f"Conditions not met for packing products in wizard {wizard.id}. Line count: {wizard.line_count}, Updated line count: {wizard.updated_line_count}")
+        return {}
+
+    # def write(self, vals):
+    #     result = super(PackDeliveryReceiptWizard, self).write(vals)
+    #     if 'line_ids' in vals:
+    #         self.check_and_pack_products()
+    #     return result
+
 
     @api.depends('picking_ids')
-    def _compute_tenant_code(self):
+    def _compute_fields_based_on_picking_ids(self):
         """
-        Fetches tenant_code_id from the first picking if multiple pickings exist.
+        Computes both the tenant code and the total line count based on the picking IDs.
         """
         for wizard in self:
             if wizard.picking_ids:
+                # Set the tenant code from the first picking
                 wizard.tenant_code_id = wizard.picking_ids[0].tenant_code_id
+                # Calculate the total line count from all pickings
+                wizard.line_count = sum(len(picking.move_ids_without_package) for picking in wizard.picking_ids)
             else:
+                # If there are no pickings, reset the tenant code and line count
                 wizard.tenant_code_id = False
-
+                wizard.line_count = 0
 
     @api.onchange('pc_container_code_id')
     def _onchange_pc_container_code_id(self):
-        """
-        Fetches and assigns pickings in 'done' state that are linked to the scanned PC container barcode.
-        """
         if self.pc_container_code_id:
             pickings = self.env['stock.picking'].search([
                 ('move_ids_without_package.pc_container_code', '=', self.pc_container_code_id.name),
@@ -65,6 +102,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
             self.picking_ids = [(6, 0, pickings.ids)]
             self._auto_select_package_box_type()
+            self._compute_fields_based_on_picking_ids()
 
 
     @api.depends('picking_ids')
@@ -144,7 +182,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'product_id': line.product_id.id,
                 'name': line.product_id.name,
                 'sku_code': line.product_id.default_code,
-                'quantity': line.quantity,
+                'quantity': 1.0,
                 'available_quantity': line.available_quantity,
                 'remaining_quantity': line.remaining_quantity,
                 'picking_id': line.picking_id.id,
@@ -166,16 +204,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             raise ValidationError(_("Unknown warehouse. Cannot determine API endpoint."))
 
         # Process based on the number of pick numbers
-        if len(self.picking_ids) > 1:
-            payloads = self.process_multiple_picks(picking_orders)
-        else:
+        if not len(self.picking_ids) > 1:
             payloads = [self.process_single_pick()]
 
         # Send payloads to API
-        for payload in payloads:
-            self.send_payload_to_api(api_url, payload)
-        self.release_container()
-
+            for payload in payloads:
+                self.send_payload_to_api(api_url, payload)
+        # self.release_container()
         return {'type': 'ir.actions.act_window_close'}
 
     def release_container(self):
@@ -290,55 +325,118 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             }
         }
 
-    def process_multiple_picks(self, picking_orders):
+    # Old Code Commented
+    # def process_multiple_picks(self, picking_orders):
+    #     """
+    #     Processes multiple pick numbers and returns a list of formatted payloads.
+    #     Each pick number has its own payload, and products are NOT grouped across different pick numbers.
+    #     """
+    #     payloads = []
+    #     for picking_id, lines in picking_orders.items():
+    #         product_lines = []
+    #
+    #         for line in lines:
+    #             product_weight = line.weight  # Default weight to 1 if not defined
+    #
+    #             product_lines.append({
+    #                 "sku_code": line.product_id.default_code,
+    #                 "name": line.product_id.name,
+    #                 "quantity": line.quantity,
+    #                 "remaining_quantity": line.remaining_quantity,
+    #                 "weight": product_weight * line.quantity,  # Weight per product line
+    #                 "picking_id": line.picking_id.name if line.picking_id else "",
+    #                 "customer_name": line.picking_id.partner_id.name or "",
+    #                 "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
+    #                 "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
+    #                 "site_code": line.site_code_id.name if line.site_code_id else "",
+    #                 "receipt_number": line.picking_id.name,
+    #                 "origin": line.picking_id.origin or "N/A",
+    #                 "package_name": line.package_box_type_id.name,
+    #                 "length": line.package_box_type_id.length or "NA",
+    #                 "width": line.package_box_type_id.width or "NA",
+    #                 "height": line.package_box_type_id.height or "NA",
+    #                 "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
+    #                 "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
+    #                 "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
+    #                 "incoterm_location": line.incoterm_location or "N/A",
+    #                 "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
+    #                 "carrier": line.picking_id.sale_id.carrier or "N/A",
+    #             })
+    #
+    #         payloads.append({
+    #             "header": {"user_id": "system", "user_key": "system", "warehouse_code": self.warehouse_id.name},
+    #             "body": {
+    #                 "receipt_list": [{
+    #                     "product_lines": product_lines,
+    #                     "pack_bench_number": self.pack_bench_id.name,
+    #                     "pack_bench_ip": self.pack_bench_id.printer_ip,
+    #                 }]
+    #             }
+    #         })
+    #
+    #     return payloads
+
+
+
+    def prepare_payload_for_individual_line(self, line):
         """
-        Processes multiple pick numbers and returns a list of formatted payloads.
-        Each pick number has its own payload, and products are NOT grouped across different pick numbers.
+        Prepares a payload for a single line.
         """
         payloads = []
-        for picking_id, lines in picking_orders.items():
-            product_lines = []
-
-            for line in lines:
-                product_weight = line.weight  # Default weight to 1 if not defined
-
-                product_lines.append({
-                    "sku_code": line.product_id.default_code,
-                    "name": line.product_id.name,
-                    "quantity": line.quantity,
-                    "remaining_quantity": line.remaining_quantity,
-                    "weight": product_weight * line.quantity,  # Weight per product line
-                    "picking_id": line.picking_id.name if line.picking_id else "",
-                    "customer_name": line.picking_id.partner_id.name or "",
-                    "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
-                    "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
-                    "site_code": line.site_code_id.name if line.site_code_id else "",
-                    "receipt_number": line.picking_id.name,
-                    "origin": line.picking_id.origin or "N/A",
-                    "package_name": line.package_box_type_id.name,
-                    "length": line.package_box_type_id.length or "NA",
-                    "width": line.package_box_type_id.width or "NA",
-                    "height": line.package_box_type_id.height or "NA",
-                    "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
-                    "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
-                    "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
-                    "incoterm_location": line.incoterm_location or "N/A",
-                    "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
-                    "carrier": line.picking_id.sale_id.carrier or "N/A",
-                })
-
-            payloads.append({
-                "header": {"user_id": "system", "user_key": "system", "warehouse_code": self.warehouse_id.name},
-                "body": {
-                    "receipt_list": [{
-                        "product_lines": product_lines,
-                        "pack_bench_number": self.pack_bench_id.name,
-                        "pack_bench_ip": self.pack_bench_id.printer_ip,
-                    }]
-                }
-            })
-
-        return payloads
+        product_weight = line.weight  # Default weight to 1 if not defined
+        product_line = {
+            "sku_code": line.product_id.default_code,
+            "name": line.product_id.name,
+            "quantity": line.quantity,
+            "remaining_quantity": line.remaining_quantity,
+            "weight": product_weight * line.quantity,  # Weight per product line
+            "picking_id": line.picking_id.name if line.picking_id else "",
+            "customer_name": line.picking_id.partner_id.name or "",
+            "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
+            "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
+            "site_code": line.site_code_id.name if line.site_code_id else "",
+            "receipt_number": line.picking_id.name,
+            "origin": line.picking_id.origin or "N/A",
+            "package_name": line.package_box_type_id.name,
+            "length": line.package_box_type_id.length or "NA",
+            "width": line.package_box_type_id.width or "NA",
+            "height": line.package_box_type_id.height or "NA",
+            "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
+            "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
+            "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
+            "incoterm_location": line.incoterm_location or "N/A",
+            "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
+            "carrier": line.picking_id.sale_id.carrier or "N/A",
+        }
+        payloads.append({
+            "header": {"user_id": "system", "user_key": "system", "warehouse_code": self.warehouse_id.name},
+            "body": {
+                "receipt_list": [{
+                    "product_lines": product_line,
+                    "pack_bench_number": self.pack_bench_id.name,
+                    "pack_bench_ip": self.pack_bench_id.printer_ip,
+                }]
+            }
+        })
+        # Convert the payload to JSON
+        json_payload = json.dumps(payloads, indent=4)
+        _logger.info(f"Sending payload to API: {json_payload}")
+        # api_url = self.determine_api_url(line.site_code_id.name)
+        is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
+        if self.site_code_id.name == "FC3":
+            api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/ot_orders"
+        elif self.site_code_id.name == "SHIPEROOALTONA":
+            api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/orders"
+        else:
+            raise ValidationError(_("Unknown warehouse. Cannot determine API endpoint."))
+        # Send the payload to the API
+        try:
+            response = requests.post(api_url, headers={'Content-Type': 'application/json'}, data=json_payload)
+            response.raise_for_status()
+            _logger.info(f"Payload successfully sent to {api_url}")
+        except requests.exceptions.RequestException as e:
+            _logger.error(f"Error sending payload: {str(e)}")
+            raise UserError(f"Error sending payload: {str(e)}")
 
 
     def send_payload_to_api(self, api_url, payload):
@@ -366,7 +464,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     default_code = fields.Char(related='product_id.default_code', string='SKU Code')
     available_quantity = fields.Float(string='Expected Quantity', compute='_compute_available_quantity', store=True)
     remaining_quantity = fields.Float(string='Remaining Quantity', compute='_compute_remaining_quantity', store=True)
-    quantity = fields.Float(string='Quantity', required=True)
+    quantity = fields.Float(string='Quantity', store=True)
     available_product_ids = fields.Many2many('product.product', string='Available Products',
                                              compute='_compute_available_products')
     picking_id = fields.Many2one('stock.picking', string='Picking Number', compute='_compute_picking_id', store=True)
@@ -377,7 +475,25 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     sale_order_id = fields.Many2one(related='picking_id.sale_id', string='Sale Order', store=True)
     incoterm_location = fields.Char(related='sale_order_id.packaging_source_type', string='Incoterm location')
     weight = fields.Float(string="Weight", help="If product weight is missing, enter weight here.", required=True)
+    line_added = fields.Boolean(string='line Added', default=False)
 
+    @api.onchange('product_id', 'package_box_type_id')
+    def _compute_add_line_boolean(self):
+        for line in self:
+            if line.product_id and line.package_box_type_id and line.weight:
+                try:
+                    # Attempt to prepare the payload only if all conditions are met
+                    payload = line.wizard_id.prepare_payload_for_individual_line(line)
+                    line.line_added = True
+                    _logger.info(f"Payload prepared successfully for line: {payload}")
+                except Exception as e:
+                    line.line_added = False
+                    _logger.error(f"Failed to prepare payload for line due to: {str(e)}")
+                    # Optionally, raise a UserError or ValidationError to inform the user if necessary
+                    # raise UserError(_("Failed to prepare payload: ") + str(e))
+            else:
+                line.line_added = False
+                _logger.debug("Product, package box type, or weight not properly set, skipping payload preparation.")
 
     @api.depends('wizard_id.picking_ids', 'product_id')
     def _compute_picking_id(self):
@@ -385,7 +501,8 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         Compute the picking number based on the product.
         """
         for line in self:
-            picking = line.wizard_id.picking_ids.filtered(lambda p: line.product_id in p.move_ids_without_package.mapped('product_id'))[:1]
+            picking = line.wizard_id.picking_ids.filtered(
+                lambda p: line.product_id in p.move_ids_without_package.mapped('product_id'))[:1]
             line.picking_id = picking.id if picking else False
 
     @api.depends('wizard_id.picking_ids')
@@ -396,9 +513,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         for line in self:
             if line.wizard_id and line.wizard_id.picking_ids:
                 # Fetch products linked to the picking and PC container code
-                product_ids = line.wizard_id.picking_ids.mapped('move_ids_without_package').filtered(
-                    lambda m: m.pc_container_code == line.wizard_id.pc_container_code_id.name
-                ).mapped('product_id.id')
+                product_ids = line.wizard_id.picking_ids.mapped('move_ids_without_package').filtered(lambda m: m.pc_container_code == line.wizard_id.pc_container_code_id.name).mapped('product_id.id')
 
                 _logger.info(
                     f"Filtered product IDs for PC barcode {line.wizard_id.pc_container_code_id.name}: {product_ids}")
@@ -452,9 +567,10 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         """
         if self.product_id:
             self.quantity = 1  # Set default quantity per scan
-
+            if not self.wizard_id.pack_bench_id:
+                raise ValidationError("Please select a Pack Bench first before proceeding with packing.")
             if not self.product_id.weight or self.product_id.weight <= 0.0:
-                 return {
+                return {
                     'warning': {
                         'title': _("Missing Weight"),
                         'message': _("The selected product '%s' does not have a weight. "
@@ -480,6 +596,13 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                     self.product_id.weight = self.weight  # Update the product record
                     _logger.info(f"Updated weight for product {self.product_id.name} to {self.weight}")
             elif self.weight == 0:
+                return {
+                    'warning': {
+                        'title': _("Invalid Weight"),
+                        'message': _("Weight must be greater than 0. Please enter a valid weight."),
+                    }
+                }
+            elif self.weight == 0 and self.package_box_type_id:
                 return {
                     'warning': {
                         'title': _("Invalid Weight"),
