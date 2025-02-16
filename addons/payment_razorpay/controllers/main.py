@@ -69,6 +69,9 @@ class RazorpayController(http.Controller):
 
         # Compare the received signature with the expected signature.
         expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(notification_data)
-        if not hmac.compare_digest(received_signature, expected_signature):
+        if (
+            expected_signature is None
+            or not hmac.compare_digest(received_signature, expected_signature)
+        ):
             _logger.warning("Received notification with invalid signature.")
             raise Forbidden()
