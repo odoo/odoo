@@ -40,6 +40,7 @@ from passlib.context import CryptContext
 from typing import Optional, Iterable
 from unittest.mock import patch, _patch, Mock
 from xmlrpc import client as xmlrpclib
+from uuid import uuid4
 
 try:
     from concurrent.futures import InvalidStateError
@@ -1926,6 +1927,17 @@ class HttpCase(TransactionCase):
             self.parse_http_location(truth_url).url,
             message,
         )
+
+    def build_rpc_payload(self, params=None):
+        """
+        Helper to properly build jsonrpc payload
+        """
+        return {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "id": str(uuid4()),
+            "params": params or {},
+        }
 
     def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
         if url.startswith('/'):
