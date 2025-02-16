@@ -5,9 +5,9 @@
     <div t-if="props.options.length"
          class="options-container" t-ref="root" t-att-data-container-title="title"
          t-on-mouseenter="onMouseEnter" t-on-mouseleave="onMouseLeave">
-        <div class="we-bg-darker p-1">
+        <div class="we-bg-darker p-2">
                 <!-- TODO change the structure so the clickable surface is bigger -->
-            <span t-out="title" role="button" t-on-click="selectElement"/>
+            <span class="ps-2 text-white" t-out="title" role="button" t-on-click="selectElement"/>
                 <!-- TODO CSS + remove temporary BS classes -->
             <div class="float-end">
                 <div class="me-3 d-inline">
@@ -39,7 +39,7 @@
                 </t>
             </div>
         </div>
-        <div class="we-bg-options-container" t-ref="content">
+        <div class="we-bg-options-container p-1 pb-3" t-ref="content">
             <t t-foreach="props.options" t-as="option" t-key="option.id">
                 <BuilderContext applyTo="option.applyTo">
                     <t t-if="option.OptionComponent" t-component="option.OptionComponent" t-props="option.props || {}"></t>

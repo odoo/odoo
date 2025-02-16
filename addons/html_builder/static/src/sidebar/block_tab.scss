@@ -1,6 +1,24 @@
 .o-snippets-menu {
+
+    .o-section {
+        padding-left: 6px;
+    }
+    .o-block-container {
+        > .row {
+            margin-right: 2px;
+        }
+    }
+    .o-draggable-block {
+        padding: 1px;
+    }
     .block {
         background-color: rgba(62, 62, 70, 0.9);
+        color: $o-we-color;
+
+        &:hover {
+            background: $o-we-dropdown-item-bg-hover;
+            color: $o-we-dropdown-item-hover-color;
+        }
 
         &.to_install {
             .img-container {

@@ -1,11 +1,11 @@
 .o-snippets-menu {
-    background-color: #191922;
+    background-color: $o-we-bg-darker;
     color: #d9d9d9;
     width: 288px;
 }
 
 .o-snippets-top-actions {
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid $o-we-bg-lighter;
     height: 46px;
 
     .btn {
@@ -37,9 +37,20 @@
 }
 
 .o-snippets-tabs {
+    font-size: 12px;
+    line-height: 24px;
+
+    > button {
+        color: $o-we-color;
+    }
     .active {
         box-shadow: inset 0 -2px 0 #01bad2;
     }
+}
+
+.o-tab-content {
+    background-color: $o-we-bg-dark;
+    font-size: 12px;
 }
 
 .we-bg-darker {
