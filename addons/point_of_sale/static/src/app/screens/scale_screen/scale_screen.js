@@ -3,6 +3,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 
 export class ScaleScreen extends Component {
     static template = "point_of_sale.ScaleScreen";
@@ -52,6 +53,10 @@ export class ScaleScreen extends Component {
             Math.ceil(Math.log(1.0 / this.props.uomRounding) / Math.log(10))
         );
         return weightRound - parseFloat(this.state.tare);
+    }
+
+    get productName() {
+        return this.props.product?.display_name || _t("Unnamed Product");
     }
 
     get productWeightString() {

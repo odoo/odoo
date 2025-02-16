@@ -173,8 +173,9 @@
                                 class="form-select"
                                 disabled="true"
                         >
+                            <t t-set="default_country">Belgium</t>
                             <option t-att-value="customer.country_id.code or 'BE'"
-                                    t-out="customer.country_id.name or 'Belgium'"
+                                    t-out="customer.country_id.name or default_country"
                             />
                         </select>
                     </div>
