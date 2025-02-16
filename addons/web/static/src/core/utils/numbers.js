@@ -149,7 +149,8 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
     // determine if we should keep the decimals (we don't want to display 1,020.02k for 1020020)
     const decimalsToKeep = number >= 1000 ? 0 : decimals;
     number = sign * number;
-    const [integerPart, decimalPart] = number.toFixed(decimalsToKeep).split(".");
+    let number2 = (number * 10 ** decimalsToKeep).toFixed(0) / (10 ** decimalsToKeep);
+    const [integerPart, decimalPart] = number2.toFixed(decimalsToKeep).split(".");
     const int = insertThousandsSep(integerPart, thousandsSep, grouping);
     if (!decimalPart) {
         return int + symbol;
@@ -171,7 +172,7 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
  * @param {string} [options.thousandsSep] thousands separator to insert
  * @param {number[]} [options.grouping] array of relative offsets at which to
  *   insert `thousandsSep`. See `insertThousandsSep` method.
- * @param {number} [options.decimals] used for humanNumber formmatter
+ * @param {number} [options.decimals] used for humanNumber formatter
  * @param {boolean} [options.trailingZeros=true] if false, the decimal part
  *   won't contain unnecessary trailing zeros.
  * @returns {string}
@@ -189,7 +190,8 @@ export function formatFloat(value, options = {}) {
     } else {
         precision = 2;
     }
-    const formatted = value.toFixed(precision).split(".");
+    let value2 = (value * 10 ** precision).toFixed(0) / (10 ** precision);
+    const formatted = value2.toFixed(precision).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (options.trailingZeros === false && formatted[1]) {
         formatted[1] = formatted[1].replace(/0+$/, "");
