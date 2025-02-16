@@ -31,6 +31,17 @@ class ProductTemplate(models.Model):
 
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
 
+    @api.depends('purchase_ok')
+    def _compute_route_ids(self):
+        super()._compute_route_ids()
+        for template in self:
+            if 'purchase_ok' in self.env.context:
+                buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+                if template.purchase_ok and buy_route:
+                    template.write({'route_ids': [(4, buy_route.id)]})
+                else:
+                    template.write({'route_ids': [(3, buy_route.id)]})
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'

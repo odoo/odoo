@@ -31,9 +31,8 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         product_form.uom_id = cls.uom_unit
         product_form.is_storable = True
         product_form.route_ids.clear()
-        product_form.route_ids.add(cls.warehouse.manufacture_pull_id.route_id)
-        product_form.route_ids.add(cls.warehouse.mto_pull_id.route_id)
         cls.finished_product = product_form.save()
+        cls.finished_product.route_ids = [Command.link(cls.warehouse.manufacture_pull_id.route_id.id), Command.link(cls.warehouse.mto_pull_id.route_id.id)]
 
         # Create raw product for manufactured product
         product_form = Form(cls.env['product.product'])
@@ -436,7 +435,8 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         with Form(self.raw_product) as p:
             p.route_ids.clear()
-            p.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
+            self.raw_product = p.save()
+        self.raw_product.route_ids = [Command.link(self.warehouse.manufacture_pull_id.route_id.id)]
 
         # Create an additional BoM for component
         product_form = Form(self.env['product.product'])

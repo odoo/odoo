@@ -76,6 +76,21 @@
             </field>
         </record>
 
+        <record id="product_template_form_view_manufacturing_type" model="ir.ui.view">
+            <field name="name">product.template.form.view.manufacturing.type</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="priority" eval="0"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options']" position="inside">
+                    <span class="d-inline-flex" invisible="type != 'consu'">
+                        <field name="manufacturing_ok" context="{'manufacturing_ok': manufacturing_ok}"/>
+                        <label for="manufacturing_ok"/>
+                    </span>
+                </xpath>
+            </field>
+        </record>
+
         <menuitem id="menu_mrp_product_form"
             name="Products"
             action="product_template_action"
@@ -101,7 +116,7 @@
                 <button name="action_open_documents" position="before">
                     <button class="oe_stat_button" name="%(template_open_bom)d" type="action"
                         groups="mrp.group_mrp_user"
-                        invisible="type != 'consu'" icon="fa-flask">
+                        invisible="type != 'consu' or not manufacturing_ok" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                 </button>
@@ -134,7 +149,7 @@
                 <xpath expr="//button[@name='action_open_product_lot']" position="after">
                     <button class="oe_stat_button" name="action_view_bom" type="object"
                         groups="mrp.group_mrp_user"
-                        invisible="type != 'consu'" icon="fa-flask">
+                        invisible="type != 'consu' or not manufacturing_ok" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_used_in_bom" type="object"

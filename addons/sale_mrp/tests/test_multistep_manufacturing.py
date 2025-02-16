@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo import Command
 
 
 class TestMultistepManufacturing(TestMrpCommon):
@@ -34,9 +35,8 @@ class TestMultistepManufacturing(TestMrpCommon):
         product_form.name = 'Stick'
         product_form.uom_id = cls.uom_unit
         product_form.route_ids.clear()
-        product_form.route_ids.add(cls.warehouse.manufacture_pull_id.route_id)
-        product_form.route_ids.add(cls.warehouse.mto_pull_id.route_id)
         cls.product_manu = product_form.save()
+        cls.product_manu.route_ids = [Command.link(cls.warehouse.manufacture_pull_id.route_id.id), Command.link(cls.warehouse.mto_pull_id.route_id.id)]
 
         # Create raw product for manufactured product
         product_form = Form(cls.env['product.product'])
@@ -113,8 +113,8 @@ class TestMultistepManufacturing(TestMrpCommon):
         # Add routes for manufacturing and make to order to the raw material product
         with Form(self.product_raw) as p1:
             p1.route_ids.clear()
-            p1.route_ids.add(self.warehouse_1.manufacture_pull_id.route_id)
-            p1.route_ids.add(self.warehouse_1.mto_pull_id.route_id)
+            self.product_raw = p1.save()
+            self.product_raw.route_ids = [Command.link(self.warehouse_1.manufacture_pull_id.route_id.id), Command.link(self.warehouse_1.mto_pull_id.route_id.id)]
 
         # New BoM for raw material product, it will generate another Production order i.e. child Production order
         bom_product_form = Form(self.env['mrp.bom'])

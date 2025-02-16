@@ -24,3 +24,18 @@ class ProductProduct(models.Model):
         if params and params.get('subcontractor_ids'):
             return super()._prepare_sellers(params=params).filtered(lambda s: s.partner_id in params.get('subcontractor_ids'))
         return super()._prepare_sellers(params=params)
+
+
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+
+    @api.depends('bom_line_ids', 'bom_line_ids.bom_id.type')
+    def _compute_route_ids(self):
+        super()._compute_route_ids()
+        for template in self:
+            resupply_subcontractor_route = self.env.ref('mrp_subcontracting.route_resupply_subcontractor_mto')
+            has_subcontract_bom = any(bom_line.bom_id.type == 'subcontract' for bom_line in template.bom_line_ids)
+            if template.qty_available and has_subcontract_bom and resupply_subcontractor_route:
+                template.write({'route_ids': [(4, resupply_subcontractor_route.id)]})
+            else:
+                template.write({'route_ids': [(3, resupply_subcontractor_route.id)]})

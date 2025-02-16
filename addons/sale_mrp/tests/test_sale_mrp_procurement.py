@@ -43,9 +43,8 @@ class TestSaleMrpProcurement(TransactionCase):
         product.is_storable = True
         product.uom_id = uom_unit
         product.route_ids.clear()
-        product.route_ids.add(warehouse0.manufacture_pull_id.route_id)
-        product.route_ids.add(warehouse0.mto_pull_id.route_id)
         product_template_slidermobile0 = product.save()
+        product_template_slidermobile0.route_ids = [Command.link(warehouse0.manufacture_pull_id.route_id.id), Command.link(warehouse0.mto_pull_id.route_id.id)]
 
         product_template_slidermobile0.standard_price = 189
 
@@ -111,18 +110,16 @@ class TestSaleMrpProcurement(TransactionCase):
         product_form.uom_id = self.uom_unit
         product_form.is_storable = True
         product_form.route_ids.clear()
-        product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
-        product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
         self.finished_product = product_form.save()
+        self.finished_product.route_ids = [Command.link(self.warehouse.manufacture_pull_id.route_id.id), Command.link(self.warehouse.mto_pull_id.route_id.id)]
 
         # Create manifactured product which uses another manifactured
         product_form = Form(self.env['product.product'])
         product_form.name = 'Arrow'
         product_form.is_storable = True
         product_form.route_ids.clear()
-        product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
-        product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
         self.complex_product = product_form.save()
+        self.complex_product.route_ids = [Command.link(self.warehouse.manufacture_pull_id.route_id.id), Command.link(self.warehouse.mto_pull_id.route_id.id)]
 
         ## Create raw product for manufactured product
         product_form = Form(self.env['product.product'])

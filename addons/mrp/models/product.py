@@ -31,6 +31,18 @@ class ProductTemplate(models.Model):
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit',
         compute='_compute_mrp_product_qty', compute_sudo=False)
     is_kits = fields.Boolean(compute='_compute_is_kits', search='_search_is_kits')
+    manufacturing_ok = fields.Boolean('Manufacturing')
+
+    @api.depends('manufacturing_ok')
+    def _compute_route_ids(self):
+        super()._compute_route_ids()
+        for template in self:
+            if 'manufacturing_ok' in self.env.context:
+                manufacturing_route = self.env.ref('mrp.route_warehouse0_manufacture')
+                if template.manufacturing_ok and manufacturing_route:
+                    template.write({'route_ids': [(4, manufacturing_route.id)]})
+                else:
+                    template.write({'route_ids': [(3, manufacturing_route.id)]})
 
     def _compute_bom_count(self):
         for product in self:

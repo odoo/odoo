@@ -69,13 +69,13 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     tooltipPosition: 'top',
     run: "click",
 }, {
-    trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Manufacture")',
-    content: _t('Check Manufacture'),
+    trigger: '.o_field_widget[name=manufacturing_ok] input',
+    content: _t('Set "manufacturing_ok" to True so that the Manufacturing route is enabled.'),
     tooltipPosition: 'right',
     run: "click",
 }, {
-    trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Buy")',
-    content: _t('Uncheck Buy'),
+    trigger: '.o_field_widget[name=purchase_ok] input',
+    content: _t('Set "purchase_ok" to False so that the Buy route is disabled.'),
     tooltipPosition: 'right',
     run: "click",
 }, {
