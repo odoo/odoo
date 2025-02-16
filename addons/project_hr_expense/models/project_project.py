@@ -119,7 +119,8 @@ class Project(models.Model):
                 revenues = profitability_data['revenues']
                 revenues['data'].append(expenses_data['revenues'])
                 revenues['total'] = {k: revenues['total'][k] + expenses_data['revenues'][k] for k in ['invoiced', 'to_invoice']}
-            costs = profitability_data['costs']
-            costs['data'].append(expenses_data['costs'])
-            costs['total'] = {k: costs['total'][k] + expenses_data['costs'][k] for k in ['billed', 'to_bill']}
+            if 'costs' in expenses_data:
+                costs = profitability_data['costs']
+                costs['data'].append(expenses_data['costs'])
+                costs['total'] = {k: costs['total'][k] + expenses_data['costs'][k] for k in ['billed', 'to_bill']}
         return profitability_data

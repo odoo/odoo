@@ -16,12 +16,32 @@ class Project(models.Model):
             groupby=['sale_order_id', 'product_id', 'currency_id'],
             aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],
         )
-        if not expenses_read_group:
-            return {}
         expenses_per_so_id = {}
         expense_ids = []
         dict_amount_per_currency = defaultdict(lambda: 0.0)
-        can_see_expense = with_action and self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
+        can_see_expense = with_action and self.env.user.has_group('hr_expense.group_hr_expense_team_approver') and expenses_read_group
+
+        from_expense = True
+        if not expenses_read_group:
+            from_expense = False
+            expenses_read_group = [
+                (
+                    sol.order_id,
+                    sol.product_id,
+                    sol.currency_id,
+                    [sol.id],
+                    sol.price_subtotal
+                )
+                for sol in self.env['sale.order.line'].sudo().search([
+                    ('order_id', '=', self.sale_order_id.id),
+                    ('is_expense', '=', True),
+                    ('state', '=', 'sale'),
+                ])
+        ]
+
+        if not expenses_read_group:
+            return {}
+
         for sale_order, product, currency, ids, untaxed_amount_currency_sum in expenses_read_group:
             expenses_per_so_id.setdefault(sale_order.id, {})[product.id] = ids
             if can_see_expense:
@@ -60,14 +80,14 @@ class Project(models.Model):
 
         section_id = 'expenses'
         sequence = self._get_profitability_sequence_per_invoice_type()[section_id]
-        expense_data = {
-            'costs': {
+        expense_data = {}
+        if from_expense:
+            expense_data['costs'] = {
                 'id': section_id,
                 'sequence': sequence,
                 'billed': -amount_billed,
                 'to_bill': 0.0,
-            },
-        }
+            }
         if reinvoice_expense_ids:
             expense_data['revenues'] = {
                 'id': section_id,

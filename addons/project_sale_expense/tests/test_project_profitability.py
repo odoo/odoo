@@ -327,3 +327,54 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
                 'total': {'invoiced': expense_profitability['revenues']['invoiced'] + revenue_items_from_sol['total']['invoiced'], 'to_invoice': expense_profitability['revenues']['to_invoice'] + revenue_items_from_sol['total']['to_invoice']},
             },
         )
+
+    def test_expense_from_PO_is_in_profitability(self):
+        product = self.env['product.product'].create([{
+            'name': 'Test Product',
+            'standard_price': 30,
+            'list_price': 90,
+            'type': 'service',
+            'service_tracking': 'task_in_project',
+            'expense_policy': 'sales_price',
+        }])
+        sale_order = self.env['sale.order'].create([{
+            'partner_id': self.partner.id,
+        }])
+
+        self.env['sale.order.line'].create([{
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order.id,
+        }])
+        sale_order.action_confirm()
+        project = sale_order.order_line.project_id
+    
+        # simulate a line expensed from a PO, (`is_expense` is True but no `expense_id` is set)
+        self.env['sale.order.line'].create({
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order.id,
+            'is_expense': True,
+        })
+
+        sale_items = project._get_sale_order_items()
+        domain = [
+            ('order_id', 'in', sale_items.order_id.ids),
+            '|',
+                '|',
+                    ('project_id', 'in', project.ids),
+                    ('project_id', '=', False),
+                ('id', 'in', sale_items.ids),
+        ]
+
+        revenue_items_from_sol = project._get_revenues_items_from_sol(domain, False)
+        expense_profitability = project._get_expenses_profitability_items(False)
+        project_profitability = project._get_profitability_items(False)
+        # sol expensed from PO should be included in the revenues
+        self.assertDictEqual(
+            project_profitability.get('revenues', {}),
+            {
+                'data': [expense_profitability['revenues'], revenue_items_from_sol['data'][0]],
+                'total': {'invoiced': expense_profitability['revenues']['invoiced'] + revenue_items_from_sol['total']['invoiced'], 'to_invoice': expense_profitability['revenues']['to_invoice'] + revenue_items_from_sol['total']['to_invoice']},
+            },
+        )
