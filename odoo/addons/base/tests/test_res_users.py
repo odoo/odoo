@@ -209,7 +209,8 @@ class TestUsers(UsersCommonCase):
             'model_id': self.env.ref('base.model_res_partner').id,
         })
 
-        self.env['res.users.deletion']._gc_portal_users()
+        with self.enter_registry_test_mode():
+            self.env.ref('base.ir_cron_res_users_deletion').method_direct_trigger()
 
         self.assertFalse(portal_user.exists(), 'Should have removed the user')
         self.assertFalse(portal_partner.exists(), 'Should have removed the partner')

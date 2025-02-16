@@ -348,11 +348,7 @@ class IrCron(models.Model):
         server action is not executed and the cron is considered
         ``'failed'``.
 
-        The server action can use the progress API via the method
-        :meth:`_notify_progress` to report processing progress, i.e. how
-        many records are done and how many records are remaining to
-        process.
-
+        The server action can use the progress API via the environment.
         Those progress notifications are used to determine the job's
         ``CompletionStatus`` and to determine the next time the cron
         will be executed:
@@ -773,6 +769,7 @@ class IrCron(models.Model):
         :param int remaining: the number of tasks left to process
         :param bool deactivate: whether the cron will be deactivated
         """
+        # TODO deprecate in favor of the other method
         if not (progress_id := self.env.context.get('ir_cron_progress_id')):
             return
         if done < 0 or remaining < 0:
@@ -784,6 +781,30 @@ class IrCron(models.Model):
             'done': done,
             'deactivate': deactivate,
         })
+
+    @api.model
+    @api.private  # XXX this instead of putting it on environment? (but no auto-complete)
+    def _commit_progress(self, processed: int = 0, *, remaining: int | None = None, deactivate: bool = False) -> float:
+        ctx = self.env.context
+        progress = self.env['ir.cron.progress'].sudo().browse(ctx.get('ir_cron_progress_id'))
+        if not progress:
+            # not called during a CRON, ignore
+            return float('inf')
+        assert processed >= 0
+        assert (remaining or 0) >= 0
+        assert progress.cron_id.id == ctx.get('cron_id'), "Progress on the wrong cron_id"
+        if remaining is None:
+            remaining = max(progress.remaining - processed, 0)
+        done = progress.done + processed
+        vals = {
+            'remaining': remaining,
+            'done': done,
+        }
+        if deactivate:
+            vals['deactivate'] = True
+        progress.write(vals)
+        self.env.cr.commit()
+        return max(ctx.get('cron_end_time', float('inf')) - time.monotonic(), 0)
 
 
 class IrCronTrigger(models.Model):

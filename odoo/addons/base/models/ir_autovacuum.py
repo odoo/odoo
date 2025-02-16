@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import collections
 import inspect
 import logging
-import warnings
-import traceback
+import random
+import time
 
 from odoo import api, models
 from odoo.exceptions import AccessDenied
@@ -32,16 +32,34 @@ class IrAutovacuum(models.AbstractModel):
         if not self.env.is_admin():
             raise AccessDenied()
 
-        for model in self.env.values():
-            cls = self.env.registry[model._name]
-            for attr, func in inspect.getmembers(cls, is_autovacuum):
-                _logger.debug('Calling %s.%s()', model, attr)
-                try:
-                    func(model)
-                    self.env.cr.commit()
-                except Exception:
-                    _logger.exception("Failed %s.%s()", model, attr)
-                    self.env.cr.rollback()
+        methods = collections.deque(
+            (model, attr, func)
+            for model in self.env.values()
+            for attr, func in inspect.getmembers(model.__class__, is_autovacuum)
+        )
+        # shuffle methods at each run, prevents one blocking method from running
+        # the following ones
+        random.shuffle(methods)
+        while methods:
+            self.env.cron_commit_progress(remaining=len(methods))
+            model, attr, func = methods.pop()
+            _logger.debug('Calling %s.%s()', model, attr)
+            start_time = time.monotonic()
+            try:
+                result = func(model)
+                if isinstance(result, tuple) and len(result) == 2:
+                    func_done, func_remaining = result
+                    _logger.debug(
+                        '  vacuumed %r records, remaining %r',
+                        func_done, func_remaining,
+                    )
+                    if func_remaining:
+                        methods.appendleft((model, attr, func))
+                self.env.cron_commit_progress(1)
+            except Exception:  # noqa: BLE001
+                self.env.cr.rollback()
+                _logger.debug(" took %.2fs", time.monotonic() - start_time)
+                _logger.exception("Failed %s.%s()", model, attr)
 
     @api.autovacuum
     def _gc_orm_signaling(self):

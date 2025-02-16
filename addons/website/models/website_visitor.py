@@ -339,21 +339,13 @@ class WebsiteVisitor(models.Model):
         Visitors were previously archived but we came to the conclusion that
         archived visitors have very little value and bloat the database for no
         reason. """
-        auto_commit = not modules.module.current_test
-        visitor_model = self.env['website.visitor']
-        visitor_ids = visitor_model.sudo().search(self._inactive_visitors_domain(), limit=limit).ids
-        visitor_done = 0
-        for inactive_visitors_batch in split_every(
-            batch_size,
-            visitor_ids,
-            visitor_model.browse,
-        ):
-            inactive_visitors_batch.unlink()
-            visitor_done += len(inactive_visitors_batch)
-            if auto_commit:
-                self.env['ir.cron']._notify_progress(done=visitor_done, remaining=len(visitor_ids) - visitor_done)
-                self.env.cr.commit()
-        self.env['ir.cron']._notify_progress(done=visitor_done, remaining=len(visitor_ids) - visitor_done)
+        domain = self._inactive_visitors_domain()
+        visitors = self.env['website.visitor'].sudo().search(domain, limit=batch_size)
+        visitors.unlink()
+        self.env.cron_commit_progress(
+            processed=len(visitors),
+            remaining=0 if len(visitors) < batch_size else visitors.search_count(domain),
+        )
 
     def _inactive_visitors_domain(self):
         """ This method defines the domain of visitors that can be cleaned. By
