@@ -40,17 +40,18 @@
 # Martin Trigaux, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Richard Mouthier (RMO) <rmo@odoo.com>, 2024
-# Jessica Jakara, 2025
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Jessica Jakara, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 14:23+0000\n"
+"POT-Creation-Date: 2025-02-10 16:32+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3555,6 +3556,19 @@ msgstr ""
 "Mahdollistaa verolaskennan ja EDI:n sähköisen kaupankäynnin käyttäjille.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_br_edi_stock
+msgid ""
+"\n"
+"Brazilian Accounting EDI for stock\n"
+"==================================\n"
+"Adds delivery-related information to the NF-e.\n"
+msgstr ""
+"\n"
+"Brasilialainen kirjanpito EDI (organisaatioiden välinen tiedonsiirto) varastoa varten\n"
+"==================================\n"
+"Lisää toimitusta koskevat tiedot NF-e:hen.\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
 msgid ""
 "\n"
@@ -4646,6 +4660,20 @@ msgstr ""
 "Lisäksi se merkitsee laskun maksatustilaan \"luovutetuksi\".\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock_batch
+msgid ""
+"\n"
+"E-Transport implementation for Batch Pickings in Romania\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock
+msgid ""
+"\n"
+"E-Transport implementation for Romania\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
 msgid ""
 "\n"
@@ -5187,6 +5215,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_post_wizard
+#: model:ir.module.module,description:base.module_l10n_nl_reports_vat_pay_wizard
 msgid ""
 "\n"
 "Enable the VAT wizard when posting a tax return journal entry\n"
@@ -8696,6 +8725,27 @@ msgstr ""
 "=============================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_envia
+msgid ""
+"\n"
+"Send your shippings through Envia and track them online\n"
+"=======================================================\n"
+"\n"
+"Envia is a provider of integrated shipping and tracking solutions for growing e-commerce businesses.\n"
+"Seamlessly integrating with a large range of couriers and platforms,\n"
+"you can streamline every step of your fulfilment process,\n"
+"reduce handling time and improve customer experience.\n"
+msgstr ""
+"\n"
+"Lähetä toimituksesi Envian kautta ja seuraa niitä verkossa\n"
+"=======================================================\n"
+"\n"
+"Envia tarjoaa integroituja lähetys- ja seurantaratkaisuja kasvaville verkkossa toimiville yrityksille.\n"
+"Se integroituu saumattomasti eri kuriiripalveluiden ja alustojen kanssa\n"
+"ja voit virtaviivaistaa jokaisen toimitusprosessisi vaiheen\n"
+"vähentäen käsittelyaikaa ja parantaen asiakaskokemusta.\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_delivery_starshipit
 msgid ""
 "\n"
@@ -10525,6 +10575,27 @@ msgstr ""
 "\n"
 "Tämä moduuli lisää eräsiirtovaihtoehdon varastonhallintaan\n"
 "==================================================================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_cz_reports_2025
+msgid ""
+"\n"
+"This module adds the following reports for the Czech Republic:\n"
+"==============================================================\n"
+"1. VAT Control Statement (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
+msgstr ""
+"\n"
+"Tämä moduuli lisää seuraavat raportit saataville Tšekkeihin:\n"
+"==============================================================\n"
+"1. ALV-valvontailmoitus (luonti ja XML-vienti). Löydät lisätietoja osoitteesta: https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES -raportti (luonti ja XML-vienti). Löydät lisätietoja osoitteesta:  https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Veroraportti (XML-vienti). Löydät lisätietoja osoitteesta:  https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
@@ -19046,6 +19117,11 @@ msgid "Brazilian Accounting EDI for eCommerce"
 msgstr "Brasilialainen kirjanpito EDI sähköistä kaupankäyntiä varten"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_stock
+msgid "Brazilian Accounting EDI for stock"
+msgstr "Brasilialainen kirjanpito EDI varastoa varten"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
 msgid "Bridge Sign functionalities with the Rental application"
 msgstr "Yhdistä Sign -toiminnot Vuokrasovelluksen kanssa"
@@ -21767,6 +21843,11 @@ msgid "Czech Republic"
 msgstr "Tšekki"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cz_reports_2025
+msgid "Czech Republic - Accounting Reports 2025"
+msgstr "Tšekki - Kirjanpitoraportti 2025"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz_reports
 msgid "Czech Republic- Accounting Reports"
 msgstr "Tšekin tasavalta - Kirjanpitoraportit"
@@ -23623,6 +23704,11 @@ msgstr "Viihde"
 #: model:ir.model.fields,field_description:base.field_ir_profile__entry_count
 msgid "Entry count"
 msgstr "Lukumäärä"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_envia
+msgid "Envia Shipping"
+msgstr "Envia-lähetys"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
@@ -25793,6 +25879,16 @@ msgstr "Gantt-näkymä läsnäoloa varten"
 #: model:ir.module.module,summary:base.module_hr_holidays_gantt
 msgid "Gantt view for Time Off Dashboard"
 msgstr "Gantt-näkymä vapaapäivien kojelaudassa"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato
+msgid "Gelato"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato_stock
+msgid "Gelato/Stock bridge"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -31756,6 +31852,11 @@ msgid "Netherlands - Accounting Reports"
 msgstr "Alankomaat - Kirjanpitoraportit"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_vat_pay_wizard
+msgid "Netherlands - Accounting Reports (post wizard)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_hr_payroll
 msgid "Netherlands - Payroll"
 msgstr "Alankomaat - Palkanlaskenta"
@@ -36014,6 +36115,11 @@ msgid "Pivot"
 msgstr "Taulukko"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_gelato
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Plan your resources on project tasks"
 msgstr "Suunnittele resurssit projektin tehtäviin"
@@ -38043,6 +38149,16 @@ msgid "Romania - Accounting Reports"
 msgstr "Romania - Kirjanpitoraportit"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
+msgid "Romania - E-Transport"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock_batch
+msgid "Romania - E-Transport Batch Pickings"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi
 msgid "Romania - E-invoicing"
 msgstr "Romania - Sähköinen laskutus"
@@ -39190,12 +39306,9 @@ msgid "Send your shippings through UPS and track them online"
 msgstr "Lähetä lähetyksesi UPSin kautta ja seuraa niitä verkossa"
 
 #. module: base
-#: model:ir.module.module,description:base.module_delivery_usps
-msgid ""
-"This is the legacy integration with USPS. Please install the new \"United "
-"States Postal Service (USPS) Shipping\" module and uninstall this one as "
-"soon as possible."
-msgstr ""
+#: model:ir.module.module,description:base.module_delivery_usps_rest
+msgid "Send your shippings through USPS and track them online"
+msgstr "Lähetä lähetyksesi USPS:n kautta ja seuraa niitä verkossa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -42322,6 +42435,17 @@ msgstr ""
 "lakkaa toimimasta vuonna 2024."
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_usps
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
+"Tämä on vanhanmallinen integraatio USPS:n kanssa. Asenna uusi \"United "
+"States Postal Service (USPS) Shipping\" -moduuli ja poista tämä "
+"mahdollisimman pian."
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_no
 msgid ""
 "This is the module to manage the accounting chart for Norway in Odoo.\n"
@@ -43776,9 +43900,14 @@ msgid "United States - Payroll with Accounting"
 msgstr "Yhdysvallat - Palkanlaskenta ja kirjanpito"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_usps_rest
+msgid "United States Postal Service (USPS) Shipping"
+msgstr "United States Postal Service (USPS) Toimitukset"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
 msgid "United States Postal Service (USPS) Shipping (Legacy)"
-msgstr ""
+msgstr "Yhdysvaltain postipalvelu (USPS) Toimitus (Legacy)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -46154,6 +46283,11 @@ msgstr "verkkokauppa tilaus"
 #: model:ir.module.module,summary:base.module_website_appointment_sale
 msgid "eCommerce on appointments"
 msgstr "sähköinen kaupankäynti tapaamisissa"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_gelato
+msgid "eCommerce/Gelato bridge"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning
