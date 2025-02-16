@@ -116,7 +116,7 @@ class ResourceCalendar(models.Model):
             attendances = calendar._get_global_attendances()
             calendar.hours_per_day = calendar._get_hours_per_day(attendances)
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'flexible_hours')
     def _compute_attendance_ids(self):
         for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id and c.company_id):
             company_calendar = calendar.company_id.resource_calendar_id
@@ -126,6 +126,11 @@ class ResourceCalendar(models.Model):
                 'attendance_ids': [(5, 0, 0)] + [
                     (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids if not attendance.resource_id]
             })
+        for calendar in self:
+            if calendar.flexible_hours:
+                calendar.update({'attendance_ids': [(5, 0, 0)]})
+            elif not calendar.attendance_ids:
+                calendar.update({'attendance_ids': calendar.default_get(['attendance_ids'])['attendance_ids']})
 
     @api.depends('company_id')
     def _compute_global_leave_ids(self):
@@ -289,6 +294,22 @@ class ResourceCalendar(models.Model):
         else:
             resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
+        # attendances = self.env['resource.calendar.attendance']
+        # if self.flexible_hours:
+        #     attendance_data = [
+        #         {
+        #             'name': f'24/7 - {day}',
+        #             'dayofweek': str(day),
+        #             'hour_from': 0.0,
+        #             'hour_to': 24.0,
+        #             'day_period': 'morning',
+        #             'calendar_id': self.id,
+        #         }
+        #         for day in range(7)
+        #     ]
+        #     for data in attendance_data:
+        #         attendances |= self.env['resource.calendar.attendance'].new(data)
+        # else:
         domain = domain if domain is not None else []
         domain = expression.AND([domain, [
             ('calendar_id', '=', self.id),
