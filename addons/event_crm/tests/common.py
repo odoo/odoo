@@ -14,6 +14,8 @@ class EventCrmCase(TestCrmCommon, EventCase):
     def setUpClass(cls):
         super(EventCrmCase, cls).setUpClass()
 
+    @classmethod
+    def setUpCommonData(cls):
         # avoid clash with existing rules
         cls.env['event.lead.rule'].search([]).write({'active': False})
 
@@ -131,6 +133,8 @@ class TestEventCrmCommon(EventCrmCase):
     def setUpClass(cls):
         super(TestEventCrmCommon, cls).setUpClass()
 
+    @classmethod
+    def setUpCommonData(cls):
         cls.event_0 = cls.env['event.event'].create({
             'name': 'TestEvent',
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),

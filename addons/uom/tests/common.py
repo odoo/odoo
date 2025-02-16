@@ -10,6 +10,8 @@ class UomCommon(BaseCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+    @classmethod
+    def setUpCommonData(cls):
         cls.uom_gram = cls.quick_ref('uom.product_uom_gram')
         cls.uom_kgm = cls.quick_ref('uom.product_uom_kgm')
         cls.uom_ton = cls.quick_ref('uom.product_uom_ton')

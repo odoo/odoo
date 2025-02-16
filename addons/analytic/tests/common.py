@@ -7,6 +7,8 @@ class AnalyticCommon(BaseCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+    @classmethod
+    def setUpCommonData(cls):
         cls.analytic_plan_offset = len(cls.env['account.analytic.plan'].get_relevant_plans())
         cls.analytic_plan_1, cls.analytic_plan_2 = cls.env['account.analytic.plan'].create([
             {

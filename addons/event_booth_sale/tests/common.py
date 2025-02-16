@@ -11,6 +11,8 @@ class TestEventBoothSaleCommon(TestEventBoothCommon):
     def setUpClass(cls):
         super(TestEventBoothSaleCommon, cls).setUpClass()
 
+    @classmethod
+    def setUpCommonData(cls):
         cls.env['account.tax.group'].create(
             {'name': 'Test Account Tax Group', 'company_id': cls.env.company.id}
         )
