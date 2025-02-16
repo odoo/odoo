@@ -51,19 +51,18 @@
         <field name="name">hr.work.entry.form</field>
         <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
-            <form string="Work Entry" >
-                <header>
+            <form string="Work Entry" class="o_work_entry_form">
+                <header invisible="1">
                     <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,validated,conflict"/>
                 </header>
-                <div class="alert alert-warning text-center" role="alert" invisible="state != 'validated'">
-                    Note: Validated work entries cannot be modified.
-                </div>
                 <sheet>
+                <widget name="web_ribbon" title="Validated" bg_color="text-bg-secondary" invisible="state != 'validated'"/>
+                <widget name="web_ribbon" title="Conflict" bg_color="text-bg-danger" invisible="state != 'conflict'"/>
                     <group>
                         <group>
-                            <field name="name" string="Description" placeholder="Work Entry Name" readonly="state == 'validated'"/>
                             <field name="employee_id" readonly="state != 'draft'" widget="many2one_avatar_employee"/>
                             <field name="work_entry_type_id" readonly="state == 'validated'" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="name" string="Description" placeholder="Work Entry Name" readonly="state == 'validated'"/>
                         </group>
                         <group>
                             <field name="date_start" readonly="state != 'draft'" />
@@ -81,6 +80,28 @@
                         </group>
                     </group>
                 </sheet>
+                 <footer>
+                    <button
+                        string="Save &amp; Close"
+                        special="save"
+                        data-hotkey="s"
+                        class="btn btn-primary"
+                        close="1"/>
+                    <button
+                        string="Discard"
+                        special="cancel"
+                        data-hotkey="j"
+                        class="btn-secondary"
+                        close="1"/>
+                    <button
+                        string="Remove"
+                        name="unlink"
+                        type="object"
+                        data-hotkey="x"
+                        class="btn btn-danger ms-auto"
+                        close="1"
+                        invisible="not id"/>
+                </footer>
             </form>
         </field>
     </record>
