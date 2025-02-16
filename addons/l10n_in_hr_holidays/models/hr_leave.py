@@ -2,13 +2,17 @@
 
 from datetime import datetime, timedelta
 
-from odoo import models, fields
+from odoo import api, models, fields
 
 
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
     l10n_in_contains_sandwich_leaves = fields.Boolean()
+    l10n_in_is_limited_to_optional_days = fields.Boolean(related="holiday_status_id.l10n_in_is_limited_to_optional_days")
+    l10n_in_optional_day_id = fields.Many2one('l10n.in.hr.leave.optional.holiday', string="Available Days", ondelete="restrict")
+    request_date_from = fields.Date('Request Start Date', compute="_compute_request_date_from_to", store=True, readonly=False)
+    request_date_to = fields.Date('Request End Date', compute="_compute_request_date_from_to", store=True, readonly=False)
 
     def _l10n_in_apply_sandwich_rule(self, public_holidays, employee_leaves):
         self.ensure_one()
@@ -76,3 +80,10 @@ class HrLeave(models.Model):
             else:
                 leave.l10n_in_contains_sandwich_leaves = False
         return result
+
+    @api.depends('l10n_in_optional_day_id')
+    def _compute_request_date_from_to(self):
+        for leave in self:
+            if leave.l10n_in_is_limited_to_optional_days:
+                leave.request_date_from = leave.l10n_in_optional_day_id.date
+                leave.request_date_to = leave.l10n_in_optional_day_id.date

@@ -260,14 +260,14 @@
                             <field name="request_date_from" invisible="1"/>
                             <field name="request_date_to" invisible="1"/>
                             <!-- half day or custom hours: only show one date -->
-                            <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
-                            <label for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
-                            <div class="o_row" invisible="not request_unit_half and not request_unit_hours">
+                            <label name="date_label" for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
+                            <label name="dates_label" for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
+                            <div id="leave_type_day_half_hours" class="o_row" invisible="not request_unit_half and not request_unit_hours">
                                 <field name="request_date_from" class="oe_inline" string="Date" readonly="state != 'confirm'" />
                                 <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half" readonly="state != 'confirm'"/>
                             </div>
                             <!-- full days: show date start/end with daterange -->
-                            <div class="o_row" invisible="request_unit_half or request_unit_hours">
+                            <div id="leave_type_day_full" class="o_row" invisible="request_unit_half or request_unit_hours">
                                 <field
                                     name="request_date_from"
                                     widget="daterange"

@@ -14,6 +14,31 @@
                     The requested time considers the sandwich leave policy.
                 </div>
             </xpath>
+            <xpath expr="//div[@id='leave_type_day_half_hours']" position="attributes">
+                <attribute name="invisible" separator=" or " add="l10n_in_is_limited_to_optional_days"/>
+            </xpath>
+            <xpath expr="//div[@id='leave_type_day_full']" position="attributes">
+                <attribute name="invisible" separator=" or " add="l10n_in_is_limited_to_optional_days"/>
+            </xpath>
+            <xpath expr="//label[@name='date_label']" position="attributes">
+                <attribute name="invisible" separator=" or " add="l10n_in_is_limited_to_optional_days"/>
+            </xpath>
+            <xpath expr="//label[@name='dates_label']" position="attributes">
+                <attribute name="invisible" separator=" or " add="l10n_in_is_limited_to_optional_days"/>
+            </xpath>
+            <xpath expr="//label[@name='dates_label']" position="after">
+                <label for="l10n_in_optional_day_id" invisible="not l10n_in_is_limited_to_optional_days" string="Available Days" />
+                <div class="o_row" invisible="not l10n_in_is_limited_to_optional_days or not(request_unit_half or request_unit_hours)">
+                    <field name="l10n_in_optional_day_id" invisible="not l10n_in_is_limited_to_optional_days" class="oe_inline" string="Available Days"
+                           readonly="state != 'confirm'" options="{'no_create': True}" required="True"/>
+                    <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half" readonly="state != 'confirm'"/>
+                </div>
+
+                <div class="o_row" invisible="not l10n_in_is_limited_to_optional_days or request_unit_half or request_unit_hours">
+                    <field name="l10n_in_optional_day_id" invisible="not l10n_in_is_limited_to_optional_days" class="oe_inline" string="Available Days"
+                           readonly="state != 'confirm'" options="{'no_create': True}" required="True"/>
+                </div>
+            </xpath>
         </field>
     </record>
 
