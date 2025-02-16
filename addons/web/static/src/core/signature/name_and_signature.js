@@ -88,8 +88,7 @@ export class NameAndSignature extends Component {
                         this.drawCurrentName();
                     }
                     if (this.props.signature.signatureImage) {
-                        this.clear();
-                        this.signaturePad.fromDataURL(this.props.signature.signatureImage);
+                        this.fromDataURL(this.props.signature.signatureImage);
                     }
                 }
             },
@@ -121,6 +120,19 @@ export class NameAndSignature extends Component {
     clear() {
         this.signaturePad.clear();
         this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+    }
+
+    /**
+     * Load a base64 encoded image, as dataURL, into the signature field.
+     * Update the isSignatureEmpty flag to reflect the correct state.
+     * This prevents the flag from incorrectly staying true when a signature
+     * image is already passed in the props.
+     */
+    fromDataURL(dataURL) {
+        this.clear();
+        this.signaturePad.fromDataURL(dataURL);
+        this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+        this.props.onSignatureChange(this.state.signMode);
     }
 
     /**
