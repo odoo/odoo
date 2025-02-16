@@ -47,6 +47,8 @@ class StockRule(models.Model):
                 # If procurement contains negative quantity, don't create a MO that would be for a negative value.
                 continue
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
+            if not bom and self.env.context.get('from_orderpoint'):
+                continue
 
             mo = self.env['mrp.production']
             if procurement.origin != 'MPS':

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.exceptions import ValidationError
 
 
 class ProductCategory(models.Model):
@@ -22,14 +23,12 @@ class ProductTemplate(models.Model):
         help="This account is used in automated inventory valuation to "\
              "record the price difference between a purchase order and its related vendor bill when validating this vendor bill.")
 
-    @api.model
-    def _get_buy_route(self):
+    @api.constrains('route_ids', 'purchase_ok')
+    def _check_buy_route(self):
         buy_route = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
-        if buy_route:
-            return self.env['stock.route'].search([('id', '=', buy_route.id)]).ids
-        return []
-
-    route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
+        for product in self:
+            if buy_route and buy_route in product.route_ids and not product.purchase_ok:
+                raise ValidationError(_("The 'Buy' route cannot be assigned to a product that is not purchasable. Enable 'Can be Purchased' to use this route."))
 
 
 class ProductProduct(models.Model):
