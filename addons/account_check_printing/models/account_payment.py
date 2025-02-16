@@ -83,14 +83,22 @@ class AccountPayment(models.Model):
               JOIN account_journal journal ON journal.id = move.journal_id,
                    account_payment other_payment
               JOIN account_move other_move ON other_move.id = other_payment.move_id
-             WHERE payment.check_number::BIGINT = other_payment.check_number::BIGINT
-               AND move.journal_id = other_move.journal_id
+               WHERE move.journal_id = other_move.journal_id
                AND payment.id != other_payment.id
                AND payment.id IN %(ids)s
                AND move.state = 'posted'
                AND other_move.state = 'posted'
                AND payment.check_number IS NOT NULL
                AND other_payment.check_number IS NOT NULL
+               AND CASE
+                       WHEN payment.check_number ~ E'^\\d+$' THEN payment.check_number::BIGINT
+                       ELSE NULL
+                   END
+                   =
+                   CASE
+                       WHEN other_payment.check_number ~ E'^\\d+$' THEN other_payment.check_number::BIGINT
+                       ELSE NULL
+                   END
         """, {
             'ids': tuple(payment_checks.ids),
         })
