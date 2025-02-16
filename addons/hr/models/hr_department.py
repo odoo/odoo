@@ -59,7 +59,7 @@ class Department(models.Model):
             department.master_department_id = int(department.parent_path.split('/')[0])
 
     def _compute_total_employee(self):
-        emp_data = self.env['hr.employee']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
+        emp_data = self.env['hr.employee'].sudo()._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
         result = {department.id: count for department, count in emp_data}
         for department in self:
             department.total_employee = result.get(department.id, 0)
