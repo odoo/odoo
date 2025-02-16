@@ -8,8 +8,9 @@ export class TagsList extends Component {
     static props = {
         displayText: { type: Boolean, optional: true },
         visibleItemsLimit: { type: Number, optional: true },
-        tags: { type: Object },
+        tags: { type: Array, element: Object },
     };
+
     get visibleTagsCount() {
         return this.props.visibleItemsLimit - 1;
     }
@@ -20,13 +21,10 @@ export class TagsList extends Component {
         return this.props.tags;
     }
     get otherTags() {
-        if (
-            !this.props.visibleItemsLimit ||
-            this.props.tags.length <= this.props.visibleItemsLimit
-        ) {
-            return [];
+        if (this.props.visibleItemsLimit && this.props.tags.length > this.props.visibleItemsLimit) {
+            return this.props.tags.slice(this.visibleTagsCount);
         }
-        return this.props.tags.slice(this.visibleTagsCount);
+        return [];
     }
     get tooltipInfo() {
         return JSON.stringify({
