@@ -11,17 +11,27 @@ Bolivian accounting chart and tax localization.
 Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
 
     """,
-    'author': 'Odoo / Cubic ERP',
+    'author': 'Odoo / Kyohei Ltda',
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account',
+        'account_tax_python'
     ],
     'auto_install': ['account'],
     'data': [
-        'data/account_tax_report_data.xml',
-    ],
-    'demo': [
-        'demo/demo_company.xml',
+        'data/tax_reports/form_200_v5_tax_report_data.xml',
+        'data/tax_reports/form_400_v5_tax_report_data.xml',
+        'data/tax_reports/form_410_v2_tax_report_data.xml',
+        'data/tax_reports/form_500_v2_tax_report_data.xml',
+        'data/tax_reports/form_530_v3_tax_report_data.xml',
+        'data/tax_reports/form_550_v3_tax_report_data.xml',
+        'data/tax_reports/form_551_v3_tax_report_data.xml',
+        'data/tax_reports/form_570_v2_tax_report_data.xml',
+        'data/tax_reports/form_604_v3_tax_report_data.xml',
+        'data/country_data.xml',
+        'data/state_data.xml',
+        'data/contact_bank_data.xml',
+        'data/language_data.xml',
     ],
     'license': 'LGPL-3',
 }

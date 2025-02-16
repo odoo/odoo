@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="base.bo" model="res.country">
+            <field name="zip_required" eval="0"/>
+            <field name="vat_label">NIT</field>
+            <field name="address_format">%(street)s
+    %(street2)s
+    %(city)s - %(country_name)s</field>
+        </record>
+
+    </data>
+</odoo>
