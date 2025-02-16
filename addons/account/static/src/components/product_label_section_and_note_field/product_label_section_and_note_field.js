@@ -224,10 +224,7 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
 
     updateLabel(value) {
         this.props.record.update({
-          name:
-            this.productName && this.productName !== value
-              ? `${this.productName}\n${value}`
-              : value,
+            name: value ? value : this.productName,
         });
     }
 }
