@@ -10,6 +10,7 @@ class StockQuant(models.Model):
     expiration_date = fields.Datetime(related='lot_id.expiration_date', store=True)
     removal_date = fields.Datetime(related='lot_id.removal_date', store=True)
     use_expiration_date = fields.Boolean(related='product_id.use_expiration_date')
+    is_expired = fields.Boolean(related='lot_id.is_expired')
 
     def _get_gs1_barcode(self, gs1_quantity_rules_ai_by_uom):
         barcode = super()._get_gs1_barcode(gs1_quantity_rules_ai_by_uom)

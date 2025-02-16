@@ -20,6 +20,7 @@ class StockLot(models.Model):
         help='Date to determine the expired lots and serial numbers using the filter "Expiration Alerts".')
     product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', help="The Expiration Date has been reached.")
     product_expiry_reminded = fields.Boolean(string="Expiry has been reminded")
+    is_expired = fields.Boolean(compute='_compute_is_expired')
 
     @api.depends('expiration_date')
     def _compute_product_expiry_alert(self):
@@ -60,6 +61,23 @@ class StockLot(models.Model):
                     lot.use_date = lot._origin.use_date and lot._origin.use_date + time_delta
                     lot.removal_date = lot._origin.removal_date and lot._origin.removal_date + time_delta
                     lot.alert_date = lot._origin.alert_date and lot._origin.alert_date + time_delta
+
+    @api.depends('name', 'use_expiration_date', 'expiration_date')
+    def _compute_display_name(self):
+        for lot in self:
+            if not lot.use_expiration_date:
+                lot.display_name = lot.name
+            else:
+                formatted_date = lot.expiration_date.strftime("%d/%m/%Y")
+                lot.display_name = f"{lot.name} (Exp. {formatted_date})"
+
+    @api.depends('use_expiration_date', 'expiration_date')
+    def _compute_is_expired(self):
+        for lot in self:
+            if not lot.use_expiration_date:
+                lot.is_expired = False
+            else:
+                lot.is_expired = bool(lot.expiration_date < datetime.datetime.now())
 
     @api.model
     def _alert_date_exceeded(self):
