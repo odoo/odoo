@@ -247,6 +247,10 @@ class AccountTestInvoicingCommon(TransactionCase):
                     ('company_id', '=', company.id),
                     ('account_type', '=', 'asset_current')
                 ], limit=1),
+            'default_account_liabilities': cls.env['account.account'].search([
+                    ('company_id', '=', company.id),
+                    ('account_type', '=', 'liability_current')
+                ], limit=1),
             'default_account_tax_sale': company.account_sale_tax_id.mapped('invoice_repartition_line_ids.account_id'),
             'default_account_tax_purchase': company.account_purchase_tax_id.mapped('invoice_repartition_line_ids.account_id'),
             'default_journal_misc': cls.env['account.journal'].search([
