@@ -33,9 +33,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'chart_sk_646000',
                 'default_cash_difference_income_account_id': 'chart_sk_668000',
                 'default_cash_difference_expense_account_id': 'chart_sk_568000',
+<<<<<<< saas-18.1
                 'account_sale_tax_id': 'vy_tuz_20',
                 'account_purchase_tax_id': 'vs_tuz_20',
                 'expense_account_id': 'chart_sk_504000',
                 'income_account_id': 'chart_sk_604000',
+||||||| 41b901e7b15fc031904b0c2e300e99d86388f66f
+                'account_sale_tax_id': 'vy_tuz_20',
+                'account_purchase_tax_id': 'vs_tuz_20',
+=======
+                'account_sale_tax_id': 'vy_tuz_23',
+                'account_purchase_tax_id': 'vs_tuz_23',
+>>>>>>> 3db0227aa1b83aa1688b4b37fe496e71b41adffb
             },
         }
