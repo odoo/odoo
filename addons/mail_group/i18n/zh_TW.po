@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                你好！<br/><br/>\n"
+"                你已要求取消訂閱郵寄清單 <strong t-out=\"object.name or ''\"/>。\n"
+"                <br/><br/>\n"
+"                請到以下網址確認： <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                如果這是錯誤，或你沒有請求此操作，請忽略此訊息。\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -67,6 +77,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p><t t-out=\"object.partner_id.name or ''\"/> 你好！</p>\n"
+"                <p>請參閱下方有關 <t t-out=\"object.mail_group_id.name\"/> 郵寄清單的使用指引。</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -88,7 +104,7 @@ msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"別名\" title=\
 msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"流量\" title=\"流量\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -396,7 +412,7 @@ msgstr "已關閉"
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
-msgstr ""
+msgstr "已關閉的群組仍可存取，但向其傳送的電郵會被彈回"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -592,6 +608,11 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"你好，\n"
+"    <br/><br/>\n"
+"    你嘗試聯絡的郵寄清單已關閉，不再接受新郵件訊息。\n"
+"    <br/><br/>\n"
+"    順祝  安康"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
@@ -1108,7 +1129,7 @@ msgstr "公共郵寄清單"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Re-Open"
-msgstr ""
+msgstr "重新開啟"
 
 #. module: mail_group
 #. odoo-python
@@ -1427,13 +1448,13 @@ msgstr "群組中每個電郵地址，只可建立一項規則。"
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not join a closed group."
-msgstr ""
+msgstr "你不可加入已關閉的群組。"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not send guidelines for a closed group."
-msgstr ""
+msgstr "你不可向已關閉群組傳送指引。"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1488,7 +1509,7 @@ msgstr "已經"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "members<br/>"
-msgstr ""
+msgstr "成員<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups

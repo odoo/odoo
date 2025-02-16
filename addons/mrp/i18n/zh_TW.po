@@ -3,8 +3,8 @@
 # 	* mrp
 # 
 # Translators:
-# Tony Ng, 2025
 # Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +91,7 @@ msgstr "# BOM 在哪裡被使用"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "%(display_name)s"
-msgstr ""
+msgstr "%(display_name)s"
 
 #. module: mrp
 #. odoo-python
@@ -761,7 +761,7 @@ msgstr "允許"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "允許的計量單位"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -834,6 +834,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"由於此產品已經使用其他計量單位（例如：%(problem_uom)s），而非使用 "
+"%(uom)s，現已無法更改計量單位。如需更改，請將產品封存，然後建立一項新的產品。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1375,7 +1377,7 @@ msgstr "變更待生產數量"
 msgid ""
 "Changing the product or variant will permanently reset all previously "
 "encoded variant-related data."
-msgstr ""
+msgstr "若更改產品或款式變體資料，會永久重設所有先前已編碼的款式變體資料。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1556,7 +1558,7 @@ msgstr "已確認"
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Consumed"
-msgstr "已投料"
+msgstr "已消耗"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__consume_line_ids
@@ -1873,7 +1875,7 @@ msgstr "日期：過去365天"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_pdf_line
 msgid "Days"
-msgstr "天內"
+msgstr "天"
 
 #. module: mrp
 #. odoo-python
@@ -1910,12 +1912,14 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
+"此工作中心預設可並行（同時）生產的件數，以產品單位計算。例如：產能為 5 個單位，而你需要生產 10 個單位，則物料清單列出的操作時間會乘以 "
+"2。但請注意，生產前後的時間都只計算一次。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "所有庫存商品的預設單位。"
+msgstr "所有庫存操作使用的預設計量單位。"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -4434,7 +4438,7 @@ msgstr "產品模板"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
 msgid "Product Unit"
-msgstr ""
+msgstr "產品單位"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -5759,7 +5763,7 @@ msgstr "待關閉"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "To Consume"
-msgstr "待投料"
+msgstr "待消耗"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -6415,7 +6419,7 @@ msgstr "生產工單製程允許您建立和管理在工作中心內應遵循的
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
 msgid "Work Order To Consume"
-msgstr "待投料工單"
+msgstr "待消耗工作單"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time

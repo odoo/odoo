@@ -249,7 +249,7 @@ msgstr "'配送伝票 - %s - %s' % (object.partner_id.name or '', object.name)"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr "場所-%s '%object.name"
+msgstr "'ロケーション - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
@@ -1151,7 +1151,7 @@ msgstr "プロダクトの混在を許可"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
 msgid "Allowed Location"
-msgstr "許可された場所"
+msgstr "許可済ロケーション"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
@@ -1302,6 +1302,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"このプロダクトでは、すでに例:%(problem_uom)sなど、他の測定単位(%(uom)sではなく) "
+"が使用されているため、測定単位の変更はできません。変更する場合は、プロダクトをアーカイブし、新しいプロダクトを作成して下さい。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1673,7 +1675,7 @@ msgstr "空でない梱包の場所を削除できません"
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Capacity"
-msgstr "能力"
+msgstr "容量"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
@@ -1815,7 +1817,7 @@ msgstr "日付を選択して、その日付のインベントリを取得しま
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "Choose destination location"
-msgstr "目的地を選択"
+msgstr "移動先ロケーションを選択"
 
 #. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
@@ -2401,7 +2403,7 @@ msgstr "カスタマイズ可能なデスク"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Cyclic Counting"
-msgstr "周期的カウンティング"
+msgstr "サイクルカウント"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -3350,7 +3352,7 @@ msgstr "FedExコネクター"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
-msgstr "フィルタリングされた場所"
+msgstr "フィルタ済ロケーション"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -4103,12 +4105,6 @@ msgstr "チェックを外すと、削除せずに規則を非表示にするこ
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
 msgstr "今すぐ移動"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "インポート"
 
 #. module: stock
 #. odoo-javascript
@@ -4935,7 +4931,7 @@ msgstr "ロケーションタイプ"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: Store to"
-msgstr "場所:保管先"
+msgstr "ロケーション:保管先"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -6528,9 +6524,9 @@ msgstr "プレゼンスはオペレーションタイプにより異なります
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
-msgstr "作成ボタンを押して各製品の数量をセットしたり、お気に入りを通してスプレッドシートからインポートすることができます。"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
+msgstr "\"新規\" ボタンをクリックして在庫のプロダクトの数量を定義するか、または \"アクション\" メニューからスプレッドシートから数量をインポートします。"
 
 #. module: stock
 #. odoo-javascript
@@ -8501,7 +8497,7 @@ msgstr "ロケーションタイプソース"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Location:"
-msgstr "ソースの場所:"
+msgstr "移動元ロケーション:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
@@ -9091,7 +9087,7 @@ msgstr "この保管ロットを含む梱包"
 msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
-msgstr "この場所を含む親の場所。 例： 'ディスパッチゾーン'は、 'ゲート1'の親ロケーションです。"
+msgstr "このロケーションを含む親のロケーション。 例： 'ディスパッチゾーン'は、 'ゲート1'の親ロケーションです。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
@@ -9413,7 +9409,7 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
-"この付番接頭辞は、別のオペレーションタイプですでに使用されています。問題や参照の繰返しを避けるために一意の接頭辞を選択するか、既存の参照付番をこのオペレーションタイプに割当てることを推奨します。"
+"この付番プレフィックスは、別のオペレーションタイプですでに使用されています。問題および/または参照番号の繰返しを避けるために一意のプレフィックスを選択するか、既存の参照番号付番をこのオペレーションタイプに割当てることを推奨します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10257,7 +10253,7 @@ msgstr "展開先倉庫"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Warehouse view location"
-msgstr "倉庫ビューの場所"
+msgstr "倉庫ビューロケーション"
 
 #. module: stock
 #. odoo-python
@@ -10861,7 +10857,7 @@ msgstr "数量が予約されていない場合、転送を検証することは
 msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
-msgstr "空の転送は検証できません。先に進む前に転送するプロダクトを追加して下さい。"
+msgstr "空の転送は確認できません。先に進む前に転送するプロダクトを追加して下さい。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -11230,7 +11226,7 @@ msgstr "先入先出"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "from location"
-msgstr "場所から"
+msgstr "ロケーションから"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view

@@ -3,6 +3,7 @@
 # 	* base
 # 
 # Translators:
+# Сергей Шебанин <sergey@shebanin.ru>, 2025
 # Ilya Rozhkov, 2025
 # Wil Odoo, 2025
 # 
@@ -12119,7 +12120,7 @@ msgstr "%(company_currency_name)s на %(rate_currency_name)s"
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "%(integral_amount)s %(currency_unit)s"
-msgstr ""
+msgstr "%(integral_amount)s %(currency_unit)s"
 
 #. module: base
 #. odoo-python
@@ -12372,7 +12373,7 @@ msgstr ", требуется"
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "- %(description)s (%(model)s)"
-msgstr ""
+msgstr "- %(description)s (%(model)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -18910,6 +18911,9 @@ msgid ""
 "Fields: %(fields)s\n"
 "View: %(view)s"
 msgstr ""
+"Невозможно переименовать/удалить поля, которые все еще присутствуют в представлениях:\n"
+"Поля: %(fields)s\n"
+"Вид: %(view)s"
 
 #. module: base
 #. odoo-python
@@ -27468,7 +27472,7 @@ msgstr "Неверный домен: %s"
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid field %(model)s.%(field)s"
-msgstr ""
+msgstr "Неправильное поле %(model)s.%(field)s"
 
 #. module: base
 #. odoo-python
@@ -27567,7 +27571,7 @@ msgstr "Неверный пользователь шаблона. Похоже, 
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid value for %(model)s.%(field)s: %(value)s"
-msgstr ""
+msgstr "Неверное значение для %(model)s.%(field)s:%(value)s"
 
 #. module: base
 #. odoo-python
@@ -27576,6 +27580,9 @@ msgid ""
 "Invalid value for %(model)s.%(field)s: %(value)s is out of bounds (integers "
 "should be between -2,147,483,648 and 2,147,483,647)"
 msgstr ""
+"Недопустимое значение для %(model)s.%(field)s: %(value)s выходит за пределы "
+"(целые числа должны находиться в диапазоне от -2,147,483,648 до "
+"2,147,483,647)"
 
 #. module: base
 #. odoo-python
@@ -29266,6 +29273,8 @@ msgid ""
 "Mail delivery failed via SMTP server '%(server)s'.\n"
 "%(exception_name)s: %(message)s"
 msgstr ""
+"Не удалось доставить почту через SMTP-сервер '%(server)s'.\n"
+"%(exception_name)s: %(message)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_module_tree
@@ -29772,7 +29781,7 @@ msgstr "Операции Many2many"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Many2one %(field)s on model %(model)s does not exist!"
-msgstr ""
+msgstr "Много-к-одному %(field)s на модели %(model)s не существует!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -30596,7 +30605,7 @@ msgstr "Модули"
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
 msgid "Modules \"%(module)s\" and \"%(incompatible_module)s\" are incompatible."
-msgstr ""
+msgstr "Модули '%(module)s' и '%(incompatible_module)s' несовместимы."
 
 #. module: base
 #: model:res.country,name:base.md
@@ -33229,6 +33238,8 @@ msgid ""
 "Odoo is unable to merge the generated PDFs because of %(num_errors)s "
 "corrupted file(s)"
 msgstr ""
+"Odoo не может объединить PDF-файлы из-за %(num_errors)s повреждённых "
+"файла(ов)."
 
 #. module: base
 #. odoo-python
@@ -40624,6 +40635,8 @@ msgid ""
 "The field '%(field)s' cannot be removed because the field '%(other_field)s' "
 "depends on it."
 msgstr ""
+"Поле '%(field)s' не может быть удалено, потому что поле '%(other_field)s' "
+"зависит от него."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -42573,6 +42586,9 @@ msgid ""
 "\n"
 "Sorry, %(user)s doesn't have '%(operation)s' access to:"
 msgstr ""
+"О-о-о! Похоже, вы наткнулись на сверхсекретные записи.\n"
+"\n"
+"К сожалению, у %(user)s нет доступа к '%(operation)s:"
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -42605,6 +42621,8 @@ msgid ""
 "Unable to install module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Невозможно установить модуль \"%(module)s\", потому что не соблюдена внешняя"
+" зависимость: %(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -42623,6 +42641,8 @@ msgid ""
 "Unable to process module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Невозможно обработать модуль \"%(module)s\", поскольку не соблюдена внешняя "
+"зависимость: %(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -42631,6 +42651,8 @@ msgid ""
 "Unable to upgrade module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Невозможно обновить модуль \"%(module)s\", поскольку не соблюдена внешняя "
+"зависимость: %(dependency)s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -44176,12 +44198,14 @@ msgid ""
 "Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or "
 "maximum file number of subprocess reached. Message : %(message)s"
 msgstr ""
+"Сбой Wkhtmltopdf (код ошибки: %(error_code)s). Лимит памяти слишком мал или "
+"достигнут максимальный номер файла подпроцесса. Сообщение : %(message)s"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s"
-msgstr ""
+msgstr "Сбой Wkhtmltopdf (код ошибки: %(error_code)s). Сообщение: %(message)s"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.KPW
@@ -44492,6 +44516,8 @@ msgid ""
 "You cannot archive these Outgoing Mail Servers (%(server_usage)s) because they are still used in the following case(s):\n"
 "%(usage_details)s"
 msgstr ""
+"Вы не можете архивировать эти серверы исходящей почты (%(server_usage)s), потому что они все еще используются в следующих случаях:\n"
+"%(usage_details)s"
 
 #. module: base
 #. odoo-python
@@ -44500,6 +44526,8 @@ msgid ""
 "You cannot archive this Outgoing Mail Server (%(server_usage)s) because it is still used in the following case(s):\n"
 "%(usage_details)s"
 msgstr ""
+"Вы не можете архивировать этот сервер исходящей почты (%(server_usage)s), потому что он все еще используется в следующих случаях:\n"
+"%(usage_details)s"
 
 #. module: base
 #. odoo-python
@@ -44672,6 +44700,8 @@ msgid ""
 "You try to upgrade the module %(module)s that depends on the module: %(dependency)s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Вы пытаетесь обновить модуль %(module)s, который зависит от модуля: %(dependency)s.\n"
+"Но этот модуль недоступен в вашей системе."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form

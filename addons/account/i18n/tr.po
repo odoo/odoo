@@ -7,8 +7,11 @@
 # Umur Akın <umura@projetgrup.com>, 2025
 # Wil Odoo, 2025
 # Ediz Duman <neps1192@gmail.com>, 2025
-# Melih Melik Sonmez, 2025
 # Betul Ogmen, 2025
+# Yedigen, 2025
+# Ayhan Kızıltan, 2025
+# Cihad GÜNDOĞDU <cihadgundogdu@gmail.com>, 2025
+# Melih Melik Sonmez, 2025
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2025
 # 
 msgid ""
@@ -35,6 +38,11 @@ msgid ""
 "The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
 "You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"Hareket (%(move)s) denk değil.\n"
+"Borçların toplamı eşittir %(debit_total)s ve kredilerin toplamı eşittir %(credit_total)s.\n"
+"Her hareketi otomatik olarak denkleştirmek için \"%(journal)s\" günlüğünde varsayılan bir hesap belirtmek isteyebilirsiniz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -121,6 +129,14 @@ msgstr "%(amount)s vadesi dolmuş %(date)s"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
 msgstr "%(user)s%(end_datetime_string)s%(reason)s için%(exception)s"
@@ -132,6 +148,9 @@ msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%(move)s ilgili ekstre satırıyla ilgili olarak geçersiz bir duruma ulaştı. "
+"Tutarlı olması için, yevmiye kaydının her zaman tam olarak bir askıya alma "
+"satırı olması gerekir."
 
 #. module: account
 #. odoo-python
@@ -146,6 +165,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, "
 "%(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s Faturalandırıldı, "
+"%(quantity_received)s her biri %(unit_price)s Alındı"
 
 #. module: account
 #. odoo-python
@@ -2104,7 +2125,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued %(entry_type)s entry as of %(date)s"
-msgstr ""
+msgstr "%(entry_type)s itibarıyla tahakkuk eden %(date)s girişi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -3333,7 +3354,7 @@ msgstr "Banka Hesabı"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr ""
+msgstr "%(link)s numaralı Banka Hesabı %(number)s silindi"
 
 #. module: account
 #. odoo-python
@@ -6916,6 +6937,8 @@ msgstr "Özsermaye"
 msgid ""
 "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)"
 msgstr ""
+"'%(file_name)s' eki fatura olarak içe aktarılırken hata oluştu "
+"(decoder=%(decoder)s)"
 
 #. module: account
 #. odoo-python
@@ -8483,6 +8506,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s;"
 " Day: %(day)s"
 msgstr ""
+"Hatalı mali yıl tarihi. Belirtilen ay için belirtilen gün kapsam dışında. "
+"Ay: %(month)s; Gün: %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -9880,6 +9905,8 @@ msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
 msgstr ""
+"\"%(line)s\" satırı, \"%(parent_line)s\" satırını üst öğesi olarak tanımlar,"
+" ancak raporda ondan önce görünür. Üst öğe her zaman önce gelmelidir."
 
 #. module: account
 #. odoo-python
@@ -15030,7 +15057,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "Hesap %(name)s (%(code)s) kullanımdan kaldırıldı."
 
 #. module: account
 #. odoo-python
@@ -15237,6 +15264,9 @@ msgid ""
 "%(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
+"Geçerli toplam %(current_total)s'dir ancak beklenen toplam "
+"%(expected_total)s'dir. müşteri faturası/tedarikçi faturası onaylamak için "
+"satırlarını veya beklenen Toplamı (vergi dahil) ayarlayabilirsiniz."
 
 #. module: account
 #. odoo-python
@@ -15309,7 +15339,7 @@ msgstr "Faturayı oluşturan belge(ler)."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
-msgstr ""
+msgstr "%(name)s girişi (id %(id)s) taslak halinde olmalıdır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
@@ -15397,6 +15427,8 @@ msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though"
 " it was detected as eligible: "
 msgstr ""
+"Aşağıdaki hata, uygun olarak algılanmasına rağmen '%(candidate)s' QR kodunun"
+" oluşturulmasını engelledi: "
 
 #. module: account
 #. odoo-python
@@ -16352,7 +16384,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
-msgstr ""
+msgstr "Bu kayıt otomatik olarak onaylanacak şekilde yapılandırıldı %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17854,6 +17886,8 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"Şirkette veya %(payment_method)s yevmiyesindeki %(journal)s ödeme yönteminde"
+" giden ödeme/giriş hesabı ayarlamadan yeni bir ödeme oluşturamazsınız."
 
 #. module: account
 #. odoo-python
@@ -18111,6 +18145,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
+"Denkleştirilmiş yevmiye girişinde bu değişikliği yapamazsınız. Sadece yasal olmayan bazı alanları değiştirebilir veya önce denkleştirmeleri iptal etmeniz gerekir.\n"
+"Yevmiye Girişi (id): %(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python
@@ -18126,6 +18162,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%(entries)s"
 msgstr ""
+"Şu alanları düzenleyemezsiniz: %(fields)s.\n"
+"Aşağıdaki kayıtlar zaten şifreli hale getirilmiştir:\n"
+"%(entries)s"
 
 #. module: account
 #. odoo-python

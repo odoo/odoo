@@ -10,9 +10,9 @@
 # Henning Fyllingsnes, 2024
 # Jorunn D. Newth, 2024
 # Ørjan Wean <orjan@wean.no>, 2024
-# Rune Restad, 2024
-# Marius Stedjan <marius@stedjan.com>, 2024
 # Martin Trigaux, 2025
+# Marius Stedjan <marius@stedjan.com>, 2025
+# Rune Restad, 2025
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Martin Trigaux, 2025\n"
+"Last-Translator: Rune Restad, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4664,6 +4664,9 @@ msgid ""
 "%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Følgende produkter kan ikke begrenses til firmaet %(company)s, fordi de allerede er brukt i et tilbud eller en salgsordre i et annet firma:\n"
+"%(used_products)s\n"
+"Du kan arkivere disse produktene, og opprette dem på nytt begrenset til ditt firma, eller la de være delte produkter."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4751,7 +4754,7 @@ msgstr "Prosentandelen av beløpet som må betales for å bekrefte tilbud."
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "Produktet (%(product)s) har inkompatible verdier: %(value_list)s"
 
 #. module: sale
 #. odoo-python

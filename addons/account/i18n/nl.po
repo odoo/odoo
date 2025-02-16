@@ -6,8 +6,8 @@
 # Sibe Bleuzé, 2025
 # Dylan Kiss, 2025
 # Manon Rondou, 2025
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Wil Odoo, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,6 +137,16 @@ msgstr "%(amount)s Incl. btw"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s verschuldigd %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
+"%(attachment_name)s (losgemaakt door %(user)s op "
+"%(date)s)%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -1903,7 +1913,7 @@ msgstr "Crediteurenrekening"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Rekeningvoorvoegsel-plaatsaanduiding"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -7413,7 +7423,7 @@ msgstr "Grootboekrekening"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "Financiële rekeningen voorvoegsels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -13390,7 +13400,7 @@ msgstr "Terugboeken"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reverse Entry"
-msgstr "Boeking teruboeken"
+msgstr "Boeking terugboeken"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -14178,6 +14188,8 @@ msgstr "Stel een prijs vast."
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Stel een waarde groter dan 0,0 in om een ​​kredietlimietcontrole te "
+"activeren"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -14507,7 +14519,7 @@ msgstr "Afschrift"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Statement %(date)s"
-msgstr ""
+msgstr "Verklaring %(date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -15754,6 +15766,8 @@ msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though"
 " it was detected as eligible: "
 msgstr ""
+"De volgende fout verhinderde dat '%(candidate)s' QR-code werd gegenereerd, "
+"hoewel deze als geschikt werd gedetecteerd: "
 
 #. module: account
 #. odoo-python
@@ -17215,6 +17229,10 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Activeer waarschuwingen bij het aanmaken van facturen en klantorders voor "
+"partners met een totaal te ontvangen bedrag dat een limiet overschrijdt."
+"                                      Stel een waarde groter dan 0,0 in om "
+"een kredietlimietcontrole te activeren"
 
 #. module: account
 #. odoo-python

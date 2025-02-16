@@ -3,13 +3,16 @@
 # 	* account
 # 
 # Translators:
-# EstudiTIC - estuditic.com <odoo@estuditic.com>, 2024
-# Xavier, 2025
 # Carles Antoli <carlesantoli@hotmail.com>, 2025
 # Wil Odoo, 2025
-# Noemi Pla, 2025
-# Óscar Fonseca <tecnico@pyming.com>, 2025
 # Josep Anton Belchi, 2025
+# Quim, 2025
+# Noemi Pla, 2025
+# EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
+# Óscar Fonseca <tecnico@pyming.com>, 2025
+# Xavier, 2025
+# Santiago Payà <santiagopim@gmail.com>, 2025
+# Jonatan Gk, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Josep Anton Belchi, 2025\n"
+"Last-Translator: Jonatan Gk, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,9 +40,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"El moviment (%(move)s) no està quadrat.\n"
-"El total de Deure és igual a %(debit_total)s i el total de crèdit és igual a %(credit_total)s.\n"
-"Potser voleu especificar un compte per defecte al diari \"%(journal)s\" per saldar cada moviment de forma automàtica."
+"El moviment (%(move)s) no està equilibrat.\n"
+"El total del deure és igual a %(debit_total)s i el total de l'haver és igual a %(credit_total)s.\n"
+"Potser vol especificar un compte per defecte al diari \"%(journal)s\" per saldar cada moviment de forma automàtica."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -52,10 +55,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Seleccioni 'Vendes' per diaris de factures de client.\n"
-"        Seleccioni 'Compres' per diaris de factures de proveïdor.\n"
-"        Seleccioni  \"Caixa\", \"Banc\" o \"Targeta de crèdit\" per veure els diaris que es fan servir per a pagaments de clients i proveïdors.\n"
-"        Seleccioni \"General\" per veure els diaris amb diverses operacions.\n"
+"        Seleccioni «Vendes» per diaris de factures de client.\n"
+"        Seleccioni «Compres» per diaris de factures de proveïdor.\n"
+"        Seleccioni  «Caixa», «Banc» o «Targeta de crèdit» per veure els diaris que es fan servir per a pagaments de clients i proveïdors.\n"
+"        Seleccioni «General» per veure els diaris amb diverses operacions.\n"
 "        "
 
 #. module: account
@@ -139,6 +142,14 @@ msgstr "%(amount)s Incl. Impostos"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s vençut %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -9051,7 +9062,7 @@ msgstr "Format Edi de factura"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format_store
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_edi_format_store
 msgid "Invoice Edi Format Store"
-msgstr ""
+msgstr "Emmagatzematge de factures en format EDI"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -10361,7 +10372,7 @@ msgstr "Manualment"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
-msgstr ""
+msgstr "Mapeig"
 
 #. module: account
 #: model:ir.model,name:account.model_account_code_mapping
@@ -12722,13 +12733,13 @@ msgstr "Compte de guanys"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
-msgstr ""
+msgstr "Línia de mètode de pagament entrant de la propietat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_outbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_outbound_payment_method_line_id
 msgid "Property Outbound Payment Method Line"
-msgstr ""
+msgstr "Línia de mètode de pagament sortint de la propietat"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -12774,7 +12785,7 @@ msgstr "Impost de compra"
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Purchase Taxes"
-msgstr ""
+msgstr "Impostos de Compra"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -12945,6 +12956,7 @@ msgstr "Data de reconeixement"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
 msgstr ""
+"Recalcula tots els impostos i comptes en funció d'aquesta posició fiscal"
 
 #. module: account
 #. odoo-python
@@ -14144,6 +14156,8 @@ msgstr "Establir un preu."
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Estableixi un valor major que 0,0 per activar una validació de límit de "
+"crèdit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -14473,7 +14487,7 @@ msgstr "Extracte"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Statement %(date)s"
-msgstr ""
+msgstr "Extracte %(date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -15212,6 +15226,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
+"El tipus de diagrama %s no pot ser seleccionat directament. En el seu lloc, "
+"mireu de seleccionar el tipus de diagrama adequat a la vostra ubicació."
 
 #. module: account
 #. odoo-python
@@ -15310,7 +15326,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "El compte %(name)s (%(code)s) està obsolet."
 
 #. module: account
 #. odoo-python
@@ -15527,6 +15543,9 @@ msgid ""
 "%(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
+"El total actual és %(current_total)s però el total esperat és "
+"%(expected_total)s. Per tal de publicar la factura/mil·li, podeu ajustar les"
+" seves línies o el total esperat (inc. d'impostos)."
 
 #. module: account
 #. odoo-python
@@ -15599,7 +15618,7 @@ msgstr "Els document(s) que han generat la factura."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
-msgstr ""
+msgstr "L'assentament %(name)s (id %(id)s) ha de ser un esborrany."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
@@ -15689,6 +15708,8 @@ msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though"
 " it was detected as eligible: "
 msgstr ""
+"El següent error ha evitat que '%(candidate)s' QR-code es generés encara que"
+" es detecta com a resultat: "
 
 #. module: account
 #. odoo-python
@@ -16663,6 +16684,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
 msgstr ""
+"Aquest moviment està configurat per ser publicat automàticament el %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16725,6 +16747,8 @@ msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
 msgstr ""
+"Això actualitzarà tots els impostos i comptes en funció de la posició fiscal"
+" seleccionada."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -16841,6 +16865,9 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to"
 " validate it."
 msgstr ""
+"Per enregistrar pagaments amb %(payment_method)s, el compte bancari del "
+"beneficiari ha de ser validat manualment. Heu d'anar al compte bancari del "
+"contacte per a validar-lo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -18176,6 +18203,9 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"No es pot crear un nou pagament sense un compte de pagaments/cobraments "
+"establert en l'empresa o en el mètode %(payment_method)s del diari "
+"%(journal)s."
 
 #. module: account
 #. odoo-python
@@ -18231,6 +18261,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
+"No pots tenir dues línies de mètode de pagament del mateix tipus de pagament"
+" (%(payment_type)s) i amb el mateix nom (%(name)s) en un sol diari."
 
 #. module: account
 #. odoo-python
@@ -18801,7 +18833,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
-msgstr "Heu de seleccionar almenys 2 comptes."
+msgstr "Ha de seleccionar almenys 2 comptes."
 
 #. module: account
 #. odoo-python

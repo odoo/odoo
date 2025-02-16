@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -457,7 +458,7 @@ msgstr "Code"
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_max_sessions_mode_greater_than_zero
 msgid "Concurrent session number should be greater than zero."
-msgstr ""
+msgstr "Le nombre de sessions simultanées doit être supérieur à zéro."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
@@ -740,7 +741,7 @@ msgstr "Activé uniquement s'il n'y a aucun opérateur"
 #: model:ir.actions.act_window,name:im_livechat.expertise_action
 #: model:ir.ui.menu,name:im_livechat.expertise_menu
 msgid "Expertise"
-msgstr ""
+msgstr "Expertise"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -803,7 +804,7 @@ msgstr "Saisie libre (multi-lignes)"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
 msgid "Give your feedback"
-msgstr ""
+msgstr "Donnez votre avis"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -947,6 +948,9 @@ msgid ""
 "If limited, operators will only handle the selected number of sessions at a "
 "time. While on a call, they will not receive new conversations."
 msgstr ""
+"En cas de limitation, les opérateurs ne gèrent qu'un nombre défini de "
+"sessions à la fois. Pendant un appel, ils ne recevront pas de nouvelles "
+"conversations."
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
@@ -987,7 +991,7 @@ msgstr "Est un abonné"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator
 msgid "Is Forward Operator"
-msgstr ""
+msgstr "Est un opérateur de transfert"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
@@ -997,7 +1001,7 @@ msgstr "Est un opérateur enfant direct"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__is_in_call
 msgid "Is in call"
-msgstr ""
+msgstr "Est en appel"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_active
@@ -1096,12 +1100,12 @@ msgstr "Quitter le canal"
 #: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
 #: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leaving will end the livechat. Proceed leaving?"
-msgstr ""
+msgstr "Quitter mettra fin au live chat. Voulez-vous continuer ?"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
 msgid "Limited"
-msgstr ""
+msgstr "Limité"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
@@ -1120,7 +1124,7 @@ msgstr "Bouton Live Chat"
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_expertise_ids
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_expertise_ids
 msgid "Live Chat Expertise"
-msgstr ""
+msgstr "Expertise en Live Chat"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
@@ -1237,6 +1241,8 @@ msgid ""
 "Livechat session is active until visitor or operator leaves the "
 "conversation."
 msgstr ""
+"La session live chat reste active jusqu'à ce que le visiteur ou l'opérateur "
+"quitte la conversation."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1246,12 +1252,12 @@ msgstr "Ordre correspondant"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions
 msgid "Maximum Sessions"
-msgstr ""
+msgstr "Nombre maximal de sessions"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions
 msgid "Maximum number of concurrent sessions per operator."
-msgstr ""
+msgstr "Nombre maximal de sessions simultanées par opérateur."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_message
@@ -1420,7 +1426,7 @@ msgstr "Analyse de l'opérateur"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__operator_expertise_ids
 msgid "Operator Expertise"
-msgstr ""
+msgstr "Expertise de l'opérateur"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
@@ -1749,7 +1755,7 @@ msgstr "Historique des sessions"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions_mode
 msgid "Sessions per Operator"
-msgstr ""
+msgstr "Sessions par opérateur"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
@@ -1905,7 +1911,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
 #: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "This livechat conversation has ended"
-msgstr ""
+msgstr "Cette conversation live chat est terminée"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
@@ -2028,6 +2034,24 @@ msgid "Visitor is Happy"
 msgstr "Le visiteur est satisfait"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
+msgid "Visitor is disconnected"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
+msgid "Visitor is disconnected since %(time)s"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
+msgid "Visitor is disconnected since yesterday at %(time)s"
+msgstr ""
+
+#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Visitor left the conversation."
@@ -2081,6 +2105,8 @@ msgid ""
 "When forwarding live chat conversations, the chatbot will prioritize users "
 "with matching expertise."
 msgstr ""
+"Lors du transfert des conversations live chat, le chatbot priorisera les "
+"utilisateurs ayant une expertise correspondante."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2136,7 +2162,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
 msgid "You ended the conversation with %(name)s."
-msgstr ""
+msgstr "Vous avez mis fin à la conversation avec %(name)s."
 
 #. module: im_livechat
 #. odoo-javascript

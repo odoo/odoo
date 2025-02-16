@@ -37,6 +37,9 @@ msgid ""
 "\n"
 "Transfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s."
 msgstr ""
+"\n"
+"\n"
+"Overføring %(transfer_list)s: Du må oppgi et Lot/serienummer for produkter %(product_list)s."
 
 #. module: stock
 #. odoo-python
@@ -45,6 +48,8 @@ msgid ""
 "\n"
 "(%(serial_number)s) exists in location %(location)s"
 msgstr ""
+"\n"
+"(%(serial_number)s) eksisterer på lokasjon %(location)s"
 
 #. module: stock
 #. odoo-python
@@ -4148,12 +4153,6 @@ msgid "Immediate Transfer"
 msgstr "Øyeblikkelig overføring"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Import"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -6583,11 +6582,9 @@ msgstr "Tilstedeværelse avhenger av typen operasjon."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Trykk på OPPRETT-knappen for å definere mengden for hvert produkt på lageret"
-" ditt, eller importer dem fra et regneark gjennom Favoritter."
 
 #. module: stock
 #. odoo-javascript
@@ -7611,7 +7608,7 @@ msgstr "Påfylnings informasjon"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
+msgstr "Påfylnings informasjon for %(product)s i %(warehouse)s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
@@ -7789,7 +7786,7 @@ msgstr "Retur av"
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
-msgstr ""
+msgstr "Retur av %(picking_name)s"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
@@ -7911,6 +7908,8 @@ msgid ""
 "Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
 "%(route_company)s."
 msgstr ""
+"Regel %(rule)s tilhører %(rule_company)s mens ruten tilhører "
+"%(route_company)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8221,6 +8220,9 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): "
 "%(location_list)s. Please correct the serial number encoded."
 msgstr ""
+"Serienummeret (%(serial_number)s) finnes allerede i "
+"plassering(er):%(location_list)s . Vennligst korriger det angitte "
+"serienummeret."
 
 #. module: stock
 #. odoo-python
@@ -8230,6 +8232,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"Serienummeret (%(serial_number)s) er ikke plassert i %(source_location)s, men finnes i plassering(er): %(other_locations)s. \n"
+"\n"
+"Vennligst korriger dette for å unngå inkonsekvent data."
 
 #. module: stock
 #. odoo-python
@@ -8239,6 +8244,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"Serienummeret (%(serial_number)s) er ikke plassert i %(source_location)s , men finnes i plassering(er): %(other_locations)s . \n"
+"\n"
+"Kildeplasseringen for denne flyttingen vil bli endret til %(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -9209,6 +9217,9 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"Mengden som er gjort for produktet \"%(product)s\" overholder ikke "
+"avrundingspresisjonen definert for måleenheten \"%(unit)s\". Vennligst endre"
+" mengden som er gjort eller avrundingspresisjonen for måleenheten din."
 
 #. module: stock
 #. odoo-python
@@ -9251,6 +9262,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"Serienummeret har allerede blitt tildelt: \n"
+"Produkt: %(product)s , Serienummer: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq

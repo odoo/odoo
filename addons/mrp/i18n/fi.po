@@ -92,7 +92,7 @@ msgstr "# osaluetteloa missä käytetään"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "%(display_name)s"
-msgstr ""
+msgstr "%(display_name)s"
 
 #. module: mrp
 #. odoo-python
@@ -771,7 +771,7 @@ msgstr "Sallittu"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Sallitut mittayksiköt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -847,6 +847,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Koska tätä tuotetta varten on jo käytetty muita mittayksiköitä (esim. "
+"%(problem_uom)s) mittayksikön %(uom)s sijasta, mittayksikön muutosta ei "
+"voida tehdä. Jos haluat muuttaa sen, arkistoi tuote ja luo uusi."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1401,6 +1404,8 @@ msgid ""
 "Changing the product or variant will permanently reset all previously "
 "encoded variant-related data."
 msgstr ""
+"Tuotteen tai variantin muuttaminen nollaa pysyvästi kaikki aiemmin koodatut "
+"variantteihin liittyvät tiedot."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1954,6 +1959,11 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
+"Oletusmäärä kappaleina (tuotteen yksikössä), jotka voidaan valmistaa "
+"samanaikaisesti tässä työasemassa. Esimerkiksi: jos kapasiteetti on 5 ja "
+"sinun täytyy tuottaa 10 yksikköä, silloin työaika, joka on ilmoitettu "
+"tuotetiedostossa, kerrotaan kahdella. Huomioithan kuitenkin, että sekä "
+"tuotantoa ennen että sen jälkeen käytettävä aika lasketaan vain kerran."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -2869,17 +2879,17 @@ msgstr "On estävä syy"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is paused"
-msgstr ""
+msgstr "On tauolla"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is running"
-msgstr ""
+msgstr "On käynnissä"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is stopped"
-msgstr ""
+msgstr "On pysäytetty"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_user_working
@@ -4725,7 +4735,7 @@ msgstr "Tuotettava määrä"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_ready
 msgid "Quantity Ready"
-msgstr ""
+msgstr "Valmis määrä"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -5647,7 +5657,7 @@ msgstr "Jo tuotettu määrä, joka odottaa jakamista takaisintoimitusketjussa."
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "The quantity produced must be positive."
-msgstr ""
+msgstr "Tuotetun määrän tulee olla positiivinen."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
@@ -6405,6 +6415,12 @@ msgid ""
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"Kun hankinnalle on määritelty 'tuotanto'-reitti ja toimintatyyppi, se "
+"yrittää luoda tuotantotilauksen tuotteelle käyttäen saman operaatiotyypin "
+"Materiaaliluetteloa. Jos ei, toimintatyyppiä ei oteta huomioon "
+"materiaaliluetteloa haettaessa. Tämä mahdollistaa varastosääntöjen "
+"määrittämisen, jotka laukaisevat erilaisia tuotantotilauksia, joilla on eri "
+"materiaaliluettelot."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
@@ -6802,6 +6818,8 @@ msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
 msgstr ""
+"Et voi muuttaa tuotantotilauksen valmistettua määrää, joka on tehty loppuun "
+"tai jonka tila on peruutettu."
 
 #. module: mrp
 #. odoo-python
@@ -6853,6 +6871,7 @@ msgstr "Et voi siirtää valmistustilausta, kun se on peruutettu tai tehty."
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot produce more than 1 unit of a serial product at a time."
 msgstr ""
+"Et voi valmistaa samanaikaisesti enempää, kuin yhden sarjatuotteen yksikkön."
 
 #. module: mrp
 #. odoo-python

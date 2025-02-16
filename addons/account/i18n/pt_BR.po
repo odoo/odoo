@@ -4,8 +4,9 @@
 # 
 # Translators:
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2025
-# Maitê Dietze, 2025
 # Wil Odoo, 2025
+# Maitê Dietze, 2025
+# Adrien Widart, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Adrien Widart, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,6 +135,14 @@ msgstr "%(amount)s com impostos"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s devido em %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1889,7 +1898,7 @@ msgstr "Conta a pagar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Marcador de posição do prefixo da conta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -5731,13 +5740,13 @@ msgstr "Ponto de corte"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label}"
-msgstr "Corte {rótulo}"
+msgstr "Corte {label}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label} {percent}%"
-msgstr "Corte {rótulo} {porcentagem}%"
+msgstr "Corte {label} {percent}%"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -7415,7 +7424,7 @@ msgstr "Conta financeira"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "Prefixos de contas financeiras"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -14174,6 +14183,8 @@ msgstr "Defina um preço."
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Defina um valor maior que 0,0 para ativar uma verificação de limite de "
+"crédito"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -17212,6 +17223,9 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Acione alertas ao criar faturas e pedidos de vendas para parceiros com um "
+"valor total a receber que exceda um limite. Defina um valor maior que 0,0 "
+"para ativar uma verificação de limite de crédito"
 
 #. module: account
 #. odoo-python

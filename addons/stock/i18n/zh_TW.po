@@ -50,6 +50,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"產品 %(product)s 的已完成數量，不符合在系統設定的捨入精確度。\n"
+"請更改已完成數量，或在設定頁面更改捨入精確度。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -1153,7 +1156,7 @@ msgstr "允許的位置"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
 msgid "Allowed Replenishment Uom"
-msgstr ""
+msgstr "允許的補貨計量單位"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
@@ -1166,7 +1169,7 @@ msgstr "允許路線"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "允許的計量單位"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
@@ -1228,7 +1231,7 @@ msgstr "可適用於"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
 msgid "Applicable on Package Type"
-msgstr ""
+msgstr "適用於包裝類型"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -1299,6 +1302,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"由於此產品已經使用其他計量單位（例如：%(problem_uom)s），而非使用 "
+"%(uom)s，現已無法更改計量單位。如需更改，請將產品封存，然後建立一項新的產品。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -2527,7 +2532,7 @@ msgstr "天"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
 msgid "Days"
-msgstr "天內"
+msgstr "天"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
@@ -2600,7 +2605,7 @@ msgstr "預設出庫路線"
 #: model:ir.model.fields,help:stock.field_stock_storage_category_capacity__product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
-msgstr "所有庫存商品的預設單位。"
+msgstr "所有庫存操作使用的預設計量單位。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_stock
@@ -4098,12 +4103,6 @@ msgstr "如果不勾選，允許您隱藏規則而無需刪除."
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
 msgstr "立即調撥"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "匯入"
 
 #. module: stock
 #. odoo-javascript
@@ -6323,7 +6322,7 @@ msgstr "包裝寬度"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "銷售單或採購單的包裝單位"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6526,9 +6525,9 @@ msgstr "是否存在要取決於操作類型。"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
-msgstr "按建立按鈕定義庫存中每個產品的數量，或從整個收藏夾中的試算表匯入它們"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -6796,7 +6795,7 @@ msgstr "產品追溯"
 #. module: stock
 #: model:ir.model,name:stock.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "產品測量單位"
+msgstr "產品計量單位"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
@@ -6830,7 +6829,7 @@ msgstr "此批號/序號包含的產品.如果它已經被移動了，您就不�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_uom_name
 msgid "Product unit of measure label"
-msgstr "產品量度單位標籤"
+msgstr "產品計量單位標籤"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_tracking
@@ -7144,7 +7143,7 @@ msgstr "根據產品預設計量單位的數量"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "包裝單位內的數量"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7548,7 +7547,7 @@ msgstr "補貨資訊（產品：%(product)s，倉庫：%(warehouse)s）"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid "Replenishment Multiple"
-msgstr ""
+msgstr "多次補貨"
 
 #. module: stock
 #. odoo-python
@@ -7690,7 +7689,7 @@ msgstr "退回"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return All"
-msgstr ""
+msgstr "退回所有"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -7811,7 +7810,7 @@ msgstr "可於此商品選擇路線"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_uom_uom__route_ids
 msgid "Routes propagated from the package type"
-msgstr ""
+msgstr "根據包裝類型填入的路線"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8060,7 +8059,7 @@ msgstr "不支援選取項目。"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "使用不同計量單位或包裝單位，去銷售及採購產品"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9091,7 +9090,7 @@ msgstr "包含此位置的上級位置.示例:「分配區域」是「1號門」
 msgid ""
 "The procurement quantity will be rounded up to a multiple of this "
 "unit/packaging. If it is not set, it is not rounded."
-msgstr ""
+msgstr "採購數量將四捨五入至此單位/包裝的整數倍數。若未設定，便不會進行四捨五入。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9915,7 +9914,7 @@ msgstr "單位"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "單位及包裝"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10365,7 +10364,7 @@ msgstr "重量單位"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "重量單位計量摘要"
+msgstr "重量計量單位標籤"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__weight
@@ -10395,17 +10394,17 @@ msgstr "當所有產品就緒時"
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form."
-msgstr "勾選後，可以在“產品”表單的“庫存”分頁選項中選擇路線."
+msgstr "若勾選，此路線將可在產品表單的庫存分頁中選擇。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
 msgid "When checked, the route will be selectable on package types"
-msgstr ""
+msgstr "若勾選，包裝類型將可選擇此路線。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
-msgstr "勾選後，可以在產品類別中選擇路線."
+msgstr "若勾選，產品類別將可選擇此路線。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

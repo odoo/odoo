@@ -6,6 +6,7 @@
 # Wil Odoo, 2025
 # Sammi Iversen <sammi@vkdata.dk>, 2025
 # Martin Trigaux, 2025
+# Mads Søndergaard, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Martin Trigaux, 2025\n"
+"Last-Translator: Mads Søndergaard, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,6 +136,14 @@ msgstr "%(amount)s Inklusiv moms"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)sforfalder %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15222,7 +15231,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "Kontoen %(name)s (%(code)s) er forældet."
 
 #. module: account
 #. odoo-python
@@ -15591,6 +15600,8 @@ msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though"
 " it was detected as eligible: "
 msgstr ""
+"Den følgende fejl forhindrede '%(candidate)s' QR-kode i at blive genereret, "
+"til trods for den blive anset som valgbar:"
 
 #. module: account
 #. odoo-python
@@ -16527,6 +16538,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
 msgstr ""
+"Denne bevægelse er konfigureret til at blive auto-posteret den %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -18010,6 +18022,9 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"du kan ikke oprette en ny betaling uden en udestående "
+"betaling/kvitteringskonto angivet enten på virksomheden, eller "
+"%(payment_method)s betalingsmetoden i %(journal)s journalen."
 
 #. module: account
 #. odoo-python
@@ -18063,6 +18078,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
+"Du kan ikke have to betalingsmetode linjer af den samme betalingstype "
+"(%(payment_type)s) og med samme navn (%(name)s) på en enkelt journal."
 
 #. module: account
 #. odoo-python
@@ -18257,6 +18274,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
+"Du kan ikke gennemføre denne modifikation på en afstemt journal postering. Du kan ændre visse ikke lovlige felter, ellers skal du afstemme først.\n"
+"Journal Postering (id): %(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python

@@ -3,6 +3,7 @@
 # 	* base
 # 
 # Translators:
+# Jiří Podhorecký <jirka.p@volny.cz>, 2025
 # Aleš Fiala <f.ales1@seznam.cz>, 2025
 # Wil Odoo, 2025
 # 
@@ -10207,7 +10208,7 @@ msgstr "%(company_currency_name)s na %(rate_currency_name)s"
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "%(integral_amount)s %(currency_unit)s"
-msgstr ""
+msgstr "%(integral_amount)s %(currency_unit)s"
 
 #. module: base
 #. odoo-python
@@ -10458,7 +10459,7 @@ msgstr ", vyžadovaný"
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "- %(description)s (%(model)s)"
-msgstr ""
+msgstr "- %(description)s (%(model)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -16879,6 +16880,9 @@ msgid ""
 "Fields: %(fields)s\n"
 "View: %(view)s"
 msgstr ""
+"Nelze přejmenovat/smazat pole, která se stále používají v pohledech:\n"
+"Pole: %(fields)s\n"
+"Pohledy: %(view)s"
 
 #. module: base
 #. odoo-python
@@ -25369,7 +25373,7 @@ msgstr "Neplatná doména: %s"
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid field %(model)s.%(field)s"
-msgstr ""
+msgstr "Neplatné pole %(model)s.%(field)s"
 
 #. module: base
 #. odoo-python
@@ -25468,7 +25472,7 @@ msgstr "Neplatný uživatel šablony. Vypadá to, že je smazaný."
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid value for %(model)s.%(field)s: %(value)s"
-msgstr ""
+msgstr "Neplatná hodnota pro %(model)s.%(field)s: %(value)s"
 
 #. module: base
 #. odoo-python
@@ -25477,6 +25481,8 @@ msgid ""
 "Invalid value for %(model)s.%(field)s: %(value)s is out of bounds (integers "
 "should be between -2,147,483,648 and 2,147,483,647)"
 msgstr ""
+"Neplatná hodnota pro %(model)s.%(field)s: %(value)s je mimo rozsah (celé "
+"čísla by měly být mezi -2 147 483 648 a 2 147 483 647)"
 
 #. module: base
 #. odoo-python
@@ -27162,6 +27168,8 @@ msgid ""
 "Mail delivery failed via SMTP server '%(server)s'.\n"
 "%(exception_name)s: %(message)s"
 msgstr ""
+"Doručení pošty přes server SMTP '%(server)s' selhalo.\n"
+"%(exception_name)s: %(message)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_module_tree
@@ -27660,7 +27668,7 @@ msgstr "Many2many Operace"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Many2one %(field)s on model %(model)s does not exist!"
-msgstr ""
+msgstr "Many2one %(field)s na modelu %(model)s neexistuje!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -28414,7 +28422,7 @@ msgstr "Moduly"
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
 msgid "Modules \"%(module)s\" and \"%(incompatible_module)s\" are incompatible."
-msgstr ""
+msgstr "Moduly \"%(module)s\" a \"%(incompatible_module)s\" jsou nekompatibilní."
 
 #. module: base
 #: model:res.country,name:base.md
@@ -31046,6 +31054,8 @@ msgid ""
 "Odoo is unable to merge the generated PDFs because of %(num_errors)s "
 "corrupted file(s)"
 msgstr ""
+"Odoo nemohlo sloučit vygenerované PDF kvůli %(num_errors)s poškozeným "
+"souborům"
 
 #. module: base
 #. odoo-python
@@ -38390,6 +38400,8 @@ msgid ""
 "The field '%(field)s' cannot be removed because the field '%(other_field)s' "
 "depends on it."
 msgstr ""
+"Pole '%(field)s' nelze odstranit, protože pole '%(other_field)s' na něm "
+"závisí."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -40322,6 +40334,9 @@ msgid ""
 "\n"
 "Sorry, %(user)s doesn't have '%(operation)s' access to:"
 msgstr ""
+"Ach-och! Vypadá to, že jste zakopli o nějaký přísně tajný záznam.\n"
+"\n"
+"Prominňte, %(user)s nemá přístup pro '%(operation)s' k:"
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -40354,6 +40369,8 @@ msgid ""
 "Unable to install module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Nelze instalovat modul \"%(module)s\", protože nevyhovuje vnější závislost: "
+"%(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -40372,6 +40389,8 @@ msgid ""
 "Unable to process module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Nelze zpracovat modul \"%(module)s\", protože nevyhovuje vnější závislost: "
+"%(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -40380,6 +40399,8 @@ msgid ""
 "Unable to upgrade module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Modul \"%(module)s\" nelze povýšit, protože nevyhovuje vnější závislost: "
+"%(dependency)s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -41918,12 +41939,14 @@ msgid ""
 "Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or "
 "maximum file number of subprocess reached. Message : %(message)s"
 msgstr ""
+"Wkhtmltopdf selhal (chybový kód: %(error_code)s). Příliš nízký limit paměti "
+"nebo dosažen maximální počet souborů podprocesu. Zpráva : %(message)s"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s"
-msgstr ""
+msgstr "Wkhtmltopdf selhal (kód chyby: %(error_code)s). Zpráva: %(message)s"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.KPW
@@ -42229,6 +42252,8 @@ msgid ""
 "You cannot archive these Outgoing Mail Servers (%(server_usage)s) because they are still used in the following case(s):\n"
 "%(usage_details)s"
 msgstr ""
+"Nemůžete archivovat tyto odchozí poštovní servery (%(server_usage)s), protože se stále používají pro:\n"
+"%(usage_details)s"
 
 #. module: base
 #. odoo-python
@@ -42237,6 +42262,8 @@ msgid ""
 "You cannot archive this Outgoing Mail Server (%(server_usage)s) because it is still used in the following case(s):\n"
 "%(usage_details)s"
 msgstr ""
+"Nemůžete archivovat tento odchozí poštovní server (%(server_usage)s), protože se stále používá pro:\n"
+"%(usage_details)s"
 
 #. module: base
 #. odoo-python
@@ -42402,6 +42429,8 @@ msgid ""
 "You try to upgrade the module %(module)s that depends on the module: %(dependency)s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Pokusíte se upgradovat modul %(module)s, který závisí na modulu:. %(dependency)s\n"
+"Tento modul však není ve vašem systému k dispozici."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form

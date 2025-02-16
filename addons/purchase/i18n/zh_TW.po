@@ -719,7 +719,7 @@ msgstr "允許修改採購訂單"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "允許的計量單位"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
@@ -783,6 +783,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"由於此產品已經使用其他計量單位（例如：%(problem_uom)s），而非使用 "
+"%(uom)s，現已無法更改計量單位。如需更改，請將產品封存，然後建立一項新的產品。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -1197,7 +1199,7 @@ msgstr "日期:"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Days"
-msgstr "天內"
+msgstr "天"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__reminder_date_before_receipt
@@ -1236,7 +1238,7 @@ msgstr "預設設定，表示此公司的產品及發票所使用的售價，是
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_bill_line_match__product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "所有庫存商品的預設單位。"
+msgstr "所有庫存操作使用的預設計量單位。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2861,7 +2863,7 @@ msgstr "選擇此 \"警告\" 選項，將通知使用者此消息, 選擇 \"受�
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "使用不同計量單位或包裝單位，去銷售及採購產品"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3025,7 +3027,7 @@ msgstr "供應商價目表"
 #: model:ir.model,name:purchase.model_account_tax
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax
 msgid "Tax"
-msgstr "稅金"
+msgstr "稅項"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id
@@ -3057,7 +3059,7 @@ msgstr "連稅："
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__taxes_id
 msgid "Taxes"
-msgstr "稅金"
+msgstr "稅項"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
@@ -3272,14 +3274,14 @@ msgstr "數量總計"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
 msgid "Total Untaxed"
-msgstr "不含稅金額合計"
+msgstr "未連稅總計"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Total Untaxed amount"
-msgstr "不含稅金額合計"
+msgstr "未連稅總金額"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3312,7 +3314,7 @@ msgstr "如果供應商確認了提醒電子郵件，則為 真."
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
-msgstr ""
+msgstr "請嘗試移除最頂部的篩選器，以擴大搜尋範圍"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
@@ -3359,7 +3361,7 @@ msgstr "單價:"
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Units & Packagings"
-msgstr ""
+msgstr "單位及包裝"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3371,12 +3373,12 @@ msgstr "解鎖"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Untaxed"
-msgstr "不含稅"
+msgstr "未連稅"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "不含稅金額"
+msgstr "未連稅金額"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total

@@ -270,7 +270,7 @@ msgstr "<span class=\"o_stat_text\"> Tuotteet</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_form_view_inherit
 msgid "<span class=\"o_stat_text\">Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Viivakoodit</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -522,6 +522,7 @@ msgstr "Lisää tuotteisiin"
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Additional packagings for this product which can be used for sales"
 msgstr ""
+"Tämän tuotteen lisäpakkausvaihtoehdot, joita voidaan käyttää myynnissä"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -746,7 +747,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_uom_uom__product_uom_ids
 msgid "Barcodes"
-msgstr ""
+msgstr "Viivakoodit"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -835,6 +836,8 @@ msgid ""
 "Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name."
 msgstr ""
+"Tuotteen mittayksikön muuttaminen aiheuttaa muunnoksen 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Kaikki olemassa olevat kirjaukset (myyntitilaukset, ostotilaukset, jne.), joissa käytetään tätä tuotetta, päivitetään korvaamalla yksikön nimi."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
@@ -1898,7 +1901,7 @@ msgstr "Varasto"
 #: model:ir.model.fields,field_description:product.field_product_product__is_dynamically_created
 #: model:ir.model.fields,field_description:product.field_product_template__is_dynamically_created
 msgid "Is Dynamically Created"
-msgstr ""
+msgstr "Luodaan dynaamisesti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_is_follower
@@ -2389,12 +2392,12 @@ msgstr "Pakkaustyyppi A"
 #: model:ir.model.fields,field_description:product.field_uom_uom__packaging_barcodes_count
 #: model_terms:ir.ui.view,arch_db:product.product_uom_list_view
 msgid "Packaging Barcodes"
-msgstr ""
+msgstr "Pakkausten viivakoodit"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Packaging Barcodes (PDF)"
-msgstr ""
+msgstr "Pakkausten viivakoodit (PDF)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_ids
@@ -3424,6 +3427,9 @@ msgid ""
 " a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
 msgstr ""
+"Määrä, joka on ostettava tältä toimittajalta, jotta yksikköhinta  on "
+"edullinen. Jos toimittaja on määritellyt yksikön, määrä tulee ilmoittaa "
+"tässä yksikössä. Muuten se tulee ilmoittaa tuotteen oletusyksikössä."
 
 #. module: product
 #. odoo-python
@@ -3574,7 +3580,7 @@ msgstr "Yksikkö"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_uom_ids
 msgid "Unit Barcode"
-msgstr ""
+msgstr "Yksikön viivakoodi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_uom_name
@@ -3608,7 +3614,7 @@ msgstr "Mittayksiköt"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 msgid "Units of Measure & Packagings"
-msgstr ""
+msgstr "Mittayksiköt & pakkaukset"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -3676,7 +3682,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid "Used for sales to the current partner"
-msgstr ""
+msgstr "Käytetään nykyiselle kumppanille myytäessä"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3935,7 +3941,7 @@ msgstr "Mittayksikön paino"
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "What to expect ?"
-msgstr ""
+msgstr "Mitä voin odottaa?"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3

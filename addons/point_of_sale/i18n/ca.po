@@ -5,10 +5,11 @@
 # Translators:
 # jabiri7, 2024
 # Xavier, 2024
-# EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
 # Josep Anton Belchi, 2025
 # Wil Odoo, 2025
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2025
+# Noemi Pla, 2025
+# EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
 # Óscar Fonseca <tecnico@pyming.com>, 2025
 # 
 msgid ""
@@ -93,7 +94,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-msgstr ""
+msgstr "Pagament TPV %(payment_method)s de %(partner)s a %(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1853,7 +1854,7 @@ msgstr "Tanca la sessió"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
-msgstr ""
+msgstr "S'està tancant la diferència a %(payment_method)s (%(session)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1905,7 +1906,7 @@ msgstr "Color"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Combine %(payment_method)s POS payments from %(session)s"
-msgstr ""
+msgstr "Combina %(payment_method)s pagaments TPV de %(session)s"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_t_shirt_pants_product_template
@@ -3690,6 +3691,8 @@ msgstr "Estat factura"
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
 msgstr ""
+"Pagament de factura per a %(order)s (%(account_move)s) usant "
+"%(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -5422,6 +5425,7 @@ msgstr ""
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
+"Definiu el compte d'ingressos d'aquest producte: «%(product)s» (id:%(id)d)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -5834,7 +5838,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation"
-msgstr ""
+msgstr "Preparació"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -6664,6 +6668,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session "
 "%(session)s"
 msgstr ""
+"Reverteix l'entrada de tancament TPV %(entry)s per a la comanda %(order)s de"
+" la sessió %(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9190,6 +9196,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
+"Heu activat l'opció \"Identifica el client\" per al mètode de pagament "
+"%(payment_method)s, però la comanda %(order)s no conté cap client."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -9197,8 +9205,8 @@ msgid ""
 "You must define a product for everything you sell through\n"
 "                the point of sale interface."
 msgstr ""
-"Heu de definir un producte per tot el que es ven a través\n"
-"de la interfície del punt de venda."
+"Ha de definir un producte per a tot el que ven a través\n"
+"                de la interfície de punt de venda."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9212,8 +9220,8 @@ msgstr ""
 msgid ""
 "You must have at least one payment method configured to launch a session."
 msgstr ""
-"Deus que tenir almenys una forma de pagament configurada per a iniciar la "
-"sessió"
+"Ha de tenir, com a mínim, un mètode de pagament configurat per iniciar la "
+"sessió."
 
 #. module: point_of_sale
 #. odoo-python

@@ -84,6 +84,7 @@ msgstr "%s (copie)"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 msgid "'%(name)s' %(type)s badge sent to printer '%(printer)s'"
 msgstr ""
+"Le badge '%(name)s' %(type)s a été envoyé à l'imprimante '%(printer)s'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -1863,13 +1864,13 @@ msgstr "Après chaque inscription"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
 msgid "After the event ended"
-msgstr ""
+msgstr "Après la fin de l'événement"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event_start
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event_start
 msgid "After the event started"
-msgstr ""
+msgstr "Après le début de l'événement"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
@@ -2125,13 +2126,13 @@ msgstr "Le code-barres doit être unique"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event_end
 msgid "Before the event ends"
-msgstr ""
+msgstr "Avant la fin de l'événement"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
 msgid "Before the event starts"
-msgstr ""
+msgstr "Avant le début de l'événement"
 
 #. module: event
 #. odoo-python
@@ -2275,6 +2276,7 @@ msgstr "Communication"
 msgid ""
 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed."
 msgstr ""
+"La communication pour %(event_name)s prévue le %(scheduled_date)s a échoué."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -2545,7 +2547,7 @@ msgstr "Terminé"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets"
-msgstr ""
+msgstr "Télécharger les tickets"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -3365,7 +3367,7 @@ msgstr "Est en cours"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "Échec avec l'erreur %(error)s."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -3450,7 +3452,7 @@ msgstr "Dernier participant"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
 msgid "Last Error"
-msgstr ""
+msgstr "Dernière erreur"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -4183,7 +4185,7 @@ msgstr "Les inscriptions ont commencé"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "Le rendu du modèle a échoué avec l'erreur : %(error)s."
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -4663,6 +4665,8 @@ msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: "
 "%(error)s."
 msgstr ""
+"Un problème est survenu avec le placeholder dynamique. L'erreur reçue est : "
+"%(error)s."
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
@@ -4699,7 +4703,7 @@ msgstr "Cette information sera imprimée sur vos tickets."
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "Cela est dû à une erreur dans le modèle %(template_link)s."
 
 #. module: event
 #. odoo-javascript
@@ -4729,7 +4733,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "Cela peut être lié au modèle %(template_link)s."
 
 #. module: event
 #. odoo-python

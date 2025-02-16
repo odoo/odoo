@@ -5,8 +5,9 @@
 # Translators:
 # Martin Trigaux, 2025
 # Sammi Iversen <sammi@vkdata.dk>, 2025
-# Sanne Kristensen <sanne@vkdata.dk>, 2025
 # Wil Odoo, 2025
+# lhmflexerp <lhm@flexerp.dk>, 2025
+# Sanne Kristensen <sanne@vkdata.dk>, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +91,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-msgstr ""
+msgstr "%(payment_method)s POS betaling på %(partner)s i %(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1430,7 +1431,7 @@ msgstr "Kontant"
 #. odoo-python
 #: code:addons/point_of_sale/models/report_sale_details.py:0
 msgid "Cash %(session_name)s"
-msgstr ""
+msgstr "Kontant%(session_name)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1859,7 +1860,7 @@ msgstr "Lukningssession"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
-msgstr ""
+msgstr "Lukkedifference i %(payment_method)s (%(session)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1911,7 +1912,7 @@ msgstr "Farve"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Combine %(payment_method)s POS payments from %(session)s"
-msgstr ""
+msgstr "Kombinér %(payment_method)s POS betalinger fra %(session)s"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_t_shirt_pants_product_template
@@ -3693,6 +3694,7 @@ msgstr "Faktura status"
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
 msgstr ""
+"Fakturabetaling for %(order)s (%(account_move)s) med %(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -5433,6 +5435,7 @@ msgstr ""
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
+"Definer venligst indkomstkonto for dette produkt: '%(product)s' (id:%(id)d)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -6675,6 +6678,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session "
 "%(session)s"
 msgstr ""
+"Tilbageførsel af POS-lukningsindgang %(entry)s for ordre %(order)s fra "
+"session%(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9205,6 +9210,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
+"Du har aktiveret muligheden \"Identificer kunde\" for %(payment_method)s "
+"betalingsmetode, men ordren %(order)s indeholder ikke en kunde."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

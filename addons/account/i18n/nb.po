@@ -4,10 +4,12 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Marius Stedjan <marius@stedjan.com>, 2024
-# Thor Arne Hvidsten <thor.arne.hvidsten@gmail.com>, 2025
-# Rune Restad, 2025
 # Martin Trigaux, 2025
+# Marius Stedjan <marius@stedjan.com>, 2025
+# Jens Nymoen <jens.nymoen@gmail.com>, 2025
+# Thor Arne Hvidsten <thor.arne.hvidsten@gmail.com>, 2025
+# Thor Arne Hvidsten, 2025
+# Rune Restad, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Martin Trigaux, 2025\n"
+"Last-Translator: Rune Restad, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +35,11 @@ msgid ""
 "The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
 "You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"Bilag (%(move)s) er ikke balansert.\n"
+"Total debet er %(debit_total)s, mens total kredit er %(credit_total)s.\n"
+"Du kan spesifisere en standardkonto på \"%(journal)s\"-journalen, for å automatisk balansere hvert bilag."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -103,19 +110,27 @@ msgstr "%(action)s for journal %(journal)s"
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Excl. Taxes"
-msgstr ""
+msgstr "%(amount)s eksl. Mva"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Incl. Taxes"
-msgstr ""
+msgstr "%(amount)s Inkl. MVA"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s forfall %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -130,12 +145,14 @@ msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%(move)s nådde en ugyldig tilstand i forhold til tilknyttet bilagslinje. \n"
+"For å være konsistent, må regnskapsføringen alltid ha nøyaktig én avstemmingslinje. "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%(name)s installment #%(number)s"
-msgstr ""
+msgstr "%(name)s avdrag %(number)s"
 
 #. module: account
 #. odoo-python
@@ -144,6 +161,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, "
 "%(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s Fakturert, "
+"%(quantity_received)s Mottatt den %(unit_price)s hver"
 
 #. module: account
 #. odoo-python
@@ -152,6 +171,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, "
 "%(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Fakturert, "
+"%(quantity_delivered)s Levert på %(unit_price)s hver seg"
 
 #. module: account
 #. odoo-python
@@ -163,19 +184,19 @@ msgstr "%(partner_name)s har nådd sin kredittgrense på: %(credit_limit)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(ref)s (%(currency_amount)s)"
-msgstr ""
+msgstr "%(ref)s (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
-msgstr ""
+msgstr "%(tag)s (%(country_code)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
-msgstr ""
+msgstr "%(tax_name)s (avrunding)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2082,7 +2103,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued %(entry_type)s entry as of %(date)s"
-msgstr ""
+msgstr "Periodisering %(entry_type)s opprettelse fra den %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -3309,7 +3330,7 @@ msgstr "Bankkonto"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr ""
+msgstr "Bankkonto %(link)s med nummer %(number)s slettet"
 
 #. module: account
 #. odoo-python
@@ -6891,6 +6912,7 @@ msgstr "Egenkapital"
 msgid ""
 "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)"
 msgstr ""
+"Feil ved import av vedlegg '%(file_name)s' som faktura (dekoder=%(decoder)s)"
 
 #. module: account
 #. odoo-python
@@ -8460,6 +8482,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s;"
 " Day: %(day)s"
 msgstr ""
+"Feil dato for regnskapsår: dagen er utenfor rekkevidde for måneden. Måned: "
+"%(month)s ; Dag: %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -8687,7 +8711,7 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
-msgstr ""
+msgstr "Ugyldig domene for uttrykk %(label)s av linjen %(line)s:%(formula)s"
 
 #. module: account
 #. odoo-python
@@ -9857,6 +9881,8 @@ msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
 msgstr ""
+"Linje \"%(line)s\" definerer linje \"%(parent_line)s\" som sin forelder, men"
+" vises før den i rapporten. Forelderen må alltid komme først."
 
 #. module: account
 #. odoo-python
@@ -15018,7 +15044,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "Kontoen %(name)s (%(code)s) er avviklet."
 
 #. module: account
 #. odoo-python
@@ -15229,6 +15255,9 @@ msgid ""
 "%(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
+"Den nåværende totalen er %(current_total)s, men den forventede totalen er "
+"%(expected_total)s . For å bokføre fakturaen/regningen kan du justere "
+"linjene eller forventet totalsum (inkl. skatt)."
 
 #. module: account
 #. odoo-python
@@ -15301,7 +15330,7 @@ msgstr "Dokumentet(e) som genererte fakturaen."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
-msgstr ""
+msgstr "Oppføringen %(name)s (id %(id)s ) må være i utkast."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
@@ -15390,6 +15419,8 @@ msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though"
 " it was detected as eligible: "
 msgstr ""
+"Følgende feil forhindret at '%(candidate)s' QR-kode ble generert selv om den"
+" ble oppdaget som kvalifisert:"
 
 #. module: account
 #. odoo-python
@@ -16355,7 +16386,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
-msgstr ""
+msgstr "Dette trekket er konfigurert til å bli automatisk lagt ut på %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16535,6 +16566,8 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to"
 " validate it."
 msgstr ""
+"For å registrere betalinger med %(payment_method)s må mottakerens bankkonto "
+"valideres manuelt. Du bør gå inn på partnerens bankkonto for å validere den."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -17853,6 +17886,9 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"Du kan ikke opprette en ny betaling uten en utestående "
+"betalings-/kvitteringskonto satt enten på firmaet eller "
+"%(payment_method)sbetalingsmåten i %(journal)s journalen."
 
 #. module: account
 #. odoo-python
@@ -17911,6 +17947,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
+"Du kan ikke ha to betalingsmåtelinjer av samme betalingstype "
+"(%(payment_type)s) og med samme navn (%(name)s) på en enkelt journal."
 
 #. module: account
 #. odoo-python
@@ -18122,6 +18160,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
+"Du kan ikke gjøre denne endringen på en avstemt journalpost. Du kan bare endre noen ikke-lovlige felt, eller du må avstemme først.\n"
+"Journaloppføring (id): %(entry)s(%(id)s)"
 
 #. module: account
 #. odoo-python
@@ -18137,6 +18177,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%(entries)s"
 msgstr ""
+"Du kan ikke redigere følgende felt: %(fields)s .\n"
+"Følgende oppføringer er allerede hashed:\n"
+" %(entries)s"
 
 #. module: account
 #. odoo-python

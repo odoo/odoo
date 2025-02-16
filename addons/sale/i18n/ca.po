@@ -5,9 +5,12 @@
 # Translators:
 # Xavier, 2024
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
-# Óscar Fonseca <tecnico@pyming.com>, 2025
 # Josep Anton Belchi, 2025
 # Wil Odoo, 2025
+# Noemi Pla, 2025
+# Óscar Fonseca <tecnico@pyming.com>, 2025
+# marcescu, 2025
+# Ivan Espinola, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Ivan Espinola, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1988,7 +1991,7 @@ msgstr "Import de la bestreta (fixe)"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Bestreta: %(date)s (esborrany)"
 
 #. module: sale
 #. odoo-python
@@ -2666,7 +2669,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Issued Date"
-msgstr ""
+msgstr "Data d'emissió"
 
 #. module: sale
 #. odoo-python
@@ -2897,7 +2900,7 @@ msgstr "Falten camps obligatoris a la línia de venda comptabilitzable. "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -4703,6 +4706,9 @@ msgid ""
 "%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Els productes següents no es poden restringir a l'empresa %(company)s perquè ja s'han utilitzat en quotes o comandes de vendes en una altra empresa:\n"
+"%(used_products)s\n"
+"Pots arxivar aquests productes i recrear-los amb la restricció de la teva empresa, o deixar-los com a productes compartits."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4786,7 +4792,7 @@ msgstr "El percentatge de l'import que cal pagar per confirmar el pressupost."
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "El producte (%(product)s) té valors incompatibles: %(value_list)s"
 
 #. module: sale
 #. odoo-python
@@ -5367,8 +5373,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Heu de definir un producte per a tot el que veneu o compreu,\n"
-"                 ja sigui un producte emmagatzemable, un consumible o un servei."
+"Ha de definir un producte per a tot el que ven o compra,\n"
+"            sigui un producte emmagatzemable, un consumible o un servei."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale

@@ -4,9 +4,10 @@
 # 
 # Translators:
 # Sammi Iversen <sammi@vkdata.dk>, 2025
-# Martin Trigaux, 2025
 # lhmflexerp <lhm@flexerp.dk>, 2025
 # Wil Odoo, 2025
+# Sanne Kristensen <sanne@vkdata.dk>, 2025
+# Martin Trigaux, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-07 10:32+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Martin Trigaux, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9144,7 +9145,7 @@ msgstr "%(company_currency_name)s per %(rate_currency_name)s"
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "%(integral_amount)s %(currency_unit)s"
-msgstr ""
+msgstr "%(integral_amount)s %(currency_unit)s"
 
 #. module: base
 #. odoo-python
@@ -9397,7 +9398,7 @@ msgstr ", påkrævet"
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "- %(description)s (%(model)s)"
-msgstr ""
+msgstr "- %(description)s (%(model)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -24236,7 +24237,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid field %(model)s.%(field)s"
-msgstr ""
+msgstr "Ugyldigt felt %(model)s.%(field)s"
 
 #. module: base
 #. odoo-python
@@ -24333,7 +24334,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid value for %(model)s.%(field)s: %(value)s"
-msgstr ""
+msgstr "Ugyldig værdi for %(model)s.%(field)s: %(value)s"
 
 #. module: base
 #. odoo-python
@@ -26028,6 +26029,8 @@ msgid ""
 "Mail delivery failed via SMTP server '%(server)s'.\n"
 "%(exception_name)s: %(message)s"
 msgstr ""
+"Postomdeling mislykkedes via SMTP server '  %(server)s'.   "
+"%(exception_name)s:  %(message)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_module_tree
@@ -26487,7 +26490,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Many2one %(field)s on model %(model)s does not exist!"
-msgstr ""
+msgstr "Many2one %(field)s på model %(model)s eksistere ikke!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -27235,7 +27238,7 @@ msgstr "Moduler"
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
 msgid "Modules \"%(module)s\" and \"%(incompatible_module)s\" are incompatible."
-msgstr ""
+msgstr "Modulerne \"%(module)s\" og \"%(incompatible_module)s\" er uforenelige."
 
 #. module: base
 #: model:res.country,name:base.md
@@ -36108,6 +36111,8 @@ msgid ""
 "The field '%(field)s' cannot be removed because the field '%(other_field)s' "
 "depends on it."
 msgstr ""
+"Feltet '%(field)s' kan ikke fjernes fordi felt '%(other_field)s' afhænger af"
+" den."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -37998,6 +38003,8 @@ msgid ""
 "Unable to install module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Kan ikke installere modulet \"  %(module)s\", fordi en ekstern afhængighed "
+"ikke er opfyldt:   %(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -38016,6 +38023,8 @@ msgid ""
 "Unable to process module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Ikke behandle modulet \"  %(module)s\", fordi en ekstern afhængighed ikke er"
+" opfyldt:   %(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -38024,6 +38033,8 @@ msgid ""
 "Unable to upgrade module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Kan ikke opgradere modulet \"  %(module)s\", fordi en ekstern afhængighed "
+"ikke er opfyldt:   %(dependency)s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -39554,12 +39565,14 @@ msgid ""
 "Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or "
 "maximum file number of subprocess reached. Message : %(message)s"
 msgstr ""
+"wkhtmlopdf fejlede (fejlkode: %(error_code)s). Hukommelse grænse for lav, "
+"eller maksimum filtal af underprocesser er nået. Besked: %(message)s"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s"
-msgstr ""
+msgstr "Wkhtmlopdf fejlede (fejlkode: %(error_code)s). Besked: %(message)s"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.KPW
@@ -40039,6 +40052,8 @@ msgid ""
 "You try to upgrade the module %(module)s that depends on the module: %(dependency)s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Du prøver at opgradere modulet %(module)s som afhænger af modulet: %(dependency)s.\n"
+"Men dette modul er ikke tilgængeligt i dit system."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form

@@ -1348,6 +1348,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Ya utilizó otra unidad de medida (como %(problem_uom)s) que no es %(uom)s "
+"para este producto, así que no podrá cambiarla. Si desea hacerlo, archive el"
+" producto y cree uno nuevo."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -2454,14 +2457,14 @@ msgstr "Cliente"
 #: model:ir.model.fields,field_description:stock.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template__sale_delay
 msgid "Customer Lead Time"
-msgstr "Plazo de entrega del cliente"
+msgstr "Plazo de entrega al cliente"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_customer
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_customer
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__customer
 msgid "Customer Location"
-msgstr "Ubicación de cliente"
+msgstr "Ubicación del cliente"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -4266,12 +4269,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
 msgstr "Traslado inmediato"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Importar"
 
 #. module: stock
 #. odoo-javascript
@@ -6625,12 +6622,12 @@ msgstr "Tipo de recolección"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
 msgid "Pick then Deliver (2 steps)"
-msgstr "Recoger y luego entregar (2 pasos)"
+msgstr "Recolectar y luego entregar (2 pasos)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pick, Pack, then Deliver (3 steps)"
-msgstr "Recoger, empacar y luego entregar (3 pasos)"
+msgstr "Recolectar, empacar y luego entregar (3 pasos)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
@@ -6742,11 +6739,12 @@ msgstr "La presencia depende del tipo de operación."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Haga clic en el botón CREAR para definir una cantidad para cada producto en "
-"sus existencias o impórtelos de una hoja de cálculo a través de Favoritos"
+"Haga clic en el botón \"Nuevo\" para definir la cantidad de un producto en "
+"sus existencias o importe la cantidad desde una hoja de cálculo a través del"
+" menú Acciones."
 
 #. module: stock
 #. odoo-javascript

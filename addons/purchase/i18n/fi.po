@@ -729,7 +729,7 @@ msgstr "Salli ostotilausten muokkaaminen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Sallitut mittayksiköt"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
@@ -795,6 +795,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Koska tätä tuotetta varten on jo käytetty muita mittayksiköitä (esim. "
+"%(problem_uom)s) mittayksikön %(uom)s sijasta, mittayksikön muutosta ei "
+"voida tehdä. Jos haluat muuttaa sen, arkistoi tuote ja luo uusi."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count

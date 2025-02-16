@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-04 14:39+0000\n"
 "PO-Revision-Date: 2025-02-09 04:00+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,39 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    안녕하세요, <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>님,<br/><br/>\n"
+"                    <!-- Order in transit body -->\n"
+"                    <t t-if=\"ctx.get('tracking_data')\">\n"
+"                        고객님이 주문하신 상품이 배송 중입니다.\n"
+"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                            <t t-set=\"tracking_url\" t-value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            배송 조회 번호: <a t-attf-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                            <br/><br/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            배송 조회 번호:\n"
+"                            <ul>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-as=\"tracking_url\">\n"
+"                                    <a t-attf-href=\"{{tracking_url}}\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                    <!-- Order delivered body -->\n"
+"                    <t t-if=\"ctx.get('order_delivered')\">\n"
+"                        고객님이 주문하신 상품에 대한 배송이 완료되었습니다.\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    감사합니다.\n"
+"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-container=\"1\">\n"
+"                        <br/>\n"
+"                        <t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                    </t>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -63,6 +97,8 @@ msgid ""
 "<i title=\"All print images are set\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
 "                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
 msgstr ""
+"<i title=\"All print images are set\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
+"                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
@@ -88,24 +124,24 @@ msgstr "연락처"
 #. odoo-python
 #: code:addons/sale_gelato/utils.py:0
 msgid "Could not establish the connection to the Gelato API."
-msgstr ""
+msgstr "젤라또 API 연결을 설정할 수 없습니다."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Could not synchronize with Gelato"
-msgstr ""
+msgstr "젤라또와 동기화할 수 없습니다"
 
 #. module: sale_gelato
 #: model:delivery.carrier,name:sale_gelato.express_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__express
 msgid "Express Delivery"
-msgstr ""
+msgstr "특급 배송"
 
 #. module: sale_gelato
 #: model:product.template,name:sale_gelato.express_delivery_product_product_template
 msgid "Express Delivery (Gelato)"
-msgstr ""
+msgstr "특급 배송(젤라또)"
 
 #. module: sale_gelato
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__delivery_type__gelato
@@ -113,46 +149,46 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Gelato"
-msgstr ""
+msgstr "젤라또"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_api_key
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_api_key
 msgid "Gelato API Key"
-msgstr ""
+msgstr "젤라또 API 키"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_image_ids
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_image_ids
 msgid "Gelato Print Images"
-msgstr ""
+msgstr "젤라또 인쇄 이미지"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_product_uid
 msgid "Gelato Product UID"
-msgstr ""
+msgstr "젤라또 품목 UID"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_product_uid
 msgid "Gelato Product Uid"
-msgstr ""
+msgstr "젤라또 품목 UID"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__gelato_shipping_service_type
 msgid "Gelato Shipping Service Type"
-msgstr ""
+msgstr "젤라또 배송 서비스 유형"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_template_ref
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_template_ref
 msgid "Gelato Template Reference"
-msgstr ""
+msgstr "젤라또 템플릿 참조"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_webhook_secret
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_webhook_secret
 msgid "Gelato Webhook Secret"
-msgstr ""
+msgstr "젤라또 웹훅 비밀번호"
 
 #. module: sale_gelato
 #. odoo-python
@@ -160,51 +196,51 @@ msgstr ""
 msgid ""
 "Gelato could not proceed with the fulfillment of order %(order_reference)s: "
 "%(gelato_message)s"
-msgstr ""
+msgstr "젤라또에서 %(order_reference)s 주문을 진행할 수 없습니다: %(gelato_message)s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
 msgid "Gelato has returned order %(reference)s."
-msgstr ""
+msgstr "젤라또에서 %(reference)s 주문이 반품되었습니다."
 
 #. module: sale_gelato
 #: model:mail.template,name:sale_gelato.order_status_update
 msgid "Gelato: Order status update"
-msgstr ""
+msgstr "젤라또: 주문 상태 업데이트"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
 msgid "Is Gelato"
-msgstr ""
+msgstr "젤라또임"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
 msgid "Manage Delivery Methods"
-msgstr ""
+msgstr "배송 방법 관리"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_missing_images
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_missing_images
 msgid "Missing Print Images"
-msgstr ""
+msgstr "누락된 인쇄 이미지"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Missing product variants and images have been successfully created."
-msgstr ""
+msgstr "누락된 품목 세부 옵션 및 이미지 생성이 완료되었습니다."
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Print Images"
-msgstr ""
+msgstr "이미지 인쇄"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_document.py:0
 msgid "Print images must be set on products before they can be ordered."
-msgstr ""
+msgstr "품목을 주문하기 전에 반드시 인쇄 이미지를 설정해야 합니다."
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_template
@@ -221,7 +257,7 @@ msgstr "제품 관련 문서"
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Product UID"
-msgstr ""
+msgstr "품목 UID"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_product
@@ -246,7 +282,7 @@ msgstr "판매 주문 내역"
 #. module: sale_gelato
 #: model:mail.template,description:sale_gelato.order_status_update
 msgid "Sent to the customer when Gelato updates the status of an order"
-msgstr ""
+msgstr "젤라또에서 주문 상태가 업데이트되면 고객에게 전송됩니다"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_delivery_carrier
@@ -257,18 +293,18 @@ msgstr "배송 방법"
 #: model:delivery.carrier,name:sale_gelato.standard_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__normal
 msgid "Standard Delivery"
-msgstr ""
+msgstr "일반 배송"
 
 #. module: sale_gelato
 #: model:product.template,name:sale_gelato.standard_delivery_product_product_template
 msgid "Standard Delivery (Gelato)"
-msgstr ""
+msgstr "표준 배송(젤라또)"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Successfully synchronized with Gelato"
-msgstr ""
+msgstr "젤라또와 동기화 성공"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -279,30 +315,30 @@ msgstr "동기화"
 #: model:ir.model.fields,help:sale_gelato.field_product_product__gelato_template_ref
 #: model:ir.model.fields,help:sale_gelato.field_product_template__gelato_template_ref
 msgid "Synchronize to fetch variants from Gelato"
-msgstr ""
+msgstr "동기화하여 젤라또에서 세부 옵션을 가져옵니다."
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Template Reference"
-msgstr ""
+msgstr "템플릿 참조"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "The delivery method is not available for this order."
-msgstr ""
+msgstr "이 주문에는 배송 방법을 사용할 수 없습니다."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "The following required address fields are missing: %s"
-msgstr ""
+msgstr "다음 필수 주소 필드가 누락되었습니다: %s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "The order has been successfully passed on Gelato."
-msgstr ""
+msgstr "주문이 성공적으로 젤라또로 전달되었습니다."
 
 #. module: sale_gelato
 #. odoo-python
@@ -311,6 +347,8 @@ msgid ""
 "The order with reference %(order_reference)s was not sent to Gelato.\n"
 "Reason: %(error_message)s"
 msgstr ""
+"참조 번호 %(order_reference)s 관련 주문이 Gelato로 전송되지 않았습니다.\n"
+"사유: %(error_message)s"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
@@ -322,9 +360,9 @@ msgstr "Webhook 보안"
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid ""
 "You cannot mix Gelato products with non-Gelato products in the same order."
-msgstr ""
+msgstr "젤라또 품목과 젤라또 외의 품목은 동일한 주문서에서 같이 사용할 수 없습니다."
 
 #. module: sale_gelato
 #: model:mail.template,subject:sale_gelato.order_status_update
 msgid "{{ object.reference }}"
-msgstr ""
+msgstr "{{ object.reference }}"

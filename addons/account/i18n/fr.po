@@ -3,9 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Manon Rondou, 2025
 # Cécile Collart <cco@odoo.com>, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,6 +135,16 @@ msgstr "%(amount)s toutes taxes comprises"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s dû le %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
+"%(attachment_name)s (détaché par %(user)s le "
+"%(date)s)%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -1911,7 +1921,7 @@ msgstr "Compte fournisseur"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Placeholder du préfixe du compte"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -2542,13 +2552,13 @@ msgstr "Libellé de l'origine de l'écriture d'ajustement"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_move_ids
 msgid "Adjusting Entry Origin Moves"
-msgstr ""
+msgstr "Mouvements d'origine des écritures d'ajustement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_moves_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_moves_count
 msgid "Adjusting Entry Origin Moves Count"
-msgstr ""
+msgstr "Nombre de mouvements d'origine des écritures d'ajustement"
 
 #. module: account
 #. odoo-python
@@ -2736,7 +2746,7 @@ msgstr "Comptes autorisés"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 msgid "Allows out payments"
-msgstr ""
+msgstr "Autorise les paiements sortants"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3407,7 +3417,7 @@ msgstr "Disponibilité"
 #: model:ir.model.fields,field_description:account.field_res_partner__available_invoice_template_pdf_report_ids
 #: model:ir.model.fields,field_description:account.field_res_users__available_invoice_template_pdf_report_ids
 msgid "Available Invoice Template Pdf Report"
-msgstr ""
+msgstr "Modèle de facture rapport PDF disponible"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__available_journal_ids
@@ -3437,7 +3447,7 @@ msgstr "Mode de paiement disponible "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__available_pdf_report_ids
 msgid "Available Pdf Report"
-msgstr ""
+msgstr "Rapport PDF disponible"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -4100,6 +4110,8 @@ msgid ""
 "Cannot change Price Tax computation method on a company that has already "
 "started invoicing."
 msgstr ""
+"Impossible de modifier la méthode de calcul de la TVA pour une entreprise "
+"qui a déjà commencé à facturer."
 
 #. module: account
 #. odoo-python
@@ -5262,7 +5274,7 @@ msgstr "Créez le produit."
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_move_ids
 msgid "Created Adjusting Entries"
-msgstr ""
+msgstr "Écritures d'ajustement créées"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -7193,12 +7205,12 @@ msgstr "Erreur !"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__euro
 msgid "European (RF83INV202400001)"
-msgstr ""
+msgstr "Europe (RF83INV202400001)"
 
 #. module: account
 #: model:res.country.group,name:account.europe_vat
 msgid "European Union VAT"
-msgstr ""
+msgstr "TVA Union européenne"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__decimal_separator
@@ -7459,7 +7471,7 @@ msgstr "Compte financier"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "Préfixes des comptes financiers"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -7537,7 +7549,7 @@ msgstr "Codes fiscaux des pays"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_country_group__exclude_state_ids
 msgid "Fiscal Exceptions"
-msgstr ""
+msgstr "Exceptions fiscales"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -7900,7 +7912,7 @@ msgstr "Lettrage intégral"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__odoo
 msgid "Full Reference (INV/2024/00001)"
-msgstr ""
+msgstr "Référence complète (INV/2024/00001)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11246,12 +11258,12 @@ msgstr "Maintenant, créons votre première facture."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account_bank
 msgid "Num Journals Without Account Bank"
-msgstr ""
+msgstr "Nombre de journaux sans compte bancaire"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account_credit
 msgid "Num Journals Without Account Credit"
-msgstr ""
+msgstr "Nombre de journaux sans compte de crédit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name
@@ -11346,7 +11358,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__number
 msgid "Numbers only (202400001)"
-msgstr ""
+msgstr "Chiffres uniquement (202400001)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__value
@@ -13993,6 +14005,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Vendre et acheter des produits dans différentes unités de mesure ou "
+"conditionnements"
 
 #. module: account
 #. odoo-python
@@ -14238,6 +14252,8 @@ msgstr "Fixez un prix."
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Définir une valeur supérieure à 0,0 pour activer la vérification du plafond "
+"de crédit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -14312,7 +14328,7 @@ msgstr "Configurer le compte bancaire"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Setup Credit Card Account"
-msgstr ""
+msgstr "Configurer un compte de carte de crédit"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -14571,7 +14587,7 @@ msgstr "Relevé"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Statement %(date)s"
-msgstr ""
+msgstr "Relevé %(date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -15083,6 +15099,8 @@ msgid ""
 "Tax names must be unique!\n"
 "%(taxes)s"
 msgstr ""
+"Les noms des taxes doivent être uniques !\n"
+"%(taxes)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
@@ -15753,6 +15771,8 @@ msgid ""
 "The existing PDFs will be used for sending. If you want to regenerate them, "
 "please delete the attachment from the invoice."
 msgstr ""
+"Les PDF existants seront utilisés pour l'envoi. Si vous souhaitez les "
+"régénérer, veuillez supprimer la pièce jointe de la facture."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -15819,6 +15839,8 @@ msgid ""
 "The following accounts must be assigned to at least one company:\n"
 "%(accounts)s"
 msgstr ""
+"Les comptes suivants doivent être affectés à au moins une société :\n"
+"%(accounts)s"
 
 #. module: account
 #. odoo-python
@@ -15827,6 +15849,8 @@ msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though"
 " it was detected as eligible: "
 msgstr ""
+"L'erreur suivante a empêché la création du code QR pour '%(candidate)s', "
+"bien qu'il ait été détecté comme éligible :"
 
 #. module: account
 #. odoo-python
@@ -16543,13 +16567,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "There is no template that applies to invoices."
-msgstr ""
+msgstr "Aucun modèle ne s'applique aux factures."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "There is no template that applies to this move type."
-msgstr ""
+msgstr "Aucun modèle ne s'applique à ce type d'écriture."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -16924,7 +16948,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_country_group__exclude_state_ids
 msgid "Those states are ignored by the fiscal positions"
-msgstr ""
+msgstr "Ces statuts sont ignorés par les positions fiscales"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_merge_wizard__is_group_by_name
@@ -17293,6 +17317,10 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Déclencher des alertes lors de la création de factures et de commandes "
+"clients pour des partenaires dont le total des créances dépasse une limite."
+"                                      Définir une valeur supérieure à 0,0 "
+"pour activer la vérification du plafond de crédit"
 
 #. module: account
 #. odoo-python
@@ -17419,7 +17447,7 @@ msgstr "États-Unis d'Amérique (Générique)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Unités et conditionnements"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -18281,7 +18309,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Vous ne pouvez générer que des documents de vente."
 
 #. module: account
 #. odoo-python
@@ -18416,6 +18444,7 @@ msgstr "Vous ne pouvez pas supprimer un rapport qui a des variantes."
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
 msgstr ""
+"Vous ne pouvez pas générer de factures qui ne sont pas comptabilisées."
 
 #. module: account
 #. odoo-python
@@ -19210,7 +19239,7 @@ msgstr "dû si payé avant"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "e-Invoicing & Email"
-msgstr ""
+msgstr "Facturation électronique et e-mail"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard

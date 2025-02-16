@@ -3,9 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Tony Ng, 2025
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2025
 # Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,6 +135,14 @@ msgstr "%(amount)s 連稅"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s 到期 %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1838,7 +1846,7 @@ msgstr "應付賬戶"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "賬戶字首佔位符"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -3951,7 +3959,7 @@ msgstr "無法在非銷售日記帳中建立銷售單據"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Cannot create an accrual entry with orders in different currencies."
-msgstr ""
+msgstr "無法建立包含不同貨幣訂單項目的應計記項。"
 
 #. module: account
 #. odoo-python
@@ -5667,7 +5675,7 @@ msgstr "日期時間"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__nb_days
 msgid "Days"
-msgstr "天內"
+msgstr "天"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__days_sales_outstanding
@@ -7173,7 +7181,7 @@ msgstr "多變量篩選"
 #. odoo-python
 #: code:addons/account/models/account_root.py:0
 msgid "Filter on the Account or its Display Name instead"
-msgstr ""
+msgstr "按賬戶或其顯示名稱篩選"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -7184,7 +7192,7 @@ msgstr "財務會計科目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "財務賬戶字首"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -7449,7 +7457,7 @@ msgstr "強制"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__force_tax_included
 msgid "Force the tax to be managed as a price included tax."
-msgstr "強制使稅作為含稅價來管理."
+msgstr "強制將稅項當作包含在價格內的稅項去管理。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -8840,7 +8848,7 @@ msgstr "應收憑單和折讓單分配應具有相同的明細."
 msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
-msgstr "應收憑單和折讓單分配應匹配 (相同的百分比，相同的順序)."
+msgstr "發票及貸記單/退款單的分佈，應該相符（相同的百分比，依據相同的順序）。"
 
 #. module: account
 #. odoo-python
@@ -12294,7 +12302,7 @@ msgstr "產品銷售"
 #. module: account
 #: model:ir.model,name:account.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "產品測量單位"
+msgstr "產品計量單位"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
@@ -13481,7 +13489,7 @@ msgstr "選擇此 \"警告\" 選項，將通知使用者此消息, 選擇 \"受�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "使用不同計量單位或包裝單位，去銷售及採購產品"
 
 #. module: account
 #. odoo-python
@@ -13715,7 +13723,7 @@ msgstr "設定價錢。"
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
-msgstr ""
+msgstr "設定大於 0.0 的數值以啟用信用額度檢查"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13833,7 +13841,7 @@ msgstr "顯示折扣詳情"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
-msgstr "顯示強制含稅"
+msgstr "顯示強制連稅"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -14028,7 +14036,7 @@ msgstr "銀行結單"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Statement %(date)s"
-msgstr ""
+msgstr "%(date)s 結單"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -14267,7 +14275,7 @@ msgstr "目標表達標籤"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_line_id
 msgid "Target Line"
-msgstr "目標明細"
+msgstr "目標資料行"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
@@ -14284,7 +14292,7 @@ msgstr "目標明細"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Tax"
-msgstr "稅金"
+msgstr "稅項"
 
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_15
@@ -14390,7 +14398,7 @@ msgstr "已連稅"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__force_tax_included
 msgid "Tax Included in Price"
-msgstr "含稅價"
+msgstr "價格包含稅項"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
@@ -14563,7 +14571,7 @@ msgstr "使用的稅款"
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Taxes"
-msgstr "稅金"
+msgstr "稅項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15572,7 +15580,7 @@ msgstr "所選付款方式不適用於本次付款，請重新選擇付款方式
 msgid ""
 "The sending of invoices is not set up properly, make sure the report used is"
 " set for invoices."
-msgstr ""
+msgstr "發票傳送功能未設定妥當，請確保所使用的報告，已就發票功能進行設定。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -16296,7 +16304,7 @@ msgstr "總計"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_edit_total_amount
 #: model:ir.model.fields,field_description:account.field_account_move__quick_edit_total_amount
 msgid "Total (Tax inc.)"
-msgstr "總計(含稅)"
+msgstr "總計（連稅）"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__total_amount
@@ -16522,6 +16530,8 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"為合作夥伴建立發票及銷售單時，若單據的應收總金額超過指定限額，便觸發警報。                                      "
+"設定大於 0.0 的數值以啟用信用額度檢查"
 
 #. module: account
 #. odoo-python
@@ -16643,7 +16653,7 @@ msgstr "美國（通用）"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "單位及包裝"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16727,13 +16737,13 @@ msgstr "未核銷交易"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 msgid "Untaxed Amount"
-msgstr "不含稅金額"
+msgstr "未連稅金額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_signed
 msgid "Untaxed Amount Signed"
-msgstr "未含稅金額簽署"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_in_currency_signed
@@ -17347,7 +17357,7 @@ msgstr "有剩餘金額"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "With tax"
-msgstr "含稅"
+msgstr "連稅"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__wizard_id
@@ -17461,7 +17471,7 @@ msgstr "您只能更改已過帳日記帳項目的期間/科目."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "你只可產生銷售文件。"
 
 #. module: account
 #. odoo-python
@@ -17573,7 +17583,7 @@ msgstr "您不能刪除具有變體的報表."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "未完成過賬的項目，不能產生發票。"
 
 #. module: account
 #. odoo-python
@@ -18433,7 +18443,7 @@ msgstr "為了使其被受理，必須在交付貨物或提供服務後 8 天內
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
-msgstr "稅金"
+msgstr "稅項的"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form

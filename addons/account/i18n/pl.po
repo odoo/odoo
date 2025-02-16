@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2025
-# Marta Wacławek, 2025
 # Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,6 +135,14 @@ msgstr "%(amount)s Włączając podatki"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s należne %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1893,7 +1901,7 @@ msgstr "Konto zobowiązań"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Znak zastępczy prefiksu konta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -7377,7 +7385,7 @@ msgstr "Konto księgowe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "Prefiksy rachunków finansowych"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -14116,6 +14124,7 @@ msgstr "Ustaw cenę."
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Aby aktywować kontrolę limitu kredytowego, ustaw wartość większą niż 0.0"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -17139,6 +17148,10 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Wyzwalaj alerty podczas tworzenia faktur i zamówień sprzedaży dla partnerów "
+"z łączną kwotą należności przekraczającą limit."
+"                                      Aby aktywować kontrolę limitu "
+"kredytowego, ustaw wartość większą niż 0.0"
 
 #. module: account
 #. odoo-python

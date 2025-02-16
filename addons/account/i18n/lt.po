@@ -3,10 +3,14 @@
 # 	* account
 # 
 # Translators:
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
 # Eimantas <eimantas@focusate.eu>, 2025
 # Wil Odoo, 2025
 # Jessica Jakara, 2025
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2025
+# Sigitasvia <sigitas@vialaurea.lt>, 2025
+# Arunas Vaitekunas <vaitekunas@gmail.com>, 2025
+# Linas Versada <linaskrisiukenas@gmail.com>, 2025
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Gailius Kazlauskas <gailius@vialaurea.lt>, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +36,11 @@ msgid ""
 "The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
 "You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"Operacija (%(move)s) nėra subalansuota.\n"
+" Debetų suma yra %(debit_total)s o kreditų suma yra %(credit_total)s.\n"
+" Galbūt norėsite nustatyti numatytąją sąskaitą žurnale \"%(journal)s\",  kad kiekviena operacija būtų automatiškai subalansuota."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -102,19 +111,27 @@ msgstr "%(action)s žurnalui %(journal)s"
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Excl. Taxes"
-msgstr ""
+msgstr "%(amount)s be PVM"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Incl. Taxes"
-msgstr ""
+msgstr "%(amount)s su PVM"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s Terminas iki %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -129,12 +146,14 @@ msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%(move)s  pasiekė netinkamą būseną, susijusią su jos atitinkama ataskaitos eilute.\n"
+" Norint išlaikyti nuoseklumą, žurnalo įrašas turi turėti tik vieną neapmokėtą eilutę."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%(name)s installment #%(number)s"
-msgstr ""
+msgstr "%(name)sįmoka #%(number)s"
 
 #. module: account
 #. odoo-python
@@ -143,6 +162,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, "
 "%(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s  išrašyta, "
+"%(quantity_received)s gauta po %(unit_price)s kiekvienam"
 
 #. module: account
 #. odoo-python
@@ -151,6 +172,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, "
 "%(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_invoiced)s  išrašyta, "
+"%(quantity_delivered)s pristatyta po %(unit_price)s kiekvienam"
 
 #. module: account
 #. odoo-python
@@ -162,19 +185,19 @@ msgstr "%(partner_name)s pasiekė savo kredito limitą: %(credit_limit)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(ref)s (%(currency_amount)s)"
-msgstr ""
+msgstr "%(ref)s (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
-msgstr ""
+msgstr "%(tag)s (%(country_code)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
-msgstr ""
+msgstr "%(tax_name)s (apvalinimas)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -311,7 +334,7 @@ msgstr ". Galbūt norėsite čia įrašyti didesnį skaičių."
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 msgid "... (%(nb_of_values)s other)"
-msgstr ""
+msgstr "... (%(nb_of_values)s kita)"
 
 #. module: account
 #. odoo-javascript
@@ -2083,7 +2106,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued %(entry_type)s entry as of %(date)s"
-msgstr ""
+msgstr "Kaupiamasis %(entry_type)s įrašas nuo %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -3311,7 +3334,7 @@ msgstr "Banko sąskaita"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr ""
+msgstr "Banko sąskaita %(link)s kurios numeris %(number)s pašalinta"
 
 #. module: account
 #. odoo-python
@@ -8414,6 +8437,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s;"
 " Day: %(day)s"
 msgstr ""
+"Neteisinga finansinių metų data: diena nepatenka į mėnesio ribas: mėnuo: "
+"%(month)s; diena: %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -14856,7 +14881,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "Sąskaita %(name)s (%(code)s) nebenaudojama."
 
 #. module: account
 #. odoo-python
@@ -16083,6 +16108,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
 msgstr ""
+"Šis perkėlimas sukonfigūruotas taip, kad būtų paskelbtas automatiškai "
+"%(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

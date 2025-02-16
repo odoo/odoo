@@ -3,8 +3,8 @@
 # 	* account_peppol
 # 
 # Translators:
-# Tony Ng, 2025
 # Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -218,8 +218,8 @@ msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 msgstr ""
-"用於識別 BIS Billing 3.0 及其衍生版本的端點的代碼。\n"
-"             列表可從 https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/ 獲取。"
+"用於識別 BIS 賬單 3.0 及其衍生產品所使用終端點的代碼。\n"
+"             詳細列表： https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -406,7 +406,7 @@ msgstr "完全自動化"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
 msgid "Got it !"
-msgstr ""
+msgstr "知道！"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -505,7 +505,7 @@ msgstr "流動電話號碼"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
 msgid "Not on Peppol"
-msgstr ""
+msgstr "不在 Peppol 上"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
@@ -526,7 +526,7 @@ msgstr "Odoo"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Odoo keeps you up to date with the new regulation."
-msgstr ""
+msgstr "Odoo 協助你時刻遵守最新法規。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
@@ -643,7 +643,7 @@ msgstr "Peppol 服務精靈"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol document (UUID: %(uuid)s) has been received successfully"
-msgstr ""
+msgstr "已成功接收 Peppol 文件（UUID：%(uuid)s）"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details_fields
@@ -770,7 +770,7 @@ msgstr "註冊為接收方"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Registered as a receiver."
-msgstr ""
+msgstr "已登記為收款人。"
 
 #. module: account_peppol
 #. odoo-python
@@ -801,7 +801,7 @@ msgstr "已註冊透過 Peppol 接收文件。"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Registration rejected."
-msgstr ""
+msgstr "登記被拒絕。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__rejected
@@ -912,7 +912,7 @@ msgstr "合作夥伴未有 Peppol EAS 及/或終端點識別資料。"
 msgid ""
 "The recommended identification method for Belgium is your Company Registry "
 "Number."
-msgstr ""
+msgstr "就比利時業務而言，建議的識別方式是你的公司註冊號碼。"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -925,7 +925,7 @@ msgstr "識別此用戶的唯一識別碼，通常是增值稅(VAT)編號"
 msgid ""
 "This feature is deprecated. Contact odoo support if you need a migration "
 "key."
-msgstr ""
+msgstr "此功能已棄用。若需要遷移金鑰，請聯絡 Odoo 技術支援。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -946,7 +946,7 @@ msgstr "要產生完整的電子發票，請亦為此合作夥伴設定國家/�
 msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
-msgstr "BIS Billing 3.0 及其衍生產品使用的唯一標識符，也稱為\"端點 ID\"。"
+msgstr "BIS 賬單 3.0 及其衍生產品所使用的唯一標識符，又稱為「終端點識別碼」。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -985,7 +985,7 @@ msgstr "檢視合作夥伴"
 msgid ""
 "We could not find a user with this information on our server. Please check "
 "your information."
-msgstr ""
+msgstr "我們的伺服器找不到具有此資料的使用者。請檢查搜尋資料。"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1038,7 +1038,7 @@ msgstr "你現在可以在演示模式下，傳送發票。"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "You can send this invoice electronically via Peppol."
-msgstr ""
+msgstr "你可透過 Peppol，以電子方式傳送此發票。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

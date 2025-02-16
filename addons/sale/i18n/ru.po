@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Ilya Rozhkov, 2025
+# Nadia Martynova, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
@@ -4686,6 +4687,9 @@ msgid ""
 "%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Эти продукты не могут быть привязаны к компании %(company)s, поскольку они уже были использованы в коммерческих предложениях или продажах в другой компании:\n"
+"%(used_products)s\n"
+"Мы можете архивировать эти продукты и создать их заново для нужной компании или пометьте их как общие."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4775,7 +4779,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "Продукт (%(product)s) имеет несовместимые значения: %(value_list)s"
 
 #. module: sale
 #. odoo-python
@@ -5009,7 +5013,7 @@ msgstr "Общий налог включен"
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.js:0
 #: code:addons/sale/static/src/js/product_list/product_list.js:0
 msgid "Total: %s"
-msgstr ""
+msgstr "Итого: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type

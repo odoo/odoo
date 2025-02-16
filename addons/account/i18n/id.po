@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Abe Manyo, 2025
 # Wil Odoo, 2025
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,6 +134,14 @@ msgstr "%(amount)s Termasuk. Pajak"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s jatuh tempo %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1891,7 +1899,7 @@ msgstr "Akun Utang"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Placeholder Awalan Akun"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -7393,7 +7401,7 @@ msgstr "Akun Finansial"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "Awalan Akun Keuangan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -14128,6 +14136,8 @@ msgstr "Tetapkan harga."
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Tetapkan nilai lebih besar dari 0.0 untuk mengaktifkan pemeriksaan limit "
+"kredit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -17149,6 +17159,10 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Picu peringatan saat membuat faktur dan Sale Order untuk Partner dengan "
+"jumlah Total Piutang yang melebihi limit tertentu."
+"                                      Tetapkan nilai lebih besar dari 0.0 "
+"untuk mengaktifkan pemeriksaan limit kredit"
 
 #. module: account
 #. odoo-python
@@ -18135,7 +18149,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Anda hanya dapat membuat dokumen sales."
 
 #. module: account
 #. odoo-python
@@ -18268,7 +18282,7 @@ msgstr "Anda tidak dapat menghapus laporan yang memiliki varian."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "Anda tidak dapat membuat faktur yang tidak dipost."
 
 #. module: account
 #. odoo-python

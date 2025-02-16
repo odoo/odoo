@@ -671,6 +671,44 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        Hei,\n"
+"        <br/><br/>\n"
+"        <t t-out=\"doc_name or ''\">Tarjouksesi</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (jonka viite on: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        on yhteensä <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>, ja voit nyt esikatsella sitä.\n"
+"        <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
+"        <t t-if=\"documents\">\n"
+"            <br/> \n"
+"            <t t-if=\"len(documents)&gt;1\">\n"
+"                Tässä joitakin täydentäviä asiakirjoja, jotka mahdollisesti kiinnostavat sinua:\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Tässä täydentävä asiakirja, joka mahdollisesti kiinnostaa sinua:\n"
+"            </t>\n"
+"            <ul style=\"margin-bottom: 0;\">\n"
+"                <t t-foreach=\"documents\" t-as=\"document\">\n"
+"                    <li style=\"font-size: 13px;\">\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
+"                    </li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </t>\n"
+"        <br/>\n"
+"        Olethan meihin yhteydessä, jos sinulla on kysymyksiä.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_proforma
@@ -696,6 +734,26 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        Hei,\n"
+"        <br/><br/>\n"
+"        Pro forma -laskunne liittyen <t t-out=\"doc_name or ''\">tarjoukseen</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>,\n"
+"        <t t-if=\"object.origin\">\n"
+"            (jonka viite on: <t t-out=\"object.origin or ''\"/> )\n"
+"        </t>\n"
+"        jonka summe on <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>, on nyt käsiteltävissä.\n"
+"        <br/><br/>\n"
+"        Olethan meihin yhteydessä, jos sinulla on kysymyksiä.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -1206,7 +1264,7 @@ msgstr "Lisää tilaukseen useita variantteja taulukosta"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Sallitut mittayksiköt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1359,6 +1417,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Koska tätä tuotetta varten on jo käytetty muita mittayksiköitä (esim. "
+"%(problem_uom)s) mittayksikön %(uom)s sijasta, mittayksikön muutosta ei "
+"voida tehdä. Jos haluat muuttaa sen, arkistoi tuote ja luo uusi."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1842,6 +1903,8 @@ msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
 msgstr ""
+"Luo lasku kaikille saman asiakkaan tilauksille käyttäen samaa "
+"laskutusosoitetta ja samaa toimitusosoitetta."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -4470,7 +4533,7 @@ msgstr "Myynti: Maksu suoritettu"
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
 msgid "Sales: Send Proforma"
-msgstr ""
+msgstr "Myynti: Lähetä Proforma"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -5483,6 +5546,7 @@ msgstr "Lisämyynnin mahdollisuus"
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send proforma to prospects"
 msgstr ""
+"Myyjien käyttämä, kun he lähettävät proforma-laskuja myyntimahdollisuuksille"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -5834,6 +5898,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -5841,6 +5907,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

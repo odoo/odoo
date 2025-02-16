@@ -138,6 +138,14 @@ msgstr "%(amount)s đến hạn %(date)s"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
 msgstr "%(exception)s đối với %(user)s%(end_datetime_string)s%(reason)s."
@@ -9367,7 +9375,7 @@ msgstr "Hoàn tất"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__is_mail_template_editor
 msgid "Is Editor"
-msgstr "Đang biên tập"
+msgstr "Là trình chỉnh sửa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
@@ -14433,7 +14441,7 @@ msgstr "Sao kê"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Statement %(date)s"
-msgstr ""
+msgstr "Sao kê %(date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -15669,6 +15677,7 @@ msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though"
 " it was detected as eligible: "
 msgstr ""
+"Lỗi sau đã ngăn chặn việc tạo mã QR '%(candidate)s' mặc dù đủ điều kiện: "
 
 #. module: account
 #. odoo-python

@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Marianna Ciofani, 2025
 # Wil Odoo, 2025
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,6 +134,14 @@ msgstr "%(amount)s Tasse incluse"
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)sdovuto %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1898,7 +1906,7 @@ msgstr "Conto di debito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Segnaposto prefisso conto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -7436,7 +7444,7 @@ msgstr "Conto finanziario"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "Prefissi conti finanziari"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -14199,6 +14207,8 @@ msgstr "Imposta un prezzo."
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Configura un valore maggiore di 0,0 per attivare la verifica del limite di "
+"credito"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -17250,6 +17260,9 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Mostra avvisi durante la creazione di fatture e ordini di vendita per i "
+"partner con un importo totale del credito superiore a un limite. Configura "
+"un valore maggiore di 0,0 per attivare un controllo del limite di credito."
 
 #. module: account
 #. odoo-python

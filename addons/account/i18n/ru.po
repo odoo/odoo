@@ -3,6 +3,8 @@
 # 	* account
 # 
 # Translators:
+# Collex100, 2025
+# Martin Trigaux, 2025
 # Ilya Rozhkov, 2025
 # Wil Odoo, 2025
 # 
@@ -105,19 +107,27 @@ msgstr "%(action)s для журнала %(journal)s"
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Excl. Taxes"
-msgstr ""
+msgstr "%(amount)s Без учета налогов"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Incl. Taxes"
-msgstr ""
+msgstr "%(amount)s Вкл. налоги"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s должен %(date)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -132,12 +142,14 @@ msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%(move)s достигла недопустимого состояния для связанной с ней строки ведомости.\n"
+"Чтобы быть последовательным, в журнальной записи всегда должна быть ровно одна строка приостановки."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%(name)s installment #%(number)s"
-msgstr ""
+msgstr "%(name)s рассрочка #%(number)s"
 
 #. module: account
 #. odoo-python
@@ -146,6 +158,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, "
 "%(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s Выставлен счет, "
+"%(quantity_received)s Получен по %(unit_price)s каждому"
 
 #. module: account
 #. odoo-python
@@ -154,6 +168,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, "
 "%(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Выставлен счет, "
+"%(quantity_delivered)s Поставлено по %(unit_price)s каждому"
 
 #. module: account
 #. odoo-python
@@ -172,13 +188,13 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
-msgstr ""
+msgstr "%(tag)s (%(country_code)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
-msgstr ""
+msgstr "%(tax_name)s (округление)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -316,7 +332,7 @@ msgstr ". Возможно, вы захотите поставить здесь 
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 msgid "... (%(nb_of_values)s other)"
-msgstr ""
+msgstr "... (%(nb_of_values)s другое)"
 
 #. module: account
 #. odoo-javascript
@@ -2086,7 +2102,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued %(entry_type)s entry as of %(date)s"
-msgstr ""
+msgstr "Начисленная запись %(entry_type)s по состоянию на %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -3318,7 +3334,7 @@ msgstr "Расчётный счет"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr ""
+msgstr "Банковский счет %(link)s с номером %(number)s удален"
 
 #. module: account
 #. odoo-python
@@ -4695,7 +4711,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
-msgstr ""
+msgstr "Повреждённые данные в проводке с ID %(id)s (%(name)s)."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -6913,6 +6929,8 @@ msgstr "Капитал"
 msgid ""
 "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)"
 msgstr ""
+"Ошибка импорта вложения «%(file_name)s» как счета-фактуры "
+"(декодер=%(decoder)s)"
 
 #. module: account
 #. odoo-python
@@ -8492,6 +8510,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s;"
 " Day: %(day)s"
 msgstr ""
+"Неправильная дата финансового года: день выходит за пределы диапазона для "
+"месяца. Месяц: %(month)s; День: %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -8718,6 +8738,7 @@ msgstr ""
 msgid ""
 "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
 msgstr ""
+"Недопустимый домен для выражения '%(label)s' строки '%(line)s': %(formula)s"
 
 #. module: account
 #. odoo-python
@@ -9895,6 +9916,9 @@ msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
 msgstr ""
+"Строка \"%(line)s\" определяет строку \"%(parent_line)s\" как своего "
+"родителя, но появляется перед ней в отчете. Родитель всегда должен быть на "
+"первом месте."
 
 #. module: account
 #. odoo-python
@@ -15074,7 +15098,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "Счет %(name)s (%(code)s) является устаревшим."
 
 #. module: account
 #. odoo-python
@@ -15291,6 +15315,9 @@ msgid ""
 "%(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
+"Текущая общая сумма равна %(current_total)s, а ожидаемая общая сумма равна "
+"%(expected_total)s. Для проводки счета/фактуры можно скорректировать строки "
+"или ожидаемый итог (с учетом налогов)."
 
 #. module: account
 #. odoo-python
@@ -15364,7 +15391,7 @@ msgstr "Документ(ы), который(ые) породил(и) счет-�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
-msgstr ""
+msgstr "Запись %(name)s (id %(id)s) должна быть в черновике."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
@@ -15453,6 +15480,8 @@ msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though"
 " it was detected as eligible: "
 msgstr ""
+"Следующая ошибка не позволила сгенерировать QR-код '%(candidate)s', хотя он "
+"был признан подходящим: "
 
 #. module: account
 #. odoo-python
@@ -16431,7 +16460,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
-msgstr ""
+msgstr "Этот шаг настроен на автопостинг на %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16612,6 +16641,9 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to"
 " validate it."
 msgstr ""
+"Для регистрации платежей с %(payment_method)s необходимо вручную подтвердить"
+" банковский счет получателя. Для проверки необходимо перейти на банковский "
+"счет партнера."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -17947,6 +17979,9 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"Вы не можете создать новый платеж, если не установлен счет неоплаченных "
+"платежей/поступлений либо в компании, либо в методе оплаты "
+"%(payment_method)s в журнале %(journal)s."
 
 #. module: account
 #. odoo-python
@@ -18001,6 +18036,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
+"В одном журнале не может быть двух строк метода оплаты с одинаковым типом "
+"платежа (%(payment_type)s) и одинаковым именем (%(name)s)."
 
 #. module: account
 #. odoo-python
@@ -18215,6 +18252,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
+"Вы не можете выполнить эту модификацию в выверенной журнальной записи. Вы можете только изменить некоторые неправовые поля или сначала отменить сверку.\n"
+"Журнальная запись (id): %(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python
@@ -18230,6 +18269,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%(entries)s"
 msgstr ""
+"Вы не можете редактировать следующие поля: %(fields)s.\n"
+"Следующие записи уже хэшированы:\n"
+"%(entries)s"
 
 #. module: account
 #. odoo-python

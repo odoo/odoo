@@ -5,6 +5,7 @@
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,6 +117,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+"title=\"Traffic\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -446,6 +449,8 @@ msgstr "Suljettu"
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
 msgstr ""
+"Suljetut ryhmät ovat yhä käytettävissä, mutta niihin lähetetyt sähköpostit "
+"palautuvat takaksin"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -645,6 +650,11 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"Tervehdys,\n"
+"    <br/><br/>\n"
+"    Postituslista, johon yrität ottaa yhteyttä, on suljettu eikä vastaanota uusia viestejä.\n"
+"    <br/><br/>\n"
+"    Ystävällisin terveisin,"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
@@ -1179,7 +1189,7 @@ msgstr "Julkinen sähköpostituslista"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Re-Open"
-msgstr ""
+msgstr "Avaa uudelleen"
 
 #. module: mail_group
 #. odoo-python
@@ -1508,13 +1518,13 @@ msgstr "Voit luoda vain yhden säännön tietylle ryhmän sähköpostiosoitteell
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not join a closed group."
-msgstr ""
+msgstr "Et voi liittyä suljettuun ryhmään."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not send guidelines for a closed group."
-msgstr ""
+msgstr "Et voi lähettää ohjeita suljettuun ryhmään."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1569,7 +1579,7 @@ msgstr "on"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "members<br/>"
-msgstr ""
+msgstr "jäsenille<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
