@@ -68,6 +68,10 @@ export class CallParticipantCard extends Component {
         );
     }
 
+    get iconTitle() {
+        return this.props.cardData.type === "screen" ? "screen sharing" : "camera";
+    }
+
     get rtcSession() {
         return this.props.cardData.session;
     }
@@ -152,6 +156,7 @@ export class CallParticipantCard extends Component {
                     this.props.inset(activeRtcSession, currentMainVideoType);
                 }
             }
+            this.env.discussCall.resizeCallSpace(false);
             return;
         }
         await rpc("/mail/rtc/channel/cancel_call_invitation", {
