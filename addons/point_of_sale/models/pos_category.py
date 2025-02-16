@@ -40,6 +40,9 @@ class PosCategory(models.Model):
         product_catg_ids = []
         for product in data['product.product']['data']:
             product_catg_ids += product['pos_categ_ids']
+        for category in config_id._get_available_categories():
+            if category.id in product_catg_ids and category.parent_id:
+                product_catg_ids.append(category.parent_id.id)
         if config_id.limit_categories and config_id.iface_available_categ_ids:
             category_ids = config_id._get_available_categories().ids
             product_catg_ids = list(set(product_catg_ids) & set(category_ids))

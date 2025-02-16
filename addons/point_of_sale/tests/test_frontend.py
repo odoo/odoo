@@ -1629,6 +1629,25 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.main_pos_config.with_user(self.pos_user).open_ui()
             self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchMoreCustomer', login="pos_user")
 
+    def test_parent_category_included(self):
+        """
+        Test that the parents pos categories are displayed even if they have no products if their child is
+         included in the display.
+        """
+        parent_catg = self.env['pos.category'].create({
+            'name': 'Parent',
+        })
+        child_catg = self.env['pos.category'].create({
+            'name': 'Child',
+            'parent_id': parent_catg.id,
+        })
+        product = self.env['product.product'].create({
+            'name': 'test_product',
+            'available_in_pos': True,
+            'pos_categ_ids': [child_catg.id]
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ParentCategoryDisplayed', login="pos_user")
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
