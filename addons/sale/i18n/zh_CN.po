@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"POT-Creation-Date: 2025-02-10 12:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -1203,15 +1203,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote pdf: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"允许您在销售中与客户共享文档。\n"
-"如果您不想与销售客户共享此文档，请将其留空。\n"
-"报价时：文档将发送给客户，客户可随时访问。\n"
-"例如，此选项可用于共享产品描述文件。\n"
-"订单确认时：文件将发送给客户并供其访问。\n"
-"例如，此选项可用于共享用户手册或在电子商务平台上购买的数字内容。\n"
-"内部引用 PDF：文件将包含在报价单的 PDF 中，位于页眉和报价表之间。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2267,7 +2261,7 @@ msgstr "发票就绪后向客户发送的电子邮件。"
 
 #. module: sale
 #. odoo-javascript
-#: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
+#: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
 msgstr "输入自定义值"
 
@@ -4926,7 +4920,6 @@ msgstr "有现有的"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
-#, python-format
 msgid ""
 "There does not seem to be any discount product configured for this company "
 "yet. You can either use a per-line discount, or ask an administrator to "

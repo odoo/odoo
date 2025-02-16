@@ -3,16 +3,16 @@
 # 	* hr_attendance
 # 
 # Translators:
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:11+0000\n"
+"POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -272,7 +272,6 @@ msgstr "การเข้าร่วมจากการทำงานเบ
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/card_layout/card_layout.xml:0
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
 msgid "Back"
 msgstr "กลับ"
@@ -281,6 +280,18 @@ msgstr "กลับ"
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
 msgid "Back Camera"
 msgstr "กล้องหลัง"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Badge with Barcode"
+msgstr "ป้ายที่มีบาร์โค้ด"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Badge with Barcode on Tablet"
+msgstr "ป้ายที่มีบาร์โค้ดบนแท็บเล็ต"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
@@ -363,7 +374,6 @@ msgstr "เช็คอิน"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_in
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_in
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_in
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check In"
 msgstr "เช็คอิน"
@@ -379,7 +389,6 @@ msgstr "เช็คเอาท์"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check Out"
 msgstr "เช็คเอาท์"
@@ -422,6 +431,12 @@ msgstr "เช็คเอาท์ที่"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Choose how long the greeting message will be displayed."
 msgstr "เลือกระยะเวลาที่จะแสดงข้อความทักทาย"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Choose how to record attendances"
+msgstr "เลือกวิธีการบันทึกการเข้างาน"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_city
@@ -481,6 +496,12 @@ msgid "Configuration"
 msgstr "การกำหนดค่า"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Connect an RFID reader, and scan a token."
+msgstr "เชื่อมต่อเครื่องอ่าน RFID และสแกนโทเค็น"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
 msgid "Count Extra Hours"
@@ -538,6 +559,7 @@ msgid "Currently Working"
 msgstr "ปัจจุบันทำงาน"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_overtime_search
 msgid "Date"
 msgstr "วันที่"
@@ -778,12 +800,6 @@ msgid "Hours Today:"
 msgstr "ชั่วโมงวันนี้:"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-msgid "How do you want to record attendances ?"
-msgstr "คุณต้องการบันทึกการลงเวลาอย่างไร"
-
-#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Hr Attendance Search"
 msgstr "ค้นหาการลงเวลางาน Hr"
@@ -865,11 +881,6 @@ msgstr "การตั้งค่าคีออสก์"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_overtime_search
 msgid "Last 3 Months"
 msgstr "3 เดือนที่ผ่านมา"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Last 7 days"
-msgstr "7 วันล่าสุด"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
@@ -969,6 +980,12 @@ msgid "Manual Selection"
 msgstr "การเลือกด้วยตนเอง"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Manually (optional PIN)"
+msgstr "ด้วยตนเอง (รหัส PIN เสริม)"
+
+#. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
 msgid "Message"
 msgstr "ข้อความ"
@@ -984,20 +1001,15 @@ msgid "Messages"
 msgstr "ข้อความ"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Method"
+msgstr "วิธีการ"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_mode
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Mode"
 msgstr "โหมด"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Mode (In)"
-msgstr "โหมด (ใน)"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Mode (Out)"
-msgstr "โหมด (นอก)"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -1016,21 +1028,17 @@ msgstr "ทีมของฉัน"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/barcode_dialog/kiosk_barcode_dialog.xml:0
-msgid "No Badge ID on your employee, do you want to set a barcode to test ?"
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "No Badge defined on employees. Set one to test."
 msgstr ""
-"ไม่มีรหัสประจำตัวพนักงานของคุณ คุณต้องการตั้งค่าบาร์โค้ดเพื่อทดสอบหรือไม่"
-
-#. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_reporting
-msgid "No attendance records found"
-msgstr "ไม่พบบันทึกการลงเวลางาน"
+"ไม่มีการกำหนดตราสัญลักษณ์ให้กับพนักงาน ตั้งค่าหนึ่งตราสัญลักษณ์เพื่อทดสอบ"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-msgid "No barcode or RFID reader ? Click the image to try with camera"
-msgstr "ไม่มีบาร์โค้ดหรือเครื่องอ่าน RFID? คลิกที่ภาพเพื่อลองกับกล้อง"
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_reporting
+msgid "No attendance records found"
+msgstr "ไม่พบบันทึกการลงเวลางาน"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1164,6 +1172,18 @@ msgid "Public Employee"
 msgstr "ข้าราชการ"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "RFID Token with reader"
+msgstr "โทเค็น RFID พร้อมเครื่องอ่าน"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "RFID Token with reader on tablet"
+msgstr "โทเค็น RFID พร้อมเครื่องอ่านบนแท็บเล็ต"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__rating_ids
 msgid "Ratings"
 msgstr "การให้คะแนน"
@@ -1191,12 +1211,6 @@ msgid "Scan your badge"
 msgstr "สแกนเหรียญรางวัลของคุณ"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/barcode_dialog/kiosk_barcode_dialog.js:0
-msgid "Scan your badge's barcode"
-msgstr "สแกนบาร์โค้ดของรหัสประจำตัวพนักงานของคุณ"
-
-#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__scanner
 msgid "Scanner"
 msgstr "เครื่องสแกน"
@@ -1214,15 +1228,15 @@ msgid "Select on Tablet"
 msgstr "เลือกบนแท็บเล็ต"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/barcode_dialog/kiosk_barcode_dialog.xml:0
-msgid "Set Badge ID"
-msgstr "ตั้งค่ารหัสประจำตัวพนักงาน"
-
-#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
 msgstr "ตั้งโค้ด PIN ในแบบฟอร์มรายละเอียดพนักงาน (ในแท็บการตั้งค่า HR)"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Set my badge"
+msgstr "ตั้งค่าป้ายของฉัน"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -1254,15 +1268,9 @@ msgstr "Systray"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-msgid "Tablet with Camera"
-msgstr "แท็บเล็ตพร้อมกล้อง"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-msgid "Tablet with RFID"
-msgstr "แท็บเล็ตพร้อม RFID"
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "The attendance records of your employees will be displayed here."
+msgstr "บันทึกการลงเวลาทำงานของพนักงานของคุณจะแสดงที่นี่"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_reporting
@@ -1450,7 +1458,7 @@ msgstr "คุณไม่มีสิทธิ์ที่จะดำเนิ
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/barcode_dialog/kiosk_barcode_dialog.js:0
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 msgid "Your badge Id is now set, you can scan your badge."
 msgstr ""
 "รหัสประจำตัวพนักงานของคุณได้รับการตั้งค่าแล้ว "
@@ -1458,7 +1466,7 @@ msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/barcode_dialog/kiosk_barcode_dialog.js:0
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 msgid "Your badge has already been set."
 msgstr "รหัสประจำตัวพนักงานของคุณได้รับการตั้งค่าแล้ว"
 
@@ -1476,6 +1484,12 @@ msgstr "เช็คเอาท์"
 
 #. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "e.g. 1102021021"
+msgstr "เช่น 1102021021"
+
+#. module: hr_attendance
+#. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "icon (e.g for work from home)"
 msgstr "ไอคอน (เช่น สำหรับการทำงานจากที่บ้าน)"
@@ -1485,18 +1499,6 @@ msgstr "ไอคอน (เช่น สำหรับการทำงาน
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "or"
 msgstr "หรือ"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-msgid "to scan badges"
-msgstr "เพื่อสแกนรหัสประจำตัวพนักงาน"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-msgid "with barcode or RFID reader"
-msgstr "ด้วยบาร์โค้ดหรือเครื่องอ่าน RFID"
 
 #. module: hr_attendance
 #. odoo-javascript

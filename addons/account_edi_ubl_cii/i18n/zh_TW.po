@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Tony Ng, 2024
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:11+0000\n"
+"POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid ""
 "%s should have a KVK or OIN number: the Peppol e-address (EAS) should be "
 "'0106' or '0190'."
-msgstr "%s 應具有 KVK 或 OIN 編號：Peppol 電子地址 (EAS) 應為“0106”或“0190”。"
+msgstr "%s 應有 KVK 或 OIN 號碼：Peppol 電子地址（EAS）應為 0106 或 0190。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -80,7 +80,7 @@ msgstr "0106 - 荷蘭工商會協會(符合EDIRA標準)"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0130
 msgid "0130 - Directorates of the European Commission"
-msgstr "0130 - 歐盟委員會司署"
+msgstr "0130 - 歐盟委員會各署"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0135
@@ -232,7 +232,7 @@ msgstr "9910 - 匈牙利增值稅號"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9913
 msgid "9913 - Business Registers Network"
-msgstr "9913 - 商業登記網絡"
+msgstr "9913 - 商業登記網絡（歐洲）"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9914
@@ -447,7 +447,7 @@ msgstr "偵測到 %s 的付款。"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
-msgstr "澳紐 BIS Billing 3.0"
+msgstr "澳洲紐西蘭 BIS 賬單 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
@@ -483,12 +483,12 @@ msgstr "BIS 賬單 3.0"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_a_nz
 msgid "BIS Billing 3.0 A-NZ"
-msgstr "BIS 賬單 3.0 澳大利亞-新西蘭"
+msgstr "BIS 賬單 3.0 澳洲紐西蘭"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_sg
 msgid "BIS Billing 3.0 SG"
-msgstr "Peppol BIS 賬單 3.0 新加坡"
+msgstr "BIS 賬單 3.0 新加坡"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
@@ -524,8 +524,8 @@ msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 msgstr ""
-"用於識別 BIS 賬單 3.0及其衍生產品端點的代碼。\n"
-"             列表網址：https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"用於識別 BIS 賬單 3.0 及其衍生產品所使用終端點的代碼。\n"
+"             詳細列表： https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
@@ -687,6 +687,12 @@ msgid "Generate Peppol format by default"
 msgstr "預設產生 Peppol 格式"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__hide_peppol_fields
+msgid "Hide Peppol Fields"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Intra-Community supply"
@@ -761,7 +767,7 @@ msgstr "請在你的公司表格中，填寫 Peppol EAS 及 Peppol 終端點，�
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
-msgstr "新加坡 BIS Billing 3.0"
+msgstr "新加坡 BIS 賬單 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
@@ -872,7 +878,7 @@ msgstr "UBL 2.1"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
-msgstr "UBL BIS Billing 3.0.12"
+msgstr "UBL BIS 賬單 3.0.12"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_file
@@ -887,7 +893,7 @@ msgstr "UBL/CII 檔案"
 msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
-msgstr "BIS 賬單 3.0及其衍生產品使用的唯一標識符，也稱為\"端點ID\"。"
+msgstr "BIS 賬單 3.0 及其衍生產品使用的唯一標識符，又稱為「終端點識別碼」。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

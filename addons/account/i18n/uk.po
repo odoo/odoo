@@ -6,17 +6,17 @@
 # Martin Trigaux, 2024
 # Vitalii Fedko, 2024
 # Tymofii Lytvynenko <till.svit@gmail.com>, 2024
-# Wil Odoo, 2024
 # Yana Bystrytska, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.4+e\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-14 14:13+0000\n"
+"POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1896,11 +1896,6 @@ msgstr ""
 "сьогоднішнього дня"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "Бухгалтер"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -2269,11 +2264,6 @@ msgstr "Коригування запису {link} {percent}%% від {amount} �
 msgid ""
 "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr "Коригування запису {link} {percent}%% від {amount} визнано {new_date}"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Advanced Billing"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -2934,11 +2924,6 @@ msgid "Automatic Entry Default Journal"
 msgstr "Журнал автоматичних записів за замовчуванням"
 
 #. module: account
-#: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
-msgid "Automatic Tax Mapping (AvaTax)"
-msgstr "Автомтаичне співставлення податків (AvaTax)"
-
-#. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
 msgstr "Автоматична послідовність"
@@ -3297,6 +3282,11 @@ msgid "Based on Payment"
 msgstr "На основі оплати"
 
 #. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "Звичайний"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "Групові платежі"
@@ -3350,6 +3340,11 @@ msgid "Billing"
 msgstr "Вставлення рахунку постачальникам"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Billing Administrator"
+msgstr "Адміністратор рахунків"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3391,11 +3386,6 @@ msgstr "Пусто, якщо нуль"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Блокування повідомлення"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Бухгалтер"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3571,7 +3561,6 @@ msgstr "Неможливо створити документ про продаж
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
 "Неможливо створити запис нарахування із замовленнями в різних валютах."
@@ -5961,6 +5950,7 @@ msgstr "Чорнові записи"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 msgid "Draft Entry"
 msgstr "Запис чернетки"
 
@@ -8504,6 +8494,12 @@ msgstr "Надсилається"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
 msgstr "Між"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr "Чи встановлена Coa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -11810,11 +11806,6 @@ msgid "Re-Sequence"
 msgstr "Повторна послідовність"
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Лише для читання"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
 msgstr "Причина вказана в сторно"
@@ -12432,11 +12423,6 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "STANDARD TERMS AND CONDITIONS OF SALE"
 
 #. module: account
-#: model:account.journal,name:account.1_hr_payroll_account_journal
-msgid "Salaries"
-msgstr "Зарплата"
-
-#. module: account
 #: model:account.account,name:account.1_expense_salary
 msgid "Salary Expenses"
 msgstr "Витрати зарплати"
@@ -12566,7 +12552,6 @@ msgstr "Сканувати штрих-код"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr "Відскануйте мене за допомогою вашого банківського додатку."
 
@@ -13029,8 +13014,10 @@ msgstr "Встановіть ціну"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Встановіть значення більше 0,0, щоб активувати перевірку кредитного ліміту"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13126,6 +13113,11 @@ msgstr ""
 "будуть названі, використовуючи цей префікс за замовчуванням."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Show Accounting Features - Readonly"
+msgstr "Показати функцію бухобліку - лише читання"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -13154,6 +13146,11 @@ msgstr "Показати деталі знижки"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
 msgstr "Показати податок на примусовий збір"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Show Full Accounting Features"
+msgstr "Показати всі функції бухобліку"
 
 #. module: account
 #. odoo-python
@@ -13729,7 +13726,7 @@ msgstr "Повідомлення дати блокування податку"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_map
 msgid "Tax Map"
-msgstr ""
+msgstr "Співставлення податків"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
@@ -13915,12 +13912,12 @@ msgstr "Податки застосовуються"
 #: model:ir.model.fields,field_description:account.field_account_move__taxes_legal_notes
 #: model:ir.model.fields,field_description:account.field_account_payment__taxes_legal_notes
 msgid "Taxes Legal Notes"
-msgstr ""
+msgstr "Правові примітки щодо податків"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Taxes are also displayed in local currency on invoices"
-msgstr ""
+msgstr "У рахунках-фактурах податки також відображаються в місцевій валюті"
 
 #. module: account
 #. odoo-python
@@ -13936,7 +13933,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_invoice_tax_company_currency
 msgid "Taxes in company currency"
-msgstr ""
+msgstr "Податки у валюті компанії"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14066,6 +14063,18 @@ msgid ""
 "The %(date_field)s (%(date)s) you've entered isn't aligned with the existing sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
 "To maintain date-based sequences, select entries and use the resequence option from the actions menu, available in developer mode."
 msgstr ""
+"%(date_field)s (%(date)s) введений вами номер не відповідає існуючому порядковому номеру (%(sequence)s). Очистіть порядковий номер, щоб продовжити.\n"
+"Щоб підтримувати послідовності на основі дат, виберіть записи та скористайтеся опцією повторної послідовності в меню дій, доступному в режимі розробника."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+"Шаблон діаграми %s не потрібно обирати безпосередньо. Натомість вам слід "
+"безпосередньо вибрати шаблон діаграми, що стосується вашої країни."
 
 #. module: account
 #. odoo-python
@@ -14146,16 +14155,6 @@ msgstr ""
 "відсотків має становити 100%."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
-"Шаблон діаграми %s не потрібно обирати безпосередньо. Натомість вам слід "
-"безпосередньо вибрати шаблон діаграми, що стосується вашої країни."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
 msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
@@ -14173,12 +14172,14 @@ msgid ""
 "The Unit of Measure (UoM) '%(uom)s' you have selected for product "
 "'%(product)s', is incompatible with its category : %(category)s."
 msgstr ""
+"Одиниця вимірювання (UoM) '%(uom)s' ви вибрали для товару '%(product)s', "
+"несумісний зі своєю категорією : %(category)s."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "Рахунок %(name)s (%(code)s) не підтримується."
 
 #. module: account
 #. odoo-python
@@ -14248,6 +14249,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"Сума для %(partner_name)s виглядає незвично. На основі ваших історичних даних очікувана сума становить %(mean)s (± %(wiggle)s).\n"
+"Будь ласка, перевірте, чи ця сума точна."
 
 #. module: account
 #. odoo-python
@@ -14286,6 +14289,8 @@ msgid ""
 "The billing frequency for %(partner_name)s appears unusual. Based on your historical data, the expected next invoice date is not before %(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
+"Частота виставлення рахунків для %(partner_name)s виглядає незвично. Виходячи з ваших історичних даних, очікувана дата наступного рахунка-фактури не раніше %(expected_date)s (кожні %(mean)s (± %(wiggle)s) дні).\n"
+"Будь ласка, перевірте, чи ця дата точна."
 
 #. module: account
 #. odoo-javascript
@@ -14398,6 +14403,9 @@ msgid ""
 "%(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
+"Поточна сума %(current_total)s але очікувана сума %(expected_total)s. Щоб "
+"опублікувати рахунок-фактуру/рахунок від постачальника, ви можете "
+"відкоригувати його рядки або очікувану суму (включно з податком)."
 
 #. module: account
 #. odoo-python
@@ -14446,7 +14454,7 @@ msgstr "Документ(и), що створив рахунок."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
-msgstr ""
+msgstr "Запис %(name)s (id %(id)s) має бути в чернетці."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -15430,6 +15438,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
 msgstr ""
+"Це переміщення налаштоване, щоби автоматично публікуватися на %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15613,6 +15622,9 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to"
 " validate it."
 msgstr ""
+"Для запису платежів з %(payment_method)s, банківський рахунок одержувача має"
+" бути підтверджено вручну. Ви повинні перейти на банківський рахунок "
+"партнера, щоб підтвердити його."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -15863,7 +15875,8 @@ msgstr "Перемістити до %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
 
@@ -16867,6 +16880,9 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"Ви не можете створити новий платіж без облікового запису непогашених "
+"платежів/квитанцій, встановленого як у компанії, так і %(payment_method)s "
+"спосіб оплати в журналі %(journal)s."
 
 #. module: account
 #. odoo-python
@@ -16929,6 +16945,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
+"Ви не можете мати два рядки способу оплати одного типу платежу "
+"(%(payment_type)s) і з однаковою назвою (%(name)s) в одному журналі."
 
 #. module: account
 #. odoo-python
@@ -17130,6 +17148,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
+"Ви не можете виконати цю зміну в узгодженому записі журналу. Ви можете лише змінити деякі неюридичні рядки або вам необхідно спершу скасувати узгодження.\n"
+"Запис журналу (id): %(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python
@@ -17139,6 +17159,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%(entries)s"
 msgstr ""
+"Ви не можете редагувати наступні поля: %(fields)s.\n"
+"Наступні записи вже хешовані:\n"
+"%(entries)s"
 
 #. module: account
 #. odoo-python

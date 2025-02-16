@@ -3,16 +3,16 @@
 # 	* event
 # 
 # Translators:
-# Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"POT-Creation-Date: 2025-02-10 12:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +57,12 @@ msgstr "%(event_name)s - التسجيل لـ %(attendee_name)s "
 
 #. module: event
 #. odoo-python
+#: code:addons/event/models/event_event.py:0
+msgid "%(start_date)s to %(end_date)s"
+msgstr "%(start_date)s إلى %(end_date)s "
+
+#. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (%(count)s seats remaining)"
 msgstr "%(ticket_name)s (%(count)s مقاعد متبقية) "
@@ -72,6 +78,12 @@ msgstr "%(ticket_name)s (نفدت الكمية) "
 #: code:addons/event/models/event_event.py:0
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
+msgid "'%(name)s' badge sent to printer '%(printer)s'"
+msgstr "تم إرسال الشارة '%(name)s' إلى الطابعة '%(printer)s' "
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -161,6 +173,16 @@ msgstr "4 لكل ورقة "
 #: model:event.tag,name:event.event_tag_category_1_tag_1
 msgid "5-10"
 msgstr "5-10"
+
+#. module: event
+#: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
+msgid "96x134mm (Badge Printer)"
+msgstr "96x134mm (طابعة الشارات) "
+
+#. module: event
+#: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
+msgid "96x82mm (Badge Printer)"
+msgstr "96x82mm (طابعة الشارات) "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2046,6 +2068,12 @@ msgid "Attendees"
 msgstr "الحاضرين "
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Auto-Print"
+msgstr "الطباعة التلقائية "
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_available
 msgid "Available Seats"
@@ -2055,6 +2083,16 @@ msgstr "المقاعد المتاحة"
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
 msgstr "الشارة"
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
+msgid "Badge (96x134mm)"
+msgstr "الشارة (96x134mm) "
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
+msgid "Badge (96x82mm)"
+msgstr "الشارة (96x82mm) "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -2221,12 +2259,6 @@ msgstr ""
 "تلقائياً. "
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Close"
-msgstr "إغلاق"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 msgid "Color"
 msgstr "اللون"
@@ -2322,12 +2354,6 @@ msgid "Configuration"
 msgstr "التهيئة "
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm"
-msgstr "تأكيد"
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
 msgstr "تأكيد الحضور "
@@ -2340,13 +2366,19 @@ msgstr "زر تأكيد الحضور "
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm attendance ?"
-msgstr "تأكيد الحضور "
+msgid "Confirm attendance?"
+msgstr "تأكيد الحضور؟ "
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
 msgid "Contact"
 msgstr "جهة الاتصال"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Continue"
+msgstr "استمرار "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -2513,6 +2545,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "قم بعرض الرعاة والعارضين في صفحات فعاليتك "
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "ترتيب العرض"
@@ -2530,6 +2567,12 @@ msgid ""
 msgstr ""
 "خلال هذا المؤتمر، سيعرض فريقنا نظرة عامة مفصّلة عن تطبيقاتنا لإدارة الأعمال،"
 " وستتعرفون على كافة فوائد استخدامها. "
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Edit"
+msgstr "تحرير"
 
 #. module: event
 #. odoo-python
@@ -3251,16 +3294,16 @@ msgid "In Progress"
 msgstr "قيد التنفيذ"
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Insert dynamic Google Maps in your email templates"
-msgstr "إدراج خرائط Google ديناميكية في قوالب البريد الإلكتروني "
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
 msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
 msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Insert dynamic Google Maps in your email templates"
+msgstr "إدراج خرائط Google ديناميكية في قوالب البريد الإلكتروني "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3784,15 +3827,9 @@ msgstr "تكون الفعالية عبر الإنترنت إذا لم يتم إ�
 
 #. module: event
 #. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Open Details"
-msgstr "رؤية التفاصيل "
-
-#. module: event
-#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
-msgid "Open date range picker. Pick a Start date for your event"
-msgstr "أداة اختيار نطاق التاريخ. اختر تاريخ بدء فعاليتك "
+msgid "Open date range picker.<br/>Pick a Start and End date for your event."
+msgstr "أداة اختيار نطاق التاريخ. <br/>اختر تاريخ بداية ونهاية فعاليتك "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3905,8 +3942,8 @@ msgstr "نقطة البيع (POS)، مقدِّمة لتخصيص التقارير
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Print Ticket"
-msgstr "طباعة التذكرة "
+msgid "Print"
+msgstr "طباعة"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4028,8 +4065,6 @@ msgid "Registration Date"
 msgstr "تاريخ التسجيل"
 
 #. module: event
-#. odoo-python
-#: code:addons/event/controllers/main.py:0
 #: model:ir.ui.menu,name:event.menu_event_registration_desk
 #: model:res.groups,name:event.group_event_registration_desk
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4166,18 +4201,6 @@ msgstr "خطأ في تسليم الرسائل النصية القصيرة "
 
 #. module: event
 #. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Scan Next"
-msgstr "مسح التالي "
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.xml:0
-msgid "Scan a badge"
-msgstr "مسح شارة "
-
-#. module: event
-#. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
 msgstr "المسح أو النقر "
@@ -4228,6 +4251,12 @@ msgstr "سر"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
 msgstr "تحديد الحاضر "
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Select printer..."
+msgstr "الطابعة المحددة... "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4729,7 +4758,6 @@ msgid "Tickets with Sale"
 msgstr "التذاكر التي تم بيعها باستخدام تطبيق المبيعات "
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "المنطقة الزمنية"
@@ -4831,15 +4859,15 @@ msgstr ""
 "سوف تجد كافة التواصلات المجدولة المتعلقة بفعالياتك تحت هذه القائمة التقنية. "
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "فهم التطبيقات المتنوعة؛ "
+
+#. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
 msgstr "تراجع"
-
-#. module: event
-#: model_terms:event.event,description:event.event_2
-msgid "Understand the various modules;"
-msgstr "فهم التطبيقات المتنوعة؛ "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -4979,17 +5007,17 @@ msgid "Welcome to"
 msgstr "مرحبًا بك في"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr "ما الجديد؟ "
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_begin
 #: model:ir.model.fields,help:event.field_event_registration__event_begin_date
 msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
 msgstr ""
-
-#. module: event
-#: model_terms:event.event,description:event.event_0
-msgid "What's new?"
-msgstr "ما الجديد؟ "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -5201,9 +5229,3 @@ msgstr "غدًا"
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
-msgid "'%(name)s' badge sent to printer '%(printer)s'"
-msgstr "تم إرسال الشارة '%(name)s' إلى الطابعة '%(printer)s' "

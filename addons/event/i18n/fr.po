@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
 # Manon Rondou, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"POT-Creation-Date: 2025-02-10 12:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +58,12 @@ msgstr "%(event_name)s - Inscription de %(attendee_name)s"
 
 #. module: event
 #. odoo-python
+#: code:addons/event/models/event_event.py:0
+msgid "%(start_date)s to %(end_date)s"
+msgstr "du %(start_date)s au %(end_date)s"
+
+#. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (%(count)s seats remaining)"
 msgstr "%(ticket_name)s (%(count)s places restantes)"
@@ -73,6 +79,12 @@ msgstr "%(ticket_name)s (Épuisés)"
 #: code:addons/event/models/event_event.py:0
 msgid "%s (copy)"
 msgstr "%s (copie)"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
+msgid "'%(name)s' badge sent to printer '%(printer)s'"
+msgstr "'%(name)s' badge envoyé à l'imprimante '%(printer)s'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -163,6 +175,16 @@ msgstr "4 par feuille"
 #: model:event.tag,name:event.event_tag_category_1_tag_1
 msgid "5-10"
 msgstr "5-10"
+
+#. module: event
+#: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
+msgid "96x134mm (Badge Printer)"
+msgstr "96x134 mm (Imprimante de badges)"
+
+#. module: event
+#: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
+msgid "96x82mm (Badge Printer)"
+msgstr "96x82 mm (Imprimante de badges)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2052,6 +2074,12 @@ msgid "Attendees"
 msgstr "Participants"
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Auto-Print"
+msgstr "Auto-impression"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_available
 msgid "Available Seats"
@@ -2061,6 +2089,16 @@ msgstr "Places disponibles"
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
 msgstr "Badge"
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
+msgid "Badge (96x134mm)"
+msgstr "Badge (96x134 mm)"
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
+msgid "Badge (96x82mm)"
+msgstr "Badge (96x82 mm)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -2228,12 +2266,6 @@ msgstr ""
 "communications, les descriptions et les autres champs."
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Close"
-msgstr "Fermer"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 msgid "Color"
 msgstr "Couleur"
@@ -2328,12 +2360,6 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm"
-msgstr "Confirmer"
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
 msgstr "Confirmer la présence"
@@ -2346,13 +2372,19 @@ msgstr "Bouton de confirmation de présence"
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm attendance ?"
-msgstr "Confirmer la présence ?"
+msgid "Confirm attendance?"
+msgstr "Confirmer la participation ?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
 msgid "Contact"
 msgstr "Contact"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Continue"
+msgstr "Continuer"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -2520,6 +2552,11 @@ msgstr ""
 "Afficher les sponsors et les exposants sur les pages de votre événement"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "Afficher le fuseau horaire"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "Afficher l'ordre"
@@ -2538,6 +2575,12 @@ msgstr ""
 "Au cours de cette conférence, notre équipe vous donnera un aperçu détaillé "
 "de nos applications professionnelles. Vous connaîtrez tous les avantages de "
 "leur utilisation."
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Edit"
+msgstr "Modifier"
 
 #. module: event
 #. odoo-python
@@ -3276,11 +3319,6 @@ msgid "In Progress"
 msgstr "En cours"
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Insert dynamic Google Maps in your email templates"
-msgstr "Insérer Google Maps dynamique dans vos modèles d'e-mail"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
 msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
@@ -3288,6 +3326,11 @@ msgid ""
 msgstr ""
 "Indique le fuseau horaire dans lequel les dates/horaires des événements "
 "seront affichés sur le site web."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Insert dynamic Google Maps in your email templates"
+msgstr "Insérer Google Maps dynamique dans vos modèles d'e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3817,17 +3860,11 @@ msgstr "En ligne si non défini"
 
 #. module: event
 #. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Open Details"
-msgstr "Ouvrir les détails"
-
-#. module: event
-#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
-msgid "Open date range picker. Pick a Start date for your event"
+msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
-"Ouvrir le sélecteur de page de dates. Choisissez une date de début pour "
-"votre événement"
+"Ouvrir le sélecteur de page de dates.<br/>Choisissez une date de début et de"
+" fin pour votre événement."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3945,8 +3982,8 @@ msgstr "Point de vente (PdV), introduction à la personnalisation de rapports."
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Print Ticket"
-msgstr "Imprimer le ticket"
+msgid "Print"
+msgstr "Imprimer"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4070,8 +4107,6 @@ msgid "Registration Date"
 msgstr "Date d'inscription"
 
 #. module: event
-#. odoo-python
-#: code:addons/event/controllers/main.py:0
 #: model:ir.ui.menu,name:event.menu_event_registration_desk
 #: model:res.groups,name:event.group_event_registration_desk
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4208,18 +4243,6 @@ msgstr "Erreur d'envoi SMS"
 
 #. module: event
 #. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Scan Next"
-msgstr "Scanner le suivant"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.xml:0
-msgid "Scan a badge"
-msgstr "Scannez un badge"
-
-#. module: event
-#. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
 msgstr "Scanner ou toucher"
@@ -4268,6 +4291,12 @@ msgstr "Secret"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
 msgstr "Sélectionnez un participant"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Select printer..."
+msgstr "Sélectionner l'imprimante..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4787,7 +4816,6 @@ msgid "Tickets with Sale"
 msgstr "Tickets avec Ventes"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Fuseau horaire"
@@ -4890,15 +4918,15 @@ msgstr ""
 " liées à vos événements."
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "Comprendre les modèles variés ;"
+
+#. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
 msgstr "Annuler"
-
-#. module: event
-#: model_terms:event.event,description:event.event_2
-msgid "Understand the various modules;"
-msgstr "Comprendre les modèles variés ;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -5039,6 +5067,11 @@ msgid "Welcome to"
 msgstr "Bienvenue à"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr "Quoi de neuf ?"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_begin
 #: model:ir.model.fields,help:event.field_event_registration__event_begin_date
 msgid ""
@@ -5047,11 +5080,6 @@ msgid ""
 msgstr ""
 "Le moment auquel l'événement est prévu (selon votre fuseau horaire local "
 "dans la vue formulaire)."
-
-#. module: event
-#: model_terms:event.event,description:event.event_0
-msgid "What's new?"
-msgstr "Quoi de neuf ?"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -5272,9 +5300,3 @@ msgstr "demain"
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr "{{ object.event_id.name }} : {{ object.event_date_range }}"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
-msgid "'%(name)s' badge sent to printer '%(printer)s'"
-msgstr "'%(name)s' badge envoyé à l'imprimante '%(printer)s'"

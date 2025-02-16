@@ -16,31 +16,31 @@
 # Albert Parera, 2024
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
 # Pere Martínez, 2024
-# Noemi Pla, 2024
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2024
 # Iván Infantes Castarnado, 2024
-# Óscar Fonseca <tecnico@pyming.com>, 2024
 # Martin Trigaux, 2024
 # Guspy12, 2024
 # ericrolo, 2024
 # Carles Antoli <carlesantoli@hotmail.com>, 2024
-# Ivan Espinola, 2024
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
 # jabiri7, 2024
-# marcescu, 2024
 # Arnau Ros, 2024
 # Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Josep Anton Belchi, 2024
 # Xavier, 2024
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
+# Noemi Pla, 2025
+# Óscar Fonseca <tecnico@pyming.com>, 2025
+# marcescu, 2025
+# Ivan Espinola, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"POT-Creation-Date: 2025-02-10 12:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025\n"
+"Last-Translator: Ivan Espinola, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -936,7 +936,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote pdf: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
 
 #. module: sale
@@ -1855,7 +1856,7 @@ msgstr "Descompte:"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount: %(percent)s%%"
-msgstr ""
+msgstr "Descompte: %(percent)s%%"
 
 #. module: sale
 #. odoo-python
@@ -1935,7 +1936,7 @@ msgstr "Import de la bestreta (fixe)"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Bestreta: %(date)s (esborrany)"
 
 #. module: sale
 #. odoo-python
@@ -2016,7 +2017,7 @@ msgstr ""
 
 #. module: sale
 #. odoo-javascript
-#: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
+#: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
 msgstr "Introduïu un valor personalitzat"
 
@@ -2772,7 +2773,7 @@ msgstr "Falten camps obligatoris a la línia de venda comptabilitzable. "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -4550,6 +4551,9 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s is "
 "cancelled. You cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"La comanda de venda %(order)s vinculada al compte analític %(account)s s'ha "
+"cancel·lat. No podeu registrar una despesa en una comanda de venda "
+"cancel·lada."
 
 #. module: sale
 #. odoo-python
@@ -4559,6 +4563,10 @@ msgid ""
 "currently locked. You cannot register an expense on a locked Sales Order. "
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
+"La comanda de venda %(order)s enllaçada al compte analític %(account)s està "
+"actualment bloquejada. No podeu registrar una despesa en una comanda de "
+"venda bloquejada. Si us plau, crei una nova venda vinculada a aquest compte "
+"analític."
 
 #. module: sale
 #. odoo-python
@@ -4567,6 +4575,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
 " validated before registering expenses."
 msgstr ""
+"La comanda de vendes %(order)senllaçat al compte analític%(account)s s'ha de"
+" validar abans de registrar les despeses."
 
 #. module: sale
 #. odoo-python
@@ -4616,6 +4626,9 @@ msgid ""
 "%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Els productes següents no es poden restringir a l'empresa %(company)s perquè ja s'han utilitzat en quotes o comandes de vendes en una altra empresa:\n"
+"%(used_products)s\n"
+"Pots arxivar aquests productes i recrear-los amb la restricció de la teva empresa, o deixar-los com a productes compartits."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4691,7 +4704,7 @@ msgstr "El percentatge de l'import que cal pagar per confirmar el pressupost."
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "El producte (%(product)s) té valors incompatibles: %(value_list)s"
 
 #. module: sale
 #. odoo-python
@@ -4723,7 +4736,6 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
-#, python-format
 msgid ""
 "There does not seem to be any discount product configured for this company "
 "yet. You can either use a per-line discount, or ask an administrator to "

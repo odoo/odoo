@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:11+0000\n"
+"POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -87,9 +87,10 @@ msgstr "Message de Viva Wallet : %s"
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
+msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
 msgstr ""
-"Seul 'group_pos_user' est autorisé à récupérer des jetons depuis Viva Wallet"
+"Seuls les membres de 'group_pos_user' sont autorisés à annuler un paiement "
+"Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -98,6 +99,24 @@ msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
 "Seul 'group_pos_user' est autorisé à obtenir le dernier statut des "
 "transactions"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
+msgstr ""
+"Seuls les membres de 'group_pos_user' sont autorisés à obtenir le statut de "
+"paiement depuis Viva Wallet"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgstr ""
+"Seuls les membres de 'group_pos_user' sont autorisés à envoyer une demande "
+"de paiement Viva Wallet"
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
@@ -138,7 +157,6 @@ msgstr ""
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
 msgid ""
 "Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
 "ID and Client Secret are correct"

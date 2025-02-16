@@ -3,8 +3,10 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
+# Kseina Tyshchenko, 2025
+# Wil Odoo, 2025
+# Martin Trigaux, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Last-Translator: Martin Trigaux, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +30,9 @@ msgid ""
 "\n"
 "Transfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s."
 msgstr ""
+"\n"
+"\n"
+"Переміщення %(transfer_list)s: Вам необхідно вказати Партійний/Серійний номер для товарів %(product_list)s."
 
 #. module: stock
 #. odoo-python
@@ -36,6 +41,8 @@ msgid ""
 "\n"
 "(%(serial_number)s) exists in location %(location)s"
 msgstr ""
+"\n"
+"(%(serial_number)s) наявний у місцезнаходженні %(location)s"
 
 #. module: stock
 #. odoo-python
@@ -45,6 +52,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"Виконана кількість для товару %(product)s не дотримується точності округлення, визначеної в одиниці вимірювання %(unit)s.\n"
+"Будь ласка, змініть зроблену кількість або точність округлення вашої одиниці вимірювання."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -115,6 +125,9 @@ msgid ""
 "(%(product_uom_category)s) - Move UoM is %(move_uom)s "
 "(%(move_uom_category)s)"
 msgstr ""
+"%(product_name)s --> Одиниця вимірювання товару %(product_uom)s "
+"(%(product_uom_category)s) - Одиниця вимірювання переміщення %(move_uom)s "
+"(%(move_uom_category)s)"
 
 #. module: stock
 #. odoo-python
@@ -395,11 +408,6 @@ msgstr "4 x 7 з ціною"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #. odoo-python
@@ -1709,7 +1717,6 @@ msgstr "Змінити кількість товару"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
-#, python-format
 msgid ""
 "Changing the Lot/Serial number for move lines with different products is not"
 " allowed."
@@ -4097,12 +4104,6 @@ msgid "Immediate Transfer"
 msgstr "Миттєве переміщення"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Імпорт"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -5630,6 +5631,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"Не знайдено жодного правила для поповнення \"%(product)s\" в \"%(location)s\".\n"
+"Перевірте налаштування маршрутів на товарі."
 
 #. module: stock
 #. odoo-python
@@ -6488,11 +6491,9 @@ msgstr "Наявність залежить від типу операції."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Натисніть кнопку СТВОРИТИ, щоб визначити кількість для кожного товару на "
-"вашому складі, або імпортуйте їх з електронної таблиці в розділ «Вибране»"
 
 #. module: stock
 #. odoo-javascript
@@ -7544,7 +7545,7 @@ msgstr "Інформація поповнення"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
+msgstr "Інформація поповнення для %(product)s в %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -7727,7 +7728,7 @@ msgstr "Повернення"
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
-msgstr ""
+msgstr "Повернення %(picking_name)s"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
@@ -7845,6 +7846,8 @@ msgid ""
 "Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
 "%(route_company)s."
 msgstr ""
+"Правило %(rule)s належить %(rule_company)s, а маршрут належить "
+"%(route_company)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8215,6 +8218,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): "
 "%(location_list)s. Please correct the serial number encoded."
 msgstr ""
+"Серійний номер (%(serial_number)s) вже існує в місцезнаходженн: "
+"%(location_list)s. Виправіть закодований серійний номер."
 
 #. module: stock
 #. odoo-python
@@ -8224,6 +8229,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"Серійний номер (%(serial_number)s) не знаходиться в %(source_location)s, але знаходиться у місцезнаходженні: %(other_locations)s.\n"
+"\n"
+"Виправте це, щоб запобігти невідповідності даних."
 
 #. module: stock
 #. odoo-python
@@ -8233,6 +8241,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"Серійний номер (%(serial_number)s) не знаходиться в %(source_location)s, але знаходиться у місцезнаходженні: %(other_locations)s.\n"
+"\n"
+"Джерело місцезнаходження для цього переміщення буде змінено на %(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -8966,7 +8977,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
-#, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
 msgstr ""
 
@@ -9170,6 +9180,10 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"Виконана кількість для товару \"%(product)s\" не враховує точність "
+"округлення, визначену в одиниці вимірювання \"%(unit)s\". Будь ласка, "
+"змініть виконану кількість або точність округлення вашої одиниці "
+"вимірювання."
 
 #. module: stock
 #. odoo-python
@@ -9192,7 +9206,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "Пошук не підтримує оператора %(operator)s або %(value)s значення."
 
 #. module: stock
 #. odoo-python
@@ -9211,6 +9225,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"Серійний номер вже призначено: \n"
+" Товар: %(product)s, Серійний номер: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -10555,6 +10571,8 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need."
 msgstr ""
+"Коли товари необхідні в <b>%(destination)s</b>, <br/> <b>%(operation)s</b> "
+"створюють з <b>%(source_location)s</b>для задоволення потреби."
 
 #. module: stock
 #. odoo-python

@@ -5,15 +5,15 @@
 # Translators:
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Wil Odoo, 2024
-# Junko Augias, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"POT-Creation-Date: 2025-02-10 12:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1206,7 +1206,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote pdf: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
 "販売内で顧客とドキュメントを共有できます。\n"
 "このドキュメントを販売顧客と共有したくない場合は、空のままにして下さい。\n"
@@ -1214,7 +1215,8 @@ msgstr ""
 "例: このオプションはプロダクト説明ファイルを共有するのに便利です。\n"
 "オーダ確認時: ドキュメントは顧客に送信され、顧客はアクセスできます。\n"
 "例: このオプションはユーザマニュアルやeコマースで購入したデジタルコンテンツを共有するのに便利です。\n"
-"見積書pdf内:ドキュメントはヘッダページと見積テーブルの間の見積書のPDFに含まれます。"
+"見積書内:ドキュメントはヘッダページと見積テーブルの間の見積書\n"
+"と販売オーダのPDFに含まれます。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1695,7 +1697,7 @@ msgstr "確認メッセージ"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
-msgstr "コネクター"
+msgstr "コネクタ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -2265,7 +2267,7 @@ msgstr "請求書の発行が可能になった時点で、お客様に送信さ
 
 #. module: sale
 #. odoo-javascript
-#: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
+#: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
 msgstr "カスタム値を入力"
 
@@ -3440,7 +3442,7 @@ msgstr "パッケージング数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr "取引先与信限度警告"
+msgstr "取引先信用限度警告"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4930,7 +4932,6 @@ msgstr "これらは存在する"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
-#, python-format
 msgid ""
 "There does not seem to be any discount product configured for this company "
 "yet. You can either use a per-line discount, or ask an administrator to "

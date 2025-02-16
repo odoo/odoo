@@ -3,16 +3,16 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2923,6 +2923,8 @@ msgid ""
 "Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
 " can approve or refuse allocation requests."
 msgstr ""
+"เฉพาะผู้อนุมัติเวลาหยุดงานของ %s เท่านั้น "
+"เจ้าหน้าที่/ผู้รับผิดชอบเวลาหยุดงานหรือผู้ดูแลระบบสามารถอนุมัติหรือปฏิเสธคำขอจัดสรรเวลาได้"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2960,7 +2962,7 @@ msgstr "มีเพียงผู้จัดการเท่านั้น
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a time off Administrator can approve their own requests."
-msgstr ""
+msgstr "ผู้ดูแลระบบจะสามารถอนุมัติคำขอของตนเองได้เฉพาะช่วงเวลาว่างเท่านั้น"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2969,6 +2971,7 @@ msgid ""
 "Only a time off Officer/Responsible or Administrator can approve or refuse "
 "allocation requests."
 msgstr ""
+"เจ้าหน้าที่/ผู้รับผิดชอบหรือผู้ดูแลระบบจะสามารถอนุมัติหรือปฏิเสธคำขอจัดสรรได้เฉพาะในช่วงเวลาว่างเท่านั้น"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3080,6 +3083,12 @@ msgstr "วันหยุดราชการให้นับรวมใน
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
 msgid "Rate"
 msgstr "อัตรา"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
+msgid "Ratings"
+msgstr "การให้คะแนน"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
@@ -4351,6 +4360,18 @@ msgid "Waiting for Approval"
 msgstr "รอการอนุมัติ"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__website_message_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความเว็บไซต์"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__website_message_ids
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__website_message_ids
+msgid "Website communication history"
+msgstr "ประวัติการสื่อสารของเว็บไซต์"
+
+#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__wed
 msgid "Wednesday"
 msgstr "วันพุธ"
@@ -4544,6 +4565,8 @@ msgid ""
 "You must be either %s's Time Off Approver or Time off Administrator to "
 "validate this allocation request."
 msgstr ""
+"คุณต้องเป็นผู้อนุมัติการลางานหรือผู้ดูแลการลางานของ %s "
+"จึงจะตรวจสอบคำขอการจัดสรรนี้ได้"
 
 #. module: hr_holidays
 #. odoo-python

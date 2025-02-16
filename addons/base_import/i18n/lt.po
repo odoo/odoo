@@ -8,20 +8,20 @@
 # Naglis Jonaitis, 2024
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2024
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2024
-# Jonas Zinkevicius <jozi@odoo.com>, 2024
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2024
 # Martin Trigaux, 2024
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2024
 # Linas Versada <linaskrisiukenas@gmail.com>, 2024
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2024
+# Jonas Zinkevicius <jozi@odoo.com>, 2025
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2024\n"
+"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "%s records successfully imported"
-msgstr ""
+msgstr "%s duomenys buvo sėkmingai įkelti"
 
 #. module: base_import
 #. odoo-javascript
@@ -129,7 +129,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Column %(column)s contains incorrect values (value: %(value)s)"
-msgstr ""
+msgstr "Stulpelyje %(column)s yra neteisingų reikšmių (reikšmė: %(value)s)"
 
 #. module: base_import
 #. odoo-python
@@ -138,6 +138,8 @@ msgid ""
 "Column %(column)s contains incorrect values. Error in line %(line)d: "
 "%(error)s"
 msgstr ""
+"Stulpelyje %(column)s yra neteisingų reikšmių. Klaida eilutėje %(line)d: "
+"%(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -236,7 +238,7 @@ msgstr "Koduotė:"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
-msgstr ""
+msgstr "Klaida analizuojant datą [%(field)s:L%(line)d]: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -432,6 +434,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Importing"
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
 
 #. module: base_import

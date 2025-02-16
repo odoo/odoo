@@ -3,14 +3,14 @@
 # 	* hr_expense
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 10:23+0000\n"
+"POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -618,6 +618,17 @@ msgstr ""
 "automatisch."
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
+msgid ""
+"Do you really want to invoice your own company? Remove the \"Company Name\" "
+"from the partner to fix the configuration. Cancel this invoice and start "
+"again."
+msgstr ""
+"Möchten Sie wirklich Ihrem eigenen Unternehmen eine Rechnung ausstellen? "
+"Entfernen Sie den „Unternehmensnamen“ des Partners, um die Konfiguration zu "
+"korrigieren. Stornieren Sie diese Rechnung und beginnen Sie erneut."
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
 msgid "Domain"
 msgstr "Bereich"
@@ -1042,6 +1053,11 @@ msgstr "Hat eine Nachricht"
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hotel, Flugtickets, Taxi usw."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
+msgid "Hr Expense Alias Domain"
+msgstr "Alias-Domain für Personalausgaben"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
@@ -1578,7 +1594,6 @@ msgstr "Telefonrechnungen, Porto usw."
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
 msgid ""
 "Please specify an expense journal in order to generate accounting entries."
 msgstr ""
@@ -1853,6 +1868,13 @@ msgid "Sheet"
 msgstr "Abrechnung"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__show_commercial_partner_warning
+#: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment__show_commercial_partner_warning
+msgid "Show Commercial Partner Warning"
+msgstr "Warnung für Vertriebspartner anzeigen"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records which has next action date is before today"
@@ -1863,12 +1885,6 @@ msgstr "Alle Datensätze mit vor heute geplanten Aktionen anzeigen"
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "Show missing work email employees"
 msgstr "Fehlende Arbeitsmails von Mitarbeitern anzeigen"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Geben Sie das Aufwandsjournal an, um Buchungseinträge zu erstellen."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
@@ -2086,27 +2102,6 @@ msgid ""
 msgstr ""
 "Die Arbeitsmailadresse einiger Mitarbeiter fehlt. Bitte geben Sie sie auf "
 "dem Mitarbeiterformular an."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s) should have a bank account set."
-msgstr "Für Mitarbeiter sollte ein Bankkonto hinterlegt sein."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Go to Employee(s)"
-msgstr "Zu Mitarbeiter(n)"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s)"
-msgstr "Mitarbeiter"
 
 #. module: hr_expense
 #. odoo-python
@@ -2658,14 +2653,3 @@ msgstr "OCR zum Ausfüllen von Daten aus einem Foto der Rechnung verwenden"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "mit demselben Beleg besteht bereits."
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
-msgid ""
-"Do you really want to invoice your own company? Remove the \"Company Name\" "
-"from the partner to fix the configuration. Cancel this invoice and start "
-"again."
-msgstr ""
-"Möchten Sie wirklich Ihrem eigenen Unternehmen eine Rechnung ausstellen? "
-"Entfernen Sie den „Unternehmensnamen“ des Partners, um die Konfiguration zu "
-"korrigieren. Stornieren Sie diese Rechnung und beginnen Sie erneut."

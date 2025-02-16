@@ -3,16 +3,16 @@
 # 	* event
 # 
 # Translators:
-# Wil Odoo, 2024
-# Abe Manyo, 2024
+# Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"POT-Creation-Date: 2025-02-10 12:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Abe Manyo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +57,12 @@ msgstr "%(event_name)s - Pendaftaran untuk %(attendee_name)s"
 
 #. module: event
 #. odoo-python
+#: code:addons/event/models/event_event.py:0
+msgid "%(start_date)s to %(end_date)s"
+msgstr "%(start_date)s sampai %(end_date)s"
+
+#. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (%(count)s seats remaining)"
 msgstr "%(ticket_name)s (%(count)s tempat tersisa)"
@@ -72,6 +78,12 @@ msgstr "%(ticket_name)s (Sold out)"
 #: code:addons/event/models/event_event.py:0
 msgid "%s (copy)"
 msgstr "%s (salin)"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
+msgid "'%(name)s' badge sent to printer '%(printer)s'"
+msgstr "'%(name)s' lencana dikirim ke printer '%(printer)s'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -160,6 +172,16 @@ msgstr "4 per sheet"
 #: model:event.tag,name:event.event_tag_category_1_tag_1
 msgid "5-10"
 msgstr "5-10"
+
+#. module: event
+#: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
+msgid "96x134mm (Badge Printer)"
+msgstr "96x134mm (Badge Printer)"
+
+#. module: event
+#: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
+msgid "96x82mm (Badge Printer)"
+msgstr "96x82mm (Badge Printer)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2049,6 +2071,12 @@ msgid "Attendees"
 msgstr "Peserta"
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Auto-Print"
+msgstr "Cetak-otomatis"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_available
 msgid "Available Seats"
@@ -2058,6 +2086,16 @@ msgstr "Kursi yang tersedia"
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
 msgstr "Lencana"
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
+msgid "Badge (96x134mm)"
+msgstr "Badge (96x134mm)"
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
+msgid "Badge (96x82mm)"
+msgstr "Badge (96x82mm)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -2225,12 +2263,6 @@ msgstr ""
 " lainnya."
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Close"
-msgstr "Tutup"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 msgid "Color"
 msgstr "Warna"
@@ -2325,12 +2357,6 @@ msgid "Configuration"
 msgstr "Konfigurasi"
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm"
-msgstr "Konfirmasi"
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
 msgstr "Konfirmasi Kedatangan"
@@ -2343,13 +2369,19 @@ msgstr "Tombol Konfirmasi Kehadiran"
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm attendance ?"
-msgstr "Konfirmasi kehadiran ?"
+msgid "Confirm attendance?"
+msgstr "Konfirmasi ketadangan?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
 msgid "Contact"
 msgstr "Kontak"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Continue"
+msgstr "Lanjutkan"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -2517,6 +2549,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "Tampilkan Sponsor dan Exhibitor pada halaman acara Anda"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "Tampilkan Zona Waktu"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "Tampilkan order"
@@ -2535,6 +2572,12 @@ msgstr ""
 "Pada konferensi ini, tim kami akan memberikan gambaran umum yang detail "
 "mengenai aplikasi bisnis kami. Anda akan tahu semua manfaat dari menggunakan"
 " aplikasi kami."
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Edit"
+msgstr "Edit"
 
 #. module: event
 #. odoo-python
@@ -3263,16 +3306,18 @@ msgid "In Progress"
 msgstr "Dalam Proses"
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Insert dynamic Google Maps in your email templates"
-msgstr "Masukkan Google Map dinamik di templat email Anda"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
 msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
 msgstr ""
+"Mengindikasikan zona waktu di mana tanggal/waktu acara akan ditampilkan pada"
+" website."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Insert dynamic Google Maps in your email templates"
+msgstr "Masukkan Google Map dinamik di templat email Anda"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3798,15 +3843,11 @@ msgstr "Online bila tidak diaktifkan"
 
 #. module: event
 #. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Open Details"
-msgstr "Buka Detail"
-
-#. module: event
-#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
-msgid "Open date range picker. Pick a Start date for your event"
-msgstr "Buka pemilih rentang tanggal. Pilih tanggal Mulai untuk acara Anda"
+msgid "Open date range picker.<br/>Pick a Start and End date for your event."
+msgstr ""
+"Buka pemilih rentang tanggal.<br/>Pilih Tanggal Awal dan Akhir untuk acara "
+"Anda."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3922,8 +3963,8 @@ msgstr "Point of Sale (POS), Pengenalan ke kustomisasi laporan."
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Print Ticket"
-msgstr "Cetak Tiket"
+msgid "Print"
+msgstr "Cetak"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4045,8 +4086,6 @@ msgid "Registration Date"
 msgstr "Registrasi rawat inap"
 
 #. module: event
-#. odoo-python
-#: code:addons/event/controllers/main.py:0
 #: model:ir.ui.menu,name:event.menu_event_registration_desk
 #: model:res.groups,name:event.group_event_registration_desk
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4183,18 +4222,6 @@ msgstr "Kesalahan Pengiriman SMS`"
 
 #. module: event
 #. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Scan Next"
-msgstr "can BerikutnyaS"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.xml:0
-msgid "Scan a badge"
-msgstr "Scan lencana"
-
-#. module: event
-#. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
 msgstr "Scan atau Tap"
@@ -4244,6 +4271,12 @@ msgstr "Rahasia"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
 msgstr "Pilih Pendaftar"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Select printer..."
+msgstr "Pilih printer..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4758,7 +4791,6 @@ msgid "Tickets with Sale"
 msgstr "Tiket dengan Sale"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Zona Waktu"
@@ -4861,15 +4893,15 @@ msgstr ""
 "dijadwalkan yang terkait acara-acara Anda."
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "Memahami beragam macam modul;"
+
+#. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
 msgstr "Undo"
-
-#. module: event
-#: model_terms:event.event,description:event.event_2
-msgid "Understand the various modules;"
-msgstr "Memahami beragam macam modul;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -5009,17 +5041,19 @@ msgid "Welcome to"
 msgstr "Selamat datang ke"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr "Apa yang baru?"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_begin
 #: model:ir.model.fields,help:event.field_event_registration__event_begin_date
 msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
 msgstr ""
-
-#. module: event
-#: model_terms:event.event,description:event.event_0
-msgid "What's new?"
-msgstr "Apa yang baru?"
+"Saat acara dijadwalkan untuk terjadi (diekspresikan dalam zona waktu lokal "
+"Anda di tampilan formulir)."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -5235,9 +5269,3 @@ msgstr "besok"
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
-msgid "'%(name)s' badge sent to printer '%(printer)s'"
-msgstr "'%(name)s' lencana dikirim ke printer '%(printer)s'"

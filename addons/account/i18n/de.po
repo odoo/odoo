@@ -3,16 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2024
 # Larissa Manderfeld, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.4+e\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-14 14:13+0000\n"
+"POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Larissa Manderfeld, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1962,11 +1962,6 @@ msgstr ""
 " Tag buchen"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "Buchhalter"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -2340,11 +2335,6 @@ msgid ""
 msgstr ""
 "Berichtigungsbuchung {link} {percent}%% von {amount} realisiert am "
 "{new_date}"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Advanced Billing"
-msgstr "Erweiterte Abrechnung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -3006,11 +2996,6 @@ msgid "Automatic Entry Default Journal"
 msgstr "Automatische Buchung Standardjournal"
 
 #. module: account
-#: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
-msgid "Automatic Tax Mapping (AvaTax)"
-msgstr "Automatische Steuerzuordnung (AvaTax)"
-
-#. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
 msgstr "Automatische Sequenz"
@@ -3368,6 +3353,11 @@ msgid "Based on Payment"
 msgstr "Auf Grundlage der Zahlung"
 
 #. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "Basic"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "Sammelzahlungen"
@@ -3422,6 +3412,11 @@ msgid "Billing"
 msgstr "Abrechnung"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Billing Administrator"
+msgstr "Abrechnungsadministrator"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3463,11 +3458,6 @@ msgstr "Leer, wenn Null"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Blockierende Meldung"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Buchführer"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3644,7 +3634,6 @@ msgstr "Kann kein Verkaufsdokument in einem Nicht-Verkaufsjournal erstellen"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
 "Sie können keine Abgrenzungsbuchung mit Aufträgen in unterschiedlichen "
@@ -6047,6 +6036,7 @@ msgstr "Entwurfsbuchungen"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 msgid "Draft Entry"
 msgstr "Entwurfsbuchung"
 
@@ -8601,6 +8591,12 @@ msgstr "Wird gesendet"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
 msgstr "Ist zwischen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr "Ist Kontenplan installiert"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -11927,11 +11923,6 @@ msgid "Re-Sequence"
 msgstr "Neu sequenzieren"
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Schreibgeschützt"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
 msgstr "Begründung auf Gutschrift angezeigt"
@@ -12556,11 +12547,6 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "ALLGEMEINE VERKAUFSBEDINGUNGEN"
 
 #. module: account
-#: model:account.journal,name:account.1_hr_payroll_account_journal
-msgid "Salaries"
-msgstr "Gehälter"
-
-#. module: account
 #: model:account.account,name:account.1_expense_salary
 msgid "Salary Expenses"
 msgstr "Gehaltskosten"
@@ -12691,7 +12677,6 @@ msgstr "Barcode scannen"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr "Scannen Sie mich mit Ihrer Banking-App."
 
@@ -13159,8 +13144,11 @@ msgstr "Legen Sie einen Preis fest"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Legen Sie einen Wert, der größer als 0,0 ist, um eine Kreditlimitprüfung zu "
+"aktivieren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13260,6 +13248,11 @@ msgstr ""
 "Präfix benannt."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Show Accounting Features - Readonly"
+msgstr "Buchhaltungsfunktionen anzeigen - schreibgeschützt"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -13288,6 +13281,11 @@ msgstr "Rabattdetails anzeigen"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
 msgstr "„Steuer inklusive erzwingen“ anzeigen"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Show Full Accounting Features"
+msgstr "Zeige vollständige Finanzbuchhaltung"
 
 #. module: account
 #. odoo-python
@@ -14209,6 +14207,16 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+"Die Kontenplanvorlage %s sollte nicht direkt ausgewählt werden. Stattdessen "
+"solltest du direkt die Kontenplanvorlage für dein Land auswählen."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
@@ -14285,16 +14293,6 @@ msgid ""
 msgstr ""
 "Die Zahlungsbedingung muss mindestens eine Prozentzeile haben und die "
 "Prozentsumme muss 100 % betragen."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
-"Die Kontenplanvorlage %s sollte nicht direkt ausgewählt werden. Stattdessen "
-"solltest du direkt die Kontenplanvorlage für dein Land auswählen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
@@ -16075,9 +16073,14 @@ msgstr "Übertragung nach %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Auslösen von Warnungen bei der Erstellung von Rechnungen und "
+"Verkaufsaufträgen für Partner, deren Gesamtforderungsbetrag eine bestimmte "
+"Grenze überschreitet.                                      Legen Sie einen "
+"Wert, der größer als 0,0 ist, um eine Kreditlimitprüfung zu aktivieren."
 
 #. module: account
 #. odoo-python

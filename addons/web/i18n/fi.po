@@ -33,11 +33,11 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
 # Kim Asplund <kim.asplund@gmail.com>, 2024
 # Erno Iipponen <erno.iipponen@web-veistamo.fi>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
 # Martin Trigaux, 2024
 # a0002ef8927c0b0b9c58a7cc5f73028e_ba3d803 <aeb43a6499fcef2a5a423b3f4a45b153_32479>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Jessica Jakara, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
@@ -45,7 +45,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 10:25+0000\n"
+"POT-Creation-Date: 2025-02-10 12:11+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -1783,7 +1783,6 @@ msgstr "Yrityksen nimi"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 msgid "Company tagline"
@@ -1947,7 +1946,6 @@ msgstr "Copyright © 2004"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 msgid "Could not display the selected image"
 msgstr "Valittua kuvaa ei voitu näyttää"
@@ -1960,9 +1958,9 @@ msgstr "Valittua pdf-tiedostoa ei voitu näyttää"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
-msgid "Could not display the specified image url."
-msgstr "Määritettyä kuvan url-osoitetta ei voitu näyttää."
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+msgid "Could not display the selected spreadsheet"
+msgstr "Valittua laskentataulukkoa ei voitu näyttää"
 
 #. module: web
 #. odoo-javascript
@@ -3059,17 +3057,10 @@ msgstr "Siirry URL-osoitteeseen"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/google_slide_viewer.js:0
-#: code:addons/web/static/src/views/fields/google_slide_viewer.xml:0
-#, python-format
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
 msgid "Google Slide Viewer"
 msgstr "Google Slide Viewer"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/graph/graph_view.js:0
-msgid "Graph"
-msgstr "Kaavio"
 
 #. module: web
 #. odoo-javascript
@@ -3832,6 +3823,12 @@ msgstr "Lataa Demodata"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+msgid "Load everything anyway."
+msgstr "Lataa kaikki joka tapauksessa."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 msgid "Load more... ("
 msgstr "Näytä lisää... ("
@@ -3987,6 +3984,12 @@ msgstr "Many2one"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Match"
 msgstr "Vastaavuus"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+msgid "Max value"
+msgstr "Max. arvo"
 
 #. module: web
 #. odoo-javascript
@@ -4174,6 +4177,12 @@ msgstr "Lisää"
 #: code:addons/web/static/src/webclient/navbar/navbar.xml:0
 msgid "More Menu"
 msgstr "Lisävalikko"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+msgid "More..."
+msgstr "Lisää…"
 
 #. module: web
 #. odoo-javascript
@@ -5321,7 +5330,7 @@ msgstr "Vadelma"
 #. odoo-javascript
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Raw Record Data: %(model)s(%(id)s)"
-msgstr ""
+msgstr "Raakatietueet: %(model)s(%(id)s)"
 
 #. module: web
 #. odoo-javascript
@@ -6102,6 +6111,12 @@ msgstr "Tila"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+msgid "Statusbar"
+msgstr "Tilapalkki"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 msgid "Stay Here"
 msgstr "Pysy täällä"
@@ -6370,6 +6385,16 @@ msgstr ""
 "kehittäjän virhe, joka on korjattava koko tietokannassa ennen työskentelyn "
 "jatkamista. Katso lisätietoja selaimen konsolista tai palvelimen "
 "lokitiedoista."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+msgid ""
+"There are too many data. The graph only shows a sample. Use the filters to "
+"refine the scope."
+msgstr ""
+"Tietoja on liikaa. Kuvaaja näyttää vain otoksen. Käytä suodattimia laajuuden"
+" tarkentamiseen."
 
 #. module: web
 #. odoo-python

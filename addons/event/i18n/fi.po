@@ -29,13 +29,14 @@
 # Miika Nissi <miika.nissi@tawasta.fi>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Wil Odoo, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"POT-Creation-Date: 2025-02-10 12:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -82,6 +83,12 @@ msgstr "%(event_name)s - Rekisteröinti %(attendee_name)s"
 
 #. module: event
 #. odoo-python
+#: code:addons/event/models/event_event.py:0
+msgid "%(start_date)s to %(end_date)s"
+msgstr "%(start_date)s - %(end_date)s"
+
+#. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (%(count)s seats remaining)"
 msgstr "%(ticket_name)s (%(count)s paikkaa jäljellä)"
@@ -97,6 +104,12 @@ msgstr "%(ticket_name)s (Loppuunmyyty)"
 #: code:addons/event/models/event_event.py:0
 msgid "%s (copy)"
 msgstr "%s (kopio)"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
+msgid "'%(name)s' badge sent to printer '%(printer)s'"
+msgstr "'%(name)s' nimilappu on lähetetty tulostimelle '%(printer)s'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -186,6 +199,16 @@ msgstr "4 per arkki"
 #: model:event.tag,name:event.event_tag_category_1_tag_1
 msgid "5-10"
 msgstr "5-10"
+
+#. module: event
+#: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
+msgid "96x134mm (Badge Printer)"
+msgstr "96x134mm (nimilapputulostin)"
+
+#. module: event
+#: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
+msgid "96x82mm (Badge Printer)"
+msgstr "96x82mm (nimilapputulostin)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1387,6 +1410,12 @@ msgid "Attendees"
 msgstr "Osallistujat"
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Auto-Print"
+msgstr "Tulosta automaattisesti"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_available
 msgid "Available Seats"
@@ -1396,6 +1425,16 @@ msgstr "Saatavilla olevat paikat"
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
 msgstr "Nimilappu"
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
+msgid "Badge (96x134mm)"
+msgstr "Nimilappu (96x134mm)"
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
+msgid "Badge (96x82mm)"
+msgstr "Nimilappu (96x82mm)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -1563,12 +1602,6 @@ msgstr ""
 " täyttämistä varten."
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Close"
-msgstr "Sulje"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 msgid "Color"
 msgstr "Väri"
@@ -1665,12 +1698,6 @@ msgid "Configuration"
 msgstr "Asetukset"
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm"
-msgstr "Vahvista"
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
 msgstr "Vahvista osallistuminen"
@@ -1683,13 +1710,19 @@ msgstr "Vahvista läsnäolo -painike"
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm attendance ?"
-msgstr ""
+msgid "Confirm attendance?"
+msgstr "Vahvistaa läsnäolo?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
 msgid "Contact"
 msgstr "Kontakti"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Continue"
+msgstr "Jatka"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -1858,6 +1891,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "Näytä sponsorit ja näytteilleasettajat tapahtumasivuillasi"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "Näytä aikavyöhyke"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "Näyttöjärjestys"
@@ -1876,6 +1914,12 @@ msgstr ""
 "Tämän konferenssin aikana, tiimimme antaa sinulle seikkaperäisen "
 "kokonaiskuvan yritysohjelmistoista. Tulet tietämään kaikki hyödyt sen "
 "käytössä."
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Edit"
+msgstr "Muokkaa"
 
 #. module: event
 #. odoo-python
@@ -2600,11 +2644,6 @@ msgid "In Progress"
 msgstr "Käynnissä"
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Insert dynamic Google Maps in your email templates"
-msgstr "Lisää dynaamisia Google-karttoja sähköpostimalleihisi"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
 msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
@@ -2612,6 +2651,11 @@ msgid ""
 msgstr ""
 "Ilmoittaa aikavyöhykkeen, jossa tapahtuman päivämäärät/ajat näytetään "
 "verkkosivustolla."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Insert dynamic Google Maps in your email templates"
+msgstr "Lisää dynaamisia Google-karttoja sähköpostimalleihisi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3138,15 +3182,10 @@ msgstr "Online jos ei ole asetettu"
 
 #. module: event
 #. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Open Details"
-msgstr ""
-
-#. module: event
-#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
-msgid "Open date range picker. Pick a Start date for your event"
-msgstr "Avaa päivämäärävälin valitsin. Valitse tapahtuman alkamispäivä"
+msgid "Open date range picker.<br/>Pick a Start and End date for your event."
+msgstr ""
+"Avaa päivämäärän valitsin.<br/>Valitse tapahtumalle alku- ja loppupäivä."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3256,8 +3295,8 @@ msgstr "Kassapääte (POS), raporttien kustomintiin tutustuminen."
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Print Ticket"
-msgstr ""
+msgid "Print"
+msgstr "Tulosta"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3380,8 +3419,6 @@ msgid "Registration Date"
 msgstr "Ilmottautumispäivä"
 
 #. module: event
-#. odoo-python
-#: code:addons/event/controllers/main.py:0
 #: model:ir.ui.menu,name:event.menu_event_registration_desk
 #: model:res.groups,name:event.group_event_registration_desk
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3518,18 +3555,6 @@ msgstr "Tekstiviestin toimitusvirhe"
 
 #. module: event
 #. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Scan Next"
-msgstr ""
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.xml:0
-msgid "Scan a badge"
-msgstr "Skannaa nimilappu"
-
-#. module: event
-#. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
 msgstr "Skannaa tai napauta"
@@ -3579,6 +3604,12 @@ msgstr "Salausavain"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
 msgstr "Valitse osallistuja"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Select printer..."
+msgstr "Valitse tulostin..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4093,7 +4124,6 @@ msgid "Tickets with Sale"
 msgstr "Liput myyntisovelluksella"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Aikavyöhyke"
@@ -4196,15 +4226,15 @@ msgstr ""
 "aikataulutetut tiedotteet."
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "Ymmärää useita moduuleita;"
+
+#. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
 msgstr "Peru"
-
-#. module: event
-#: model_terms:event.event,description:event.event_2
-msgid "Understand the various modules;"
-msgstr "Ymmärää useita moduuleita;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -4344,6 +4374,11 @@ msgid "Welcome to"
 msgstr "Tervetuloa"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr "Mikä on uutta?"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_begin
 #: model:ir.model.fields,help:event.field_event_registration__event_begin_date
 msgid ""
@@ -4352,11 +4387,6 @@ msgid ""
 msgstr ""
 "Milloin tapahtuman on tarkoitus tapahtua (ilmaistuna paikallisena "
 "aikavyöhykkeenä lomakkeen näkymässä)."
-
-#. module: event
-#: model_terms:event.event,description:event.event_0
-msgid "What's new?"
-msgstr "Mikä on uutta?"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -4569,9 +4599,3 @@ msgstr "huomenna"
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
-msgid "'%(name)s' badge sent to printer '%(printer)s'"
-msgstr "'%(name)s' nimilappu on lähetetty tulostimelle '%(printer)s'"

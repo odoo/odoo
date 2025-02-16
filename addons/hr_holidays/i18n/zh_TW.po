@@ -3,14 +3,14 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Tony Ng, 2024
+# Tony Ng, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -1652,7 +1652,7 @@ msgstr "日"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Days"
-msgstr "天內"
+msgstr "天"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__dec
@@ -2880,7 +2880,7 @@ msgstr "只剩"
 msgid ""
 "Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
 " can approve or refuse allocation requests."
-msgstr ""
+msgstr "只限 %s 的休假審批人、休假管理員工/負責人，或系統管理員，才可批准或拒絕休假分配請求。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2917,7 +2917,7 @@ msgstr "只限管理員才可修改已取消的休假。"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a time off Administrator can approve their own requests."
-msgstr ""
+msgstr "只限休假管理員才可批准自己的請求。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2925,7 +2925,7 @@ msgstr ""
 msgid ""
 "Only a time off Officer/Responsible or Administrator can approve or refuse "
 "allocation requests."
-msgstr ""
+msgstr "只限休假管理員工/負責人，或系統管理員，才可批准或拒絕休假分配請求。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3037,6 +3037,12 @@ msgstr "申請休假時，公眾假期也應計入休假長度"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
 msgid "Rate"
 msgstr "比率"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
+msgid "Ratings"
+msgstr "評分"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
@@ -4282,6 +4288,18 @@ msgid "Waiting for Approval"
 msgstr "等待批准"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__website_message_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__website_message_ids
+msgid "Website Messages"
+msgstr "網站資訊"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__website_message_ids
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__website_message_ids
+msgid "Website communication history"
+msgstr "網站溝通記錄"
+
+#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__wed
 msgid "Wednesday"
 msgstr "星期三"
@@ -4464,7 +4482,7 @@ msgstr "你必須是 %s 的經理，才可批准此休假"
 msgid ""
 "You must be either %s's Time Off Approver or Time off Administrator to "
 "validate this allocation request."
-msgstr ""
+msgstr "你必須是 %s 的休假審批人或休假管理員，才可驗證此休假分配請求。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4666,7 +4684,7 @@ msgstr "最後一天"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "new request"
-msgstr "new request"
+msgstr "新請求"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form

@@ -3,8 +3,8 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Marta Wacławek, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -414,11 +414,6 @@ msgstr "4 x 7 z ceną"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #. odoo-python
@@ -1733,7 +1728,6 @@ msgstr "Zmień ilość produktu"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
-#, python-format
 msgid ""
 "Changing the Lot/Serial number for move lines with different products is not"
 " allowed."
@@ -4134,12 +4128,6 @@ msgid "Immediate Transfer"
 msgstr "Natychmiastowe pobranie"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Importuj"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -6538,11 +6526,9 @@ msgstr "Obecność zależy od typu operacji."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Naciśnij przycisk UTWÓRZ, aby zdefiniować ilości dla każdego produktu w "
-"magazynie lub zaimportuj ilość z arkusza kalkulacyjnego przez Ulubione "
 
 #. module: stock
 #. odoo-javascript
@@ -9045,7 +9031,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
-#, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
 msgstr "Numer partii/serii (%s) jest powiązany z innym produktem."
 
@@ -10644,6 +10629,9 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need."
 msgstr ""
+"Jeśli produkty są potrzebne w <b>%(destination)s</b>, <br/> "
+"<b>%(operation)s</b> są tworzone z <b>%(source_location)s</b>, aby spełnić "
+"zapotrzebowanie."
 
 #. module: stock
 #. odoo-python

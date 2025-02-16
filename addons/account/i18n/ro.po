@@ -4,22 +4,23 @@
 # 
 # Translators:
 # Corina Calin, 2024
-# Larisa_nexterp, 2024
 # Andrei C, 2024
 # Larisa Pop, 2024
 # Alin Miclea, 2024
 # Betty Keresztesi, 2024
-# Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Lyall Kindmurr, 2024
-# Wil Odoo, 2024
 # Toni Chirila, 2024
+# Wil Odoo, 2025
+# Cozmin Candea <office@terrabit.ro>, 2025
+# Foldi Robert <foldirobert@nexterp.ro>, 2025
+# Larisa_nexterp, 2025
 # Dorin Hongu <dhongu@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.4+e\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-14 14:13+0000\n"
+"POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -39,6 +40,11 @@ msgid ""
 "The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
 "You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"Documentul (%(move)s) nu este echilibrat.\n"
+"Totalul debitelor este %(debit_total)s iar totalul creditelor este %(credit_total)s.\n"
+"Poate doriți să specificați un cont implicit în jurnalul \"%(journal)s\" pentru a echilibra automat fiecare document."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -104,7 +110,7 @@ msgstr "%(amount)s datorat %(date)s"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "%(journal_code)s Statement %(date)s"
-msgstr ""
+msgstr "%(journal_code)s Declarație %(date)s"
 
 #. module: account
 #. odoo-python
@@ -113,12 +119,14 @@ msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%(move)s a ajuns la o stare nevalidă în ceea ce privește linia de instrucțiune aferentă.\n"
+"Pentru a fi consecvent, înregistrarea jurnalului trebuie să aibă întotdeauna exact o linie de suspans."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%(name)s installment #%(number)s"
-msgstr ""
+msgstr "%(name)s rata #%(number)s"
 
 #. module: account
 #. odoo-python
@@ -127,6 +135,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, "
 "%(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s Facturat, "
+"%(quantity_received)s Primit la %(unit_price)s fiecare"
 
 #. module: account
 #. odoo-python
@@ -135,6 +145,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, "
 "%(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Facturat, "
+"%(quantity_delivered)s Livrat la %(unit_price)s fiecare"
 
 #. module: account
 #. odoo-python
@@ -146,19 +158,19 @@ msgstr "%(partner_name)s a atins limita de credit de: %(credit_limit)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(ref)s (%(currency_amount)s)"
-msgstr ""
+msgstr "%(ref)s (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
-msgstr ""
+msgstr "%(tag)s (%(country_code)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
-msgstr ""
+msgstr "%(tax_name)s (rotunjire)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -287,7 +299,7 @@ msgstr "Poate doriți să puneți un număr mai mare aici."
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 msgid "... (%(nb_of_values)s other)"
-msgstr ""
+msgstr "... (%(nb_of_values)s altul,altele)"
 
 #. module: account
 #. odoo-javascript
@@ -1877,11 +1889,6 @@ msgstr ""
 "Cont: Postează intrările cu auto_post activat și data contabilă până astăzi"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
-msgstr "Contabil"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -2002,7 +2009,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued %(entry_type)s entry as of %(date)s"
-msgstr ""
+msgstr "Înregistrare de acumulare %(entry_type)s până la %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2253,11 +2260,6 @@ msgid ""
 msgstr ""
 "Se ajustează intrarea {link} {percent}%% din {amount} recunoscută pe "
 "{new_date}"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Advanced Billing"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -2918,11 +2920,6 @@ msgid "Automatic Entry Default Journal"
 msgstr "Jurnal implicit de intrare automată"
 
 #. module: account
-#: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
-msgid "Automatic Tax Mapping (AvaTax)"
-msgstr "Maparea automată a taxelor (AvaTax)"
-
-#. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
 msgstr "Secvență Automată"
@@ -3044,7 +3041,7 @@ msgstr "Cont bancar"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr ""
+msgstr "Contul bancar %(link)s cu numărul %(number)s șters"
 
 #. module: account
 #. odoo-python
@@ -3279,6 +3276,11 @@ msgid "Based on Payment"
 msgstr "Pe baza plății"
 
 #. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "De bază"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "Lot Plăți"
@@ -3333,6 +3335,11 @@ msgid "Billing"
 msgstr "Facturare"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Billing Administrator"
+msgstr "Administrator de facturare"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3374,11 +3381,6 @@ msgstr "Gol este Zero"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Mesaj de blocare"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3555,7 +3557,6 @@ msgstr "Nu se poate crea un document de vânzare într-un jurnal fără vânzare
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
 
@@ -5941,6 +5942,7 @@ msgstr "Ciorne de intrări"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 msgid "Draft Entry"
 msgstr "Intrare ciornă"
 
@@ -6371,6 +6373,8 @@ msgstr "Capital propriu"
 msgid ""
 "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)"
 msgstr ""
+"Eroare la importarea atașamentului „%(file_name)s” ca factură "
+"(decodor=%(decoder)s)"
 
 #. module: account
 #. odoo-python
@@ -7845,6 +7849,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s;"
 " Day: %(day)s"
 msgstr ""
+"Date incorecte an fiscal: ziua este în afara intervalului de lună. Luna: "
+"%(month)s; Ziua: %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -8064,6 +8070,8 @@ msgstr ""
 msgid ""
 "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
 msgstr ""
+"Domeniu nevalid pentru expresia „%(label)s” din rândul „%(line)s”: "
+"%(formula)s"
 
 #. module: account
 #. odoo-python
@@ -8467,6 +8475,12 @@ msgstr "Se Trimite"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
 msgstr "Între"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -9217,6 +9231,8 @@ msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
 msgstr ""
+"Linia „%(line)s” definește linia „%(parent_line)s” ca părinte, dar apare "
+"înaintea acesteia în raport. Părintele trebuie să fie întotdeauna primul."
 
 #. module: account
 #. odoo-python
@@ -11774,11 +11790,6 @@ msgid "Re-Sequence"
 msgstr "Re-Secvență"
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
 msgstr "Motivul afișat pe nota de credit"
@@ -12398,11 +12409,6 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "TERMENI ȘI CONDIȚII STANDARD DE VÂNZARE"
 
 #. module: account
-#: model:account.journal,name:account.1_hr_payroll_account_journal
-msgid "Salaries"
-msgstr "Salarii"
-
-#. module: account
 #: model:account.account,name:account.1_expense_salary
 msgid "Salary Expenses"
 msgstr "Cheltuieli salariale"
@@ -12532,7 +12538,6 @@ msgstr "Scanare cod de bare"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr "Scanează-mă cu aplicația ta bancară."
 
@@ -12995,6 +13000,7 @@ msgstr "Stabiliți un preț"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
 
@@ -13088,6 +13094,11 @@ msgstr ""
 "fi, de asemenea, numite folosind acest prefix în mod implicit."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Show Accounting Features - Readonly"
+msgstr "Afișați caracteristicile contabile - Readonly"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -13116,6 +13127,11 @@ msgstr "Afișați detaliile reducerii"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
 msgstr "Afișați forța impozitului inclus"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Show Full Accounting Features"
+msgstr "Afișați toate funcțiile din contabilitate"
 
 #. module: account
 #. odoo-python
@@ -14033,6 +14049,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
@@ -14107,14 +14131,6 @@ msgstr ""
 "procentelor trebuie să fie de 100%."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
 msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
@@ -14132,12 +14148,14 @@ msgid ""
 "The Unit of Measure (UoM) '%(uom)s' you have selected for product "
 "'%(product)s', is incompatible with its category : %(category)s."
 msgstr ""
+"Unitatea de măsură (UoM) '%(uom)s' pe care ați selectat-o pentru produsul "
+"'%(product)s', este incompatibilă cu categoria sa: %(category)s."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
-msgstr ""
+msgstr "Contul %(name)s (%(code)s) este depreciat."
 
 #. module: account
 #. odoo-python
@@ -14361,6 +14379,9 @@ msgid ""
 "%(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
+"Totalul curent este %(current_total)s, dar totalul așteptat este "
+"%(expected_total)s. Pentru a încărca factura/factura, puteți ajusta liniile "
+"acesteia sau Totalul așteptat (inc. taxe)."
 
 #. module: account
 #. odoo-python
@@ -14409,7 +14430,7 @@ msgstr "Documentul (Documentele) care au generat factura."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
-msgstr ""
+msgstr "Intrarea %(name)s (id %(id)s) trebuie să fie în schiță."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -15401,6 +15422,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
 msgstr ""
+"Această înregistrare este configurată pentru a fi postată automat pe "
+"%(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15586,6 +15609,9 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to"
 " validate it."
 msgstr ""
+"Pentru a înregistra plățile cu %(payment_method)s, contul bancar destinatar "
+"trebuie validat manual. Ar trebui să accesați contul bancar partener pentru "
+"a-l valida."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -15837,7 +15863,8 @@ msgstr "Transfer la %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
 
@@ -16838,6 +16865,9 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"Nu puteți crea o nouă plată fără un cont de plăți/încasare neachitate setat "
+"fie pe companie sau pe metoda de plată %(payment_method)s în jurnalul "
+"%(journal)s."
 
 #. module: account
 #. odoo-python
@@ -16898,6 +16928,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
+"Puteți avea două linii de metode de plată de același tip (%(payment_type)s) "
+"și cu același nume (%(name)s) pe un singur jurnal."
 
 #. module: account
 #. odoo-python
@@ -17095,6 +17127,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
+"Nu puteți face această modificare pe o notă contabilă reconciliată. Puteți doar schimba câmpurile non-legal sau trebuie să anulați reconcilierea mai întâi.\n"
+"Nota contabilă (id): %(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python
@@ -17104,6 +17138,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%(entries)s"
 msgstr ""
+"Nu puteți edita următoarele câmpuri: %(fields)s.\n"
+"Următoarele intrări au deja hashing:\n"
+"%(entries)s"
 
 #. module: account
 #. odoo-python
