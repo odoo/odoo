@@ -65,4 +65,7 @@ patch(Thread.prototype, {
             ? _t("This livechat conversation has ended")
             : null;
     },
+    get canUnpin() {
+        return this.channel_type === "livechat" && this.importantCounter === 0;
+    },
 });

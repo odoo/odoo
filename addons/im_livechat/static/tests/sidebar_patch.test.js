@@ -352,9 +352,11 @@ test("Clicking on leave button leaves the channel", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
-    await click(".o-mail-DiscussSidebarChannel [title='Leave Channel']");
-    await click("button:contains(Leave Conversation)");
+    await click("[title='Chat Settings']", {
+        parent: [".o-mail-DiscussSidebarChannel"],
+    });
+    await contains(".o-mail-DiscussSidebarChannelCommands");
+    await click("[title='Leave Channel']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Visitor 11" });
 });
 
@@ -417,10 +419,11 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await waitNotifications([env, "discuss.channel/new_message"]);
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
-    await click("[title='Leave Channel']", {
+    await click("[title='Chat Settings']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Jane" }],
     });
-    await click("button:contains('Leave Conversation')");
+    await contains(".o-mail-DiscussSidebarChannelCommands");
+    await click("[title='Leave Channel']");
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });
