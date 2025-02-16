@@ -5,8 +5,8 @@
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # shahriyar rzayev, 2024
-# Nurlan Farajov <coolinuxoid@gmail.com>, 2024
 # erpgo translator <jumshud@erpgo.az>, 2024
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2024\n"
+"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +25,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr " Data Gətirildi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr ""
+msgstr "# Satış Sifarişləri"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -40,7 +40,7 @@ msgstr "Xətlərin #"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "Satış Sifarişlərinin #"
 
 #. module: sale
 #. odoo-python
@@ -62,7 +62,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'PRO-FORMA - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -70,6 +70,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Təklif - %s' % (object.name)) or "
+"'Sifariş - %s' % (object.name)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -91,7 +93,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr ""
+msgstr "<b>Qiyməti özünüzə göndərin</b> və müştərinin nə alacağını yoxlayın."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_payment_executed
@@ -140,6 +142,49 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
+"        Salam,\n"
+"        <br/><br/>\n"
+"        Aşağıdakı istinad nömrəsi ilə olan ödəniş\n"
+"        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
+"        məbləği\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"        sizin sifarişiniz üçün\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
+"            gözləmədədir.\n"
+"            <br/>\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ('draft', 'sent')\">\n"
+"                Sifarişiniz ödəniş təsdiqləndikdən sonra təsdiqlənəcək.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Təsdiqləndikdən sonra,\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                məbləği ödənilməmiş qalacaq.\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            təsdiqlənmişdir.\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, object.amount_total) &lt; 0\">\n"
+"                <br/>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ 10.00</span>\n"
+"                məbləği hələ də ödənilməlidir.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Etimadınız üçün təşəkkür edirik!\n"
+"        <br/>\n"
+"        Hər hansı bir sualınız olarsa, bizimlə əlaqə saxlamaqdan çəkinməyin.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"         "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -417,6 +462,54 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        Salam,\n"
+"        <br/><br/>\n"
+"        Sizin\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            <t t-out=\"doc_name or ''\">qiymət təklifi</t> üçün Pro forma hesab-faktura <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (istinad: <t t-out=\"object.origin or ''\"/> )\n"
+"            </t>\n"
+"            məbləği <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> mövcuddur.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">qiymət təklifi</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (istinad: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            </t>\n"
+"            məbləği <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> nəzərdən keçirmək üçün hazırdır.\n"
+"        </t>\n"
+"        <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
+"        <t t-if=\"documents\">\n"
+"            <br/> \n"
+"            <t t-if=\"len(documents)&gt;1\">\n"
+"                Sizin üçün maraqlı ola biləcək əlavə sənədlər:\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Sizin üçün maraqlı ola biləcək əlavə sənəd:\n"
+"            </t>\n"
+"            <ul style=\"margin-bottom: 0;\">\n"
+"                <t t-foreach=\"documents\" t-as=\"document\">\n"
+"                    <li style=\"font-size: 13px;\">\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
+"                    </li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </t>\n"
+"        <br/>\n"
+"        Hər hansı bir sualınız olarsa, bizimlə əlaqə saxlamaqdan çəkinməyin.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"       "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -440,6 +533,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
+"        Hörmətli <t t-out=\"object.partner_id.name or ''\">istifadəçi</t>,\n"
+"        <br/><br/>\n"
+"        Xəbərdar edirik ki, sizin  \n"
+"        <t t-out=\"doc_name or ''\">təklifiniz</t> <strong t-out=\"object.name or ''\">S00052</strong>  \n"
+"        <t t-if=\"object.origin\">\n"
+"            (istinad nömrəsi: <t t-out=\"object.origin or ''\">S00052</t>)\n"
+"        </t>  \n"
+"        ləğv edilmişdir. Buna görə də, bu sifariş üçün sizdən əlavə ödəniş tutulmayacaq.  \n"
+"        Əgər hər hansı bir geri ödəniş tələb olunarsa, bu ən qısa zamanda həyata keçiriləcəkdir.\n"
+"        <br/><br/>\n"
+"        Hər hansı bir sualınız olarsa, bizimlə əlaqə saxlamaqdan çəkinməyin.\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -617,7 +728,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Taxes</span>"
-msgstr "<span>Vergilər</span>"
+msgstr "<span>Vergi</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -638,7 +749,7 @@ msgstr "<strong class=\"mr16\">Yekun</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration</strong>"
-msgstr ""
+msgstr "<strong>Bitmə tarixi:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -648,12 +759,12 @@ msgstr "<strong>Maliyyə Mövqeyi Qeyd:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson</strong>"
-msgstr ""
+msgstr "<strong>Satış Meneceri</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping Address</strong>"
-msgstr ""
+msgstr "<strong>Çatdırılma Ünvanı</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -663,33 +774,33 @@ msgstr "<strong>İmza</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>Thank You!</strong><br/>"
-msgstr ""
+msgstr "<strong>Təşəkkür edirik!</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This offer expired!</strong>"
-msgstr ""
+msgstr "<strong>Bu təklifin müddəti bitdi!</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been cancelled.</strong>"
-msgstr ""
+msgstr "<strong>Bu kotirovka ləğv edilib.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference</strong>"
-msgstr ""
+msgstr "<strong>Sizin Referans</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr ""
+msgstr "Təsdiqlənmiş satış sifarişi təsdiqləmə tarixini tələb edir."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "A line on these orders missing a product, you cannot confirm it."
-msgstr ""
+msgstr "Bu sifarişlərdə məhsul yoxdur, siz onu təsdiq edə bilməzsiniz."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -703,12 +814,16 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
+"Satış sifarişi xəttinin kombo elementi onun əlaqəli xəttin mövcud kombo "
+"elementləri arasında olmalıdır."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "A sale order line's product must match its combo item's product."
 msgstr ""
+"Satış sifarişi xəttinin məhsulu onun kombo elementinin məhsulu ilə uyğun "
+"olmalıdır."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -722,11 +837,14 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
+"Standart hesab-faktura, faktura siyasətinə uyğun olaraq (sifariş edilmiş və "
+"ya çatdırılan kəmiyyətə əsaslanaraq) faktura üçün hazır olan bütün sifariş "
+"xətləri ilə verilir."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "Xəbərdarlıq məhsula və ya müştəriyə təyin edilə bilər (Satış)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -734,33 +852,35 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Satış sifarişlərində paket növünü seçmək və paket başına vahidlərin sayından"
+" çox olan kəmiyyəti məcbur etmək bacarığı."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "Təklifi qəbul et və ödə"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "Təklifi qəbul et və imzala"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "Qəbul et &amp; Ödəmək"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr ""
+msgstr "Qəbul et &amp; İmza"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
-msgstr "Hesaba Giriş Xəbərdarlığı"
+msgstr "Giriş xəbərdarlığı"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
@@ -771,16 +891,21 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Məhsulun konfiqurasiyasına uyğun olaraq, çatdırılan miqdar avtomatik olaraq mexanizmlə hesablana bilər:\n"
+"  - Manual: kəmiyyət sətirdə əl ilə təyin edilir\n"
+"  - Xərclərdən analitik: kəmiyyət dərc edilmiş xərclərdən alınan kəmiyyət məbləğidir\n"
+"  - Vaxt cədvəli: kəmiyyət bu satış sətiri ilə əlaqəli tapşırıqlar üzrə qeydə alınan saatların cəmidir\n"
+"  - Anbar hərəkətləri: miqdar təsdiq edilmiş qəbullardan gəlir\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Hesablar Planı Şablonu"
+msgstr "Müxabir hesabları Şablonu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__acc_number
 msgid "Account Number"
-msgstr "Hesab Nömrəsi"
+msgstr "Hesab nömrəsi"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
@@ -932,17 +1057,17 @@ msgstr "Məbləğ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Endirimdən əvvəlki məbləğ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "Fakturalanmalı təkliflərin məbləği"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_to_invoice
 msgid "Amount to invoice"
-msgstr ""
+msgstr "Fakturalanmalı Məbləğ"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1477,7 +1602,7 @@ msgid ""
 "your customers."
 msgstr ""
 "Hesab-fakturalar yaradın, ödənişləri qediyyata alın və müştərilərinizlə "
-"aparılan müzakirələri izləyin. "
+"aparılan müzakirələri izləyin."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
@@ -1747,7 +1872,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Description"
-msgstr "Təsvir"
+msgstr "Açıqlama"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1795,7 +1920,7 @@ msgstr "Endirim (%)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount_amount
 msgid "Discount Amount"
-msgstr ""
+msgstr "Endirim məbləği"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_discount_product_id
@@ -1841,7 +1966,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
 msgid "Display Invoice Amount Warning"
-msgstr ""
+msgstr "Faktura Məbləği Xəbərdarlığını göstərin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
@@ -1898,7 +2023,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "İlkin ödəniş məbləği (sabit)"
 
 #. module: sale
 #. odoo-python
@@ -1916,7 +2041,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr ""
+msgstr "İlkin ödəniş (sabit məbləğ)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
@@ -2108,7 +2233,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Full amount <br/>"
-msgstr ""
+msgstr "Tam məbləğ<br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2138,7 +2263,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr "Ödəniş təsdiqləndiyində Fakturanı avtomatik tərtib et "
+msgstr "Ödəniş təsdiqləndiyində Fakturanı avtomatik tərtib et"
 
 #. module: sale
 #. odoo-python
@@ -2313,7 +2438,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Invalid discount amount"
-msgstr ""
+msgstr "Yanlış endirim məbləği"
 
 #. module: sale
 #. odoo-python
@@ -2773,7 +2898,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Mənim Fəaliyyətlərimin Son Tarixi "
+msgstr "Mənim Fəaliyyətlərimin Son Tarixi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3018,7 +3143,7 @@ msgstr "%s üçün Seçim"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Option: %s"
-msgstr "Seçim: %s "
+msgstr "Seçim: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
@@ -3573,7 +3698,7 @@ msgstr "Qiymət Sorğusunun Sayı"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quotation Date"
-msgstr ""
+msgstr "Təklif Tarixi:"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__sent
@@ -3804,7 +3929,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__sale_order_id
 #: model:ir.model.fields.selection,name:sale.selection__account_analytic_applicability__business_domain__sale_order
 msgid "Sale Order"
-msgstr "satış sifarişi"
+msgstr "Satış Sifarişi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__sale_order_count
@@ -3897,7 +4022,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
-msgstr ""
+msgstr "Satış işçiləri tərəfindən satış təhlili"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -4048,7 +4173,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Satış: Təklif Göndər"
 
 #. module: sale
 #. odoo-python
@@ -4064,18 +4189,18 @@ msgstr "Satışlar: Vergiləndirilməmiş Cəmi Məbləğ"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
-msgstr "Satıcı"
+msgstr "Satış Meneceri"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_salespeople
 msgid "Salespersons"
-msgstr "Satıcılar"
+msgstr "Satış Menecerləri"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
-msgstr "Satış Sifarişlərində Axtar "
+msgstr "Satış Sifarişini axtarın"
 
 #. module: sale
 #. odoo-javascript
@@ -4096,7 +4221,7 @@ msgstr "Bölmə Adı (məs. Məhsullar, Xidmətlər)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
 msgid "Security Token"
-msgstr " Təhlükəsizlik Tokeni"
+msgstr "Təhlükəsizlik Tokeni"
 
 #. module: sale
 #. odoo-javascript
@@ -4207,7 +4332,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr ""
+msgstr "Təklifə çevirin"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_config_settings
@@ -4250,7 +4375,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "Təklifə imza at və ödə"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4438,7 +4563,7 @@ msgstr "Vergi Hesablanmasında Yuvarlaqlaşdırma Metodu"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_id
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
-msgstr "Vergilər"
+msgstr "Vergi"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_discount__tax_ids
@@ -4456,7 +4581,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "Texniki qiymət vahidi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4464,17 +4589,19 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Bu təklifdən niyə imtina etdiyinizi bizə deyin, bu, xidmətlərimizi "
+"yaxşılaşdırmağa kömək edəcək."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Qaydalar və Şərtlər formatı"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Qaydalar və Şərtlər: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -5276,13 +5403,13 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "close"
-msgstr "Bağlayın"
+msgstr "bağla"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "days"
-msgstr "Gün"
+msgstr "günlər"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
