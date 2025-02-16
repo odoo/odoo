@@ -22,6 +22,13 @@ class Menu(models.Model):
         menu = self.search([], limit=1, order="sequence DESC")
         return menu.sequence or 0
 
+    def _default_website_id(self):
+        website_model = self.env['website']
+        website_count = website_model.search_count([])
+        if website_count == 1:
+            return website_model.get_current_website()
+        return False
+
     @api.depends('mega_menu_content')
     def _compute_field_is_mega_menu(self):
         for menu in self:
@@ -41,7 +48,7 @@ class Menu(models.Model):
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
-    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade', default=_default_website_id)
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True, unaccent=False)
