@@ -150,12 +150,8 @@ class SaleOrder(models.Model):
                     or order.partner_id.user_id.id
                 )
 
-    def _compute_team_id(self):
-        website_orders = self.filtered('website_id')
-        super(SaleOrder, self - website_orders)._compute_team_id()
-        for order in website_orders:
-            if not order.team_id and (team := order.website_id.salesteam_id):
-                order.team_id = team.id
+    def _default_team_id(self):
+        return super()._default_team_id() or self.website_id.salesteam_id.id
 
     #=== CRUD METHODS ===#
 
