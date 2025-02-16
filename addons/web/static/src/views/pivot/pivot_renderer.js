@@ -166,7 +166,7 @@ export class PivotRenderer extends Component {
         const table = this.model.exportData();
         download({
             url: "/web/pivot/export_xlsx",
-            data: { data: JSON.stringify(table) },
+            data: { data: new Blob([JSON.stringify(table)], { type: "application/json" }) },
         });
     }
     /**
