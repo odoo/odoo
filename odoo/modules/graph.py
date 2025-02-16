@@ -77,9 +77,12 @@ class Graph(dict):
         dependencies = dict([(p, info['depends']) for p, info in packages])
         current, later = set([p for p, info in packages]), set()
 
-        while packages and current > later:
+        while packages and current > later: #current is a superset of later
             package, info = packages[0]
             deps = info['depends']
+
+            # if 'demo' in force and package == 'stock' and 'sale' in module_list and sale not in ():
+                # self.add_module(cr, 'sale', force)
 
             # if all dependencies of 'package' are already in the graph, add 'package' in the graph
             if all(dep in self for dep in deps):
