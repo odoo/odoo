@@ -12,7 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import MissingError, UserError
 from odoo.modules.registry import Registry
 from odoo.tools import SQL
 from odoo.tools.constants import GC_UNLINK_LIMIT
@@ -624,18 +624,9 @@ class IrCron(models.Model):
                           the lock acquired by foreign keys when they
                           reference this row.
         """
-        if not self:
-            return
-        row_level_lock = "UPDATE" if lockfk else "NO KEY UPDATE"
         try:
-            self._cr.execute(f"""
-                SELECT id
-                FROM "{self._table}"
-                WHERE id IN %s
-                FOR {row_level_lock} NOWAIT
-            """, [tuple(self.ids)], log_exceptions=False)
-        except psycopg2.OperationalError:
-            self._cr.rollback()  # early rollback to allow translations to work for the user feedback
+            self.lock_records(lockfk=lockfk)
+        except MissingError:
             raise UserError(_("Record cannot be modified right now: "
                               "This cron task is currently being executed and may not be modified "
                               "Please try again in a few minutes"))
@@ -650,20 +641,6 @@ class IrCron(models.Model):
         self._lock_records(lockfk=True)
         return super().unlink()
 
-    def try_write(self, values):
-        try:
-            with self._cr.savepoint(flush=False):
-                self._cr.execute(f"""
-                    SELECT id
-                    FROM "{self._table}"
-                    WHERE id IN %s
-                    FOR NO KEY UPDATE NOWAIT
-                """, [tuple(self.ids)], log_exceptions=False)
-        except psycopg2.OperationalError:
-            return False
-        else:
-            return super().write(values)
-
     @api.model
     def toggle(self, model, domain):
         # Prevent deactivated cron jobs from being re-enabled through side effects on
@@ -672,7 +649,7 @@ class IrCron(models.Model):
             return True
 
         active = bool(self.env[model].search_count(domain))
-        return self.try_write({'active': active})
+        return self.lock_records(strict=False, lockfk=False).write({'active': active})
 
     def _trigger(self, at=None):
         """
