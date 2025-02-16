@@ -211,7 +211,7 @@ test("default thread rendering", async () => {
     });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-Thread", { text: "Welcome to #General!" });
 });
 
 test("sidebar: basic chat rendering", async () => {
@@ -707,7 +707,7 @@ test("channel - avatar: should update avatar url from bus", async () => {
     const newCacheKey = result[0]["avatar_cache_key"];
     await contains(
         `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=${newCacheKey}']`,
-        { count: 2 }
+        { count: 3 }
     );
 });
 

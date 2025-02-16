@@ -574,4 +574,32 @@ export class Thread extends Component {
         this.lastSetValue = value;
         this.saveScroll();
     }
+
+    get showWelcomeMessage() {
+        return (
+            this.props.thread.model !== "mail.box" && this.props.thread.channel_type === "channel"
+        );
+    }
+
+    get welcomeMessageTitle() {
+        const channelName = this.props.thread.name;
+        if (this.props.thread.parent_channel_id) {
+            return channelName;
+        }
+        return _t("Welcome to #%(channelName)s!", { channelName });
+    }
+
+    get welcomeMessageSubtitle() {
+        if (this.props.thread.parent_channel_id) {
+            const authorName = Object.values(this.store.Persona.records).find(
+                (persona) => persona.userId === this.props.thread.create_uid
+            )?.name;
+            if (authorName) {
+                return _t("Started by %(authorName)s", { authorName });
+            }
+        }
+        return _t("This is the start of #%(channelName)s channel", {
+            channelName: this.props.thread.name,
+        });
+    }
 }
