@@ -49,10 +49,10 @@ class HrEmployeeBase(models.AbstractModel):
     is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True)
     is_fully_flexible = fields.Boolean(compute='_compute_is_flexible', store=True)
     parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
+        domain="['|', ('company_id', '=', False), ('company_id', 'in', companies.active_ids)]")
     coach_id = fields.Many2one(
         'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]",
+        domain="['|', ('company_id', '=', False), ('company_id', 'in', companies.active_ids)]",
         help='Select the "Employee" who is the coach of this employee.\n'
              'The "Coach" has no specific rights or responsibilities by default.')
     tz = fields.Selection(

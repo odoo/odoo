@@ -4755,9 +4755,6 @@ class ViewModifiers(ViewCase):
         _test_modifiers("""<field name="a" invisible="a == context['b']"/>""",
             {"a"},
         )
-        _test_modifiers("""<field name="a" invisible="company_id == allowed_company_ids[0]"/>""",  # deprecated
-            {"company_id"},
-        )
         _test_modifiers("""<field name="a" invisible="company_id == companies.active_id"/>""",
             {"company_id"},
         )

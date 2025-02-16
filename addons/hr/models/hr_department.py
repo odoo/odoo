@@ -21,7 +21,7 @@ class HrDepartment(models.Model):
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True, check_company=True)
     child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
-    manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
+    manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', 'in', companies.active_ids)]")
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
     has_read_access = fields.Boolean(search="_search_has_read_access", store=False, export_string_translation=False)
     total_employee = fields.Integer(compute='_compute_total_employee', string='Total Employee',
