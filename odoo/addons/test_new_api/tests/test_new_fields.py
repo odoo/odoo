@@ -1611,23 +1611,43 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(len(company_records), 1)
 
     def test_27_company_dependent_bool_integer_float(self):
-         company0 = self.env.ref('base.main_company')
-         company1 = self.env['res.company'].create({'name': 'A'})
-         Model = self.env['test_new_api.company']
-         record = Model.create({})
-         record.invalidate_recordset()
-         cr = self.env.cr
-         cr.execute("SELECT truth, count, phi FROM test_new_api_company WHERE id = %s", (record.id,))
-         self.assertEqual(cr.fetchone(), (None, None, None))
-         for company in [company0, company1]:
-             record_company = record.with_company(company)
-             self.assertEqual(record_company.truth, False)
-             self.assertEqual(record_company.count, 0)
-             self.assertEqual(record_company.phi, 0.0)
-         record.write({'truth': False, 'count': 0, 'phi': 0})  # write fallback equivalent
-         record.invalidate_recordset()
-         cr.execute("SELECT truth, count, phi FROM test_new_api_company WHERE id = %s", (record.id,))
-         self.assertEqual(cr.fetchone(), (None, None, None))
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+        Model = self.env['test_new_api.company']
+        record = Model.create({})
+        record.invalidate_recordset()
+        cr = self.env.cr
+        cr.execute("SELECT truth, count, phi FROM test_new_api_company WHERE id = %s", (record.id,))
+        self.assertEqual(cr.fetchone(), (None, None, None))
+        for company in [company0, company1]:
+            record_company = record.with_company(company)
+            self.assertEqual(record_company.truth, False)
+            self.assertEqual(record_company.count, 0)
+            self.assertEqual(record_company.phi, 0.0)
+        record.write({'truth': False, 'count': 0, 'phi': 0})  # write fallback equivalent
+        record.invalidate_recordset()
+        cr.execute("SELECT truth, count, phi FROM test_new_api_company WHERE id = %s", (record.id,))
+        self.assertEqual(cr.fetchone(), (None, None, None))
+
+    def test_27_company_dependent_missing_many2one(self):
+        """ Test ORM can handle missing records for many2one company dependent fields """
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+        Model = self.env['test_new_api.company']
+        record = Model.create({})
+        record.tag_id = 1000  # non-existing record id
+        record.invalidate_recordset()
+
+        self.env.cr.execute(
+            'SELECT id FROM test_new_api_company WHERE id = %s and (tag_id->%s)::int = %s',
+            [record.id, str(self.env.company.id), 1000],
+        )
+        self.assertEqual(self.env.cr.rowcount, 1)
+        self.assertFalse(record.tag_id)
+        self.assertEqual(
+            record.search([('id', '=', record.id), ('tag_id', '=', False)]),
+            record,
+        )
 
     def test_28_company_dependent_search(self):
         """ Test the search on company-dependent fields in all corner cases.
