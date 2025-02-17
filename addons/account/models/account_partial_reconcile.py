@@ -130,7 +130,7 @@ class AccountPartialReconcile(models.Model):
         # Reverse or unlink CABA/exchange move entries.
         if moves_to_reverse:
             not_draft_moves = moves_to_reverse.filtered(lambda m: m.state != 'draft')
-            draft_moves = moves_to_reverse.filtered(lambda m: m.state == 'draft')
+            draft_moves = moves_to_reverse - not_draft_moves
             default_values_list = [{
                 'date': move._get_accounting_date(move.date, move._affect_tax_report()),
                 'ref': move.env._('Reversal of: %s', move.name),
