@@ -4,9 +4,10 @@
     <t t-name="base_automation.TriggerSelectionField" t-inherit="web.SelectionField" t-inherit-mode="primary">
         <xpath expr="//t[@t-foreach='options']" position="replace">
             <t t-foreach="groupedOptions" t-as="group" t-key="group.key">
-                <optgroup t-att-label="group.name">
+                <optgroup t-att-label="group.name" class="text-black">
                     <t t-foreach="group.options" t-as="option" t-key="option.value">
                         <option
+                            class="text-black"
                             t-att-selected="option.value === value"
                             t-att-value="stringify(option.value)"
                             t-esc="option.label"/>
