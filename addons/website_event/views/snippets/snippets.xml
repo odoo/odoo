@@ -85,7 +85,50 @@
                 <we-button data-customize-website-views="website_event.opt_event_description_cover_hidden">Hidden (visitor only)</we-button>
             </we-select>
         </div>
+        <div data-selector=".o_wevent_registration_desktop_block,.o_wevent_registration_mobile_block" data-no-check="true">
+            <t t-call="website_event.snippet_sidebar_block_visibility">
+                <t t-set="desktop_view" t-value="'website_event.opt_wevent_hide_registration_block_desktop'"/>
+                <t t-set="mobile_view" t-value="'website_event.opt_wevent_hide_registration_block_mobile'"/>
+            </t>
+        </div>
+        <div data-selector=".o_wevent_date_block" data-no-check="true">
+            <t t-call="website_event.snippet_sidebar_block_visibility">
+                <t t-set="desktop_view" t-value="'website_event.opt_wevent_hide_date_block_desktop'"/>
+                <t t-set="mobile_view" t-value="'website_event.opt_wevent_hide_date_block_mobile'"/>
+            </t>
+        </div>
+        <div data-selector=".o_wevent_calendar_block" data-no-check="true">
+            <t t-call="website_event.snippet_sidebar_block_visibility">
+                <t t-set="desktop_view" t-value="'website_event.opt_wevent_hide_calendar_block_desktop'"/>
+                <t t-set="mobile_view" t-value="'website_event.opt_wevent_hide_calendar_block_mobile'"/>
+            </t>
+        </div>
+        <div data-selector=".o_wevent_location_block" data-no-check="true">
+            <t t-call="website_event.snippet_sidebar_block_visibility">
+                <t t-set="desktop_view" t-value="'website_event.opt_wevent_hide_location_block_desktop'"/>
+                <t t-set="mobile_view" t-value="'website_event.opt_wevent_hide_location_block_mobile'"/>
+            </t>
+        </div>
+        <div data-selector=".o_wevent_organizer_block" data-no-check="true">
+            <t t-call="website_event.snippet_sidebar_block_visibility">
+                <t t-set="desktop_view" t-value="'website_event.opt_wevent_hide_organizer_block_desktop'"/>
+                <t t-set="mobile_view" t-value="'website_event.opt_wevent_hide_organizer_block_mobile'"/>
+            </t>
+        </div>
     </xpath>
+</template>
+
+<template id="snippet_sidebar_block_visibility">
+    <we-row string="Visibility">
+        <we-button class="o_we_device" t-att-data-customize-website-views="desktop_view" title="Show/Hide on Desktop"
+            data-no-preview="true" data-reload="/"
+            data-img="/website/static/src/img/snippets_options/desktop_invisible.svg"
+        />
+        <we-button class="o_we_device" t-att-data-customize-website-views="mobile_view" title="Show/Hide on Mobile"
+            data-no-preview="true" data-reload="/"
+            data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
+        />
+    </we-row>
 </template>
 
 <record id="website_event.s_searchbar_000_xml" model="ir.asset">
