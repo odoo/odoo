@@ -245,6 +245,8 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
                                 break;
                             }
                         }
+                        // A group by value of "none"
+                        if (value === false) break;
                         if (JSON.stringify(currentValue) !== `[${value}]`) {
                             transformedValue = [value];
                         }
