@@ -6,7 +6,7 @@ import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 
 export class Chatbot extends Record {
     static id = AND("script", "thread");
-    static MESSAGE_DELAY = 1500;
+    static MESSAGE_DELAY = 400;
     static TYPING_DELAY = 500;
     // Time to wait without user input before considering a multi line step as
     // completed.
