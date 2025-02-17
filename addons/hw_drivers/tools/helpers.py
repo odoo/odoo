@@ -129,10 +129,8 @@ def start_nginx_server():
     if platform.system() == 'Windows':
         path_nginx = get_path_nginx()
         if path_nginx:
-            os.chdir(path_nginx)
             _logger.info('Start Nginx server: %s\\nginx.exe', path_nginx)
-            os.popen('nginx.exe')
-            os.chdir('..\\server')
+            os.popen(str(path_nginx / 'nginx.exe'))
     elif platform.system() == 'Linux':
         subprocess.check_call(["sudo", "service", "nginx", "restart"])
 
@@ -186,6 +184,8 @@ def check_git_branch(server_url=None):
 
     :param server_url: The URL of the connected Odoo database (provided by decorator).
     """
+    git_executable = "git" if platform.system() == 'Linux' else path_file('git', 'cmd', 'git.exe')
+    git_repo_path = path_file("odoo/")
     try:
         response = requests.post(server_url + "/web/webclient/version_info", json={}, timeout=5)
         response.raise_for_status()
@@ -198,7 +198,7 @@ def check_git_branch(server_url=None):
         return
 
     try:
-        git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
+        git = [git_executable, f'--work-tree={git_repo_path}', f'--git-dir={git_repo_path / ".git"}']
 
         db_branch = data['result']['server_serie'].replace('~', '-')
         if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
@@ -335,7 +335,7 @@ def get_mac_address():
                 return addr
 
 def get_path_nginx():
-    return str(list(Path().absolute().parent.glob('*nginx*'))[0])
+    return path_file('nginx')
 
 
 @cache
@@ -410,8 +410,8 @@ def load_certificate():
             Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
             Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
     elif platform.system() == 'Windows':
-        Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
-        Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
+        get_path_nginx().joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
+        get_path_nginx().joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
     time.sleep(3)
     if platform.system() == 'Windows':
         odoo_restart(0)
