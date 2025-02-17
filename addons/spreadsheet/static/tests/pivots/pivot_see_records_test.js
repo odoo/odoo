@@ -118,6 +118,33 @@ QUnit.test(
         assert.strictEqual(action.isVisible(env), true);
     }
 );
+QUnit.test("See records is not visible if the formula has an weird IF", async function (assert) {
+    let deferred = undefined;
+    const { env, model } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
+            <pivot>
+                <field name="probability" type="measure"/>
+            </pivot>
+        `,
+        mockRPC: async function (route, args) {
+            if (deferred && args.method === "read_group" && args.model === "partner") {
+                await deferred;
+            }
+        },
+    });
+    setCellContent(
+        model,
+        "A1",
+        '=if(false, ODOO.PIVOT("1","probability","user_id",2,"partner_id", "#Error"), "test")'
+    );
+    deferred = makeDeferred();
+    model.dispatch("REFRESH_ALL_DATA_SOURCES");
+    const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
+    assert.strictEqual(action.isVisible(env), false);
+    deferred.resolve();
+    await nextTick();
+    assert.strictEqual(action.isVisible(env), false);
+});
 
 QUnit.test("See records is not visible on an empty cell", async function (assert) {
     const { env, model } = await createSpreadsheetWithPivot();
