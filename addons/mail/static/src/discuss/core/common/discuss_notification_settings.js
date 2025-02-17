@@ -23,6 +23,10 @@ export class DiscussNotificationSettings extends Component {
         }
     }
 
+    onChangeMessageSound() {
+        this.store.settings.messageSound = !this.store.settings.messageSound;
+    }
+
     onChangeMuteDuration(ev) {
         if (ev.target.value === "default") {
             return;
