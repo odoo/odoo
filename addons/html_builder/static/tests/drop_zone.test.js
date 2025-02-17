@@ -3,6 +3,7 @@ import { animationFrame, click, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
+    setupHTMLBuilder,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithDummySnippet,
 } from "./helpers";
@@ -25,10 +26,9 @@ async function confirmSnippet() {
 }
 
 test("initial dropzone is visible after opening edit sidebar", async () => {
-    const { getEditableContent } = await setupWebsiteBuilder("");
+    const { el } = await setupHTMLBuilder("");
 
-    const editableContent = getEditableContent();
-    expect(editableContent).toHaveInnerHTML(initialDropZone());
+    expect(el).toHaveInnerHTML(initialDropZone());
 });
 
 test("drop beside dropzone inserts the snippet", async () => {
