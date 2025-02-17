@@ -772,6 +772,17 @@ export class Rtc extends Record {
                     }, 2000);
                 }
                 return;
+            case "recovery": {
+                const { id } = payload;
+                const session = this.store["discuss.channel.rtc.session"].get(id);
+                if (!session?.channel.eq(this.state.channel)) {
+                    return;
+                }
+                if (this.serverInfo || this.state.fallbackMode) {
+                    return;
+                }
+                this._upgradeConnection();
+            }
         }
     }
 
@@ -814,6 +825,17 @@ export class Rtc extends Record {
                 }
                 return;
         }
+    }
+
+    async _upgradeConnection() {
+        const channelId = this.state.channel?.id;
+        if (!channelId) {
+            return;
+        }
+        if (!this.selfSession?.persona.isInternalUser) {
+            return;
+        }
+        await rpc("/mail/rtc/channel/upgrade", { channel_id: channelId }, { silent: true });
     }
 
     async _downgradeConnection() {
