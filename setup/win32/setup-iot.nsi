@@ -65,7 +65,7 @@ Unicode True
 	!define TOOLSDIR 'c:\odoobuild'
 !endif
 
-!define PRODUCT_NAME "Odoo IOT"
+!define PRODUCT_NAME "Odoo IoT"
 !define DISPLAY_NAME "${PRODUCT_NAME} ${MAJOR_VERSION}.${MINOR_VERSION}"
 
 !define UNINSTALL_BASE_REGISTRY_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall"
@@ -99,7 +99,7 @@ Var /GLOBAL cmdLineParams
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${PIXMAPS_PATH}\odoo-intro.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "${PIXMAPS_PATH}\odoo-intro.bmp"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "${PIXMAPS_PATH}\odoo-slogan.bmp"
+!define MUI_HEADERIMAGE_BITMAP "${PIXMAPS_PATH}\iot-slogan.bmp"
 !define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
 !define MUI_HEADER_TRANSPARENT_TEXT ""
 
@@ -129,18 +129,18 @@ Var /GLOBAL cmdLineParams
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
 ; English
-LangString DESC_Odoo_IOT ${LANG_ENGLISH} "Install the Odoo Server with IOT modules."
+LangString DESC_Odoo_IoT ${LANG_ENGLISH} "Install the Odoo Server with IoT modules."
 LangString DESC_FinishPage_Link ${LANG_ENGLISH} "Contact Odoo for Partnership and/or Support"
-LangString TITLE_Odoo_IOT ${LANG_ENGLISH} "Odoo IoT"
+LangString TITLE_Odoo_IoT ${LANG_ENGLISH} "Odoo IoT"
 LangString TITLE_Nginx ${LANG_ENGLISH} "Nginx WebServer"
 LangString TITLE_Ghostscript ${LANG_ENGLISH} "Ghostscript interpreter"
 LangString DESC_FinishPageText ${LANG_ENGLISH} "Start Odoo"
 LangString UnsafeDirText ${LANG_ENGLISH} "Installing outside of $PROGRAMFILES64 is not recommended.$\nDo you want to continue ?"
 
 ; French
-LangString DESC_Odoo_IOT ${LANG_FRENCH} "Installation du Serveur Odoo avec les modules IOT."
+LangString DESC_Odoo_IoT ${LANG_FRENCH} "Installation du Serveur Odoo avec les modules IoT."
 LangString DESC_FinishPage_Link ${LANG_FRENCH} "Contactez Odoo pour un Partenariat et/ou du Support"
-LangString TITLE_Odoo_IOT ${LANG_FRENCH} "Odoo IoT"
+LangString TITLE_Odoo_IoT ${LANG_FRENCH} "Odoo IoT"
 LangString TITLE_Nginx ${LANG_FRENCH} "Installation du serveur web Nginx"
 LangString TITLE_Ghostscript ${LANG_FRENCH} "Installation de l'interpréteur Ghostscript"
 LangString DESC_FinishPageText ${LANG_FRENCH} "Démarrer Odoo"
@@ -148,7 +148,7 @@ LangString UnsafeDirText ${LANG_FRENCH} "Installer en dehors de $PROGRAMFILES64 
 
 InstType /NOCUSTOM
 
-Section $(TITLE_Odoo_IOT) SectionOdoo_IOT
+Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
 
     # Installing winpython
     SetOutPath "$INSTDIR\python"
@@ -168,11 +168,16 @@ Section $(TITLE_Odoo_IOT) SectionOdoo_IOT
     DetailPrint "Unzipping git"
     nsisunz::UnzipToLog "$TEMP\$git_zip_filename" "$INSTDIR\git"
 
-    # cloning odoo
-    SetOutPath "$INSTDIR"
+    # Cloning odoo
     DetailPrint "Cloning Odoo"
-    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter tree:0 -b 18.0 --single-branch https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
-    pop $0
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter=tree:0 -b 18.0 --single-branch --no-checkout https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
+
+    DetailPrint "Configuring Sparse Checkout for IoT modules"
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout init --no-cone'
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout set addons/web addons/hw_* addons/iot_base addons/iot_box_image/configuration addons/point_of_sale/tools/posbox/configuration/requirements.txt odoo odoo-bin'
+
+    DetailPrint "Checking out the repository"
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" checkout'
 
     DetailPrint "Installing vcredist"
     SetOutPath "$INSTDIR\vcredist"
@@ -182,15 +187,16 @@ Section $(TITLE_Odoo_IOT) SectionOdoo_IOT
     DetailPrint "Installing Visual C++ redistributable files"
     nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x64.exe" /q'
 
-    DetailPrint "Writing odoo.conf"
-    # Fix the addons path
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "addons_path" "$INSTDIR\odoo\odoo\addons,$INSTDIR\odoo\addons"
+    DetailPrint "Configuring $(TITLE_Odoo_IoT)"
     # Set data_dir
     WriteIniStr "$INSTDIR\odoo.conf" "options" "data_dir" "$INSTDIR\sessions"
-
-    DetailPrint "Configuring $(TITLE_Odoo_IOT)"
-    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\odoo\odoo-bin" --stop-after-init -c "$INSTDIR\odoo.conf" --logfile "$INSTDIR\odoo.log" -s'
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "server_wide_modules" "web,hw_posbox_homepage,hw_drivers"
+    # set modules to load
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "server_wide_modules" "hw_drivers,hw_posbox_homepage,web"
+    # Configure logging
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "logfile" "$INSTDIR\odoo.log"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_handler" ":WARNING"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_level" "warn"
+    # Other configuration
     WriteIniStr "$INSTDIR\odoo.conf" "options" "list_db" "False"
     WriteIniStr "$INSTDIR\odoo.conf" "options" "max_cron_threads" "0"
 
@@ -225,10 +231,12 @@ Section -$(TITLE_Nginx) Nginx
 
     FindFirst $0 $1 "$INSTDIR\nginx*"
     DetailPrint "Setting up nginx"
-    SetOutPath "$INSTDIR\$1\conf"
-    CreateDirectory $INSTDIR\$1\temp
-    CreateDirectory $INSTDIR\$1\logs
+    Rename "$TEMP\$1" "$INSTDIR\nginx"
     FindClose $0
+
+    SetOutPath "$INSTDIR\nginx\conf"
+    CreateDirectory $INSTDIR\nginx\temp
+    CreateDirectory $INSTDIR\nginx\logs
     File "conf\nginx\nginx.conf"
     # Temporary certs for the first start
     File "..\..\odoo\addons\iot_box_image\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
@@ -270,7 +278,7 @@ Section -Post
 SectionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-    !insertmacro MUI_DESCRIPTION_TEXT ${SectionOdoo_IOT} $(DESC_Odoo_IOT)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SectionOdoo_IoT} $(DESC_Odoo_IoT)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 Section "Uninstall"
@@ -289,6 +297,7 @@ Section "Uninstall"
     Rmdir /r "$INSTDIR\sessions"
     Rmdir /r "$INSTDIR\thirdparty"
     Rmdir /r "$INSTDIR\python"
+    Rmdir /r "$INSTDIR\git"
     Rmdir /r "$INSTDIR\nssm"
     FindFirst $0 $1 "$INSTDIR\nginx*"
     Rmdir /R "$INSTDIR\$1"
@@ -301,7 +310,7 @@ Function .onInit
     SetRegView 64
     ReadRegStr $previous_install_dir HKLM "${REGISTRY_KEY}" "Install_Dir"
     ${If} $previous_install_dir == ""
-        StrCpy $INSTDIR "$PROGRAMFILES64\Odoo IOT ${VERSION}"
+        StrCpy $INSTDIR "$PROGRAMFILES64\Odoo IoT ${VERSION}"
         WriteRegStr HKLM "${REGISTRY_KEY}" "Install_dir" "$INSTDIR"
     ${Else}
         StrCpy $INSTDIR $previous_install_dir
