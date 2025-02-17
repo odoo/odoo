@@ -502,7 +502,14 @@ class Many2one(_Relational):
                     return SQL("(%s) IS NOT TRUE", sql)
 
         # execute search and generate condition with a SQL query
-        domain_query = comodel.with_context(active_test=False)._search(value)
+        if (
+            comodel.env.context.get('active_test', True)
+            and comodel._active_name
+            and not any(condition.field_expr == comodel._active_name for condition in value.iter_conditions())
+        ):
+            # active_test=False only of the first leaf
+            value &= Domain(comodel._active_name, 'in', [True, False])
+        domain_query = comodel._search(value)
         return self.condition_to_sql(fname, operator, domain_query, model, alias, query)
 
     def join(self, model: BaseModel, alias: str, query: Query) -> tuple[BaseModel, str]:
