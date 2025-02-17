@@ -302,6 +302,22 @@ export const PublicRoot = publicWidget.Widget.extend({
     _onDateTimePickerError: function (ev) {
         return false;
     },
+    /**
+     * create an Owl App with the MainComponentsContainer as root component
+     *
+     * @param {OdooEnv} env
+     * @returns {Promise<App>}
+     */
+    async createMainComponent(env) {
+        return new App(MainComponentsContainer, {
+            getTemplate,
+            env,
+            dev: env.debug,
+            translateFn: _t,
+            translatableAttributes: ["data-tooltip"],
+        });
+    },
+
 });
 
 /**
@@ -318,13 +334,7 @@ export async function createPublicRoot(RootWidget) {
     Component.env = env;
     await env.services.public_component.mountComponents();
     const publicRoot = new RootWidget(null, env);
-    const app = new App(MainComponentsContainer, {
-        getTemplate,
-        env,
-        dev: env.debug,
-        translateFn: _t,
-        translatableAttributes: ["data-tooltip"],
-    });
+    const app = await publicRoot.createMainComponent(env);
     const locale = pyToJsLocale(lang) || browser.navigator.language;
     Settings.defaultLocale = locale;
     const [root] = await Promise.all([
