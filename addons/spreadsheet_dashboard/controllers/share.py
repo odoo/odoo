@@ -13,6 +13,7 @@ class DashboardShareRoute(http.Controller):
             {
                 "spreadsheet_name": share.dashboard_id.name,
                 "share": share,
+                "is_frozen": True,
                 "session_info": request.env["ir.http"].session_info(),
                 "props": {
                     "dataUrl": f"/dashboard/data/{share.id}/{token}",
