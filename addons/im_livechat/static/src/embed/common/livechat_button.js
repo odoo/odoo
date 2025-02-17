@@ -1,4 +1,4 @@
-import { Component, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState, useEffect } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
@@ -17,6 +17,17 @@ export class LivechatButton extends Component {
         });
         this.ref = useRef("button");
         this.state = useState({ animateNotification: this.isShown });
+        useEffect(
+            (isShown, rootNodeClassList) => {
+                if (isShown && rootNodeClassList) {
+                    rootNodeClassList.add("o-livechat-LivechatButton-isVisible");
+                    return () => {
+                        rootNodeClassList.remove("o-livechat-LivechatButton-isVisible");
+                    };
+                }
+            },
+            () => [this.isShown, this.ref.el?.getRootNode().host?.classList]
+        );
     }
 
     onClick() {
