@@ -54,6 +54,8 @@ class IrProfile(models.Model):
         # The params variable is done to control input from the user
         # When expanding this, it should be select from an enum to input only the correct values
         params = self._parse_params(self.env.context)
+        if not any(params[key] for key in ('combined_profile', 'sql_no_gap_profile', 'sql_density_profile', 'frames_profile')):
+            params['combined_profile'] = True
         for execution in self:
             execution.speedscope = base64.b64encode(execution._generate_speedscope(params))
 

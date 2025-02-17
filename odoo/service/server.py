@@ -4,6 +4,7 @@
 import contextlib
 import datetime
 import errno
+import json
 import logging
 import os
 import os.path
@@ -55,7 +56,7 @@ except ImportError:
 from odoo import api, sql_db
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
-from odoo.tools import config, osutil, OrderedSet
+from odoo.tools import config, osutil, OrderedSet, profiler
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import stripped_sys_argv, dumpstacks
 from .db import list_dbs
@@ -1330,6 +1331,18 @@ def _reexec(updated_modules=None):
     # We should keep the LISTEN_* environment variabled in order to support socket activation on reexec
     os.execve(sys.executable, args, os.environ)
 
+#def preload_registries(dbnames):
+#    if dbnames and config['profile']:
+#        with profiler.Profiler(
+#            db=config['profile_database'] or dbnames[0],
+#            description=f'_preload_registries - {dbnames[0]}',
+#            profile_session=f'{os.getpid()} - {dbnames[0]}',
+#            collectors=config['profile_collectors'],
+#            params=json.loads(config['profile_params']),
+#        ):
+#            return _preload_registries(dbnames)
+#    else:
+#        return _preload_registries(dbnames)
 
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
@@ -1342,28 +1355,41 @@ def preload_registries(dbnames):
             update_module = config['init'] or config['update']
             registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'])
 
-            # run post-install tests
             if config['test_enable']:
-                from odoo.tests import loader  # noqa: PLC0415
-                t0 = time.time()
-                t0_sql = sql_db.sql_counter
-                module_names = (registry.updated_modules if update_module else
-                                sorted(registry._init_modules))
-                _logger.info("Starting post tests")
-                tests_before = registry._assertion_report.testsRun
-                post_install_suite = loader.make_suite(module_names, 'post_install')
-                if post_install_suite.has_http_case():
-                    with registry.cursor() as cr:
-                        env = api.Environment(cr, api.SUPERUSER_ID, {})
-                        env['ir.qweb']._pregenerate_assets_bundles()
-                result = loader.run_suite(post_install_suite)
-                registry._assertion_report.update(result)
-                _logger.info("%d post-tests in %.2fs, %s queries",
-                             registry._assertion_report.testsRun - tests_before,
-                             time.time() - t0,
-                             sql_db.sql_counter - t0_sql)
+                if dbnames and config['profile']:
+                    profiler_cm = profiler.Profiler(
+                        db=config['profile_database'] or dbnames[0],
+                        description=f'post install tests - {dbnames[0]}',
+                        profile_session=f'{os.getpid()} - {dbnames[0]}',
+                        collectors=config['profile_collectors'],
+                        params=json.loads(config['profile_params']),
+                        entry_count_limit=100000, # arbitrary limit to avoid memory error. With memory limit set to 4Go would fail around 500k entries
+                        flush=True,
+                    )
+                else:
+                    profiler_cm = contextlib.nullcontext()
+                with profiler_cm:
+                    from odoo.tests import loader  # noqa: PLC0415
+                    t0 = time.time()
+                    t0_sql = sql_db.sql_counter
+                    module_names = (registry.updated_modules if update_module else
+                                    sorted(registry._init_modules))
+                    _logger.info("Starting post tests")
+                    tests_before = registry._assertion_report.testsRun
+                    post_install_suite = loader.make_suite(module_names, 'post_install')
+                    if post_install_suite.has_http_case():
+                        with registry.cursor() as cr:
+                            env = api.Environment(cr, api.SUPERUSER_ID, {})
+                            env['ir.qweb']._pregenerate_assets_bundles()
+                    
+                    result = loader.run_suite(post_install_suite)
+                    registry._assertion_report.update(result)
+                    _logger.info("%d post-tests in %.2fs, %s queries",
+                                registry._assertion_report.testsRun - tests_before,
+                                time.time() - t0,
+                                sql_db.sql_counter - t0_sql)
 
-                registry._assertion_report.log_stats()
+                    registry._assertion_report.log_stats()
             if registry._assertion_report and not registry._assertion_report.wasSuccessful():
                 rc += 1
         except Exception:

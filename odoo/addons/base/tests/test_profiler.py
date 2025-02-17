@@ -571,6 +571,37 @@ class TestProfiling(TransactionCase):
         self.assertEqual(first_query['stack'][-1][0].split('/')[-1], 'sql_db.py')
 
 
+    def test_limit(self):
+        saves = []
+        with Profiler(db=None, collectors=['sql'], entry_count_limit=5) as p:
+            p.save = lambda suffix: saves.append((suffix))
+            for i in range(10):
+                self.cr.execute('SELECT %s', [i])
+        self.assertEqual(len(p.collectors[0].entries), 5)
+        self.assertEqual(saves, [''])
+
+    def test_flush(self):
+        saves_suffix = []
+        entries = []
+        with Profiler(db=None, collectors=['sql'], entry_count_limit=5, flush=True) as p:
+            p.save = lambda suffix: saves_suffix.append(suffix) or entries.append(p.collectors[0].entries)
+            for i in range(11):
+                self.cr.execute('SELECT %s', [i])
+        self.assertEqual([len(e) for e in entries], [5, 5, 1])
+        self.assertEqual(saves_suffix, ['_part_1', '_part_2','_part_3'])
+
+
+    def test_flush_last_empty(self):
+        saves_suffix = []
+        entries = []
+        with Profiler(db=None, collectors=['sql'], entry_count_limit=5, flush=True) as p:
+            p.save = lambda suffix: saves_suffix.append(suffix) or entries.append(p.collectors[0].entries)
+            for i in range(10):
+                self.cr.execute('SELECT %s', [i])
+        self.assertEqual([len(e) for e in entries], [5, 5])
+        self.assertEqual(saves_suffix, ['_part_1', '_part_2'])
+
+
 def deep_call(func, depth):
     """ Call the given function at the given call depth. """
     if depth > 0:

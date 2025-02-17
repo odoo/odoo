@@ -48,7 +48,7 @@ def _get_stack_trace(frame, limit_frame=None):
         stack.append(_format_frame(frame))
         frame = frame.f_back
     if frame is None and limit_frame:
-        _logger.error("Limit frame was not found")
+        _logger.runbot("Limit frame was not found")
     return list(reversed(stack))
 
 
@@ -124,11 +124,13 @@ class Collector:
 
     def progress(self, entry=None, frame=None):
         """ Checks if the limits were met and add to the entries"""
+        self.add(entry=entry,frame=frame)
         if self.profiler.entry_count_limit \
             and self.profiler.entry_count() >= self.profiler.entry_count_limit:
-            self.profiler.end()
-
-        self.add(entry=entry,frame=frame)
+            if self.profiler.flush:
+                self.profiler._flush()
+            else:
+                self.profiler.end()
 
     def _get_stack_trace(self, frame=None):
         """ Return the stack trace to be included in a given entry. """
@@ -231,7 +233,8 @@ class PeriodicCollector(Collector):
 
     def stop(self):
         self.active = False
-        self.__thread.join()
+        if self.__thread != threading.current_thread():  # Possible if an async profiler flush during it's own loop turn.
+            self.__thread.join()
         self.profiler.init_thread.profile_hooks.remove(self.progress)
 
     def add(self, entry=None, frame=None):
@@ -390,7 +393,7 @@ class QwebTracker():
             elif ('t-' + directive) not in attrib:
                 directive_info['t-' + directive] = None
 
-            execution_context = tools.profiler.ExecutionContext(**directive_info, xpath=xpath)
+            execution_context = ExecutionContext(**directive_info, xpath=xpath)
             execution_context.__enter__()
             self.context_stack.append(execution_context)
 
@@ -527,7 +530,7 @@ class Profiler:
     Will save sql and async stack trace by default.
     """
     def __init__(self, collectors=None, db=..., profile_session=None,
-                 description=None, disable_gc=False, params=None, log=False):
+                 description=None, disable_gc=False, params=None, log=False, flush=False, entry_count_limit=0):
         """
         :param db: database name to use to save results.
             Will try to define database automatically by default.
@@ -537,6 +540,7 @@ class Profiler:
         :param description: description of the current profiler Suggestion: (route name/test method/loading module, ...)
         :param disable_gc: flag to disable gc durring profiling (usefull to avoid gc while profiling, especially during sql execution)
         :param params: parameters usable by collectors (like frame interval)
+        :param flush: flush the profiler when reaching the entry count limit instead of stoping it
         """
         self.start_time = 0
         self.duration = 0
@@ -551,8 +555,12 @@ class Profiler:
         self.profile_id = None
         self.log = log
         self.sub_profilers = []
-        self.entry_count_limit = int(self.params.get("entry_count_limit",0)) # the limit could be set using a smarter way
+        self.entry_count_limit = int(self.params.get("entry_count_limit", 0)) or entry_count_limit # the limit could be set using a smarter way
         self.done = False
+        self.flush = flush
+        self.flush_count = 0
+        self.lock = threading.Lock()
+
 
         if db is ...:
             # determine database from current thread
@@ -565,8 +573,56 @@ class Profiler:
         # collectors
         if collectors is None:
             collectors = ['sql', 'traces_async']
+
+        self.collectors_descriptors = collectors
+        
+        if flush and any(not isinstance(collector, str) for collector in collectors):
+            raise Exception('Flush mode not compatible with custom collectors')
+
+    def _flush(self):
+        with self.lock:
+            # check that another thread didn't flush
+            if self.entry_count() < self.entry_count_limit:
+                _logger.info('Skipping flush, already done')
+                return
+            self.end(flush=True)
+            self.start()
+
+    def __enter__(self):
+        self.start()
+        return self
+
+    def start(self):
+        if not self.init_thread:
+            self.init_thread = threading.current_thread()
+            try:
+                self.init_frame = get_current_frame(self.init_thread)
+                self.init_stack_trace = _get_stack_trace(self.init_frame)
+                self._add_file_lines(self.init_stack_trace)
+            except KeyError:
+                # when using thread pools (gevent) the thread won't exist in the current_frames
+                # this case is managed by http.py but will still fail when adding a profiler
+                # inside a piece of code that may be called by a longpolling route.
+                # in this case, avoid crashing the caller and disable all collectors
+                self.init_frame = self.init_stack_trace = self.collectors = []
+                self.db = self.params = None
+                message = "Cannot start profiler, thread not found. Is the thread part of a thread pool?"
+                if not self.description:
+                    self.description = message
+                _logger.warning(message)
+            if self.description is None:
+                frame = self.init_frame
+                code = frame.f_code
+                self.description = f"{frame.f_code.co_name} ({code.co_filename}:{frame.f_lineno})"
+        if self.params:
+            self.init_thread.profiler_params = self.params
+        if self.disable_gc and gc.isenabled():
+            gc.disable()
+        self.start_time = real_time()
+        self.duration = 0
+        self.done = False
         self.collectors = []
-        for collector in collectors:
+        for collector in self.collectors_descriptors:
             if isinstance(collector, str):
                 try:
                     collector = Collector.make(collector)
@@ -575,41 +631,13 @@ class Profiler:
                     continue
             collector.profiler = self
             self.collectors.append(collector)
-
-    def __enter__(self):
-        self.init_thread = threading.current_thread()
-        try:
-            self.init_frame = get_current_frame(self.init_thread)
-            self.init_stack_trace = _get_stack_trace(self.init_frame)
-        except KeyError:
-            # when using thread pools (gevent) the thread won't exist in the current_frames
-            # this case is managed by http.py but will still fail when adding a profiler
-            # inside a piece of code that may be called by a longpolling route.
-            # in this case, avoid crashing the caller and disable all collectors
-            self.init_frame = self.init_stack_trace = self.collectors = []
-            self.db = self.params = None
-            message = "Cannot start profiler, thread not found. Is the thread part of a thread pool?"
-            if not self.description:
-                self.description = message
-            _logger.warning(message)
-
-        if self.description is None:
-            frame = self.init_frame
-            code = frame.f_code
-            self.description = f"{frame.f_code.co_name} ({code.co_filename}:{frame.f_lineno})"
-        if self.params:
-            self.init_thread.profiler_params = self.params
-        if self.disable_gc and gc.isenabled():
-            gc.disable()
-        self.start_time = real_time()
         for collector in self.collectors:
             collector.start()
-        return self
 
     def __exit__(self, *args):
         self.end()
 
-    def end(self):
+    def end(self, flush=False):
         if self.done:
             return
         self.done = True
@@ -617,14 +645,30 @@ class Profiler:
             for collector in self.collectors:
                 collector.stop()
             self.duration = real_time() - self.start_time
-            self._add_file_lines(self.init_stack_trace)
+            suffix = ''
+            if not self.entry_count():
+                _logger.info('No entries collected, skipping save')
+                return
+            if flush or self.flush_count:
+                self.flush_count += 1
+                suffix = f'_part_{self.flush_count}'
+            self.save(suffix)
+        finally:
+            if self.disable_gc:
+                gc.enable()
+            if self.params:
+                del self.init_thread.profiler_params
+            if self.log:
+                _logger.info(self.summary())
 
-            if self.db:
+    def save(self, suffix=''):
+        if self.db:
+            try:
                 # pylint: disable=import-outside-toplevel
                 from odoo.sql_db import db_connect  # only import from odoo if/when needed.
                 with db_connect(self.db).cursor() as cr:
                     values = {
-                        "name": self.description,
+                        "name": self.description + suffix,
                         "session": self.profile_session,
                         "create_date": real_datetime_now(),
                         "init_stack_trace": json.dumps(_format_stack(self.init_stack_trace)),
@@ -635,6 +679,7 @@ class Profiler:
                     for collector in self.collectors:
                         if collector.entries:
                             values[collector.name] = json.dumps(collector.entries)
+
                     query = SQL(
                         "INSERT INTO ir_profile(%s) VALUES %s RETURNING id",
                         SQL(",").join(map(SQL.identifier, values)),
@@ -643,15 +688,8 @@ class Profiler:
                     cr.execute(query)
                     self.profile_id = cr.fetchone()[0]
                     _logger.info('ir_profile %s (%s) created', self.profile_id, self.profile_session)
-        except OperationalError:
-            _logger.exception("Could not save profile in database")
-        finally:
-            if self.disable_gc:
-                gc.enable()
-            if self.params:
-                del self.init_thread.profiler_params
-            if self.log:
-                _logger.info(self.summary())
+            except OperationalError:
+                _logger.exception("Could not save profile in database")
 
     def _add_file_lines(self, stack):
         for index, frame in enumerate(stack):

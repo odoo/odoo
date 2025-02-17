@@ -243,6 +243,14 @@ class configmanager:
                               "The expression can use %d (domain) and %h (host) placeholders.")
         parser.add_option_group(group)
 
+        # Profile
+        group = optparse.OptionGroup(parser, "Profiler Configuration")
+        group.add_option("--profile", dest='profile', action="store_true",
+                         help="Enable profiler")
+        group.add_option("--profile-database", dest="profile_database", type='string', my_default=None)
+        group.add_option("--profile-collectors", dest="profile_collectors", type='comma', my_default=['sql', 'traces_async'])
+        group.add_option("--profile-params", dest="profile_params", type='string', my_default='{}')
+                         
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", type='path', my_default='',
