@@ -5,6 +5,8 @@ import { Record } from "./record";
 import { debounce } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
 
+const MESSAGE_SOUND = "mail.user_setting.message_sound";
+
 export class Settings extends Record {
     id;
 
@@ -21,6 +23,11 @@ export class Settings extends Record {
         this._loadLocalSettings();
     }
 
+    delete() {
+        browser.removeEventListener("storage", this.onStorage);
+        super.delete(...arguments);
+    }
+
     // Notification settings
     /**
      * @type {"mentions"|"all"|"no_notif"}
@@ -28,6 +35,19 @@ export class Settings extends Record {
     channel_notifications = Record.attr("mentions", {
         compute() {
             return this.channel_notifications === false ? "mentions" : this.channel_notifications;
+        },
+    });
+    messageSound = Record.attr(true, {
+        compute() {
+            return browser.localStorage.getItem(MESSAGE_SOUND) !== "false";
+        },
+        /** @this {import("models").Settings} */
+        onUpdate() {
+            if (this.messageSound) {
+                browser.localStorage.removeItem(MESSAGE_SOUND);
+            } else {
+                browser.localStorage.setItem(MESSAGE_SOUND, "false");
+            }
         },
     });
     mute_until_dt = Record.attr(false, { type: "datetime" });
@@ -286,6 +306,8 @@ export class Settings extends Record {
         this.backgroundBlurAmount = backgroundBlurAmount ? parseInt(backgroundBlurAmount) : 10;
         const edgeBlurAmount = browser.localStorage.getItem("mail_user_setting_edge_blur_amount");
         this.edgeBlurAmount = edgeBlurAmount ? parseInt(edgeBlurAmount) : 10;
+        this.onStorage = this.onStorage.bind(this);
+        browser.addEventListener("storage", this.onStorage);
     }
     /**
      * @private
@@ -319,6 +341,11 @@ export class Settings extends Record {
             [[this.id], partnerId, volume],
             { guest_id: guestId }
         );
+    }
+    onStorage(ev) {
+        if (ev.key === MESSAGE_SOUND) {
+            this.messageSound = ev.newValue !== "false";
+        }
     }
     /**
      * @private

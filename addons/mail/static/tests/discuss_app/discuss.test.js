@@ -1423,6 +1423,45 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     await waitForSteps([]); // no sound alert whatsoever
 });
 
+test("receive new message plays sound", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    mockService("mail.sound_effects", {
+        play(soundEffectName, ...args) {
+            asyncStep(`sound:${soundEffectName}`);
+            return super.play(soundEffectName, ...args);
+        },
+    });
+    onRpcBefore("/mail/data", async (args) => {
+        if (args.fetch_params.includes("init_messaging")) {
+            asyncStep("init_messaging");
+        }
+    });
+    await start();
+    await contains(".o_menu_systray i[aria-label='Messages']");
+    await waitForSteps(["init_messaging"]);
+    // simulate receiving a new message with odoo out-of-focused
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "New message",
+                message_type: "comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await waitForSteps(["sound:new-message"]);
+});
+
 test("should auto-pin chat when receiving a new DM", async () => {
     mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
