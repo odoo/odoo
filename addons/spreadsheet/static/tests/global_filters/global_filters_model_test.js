@@ -8,7 +8,7 @@ import {
     createModelWithDataSource,
     waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
-import { getBasicPivotArch } from "@spreadsheet/../tests/utils/data";
+import { getBasicPivotArch, getBasicServerData } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetWithPivotAndList } from "@spreadsheet/../tests/utils/pivot_list";
 import {
     THIS_YEAR_GLOBAL_FILTER,
@@ -50,6 +50,7 @@ import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { toRangeData } from "../utils/zones";
 import { PivotUIPlugin } from "@spreadsheet/pivot/index";
 import { getEvaluatedCell } from "../utils/getters";
+
 const { DateTime } = luxon;
 const { toZone } = helpers;
 
@@ -2003,6 +2004,8 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         "getFiltersMatchingPivot return correctly matching filter according to cell formula",
         async function (assert) {
             patchDate(2022, 6, 14, 0, 0, 0);
+            const serverData = getBasicServerData();
+            serverData.models["partner"].records.push({ ...serverData.models["partner"].records[0], id: 10000, product_id: false });
             const { model } = await createSpreadsheetWithPivot({
                 arch: /*xml*/ `
                 <pivot>
@@ -2010,6 +2013,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     <field name="probability" type="measure"/>
                     <field name="date" interval="month" type="col"/>
                 </pivot>`,
+                serverData,
             });
             await addGlobalFilter(
                 model,
@@ -2029,7 +2033,6 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     type: "date",
                     label: "date filter 1",
                     rangeType: "fixedPeriod",
-                    defaultValue: "this_month",
                 },
                 {
                     pivot: { 1: { chain: "date", type: "date" } },
@@ -2045,6 +2048,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 '=ODOO.PIVOT.HEADER(1,"product_id","41")'
             );
             assert.deepEqual(relationalFilters2, [{ filterId: "42", value: [41] }]);
+            const relationalFiltersWithNoneValue = getFiltersMatchingPivot(
+                model,
+                '=ODOO.PIVOT.HEADER(1,"#product_id",1)'
+            );
+            assert.deepEqual(relationalFiltersWithNoneValue, [{ filterId: "42", value: undefined }]);
             const dateFilters1 = getFiltersMatchingPivot(
                 model,
                 '=ODOO.PIVOT.HEADER(1,"date:month","08/2016")'
