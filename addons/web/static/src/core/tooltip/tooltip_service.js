@@ -102,6 +102,8 @@ export const tooltipService = {
             }
 
             target = el;
+            // Prevent title from showing on a parent at the same time
+            target.title = "";
             openTooltipTimeout = browser.setTimeout(() => {
                 // verify that the element is still in the DOM
                 if (target.isConnected) {
@@ -111,8 +113,6 @@ export const tooltipService = {
                         { tooltip, template, info },
                         { position }
                     );
-                    // Prevent title from showing on a parent at the same time
-                    target.title = "";
                 }
             }, delay);
         }
