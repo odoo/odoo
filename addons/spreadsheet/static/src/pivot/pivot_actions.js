@@ -32,15 +32,23 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
         return false;
     }
     const dataSource = env.model.getters.getPivotDataSource(pivotId);
-    return (
-        dataSource.isReady() &&
-        evaluatedCell.type !== "empty" &&
-        evaluatedCell.type !== "error" &&
-        argsDomain !== undefined &&
-        cell &&
-        cell.isFormula &&
-        getNumberOfPivotFormulas(cell.compiledFormula.tokens) === 1
-    );
+    try {
+        // parse the domain (field, value) to ensure they are of the correct type
+        dataSource.getPivotCellDomain(argsDomain);
+        return (
+            dataSource.isReady() &&
+            evaluatedCell.type !== "empty" &&
+            evaluatedCell.type !== "error" &&
+            argsDomain !== undefined &&
+            cell &&
+            cell.isFormula &&
+            getNumberOfPivotFormulas(cell.compiledFormula.tokens) === 1
+        );
+        // eslint-disable-next-line no-unused-vars
+    } catch (e) {
+        // if the arguments of the domain are not correct, don't let the user click on it.
+        return false;
+    }
 };
 
 /**
