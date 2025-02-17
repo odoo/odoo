@@ -16,6 +16,7 @@ export class BuilderButton extends Component {
         icon: { type: String, optional: true },
         className: { type: String, optional: true },
         classActive: { type: String, optional: true },
+        style: { type: String, optional: true },
 
         slots: { type: Object, optional: true },
     };
