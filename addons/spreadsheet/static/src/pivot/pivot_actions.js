@@ -37,6 +37,7 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
     );
 };
 
+<<<<<<< saas-17.4
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
  * @param {import("@spreadsheet").OdooGetters} getters
@@ -57,6 +58,53 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
         getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1 &&
         getters.getPivotCoreDefinition(pivotId).type === "ODOO"
     );
+||||||| 36fcb71454b3c1ad23c71b4e0a0424195b121883
+export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
+    const cell = env.model.getters.getCorrespondingFormulaCell(position);
+    const evaluatedCell = env.model.getters.getEvaluatedCell(position);
+    const argsDomain = env.model.getters.getPivotDomainArgsFromPosition(position)?.domainArgs;
+    const pivotId = env.model.getters.getPivotIdFromPosition(position);
+    if (!env.model.getters.isExistingPivot(pivotId)) {
+        return false;
+    }
+    const dataSource = env.model.getters.getPivotDataSource(pivotId);
+    return (
+        dataSource.isReady() &&
+        evaluatedCell.type !== "empty" &&
+        evaluatedCell.type !== "error" &&
+        argsDomain !== undefined &&
+        cell &&
+        cell.isFormula &&
+        getNumberOfPivotFormulas(cell.compiledFormula.tokens) === 1
+    );
+=======
+export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
+    const cell = env.model.getters.getCorrespondingFormulaCell(position);
+    const evaluatedCell = env.model.getters.getEvaluatedCell(position);
+    const argsDomain = env.model.getters.getPivotDomainArgsFromPosition(position)?.domainArgs;
+    const pivotId = env.model.getters.getPivotIdFromPosition(position);
+    if (!env.model.getters.isExistingPivot(pivotId)) {
+        return false;
+    }
+    const dataSource = env.model.getters.getPivotDataSource(pivotId);
+    try {
+        // parse the domain (field, value) to ensure they are of the correct type
+        dataSource.getPivotCellDomain(argsDomain);
+        return (
+            dataSource.isReady() &&
+            evaluatedCell.type !== "empty" &&
+            evaluatedCell.type !== "error" &&
+            argsDomain !== undefined &&
+            cell &&
+            cell.isFormula &&
+            getNumberOfPivotFormulas(cell.compiledFormula.tokens) === 1
+        );
+        // eslint-disable-next-line no-unused-vars
+    } catch (e) {
+        // if the arguments of the domain are not correct, don't let the user click on it.
+        return false;
+    }
+>>>>>>> 9ae58a7afb17e979990e6a06b879ff898c61ea4e
 };
 
 /**
