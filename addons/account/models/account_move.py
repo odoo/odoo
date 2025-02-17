@@ -5003,7 +5003,10 @@ class AccountMove(models.Model):
             and not self.abnormal_amount_warning
             and not self.restrict_mode_hash_table
         ):
-            self.action_post()
+            if self.duplicated_ref_ids:
+                self.message_post(body=_("Auto-post was disabled on this invoice because a potential duplicate was detected."))
+            else:
+                self.action_post()
 
     def _show_autopost_bills_wizard(self):
         if (
