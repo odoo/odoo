@@ -45,10 +45,10 @@
         <div class="builder_select_page">
             <t t-foreach="categoryShape.shapes" t-as="shape" t-key="shape_index">
                 <div class="button_shape" t-on-click="closeComponent">
-                    <BuilderButton action="'applyShape'" actionParam="{'shape': shape.shapeUrl}">
+                    <BuilderButton style="''" action="'applyShape'" actionParam="{'shape': shape.shapeUrl}">
                         <div>
                             <div class="o_we_shape" t-attf-style="background-image: {{this.props.getShapeStyleUrl(shape.shapeUrl)}};"/>
-                            <span t-if="shape.animated" class="o_we_shape_animated_label">Animated</span>
+                            <span t-if="shape.animated" class="o_we_shape_animated_label">A<span>nimated</span></span>
                         </div>
                     </BuilderButton>
                 </div>

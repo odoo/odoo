@@ -186,6 +186,16 @@
         max-width: 0;
     }
 }
+div:hover>.o_we_shape_animated_label {
+    i {
+        padding-right: $o-we-item-spacing / 2;
+    }
+
+    > span {
+        max-width: $o-we-sidebar-width / 2;
+        transition: max-width 0.5s ease 0s;
+    }
+}
 
 .o_pager_nav_angle {
     @include button-variant($o-we-bg-light, $o-we-bg-light);
