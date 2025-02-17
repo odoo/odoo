@@ -421,11 +421,11 @@ class DockerWine(Docker):
 
 
 class DockerIot(DockerWine):
-    """Docker class to build windows IOT package"""
+    """Docker class to build windows IoT package"""
 
     def __init__(self, args):
         super().__init__(args)
-        self.package_name = "IOT"
+        self.package_name = "IoT"
         self.nsi_filepath = r"c:\odoobuild\server\setup\win32\setup-iot.nsi"
         self.nt_service_name = "odoo-iot"
 
