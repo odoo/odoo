@@ -1,0 +1,22 @@
+
+.o-mail-UserStatusPanelDropdown {
+    max-width: 300px !important;
+
+    .o-away {
+        color: $yellow;
+    }
+}
+
+.o-mail-UserStatusPanel-button {
+    &:hover {
+        background-color: var(--mail-DiscussSidebar-itemActiveBgColor, mix($o-view-background-color, $o-action, 90%)) !important;
+    }
+}
+
+.o-mail-UserStatusPanel-avatar {
+    --Avatar-size: #{$o-mail-Avatar-size};
+
+    &.o-compact {
+        --Avatar-size: #{$o-mail-Avatar-sizeSmall};
+    }
+}
