@@ -389,6 +389,20 @@ class Many2one(_Relational[M]):
             if ids0 is not None or not corecord.id:
                 ids1 = tuple(unique((ids0 or ()) + valid_records._ids))
                 cache.set(corecord, invf, ids1)
+    
+    def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
+        sql_field = super().to_sql(model, alias, flush)
+        if self.company_dependent:
+            comodel = model.env[self.comodel_name]
+            sql_field = SQL(
+                '''(SELECT %(cotable_alias)s.id
+                    FROM %(cotable)s AS %(cotable_alias)s
+                    WHERE %(cotable_alias)s.id = %(ref)s)''',
+                cotable=SQL.identifier(comodel._table),
+                cotable_alias=SQL.identifier(Query.make_alias(comodel._table, 'exists')),
+                ref=sql_field,
+            )
+        return sql_field
 
     def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
         if operator not in ('any', 'not any') or field_expr != self.name:

@@ -1165,6 +1165,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             # ('null'::jsonb)::text == 'null'
             # ('null'::jsonb->>0)::text IS NULL
             return SQL('(%s->>0)::%s', sql_field, SQL(self._column_type[1]))
+
         return sql_field
 
     def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
