@@ -459,9 +459,12 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
                                 break;
                             }
                         }
+                        // A group by value of "none"
+                        if (value === false) break;
                         if (JSON.stringify(currentValue) !== `[${value}]`) {
                             transformedValue = [value];
                         }
+
                         break;
                     case "text":
                         if (currentValue !== value) {
