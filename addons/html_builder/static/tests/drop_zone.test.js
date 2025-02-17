@@ -1,14 +1,9 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import {
-    defineWebsiteModels,
-    setupHTMLBuilder,
-    setupWebsiteBuilder,
-    setupWebsiteBuilderWithDummySnippet,
-} from "./website_helpers";
+import { setupHTMLBuilder } from "./helpers";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 const initialDropZone = (hovered = false) => `
     <div class="oe_drop_zone oe_insert${
@@ -26,46 +21,43 @@ async function confirmSnippet() {
 }
 
 test("initial dropzone is visible after opening edit sidebar", async () => {
-    const { el } = await setupHTMLBuilder("");
-
-    expect(el).toHaveInnerHTML(initialDropZone());
+    const { contentEl } = await setupHTMLBuilder("");
+    expect(contentEl).toHaveInnerHTML(initialDropZone());
 });
 
 test("drop beside dropzone inserts the snippet", async () => {
-    const { getEditableContent, snippetContent } = await setupWebsiteBuilderWithDummySnippet();
-    const editableContent = getEditableContent();
-    expect(editableContent).toHaveInnerHTML(initialDropZone());
+    const { contentEl, snippetContent } = await setupHTMLBuilder();
+    expect(contentEl).toHaveInnerHTML(initialDropZone());
     const { moveTo, drop } = await contains(
         `.o-snippets-menu [data-category="snippet_groups"] div`
     ).drag();
-    await moveTo(editableContent.ownerDocument.body);
+    await moveTo(contentEl.ownerDocument.body);
     // The dropzone is not hovered, so not highlighted.
-    expect(editableContent).toHaveInnerHTML(initialDropZone());
+    expect(contentEl).toHaveInnerHTML(initialDropZone());
     await drop();
     await confirmSnippet();
     expect(".o_add_snippet_dialog").toHaveCount(0);
-    expect(editableContent).toHaveInnerHTML(snippetContent);
+    expect(contentEl).toHaveInnerHTML(snippetContent);
 });
 
 test("initial dropzone appears after undo", async () => {
-    const { getEditableContent, snippetContent } = await setupWebsiteBuilderWithDummySnippet();
-    const editableContent = getEditableContent();
-    expect(editableContent).toHaveInnerHTML(initialDropZone());
+    const { contentEl, snippetContent } = await setupHTMLBuilder();
+    expect(contentEl).toHaveInnerHTML(initialDropZone());
 
     const { moveTo, drop } = await contains(
         `.o-snippets-menu [data-category="snippet_groups"] div`
     ).drag();
-    await moveTo(editableContent);
-    expect(editableContent).toHaveInnerHTML(initialDropZone(true));
+    await moveTo(contentEl);
+    expect(contentEl).toHaveInnerHTML(initialDropZone(true));
     await drop();
     await confirmSnippet();
     expect(".o_add_snippet_dialog").toHaveCount(0);
-    expect(editableContent).toHaveInnerHTML(snippetContent);
+    expect(contentEl).toHaveInnerHTML(snippetContent);
 
     // Undo should display the dropzone
     await click(".o-snippets-menu button.fa-undo");
     await animationFrame();
-    expect(editableContent).toHaveInnerHTML(initialDropZone());
+    expect(contentEl).toHaveInnerHTML(initialDropZone());
 });
 
 test("initial dropzone appears after delete & redo", async () => {
@@ -73,22 +65,21 @@ test("initial dropzone appears after delete & redo", async () => {
         const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
         return `<section class="${className}"></section>`;
     };
-    const { getEditableContent } = await setupWebsiteBuilder(startContent());
-    const editableContent = getEditableContent();
+    const { contentEl } = await setupHTMLBuilder(startContent());
 
-    expect(editableContent).toHaveInnerHTML(startContent(true));
-    await click(editableContent.querySelector(".s_test"));
+    expect(contentEl).toHaveInnerHTML(startContent(true));
+    await click(contentEl.querySelector(".s_test"));
     await animationFrame();
     // Delete should display the initial dropzone
     await click(".oe_snippet_remove.fa-trash");
     await animationFrame();
-    expect(editableContent).toHaveInnerHTML(initialDropZone());
+    expect(contentEl).toHaveInnerHTML(initialDropZone());
 
     // Undo, then redo should display the initial dropzone
     await click(".o-snippets-menu button.fa-undo");
     await animationFrame();
-    expect(editableContent).toHaveInnerHTML(startContent(true));
+    expect(contentEl).toHaveInnerHTML(startContent(true));
     await click(".o-snippets-menu button.fa-repeat");
     await animationFrame();
-    expect(editableContent).toHaveInnerHTML(initialDropZone());
+    expect(contentEl).toHaveInnerHTML(initialDropZone());
 });
