@@ -6,7 +6,7 @@ import { assignDefined, assignIn } from "@mail/utils/common/misc";
 
 import { toRaw } from "@odoo/owl";
 
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { omit } from "@web/core/utils/objects";
 import { url } from "@web/core/utils/urls";
@@ -213,7 +213,7 @@ export class Message extends Record {
     }
 
     get datetimeShort() {
-        return this.datetime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
+        return formatDateTime(this.datetime);
     }
 
     get isSelfMentioned() {
