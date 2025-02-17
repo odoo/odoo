@@ -253,10 +253,6 @@ def load_module_graph(
                 # validate the views that have not been checked yet
                 env['ir.ui.view']._validate_module_views(module_name)
 
-            # need to commit any modification the module's installation or
-            # update made to the schema or data so the tests can run
-            # (separately in their own transaction)
-            env.cr.commit()
             concrete_models = [model for model in model_names if not registry[model]._abstract]
             if concrete_models:
                 env.cr.execute("""
@@ -274,10 +270,20 @@ def load_module_graph(
                         lines.append(f"{module_name}.access_{xmlid},access_{xmlid},{module_name}.model_{xmlid},base.group_user,1,0,0,0")
                     _logger.warning('\n'.join(lines))
 
+            registry.updated_modules.append(package.name)
+
+            ver = adapt_version(package.manifest['version'])
+            # Set new modules and dependencies
+            module.write({'state': 'installed', 'latest_version': ver})
+
+            package.state = 'installed'
+            module.env.flush_all()
+            module.env.cr.commit()
+
         test_time = 0.0
         test_queries = 0
         test_results = None
-        # allow to run at_install tests without updating modules
+
         update_from_config = tools.config['update'] or tools.config['init']
         if tools.config['test_enable'] and (needs_update or not update_from_config):
             from odoo.tests import loader  # noqa: PLC0415
@@ -296,16 +302,6 @@ def load_module_graph(
                 # tests may have reset the environment
                 module = env['ir.module.module'].browse(module_id)
 
-        if needs_update:
-            registry.updated_modules.append(package.name)
-
-            ver = adapt_version(package.manifest['version'])
-            # Set new modules and dependencies
-            module.write({'state': 'installed', 'latest_version': ver})
-
-            package.state = 'installed'
-            module.env.flush_all()
-            module.env.cr.commit()
 
         extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
         extras = []
