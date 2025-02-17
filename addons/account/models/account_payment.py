@@ -141,6 +141,7 @@ class AccountPayment(models.Model):
         relation='account_move__account_payment',
         column1='payment_id',
         column2='invoice_id',
+        copy=False,
     )
     reconciled_invoice_ids = fields.Many2many('account.move', string="Reconciled Invoices",
         compute='_compute_stat_buttons_from_reconciliation',
