@@ -71,7 +71,6 @@ export const batchedOrmService = {
     async: [
         "call",
         "create",
-        "nameGet",
         "read",
         "formattedReadGroup",
         "search",

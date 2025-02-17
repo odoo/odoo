@@ -536,7 +536,6 @@ export function extractInfoFromGroupData(groupData, groupBy, fields) {
     const info = {};
     const groupByField = fields[groupBy[0].split(":")[0]];
     info.count = groupData.__count;
-    info.length = info.count; // TODO: remove but still used in DynamicRecordList._updateCount
     info.domain = groupData.__domain;
     info.rawValue = groupData[groupBy[0]];
     info.value = getValueFromGroupData(groupByField, info.rawValue);
