@@ -75,21 +75,25 @@ export class BasicMany2Many extends Component {
             operator: "ilike",
             limit: this.props.limit + 1,
         });
-        this.state.searchResults = [];
-        for (const tuple of tuples.slice(0, this.props.limit)) {
-            this.state.searchResults.push({
-                id: tuple[0],
-                name: tuple[1],
-            });
-        }
-        /*
-        const records = await this.cachedModel.ormRead(
-            this.props.model,
-            tuples.map(([id, _name]) => id),
-            this.props.fields
-        );
-        */
         this.state.searchMore = tuples.length > this.props.limit;
+        if (this.props.fields.length) {
+            const fields = this.props.fields.includes("name")
+                ? this.props.fields
+                : ["name", ...this.props.fields];
+            this.state.searchResults = await this.cachedModel.ormRead(
+                this.props.model,
+                tuples.map(([id, _name]) => id),
+                fields
+            );
+        } else {
+            this.state.searchResults = [];
+            for (const tuple of tuples.slice(0, this.props.limit)) {
+                this.state.searchResults.push({
+                    id: tuple[0],
+                    name: tuple[1],
+                });
+            }
+        }
     }
     select(entry) {
         this.props.setSelection([...this.props.selection, entry]);

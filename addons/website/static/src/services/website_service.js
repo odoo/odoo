@@ -248,7 +248,7 @@ export const websiteService = {
                 ]);
             },
             async fetchWebsites() {
-                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name']))];
+                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name', 'language_ids']))];
             },
             async loadWysiwyg() {
                 await ensureJQuery();
