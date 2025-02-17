@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from dbus.mainloop.glib import DBusGMainLoop
 import logging
 import platform
 import requests
@@ -10,6 +9,10 @@ import time
 
 from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.addons.hw_drivers.websocket_client import WebsocketClient
+
+if platform.system() == 'Linux':
+    from dbus.mainloop.glib import DBusGMainLoop
+    DBusGMainLoop(set_as_default=True) # Must be started from main thread
 
 _logger = logging.getLogger(__name__)
 
@@ -124,9 +127,6 @@ class Manager(Thread):
             except Exception:
                 # No matter what goes wrong, the Manager loop needs to keep running
                 _logger.exception("Manager loop unexpected error")
-
-# Must be started from main thread
-DBusGMainLoop(set_as_default=True)
 
 manager = Manager()
 manager.daemon = True
