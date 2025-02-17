@@ -44,7 +44,6 @@ DATE_RANGE_FACTOR = {
 
 CREATE_TRIGGERS = [
     'on_create',
-
     'on_create_or_write',
     'on_priority_set',
     'on_stage_set',
@@ -128,8 +127,8 @@ class BaseAutomation(models.Model):
             ('on_priority_set', "Priority is set to"),
             ('on_archive', "On archived"),
             ('on_unarchive', "On unarchived"),
-            ('on_create_or_write', "On save"),
-            ('on_create', "On creation"),  # deprecated, use 'on_create_or_write' instead
+            ('on_create', "On create"),
+            ('on_create_or_write', "On create and edit"),
             ('on_write', "On update"),  # deprecated, use 'on_create_or_write' instead
 
             ('on_unlink', "On deletion"),
