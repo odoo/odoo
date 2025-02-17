@@ -88,6 +88,7 @@ class RtcController(http.Controller):
         # sudo: discuss.channel.rtc.session - member of current user can leave call
         member.sudo()._rtc_leave_call(session_id)
 
+<<<<<<< 5f2d396823657ae085c010febeecefae8a949485
     @http.route("/mail/rtc/channel/upgrade_connection", methods=["POST"], type="jsonrpc", auth="user")
     def channel_upgrade(self, channel_id):
         member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
@@ -96,6 +97,18 @@ class RtcController(http.Controller):
         member.sudo()._join_sfu(force=True)
 
     @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="jsonrpc", auth="public")
+||||||| b9cdfadca0e40ab329508bd5f140f84523223fc6
+    @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="json", auth="public")
+=======
+    @http.route("/mail/rtc/channel/upgrade_connection", methods=["POST"], type="json", auth="user")
+    def channel_upgrade(self, channel_id):
+        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        if not member:
+            raise NotFound()
+        member.sudo()._join_sfu(force=True)
+
+    @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="json", auth="public")
+>>>>>>> c50607d75b52d157377f16c32fa5ec75572eb04c
     @add_guest_to_context
     def channel_call_cancel_invitation(self, channel_id, member_ids=None):
         """

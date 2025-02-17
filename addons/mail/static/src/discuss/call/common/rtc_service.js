@@ -294,6 +294,7 @@ export class Rtc extends Record {
     cleanups = [];
     /** @type {number} */
     sfuTimeout;
+<<<<<<< 5f2d396823657ae085c010febeecefae8a949485
     // cross tab sync
     _broadcastChannel = new browser.BroadcastChannel("call_sync_state");
     _remotelyHostedSessionId;
@@ -321,6 +322,18 @@ export class Rtc extends Record {
     get isHost() {
         return Boolean(this.localSession);
     }
+||||||| b9cdfadca0e40ab329508bd5f140f84523223fc6
+=======
+    /** @type {number} count of how many times the p2p service attempted a connection recovery */
+    _p2pRecoveryCount = 0;
+    upgradeConnectionDebounce = debounce(
+        () => {
+            this._upgradeConnection();
+        },
+        15000,
+        { leading: true, trailing: false }
+    );
+>>>>>>> c50607d75b52d157377f16c32fa5ec75572eb04c
 
     callActions = Record.attr([], {
         compute() {
@@ -1052,6 +1065,7 @@ export class Rtc extends Record {
                     }, 2000);
                 }
                 return;
+<<<<<<< 5f2d396823657ae085c010febeecefae8a949485
             case "recovery": {
                 const { id } = payload;
                 const session = this.store["discuss.channel.rtc.session"].get(id);
@@ -1068,6 +1082,25 @@ export class Rtc extends Record {
                     this.upgradeConnectionDebounce();
                 }
             }
+||||||| b9cdfadca0e40ab329508bd5f140f84523223fc6
+=======
+            case "recovery": {
+                const { id } = payload;
+                const session = await this.store.RtcSession.getWhenReady(id);
+                if (
+                    !this.store.self.isInternalUser ||
+                    this.serverInfo ||
+                    this.state.fallbackMode ||
+                    !session?.channel.eq(this.state.channel)
+                ) {
+                    return;
+                }
+                this._p2pRecoveryCount++;
+                if (this._p2pRecoveryCount > 1 || !hasTurn(this.iceServers)) {
+                    this.upgradeConnectionDebounce();
+                }
+            }
+>>>>>>> c50607d75b52d157377f16c32fa5ec75572eb04c
         }
     }
 
@@ -1113,6 +1146,7 @@ export class Rtc extends Record {
         }
     }
 
+<<<<<<< 5f2d396823657ae085c010febeecefae8a949485
     async _upgradeConnection() {
         const channelId = this.state.channel?.id;
         if (this.serverInfo || this.state.fallbackMode || !channelId) {
@@ -1161,6 +1195,21 @@ export class Rtc extends Record {
         }
     }
 
+||||||| b9cdfadca0e40ab329508bd5f140f84523223fc6
+=======
+    async _upgradeConnection() {
+        const channelId = this.state.channel?.id;
+        if (this.serverInfo || this.state.fallbackMode || !channelId) {
+            return;
+        }
+        await rpc(
+            "/mail/rtc/channel/upgrade_connection",
+            { channel_id: channelId },
+            { silent: true }
+        );
+    }
+
+>>>>>>> c50607d75b52d157377f16c32fa5ec75572eb04c
     async _downgradeConnection() {
         this.serverInfo = undefined;
         this.state.fallbackMode = true;
