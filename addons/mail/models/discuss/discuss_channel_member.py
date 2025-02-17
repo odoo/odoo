@@ -332,8 +332,8 @@ class DiscussChannelMember(models.Model):
             self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
             self._rtc_invite_members()
 
-    def _join_sfu(self, ice_servers=None):
-        if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD:
+    def _join_sfu(self, ice_servers=None, force=False):
+        if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD and not force:
             if self.channel_id.sfu_channel_uuid:
                 self.channel_id.sfu_channel_uuid = None
                 self.channel_id.sfu_server_url = None
