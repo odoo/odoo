@@ -180,7 +180,6 @@ export class PosOrderline extends Base {
         if (!this.product_id.to_weight && setQuantity) {
             this.setQuantityByLot();
         }
-        this.setDirty();
     }
 
     setDiscount(discount) {
@@ -194,7 +193,6 @@ export class PosOrderline extends Base {
         const disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
         this.order_id.recomputeOrderData();
-        this.setDirty();
     }
 
     setLinePrice() {
@@ -275,8 +273,6 @@ export class PosOrderline extends Base {
                 )
             );
         }
-
-        this.setDirty();
         return true;
     }
 
@@ -398,7 +394,6 @@ export class PosOrderline extends Base {
             parsed_price || 0,
             this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
         );
-        this.setDirty();
     }
 
     getUnitPrice() {
@@ -588,7 +583,6 @@ export class PosOrderline extends Base {
 
     setCustomerNote(note) {
         this.customer_note = note || "";
-        this.setDirty();
     }
 
     getCustomerNote() {
@@ -702,7 +696,6 @@ export class PosOrderline extends Base {
         return this.note || "";
     }
     setNote(note) {
-        this.setDirty();
         this.note = note;
     }
     setHasChange(isChange) {
@@ -735,21 +728,6 @@ export class PosOrderline extends Base {
     }
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
-    }
-    setDirty(processedLines = new Set()) {
-        if (processedLines.has(this)) {
-            return;
-        }
-        processedLines.add(this);
-        super.setDirty();
-        const linesToSetDirty = [
-            this.combo_parent_id,
-            ...(this.combo_parent_id?.combo_line_ids || []),
-            ...(this.combo_line_ids || []),
-        ].filter(Boolean);
-        for (const line of linesToSetDirty) {
-            line.setDirty(processedLines);
-        }
     }
 }
 

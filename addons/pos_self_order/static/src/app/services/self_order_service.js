@@ -353,11 +353,8 @@ export class SelfOrder extends Reactive {
         );
 
         if (lineToMerge) {
-            lineToMerge.setDirty();
             lineToMerge.qty += newLine.qty;
             newLine.delete();
-        } else {
-            newLine.setDirty();
         }
     }
     async confirmationPage(screen_mode, device, access_token = "") {

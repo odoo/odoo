@@ -56,7 +56,6 @@ const deepSerialization = (
 
         const relatedModel = field.relation;
         const targetModel = field.model;
-        const relatedCommands = record.models.commands[relatedModel];
         const modelCommands = record.models.commands[currentModel];
 
         if (DYNAMIC_MODELS.includes(relatedModel) && !serialized[relatedModel]) {
@@ -78,13 +77,10 @@ const deepSerialization = (
                         continue;
                     }
 
-                    if (
-                        typeof childRecord.id === "number" &&
-                        relatedCommands.update.has(childRecord.id)
-                    ) {
+                    if (typeof childRecord.id === "number" && childRecord._dirty) {
                         toUpdate.push(childRecord);
                         if (opts.clear) {
-                            relatedCommands.update.delete(childRecord.id);
+                            childRecord._dirty = false;
                         }
                     } else if (typeof childRecord.id !== "number") {
                         toCreate.push(childRecord);
@@ -193,6 +189,10 @@ const deepSerialization = (
     while (stack.length) {
         const [res, key, getValue] = stack.pop();
         res[key] = getValue();
+    }
+
+    if (opts.clear) {
+        record._dirty = false;
     }
 
     // Cleanup: remove empty entries from uuidMapping.

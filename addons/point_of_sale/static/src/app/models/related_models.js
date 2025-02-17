@@ -164,10 +164,21 @@ export class Base extends WithLazyGetterTrap {
         }
     }
 
-    setDirty() {
-        if (typeof this.id === "number") {
-            this.models.commands[this.model.name].update.add(this.id);
+    _markDirty(fieldName) {
+        if (this.models._loadingData || fieldName?.startsWith("<-")) {
+            return;
         }
+        if (this._dirty) {
+            return;
+        }
+        this._dirty = true;
+        this.model.getParentFields().forEach((field) => {
+            this[field.name]?._markDirty?.();
+        });
+    }
+
+    isDirty() {
+        return this._dirty;
     }
 
     formatDateOrTime(field, type = "datetime") {
@@ -226,7 +237,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     const commands = mapObj(processedModelDefs, () => ({
         delete: new Map(),
         unlink: new Map(),
-        update: new Set(),
     }));
     const baseData = {};
     const missingFields = {};
@@ -267,6 +277,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             cacheMap.delete(keyVal);
             const index = record[fieldName].findIndex((r) => r[key] === keyVal);
             record[fieldName].splice(index, 1);
+            record._markDirty(fieldName);
         }
     }
 
@@ -286,6 +297,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const index = record[fieldName].findIndex((r) => r[key] === keyVal);
             record[fieldName].splice(index, 1, item);
         }
+        record._markDirty(fieldName);
     }
 
     function connect(field, ownerRecord, recordToConnect) {
@@ -302,10 +314,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 removeItem(prevConnectedRecord, inverse.name, ownerRecord);
             }
             ownerRecord[field.name] = recordToConnect;
+            ownerRecord._markDirty(field.name);
         } else if (field.type === "one2many") {
             // It's necessary to remove the previous connected in one2many but it would cause issue for inherited one2many field.
             // Also, we don't do modification in PoS and we can ignore the removing part to prevent issue.
             recordToConnect[inverse.name] = ownerRecord;
+            recordToConnect._markDirty(inverse.name);
             addItem(ownerRecord, field.name, recordToConnect);
         } else if (field.type === "many2many") {
             addItem(ownerRecord, field.name, recordToConnect);
@@ -322,6 +336,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const prevConnectedRecord = ownerRecord[field.name];
             if (prevConnectedRecord?.isEqual(recordToDisconnect)) {
                 ownerRecord[field.name] = undefined;
+                ownerRecord._markDirty(field.name);
                 removeItem(recordToDisconnect, inverse.name, ownerRecord);
             }
         } else if (field.type === "one2many") {
@@ -329,6 +344,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const prevConnectedRecord = recordToDisconnect[inverse.name];
             if (prevConnectedRecord?.isEqual(ownerRecord)) {
                 recordToDisconnect[inverse.name] = undefined;
+                recordToDisconnect._markDirty(inverse.name);
             }
         } else if (field.type === "many2many") {
             removeItem(ownerRecord, field.name, recordToDisconnect);
@@ -546,6 +562,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         get length() {
             return this.records[this.name].size;
         }
+        getParentFields() {
+            return Object.values(getFields(this.name)).filter((field) => {
+                if (field.dummy || field.type !== "many2one") {
+                    return false;
+                }
+                const inverseField = inverseMap.get(field);
+                return inverseField && !inverseField.dummy;
+            });
+        }
         // External callbacks
         addEventListener(event, callback) {
             if (!AVAILABLE_EVENT.includes(event)) {
@@ -585,6 +610,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 record.uuid = uuidv4();
                 vals.uuid = record.uuid;
             }
+            record._dirty = typeof record.id !== "number";
 
             if (!baseData[this.name][id]) {
                 baseData[this.name][id] = vals;
@@ -776,15 +802,16 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         const linkedRec = record[name];
                         disconnect(field, record, linkedRec);
                     }
-                } else if (DATE_TIME_TYPE.has(field.type)) {
-                    record[name] = handleDatetime(this, vals[name], name);
                 } else {
-                    record[name] = vals[name];
+                    const newValue = DATE_TIME_TYPE.has(field.type)
+                        ? handleDatetime(this, vals[name], name)
+                        : vals[name];
+                    const oldValue = record[name];
+                    if (newValue !== oldValue) {
+                        record[name] = newValue;
+                        record._markDirty(name);
+                    }
                 }
-            }
-
-            if (typeof record.id === "number" && !opts.silent) {
-                commands[this.name].update.add(record.id);
             }
 
             record.model.triggerEvents("update", { id: record.id });
@@ -854,12 +881,17 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return indexedRecords;
         }
         loadData(rawData, load = [], fromSerialized = false) {
-            return disabler.call(
-                (...args) => this._loadData(...args),
-                rawData,
-                load,
-                fromSerialized
-            );
+            this._loadingData = true;
+            try {
+                return disabler.call(
+                    (...args) => this._loadData(...args),
+                    rawData,
+                    load,
+                    fromSerialized
+                );
+            } finally {
+                this._loadingData = false;
+            }
         }
         makeRecordsAvailable(results, rawData) {
             return disabler.call(

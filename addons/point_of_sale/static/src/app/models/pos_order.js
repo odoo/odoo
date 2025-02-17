@@ -1000,11 +1000,9 @@ export class PosOrder extends Base {
     }
     setGeneralCustomerNote(note) {
         this.general_customer_note = note || "";
-        this.setDirty();
     }
     setInternalNote(note) {
         this.internal_note = note || "";
-        this.setDirty();
     }
 
     get orderChange() {
