@@ -113,6 +113,16 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertTrue(ab not in without_b, "Search for category_id doesn't contain cat_b failed (2).")
         self.assertLessEqual(a + c, without_b, "Search for category_id doesn't contain cat_b failed (3).")
 
+        # Check `in` condition containing False
+        without_categ = self._search(partners, [('category_id', 'in', [False])])
+        self.assertTrue(c in without_categ, "c is without category")
+        self.assertFalse(without_categ & (a + b + ab), "only c is without category")
+
+        # Check `in` condition containing False or containing cat_a
+        with_categ_a_none = self._search(partners, [('category_id', 'in', [cat_a.id, False])])
+        self.assertLessEqual(a + ab + c, with_categ_a_none, "search for all having cat_a or no categories (1)")
+        self.assertNotIn(b, with_categ_a_none, "search for all having cat_a or no categories (2)")
+
     def test_05_not_str_m2m(self):
         partners = self.env['res.partner']
         categories = self.env['res.partner.category']
@@ -498,6 +508,24 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         count = Partner.search_count([('active', 'in', [True, False])])
         self.assertEqual(count, count_true + count_false)
 
+    def test_15_m2m_false(self):
+        Partner = self.env['res.partner']
+
+        # test many2many operator with empty search list
+        partners = self._search(Partner, [('category_id', 'in', [])])
+        self.assertFalse(partners)
+
+        # test many2many operator with False
+        partners = self._search(Partner, [('category_id', '=', False)])
+        self.assertTrue(partners)
+        for partner in partners:
+            self.assertFalse(partner.category_id)
+
+        partners = self._search(Partner, [('category_id', '!=', False)])
+        self.assertTrue(partners)
+        for partner in partners:
+            self.assertTrue(partner.category_id)
+
     def test_15_o2m(self):
         Partner = self.env['res.partner']
 
@@ -514,23 +542,13 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         categories = self.env['res.partner.category'].search([])
         parents = self._search(categories, [('child_ids', '!=', False)])
         self.assertEqual(parents, categories.filtered(lambda c: c.child_ids))
-        leafs = self._search(categories, [('child_ids', '=', False)])
-        self.assertEqual(leafs, categories.filtered(lambda c: not c.child_ids))
+        leaves = self._search(categories, [('child_ids', '=', False)])
+        self.assertEqual(leaves, categories.filtered(lambda c: not c.child_ids))
+        assert parents and leaves, "did we test something?"
 
-        # test many2many operator with empty search list
-        partners = self._search(Partner, [('category_id', 'in', [])])
-        self.assertFalse(partners)
-
-        # test many2many operator with False
-        partners = self._search(Partner, [('category_id', '=', False)])
-        self.assertTrue(partners)
-        for partner in partners:
-            self.assertFalse(partner.category_id)
-
-        partners = self._search(Partner, [('category_id', '!=', False)])
-        self.assertTrue(partners)
-        for partner in partners:
-            self.assertTrue(partner.category_id)
+        # check `in` condition containing False or and an id
+        leaves_or_parent = self._search(categories, [('child_ids', 'in', [leaves[0].parent_id.id, False])])
+        self.assertEqual(leaves_or_parent, leaves | leaves[0].parent_id)
 
         # filtering on nonexistent value across x2many should return nothing
         partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
@@ -2407,6 +2425,63 @@ class TestMany2many(TransactionCase):
             ORDER BY "res_users"."id"
         ''']):
             self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
+
+    def test_regular_in_false(self):
+        group = self.env.ref('base.group_user')
+
+        with self.assertQueries(['''
+            SELECT "res_users"."id"
+            FROM "res_users"
+            WHERE NOT EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users"."id"
+            )
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('groups_id', '=', False)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users"."id"
+            FROM "res_users"
+            WHERE EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users"."id"
+            )
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('groups_id', '!=', False)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users"."id"
+            FROM "res_users"
+            WHERE (NOT EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users"."id"
+            )
+            OR EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users"."id"
+                AND "res_users__groups_id"."gid" IN %s
+            ))
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('groups_id', 'in', [group.id, False])], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users"."id"
+            FROM "res_users"
+            WHERE (EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users"."id"
+            )
+            AND NOT EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users"."id"
+                AND "res_users__groups_id"."gid" IN %s
+            ))
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('groups_id', 'not in', [group.id, False])], order='id')
 
     def test_autojoin(self):
         self.patch(self.User._fields['groups_id'], 'auto_join', True)

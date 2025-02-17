@@ -657,13 +657,21 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
         if isinstance(value, COLLECTION_TYPES):
             value = OrderedSet(value)
             comodel = comodel.sudo().with_context(active_test=False)
-            # If there are nulls to be checked, the condition is inversed.
-            #  in (False, 1) => not any (id not in (1))
-            #  not in (False, 1) => any (id not in {1})
             if False in value:
+                #  [not]in (False, 1) => split conditions
+                #  We want records that have a record such as condition or
+                #  that don't have any records.
+                if len(value) > 1:
+                    in_operator = 'in' if exists else 'not in'
+                    return SQL(
+                        "(%s OR %s)" if exists else "(%s AND %s)",
+                        self.condition_to_sql(field_expr, in_operator, (False,), model, alias, query),
+                        self.condition_to_sql(field_expr, in_operator, value - {False}, model, alias, query),
+                    )
+                #  in (False) => not any (Domain.TRUE)
+                #  not in (False) => any (Domain.TRUE)
+                value = comodel._search(Domain.TRUE)
                 exists = not exists
-                ids_domain = Domain('id', 'not in', value - {False})
-                value = comodel._search(ids_domain)
             else:
                 value = comodel.browse(value)._as_query(ordered=False)
         elif isinstance(value, SQL):
