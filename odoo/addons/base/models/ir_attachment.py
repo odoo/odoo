@@ -425,6 +425,18 @@ class IrAttachment(models.Model):
 
     _res_idx = models.Index("(res_model, res_id)")
 
+    def _check_serving_attachments(self):
+        if self.env.is_admin():
+            return
+        for attachment in self:
+            # restrict writing on attachments that could be served by the
+            # ir.http's dispatch exception handling
+            # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
+            if attachment.type == 'binary' and attachment.url:
+                has_group = self.env.user.has_group
+                if not any(has_group(g) for g in attachment.get_serving_groups()):
+                    raise ValidationError(_("Sorry, you are not allowed to write on this document"))
+
     @api.model
     def check(self, mode, values=None):
         """ Restricts the access to an ir.attachment, according to referred mode """
@@ -472,16 +484,6 @@ class IrAttachment(models.Model):
             # and creating attachments can be seen as an update to the model
             access_mode = 'write' if mode in ('create', 'unlink') else mode
             records.check_access(access_mode)
-
-        if not self.env.is_admin() and mode in ('write', 'create') and not {'type', 'url'}.isdisjoint(values or {}):
-            for attachment in self:
-                # restrict writing on attachments that could be served by the
-                # ir.http's dispatch exception handling
-                # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
-                if attachment.type == 'binary' and attachment.url:
-                    has_group = self.env.user.has_group
-                    if not any(has_group(g) for g in attachment.get_serving_groups()):
-                        raise ValidationError(_("Sorry, you are not allowed to write on this document"))
 
     @api.model
     def _filter_attachment_access(self, attachment_ids):
@@ -584,7 +586,10 @@ class IrAttachment(models.Model):
             vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals or 'raw' in vals:
             vals = self._check_contents(vals)
-        return super(IrAttachment, self).write(vals)
+        res = super(IrAttachment, self).write(vals)
+        if 'url' in vals or 'type' in vals:
+            self._check_serving_attachments()
+        return res
 
     def copy_data(self, default=None):
         default = dict(default or {})
@@ -645,7 +650,9 @@ class IrAttachment(models.Model):
         Attachments = self.browse()
         for res_model, res_id in record_tuple_set:
             Attachments.check('create', values={'res_model':res_model, 'res_id':res_id})
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        records._check_serving_attachments()
+        return records
 
     def _post_add_create(self, **kwargs):
         # TODO master: rename to _post_upload, better indicating its usage
