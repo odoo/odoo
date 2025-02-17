@@ -6,7 +6,7 @@ import { expirableStorage } from "../expirable_storage";
 
 export class Chatbot extends Record {
     static id = AND("script", "thread");
-    static MESSAGE_DELAY = 1500;
+    static MESSAGE_DELAY = 400;
     // Time to wait without user input before considering a multi line step as
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
