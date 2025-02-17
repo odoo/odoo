@@ -227,18 +227,7 @@ export class SelectLotPopup extends Component {
                 <AutoComplete
                     placeholder.translate="'Serial/Lot Number'"
                     sources="getSources()"
-                    onSelect.bind="(...x) =>{
-                        const lot = x[0].id
-                        if (props.canCreateLots || props.options.includes(lot)){
-                            state.values.push(lot)
-                        }
-                        else {
-                            this.notification.add({
-                                message: _t("The serial/lot number is not valid."),
-                                type: "danger",
-                            });
-                        }
-                    }"
+                    onSelect.bind="onSelect"
                     dropdown="true"
                     autoSelect="true"
                     autofocus="true"
@@ -264,10 +253,27 @@ export class SelectLotPopup extends Component {
                         option.includes(currentInput)
                     );
                     return filteredOptions.length
-                        ? filteredOptions.map((option) => ({ value: option, label: option }))
+                        ? filteredOptions.map((option) => ({
+                              value: option,
+                              label: option,
+                              id: option,
+                              className: option,
+                          }))
                         : [{ label: _t("No existing serial/lot number matching...") }];
                 },
             },
         ];
+    }
+    onSelect(...x) {
+        console.log(x);
+        const lot = x[0].label;
+        if (this.props.canCreateLots || this.props.options.includes(lot)) {
+            this.state.values.push(lot);
+        } else {
+            this.notification.add({
+                message: _t("The serial/lot number is not valid."),
+                type: "danger",
+            });
+        }
     }
 }
