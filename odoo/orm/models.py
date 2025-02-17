@@ -2730,7 +2730,16 @@ class BaseModel(metaclass=MetaModel):
         assert operator in domains.STANDARD_CONDITION_OPERATORS, \
             f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
 
-        field = self._fields[parse_field_expr(field_expr)[0]]
+        field_name, property_name = parse_field_expr(field_expr)
+        field = self._fields[field_name]
+
+        if field.related and not field.store:
+            # delegate the condition on the target model and field
+            model, field, alias = self._traverse_related_sql(alias, field, query)
+            model = model.with_env(self.env)
+            related_expr = field.name if not property_name else f"{field.name}.{property_name}"
+            return model._condition_to_sql(alias, related_expr, operator, value, query)
+
         return field.condition_to_sql(field_expr, operator, value, self, alias, query)
 
     @api.model

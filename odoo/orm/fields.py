@@ -267,6 +267,7 @@ class Field(typing.Generic[T]):
     comodel_name: str | None = None     # name of the model of values (if relational)
 
     store: bool = True                  # whether the field is stored in database
+    sqlable: bool = False               # whether the field has an SQL expression
     index: str | None = None            # how the field is indexed in database
     manual: bool = False                # whether the field is a custom field
     copy: bool = True                   # whether the field is copied over by BaseModel.copy()
@@ -488,6 +489,9 @@ class Field(typing.Generic[T]):
 
         self.__dict__.update(attrs)
 
+        if self.store:
+            self.sqlable = True
+
         # prefetch only stored, column, non-manual fields
         if not self.store or not self.column_type or self.manual:
             self.prefetch = False
@@ -594,6 +598,7 @@ class Field(typing.Generic[T]):
         assert isinstance(self.related, str), self.related
 
         # determine the chain of fields, and make sure they are all set up
+        field_seq = []
         model_name = self.model_name
         for name in self.related.split('.'):
             field = model.pool[model_name]._fields.get(name)
@@ -603,6 +608,7 @@ class Field(typing.Generic[T]):
                 )
             if not field._setup_done:
                 field.setup(model.env[model_name])
+            field_seq.append(field)
             model_name = field.comodel_name
 
         # check type consistency
@@ -615,9 +621,16 @@ class Field(typing.Generic[T]):
         self.compute = self._compute_related
         if self.inherited or not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
-        if not self.store and field._description_searchable:
+        if not self.sqlable and field._description_searchable:
             # allow searching on self only if the related field is searchable
-            self.search = self._search_related
+            if self.compute_sudo and field.sqlable and all(
+                f.type == 'many2one' and f.sqlable for f in field_seq[:-1]
+            ):
+                # use joins in this case
+                self.sqlable = True
+            else:
+                # use search method instead
+                self.search = self._search_related
 
         # A readonly related field without an inverse method should not have a
         # default value, as it does not make sense.
@@ -906,7 +919,7 @@ class Field(typing.Generic[T]):
 
     @property
     def _description_searchable(self) -> bool:
-        return bool(self.store or self.search)
+        return bool(self.sqlable or self.search)
 
     def _description_sortable(self, env: Environment):
         if self.column_type and self.store:  # shortcut
