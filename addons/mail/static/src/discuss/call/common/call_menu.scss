@@ -1,6 +1,10 @@
 .o-discuss-CallMenu-buttonContent {
     max-width: 150px;
     @include o-mail-call-bordered(.7);
+
+    &.o-is-talking {
+        box-shadow: inset 0 0 0 2px var(--discuss-talkingColor, $o-discuss-talkingColor);
+    }
 }
 
 .o-discuss-CallMenu-animation {
