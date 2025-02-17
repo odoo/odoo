@@ -249,8 +249,9 @@ export class SelectLotPopup extends Component {
         return [
             {
                 options: (currentInput) => {
-                    const filteredOptions = this.props.options.filter((option) =>
-                        option.includes(currentInput)
+                    const filteredOptions = this.props.options.filter(
+                        (option) =>
+                            option.includes(currentInput) && !this.state.values.includes(option)
                     );
                     return filteredOptions.length
                         ? filteredOptions.map((option) => ({
