@@ -129,7 +129,7 @@ class AccountChartTemplate(models.AbstractModel):
     # Loading
     # --------------------------------------------------------------------------------
 
-    def try_loading(self, template_code, company, install_demo=False):
+    def try_loading(self, template_code, company, install_demo=False, force_create=True):
         """Check if the chart template can be loaded then proceeds installing it.
 
         :param template_code: code of the chart template to be loaded.
@@ -157,9 +157,9 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
             raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
 
-        return self._load(template_code, company, install_demo)
+        return self._load(template_code, company, install_demo, force_create)
 
-    def _load(self, template_code, company, install_demo):
+    def _load(self, template_code, company, install_demo, force_create=True ):
         """Install this chart of accounts for the current company.
 
         :param template_code: code of the chart template to be loaded.
@@ -221,7 +221,7 @@ class AccountChartTemplate(models.AbstractModel):
             }
 
         if reload_template:
-            self._pre_reload_data(company, template_data, data)
+            self._pre_reload_data(company, template_data, data, force_create)
             install_demo = False
         data = self._pre_load_data(template_code, company, template_data, data)
         self._load_data(data)
@@ -242,7 +242,7 @@ class AccountChartTemplate(models.AbstractModel):
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
         for subsidiary in company.child_ids:
-            self._load(template_code, subsidiary, install_demo)
+            self._load(template_code, subsidiary, install_demo, force_create)
 
     @api.model
     def _install_demo(self, companies):
@@ -252,7 +252,7 @@ class AccountChartTemplate(models.AbstractModel):
             self.sudo()._load_data(self._get_demo_data(company))
             self._post_load_demo_data(company)
 
-    def _pre_reload_data(self, company, template_data, data):
+    def _pre_reload_data(self, company, template_data, data, force_create=True):
         """Pre-process the data in case of reloading the chart of accounts.
 
         When we reload the chart of accounts, we only want to update fields that are main
@@ -303,11 +303,19 @@ class AccountChartTemplate(models.AbstractModel):
         current_taxes = self.env['account.tax'].with_context(active_test=False).search([
             *self.env['account.tax']._check_company_domain(company),
         ])
+
+        current_fiscal_positions =  self.env['account.fiscal.position'].with_context(active_test=False).search([
+            *self.env['account.fiscal.position']._check_company_domain(company),
+        ])
         unique_tax_name_key = lambda t: (t.name, t.type_tax_use, t.tax_scope, t.company_id)
         unique_tax_name_keys = set(current_taxes.mapped(unique_tax_name_key))
         xmlid2tax = {
             xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax'].browse(record)
             for record, xml_id in current_taxes.get_external_id().items() if xml_id.startswith('account.')
+        }
+        xmlid2fiscal_position= {
+            xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.fiscal.position'].browse(record)
+            for record, xml_id in current_fiscal_positions.get_external_id().items() if xml_id.startswith('account.')
         }
         def tax_template_changed(tax, template):
             template_line_ids = [x for x in template.get('repartition_line_ids', []) if x[0] != Command.CLEAR]
@@ -324,6 +332,10 @@ class AccountChartTemplate(models.AbstractModel):
         for model_name, records in data.items():
             for xmlid, values in records.items():
                 if model_name == 'account.fiscal.position':
+                    # if xmlid is not in xmlid2fiscal_position and we do not force create so we will skip_update for that record
+                    if xmlid not in xmlid2fiscal_position and not force_create:
+                        skip_update.add((model_name, xmlid))
+                        continue
                     # Only add tax mappings containing new taxes
                     if old_tax_ids := values.pop('tax_ids', []):
                         new_tax_ids = []
@@ -340,6 +352,9 @@ class AccountChartTemplate(models.AbstractModel):
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
+                        if not force_create:
+                            skip_update.add((model_name, xmlid))
+                            continue
                         if self._context.get('force_new_tax_active'):
                             values['active'] = True
                         if xmlid in xmlid2tax:
@@ -393,7 +408,7 @@ class AccountChartTemplate(models.AbstractModel):
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:
                         data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
-                    elif account:
+                    elif account or not force_create:
                         skip_update.add((model_name, xmlid))
 
         for skip_model, skip_xmlid in skip_update:

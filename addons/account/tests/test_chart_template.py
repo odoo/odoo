@@ -318,6 +318,44 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             {'name': 'Tax 4'},
         ])
 
+    def test_remove_fiscal_position_try_loading_force_create_false(self):
+        """Test that removing a fiscal position and calling try_loading with force_create=False does not recreate it."""
+
+        # Ensure the fiscal position exists
+        fiscal_position = self.env['account.fiscal.position'].search([
+            ('name', '=', 'Fiscal Position'),
+        ])
+        self.assertTrue(fiscal_position, "Fiscal Position should exist before deletion")
+
+        # Now remove the fiscal position safely
+        fiscal_position.unlink()
+
+        # Ensure the fiscal position is removed
+        self.assertFalse(fiscal_position.exists(), "Fiscal Position should be deleted")
+
+        # Call try_loading with force_create=False`
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False,
+                                                           force_create=False)
+
+        # Ensure the fiscal position was NOT recreated
+        fiscal_position_after_reload = self.env['account.fiscal.position'].search([
+            ('name', '=', 'Fiscal Position'),
+        ])
+        self.assertFalse(fiscal_position_after_reload,
+                         "Fiscal Position should not be recreated when force_create=False")
+
+        # Call try_loading with force_create=True
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False,
+                                                           force_create=True)
+
+        # Ensure the fiscal position was NOT recreated
+        fiscal_position_after_reload = self.env['account.fiscal.position'].search([
+            ('name', '=', 'Fiscal Position'),
+        ])
+        self.assertTrue(fiscal_position_after_reload, "Fiscal Position should be recreated when force_create=True")
+
     def test_new_tax_rate(self):
         """Test the flow to replace taxes from an old to a new rate.
 
