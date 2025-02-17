@@ -79,7 +79,7 @@
                     <t t-set="color_style" t-value="value.is_custom ? '' : 'background-color: ' + value.html_color" />
                     <span class="d-flex flex-row justify-content-center align-items-center">
                         <label t-attf-class="configurator_color rounded-circle border position-relative {{ value.id == state.attribute_value_ids ? 'active border-3 border-primary' : 'border-3 border-secondary' }}"
-                            t-att-class="{'ptav-not-available' : value.excluded}"
+                            t-att-class="{'ptav-not-available' : value.excluded, 'custom_value': value.is_custom}"
                             t-attf-style="{{ img_style or color_style }}" t-att-data-color="value.name">
                             <input class="m-2 opacity-0" type="radio" t-model="state.attribute_value_ids" t-att-value="value.id" t-att-name="value.attribute_id.id"/>
                         </label>
