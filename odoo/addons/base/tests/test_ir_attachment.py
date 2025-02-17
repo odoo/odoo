@@ -9,7 +9,7 @@ import contextlib
 from PIL import Image
 
 from odoo.api import SUPERUSER_ID
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools.image import image_to_base64
@@ -384,3 +384,20 @@ class TestPermissions(TransactionCaseWithUserDemo):
         self.patch(IrAttachment, '_get_path', lambda self, binary, _checksum: (binary, '/proc/dummy_test'))
         with self.assertRaises(OSError):
             self.env['ir.attachment']._file_write(b'test', 'test')
+
+    def test_write_create_url_binary_attachment(self):
+        with self.assertRaisesRegex(ValidationError, r"Sorry, you are not allowed to write on this document"):
+            self.Attachments.create({'name': 'Py', 'url': '/blabla.js', 'raw': b'Something'})
+        with self.assertRaisesRegex(ValidationError, r"Sorry, you are not allowed to write on this document"):
+            self.Attachments.create({'name': 'Py', 'url': '/blabla.js', 'raw': b'Something'})
+        with self.assertRaisesRegex(ValidationError, r"Sorry, you are not allowed to write on this document"):
+            self.Attachments.with_context(default_url='/blabla.js').create({'name': 'Py', 'raw': b'Something'})
+
+        existing_attachment = self.Attachments.create({'name': 'aaa'})
+        with self.assertRaisesRegex(ValidationError, r"Sorry, you are not allowed to write on this document"):
+            existing_attachment.url = '/blabla.js'
+        existing_attachment.type = 'url'
+        existing_attachment.url = '/blabla.js'
+
+        with self.assertRaisesRegex(ValidationError, r"Sorry, you are not allowed to write on this document"):
+            existing_attachment.type = 'binary'
