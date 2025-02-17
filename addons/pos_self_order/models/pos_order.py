@@ -52,14 +52,6 @@ class PosOrder(models.Model):
 
         return super().sync_from_ui(orders)
 
-    def _get_open_order(self, order):
-        open_order = super()._get_open_order(order)
-        if not self.env.context.get('from_self'):
-            return open_order
-        elif open_order:
-            del order['table_id']
-        return self.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
-
     def _process_saved_order(self, draft):
         res = super()._process_saved_order(draft)
 
