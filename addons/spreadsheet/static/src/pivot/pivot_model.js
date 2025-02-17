@@ -340,7 +340,7 @@ export class SpreadsheetPivotModel extends PivotModel {
      * e.g. in `ODOO.PIVOT.HEADER(1, "#stage_id", 1, "#user_id", 1)`
      *      the last group value is the id of the first user of the first stage.
      *
-     * @param {(string | number)[]} domainArgs ODOO.PIVOT.HEADER arguments
+     * @param {(string | number | boolean)[]} domainArgs ODOO.PIVOT.HEADER arguments
      */
     getLastPivotGroupValue(domainArgs) {
         const groupFieldString = domainArgs.at(-2);
