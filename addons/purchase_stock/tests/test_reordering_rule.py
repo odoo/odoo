@@ -1175,3 +1175,48 @@ class TestReorderingRule(TransactionCase):
         replenishment_info = self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id})
         supplier_info = replenishment_info.supplierinfo_ids
         self.assertEqual(supplier_info.last_purchase_date, dt.today().date(), "The last_purhchase_date should be set to the most recent date_order from the purchase orders")
+
+    def test_propagate_updated_quantity_multi_step(self):
+        """ Ensure an auto-generated purchase order correctly adjusts associated picking
+        (esp. multi-step-reception) quantities of linked picking records when the relevant POL
+        `product_qty` is changed.
+        """
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse_1.write({'reception_steps': 'two_steps'})
+        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
+        route_mto = self.env.ref('stock.route_warehouse0_mto')
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Product BUY + MTO'
+        product_form.detailed_type = 'product'
+        product_form.route_ids.add(route_buy)
+        product_form.route_ids.add(route_mto)
+        with product_form.seller_ids.new() as s:
+            s.partner_id = self.partner
+        product_buy_mto = product_form.save()
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = self.partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product_buy_mto
+            move.product_uom_qty = 10
+        delivery_picking = picking_form.save()
+        delivery_picking.move_ids.filtered(lambda m: m.product_id == product_buy_mto).procure_method = 'make_to_order'
+        delivery_picking.action_confirm()
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
+        with Form(purchase_order) as po_form:
+            with po_form.order_line.edit(0) as ol_form:
+                ol_form.product_qty = 3
+        purchase_order.button_confirm()
+        moves = self.env['stock.move'].search([('product_id', '=', product_buy_mto.id)], order='id asc')
+        self.assertRecordValues(
+            moves,
+            [
+                # delivery
+                {'product_uom_qty': 10},
+                # internal; input -> stock
+                {'product_uom_qty': 3},
+                # receipt
+                {'product_uom_qty': 3},
+            ]
+        )
