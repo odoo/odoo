@@ -1402,6 +1402,7 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"由于本产品已使用其他计量单位（例如：%(problem_uom)s），而非使用%(uom)s，现已无法更改计量单位。如需更改，请将产品封存，然后创建一项新产品。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -2200,6 +2201,12 @@ msgstr "折扣向导"
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
 msgstr "订单行折扣"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount- On products with the following taxes %(taxes)s"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

@@ -83,7 +83,7 @@ msgstr "%s（副本）"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 msgid "'%(name)s' %(type)s badge sent to printer '%(printer)s'"
-msgstr ""
+msgstr "“%(name)s”%(type)s 识别证已发送至打印机“%(printer)s”"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -1837,13 +1837,13 @@ msgstr "注册之后"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
 msgid "After the event ended"
-msgstr ""
+msgstr "活动结束后"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event_start
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event_start
 msgid "After the event started"
-msgstr ""
+msgstr "活动开始后"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
@@ -2091,13 +2091,13 @@ msgstr "条形码应是唯一的"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event_end
 msgid "Before the event ends"
-msgstr ""
+msgstr "活动结束前"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
 msgid "Before the event starts"
-msgstr ""
+msgstr "活动开始前"
 
 #. module: event
 #. odoo-python
@@ -2232,7 +2232,7 @@ msgstr "附言"
 #: code:addons/event/models/event_mail.py:0
 msgid ""
 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed."
-msgstr ""
+msgstr "为活动 %(event_name)s 预订在 %(scheduled_date)s 发出的通讯，未能执行。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -2498,7 +2498,7 @@ msgstr "已完成"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets"
-msgstr ""
+msgstr "下载门票"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -3279,7 +3279,7 @@ msgstr "正在进行"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "操作失败，错误为：%(error)s。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -3361,7 +3361,7 @@ msgstr "上次出席"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
 msgid "Last Error"
-msgstr ""
+msgstr "上次错误"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -4074,7 +4074,7 @@ msgstr "开始登记"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "模板绘制失败，错误为：%(error)s。"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -4527,7 +4527,7 @@ msgstr "没有足够的座位可用于:"
 msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: "
 "%(error)s."
-msgstr ""
+msgstr "动态占位符存在问题。实际收到的错误信息是：%(error)s。"
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
@@ -4561,7 +4561,7 @@ msgstr "这些信息将印在您的门票上。"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "这是由于模板“%(template_link)s”的一个错误所引起。"
 
 #. module: event
 #. odoo-javascript
@@ -4587,7 +4587,7 @@ msgstr "这是与朋友度过美好时光，同时聆听有史以来最具标志
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "这可能已连接至模板“%(template_link)s”。"
 
 #. module: event
 #. odoo-python

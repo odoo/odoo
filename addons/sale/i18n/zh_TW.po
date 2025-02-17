@@ -674,6 +674,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
+"        親愛的 <t t-out=\"object.partner_id.name or ''\">用戶</t>：\n"
+"        <br/><br/>\n"
+"        請注意，你的\n"
+"        <t t-out=\"doc_name or ''\">報價單</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            （參考： <t t-out=\"object.origin or ''\">S00052</t>）\n"
+"        </t>\n"
+"        已被取消。因此，你應該不會再就此訂單被進一步收費。\n"
+"        若需要任何退款，我們將在最方便的情況下執行。\n"
+"        <br/><br/>\n"
+"        如有任何疑問，歡迎隨時聯絡我們。\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2080,6 +2098,12 @@ msgstr "折扣精靈"
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
 msgstr "訂單明細折扣"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount- On products with the following taxes %(taxes)s"
+msgstr "折扣 - 適用於有以下稅項的產品：%(taxes)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
