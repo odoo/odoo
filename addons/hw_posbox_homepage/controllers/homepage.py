@@ -4,13 +4,11 @@ import json
 import logging
 import netifaces
 import platform
-import requests
 import subprocess
 import threading
 import time
 
 from itertools import groupby
-from pathlib import Path
 
 from odoo import http
 from odoo.addons.hw_drivers.tools import helpers, wifi
@@ -72,7 +70,8 @@ class IotBoxOwlHomePage(http.Controller):
 
     @http.route('/hw_posbox_homepage/iot_logs', auth='none', type='http', cors='*')
     def get_iot_logs(self):
-        with open("/var/log/odoo/odoo-server.log", encoding="utf-8") as file:
+        logs_path = "/var/log/odoo/odoo-server.log" if platform.system() == 'Linux' else helpers.path_file('odoo.log')
+        with open(logs_path, encoding="utf-8") as file:
             return json.dumps({
                 'status': 'success',
                 'logs': file.read(),
@@ -155,7 +154,7 @@ class IotBoxOwlHomePage(http.Controller):
         }
 
         six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
-        network_qr_codes = wifi.generate_network_qr_codes()
+        network_qr_codes = wifi.generate_network_qr_codes() if platform.system() == 'Linux' else {}
         odoo_server_url = helpers.get_odoo_server_url()
 
         return json.dumps({
@@ -176,8 +175,8 @@ class IotBoxOwlHomePage(http.Controller):
             'is_certificate_ok': is_certificate_ok,
             'certificate_details': certificate_details,
             'wifi_ssid': helpers.get_conf('wifi_ssid'),
-            'qr_code_wifi' : network_qr_codes['qr_wifi'],
-            'qr_code_url' : network_qr_codes['qr_url'],
+            'qr_code_wifi' : network_qr_codes.get('qr_wifi'),
+            'qr_code_url' : network_qr_codes.get('qr_url'),
         })
 
     @http.route('/hw_posbox_homepage/wifi', auth="none", type="http", cors='*')

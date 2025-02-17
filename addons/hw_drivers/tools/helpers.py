@@ -3,7 +3,6 @@
 
 import configparser
 import contextlib
-import crypt
 import datetime
 from enum import Enum
 from functools import cache, wraps
@@ -33,6 +32,9 @@ from odoo.tools.misc import file_path
 
 lock = Lock()
 _logger = logging.getLogger(__name__)
+
+if platform.system() == 'Linux':
+    import crypt
 
 
 class Orientation(Enum):
