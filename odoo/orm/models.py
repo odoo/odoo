@@ -4473,9 +4473,6 @@ class BaseModel(metaclass=MetaModel):
 
         # put the new records in cache, and update inverse fields, for many2one
         # (using bin_size=False to put binary values in the right place)
-        #
-        # cachetoclear is an optimization to avoid modified()'s cost until other_fields are processed
-        cachetoclear = []
         records = self.browse(ids)
         inverses_update = defaultdict(list)     # {(field, value): ids}
         common_set_vals = set(LOG_ACCESS_COLUMNS + ['id', 'parent_path'])
@@ -4487,16 +4484,16 @@ class BaseModel(metaclass=MetaModel):
 
             # put None in cache for all fields that are not part of the INSERT
             for field in self._fields.values():
+                if not field.store:
+                    continue
                 if field.type in ('one2many', 'many2many'):
                     self.env.cache.set(record, field, ())
-                elif field.store and field.name not in set_vals:
+                elif field.name not in set_vals:
                     self.env.cache.set(record, field, None)
 
             for fname, value in vals.items():
                 field = self._fields[fname]
-                if field.type in ('one2many', 'many2many'):
-                    cachetoclear.append((record, field))
-                else:
+                if field.type not in ('one2many', 'many2many'):
                     cache_value = field.convert_to_cache(value, record)
                     self.env.cache.set(record, field, cache_value)
                     if field.type in ('many2one', 'many2one_reference') and self.pool.field_inverses[field]:
@@ -4526,11 +4523,6 @@ class BaseModel(metaclass=MetaModel):
 
                 # mark fields to recompute
                 records.modified([field.name for field in other_fields], create=True)
-
-            # if value in cache has not been updated by other_fields, remove it
-            for record, field in cachetoclear:
-                if self.env.cache.contains(record, field) and not self.env.cache.get(record, field):
-                    self.env.cache.remove(record, field)
 
         # check Python constraints for stored fields
         records._validate_fields(name for data in data_list for name in data['stored'])
