@@ -34,6 +34,7 @@ import {
 } from "@spreadsheet/../tests/utils/date_domain";
 import GlobalFiltersUIPlugin from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
+import { getBasicServerData } from "@spreadsheet/../tests/utils/data";
 
 const { Model, DispatchResult } = spreadsheet;
 
@@ -1490,6 +1491,8 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         "getFiltersMatchingPivot return correctly matching filter according to cell formula",
         async function (assert) {
             patchDate(2022, 6, 14, 0, 0, 0);
+            const serverData = getBasicServerData();
+            serverData.models["partner"].records.push({ ...serverData.models["partner"].records[0], id: 10000, product_id: false });
             const { model } = await createSpreadsheetWithPivot({
                 arch: /*xml*/ `
                 <pivot>
@@ -1497,6 +1500,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     <field name="probability" type="measure"/>
                     <field name="date" interval="month" type="col"/>
                 </pivot>`,
+                serverData,
             });
             await addGlobalFilter(
                 model,
@@ -1547,6 +1551,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 '=ODOO.PIVOT.HEADER(1,"product_id","41")'
             );
             assert.deepEqual(relationalFilters2, [{ filterId: "42", value: [41] }]);
+            const relationalFiltersWithNoneValue = model.getters.getFiltersMatchingPivot(
+                '=ODOO.PIVOT.HEADER(1,"#product_id",1)'
+            );
+            assert.deepEqual(relationalFiltersWithNoneValue, [{ filterId: "42", value: undefined }]);
             const dateFilters1 = model.getters.getFiltersMatchingPivot(
                 '=ODOO.PIVOT.HEADER(1,"date:month","08/2016")'
             );
