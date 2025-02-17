@@ -866,6 +866,11 @@ class BaseAutomation(models.Model):
             """ Instanciate an onchange method for the given automation rule. """
             def base_automation_onchange(self):
                 automation_rule = self.env['base.automation'].browse(automation_rule_id)
+
+                if not automation_rule._filter_post(self):
+                    # Do nothing if onchange record does not satisfy the filter_domain
+                    return
+
                 result = {}
                 actions = automation_rule.sudo().action_server_ids.with_context(
                     active_model=self._name,
