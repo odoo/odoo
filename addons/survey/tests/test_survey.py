@@ -235,24 +235,28 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             'scoring_type': 'scoring_with_answers',
             'scoring_success_min': 90.0,
         })
-        [a_01, a_02, a_03] = self.env['survey.question.answer'].create([{
-            'value': 'A thing full of letters.',
-            'answer_score': 1.0
-        }, {
-            'value': 'A unit of language, [...], carrying a meaning.',
-            'answer_score': 4.0,
-            'is_correct': True
-        }, {
-            'value': '42',
-            'answer_score': -4.0
-        }])
         q_01 = self.env['survey.question'].create({
             'survey_id': partial_scores_survey.id,
             'title': 'What is a word?',
             'sequence': 1,
             'question_type': 'simple_choice',
-            'suggested_answer_ids': [(6, 0, (a_01 | a_02 | a_03).ids)]
+            'suggested_answer_ids': [
+                Command.create({
+                    'value': 'A thing full of letters.',
+                    'answer_score': 1.0,
+                }),
+                Command.create({
+                    'value': 'A unit of language, [...], carrying a meaning.',
+                    'answer_score': 4.0,
+                    'is_correct': True
+                }),
+                Command.create({
+                    'value': '42',
+                    'answer_score': -4.0
+                }),
+            ]
         })
+        __, a_02, __ = q_01.suggested_answer_ids
 
         user_input = self.env['survey.user_input'].create({'survey_id': partial_scores_survey.id})
         self.env['survey.user_input.line'].create({
@@ -286,30 +290,32 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             'scoring_type': 'scoring_with_answers',
             'scoring_success_min': 80.0,
         })
-        [a_01, a_02, a_03, a_04] = self.env['survey.question.answer'].create([{
-            'value': 'In Europe',
-            'answer_score': 0.0,
-            'is_correct': False
-        }, {
-            'value': 'In Asia',
-            'answer_score': 5.0,
-            'is_correct': True
-        }, {
-            'value': 'In South Asia',
-            'answer_score': 10.0,
-            'is_correct': True
-        }, {
-            'value': 'On Globe',
-            'answer_score': 5.0,
-            'is_correct': False
-        }])
         q_01 = self.env['survey.question'].create({
             'survey_id': test_survey.id,
             'title': 'Where is india?',
             'sequence': 1,
             'question_type': 'simple_choice',
-            'suggested_answer_ids': [(6, 0, (a_01 | a_02 | a_03 | a_04).ids)]
+            'suggested_answer_ids': [
+                Command.create({
+                    'value': 'In Europe',
+                    'answer_score': 0.0,
+                    'is_correct': False
+                }), Command.create({
+                    'value': 'In Asia',
+                    'answer_score': 5.0,
+                    'is_correct': True
+                }), Command.create({
+                    'value': 'In South Asia',
+                    'answer_score': 10.0,
+                    'is_correct': True
+                }), Command.create({
+                    'value': 'On Globe',
+                    'answer_score': 5.0,
+                    'is_correct': False
+                }),
+            ]
         })
+        a_01, *__ = q_01.suggested_answer_ids
 
         user_input = self.env['survey.user_input'].create({'survey_id': test_survey.id})
         user_input_line = self.env['survey.user_input.line'].create({
