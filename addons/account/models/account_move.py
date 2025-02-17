@@ -1195,12 +1195,7 @@ class AccountMove(models.Model):
                     'currency': move.currency_id or move.journal_id.currency_id or move.company_id.currency_id,
                 }
 
-                if move.id:
-                    kwargs['tax_lines'] = [
-                        line._convert_to_tax_line_dict()
-                        for line in move.line_ids.filtered(lambda line: line.display_type == 'tax')
-                    ]
-                else:
+                if not move.id:
                     # In case the invoice isn't yet stored, the early payment discount lines are not there. Then,
                     # we need to simulate them.
                     epd_aggregated_values = {}
@@ -1230,6 +1225,29 @@ class AccountMove(models.Model):
                             handle_price_include=False,
                             extra_context={'_extra_grouping_key_': 'epd'},
                         ))
+
+                for tax in move.line_ids.tax_ids:
+                    kwargs_base_lines = [base_line["record"] for base_line in base_line_values_list if base_line["record"] and base_line["record"] in base_lines]
+                    tax_group_base_lines = move.invoice_line_ids.filtered(lambda line, tax=tax: tax in line.tax_ids)
+                    tax_group_tax_lines = move.line_ids.filtered(lambda line, tax=tax: line.display_type == 'tax' and line.name == tax.name)
+
+                    base_amount_old = sum([line.tax_base_amount for line in tax_group_tax_lines])
+                    base_amount_new = sum([line.amount_currency for line in kwargs_base_lines if tax in line.tax_ids])
+                    tax_amount_old = sum([line.amount_currency for line in tax_group_tax_lines])
+                    tax_amount_new = sum([line.amount_currency for line in tax_group_base_lines]) * (tax.amount / 100)
+                    tax_rate_old = 100 * tax_amount_new / (sum([line.price_unit * line.quantity for line in tax_group_base_lines]) or 1)
+                    tax_rate_new = tax.amount
+
+                    base_amounts_mismatch = base_amount_old != base_amount_new or not (tax_rate_old or tax_amount_old)
+                    tax_rates_mismatch = tax_rate_old != tax_rate_new
+                    tax_amounts_edited = tax_amount_old != ((tax_rate_old and base_amount_old * tax_rate_old / 100) or 0)
+                    tax_amounts_mismatch = tax_amount_old != tax_amount_new
+
+                    if not tax_rates_mismatch and tax_amounts_edited and ((not base_amounts_mismatch and tax_amounts_mismatch) or (base_amounts_mismatch and not tax_amounts_mismatch)):
+                        # Entering this if statement means the edited amount for the tax will be kept.
+                        move = move.with_context(skip_invoice_sync=True)
+                        kwargs['tax_lines'] = kwargs.get('tax_lines', []) + [line._convert_to_tax_line_dict() for line in tax_group_tax_lines]
+
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
                 if move.invoice_cash_rounding_id:
                     rounding_amount = move.invoice_cash_rounding_id.compute_difference(move.currency_id, move.tax_totals['amount_total'])

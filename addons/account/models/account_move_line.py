@@ -974,7 +974,6 @@ class AccountMoveLine(models.Model):
                     'analytic_distribution': ((tax['analytic'] or not tax['use_in_tax_closing']) and line.move_id.state == 'draft') and line.analytic_distribution,
                     'tax_ids': [(6, 0, tax['tax_ids'])],
                     'tax_tag_ids': [(6, 0, tax['tag_ids'])],
-                    'partner_id': line.move_id.partner_id.id or line.partner_id.id,
                     'move_id': line.move_id.id,
                     'display_type': line.display_type,
                 }): {
