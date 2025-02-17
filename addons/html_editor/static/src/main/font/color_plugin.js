@@ -16,6 +16,7 @@ import {
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { isColorGradient, isCSSColor, rgbToHex } from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
 
@@ -70,6 +71,7 @@ export class ColorPlugin extends Plugin {
      */
     getPropsForColorSelector(type) {
         const mode = type === "foreground" ? "color" : "backgroundColor";
+        const title = type === "foreground" ? _t("Font Color") : _t("Background Color");
         return {
             type,
             mode,
@@ -83,6 +85,7 @@ export class ColorPlugin extends Plugin {
             applyColorPreview: (color) => this.applyColorPreview({ color, mode }),
             applyColorResetPreview: this.applyColorResetPreview.bind(this),
             colorPrefix: mode === "color" ? "text-" : "bg-",
+            title,
         };
     }
 
