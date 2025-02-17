@@ -64,10 +64,10 @@ class ResPartner(models.Model):
         self.env["res.partner"].browse(query)._search_for_channel_invite_to_store(
             store, data_id, channel
         )
-        store.add_data(data_id, count=self.env["res.partner"].search_count(domain))
+        store.resolve_data_request(data_id, count=self.env["res.partner"].search_count(domain))
 
     def _search_for_channel_invite_to_store(self, store: Store, data_id, channel):
-        store.add_data(data_id, partners=Store.Many(self))
+        store.add(self).resolve_data_request(data_id, partners=Store.Many(self, []))
 
     @api.readonly
     @api.model

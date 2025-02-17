@@ -25,29 +25,24 @@ const storeServicePatch = {
         return ["away", "bot", "online"];
     },
     async createGroupChat({ default_display_mode, partners_to, name }) {
-        const dataRequest = this.Data.createRequest();
-        await this.fetchStoreData(
+        const { channel } = await this.fetchStoreData(
             "/discuss/channel/create_group",
             {
-                data_id: dataRequest.id,
                 default_display_mode,
                 partners_to,
                 name,
             },
             { readonly: false }
         );
-        const channel = dataRequest.channel;
-        dataRequest.delete();
         channel.open({ focus: true });
         return channel;
     },
     async fetchChannel(channelId) {
-        const channelIds = this.fetchParams.find(
-            (fetchParams) => fetchParams[0] === "discuss.channel"
-        );
-        if (channelIds) {
-            channelIds[1].push(channelId);
-            await this.fetchDeferred;
+        const fetchParam = this.fetchParams.find(([name]) => name === "discuss.channel");
+        if (fetchParam) {
+            const [, channelIds, dataRequest] = fetchParam;
+            channelIds.push(channelId);
+            await dataRequest._isResolved;
         } else {
             await this.fetchStoreData("discuss.channel", [channelId]);
         }

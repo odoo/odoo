@@ -43,7 +43,7 @@ test("push notifications are Odoo toaster on Android", async () => {
     });
     onRpc("/mail/data", async (request) => {
         const { params } = await request.json();
-        if (params.fetch_params.includes("init_messaging")) {
+        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(params)}`);
         }
     });
@@ -51,7 +51,11 @@ test("push notifications are Odoo toaster on Android", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
+            fetch_params: [
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+            ],
             context: {
                 lang: "en",
                 tz: "taht",

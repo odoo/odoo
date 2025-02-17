@@ -34,14 +34,14 @@ class WebclientController(http.Controller):
 
     def _process_request_loop(self, store: Store, fetch_params):
         for fetch_param in fetch_params:
-            name, params = (fetch_param, None) if isinstance(fetch_param, str) else fetch_param
-            self._process_request_for_all(store, name, params)
+            name, params, data_id = (fetch_param, None, None) if isinstance(fetch_param, str) else fetch_param
+            self._process_request_for_all(store, name, params, data_id)
             if not request.env.user._is_public():
-                self._process_request_for_logged_in_user(store, name, params)
+                self._process_request_for_logged_in_user(store, name, params, data_id)
             if request.env.user._is_internal():
-                self._process_request_for_internal_user(store, name, params)
+                self._process_request_for_internal_user(store, name, params, data_id)
 
-    def _process_request_for_all(self, store: Store, name, params):
+    def _process_request_for_all(self, store: Store, name, params, data_id):
         if name == "init_messaging":
             if not request.env.user._is_public():
                 user = request.env.user.sudo(False)
@@ -62,7 +62,7 @@ class WebclientController(http.Controller):
             else:
                 store.add(thread, request_list=params["request_list"], as_thread=True)
 
-    def _process_request_for_logged_in_user(self, store: Store, name, params):
+    def _process_request_for_logged_in_user(self, store: Store, name, params, data_id):
         if name == "failures":
             domain = [
                 ("author_id", "=", request.env.user.partner_id.id),
@@ -76,7 +76,7 @@ class WebclientController(http.Controller):
             notifications = request.env["mail.notification"].sudo().search(domain, limit=100)
             notifications.mail_message_id._message_notifications_to_store(store)
 
-    def _process_request_for_internal_user(self, store: Store, name, params):
+    def _process_request_for_internal_user(self, store: Store, name, params, data_id):
         if name == "systray_get_activities":
             # sudo: bus.bus: reading non-sensitive last id
             bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()

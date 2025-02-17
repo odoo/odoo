@@ -556,7 +556,7 @@ test("chat window should open when receiving a new DM", async () => {
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep("init_messaging");
         }
     });

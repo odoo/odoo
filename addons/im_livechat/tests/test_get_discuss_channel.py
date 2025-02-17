@@ -314,7 +314,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.env["discuss.channel"].browse(channel_id).message_post(body="cc")
         self.assertTrue(member.is_pinned, "channel should be pinned for operator after visitor sent a message")
         self.authenticate(operator.login, self.password)
-        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["channels_as_member"]})
+        data = self.make_jsonrpc_request(
+            "/mail/data", {"fetch_params": [["channels_as_member", None, None]]}
+        )
         channel_ids = [channel["id"] for channel in data["discuss.channel"]]
         self.assertIn(channel_id, channel_ids, "channel should be fetched by operator on new page")
 

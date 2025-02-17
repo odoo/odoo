@@ -104,11 +104,11 @@ export class ChannelInvitation extends Component {
     async fetchPartnersToInvite() {
         const dataRequest = this.store.Data.createRequest();
         const data = await this.sequential(() =>
-            this.orm.call("res.partner", "search_for_channel_invite", [
-                dataRequest.id,
-                this.searchStr,
-                this.props.thread?.id ?? false,
-            ])
+            this.orm.call("res.partner", "search_for_channel_invite", [], {
+                data_id: dataRequest.id,
+                search_term: this.searchStr,
+                channel_id: this.props.thread?.id ?? false,
+            })
         );
         if (!data) {
             // dropped sequential calls return undefined

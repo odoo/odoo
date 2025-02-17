@@ -345,7 +345,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self._run_test(
             fn=lambda: self.make_jsonrpc_request(
                 "/mail/data",
-                {"fetch_params": [["discuss.channel", [self.channel_chat_1.id]], "init_messaging"]},
+                {
+                    "fetch_params": [
+                        ["discuss.channel", [self.channel_chat_1.id], None],
+                        ["init_messaging", None, None],
+                    ]
+                },
             ),
             count=self._query_count_init_messaging,
             results=self._get_init_messaging_result(),
@@ -357,7 +362,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         """Test performance of `/mail/data` with `channels_as_member`."""
         self._run_test(
             fn=lambda: self.make_jsonrpc_request(
-                "/mail/data", {"fetch_params": ["channels_as_member"]}
+                "/mail/data", {"fetch_params": [["channels_as_member", None, None]]}
             ),
             count=self._query_count_discuss_channels,
             results=self._get_discuss_channels_result(),

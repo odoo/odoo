@@ -116,18 +116,15 @@ commandSetupRegistry.add("@", {
  * @param {import("models").Store} store
  */
 async function makeNewChannel(name, store) {
-    const dataRequest = store.Data.createRequest();
-    await store.fetchStoreData(
+    const { channel } = await store.fetchStoreData(
         "/discuss/channel/create_channel",
         {
-            data_id: dataRequest.id,
             name: name,
             group_id: store.internalUserGroupId,
         },
         { readonly: false }
     );
-    dataRequest.channel.open({ focus: true });
-    dataRequest.delete();
+    channel.open({ focus: true });
 }
 
 export class DiscussCommandPalette {

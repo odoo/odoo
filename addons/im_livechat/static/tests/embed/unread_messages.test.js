@@ -55,7 +55,7 @@ test("new message from operator displays unread counter", async () => {
     );
     onRpc("/mail/data", async (request) => {
         const { params } = await request.json();
-        if (params.fetch_params.includes("init_messaging")) {
+        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(params)}`);
         }
     });
@@ -66,9 +66,9 @@ test("new message from operator displays unread counter", async () => {
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
             fetch_params: [
-                "failures", // called because mail/core/web is loaded in qunit bundle
-                "systray_get_activities", // called because mail/core/web is loaded in qunit bundle
-                "init_messaging",
+                ["failures", null, 1], // called because mail/core/web is loaded in qunit bundle
+                ["systray_get_activities", null, 2], // called because mail/core/web is loaded in qunit bundle
+                ["init_messaging", null, 3],
             ],
             context: {
                 lang: "en",
@@ -96,7 +96,7 @@ test("focus on unread livechat marks it as read", async () => {
     await loadDefaultEmbedConfig();
     onRpc("/mail/data", async (request) => {
         const { params } = await request.json();
-        if (params.fetch_params.includes("init_messaging")) {
+        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(params)}`);
         }
     });
@@ -113,9 +113,9 @@ test("focus on unread livechat marks it as read", async () => {
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
             fetch_params: [
-                "failures", // called because mail/core/web is loaded in qunit bundle
-                "systray_get_activities", // called because mail/core/web is loaded in qunit bundle
-                "init_messaging",
+                ["failures", null, 3], // called because mail/core/web is loaded in qunit bundle
+                ["systray_get_activities", null, 4], // called because mail/core/web is loaded in qunit bundle
+                ["init_messaging", null, 5],
             ],
             context: {
                 lang: "en",

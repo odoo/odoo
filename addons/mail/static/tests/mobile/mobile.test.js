@@ -32,12 +32,12 @@ test("show loading on initial opening", async () => {
     // This could load a lot of data (all pinned conversations)
     const def = new Deferred();
     onRpcBefore("/mail/action", async (args) => {
-        if (args.fetch_params.includes("channels_as_member")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "channels_as_member")) {
             await def;
         }
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("channels_as_member")) {
+        if (args.fetch_params.some((fetchParam) => fetchParam[0] === "channels_as_member")) {
             await def;
         }
     });

@@ -344,14 +344,14 @@ export class ResPartner extends webModels.ResPartner {
             .map((user) => user.partner_id);
         const count = matchingPartnersIds.length;
         matchingPartnersIds.length = Math.min(count, limit);
-        store.add("Data", { id: data_id, count });
+        store.resolve_data_request(data_id, { count });
         this._search_for_channel_invite_to_store(matchingPartnersIds, store, data_id, channel_id);
     }
 
     _search_for_channel_invite_to_store(ids, store, data_id, channel_id) {
-        store.add("Data", {
-            id: data_id,
-            partners: mailDataHelpers.Store.many(this.browse(ids)),
+        store.add(this.browse(ids));
+        store.resolve_data_request(data_id, {
+            partners: mailDataHelpers.Store.many(this.browse(ids), makeKwArgs({ only_id: true })),
         });
     }
 

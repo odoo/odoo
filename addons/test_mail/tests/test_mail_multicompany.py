@@ -350,7 +350,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                     activity_groups = self.make_jsonrpc_request(
                         "/mail/data",
                         {
-                            "fetch_params": ["systray_get_activities"],
+                            "fetch_params": [["systray_get_activities", None, None]],
                             "context": {"allowed_company_ids": allowed_company_ids},
                         },
                     )["Store"]["activityGroups"]
@@ -405,7 +405,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                     activity_groups = self.make_jsonrpc_request(
                         "/mail/data",
                         {
-                            "fetch_params": ["systray_get_activities"],
+                            "fetch_params": [["systray_get_activities", None, None]],
                             "context": {"allowed_company_ids": companies.ids},
                         },
                     )["Store"]["activityGroups"]

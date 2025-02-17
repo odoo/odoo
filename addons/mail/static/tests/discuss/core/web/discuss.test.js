@@ -39,14 +39,18 @@ test("can create a new channel", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
+            fetch_params: [
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+            ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["channels_as_member"],
+            fetch_params: [["channels_as_member", null, 4]],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
@@ -76,6 +80,7 @@ test("can create a new channel", async () => {
                         data_id: 3,
                         name: "abc",
                     },
+                    5,
                 ],
             ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
@@ -105,14 +110,18 @@ test("can make a DM chat", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
+            fetch_params: [
+                ["failures", null, 1],
+                ["systray_get_activities", null, 2],
+                ["init_messaging", null, 3],
+            ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            fetch_params: ["channels_as_member"],
+            fetch_params: [["channels_as_member", null, 4]],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
@@ -130,7 +139,11 @@ test("can make a DM chat", async () => {
         `/discuss/search - {"data_id":2,"term":"mario"}`,
         `/mail/action - ${JSON.stringify({
             fetch_params: [
-                ["/discuss/channel/get_or_create_chat", { data_id: 3, partners_to: [partnerId] }],
+                [
+                    "/discuss/channel/get_or_create_chat",
+                    { data_id: 3, partners_to: [partnerId] },
+                    5,
+                ],
             ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,

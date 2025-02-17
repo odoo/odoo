@@ -114,8 +114,7 @@ export class Store extends BaseStore {
     settings = Record.one("Settings");
     openInviteThread = Record.one("Thread");
 
-    fetchDeferred = new Deferred();
-    /** @type {[string | [string, any]]} */
+    /** @type {[[string, any, import("models").Data]]} */
     fetchParams = [];
     fetchReadonly = true;
     fetchSilent = true;
@@ -224,12 +223,12 @@ export class Store extends BaseStore {
      * @returns {Deferred}
      */
     async fetchStoreData(name, params, { readonly = true, silent = true } = {}) {
-        this.fetchParams.push(params ? [name, params] : name);
+        const dataRequest = this.Data.createRequest();
+        this.fetchParams.push([name, params, dataRequest]);
         this.fetchReadonly = this.fetchReadonly && readonly;
         this.fetchSilent = this.fetchSilent && silent;
-        const fetchDeferred = this.fetchDeferred;
         this._fetchStoreDataDebounced();
-        return fetchDeferred;
+        return dataRequest._isResolved;
     }
 
     /** Import data received from init_messaging */
@@ -278,21 +277,39 @@ export class Store extends BaseStore {
     }
 
     _fetchStoreDataDebounced() {
-        const fetchDeferred = this.fetchDeferred;
+        const fetchParams = this.fetchParams;
         rpc(
             this.fetchReadonly ? "/mail/data" : "/mail/action",
-            { fetch_params: this.fetchParams, context: user.context },
+            {
+                fetch_params: fetchParams.map(([name, params, dataRequest]) => [
+                    name,
+                    params,
+                    dataRequest.id,
+                ]),
+                context: user.context,
+            },
             {
                 silent: this.fetchSilent,
             }
         ).then(
             (data) => {
                 this.insert(data, { html: true });
-                fetchDeferred.resolve();
+                for (const [, , dataRequest] of fetchParams) {
+                    if (
+                        !data.Data?.some((dataRequestData) => dataRequestData.id === dataRequest.id)
+                    ) {
+                        // fetch params that return no data request id back are considered as if the
+                        // feature is irrelevant for them -> resolve immediately.
+                        dataRequest._resolve = true;
+                    }
+                }
             },
-            (error) => fetchDeferred.reject(error)
+            (error) => {
+                for (const [, , dataRequest] of fetchParams) {
+                    dataRequest._isResolved.reject(error);
+                }
+            }
         );
-        this.fetchDeferred = new Deferred();
         this.fetchParams = [];
         this.fetchReadonly = true;
         this.fetchSilent = true;
@@ -587,17 +604,11 @@ export class Store extends BaseStore {
     }
 
     async joinChat(id, forceOpen = false) {
-        const dataRequest = this.Data.createRequest();
-        await this.fetchStoreData(
+        const { channel } = await this.fetchStoreData(
             "/discuss/channel/get_or_create_chat",
-            {
-                data_id: dataRequest.id,
-                partners_to: [id],
-            },
+            { partners_to: [id] },
             { readonly: false }
         );
-        const channel = dataRequest.channel;
-        dataRequest.delete();
         return channel;
     }
 

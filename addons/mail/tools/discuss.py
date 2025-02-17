@@ -113,13 +113,6 @@ class Store:
                 self.add_records_fields(records, fields)
         return self
 
-    def add_data(self, data_id, **values):
-        """Add values to the store for the data request specified by data_id.
-
-        Use case: fulfil a specific data request from a client."""
-        self.add_model_values("Data", {"id": data_id, **values})
-        return self
-
     def add_global_values(self, store_self=None, **values):
         """Add global values to the store. Global values are stored in the Store singleton
         (mail.store service) in the client side.
@@ -203,6 +196,15 @@ class Store:
             else:
                 res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
+
+    def resolve_data_request(self, data_id, **values):
+        """Add values to the store for the data request specified by data_id.
+
+        Use case: resolve a specific data request from a client."""
+        if not data_id:
+            return self
+        self.add_model_values("Data", {"id": data_id, "_resolve": True, **values})
+        return self
 
     def _add_values(self, values, model_name, index=None):
         """Adds values to the store for a given model name and index."""

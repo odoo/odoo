@@ -64,7 +64,6 @@ async function get_session(request) {
     if (!persisted) {
         const store = new mailDataHelpers.Store();
         ResUsers._init_store_data(store);
-        store.add("Data", { id: data_id, channel: { id: -1, model: "discuss.channel" } });
         store.add("discuss.channel", {
             channel_type: "livechat",
             chatbot_current_step_id: channelVals.chatbot_current_step_id,
@@ -81,6 +80,7 @@ async function get_session(request) {
             scrollUnread: false,
             state: "open",
         });
+        store.resolve_data_request(data_id, { channel: { id: -1, model: "discuss.channel" } });
         return store.get_result();
     }
     const channelId = DiscussChannel.create(channelVals);
@@ -93,14 +93,17 @@ async function get_session(request) {
     }
     const store = new mailDataHelpers.Store();
     ResUsers._init_store_data(store);
-    store.add("Data", {
-        id: data_id,
-        channel: mailDataHelpers.Store.one(DiscussChannel.browse(channelId)),
-    });
+    store.add(DiscussChannel.browse(channelId));
     store.add(DiscussChannel.browse(channelId), {
         isLoaded: true,
         open_chat_window: true,
         scrollUnread: false,
+    });
+    store.resolve_data_request(data_id, {
+        channel: mailDataHelpers.Store.one(
+            DiscussChannel.browse(channelId),
+            makeKwArgs({ only_id: true })
+        ),
     });
     return store.get_result();
 }
@@ -172,7 +175,7 @@ async function get_emoji_bundle(request) {
 }
 
 patch(mailDataHelpers, {
-    _process_request_for_internal_user(store, name, params) {
+    _process_request_for_internal_user(store, name, params, data_id) {
         super._process_request_for_internal_user(...arguments);
         if (name === "im_livechat.channel") {
             store.add(
