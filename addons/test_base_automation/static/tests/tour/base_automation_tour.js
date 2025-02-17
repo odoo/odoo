@@ -158,7 +158,8 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
                         on_time: "Based on date field",
                         on_time_created: "After creation",
                         on_time_updated: "After last update",
-                        on_create_or_write: "On save",
+                        on_create: "On create",
+                        on_create_or_write: "On create and edit",
                         on_unlink: "On deletion",
                         on_change: "On UI change",
                         on_webhook: "On webhook",
@@ -503,7 +504,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
                 );
                 assertEqual(
                     triggerGroups.map((el) => el.innerText).join(" // "),
-                    "User is set // Based on date fieldAfter creationAfter last update // On saveOn deletionOn UI change // On webhook"
+                    "User is set // Based on date fieldAfter creationAfter last update // On createOn create and editOn deletionOn UI change // On webhook"
                 );
             },
         },
@@ -536,7 +537,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
                 );
                 assertEqual(
                     triggerGroups.map((el) => el.innerText).join(" // "),
-                    "Stage is set toUser is setTag is addedPriority is set to // Based on date fieldAfter creationAfter last update // On saveOn deletionOn UI change // On webhook"
+                    "Stage is set toUser is setTag is addedPriority is set to // Based on date fieldAfter creationAfter last update // On createOn create and editOn deletionOn UI change // On webhook"
                 );
             },
         },
