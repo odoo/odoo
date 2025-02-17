@@ -1,5 +1,5 @@
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 
 import { useMovable } from "@mail/utils/common/hooks";
 
@@ -43,6 +43,17 @@ export class LivechatButton extends Component {
             },
         });
         useExternalListener(document.body, "scroll", this._onScroll, { capture: true });
+        useEffect(
+            (isShown, rootNodeClassList) => {
+                if (isShown && rootNodeClassList) {
+                    rootNodeClassList.add("o-livechat-LivechatButton-isVisible");
+                    return () => {
+                        rootNodeClassList.remove("o-livechat-LivechatButton-isVisible");
+                    };
+                }
+            },
+            () => [this.isShown, this.ref.el?.getRootNode().host?.classList]
+        );
     }
 
     _onScroll(ev) {
