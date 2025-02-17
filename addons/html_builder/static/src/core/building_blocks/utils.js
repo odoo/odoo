@@ -444,18 +444,18 @@ export function useInputBuilderComponent(
         if (defaultValue !== undefined) {
             e.target.value ||= formatRawValue(defaultValue);
         }
-        const userValueInput = e.target.value;
-        const rawValue = parseDisplayValue(userValueInput);
+        const userInputValue = e.target.value;
+        const rawValue = parseDisplayValue(userInputValue);
         // If the parsed value is not equivalent to the user input, we want to
         // normalize the displayed value. It is useful in cases of invalid
         // input and allows to fall back to the output of parseDisplayValue.
         e.target.value = rawValue !== undefined ? formatRawValue(rawValue) : "";
-        callOperation(applyOperation.commit, { userValueInput: rawValue });
+        callOperation(applyOperation.commit, { userInputValue: rawValue });
     }
     let onInput = (e) => {
-        const userValueInput = e.target.value;
+        const userInputValue = e.target.value;
         callOperation(applyOperation.preview, {
-            userValueInput: parseDisplayValue(userValueInput),
+            userInputValue: parseDisplayValue(userInputValue),
             operationParams: {
                 cancellable: true,
                 cancelPrevious: () => applyOperation.revert(),
@@ -564,14 +564,14 @@ export function getAllActionsAndOperations(comp) {
     const inheritedActionIds =
         comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
 
-    function getActionsSpecs(actions, userValueInput) {
+    function getActionsSpecs(actions, userInputValue) {
         const getAction = comp.env.editor.shared.builderActions.getAction;
         const specs = [];
         for (let { actionId, actionParam, actionValue } of actions) {
             const action = getAction(actionId);
             // Take the action value defined by the clickable or the input given
             // by the user.
-            actionValue = actionValue === undefined ? userValueInput : actionValue;
+            actionValue = actionValue === undefined ? userInputValue : actionValue;
             for (const editingElement of comp.env.getEditingElements()) {
                 specs.push({
                     editingElement,
@@ -632,7 +632,7 @@ export function getAllActionsAndOperations(comp) {
         return actions.concat(inheritedActions || []);
     }
     function callOperation(fn, params = {}) {
-        const actionsSpecs = getActionsSpecs(getAllActions(), params.userValueInput);
+        const actionsSpecs = getActionsSpecs(getAllActions(), params.userInputValue);
         comp.env.editor.shared.operation.next(
             () => {
                 fn(actionsSpecs);

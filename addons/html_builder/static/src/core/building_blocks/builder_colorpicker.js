@@ -44,11 +44,11 @@ export function useColorPickerBuilderComponent() {
     }
 
     function onApply(colorValue) {
-        callOperation(applyOperation.commit, { userValueInput: colorValue });
+        callOperation(applyOperation.commit, { userInputValue: colorValue });
     }
     let onPreview = (colorValue) => {
         callOperation(applyOperation.preview, {
-            userValueInput: colorValue,
+            userInputValue: colorValue,
             operationParams: {
                 cancellable: true,
                 cancelPrevious: () => applyOperation.revert(),
