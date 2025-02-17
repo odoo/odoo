@@ -6,7 +6,6 @@ import { expirableStorage } from "../expirable_storage";
 
 export class Chatbot extends Record {
     static id = AND("script", "thread");
-    static MESSAGE_DELAY = 1500;
     // Time to wait without user input before considering a multi line step as
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
@@ -63,9 +62,6 @@ export class Chatbot extends Record {
     }
 
     async triggerNextStep() {
-        if (this.currentStep) {
-            await this._simulateTyping();
-        }
         await this._goToNextStep();
         if (!this.currentStep || this.currentStep.completed || !this.thread) {
             return;
@@ -119,19 +115,6 @@ export class Chatbot extends Record {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
             this.currentStep = this.steps[nextStepIndex];
         }
-    }
-
-    /**
-     * Simulate the typing of the chatbot.
-     */
-    async _simulateTyping() {
-        this.isTyping = true;
-        await new Promise((res) =>
-            setTimeout(() => {
-                this.isTyping = false;
-                res();
-            }, Chatbot.MESSAGE_DELAY)
-        );
     }
 
     async _processAnswer(message) {
