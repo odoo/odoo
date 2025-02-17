@@ -232,7 +232,11 @@ class PosConfig(models.Model):
 
     def _get_self_order_url(self, table_id: Optional[int] = None) -> str:
         self.ensure_one()
-        return url_quote(self.get_base_url() + self._get_self_order_route(table_id))
+        long_url = self.get_base_url() + self._get_self_order_route(table_id)
+        return self.env['link.tracker'].search_or_create([{
+            'url': long_url,
+            'title': f"Self Order {self.name}" if not table_id else f"Self Order {self.name} - Table id {table_id}",
+        }]).short_url
 
     def preview_self_order_app(self):
         self.ensure_one()
