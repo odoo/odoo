@@ -310,6 +310,7 @@
                                                 title="Add a language"/>
                                         </div>
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
+                                        <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
                                     </group>
                                     <group string="Menus Customization" groups="base.group_no_one"
                                         invisible="share">
@@ -516,6 +517,7 @@
                                         />
                                     </div>
                                     <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                                    <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
                                 </group>
                             </group>
                             <group name="signature">
