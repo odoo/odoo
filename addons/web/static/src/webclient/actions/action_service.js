@@ -516,8 +516,10 @@ export function makeActionManager(env, router = _router) {
                     [lastAction.id, lastAction.path, lastAction.xml_id]
                         .filter(Boolean)
                         .includes(state.action) &&
-                    lastAction.context?.active_id === context.active_id &&
-                    shallowEqual(lastAction.context?.active_ids, context.active_ids)
+                    (!lastAction.context?.active_id ||
+                        lastAction.context?.active_id === context.active_id) &&
+                    (!lastAction.context?.active_ids ||
+                        shallowEqual(lastAction.context?.active_ids, context.active_ids))
                 ) {
                     actionRequest = lastAction;
                 } else {
