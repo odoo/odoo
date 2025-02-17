@@ -4649,6 +4649,49 @@ class TestComputeQueries(TransactionCase):
             record = model.create({'name': 'blabla'})
             self.assertEqual(record.name_changes, 1)
 
+    def test_create_x2many_performance(self):
+        model = self.env['test_new_api.create.performance']
+        model.create({})  # warmup
+
+        # 1 INSERT on model table (without the pending update of name_changes)
+        with self.assertQueryCount(1, flush=False):
+            record = model.create({})
+        with self.assertQueryCount(0):
+            self.assertFalse(record.line_ids)
+        with self.assertQueryCount(0):
+            self.assertFalse(record.tag_ids)
+
+        # 1 INSERT on model table (without the pending update of name_changes)
+        with self.assertQueryCount(1, flush=False):
+            record = model.create({
+                'line_ids': [],
+                'tag_ids': [],
+            })
+        with self.assertQueryCount(0):
+            self.assertFalse(record.line_ids)
+        with self.assertQueryCount(0):
+            self.assertFalse(record.tag_ids)
+
+        # warmup for defaults in secondary models
+        record = model.create({
+            'line_ids': [Command.create({})],
+            'tag_ids': [Command.create({})],
+        })
+
+        # 1 INSERT on model table (without the pending update of name_changes)
+        # 1 INSERT on table of comodel of line_ids
+        # 1 INSERT on table of comodel of tag_ids
+        # 1 INSERT on relation of tag_ids
+        with self.assertQueryCount(4, flush=False):
+            record = model.create({
+                'line_ids': [Command.create({})],
+                'tag_ids': [Command.create({})],
+            })
+        with self.assertQueryCount(0):
+            self.assertTrue(record.line_ids)
+        with self.assertQueryCount(0):
+            self.assertTrue(record.tag_ids)
+
     def test_partial_compute_batching(self):
         """ Create several 'new' records and check that the partial compute
         method is called only once.
