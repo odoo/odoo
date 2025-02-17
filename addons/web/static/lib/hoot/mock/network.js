@@ -73,7 +73,7 @@ const DEFAULT_URL = "https://www.hoot.test/";
 const HEADER = {
     contentType: "Content-Type",
 };
-const R_INTERNAL_URL = /^(blob|file):/;
+const R_INTERNAL_URL = /^(blob|file|data):/;
 
 /** @type {Set<WebSocket>} */
 const openClientWebsockets = new Set();

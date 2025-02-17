@@ -25,7 +25,7 @@ export class Operation {
             cancelResolve = resolve;
         });
 
-        this.mutex.exec(async () => {
+        return this.mutex.exec(async () => {
             if (isCancel) {
                 return;
             }

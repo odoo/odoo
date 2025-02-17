@@ -17,6 +17,8 @@ import { SpacingOption } from "../spacing_option";
 import { Plugin } from "@html_editor/plugin";
 import { useIsActiveItem } from "../../core/building_blocks/utils";
 import { isImageCorsProtected } from "@html_builder/utils/utils_css";
+import { ImageShapeOption } from "./image_shape_option";
+import { getImageMimetype } from "./image_helpers";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "ImageToolOption";
@@ -160,23 +162,16 @@ registry.category("website-plugins").add(ImageToolOptionPlugin.id, ImageToolOpti
 
 class ImageToolOption extends Component {
     static template = "html_builder.ImageToolOption";
-    static components = { ...defaultBuilderComponents, SpacingOption, AddElementOption };
+    static components = {
+        ...defaultBuilderComponents,
+        SpacingOption,
+        AddElementOption,
+        ImageShapeOption,
+    };
     static props = {};
     setup() {
         this.isActiveItem = useIsActiveItem();
     }
-}
-
-/**
- * @private
- * @param {HTMLImageElement} img
- * @returns {String} The right mimetype used to apply options on image.
- */
-function getImageMimetype(img) {
-    if (img.dataset.shape && img.dataset.originalMimetype) {
-        return img.dataset.originalMimetype;
-    }
-    return img.dataset.mimetype;
 }
 
 /**

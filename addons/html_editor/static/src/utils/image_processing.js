@@ -273,7 +273,7 @@ export async function applyModifications(img, dataOptions = {}) {
         imgAspectRatio = imgAspectRatio.split(":");
         imgAspectRatio = parseFloat(imgAspectRatio[0]) / parseFloat(imgAspectRatio[1]);
         const croppedCropper = await activateCropper(croppedImg, imgAspectRatio, { y: 0 });
-        croppedImg = croppedCropper.cropper("getCroppedCanvas");
+        croppedImg = croppedCropper.getCroppedCanvas();
         croppedCropper.destroy();
     }
 
