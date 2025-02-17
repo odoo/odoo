@@ -259,6 +259,8 @@ class AccountChartTemplate(models.AbstractModel):
             if prop.startswith('property_'):
                 template_data.pop(prop)
         data.pop('account.reconcile.model', None)
+        if 'res.company' in data:
+            data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
 
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
             if self.ref(xmlid, raise_if_not_found=False):
