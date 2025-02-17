@@ -6,12 +6,14 @@ import time
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
+from werkzeug.urls import url_encode, url_join
 
 from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_razorpay import const
+from odoo.addons.payment_razorpay.controllers.main import RazorpayController
 
 
 _logger = logging.getLogger(__name__)
@@ -39,13 +41,25 @@ class PaymentTransaction(models.Model):
 
         customer_id = self._razorpay_create_customer()['id']
         order_id = self._razorpay_create_order(customer_id)['id']
-        return {
+        values = {
             'razorpay_key_id': self.provider_id.razorpay_key_id,
             'razorpay_public_token': self.provider_id.razorpay_public_token,
             'razorpay_customer_id': customer_id,
             'is_tokenize_request': self.tokenize,
             'razorpay_order_id': order_id,
         }
+
+        if self.payment_method_id.code == 'fpx':
+            base_url = self.provider_id.get_base_url()
+            return_url_params = {'reference': self.reference}
+            values.update({
+                'callback_url': url_join(
+                    base_url, f'{RazorpayController._return_url}?{url_encode(return_url_params)}'
+                ),
+                'redirect': True,
+            })
+
+        return values
 
     def _razorpay_create_customer(self):
         """ Create and return a Customer object.

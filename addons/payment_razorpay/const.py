@@ -118,6 +118,7 @@ FALLBACK_PAYMENT_METHOD_CODES = {
     'wallets_india',
     'paylater_india',
     'emi_india',
+    'fpx',
 }
 
 # Mapping of payment method codes to Razorpay codes.
