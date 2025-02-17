@@ -478,6 +478,9 @@ export function makeActionManager(env, router = _router) {
         let actionRequest = null;
         const storedAction = browser.sessionStorage.getItem("current_action");
         const lastAction = JSON.parse(storedAction || "{}");
+        // If this method is called because of a company switch, the
+        // stored allowed_company_ids is incorrect.
+        delete lastAction.context?.allowed_company_ids;
         if (lastAction.help) {
             lastAction.help = markup(lastAction.help);
         }
@@ -547,11 +550,6 @@ export function makeActionManager(env, router = _router) {
                 // This is a window action on a multi-record view => restores it from
                 // the session storage
                 if (lastAction.res_model === state.model) {
-                    if (lastAction.context) {
-                        // If this method is called because of a company switch, the
-                        // stored allowed_company_ids is incorrect.
-                        delete lastAction.context.allowed_company_ids;
-                    }
                     actionRequest = lastAction;
                     options.viewType = state.view_type;
                 }
