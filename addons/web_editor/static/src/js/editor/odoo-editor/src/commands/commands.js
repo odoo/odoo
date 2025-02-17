@@ -160,6 +160,7 @@ export const editorCommands = {
         }
         const range = selection.getRangeAt(0);
         const block = closestBlock(selection.anchorNode);
+        const isInList = closestElement(selection.anchorNode, 'LI');
         const isSelectionAtStart = firstLeaf(block) === selection.anchorNode && selection.anchorOffset === 0;
         const isSelectionAtEnd = lastLeaf(block) === selection.focusNode && selection.focusOffset === nodeSize(selection.focusNode);
         if (range.startContainer.nodeType === Node.TEXT_NODE) {
@@ -349,7 +350,7 @@ export const editorCommands = {
             }
             // Ensure that all adjacent paragraph elements are converted to
             // <li> when inserting in a list.
-            if (block.nodeName === "LI" && paragraphRelatedElements.includes(nodeToInsert.nodeName)) {
+            if (isInList && paragraphRelatedElements.includes(nodeToInsert.nodeName)) {
                 setTagName(nodeToInsert, "LI");
             }
             // Contenteditable false property changes to true after the node is

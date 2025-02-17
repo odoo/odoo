@@ -168,6 +168,15 @@ describe('insert HTML', () => {
                 contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]c<br></p>',
             });
         });
+        it('should delete selection and insert html in its place (3)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li><h1>[abc</h1></li><li><h1>def</h1></li><li>ghi]</li></ul>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML(editor.document, '<p>rst</p><p>uvw</p><p>xyz</p>'));
+                },
+                contentAfter: '<ul><li>rst</li><li>uvw</li><li>xyz[]</li></ul>',
+            });
+        });
         it('should remove a fully selected table then insert a span before it', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: unformat(
