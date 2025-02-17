@@ -46,16 +46,16 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     });
     expect(".options-container").toBeDisplayed();
     expect("table tr").toHaveCount(0);
-    expect(modelEdit.get("relSelection")).toEqual([]);
+    expect(modelEdit.get("rel")).toEqual([]);
 
     await contains(".btn.o-dropdown").click();
-    expect("input").toHaveCount(1);
+    expect("input").toHaveCount(2); // search + create
     await contains("input").click();
     await delay(300); // debounce
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(3);
     await contains("span.o-dropdown-item").click();
-    expect(modelEdit.get("relSelection")).toEqual([{ id: 1, name: "First" }]);
+    expect(modelEdit.get("rel")).toEqual([{ id: 1, name: "First" }]);
     expect("table tr").toHaveCount(1);
 
     await contains(".btn.o-dropdown").click();
@@ -64,14 +64,14 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(2);
     await contains("span.o-dropdown-item").click();
-    expect(modelEdit.get("relSelection")).toEqual([
+    expect(modelEdit.get("rel")).toEqual([
         { id: 1, name: "First" },
         { id: 2, name: "Second" },
     ]);
     expect("table tr").toHaveCount(2);
 
     await contains("button.fa-minus").click();
-    expect(modelEdit.get("relSelection")).toEqual([{ id: 2, name: "Second" }]);
+    expect(modelEdit.get("rel")).toEqual([{ id: 2, name: "Second" }]);
     expect("table tr").toHaveCount(1);
     expect("table input").toHaveValue("Second");
 
