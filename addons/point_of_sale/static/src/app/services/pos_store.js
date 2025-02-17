@@ -2195,7 +2195,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getProductsBySearchWord(searchWord, products) {
-        const words = searchWord.toLowerCase();
+        const words = unaccent(searchWord.toLowerCase(), false);
         const exactMatches = products.filter((product) => product.exactMatch(words));
 
         if (exactMatches.length > 0 && words.length > 2) {
