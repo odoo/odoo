@@ -212,7 +212,7 @@
                                             <field name="user_id"
                                                 string="Related User"
                                                 help=""
-                                                domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
+                                                domain="[('company_ids', 'in', company_id)]"
                                                 context="{'default_create_employee_id': id}"
                                                 widget="many2one_avatar_user"/>
                                             <button string="Create User"
