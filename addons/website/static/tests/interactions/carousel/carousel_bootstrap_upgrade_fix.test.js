@@ -49,7 +49,6 @@ test("carousel_bootstrap_upgrade_fix is tagged while sliding", async () => {
     expect(core.interactions).toHaveLength(1);
 
     const carouselEl = queryOne(".carousel");
-    expect(carouselEl).toHaveAttribute("data-bs-ride", "carousel");
     expect(carouselEl).toHaveAttribute("data-bs-interval", "5000");
     expect(carouselEl).not.toHaveClass("o_carousel_sliding");
 

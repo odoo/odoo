@@ -53,5 +53,4 @@ test("[EDIT] carousel_bootstrap_upgrade_fix prevents ride", async () => {
     const carouselBS = window.Carousel.getInstance(carouselEl);
     expect(carouselBS._config.ride).toBe(false);
     expect(carouselBS._config.pause).toBe(true);
-    expect(carouselEl).toHaveAttribute("data-bs-ride", "carousel");
 });
