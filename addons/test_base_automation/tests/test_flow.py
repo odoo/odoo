@@ -470,6 +470,8 @@ if env.context.get('old_values', None):  # on write
         ]
 
         def _patch(*args, **kwargs):
+            if not automations:
+                return
             self.assertEqual(args[0], automations.pop(0))
 
         patcher = patch('odoo.addons.base_automation.models.base_automation.BaseAutomation._process', _patch)

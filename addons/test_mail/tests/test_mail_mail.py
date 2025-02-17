@@ -470,6 +470,9 @@ class TestMailMail(MailCommon):
             self.assertEqual(notification.failure_type, 'mail_from_invalid')
             self.assertEqual(notification.notification_status, 'exception')
 
+        # don't try to flush the changes as they will fail
+        self.env.transaction.clear()
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_send_exceptions_recipients_emails(self):
         """ Test various use case with exceptions and errors and see how they are
