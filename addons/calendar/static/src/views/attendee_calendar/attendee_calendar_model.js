@@ -3,7 +3,10 @@ import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
-import { deleteConfirmationMessage, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    deleteConfirmationMessage,
+    ConfirmationDialog,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class AttendeeCalendarModel extends CalendarModel {
     static services = [...CalendarModel.services, "dialog", "orm"];
@@ -19,14 +22,17 @@ export class AttendeeCalendarModel extends CalendarModel {
      */
     async load() {
         const res = await super.load(...arguments);
-        const [credentialStatus, syncStatus, defaultDuration] = await Promise.all([
-            rpc("/calendar/check_credentials"),
-            this.orm.call("res.users", "check_synchronization_status", [[user.userId]]),
-            this.orm.call("calendar.event", "get_default_duration"),
-        ]);
-        this.syncStatus = syncStatus;
-        this.credentialStatus = credentialStatus;
-        this.defaultDuration = defaultDuration;
+        if (!this._loaded) {
+            const [credentialStatus, syncStatus, defaultDuration] = await Promise.all([
+                rpc("/calendar/check_credentials"),
+                this.orm.call("res.users", "check_synchronization_status", [[user.userId]]),
+                this.orm.call("calendar.event", "get_default_duration"),
+            ]);
+            this.syncStatus = syncStatus;
+            this.credentialStatus = credentialStatus;
+            this.defaultDuration = defaultDuration;
+            this._loaded = true;
+        }
         return res;
     }
 
@@ -70,13 +76,13 @@ export class AttendeeCalendarModel extends CalendarModel {
      * @override
      */
     async loadFilterSection(fieldName, filterInfo, previousSection) {
-        let result = await super.loadFilterSection(fieldName, filterInfo, previousSection);
+        const result = await super.loadFilterSection(fieldName, filterInfo, previousSection);
         if (result?.filters) {
             user.updateContext({
                 calendar_filters: {
                     all: result?.filters?.find((f) => f.type == "all")?.active ?? false,
                     user: result?.filters?.find((f) => f.type == "user")?.active ?? false,
-                }
+                },
             });
         }
         return result;
@@ -182,15 +188,14 @@ export class AttendeeCalendarModel extends CalendarModel {
             }
         } else {
             const confirm = await new Promise((resolve) => {
-                this.dialog.add(
-                    ConfirmationDialog,{
-                        title: _t("Bye-bye, record!"),
-                        body: deleteConfirmationMessage,
-                        confirm: resolve.bind(null, true),
-                        confirmLabel: _t("Delete"),
-                        cancel: () => resolve.bind(null, false),
-                        cancelLabel: _t("No, keep it"),
-                    });
+                this.dialog.add(ConfirmationDialog, {
+                    title: _t("Bye-bye, record!"),
+                    body: deleteConfirmationMessage,
+                    confirm: resolve.bind(null, true),
+                    confirmLabel: _t("Delete"),
+                    cancel: () => resolve.bind(null, false),
+                    cancelLabel: _t("No, keep it"),
+                });
             });
             if (!confirm) {
                 return;
