@@ -17,7 +17,7 @@ RUN mkdir -pm755 /etc/apt/keyrings \
     && curl -sSL https://dl.winehq.org/wine-builds/winehq.key -o /etc/apt/keyrings/winehq-archive.key \
     && curl -sSL https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources -o /etc/apt/sources.list.d/winehq.sources \
     && apt-get update \
-    && apt-get install --install-recommends -y winehq-devel \
+    && apt-get install --install-recommends -y winehq-stable \
     && rm -rf /var/lib/apt/lists/*
 
 USER odoo
