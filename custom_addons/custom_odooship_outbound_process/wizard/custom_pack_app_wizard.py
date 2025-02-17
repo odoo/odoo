@@ -376,57 +376,62 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     #
     #     return payloads
 
-
-
     def prepare_payload_for_individual_line(self, line):
         """
-        Prepares a payload for a single line.
+        Prepares a payload for a single line to be consistent with the required API format, using a dictionary instead of a list.
         """
-        payloads = []
-        product_weight = line.weight  # Default weight to 1 if not defined
-        product_line = {
+        product_line = [{
             "sku_code": line.product_id.default_code,
             "name": line.product_id.name,
             "quantity": line.quantity,
             "remaining_quantity": line.remaining_quantity,
-            "weight": product_weight * line.quantity,  # Weight per product line
+            "weight": line.weight,  # Use the actual weight from the line
             "picking_id": line.picking_id.name if line.picking_id else "",
-            "customer_name": line.picking_id.partner_id.name or "",
+            "customer_name": line.picking_id.partner_id.name if line.picking_id.partner_id else "",
             "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
             "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
-            "site_code": line.site_code_id.name if line.site_code_id else "",
-            "receipt_number": line.picking_id.name,
+            "site_code": self.site_code_id.name if self.site_code_id else "",
+            "receipt_number": line.picking_id.name if line.picking_id else "",
+            "partner_id": line.picking_id.partner_id.name if line.picking_id.partner_id else "",
             "origin": line.picking_id.origin or "N/A",
-            "package_name": line.package_box_type_id.name,
-            "length": line.package_box_type_id.length or "NA",
-            "width": line.package_box_type_id.width or "NA",
-            "height": line.package_box_type_id.height or "NA",
+            "package_name": line.package_box_type_id.name if line.package_box_type_id else None,
+            "length": line.package_box_type_id.length if line.package_box_type_id else "NA",
+            "width": line.package_box_type_id.width if line.package_box_type_id else "NA",
+            "height": line.package_box_type_id.height if line.package_box_type_id else "NA",
             "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
             "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
             "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
-            "incoterm_location": line.incoterm_location or "N/A",
+            "incoterm_location": line.sale_order_id.packaging_source_type if line.sale_order_id else "N/A",
             "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
-            "carrier": line.picking_id.sale_id.carrier or "N/A",
-        }
-        payloads.append({
-            "header": {"user_id": "system", "user_key": "system", "warehouse_code": self.warehouse_id.name},
+            "carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A"
+        }]
+
+        payload = {
+            "header": {
+                "user_id": "system",
+                "user_key": "system",
+                "warehouse_code": self.warehouse_id.name if self.warehouse_id else "Unknown"
+            },
             "body": {
                 "receipt_list": [{
-                    "product_lines": product_line,
-                    "pack_bench_number": self.pack_bench_id.name,
-                    "pack_bench_ip": self.pack_bench_id.printer_ip,
+                    "product_lines": product_line,  # No longer a list, directly the dictionary
+                    "pack_bench_number": self.pack_bench_id.name if self.pack_bench_id else "",
+                    "pack_bench_ip": self.pack_bench_id.printer_ip if self.pack_bench_id else ""
                 }]
             }
-        })
+        }
+
+        # return payload
+
         # Convert the payload to JSON
-        json_payload = json.dumps(payloads, indent=4)
+        json_payload = json.dumps(payload, indent=4)
         _logger.info(f"Sending payload to API: {json_payload}")
         # api_url = self.determine_api_url(line.site_code_id.name)
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
         if self.site_code_id.name == "FC3":
             api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/ot_orders"
         elif self.site_code_id.name == "SHIPEROOALTONA":
-            api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/orders"
+            api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/ot_orders"
         else:
             raise ValidationError(_("Unknown warehouse. Cannot determine API endpoint."))
         # Send the payload to the API
