@@ -24,6 +24,8 @@ export class OutOfFocusService {
         this.multiTab = services.multi_tab;
         this.notificationService = services.notification;
         this.soundEffectService = services["mail.sound_effects"];
+        /** @type {import("models").Store} */
+        this.store = services["mail.store"];
         this.closeFuncs = [];
     }
 
@@ -143,7 +145,7 @@ export class OutOfFocusService {
     }
 
     _playSound() {
-        if (this.canPlayAudio && this.multiTab.isOnMainTab()) {
+        if (this.canPlayAudio && this.multiTab.isOnMainTab() && this.store.settings.messageSound) {
             this.soundEffectService.play("new-message");
         }
     }
@@ -158,7 +160,7 @@ export class OutOfFocusService {
 }
 
 export const outOfFocusService = {
-    dependencies: ["multi_tab", "notification", "mail.sound_effects"],
+    dependencies: ["multi_tab", "notification", "mail.sound_effects", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
