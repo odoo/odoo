@@ -1,6 +1,16 @@
+import { undo } from "@html_editor/../tests/_helpers/user_actions";
+import { Plugin } from "@html_editor/plugin";
 import { expect, test } from "@odoo/hoot";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./helpers";
+import { Deferred, tick } from "@odoo/hoot-dom";
+import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
+import {
+    addActionOption,
+    addOption,
+    addPlugin,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "./helpers";
 
 defineWebsiteModels();
 
@@ -222,4 +232,66 @@ test("Use the 'clone' overlay buttons", async () => {
     await contains(".overlay .o_snippet_clone").click();
     expect(":iframe section").toHaveCount(2);
     expect(":iframe .col-lg-5").toHaveCount(4);
+});
+
+test("applying overlay button  should wait for actions in progress", async () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            get_overlay_buttons: this.getOverlayButtons.bind(this),
+            has_overlay_options: () => true,
+        };
+
+        getOverlayButtons(target) {
+            return [
+                {
+                    class: "test_button",
+                    title: "Test",
+                    handler: () => {
+                        target.classList.add("overlayButton");
+                    },
+                },
+            ];
+        }
+    }
+    addPlugin(TestPlugin);
+    const customActionDef = new Deferred();
+    addActionOption({
+        customAction: {
+            load: () => customActionDef,
+            apply: ({ editingElement }) => {
+                editingElement.classList.add("customAction");
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'customAction'"/>`,
+    });
+
+    const { getEditableContent, getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">plop</div>
+    `);
+    const editor = getEditor();
+    const editable = getEditableContent();
+
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-action-id='customAction']").click();
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target">plop</div>`);
+
+    await contains(":iframe .test-options-target").click();
+    await contains(".overlay .test_button").click();
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target">plop</div>`);
+
+    customActionDef.resolve();
+    await tick();
+    expect(editable).toHaveInnerHTML(
+        `<div class="test-options-target customAction overlayButton">plop</div>`
+    );
+
+    undo(editor);
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target customAction">plop</div>`);
+
+    undo(editor);
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target">plop</div>`);
 });

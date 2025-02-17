@@ -1,4 +1,5 @@
 import { useDomState } from "@html_builder/core/building_blocks/utils";
+import { useOperation } from "@html_builder/core/plugins/operation_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -112,19 +113,19 @@ class NavTabsHeaderMiddleButtons extends Component {
         this.state = useDomState((editingElement) => ({
             tabEls: editingElement.querySelectorAll(".s_tabs_nav .nav-item"),
         }));
+
+        this.callOperation = useOperation();
     }
 
     addItem() {
-        this.env.editor.shared.operation.next(() => {
+        this.callOperation(() => {
             this.props.addItem(this.env.getEditingElement());
-            this.env.editor.shared.history.addStep();
         });
     }
 
     removeItem() {
-        this.env.editor.shared.operation.next(() => {
+        this.callOperation(() => {
             this.props.removeItem(this.env.getEditingElement());
-            this.env.editor.shared.history.addStep();
         });
     }
 }

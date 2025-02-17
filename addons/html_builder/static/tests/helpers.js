@@ -174,6 +174,13 @@ export async function openBuilderSidebar() {
     await animationFrame();
 }
 
+export function addPlugin(Plugin) {
+    registry.category("website-plugins").add(Plugin.id, Plugin);
+    after(() => {
+        registry.category("website-plugins").remove(Plugin.id);
+    });
+}
+
 export function addOption({
     selector,
     exclude,

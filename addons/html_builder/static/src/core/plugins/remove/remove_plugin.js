@@ -57,7 +57,6 @@ export class RemovePlugin extends Plugin {
             title: _t("Remove"),
             handler: () => {
                 this.removeElement(this.overlayTarget);
-                this.dependencies.history.addStep();
             },
         });
         return buttons;

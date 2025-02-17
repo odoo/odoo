@@ -6,7 +6,7 @@ import { OverlayButtons } from "./overlay_buttons";
 
 export class OverlayButtonsPlugin extends Plugin {
     static id = "overlayButtons";
-    static dependencies = ["selection", "overlay", "history"];
+    static dependencies = ["selection", "overlay", "history", "operation"];
     static shared = ["hideOverlayButtons", "showOverlayButtons"];
     resources = {
         step_added_handlers: this.refreshButtons.bind(this),
@@ -93,6 +93,15 @@ export class OverlayButtonsPlugin extends Plugin {
         const buttons = [];
         for (const getOverlayButtons of this.getResource("get_overlay_buttons")) {
             buttons.push(...getOverlayButtons(this.target));
+        }
+        for (const button of buttons) {
+            const handler = button.handler;
+            button.handler = (...args) => {
+                this.dependencies.operation.next(async () => {
+                    await handler(...args);
+                    this.dependencies.history.addStep();
+                });
+            };
         }
         this.state.buttons = buttons;
         this.overlay.updatePosition();

@@ -10,6 +10,7 @@ import {
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator";
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
+import { useOperation } from "../core/plugins/operation_plugin";
 
 export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";
@@ -37,6 +38,8 @@ export class OptionsContainer extends Component {
         this.isActiveItem = useIsActiveItem();
         this.getItemValue = useGetItemValue();
         useVisibilityObserver("content", useApplyVisibility("root"));
+
+        this.callOperation = useOperation();
     }
 
     get title() {
@@ -67,14 +70,16 @@ export class OptionsContainer extends Component {
 
     // Actions of the buttons in the title bar.
     removeElement() {
-        this.env.editor.shared.remove.removeElement(this.props.editingElement);
-        this.env.editor.shared.history.addStep();
+        this.callOperation(() => {
+            this.env.editor.shared.remove.removeElement(this.props.editingElement);
+        });
     }
 
     cloneElement() {
-        this.env.editor.shared.clone.cloneElement(this.props.editingElement, {
-            scrollToClone: true,
+        this.callOperation(() => {
+            this.env.editor.shared.clone.cloneElement(this.props.editingElement, {
+                scrollToClone: true,
+            });
         });
-        this.env.editor.shared.history.addStep();
     }
 }

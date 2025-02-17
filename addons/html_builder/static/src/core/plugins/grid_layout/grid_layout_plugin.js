@@ -60,12 +60,10 @@ export class GridLayoutPlugin extends Plugin {
             columnEls.forEach((columnEl) => columnEl.style.zIndex++);
             this.overlayTarget.style.zIndex = 0;
         }
-        this.dependencies.history.addStep();
     }
 
     bringGridItemToFront() {
         const rowEl = this.overlayTarget.parentNode;
         setElementToMaxZindex(this.overlayTarget, rowEl);
-        this.dependencies.history.addStep();
     }
 }

@@ -48,7 +48,6 @@ export class ReplacePlugin extends Plugin {
             // If not possible, call updateContainers with nothing.
             this.dependencies["builder-options"].updateContainers(newSnippet);
             // TODO post snippet drop (onBuild,...)
-            this.dependencies.history.addStep();
         }
     }
 }

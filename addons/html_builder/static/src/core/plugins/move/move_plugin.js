@@ -218,7 +218,5 @@ export class MovePlugin extends Plugin {
 
         // TODO scroll (data-no-scroll)
         // TODO update invisible dom
-
-        this.dependencies.history.addStep();
     }
 }

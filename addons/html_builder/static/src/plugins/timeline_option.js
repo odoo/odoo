@@ -59,7 +59,6 @@ class TimelineOptionPlugin extends Plugin {
         const firstContentEl = timelineRowEl.querySelector(".s_timeline_content");
         timelineRowEl.append(firstContentEl);
         timelineCardEls.forEach((card) => card.classList.toggle("text-md-end"));
-        this.dependencies.history.addStep();
     }
 }
 

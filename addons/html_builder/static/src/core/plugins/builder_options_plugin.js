@@ -6,7 +6,7 @@ import { getElementsWithOption } from "@html_builder/utils/utils";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
-    static dependencies = ["selection", "overlay"];
+    static dependencies = ["selection", "overlay", "operation", "history"];
     static shared = ["getContainers", "updateContainers"];
     resources = {
         step_added_handlers: () => this.updateContainers(),
@@ -135,6 +135,15 @@ export class BuilderOptionsPlugin extends Plugin {
         const buttons = [];
         for (const getContainerButtons of this.getResource("get_options_container_top_buttons")) {
             buttons.push(...getContainerButtons(el));
+            for (const button of buttons) {
+                const handler = button.handler;
+                button.handler = (...args) => {
+                    this.dependencies.operation.next(async () => {
+                        await handler(...args);
+                        this.dependencies.history.addStep();
+                    });
+                };
+            }
         }
         return buttons;
     }
