@@ -1,6 +1,5 @@
 import { expect, test } from "@odoo/hoot";
 import { createRelatedModels } from "@point_of_sale/app/models/related_models";
-import { uuidv4 } from "@point_of_sale/utils";
 
 const getModels = () =>
     createRelatedModels(
@@ -63,7 +62,7 @@ const getModels = () =>
                     model: "pos.order.line",
                     relation: "pos.order.line.group",
                     type: "many2one",
-                    ondelete: "cascade",
+                    ondelete: "set null",
                 },
                 quantity: {
                     name: "quantity",
@@ -118,17 +117,29 @@ const getModels = () =>
             },
         },
         {},
-        { dynamicModels: ["pos.order", "pos.order.line", "pos.order.line.group", "pos.lot"] }
+        {
+            dynamicModels: ["pos.order", "pos.order.line", "pos.order.line.group", "pos.lot"],
+            databaseIndex: {
+                "pos.order": ["uuid"],
+                "pos.order.line": ["uuid"],
+                "pos.order.line.group": ["uuid"],
+            },
+            databaseTable: {
+                "pos.order": { key: "uuid" },
+                "pos.order.line": { key: "uuid" },
+                "pos.order.line.group": { key: "uuid" },
+            },
+        }
     ).models;
 
 test("simple serialization", () => {
     const models = getModels();
-    const order = models["pos.order"].create({ uuid: uuidv4() });
-    const line1 = models["pos.order.line"].create({ order_id: order, uuid: uuidv4(), quantity: 1 });
-    const line2 = models["pos.order.line"].create({ order_id: order, uuid: uuidv4(), quantity: 2 });
+    const order = models["pos.order"].create({});
+    const line1 = models["pos.order.line"].create({ order_id: order, quantity: 1 });
+    const line2 = models["pos.order.line"].create({ order_id: order, quantity: 2 });
     order.total = 10;
 
-    const result = order.serialize({ orm: true });
+    const result = order.serialize({ orm: true, clear: true });
     {
         expect(result.uuid).not.toBeEmpty();
         expect(result.total).toBe(10);
@@ -165,7 +176,8 @@ test("simple serialization", () => {
     // Delete line
     line1.delete();
     {
-        const result = order.serialize({ orm: true });
+        const result = order.serialize({ orm: true, clear: true });
+        console.log(result);
         expect(result.lines.length).toBe(1);
         expect(result.lines[0][0]).toBe(3);
         expect(result.lines[0][1]).toBe(11);
@@ -174,11 +186,11 @@ test("simple serialization", () => {
 
 test("serialization of non-dynamic model relationships", () => {
     const models = getModels();
-    const order = models["pos.order"].create({ uuid: uuidv4() });
+    const order = models["pos.order"].create({});
 
     const att1 = models["product.attribute"].create({ id: 99 });
     const att2 = models["product.attribute"].create({ id: 999 });
-    const line = models["pos.order.line"].create({ order_id: order, uuid: uuidv4(), quantity: 1 });
+    const line = models["pos.order.line"].create({ order_id: order, quantity: 1 });
     line.attribute_ids.push(att1);
     line.attribute_ids.push(att2);
     {
@@ -209,14 +221,15 @@ test("serialization of non-dynamic model relationships", () => {
 
 test("serialization of dynamic model without uuid", () => {
     const models = getModels();
-    const order = models["pos.order"].create({ uuid: uuidv4() });
+    let order = models["pos.order"].create({});
+    const orderUUID = order.uuid;
 
-    const line1 = models["pos.order.line"].create({
+    let line1 = models["pos.order.line"].create({
         order_id: order,
-        uuid: uuidv4(),
     });
+    const line1UUID = line1.uuid;
 
-    const lot1 = models["pos.lot"].create({ line_id: line1, lot_name: "lot1" });
+    models["pos.lot"].create({ line_id: line1, lot_name: "lot1" });
     {
         const result = order.serialize({ orm: true, clear: true });
         expect(result.lines.length).toBe(1);
@@ -227,9 +240,33 @@ test("serialization of dynamic model without uuid", () => {
         expect(pack_lot_ids[0][2]).toEqual({ lot_name: "lot1" });
     }
 
-    lot1.update({ id: 99 }, { silent: true });
+    models.loadData({
+        "pos.order": [
+            {
+                id: 1,
+                lines: [11],
+                uuid: order.uuid,
+            },
+        ],
+        "pos.order.line": [
+            {
+                id: 11,
+                pack_lot_ids: [99],
+                uuid: line1UUID,
+            },
+        ],
+        "pos.lot": [
+            {
+                id: 99,
+                lot_name: "lot1",
+            },
+        ],
+    });
 
-    const lot2 = models["pos.lot"].create({ line_id: line1, lot_name: "lot2" });
+    order = models["pos.order"].getBy("uuid", orderUUID);
+    line1 = models["pos.order.line"].getBy("uuid", line1UUID);
+
+    models["pos.lot"].create({ line_id: line1, lot_name: "lot2" });
     {
         const result = order.serialize({ orm: true, clear: true });
         expect(result.lines.length).toBe(1);
@@ -237,15 +274,41 @@ test("serialization of dynamic model without uuid", () => {
         expect(pack_lot_ids.length).toBe(1);
         expect(pack_lot_ids[0][0]).toBe(0);
         expect(pack_lot_ids[0][1]).toBe(0);
-        expect(pack_lot_ids[0][2]).toEqual({ lot_name: "lot2" });
+        expect(pack_lot_ids[0][2].lot_name).toEqual("lot2");
     }
 
-    lot2.update({ id: 999 }, { silent: true });
-    lot2.delete();
-    lot1.delete();
-
+    models.loadData({
+        "pos.order": [
+            {
+                id: 1,
+                lines: [11],
+                uuid: order.uuid,
+            },
+        ],
+        "pos.order.line": [
+            {
+                id: 11,
+                pack_lot_ids: [99, 999],
+                uuid: line1UUID,
+            },
+        ],
+        "pos.lot": [
+            {
+                id: 99,
+                lot_name: "lot1",
+            },
+            {
+                id: 999,
+                lot_name: "lot2",
+            },
+        ],
+    });
+    order = models["pos.order"].getBy("uuid", orderUUID);
+    order.lines[0].pack_lot_ids[1].delete();
+    order.lines[0].pack_lot_ids[0].delete();
     {
         const result = order.serialize({ orm: true, clear: true });
+        console.log(result);
         expect(result.lines.length).toBe(1);
         const pack_lot_ids = result.lines[0][2].pack_lot_ids;
         expect(pack_lot_ids.length).toBe(2);
@@ -258,17 +321,15 @@ test("serialization of dynamic model without uuid", () => {
 
 test("nested lines relationship", () => {
     const models = getModels();
-    const order = models["pos.order"].create({ uuid: uuidv4() });
-    const parentLine = models["pos.order.line"].create({ order_id: order, uuid: uuidv4() });
-    const line1 = models["pos.order.line"].create({
+    let order = models["pos.order"].create({});
+    let parentLine = models["pos.order.line"].create({ order_id: order });
+    let line1 = models["pos.order.line"].create({
         order_id: order,
         combo_parent_id: parentLine,
-        uuid: uuidv4(),
     });
-    const line2 = models["pos.order.line"].create({
+    let line2 = models["pos.order.line"].create({
         order_id: order,
         combo_parent_id: parentLine,
-        uuid: uuidv4(),
     });
 
     {
@@ -291,17 +352,44 @@ test("nested lines relationship", () => {
         );
     }
 
+    models.loadData({
+        "pos.order": [
+            {
+                id: 1,
+                lines: [11, 111],
+                uuid: order.uuid,
+            },
+        ],
+        "pos.order.line": [
+            {
+                id: 1,
+                uuid: parentLine.uuid,
+            },
+            {
+                id: 11,
+                uuid: line1.uuid,
+                combo_parent_id: 1,
+            },
+            {
+                id: 111,
+                uuid: line2.uuid,
+                combo_parent_id: 1,
+            },
+        ],
+    });
+
     // Update line: the uuid mapping must be present
-    parentLine.update({ id: 11 }, { silent: true });
-    line1.update({ id: 12 }, { silent: true });
-    line2.update({ id: 13 }, { silent: true });
+    order = models["pos.order"].getBy("uuid", order.uuid);
+    line1 = models["pos.order.line"].getBy("uuid", line1.uuid);
+    line2 = models["pos.order.line"].getBy("uuid", line2.uuid);
+    parentLine = models["pos.order.line"].getBy("uuid", parentLine.uuid);
 
     line1.quantity = 99;
     {
         const result = order.serialize({ orm: true, clear: true });
         expect(result.lines.length).toBe(1);
         expect(result.lines[0][0]).toBe(1);
-        expect(result.lines[0][1]).toBe(12);
+        expect(result.lines[0][1]).toBe(11);
         expect(result.lines[0][2].quantity).toBe(99);
         expect(result.relations_uuid_mapping).toBe(undefined);
     }
@@ -310,27 +398,22 @@ test("nested lines relationship", () => {
 test("recursive relationship with group of lines", () => {
     const models = getModels();
 
-    const order = models["pos.order"].create({ uuid: uuidv4() });
-    const group1 = models["pos.order.line.group"].create({
+    let order = models["pos.order"].create({});
+    let group1 = models["pos.order.line.group"].create({
         order_id: order,
-        uuid: uuidv4(),
         index: 1,
     });
-    const group2 = models["pos.order.line.group"].create({
+    let group2 = models["pos.order.line.group"].create({
         order_id: order,
-        uuid: uuidv4(),
         index: 2,
     });
-
-    const line1 = models["pos.order.line"].create({
+    let line1 = models["pos.order.line"].create({
         order_id: order,
         group_id: group1,
-        uuid: uuidv4(),
     });
-    const line2 = models["pos.order.line"].create({
+    let line2 = models["pos.order.line"].create({
         order_id: order,
         group_id: group1,
-        uuid: uuidv4(),
     });
 
     expect(order.lines.length).toBe(2);
@@ -338,7 +421,7 @@ test("recursive relationship with group of lines", () => {
     expect(order.groups[0].lines.length).toBe(2);
 
     {
-        const result = order.serialize({ orm: true });
+        const result = order.serialize({ orm: true, clear: true });
         expect(result.lines.length).toBe(2);
         expect(result.lines[0][2].group_id).toBeEmpty();
         expect(result.lines[1][2].group_id).toBeEmpty();
@@ -361,17 +444,58 @@ test("recursive relationship with group of lines", () => {
         expect(relations_uuid_mapping["pos.order.line"][line2.uuid]["group_id"]).toBe(group1.uuid);
     }
 
-    group1.update({ id: 210 }, { silent: true });
-    group2.update({ id: 211 }, { silent: true });
-    line1.update({ id: 110 }, { silent: true });
-    line2.update({ id: 111 }, { silent: true });
+    models.loadData({
+        "pos.order": [
+            {
+                id: 1,
+                lines: [110, 111],
+                groups: [210, 211],
+                uuid: order.uuid,
+            },
+        ],
+        "pos.order.line": [
+            {
+                id: 110,
+                uuid: line1.uuid,
+                combo_parent_id: 1,
+            },
+            {
+                id: 111,
+                uuid: line2.uuid,
+                combo_parent_id: 1,
+            },
+        ],
+        "pos.order.line.group": [
+            {
+                id: 210,
+                lines: [110, 111],
+                index: 1,
+                uuid: group1.uuid,
+            },
+            {
+                id: 211,
+                lines: [],
+                index: 2,
+                uuid: group2.uuid,
+            },
+        ],
+    });
+
+    order = models["pos.order"].getBy("uuid", order.uuid);
+    line1 = models["pos.order.line"].getBy("uuid", line1.uuid);
+    line2 = models["pos.order.line"].getBy("uuid", line2.uuid);
+    group1 = models["pos.order.line.group"].getBy("uuid", group1.uuid);
+    group2 = models["pos.order.line.group"].getBy("uuid", group2.uuid);
 
     // Move line2 to another group
     line2.update({ group_id: group2 });
+    expect(order.groups[0].lines.length).toBe(1);
     expect(order.groups[1].lines.length).toBe(1);
+
     {
         const result = order.serialize({ orm: true, clear: true });
-        expect(result.groups).toBeEmpty();
+        expect(result.groups[0].lines).toBeEmpty();
+        expect(result.groups[1].lines).toBeEmpty();
         expect(result.lines.length).toBe(1);
         expect(result.lines[0][0]).toBe(1);
         expect(result.lines[0][1]).toBe(111);
@@ -413,34 +537,29 @@ test("recursive relationship with group of lines", () => {
 test("grouped lines and nested lines", () => {
     const models = getModels();
 
-    const order = models["pos.order"].create({ uuid: uuidv4() });
+    const order = models["pos.order"].create({});
     const group1 = models["pos.order.line.group"].create({
         order_id: order,
-        uuid: uuidv4(),
         index: 1,
     });
     const group2 = models["pos.order.line.group"].create({
         order_id: order,
-        uuid: uuidv4(),
         index: 2,
     });
-    const parentLine = models["pos.order.line"].create({ order_id: order, uuid: uuidv4() });
+    const parentLine = models["pos.order.line"].create({ order_id: order });
     const line1 = models["pos.order.line"].create({
         order_id: order,
         group_id: group1,
         combo_parent_id: parentLine,
-        uuid: uuidv4(),
     });
     const line2 = models["pos.order.line"].create({
         order_id: order,
         group_id: group1,
         combo_parent_id: parentLine,
-        uuid: uuidv4(),
     });
     const line3 = models["pos.order.line"].create({
         order_id: order,
         group_id: group2,
-        uuid: uuidv4(),
     });
 
     {

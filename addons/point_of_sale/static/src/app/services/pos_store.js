@@ -1186,7 +1186,9 @@ export class PosStore extends WithLazyGetterTrap {
         let orders = options.orders || [...orderToCreate, ...orderToUpdate];
 
         // Filter out orders that are already being synced
-        orders = orders.filter((order) => !this.syncingOrders.has(order.id));
+        orders = orders.filter(
+            (order) => !this.syncingOrders.has(order.id) && (order.isDirty() || options.force)
+        );
 
         try {
             const orderIdsToDelete = this.getOrderIdsToDelete();
