@@ -13,6 +13,7 @@ import { Model } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
+import { Cache } from "@web/core/utils/cache";
 import { useDebounced } from "@web/core/utils/timing";
 
 export class CalendarModel extends Model {
@@ -45,6 +46,11 @@ export class CalendarModel extends Model {
 
         const debouncedLoadDelay = this.constructor.DEBOUNCED_LOAD_DELAY;
         this.debouncedLoad = useDebounced((params) => this.load(params), debouncedLoadDelay);
+
+        this._unusualDaysCache = new Cache(
+            (data) => this.fetchUnusualDays(data),
+            (data) => `${serializeDateTime(data.range.start)},${serializeDateTime(data.range.end)}`
+        );
     }
     async load(params = {}) {
         Object.assign(this.meta, params);
@@ -493,7 +499,7 @@ export class CalendarModel extends Model {
      * @protected
      */
     async loadUnusualDays(data) {
-        const unusualDays = await this.fetchUnusualDays(data);
+        const unusualDays = await this._unusualDaysCache.read(data);
         return Object.entries(unusualDays)
             .filter((entry) => entry[1])
             .map((entry) => entry[0]);

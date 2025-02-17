@@ -5569,3 +5569,51 @@ test(`disable editing without write access rights`, async () => {
         message: "Record should not be draggable/editable",
     });
 });
+
+test(`calendar view with show_unusual_days`, async () => {
+    let unusualDays = {
+        "2016-12-14": true,
+    };
+    onRpc("get_unusual_days", ({ args }) => {
+        expect.step(`get_unusual_days from ${args[0]} to ${args[1]}`);
+        return unusualDays;
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" show_unusual_days="1">
+                <field name="name"/>
+            </calendar>
+        `,
+    });
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveCount(1);
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveAttribute("data-date", "2016-12-14");
+
+    unusualDays = {
+        "2016-12-14": true,
+        "2016-12-21": true,
+    };
+    await changeScale("month");
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveCount(2);
+    expect(".fc-daygrid-day.o_calendar_disabled:eq(0)").toHaveAttribute("data-date", "2016-12-14");
+    expect(".fc-daygrid-day.o_calendar_disabled:eq(1)").toHaveAttribute("data-date", "2016-12-21");
+
+    await changeScale("week");
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveCount(1);
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveAttribute("data-date", "2016-12-14");
+
+    unusualDays = {};
+    await navigate("next");
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveCount(0);
+
+    await navigate("prev");
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveCount(1);
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveAttribute("data-date", "2016-12-14");
+
+    expect.verifySteps([
+        "get_unusual_days from 2016-12-10 23:00:00 to 2016-12-17 22:59:59",
+        "get_unusual_days from 2016-11-26 23:00:00 to 2017-01-07 22:59:59",
+        "get_unusual_days from 2016-12-17 23:00:00 to 2016-12-24 22:59:59",
+    ]);
+});
