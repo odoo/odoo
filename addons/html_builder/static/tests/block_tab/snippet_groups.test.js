@@ -19,8 +19,9 @@ import {
 
 defineWebsiteModels();
 
-function getBasicSection(content, { name }) {
-    return unformat(`<section class="s_test" data-snippet="s_test" ${
+function getBasicSection(content, { name, withColoredLevelClass = false }) {
+    const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
+    return unformat(`<section class="${className}" data-snippet="s_test" ${
         name ? `data-name="${name}"` : ""
     }>
         <div class="test_a">${content}</div>
@@ -275,13 +276,16 @@ test("add snippet dialog with imagePreview", async () => {
 });
 
 test("insert snippet structure", async () => {
-    const snippetsDescription = (withName = false) => {
+    const snippetsDescription = ({ withName, withColoredLevelClass = false }) => {
         const name = "Test";
         return [
             {
                 name: name,
                 groupName: "a",
-                content: getBasicSection("Yop", { name: withName ? name : "" }),
+                content: getBasicSection("Yop", {
+                    name: withName ? name : "",
+                    withColoredLevelClass: withColoredLevelClass,
+                }),
             },
         ];
     };
@@ -291,13 +295,15 @@ test("insert snippet structure", async () => {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: snippetsDescription().map((snippetDesc) =>
+            snippet_structure: snippetsDescription({ withName: false }).map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
             ),
         },
     });
     const editableContent = getEditableContent();
-    expect(editableContent).toHaveInnerHTML(`<section><p>Text</p></section>`);
+    expect(editableContent).toHaveInnerHTML(
+        `<section class="o_colored_level"><p>Text</p></section>`
+    );
 
     await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
@@ -308,18 +314,23 @@ test("insert snippet structure", async () => {
     await contains(previewSelector).click();
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editableContent).toHaveInnerHTML(
-        `<section><p>Text</p></section>${snippetsDescription(true)[0].content}`
+        `<section class="o_colored_level"><p>Text</p></section>${
+            snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
+        }`
     );
 });
 
 test("drag&drop snippet structure", async () => {
-    const snippetsDescription = (withName = false) => {
+    const snippetsDescription = ({ withName, withColoredLevelClass = false }) => {
         const name = "Test";
         return [
             {
                 name: name,
                 groupName: "a",
-                content: getBasicSection("Yop", { name: withName ? name : "" }),
+                content: getBasicSection("Yop", {
+                    name: withName ? name : "",
+                    withColoredLevelClass: withColoredLevelClass,
+                }),
             },
         ];
     };
@@ -329,13 +340,15 @@ test("drag&drop snippet structure", async () => {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: snippetsDescription().map((snippetDesc) =>
+            snippet_structure: snippetsDescription({ withName: false }).map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
             ),
         },
     });
     const editableContent = getEditableContent();
-    expect(editableContent).toHaveInnerHTML(`<section><p>Text</p></section>`);
+    expect(editableContent).toHaveInnerHTML(
+        `<section class="o_colored_level"><p>Text</p></section>`
+    );
 
     const { moveTo, drop } = await contains(
         `.o-snippets-menu [data-category="snippet_groups"] div`
@@ -343,7 +356,7 @@ test("drag&drop snippet structure", async () => {
     expect(editableContent).toHaveInnerHTML(
         unformat(`
         <div class="oe_drop_zone oe_insert"></div>
-        <section><p>Text</p></section>
+        <section class="o_colored_level"><p>Text</p></section>
         <div class="oe_drop_zone oe_insert"></div>`)
     );
 
@@ -351,12 +364,14 @@ test("drag&drop snippet structure", async () => {
     expect(editableContent).toHaveInnerHTML(
         unformat(`
         <div class="oe_drop_zone oe_insert o_dropzone_highlighted"></div>
-        <section><p>Text</p></section>
+        <section class="o_colored_level"><p>Text</p></section>
         <div class="oe_drop_zone oe_insert"></div>`)
     );
     await drop();
     expect(".o_add_snippet_dialog").toHaveCount(1);
-    expect(editableContent).toHaveInnerHTML(unformat(`<section><p>Text</p></section>`));
+    expect(editableContent).toHaveInnerHTML(
+        unformat(`<section class="o_colored_level"><p>Text</p></section>`)
+    );
 
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
     const previewSelector =
@@ -366,7 +381,9 @@ test("drag&drop snippet structure", async () => {
     await contains(previewSelector).click();
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editableContent).toHaveInnerHTML(
-        `${snippetsDescription(true)[0].content}<section><p>Text</p></section>`
+        `${
+            snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
+        }<section class="o_colored_level"><p>Text</p></section>`
     );
 });
 

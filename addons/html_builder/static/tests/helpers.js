@@ -313,10 +313,13 @@ export const dummyBase64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
 export async function setupWebsiteBuilderWithDummySnippet(content) {
-    const snippetContent = `<section class="s_test" data-snippet="s_test" data-name="Test">
-        <div class="test_a"></div>
-    </section>`;
-    const snippetsDescription = () => [{ name: "Test", groupName: "a", content: snippetContent }];
+    const getSnippetEl = (withColoredLevelClass = false) => {
+        const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
+        return `<section class="${className}" data-snippet="s_test" data-name="Test">
+            <div class="test_a"></div>
+        </section>`;
+    };
+    const snippetsDescription = () => [{ name: "Test", groupName: "a", content: getSnippetEl() }];
     const snippetsStructure = {
         snippets: {
             snippet_groups: [
@@ -331,6 +334,7 @@ export async function setupWebsiteBuilderWithDummySnippet(content) {
         content || "",
         snippetsStructure
     );
+    const snippetContent = getSnippetEl(true);
 
     return { getEditor, getEditableContent, snippetContent };
 }

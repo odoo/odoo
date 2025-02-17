@@ -1,6 +1,7 @@
 import { useIsActiveItem } from "@html_builder/core/building_blocks/utils";
 import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 import { BackgroundShapeComponent } from "@html_builder/plugins/background_option/background_shape_component";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 import { Plugin } from "@html_editor/plugin";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -40,8 +41,21 @@ class BackgroundOptionPlugin extends Plugin {
                 },
             },
         ],
+        normalize_handlers: this.normalize.bind(this),
+        system_classes: ["o_colored_level"],
         allPossiblesShapes: this.allPossiblesShapes,
     };
+    setup() {
+        this.coloredLevelBackgroundParams = [];
+        for (const builderOption of this.resources.builder_options) {
+            if (builderOption.props.withColors && builderOption.props.withColorCombinations) {
+                this.coloredLevelBackgroundParams.push({
+                    selector: builderOption.selector,
+                    exclude: builderOption.exclude || "",
+                });
+            }
+        }
+    }
     get connectionShapes() {
         return [
             { shapeUrl: "web_editor/Connections/01", label: "Connections 01" },
@@ -196,6 +210,19 @@ class BackgroundOptionPlugin extends Plugin {
             ...this.blockAndRainyShapes,
             ...this.floatingShapes,
         ];
+    }
+    normalize(root) {
+        for (const coloredLevelBackgroundParam of this.coloredLevelBackgroundParams) {
+            applyFunDependOnSelectorAndExclude(
+                this.markColorLevel,
+                root,
+                coloredLevelBackgroundParam.selector,
+                coloredLevelBackgroundParam.exclude
+            );
+        }
+    }
+    markColorLevel(editingEl) {
+        editingEl.classList.add("o_colored_level");
     }
 }
 registry.category("website-plugins").add(BackgroundOptionPlugin.id, BackgroundOptionPlugin);
