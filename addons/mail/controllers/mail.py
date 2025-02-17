@@ -209,4 +209,8 @@ class MailController(http.Controller):
             if hasattr(thread, "_get_share_url"):
                 return request.redirect(thread._get_share_url(share_token=False))
             raise Unauthorized()
-        return request.redirect(f'/odoo/{message.model}/{message.res_id}?highlight_message_id={message.id}')
+        # @see commit c63d14a0485a553b74a8457aee158384e9ae6d3f
+        # @see router.js: heuristics to discrimate a model name from an action path
+        # is the presence of dots, or the prefix m- for models
+        model_in_url = model if "." in (model := message.model) else "m-" + model
+        return request.redirect(f'/odoo/{model_in_url}/{message.res_id}?highlight_message_id={message.id}')
