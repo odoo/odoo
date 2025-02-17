@@ -3,7 +3,7 @@ import {
     exampleWebsiteContent,
     modifyText,
     setupWebsiteBuilder,
-} from "./helpers";
+} from "./website_helpers";
 import { Builder } from "@html_builder/builder";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";

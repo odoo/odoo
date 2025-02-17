@@ -1,7 +1,7 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryAllTexts } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { addDropZoneSelector, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
+import { addDropZoneSelector, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
 defineWebsiteModels();
 

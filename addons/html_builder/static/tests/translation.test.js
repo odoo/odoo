@@ -6,7 +6,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { contains, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, invisibleEl, setupWebsiteBuilder } from "./helpers";
+import { defineWebsiteModels, invisibleEl, setupWebsiteBuilder } from "./website_helpers";
 
 defineWebsiteModels();
 

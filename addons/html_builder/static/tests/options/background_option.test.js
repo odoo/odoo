@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
+import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { BackgroundComponent } from "@html_builder/plugins/background_option/background_option";
 
 defineWebsiteModels();

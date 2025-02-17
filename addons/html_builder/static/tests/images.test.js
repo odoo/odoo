@@ -2,7 +2,7 @@ import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, dblclick, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./helpers";
+import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./website_helpers";
 
 defineWebsiteModels();
 

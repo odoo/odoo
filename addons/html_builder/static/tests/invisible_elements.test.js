@@ -11,7 +11,7 @@ import {
     getSnippetStructure,
     invisibleEl,
     setupWebsiteBuilder,
-} from "./helpers";
+} from "./website_helpers";
 
 defineWebsiteModels();
 

@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";

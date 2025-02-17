@@ -1,4 +1,4 @@
-import { setupWebsiteBuilder } from "../helpers";
+import { setupWebsiteBuilder } from "../website_helpers";
 import { SnippetModel } from "@html_builder/snippets/snippet_service";
 import { getMockEnv, makeMockEnv, mockService } from "@web/../tests/web_test_helpers";
 

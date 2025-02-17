@@ -6,7 +6,7 @@ import {
     setupHTMLBuilder,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithDummySnippet,
-} from "./helpers";
+} from "./website_helpers";
 
 defineWebsiteModels();
 

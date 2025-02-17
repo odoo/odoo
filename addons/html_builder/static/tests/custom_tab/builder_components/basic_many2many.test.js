@@ -3,7 +3,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, reactive, xml } from "@odoo/owl";
 import { delay } from "@web/core/utils/concurrency";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../helpers";
+import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
 import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 
 defineWebsiteModels();

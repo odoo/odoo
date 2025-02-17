@@ -3,7 +3,7 @@ import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { click, queryAll, queryOne, queryAllTexts } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels } from "../helpers";
+import { defineWebsiteModels } from "../website_helpers";
 import { insertStructureSnippet, setupWebsiteBuilderWithSnippet } from "./helpers";
 
 defineWebsiteModels();

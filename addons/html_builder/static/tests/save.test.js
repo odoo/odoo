@@ -8,7 +8,7 @@ import {
     modifyText,
     setupWebsiteBuilder,
     wrapExample,
-} from "./helpers";
+} from "./website_helpers";
 
 defineWebsiteModels();
 

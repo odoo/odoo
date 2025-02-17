@@ -2,7 +2,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 
 defineWebsiteModels();
 

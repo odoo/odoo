@@ -10,7 +10,7 @@ import {
     addPlugin,
     defineWebsiteModels,
     setupWebsiteBuilder,
-} from "./helpers";
+} from "./website_helpers";
 
 defineWebsiteModels();
 

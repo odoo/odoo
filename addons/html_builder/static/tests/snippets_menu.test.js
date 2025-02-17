@@ -4,7 +4,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, openBuilderSidebar, setupWebsiteBuilder } from "./helpers";
+import { defineWebsiteModels, openBuilderSidebar, setupWebsiteBuilder } from "./website_helpers";
 
 defineWebsiteModels();
 

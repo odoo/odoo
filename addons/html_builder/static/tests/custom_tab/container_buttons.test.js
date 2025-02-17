@@ -10,7 +10,7 @@ import {
     dummyBase64Img,
     addPlugin,
     addActionOption,
-} from "../helpers";
+} from "../website_helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Deferred, queryText, tick } from "@odoo/hoot-dom";

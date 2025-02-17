@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, dummyBase64Img, setupWebsiteBuilder } from "../helpers";
+import { defineWebsiteModels, dummyBase64Img, setupWebsiteBuilder } from "../website_helpers";
 import { animationFrame, click, queryAll, waitFor } from "@odoo/hoot-dom";
 import { MockResponse } from "@web/../lib/hoot/mock/network";
 

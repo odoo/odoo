@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels } from "../helpers";
+import { defineWebsiteModels } from "../website_helpers";
 import { setupWebsiteBuilderWithSnippet } from "./helpers";
 
 defineWebsiteModels();
