@@ -288,7 +288,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "name": line.product_id.name,
                     "quantity": 0,
                     "remaining_quantity": 0,
-                    "weight": 0,
+                    "weight": product_weight,
                     "picking_id": line.picking_id.name if line.picking_id else "",
                     "customer_name": line.picking_id.partner_id.name or "",
                     "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
