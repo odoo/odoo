@@ -1881,7 +1881,13 @@ class AccountMove(models.Model):
                 move.move_type in ('in_invoice', 'in_refund')
                 AND (
                    move.ref = duplicate_move.ref
-                   AND (move.invoice_date = duplicate_move.invoice_date OR move.state = 'draft')
+                   AND (
+                       move.invoice_date IS NULL
+                       OR
+                       duplicate_move.invoice_date IS NULL
+                       OR
+                       date_part('year', move.invoice_date) = date_part('year', duplicate_move.invoice_date)
+                   )
                 )
             """)
             to_query.append((in_moves, in_moves_sql_condition))
