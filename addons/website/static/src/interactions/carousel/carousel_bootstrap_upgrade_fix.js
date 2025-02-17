@@ -30,30 +30,11 @@ export class CarouselBootstrapUpgradeFix extends Interaction {
             }),
         },
     };
-    OLD_AUTO_SLIDING_SNIPPETS = ["s_image_gallery"];
     carouselOptions = undefined;
 
     setup() {
         this.sliding = false;
         this.hasInterval = ![undefined, "false", "0"].includes(this.el.dataset.bsInterval);
-        if (!this.hasInterval && this.el.dataset.bsRide) {
-            // A bsInterval of 0 (or false or undefined) is intended to not
-            // auto-slide. With current Bootstrap version, a value of 0 will
-            // mean auto-slide without any delay (very fast). To prevent this,
-            // we remove the bsRide.
-            delete this.el.dataset.bsRide;
-        } else if (this.hasInterval && !this.el.dataset.bsRide) {
-            // Re-add bsRide on carousels that don't have it but still have
-            // a bsInterval. E.g. s_image_gallery must auto-slide on load,
-            // while others only auto-slide on mouseleave.
-            //
-            // In the case of s_image_gallery that has a bsRide = "true"
-            // instead of "carousel", it's better not to change the behavior and
-            // let the user update the snippet manually to avoid making changes
-            // that they don't expect.
-            const snippetName = this.el.closest("[data-snippet]")?.dataset.snippet;
-            this.el.dataset.bsRide = this.OLD_AUTO_SLIDING_SNIPPETS.includes(snippetName) ? "carousel" : "true";
-        }
     }
 
     async willStart() {

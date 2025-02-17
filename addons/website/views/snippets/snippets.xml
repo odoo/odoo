@@ -679,14 +679,13 @@
             <we-button data-select-class="s_carousel_indicators_hidden">Hidden</we-button>
         </we-select>
         <we-select string="Transition">
-            <we-button data-select-class="slide">Slide</we-button>
-            <we-button data-select-class="carousel-fade slide">Fade</we-button>
-            <we-divider/>
-            <we-button data-select-class="">None</we-button>
+            <we-button data-select-class="slide" data-name="slide_opt">Slide</we-button>
+            <we-button data-select-class="carousel-fade slide" data-name="fade_opt">Fade</we-button>
+            <we-button data-select-class="" data-name="none_opt">None</we-button>
         </we-select>
-        <we-input string="Speed"
-                  data-select-data-attribute="0s" data-attribute-name="bsInterval"
-                  data-unit="s" data-save-unit="ms" data-step="0.1"/>
+        <we-input string="Speed" class="o_we_sublevel_1" data-select-data-attribute="0s" data-attribute-name="bsInterval"
+                  data-unit="s" data-save-unit="ms" data-step="0.1" data-dependencies="slide_opt, fade_opt"/>
+        <we-checkbox string="Autoplay" class="autoplay o_we_sublevel_1" data-attribute-name="bsRide" data-select-data-attribute="carousel" data-dependencies="slide_opt, fade_opt"/>
     </div>
 </template>
 
