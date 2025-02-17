@@ -193,6 +193,8 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
                                 break;
                             }
                         }
+                        // A group by value of "none"
+                        if (value === false) break;
                         if (JSON.stringify(currentValue) !== `[${value}]`) {
                             transformedValue = [value];
                         }
