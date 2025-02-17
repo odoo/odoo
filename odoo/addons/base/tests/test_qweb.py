@@ -1615,6 +1615,10 @@ class TestQWebBasic(TransactionCase):
         auto_rendered = self.env['ir.qweb']._render(view.id, values={'partner': partner}).strip()
         self.assertRegex(auto_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
 
+        view.arch = """<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'width': 100, 'height': 30, 'format': 'svg', 'img_alt': 'SVG Barcode'}"/>"""
+        auto_rendered = self.env['ir.qweb']._render(view.id, values={'partner': partner}).strip()
+        self.assertRegex(auto_rendered, r'<div><img alt="SVG Barcode" src="data:image/svg\+xml;base64,\S+"></div>')
+
     def test_render_comment_tail(self):
         """ Test the rendering of a tail text, near a comment.
         """

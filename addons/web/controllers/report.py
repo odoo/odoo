@@ -8,6 +8,7 @@ from werkzeug.urls import url_parse
 
 from odoo import http
 from odoo.http import content_disposition, request
+from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import html_escape
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -69,6 +70,7 @@ class ReportController(http.Controller):
         'Standard93', 'UPCA', 'USPS_4State'
         :param width: Pixel width of the barcode
         :param height: Pixel height of the barcode
+        :param format: format of the generated image, 'png' (default) or 'svg'.
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
         :param quiet: Accepted values: 0 (default) or 1. 1 will display white
@@ -85,8 +87,9 @@ class ReportController(http.Controller):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 
         return request.make_response(barcode, headers=[
-            ('Content-Type', 'image/png'),
+            ('Content-Type', guess_mimetype(barcode)),
             ('Cache-Control', f'public, max-age={http.STATIC_CACHE_LONG}, immutable'),
+            ('Content-Security-Policy', "default-src 'none'; style-src 'self' 'unsafe-inline'"),
         ])
 
     @http.route(['/report/download'], type='http', auth="user")
