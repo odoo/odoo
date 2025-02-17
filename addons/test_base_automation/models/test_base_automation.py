@@ -44,7 +44,7 @@ class BaseAutomationLeadTest(models.Model):
         # this method computes two fields on purpose; don't split it
         for record in self:
             record.employee = record.partner_id.employee
-            if not record.priority:
+            if not record.priority or not record.create_date:
                 record.deadline = False
             else:
                 record.deadline = record.create_date + relativedelta.relativedelta(days=3)

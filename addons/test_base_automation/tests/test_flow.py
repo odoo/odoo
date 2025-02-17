@@ -820,19 +820,94 @@ if env.context.get('old_values', None):  # on write
 
     def test_120_on_change(self):
         Model = self.env.get(self.lead_model.model)
-        lead_name_field = self.env['ir.model.fields'].search([
-            ('model_id', '=', self.lead_model.id),
-            ('name', '=', 'name'),
-        ])
+        lead_name_field = self.env['ir.model.fields']._get(self.lead_model.model, "name")
         self.assertEqual(lead_name_field.name in Model._onchange_methods, False)
         create_automation(
             self,
             model_id=self.lead_model.id,
             trigger='on_change',
+            filter_domain="[('name', 'like', 'IMPORTANT')]",
             on_change_field_ids=[lead_name_field.id],
-            _actions={'state': 'code', 'code': ""},
+            _actions={
+                'state': 'code',
+                'code': """
+action = {
+    'value': {
+        'priority': '[IMPORTANT]' in record.name,
+    }
+}
+            """,
+            },
         )
         self.assertEqual(lead_name_field.name in Model._onchange_methods, True)
+
+        with Form(self.env[self.lead_model.model]) as f:
+            self.assertEqual(f.priority, False)
+            f.name = 'Lead Test'
+            self.assertEqual(f.priority, False)
+
+            # changed because contains "IMPORTANT", true because contains "[IMPORTANT]"
+            f.name = 'Lead Test [IMPORTANT]'
+            self.assertEqual(f.priority, True)
+
+            # not changed because does not contain "IMPORTANT"
+            f.name = 'Lead Test'
+            self.assertEqual(f.priority, True)
+
+            # changed because contains "IMPORTANT", false because does not contain "[IMPORTANT]"
+            f.name = 'Lead Test [NOT IMPORTANT]'
+            self.assertEqual(f.priority, False)
+
+            # changed because contains "IMPORTANT", true because contains "[IMPORTANT]"
+            f.name = 'Lead Test [IMPORTANT]'
+            self.assertEqual(f.priority, True)
+
+    def test_121_on_change_with_domain_field_not_in_view(self):
+        lead_name_field = self.env['ir.model.fields']._get(self.lead_model.model, "name")
+        create_automation(
+            self,
+            model_id=self.lead_model.id,
+            trigger='on_change',
+            filter_domain="[('active', '!=', False)]",
+            on_change_field_ids=[lead_name_field.id],
+            _actions={
+                'state': 'code',
+                'code': """
+action = {
+    'value': {
+        'priority': '[IMPORTANT]' in record.name,
+    }
+}
+            """,
+            },
+        )
+        my_view = self.env["ir.ui.view"].create({
+            "name": "My View",
+            "model": self.lead_model.model,
+            "type": "form",
+            "arch": """
+                <form>
+                    <field name='name'/>
+                    <field name='priority'/>
+                </form>
+            """,
+        })
+        record = self.env[self.lead_model.model].create({
+            "name": "Test Lead",
+            "active": False,
+            "priority": False,
+        })
+        self.assertEqual(record.priority, False)
+        with Form(record, view=my_view) as f:
+            f.name = "[IMPORTANT] Lead"
+        self.assertEqual(record.priority, False)
+
+        record.name = "Test Lead"
+        record.active = True
+        self.assertEqual(record.priority, False)
+        with Form(record, view=my_view) as f:
+            f.name = "[IMPORTANT] Lead"
+        self.assertEqual(record.priority, True)
 
     def test_130_on_unlink(self):
         automation = create_automation(
