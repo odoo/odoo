@@ -309,8 +309,6 @@ class TestProjectSharing(TestProjectSharingCommon):
 
         Task = Task.with_user(self.user_portal)
         # Create/Update a forbidden task through child_ids
-        with self.assertRaisesRegex(AccessError, "You cannot write on the following fields"):
-            Task.create({'name': 'foo', 'child_ids': [Command.create({'name': 'Foo', 'color': 1})]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             Task.create({'name': 'foo', 'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
@@ -350,10 +348,12 @@ class TestProjectSharing(TestProjectSharingCommon):
         with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
             Task.with_context(default_tag_ids=[Command.delete(self.task_tag.id)]).create({'name': 'foo'})
 
-        task = Task.create({'name': 'foo', 'tag_ids': [Command.link(self.task_tag.id)]})
+        task = Task.create({'name': 'foo', 'color': 1, 'tag_ids': [Command.link(self.task_tag.id)]})
+        self.assertEqual(task.color, 1)
         self.assertEqual(task.tag_ids, self.task_tag)
 
-        Task.create({'name': 'foo', 'tag_ids': [Command.set([self.task_tag.id])]})
+        task = Task.create({'name': 'foo', 'color': 4, 'tag_ids': [Command.set([self.task_tag.id])]})
+        self.assertEqual(task.color, 4)
         self.assertEqual(task.tag_ids, self.task_tag)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
@@ -424,8 +424,6 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertEqual(len(task.child_ids), 2, 'Check 2 subtasks has correctly been created by the user portal.')
 
         # Create/Update a forbidden task through child_ids
-        with self.assertRaisesRegex(AccessError, "You cannot write on the following fields"):
-            task.write({'child_ids': [Command.create({'name': 'Foo', 'color': 1})]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             task.write({'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
