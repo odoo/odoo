@@ -26,7 +26,7 @@ export class LinkTrackerDialog extends FormViewDialog {
             ...this.viewProps,
             context: {
                 ...this.viewProps.context,
-                form_view_ref: "website_links.website_link_tracker_view_form",
+                form_view_ref: "link_tracker.link_tracker_view_form",
             },
             buttonTemplate: "website_link.LinkTrackerDialogButtons",
         };
