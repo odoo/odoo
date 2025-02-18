@@ -10,6 +10,17 @@
         <t t-call="website_blog.s_dynamic_snippet_blog_posts_preview_data"/>
     </t>
 </template>
+<!-- TODO: This template is a placeholder. It will be updated later to match the final single record design. -->
+<template id="s_blog_posts_single" name="Single Blog Post">
+    <t t-call="website.s_dynamic_snippet_template">
+        <t t-set="is_single_record" t-value="True"/>
+        <t t-set="main_page_url" t-value="'/blog'"/>
+        <t t-set="snippet_name" t-value="'s_blog_posts_single'"/>
+        <t t-set="snippet_classes" t-value="'s_dynamic_snippet_blog_posts s_blog_post_single_1'"/>
+        <t t-set="custom_template_data" t-valuef='{"blog_posts_post_author_active":true, "blog_posts_post_teaser_active":true, "blog_posts_post_date_active":true}'/>
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_preview_data"/>
+    </t>
+</template>
 
 <!-- Load-time templates (rendered in JS on page load) -->
 <!-- List layout -->
@@ -116,6 +127,56 @@
     </div>
 </template>
 
+<!-- Blog Post Single Record Layout 1 -->
+<!-- TODO: This template is a placeholder. It will be updated later to match the final single record design. -->
+<template id="dynamic_filter_template_blog_post_single_1" name="Blog Post: Single Record Template 1">
+    <t class="s_blog_posts_post" data-column-classes="col-lg-12">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <div class="card">
+            <a class="text-decoration-none text-reset" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + record.name">
+                <div class="s_blog_posts_post_cover o_not_editable card-img-top ratio ratio-16x9">
+                    <t t-call="website.record_cover">
+                        <t t-set="_record" t-value="record"/>
+                        <t t-set="additionnal_classes" t-value="'position-absolute w-100 h-100 bg-600'"/>
+                    </t>
+                </div>
+                <div class="card-body">
+                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                    <h5 class="text-truncate" t-field="record.name"/>
+                    <t t-call="website_blog.s_dynamic_snippet_template_date"/>
+                    <t t-call="website_blog.s_dynamic_snippet_template_teaser"/>
+                </div>
+            </a>
+            <div class="card-footer d-flex justify-content-between mt-auto border-0 p-3 pt-0 bg-transparent small">
+                <t t-call="website_blog.s_dynamic_snippet_template_author"/>
+                <span class="text-muted">In <a class="fw-bold" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
+                    <a t-if="is_sample" class="fw-bold" href="#">Sample</a>
+                </span>
+            </div>
+        </div>
+    </t>
+</template>
+<!-- Blog Post Single Record Layout 2 -->
+<!-- TODO: This template is a placeholder. It will be updated later to match the final single record design. -->
+<template id="dynamic_filter_template_blog_post_single_2" name="Blog Post: Single Record Template 2">
+    <t class="s_blog_posts_post" data-column-classes="col-lg-12 card p-4">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <a class="text-decoration-none text-reset" t-att-title="'Read ' + record.name" t-att-href="data['call_to_action_url']">
+            <div class="d-flex align-items-center small">
+                <t t-call="website_blog.s_dynamic_snippet_template_author"/>
+                <t t-call="website_blog.s_dynamic_snippet_template_date"/>
+            </div>
+            <h4 class="mt-2">
+                <span t-if="is_sample" class="bg-primary text-uppercase">Sample</span>
+                <span t-field="record.name"/>
+            </h4>
+            <t t-call="website_blog.s_dynamic_snippet_template_teaser"/>
+        </a>
+    </t>
+</template>
+
 <!-- Blog Post Author (optional) -->
 <template id="website_blog.s_dynamic_snippet_template_author" name="Blog Post Author">
     <div t-if="blog_posts_post_author_active" class="s_blog_posts_post_author d-inline-flex align-items-center">
@@ -150,7 +211,8 @@
             string="Blog"
             data-no-preview="true"
             data-name="blog_opt"
-            data-attribute-name="filterByBlogId">
+            data-attribute-name="filterByBlogId"
+            data-dependencies="!single_record_opt">
             <we-button data-select-data-attribute="-1">All blogs</we-button>
             <!-- the blog list will be generated in js -->
         </we-select>
@@ -200,6 +262,9 @@
             <we-button data-select-class="s_blog_posts_post_picture_size_small" title="Smaller picture">Smaller</we-button>
             <we-button data-select-class="s_blog_posts_post_picture_size_default" title="Normal picture">Normal</we-button>
         </we-button-group>
+    </xpath>
+    <xpath expr="//we-select[@data-name='model_opt']" position="inside">
+        <we-button title="Blog Post Records" data-select-data-attribute="blog.post">Blog posts</we-button>
     </xpath>
 </template>
 
