@@ -1,6 +1,5 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
-import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
@@ -8,30 +7,31 @@ import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { browser } from "@web/core/browser/browser";
+import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { rpc } from "@web/core/network/rpc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
-import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
 
 import {
     Component,
     markup,
     onMounted,
+    toRaw,
     useChildSubEnv,
     useEffect,
+    useExternalListener,
     useRef,
     useState,
-    useExternalListener,
-    toRaw,
 } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
-import { FileUploader } from "@web/views/fields/file_handler";
-import { escape, sprintf } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { escape, sprintf } from "@web/core/utils/strings";
+import { FileUploader } from "@web/views/fields/file_handler";
 import { useComposerActions } from "./composer_actions";
 
 const EDIT_CLICK_TYPE = {
@@ -151,10 +151,15 @@ export class Composer extends Component {
             { capture: true }
         );
         if (this.props.dropzoneRef) {
-            useCustomDropzone(this.props.dropzoneRef, MailAttachmentDropzone, {
-                extraClass: "o-mail-Composer-dropzone",
-                onDrop: this.onDropFile,
-            }, () => this.allowUpload);
+            useCustomDropzone(
+                this.props.dropzoneRef,
+                MailAttachmentDropzone,
+                {
+                    extraClass: "o-mail-Composer-dropzone",
+                    onDrop: this.onDropFile,
+                },
+                () => this.allowUpload
+            );
         }
         if (this.props.messageEdition) {
             this.props.messageEdition.composerOfThread = this;
@@ -524,8 +529,9 @@ export class Composer extends Component {
             mentionedPartners: this.props.composer.mentionedPartners,
         });
         const signature = this.store.self.signature;
-        const default_body = await prettifyMessageContent(body, validMentions) +
-            ((this.props.composer.emailAddSignature && signature) ? ("<br>" + signature) : "");
+        const default_body =
+            (await prettifyMessageContent(body, validMentions)) +
+            (this.props.composer.emailAddSignature && signature ? "<br>" + signature : "");
         const context = {
             default_attachment_ids: attachmentIds,
             default_body,
@@ -735,12 +741,12 @@ export class Composer extends Component {
         if (editable) {
             Object.assign(config, {
                 emailAddSignature: false,
-                text: editable.innerText.replace(/(\t|\n)+/g, "\n")
+                text: editable.innerText.replace(/(\t|\n)+/g, "\n"),
             });
         } else {
             Object.assign(config, {
                 emailAddSignature: true,
-                text: composer.text
+                text: composer.text,
             });
         }
         browser.localStorage.setItem(composer.localId, JSON.stringify(config));
@@ -756,6 +762,6 @@ export class Composer extends Component {
             }
         } catch {
             browser.localStorage.removeItem(composer.localId);
-        };
+        }
     }
 }

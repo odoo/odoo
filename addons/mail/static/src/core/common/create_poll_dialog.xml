@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.CreatePollDialog">
+    <Dialog size="props.size" title="props.title">
+        <div class="w-100 mb-3">
+            <label class="w-100">
+                <span class="d-inline-block mb-3 fw-bold">QUESTION</span>
+                <input type="text" t-model="state.question" class="form-control" placeholder="What question do you want to ask?"/>
+                <div t-if="questionMissing" class="text-danger form-text ms-1">The question cannot be empty.</div>
+            </label>
+        </div>
+        <div class="w-100 mb-3">
+            <span class="mb-3 d-inline-block fw-bold">ANSWERS</span>
+            <CreatePollDialogAnswer t-foreach="state.answers" t-as="answer" t-key="answer_index" model="state.answers[answer_index]" allowRemoval="state.answers.length > 2" onClickRemove="() => this.onClickRemoveAnswer(answer_index)" registerRef="registerAnswerRef.bind(this)"/>
+            <button class="btn btn-primary" t-on-click="onClickAddAnswer"><i class="fa fa-plus"/> Add another answer</button>
+            <div t-if="answersMissing" class="text-danger form-text ms-1">At least two answers are required</div>
+        </div>
+        <div class="mb-3">
+            <label class="d-inline-block mb-3 fw-bold">DURATION</label>
+            <select class="form-select" style="width: fit-content;" t-model="state.duration">
+                <option value="1">1 hour</option>
+                <option value="4">4 hours</option>
+                <option value="8">8 hours</option>
+                <option value="24">24 hours</option>
+            </select>
+        </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary me-2" t-on-click="onClickSubmit" t-out="props.confirmText"/>
+            <button class="btn btn-secondary me-2" t-on-click="props.close">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+</templates>

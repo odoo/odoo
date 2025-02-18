@@ -7,6 +7,20 @@ from odoo.addons.mail.tools.discuss import Store
 class MailMessage(models.Model):
     _inherit = "mail.message"
 
+    def _to_store(self, store: Store, *args, **kwargs):
+        super()._to_store(store, *args, **kwargs)
+        poll_by_message_id = {}
+        for poll in self.env["discuss.poll"].search(
+            ("|", ("start_message_id", "in", self.ids), ("end_message_id", "in", self.ids))
+        ):
+            poll_by_message_id[poll.start_message_id.id] = poll
+            poll_by_message_id[poll.end_message_id.id] = poll
+
+        for message in self:
+            if message.id in poll_by_message_id:
+                store.add(poll_by_message_id[message.id])
+                store.add_records_fields(message, [Store.Attr("poll_id", lambda m: poll_by_message_id[message.id].id)])
+
     def _extras_to_store(self, store: Store, format_reply):
         super()._extras_to_store(store, format_reply=format_reply)
         if format_reply:

@@ -8,6 +8,7 @@ from odoo.addons.mail.tools.discuss import Store
 class ResUsers(models.Model):
     _inherit = "res.users"
 
+
     @api.model_create_multi
     def create(self, vals_list):
         users = super().create(vals_list)
