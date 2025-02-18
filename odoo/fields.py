@@ -1248,9 +1248,21 @@ class Field(MetaField('DummyField', (object,), {})):
             value = env.cache.get(record, self)
 
         elif self.store and record._origin and not (self.compute and self.readonly):
-            # new record with origin: fetch from origin
-            value = self.convert_to_cache(record._origin[self.name], record, validate=False)
-            value = env.cache.patch_and_set(record, self, value)
+            # new record with origin: fetch from origin, and assign the
+            # records to prefetch in cache (which is necessary for
+            # relational fields to "map" prefetching ids to their value)
+            recs = record._in_cache_without(self)
+            try:
+                for rec in recs:
+                    if (rec_origin := rec._origin):
+                        value = self.convert_to_cache(rec_origin[self.name], rec, validate=False)
+                        env.cache.patch_and_set(rec, self, value)
+                value = env.cache.get(record, self)
+            except (AccessError, MissingError):
+                if len(recs) == 1:
+                    raise
+                value = self.convert_to_cache(record._origin[self.name], record, validate=False)
+                value = env.cache.patch_and_set(record, self, value)
 
         elif self.compute: #pylint: disable=using-constant-test
             # non-stored field or new record without origin: compute
