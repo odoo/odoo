@@ -182,8 +182,11 @@ import werkzeug.security
 import werkzeug.wrappers
 import werkzeug.wsgi
 from werkzeug.urls import URL, url_parse, url_encode, url_quote
-from werkzeug.exceptions import (HTTPException, BadRequest, Forbidden,
-                                 NotFound, InternalServerError)
+from werkzeug.exceptions import (
+    default_exceptions as werkzeug_default_exceptions,
+    HTTPException, NotFound, UnsupportedMediaType, UnprocessableEntity,
+    InternalServerError
+)
 try:
     from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
     ProxyFix = functools.partial(ProxyFix_, x_for=1, x_proto=1, x_host=1)
@@ -247,9 +250,6 @@ DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
 if geoip2:
     GEOIP_EMPTY_COUNTRY = geoip2.models.Country({})
     GEOIP_EMPTY_CITY = geoip2.models.City({})
-
-# The request mimetypes that transport JSON in their body.
-JSON_MIMETYPES = ('application/json', 'application/json-rpc')
 
 MISSING_CSRF_WARNING = """\
 No CSRF validation token provided for path %r
@@ -1872,7 +1872,13 @@ class Request:
                 for disp in _dispatchers.values()
                 if disp.is_compatible_with(self)
             ]
-            raise BadRequest(f"Request inferred type is compatible with {compatible_dispatchers} but {routing['routes'][0]!r} is type={routing['type']!r}.")
+            e = (f"Request inferred type is compatible with {compatible_dispatchers} "
+                 f"but {routing['routes'][0]!r} is type={routing['type']!r}.")
+            # werkzeug doesn't let us add headers to UnsupportedMediaType
+            # so use the following (ugly) to still achieve what we want
+            res = UnsupportedMediaType(e).get_response()
+            res.headers['Accept'] = ', '.join(dispatcher_cls.mimetypes)
+            raise UnsupportedMediaType(response=res)
         self.dispatcher = dispatcher_cls(self)
 
     # =====================================================
@@ -2039,6 +2045,7 @@ _dispatchers = {}
 
 class Dispatcher(ABC):
     routing_type: str
+    mimetypes: collections.abc.Collection[str] = ()
 
     @classmethod
     def __init_subclass__(cls):
@@ -2116,6 +2123,8 @@ class Dispatcher(ABC):
 class HttpDispatcher(Dispatcher):
     routing_type = 'http'
 
+    mimetypes = ('application/x-www-form-urlencoded', 'multipart/form-data', '*/*')
+
     @classmethod
     def is_compatible_with(cls, request):
         return True
@@ -2170,15 +2179,21 @@ class HttpDispatcher(Dispatcher):
                 response.set_cookie('session_id', session.sid, max_age=get_session_max_inactivity(self.env), httponly=True)
             return response
 
-        return (exc if isinstance(exc, HTTPException)
-           else Forbidden(exc.args[0]) if isinstance(exc, (AccessDenied, AccessError))
-           else BadRequest(exc.args[0]) if isinstance(exc, UserError)
-           else InternalServerError()  # hide the real error
-        )
+        if isinstance(exc, HTTPException):
+            return exc
+
+        if isinstance(exc, UserError):
+            try:
+                return werkzeug_default_exceptions[exc.http_status](exc.args[0])
+            except (KeyError, AttributeError):
+                return UnprocessableEntity(exc.args[0])
+
+        return InternalServerError()
 
 
 class JsonRPCDispatcher(Dispatcher):
     routing_type = 'jsonrpc'
+    mimetypes = ('application/json', 'application/json-rpc')
 
     def __init__(self, request):
         super().__init__(request)
@@ -2187,7 +2202,7 @@ class JsonRPCDispatcher(Dispatcher):
 
     @classmethod
     def is_compatible_with(cls, request):
-        return request.httprequest.mimetype in JSON_MIMETYPES
+        return request.httprequest.mimetype in cls.mimetypes
 
     def dispatch(self, endpoint, args):
         """
