@@ -2,16 +2,19 @@
 
 from werkzeug.exceptions import NotFound
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
+from odoo.exceptions import ValidationError
 
 
 class MessageReactionController(http.Controller):
     @http.route("/mail/message/reaction", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def mail_message_reaction(self, message_id, content, action, **kwargs):
+        if request.env.user._is_public():
+            raise ValidationError(_("Please log in to react to this message"))
         message = request.env["mail.message"]._get_with_access(int(message_id), "create", **kwargs)
         if not message:
             raise NotFound()
