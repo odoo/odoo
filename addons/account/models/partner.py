@@ -335,6 +335,7 @@ class ResPartner(models.Model):
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
     partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
+    duplicate_bank_partner_ids = fields.Many2many(related="bank_ids.duplicate_bank_partner_ids")
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -592,11 +593,6 @@ class ResPartner(models.Model):
         required=True,
     )
 
-    # Technical field holding the amount partners that share the same account number as any set on this partner.
-    duplicated_bank_account_partners_count = fields.Integer(
-        compute='_compute_duplicated_bank_account_partners_count',
-    )
-
     property_outbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
         company_dependent=True,
@@ -636,19 +632,6 @@ class ResPartner(models.Model):
                     partner.supplier_invoice_count += count
                 partner = partner.parent_id
 
-    def _get_duplicated_bank_accounts(self):
-        self.ensure_one()
-        if not self.bank_ids:
-            return self.env['res.partner.bank']
-        domains = []
-        for bank in self.bank_ids:
-            domains.append([('acc_number', '=', bank.acc_number), ('bank_id', '=', bank.bank_id.id)])
-        domain = expression.OR(domains)
-        if self.company_id:
-            domain = expression.AND([domain, [('company_id', 'in', (False, self.company_id.id))]])
-        domain = expression.AND([domain, [('partner_id', '!=', self._origin.id)]])
-        return self.env['res.partner.bank'].search(domain)
-
     @api.depends_context('company')
     @api.depends('country_code')
     def _compute_invoice_edi_format(self):
@@ -666,11 +649,6 @@ class ResPartner(models.Model):
                 partner.invoice_edi_format_store = 'none'
             else:
                 partner.invoice_edi_format_store = partner.invoice_edi_format
-
-    @api.depends('bank_ids')
-    def _compute_duplicated_bank_account_partners_count(self):
-        for partner in self:
-            partner.duplicated_bank_account_partners_count = len(partner._get_duplicated_bank_accounts())
 
     @api.depends_context('company')
     def _compute_use_partner_credit_limit(self):
@@ -725,30 +703,6 @@ class ResPartner(models.Model):
         ]
         action['context'] = {'default_move_type': 'out_invoice', 'move_type': 'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
         return action
-
-    def action_view_partner_with_same_bank(self):
-        self.ensure_one()
-        bank_partners = self._get_duplicated_bank_accounts()
-        # Open a list view or form view of the partner(s) with the same bank accounts
-        if self.duplicated_bank_account_partners_count == 1:
-            action_vals = {
-                'type': 'ir.actions.act_window',
-                'res_model': 'res.partner',
-                'view_mode': 'form',
-                'res_id': bank_partners.partner_id.id,
-                'views': [(False, 'form')],
-            }
-        else:
-            action_vals = {
-                'name': _("Partners"),
-                'type': 'ir.actions.act_window',
-                'res_model': 'res.partner',
-                'view_mode': 'list,form',
-                'views': [(False, 'list'), (False, 'form')],
-                'domain': [('id', 'in', bank_partners.partner_id.ids)],
-            }
-
-        return action_vals
 
     def _has_invoice(self, partner_domain):
         self.ensure_one()
@@ -1085,3 +1039,6 @@ class ResPartner(models.Model):
                 if partner.id in self_ids:
                     partner.account_move_count += count
                 partner = partner.parent_id
+
+    def action_open_business_doc(self):
+        return self._get_records_action()
