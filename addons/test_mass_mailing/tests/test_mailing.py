@@ -11,10 +11,6 @@ from odoo.tools import mute_logger, email_normalize
 @tagged('mass_mailing')
 class TestMassMailing(TestMassMailCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super(TestMassMailing, cls).setUpClass()
-
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_mailing_gateway_reply(self):
@@ -219,39 +215,39 @@ class TestMassMailing(TestMassMailCommon):
                 self.assertMailTraces(
                     [
                         {'email': 'customer.multi.1@example.com',
-                         'email_to_mail': False,  # using recipient_ids, not email_to
+                         'email_to_mail': '',  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_mult.name}" <customer.multi.1@example.com>', f'"{customer_mult.name}" <customer.multi.2@example.com>']],
                          'failure_type': False,
                          'partner': customer_mult,
                          'trace_status': 'sent'},
                         {'email': 'test.customer.format@example.com',
-                         'email_to_mail': False,  # using recipient_ids, not email_to
+                         'email_to_mail': '',  # using recipient_ids, not email_to
                          # mail to avoids double encapsulation
                          'email_to_recipients': [[f'"{customer_fmt.name}" <test.customer.format@example.com>']],
                          'failure_type': False,
                          'partner': customer_fmt,
                          'trace_status': 'sent'},
                         {'email': 'test.customer.😊@example.com',
-                         'email_to_mail': False,  # using recipient_ids, not email_to
+                         'email_to_mail': '',  # using recipient_ids, not email_to
                          # mail to avoids double encapsulation
                          'email_to_recipients': [[f'"{customer_unic.name}" <test.customer.😊@example.com>']],
                          'failure_type': False,
                          'partner': customer_unic,
                          'trace_status': 'sent'},
                         {'email': 'test.customer.case@example.com',
-                         'email_to_mail': False,  # using recipient_ids, not email_to
+                         'email_to_mail': '',  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_case.name}" <test.customer.case@example.com>']],
                          'failure_type': False,
                          'partner': customer_case,
                          'trace_status': 'sent'},  # lower cased
                         {'email': 'test.customer.weird@example.comweirdformat',
-                         'email_to_mail': False,  # using recipient_ids, not email_to
+                         'email_to_mail': '',  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_weird.name}" <test.customer.weird@example.comweirdformat>']],
                          'failure_type': False,
                          'partner': customer_weird,
                          'trace_status': 'sent'},  # concatenates everything after domain
                         {'email': 'test.customer.weird.2@example.com',
-                         'email_to_mail': False,  # using recipient_ids, not email_to
+                         'email_to_mail': '',  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_weird_2.name}" <test.customer.weird.2@example.com>']],
                          'failure_type': False,
                          'partner': customer_weird_2,
