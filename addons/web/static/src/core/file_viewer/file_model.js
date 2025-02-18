@@ -128,6 +128,9 @@ export const FileModelMixin = (T) =>
             if (this.uploading && this.tmpUrl) {
                 return this.tmpUrl;
             }
+            if (!this.id) {
+                return this.url;
+            }
             return this.isImage ? `/web/image/${this.id}` : `/web/content/${this.id}`;
         }
     };
