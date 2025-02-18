@@ -1415,8 +1415,11 @@ class BaseModel(metaclass=MetaModel):
             # retrieve the last field in the sequence
             model = self
             for fname in field_name.split('.'):
+                if model is None:
+                    raise UserError(_("Non-relational field before “%(field_name)s”.", field_name=fname))
                 field = model._fields[fname]
-                model = self.env.get(field.comodel_name)
+                comodel_name = field.comodel_name if field.relational else None
+                model = self.env.get(comodel_name) if comodel_name else None
             if field.relational:
                 # relational fields will trigger a _name_search on their comodel
                 domains.append([(field_name, operator, value)])

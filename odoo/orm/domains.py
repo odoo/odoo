@@ -1097,10 +1097,10 @@ def _optimize_any_domain(condition, model):
     # get the model to optimize with
     try:
         field = condition._field()
-        comodel = model.env[field.comodel_name]
+        comodel = model.env[field.comodel_name] if field.relational else None
     except KeyError:
         raise ValueError(f"Cannot determine the relation for {condition.field_expr!r}")
-    domain = Domain(value)._optimize(comodel)
+    domain = Domain(value)._optimize(comodel) if comodel else Domain(value)
     # const if the domain is empty, the result is a constant
     # if the domain is True, we keep it as is
     if domain.is_false():

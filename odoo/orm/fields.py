@@ -233,7 +233,6 @@ class Field(typing.Generic[T]):
 
     name: str                           # name of the field
     model_name: str = ''                # name of the model of this field
-    comodel_name: str | None = None     # name of the model of values (if relational)
 
     store = True                        # whether the field is stored in database
     index = None                        # how the field is indexed in database
@@ -558,6 +557,14 @@ class Field(typing.Generic[T]):
         # determine the chain of fields, and make sure they are all set up
         model_name = self.model_name
         for name in self.related.split('.'):
+            if not model_name:
+                raise ValueError(
+                    f"Field {name} is not reachable."
+                )
+            elif model_name not in model.pool:
+                raise KeyError(
+                    f"Model {model_name} does not exist."
+                )
             field = model.pool[model_name]._fields.get(name)
             if field is None:
                 raise KeyError(
@@ -565,7 +572,7 @@ class Field(typing.Generic[T]):
                 )
             if not field._setup_done:
                 field.setup(model.env[model_name])
-            model_name = field.comodel_name
+            model_name = field.comodel_name if field.relational else None
 
         self.related_field = field
 
@@ -731,7 +738,6 @@ class Field(typing.Generic[T]):
         return domain
 
     # properties used by setup_related() to copy values from related field
-    _related_comodel_name = property(attrgetter('comodel_name'))
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
     _related_groups = property(attrgetter('groups'))
@@ -774,6 +780,14 @@ class Field(typing.Generic[T]):
             check_precompute = self.precompute
 
             for index, fname in enumerate(dotnames.split('.')):
+                if not model_name:
+                    raise ValueError(
+                        f"Field {fname} is not reachable."
+                    )
+                elif model_name not in registry:
+                    raise KeyError(
+                        f"Model {model_name} does not exist."
+                    )
                 Model = registry[model_name]
                 if Model0._transient and not Model._transient:
                     # modifying fields on regular models should not trigger
@@ -822,7 +836,7 @@ class Field(typing.Generic[T]):
                 if check_precompute and field.type == 'many2one':
                     check_precompute = False
 
-                model_name = field.comodel_name
+                model_name = field.comodel_name if field.relational else None
 
     ############################################################################
     #
