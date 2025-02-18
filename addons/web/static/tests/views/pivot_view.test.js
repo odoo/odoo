@@ -1417,11 +1417,13 @@ test("can download a file", async () => {
 test("download a file with single measure, measure row displayed in table", async () => {
     expect.assertions(2);
 
+    const downloadDef = new Deferred();
     patchWithCleanup(download, {
         _download: async ({ url, data }) => {
             data = JSON.parse(await data.data.text());
             expect(url).toBe("/web/pivot/export_xlsx");
             expect(data.measure_headers.length).toBe(4);
+            downloadDef.resolve();
             return Promise.resolve();
         },
     });
@@ -1438,6 +1440,7 @@ test("download a file with single measure, measure row displayed in table", asyn
     });
 
     await contains(".o_pivot_download").click();
+    await downloadDef;
 });
 
 test("download button is disabled when there is no data", async () => {
@@ -2629,6 +2632,7 @@ test("export data in excel with comparison", async () => {
 
     mockDate("2016-12-20T1:00:00");
 
+    const downloadDef = new Deferred();
     patchWithCleanup(download, {
         _download: async ({ url, data }) => {
             data = JSON.parse(await data.data.text());
@@ -2645,6 +2649,7 @@ test("export data in excel with comparison", async () => {
             const valuesLength = data.rows.map((o) => o.values.length);
             expect.step(valuesLength);
             expect(url).toBe("/web/pivot/export_xlsx");
+            downloadDef.resolve();
             return Promise.resolve();
         },
     });
@@ -2683,6 +2688,7 @@ test("export data in excel with comparison", async () => {
     // With the data above, the time ranges contain some records.
     // export data. Should execute 'get_file'
     await contains(".o_pivot_buttons button.o_pivot_download").click();
+    await downloadDef;
 
     expect.verifySteps([
         // col group headers
