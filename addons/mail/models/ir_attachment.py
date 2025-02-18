@@ -2,7 +2,7 @@
 
 import contextlib
 
-from odoo import _, models, SUPERUSER_ID
+from odoo import _, fields, models, SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import consteq
 from odoo.addons.mail.tools.discuss import Store
@@ -10,6 +10,8 @@ from odoo.addons.mail.tools.discuss import Store
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
+
+    message_ids = fields.Many2many("mail.message", "message_attachment_rel", "attachment_id", "message_id")
 
     def _check_attachments_access(self, attachment_tokens):
         """This method relies on access rules/rights and therefore it should not be called from a sudo env."""
