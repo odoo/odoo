@@ -58,7 +58,8 @@ class ResPartner(models.Model):
 
     @api.model
     def autocomplete_by_name(self, query, query_country_id, timeout=15):
-        query_country_id = query_country_id or self.env.company.country_id.id
+        if query_country_id is False:  # If it's 0, we purposely do not want to filter on the country
+            query_country_id = self.env.company.country_id.id
         query_country_code = self.env['res.country'].browse(query_country_id).code
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_name', {
             'query': query,
