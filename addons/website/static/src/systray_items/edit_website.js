@@ -60,7 +60,8 @@ EditWebsiteSystray.template = "website.EditWebsiteSystray";
 
 export const systrayItem = {
     Component: EditWebsiteSystray,
-    isDisplayed: (env) => env.services.website.currentWebsite.metadata.editable,
+    isDisplayed: (env) => env.services.website.isRestrictedEditor
+        && env.services.website.currentWebsite.metadata.editable,
 };
 
 registry.category("website_systray").add("EditWebsite", systrayItem, { sequence: 7 });

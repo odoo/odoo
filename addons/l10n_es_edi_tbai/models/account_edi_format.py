@@ -99,6 +99,9 @@ class AccountEdiFormat(models.Model):
 
         return errors
 
+    def _l10n_es_tbai_refunded_invoices(self, invoice):
+        return invoice.reversed_entry_id
+
     def _l10n_es_tbai_post_invoice_edi(self, invoice):
         # EXTENDS account_edi
         if self.code != 'es_tbai':
@@ -115,13 +118,20 @@ class AccountEdiFormat(models.Model):
             error_msg = ''
             if chain_head and chain_head != invoice and not chain_head._l10n_es_tbai_is_in_chain():
                 error_msg = _("TicketBAI: Cannot post invoice while chain head (%s) has not been posted", chain_head.name)
-            if (
-                invoice.move_type == 'out_refund'
-                and not invoice.reversed_entry_id or (
-                    not invoice.reversed_entry_id._l10n_es_tbai_is_in_chain()
-                    and invoice.reversed_entry_id.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai'))  # avoid imported ones
-            ):
-                error_msg = _("TicketBAI: Cannot post a reversal move while the source document (%s) has not been posted", invoice.reversed_entry_id.name)
+            if invoice.move_type == 'out_refund':
+                refunded_invoices = self._l10n_es_tbai_refunded_invoices(invoice)
+                if not refunded_invoices:
+                    error_msg = _("TicketBAI: Cannot post a refund without source documents")
+                else:
+                    invalid_refunds = refunded_invoices.filtered(lambda inv:
+                                                                 not inv._l10n_es_tbai_is_in_chain()
+                                                                 and inv.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai')  # avoid imported ones
+                                                                 )
+                    if invalid_refunds:
+                        error_msg = _(
+                            "TicketBAI: Cannot post a reversal move if its source documents (%s) have not been posted",
+                            ', '.join(invalid_refunds.mapped('name'))
+                        )
 
             # Tax configuration check: In case of foreign customer we need the tax scope to be set
             com_partner = invoice.commercial_partner_id

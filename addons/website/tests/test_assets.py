@@ -233,7 +233,7 @@ class TestWebAssets(odoo.tests.HttpCase):
     def test_ensure_correct_website_asset(self):
         # when searching for an attachment, if the unique a wildcard, we want to ensute that we don't match a website one when seraching a no website one.
         # this test should also wheck that the clean_attachement does not erase a website_attachement after generating a base attachment
-        website_id = self.env['website'].search([], limit=1, order='id desc').id
+        website_id = self.env['website'].search([], limit=1, order='id asc').id
         unique = self.env['ir.qweb']._get_asset_bundle('web.assets_frontend').get_version('js')
         base_url = self.env['ir.asset']._get_asset_bundle_url('web.assets_frontend.min.js', '%', {})
         base_url_versioned = self.env['ir.asset']._get_asset_bundle_url('web.assets_frontend.min.js', unique, {})
