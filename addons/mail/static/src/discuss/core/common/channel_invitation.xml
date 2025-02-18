@@ -11,7 +11,7 @@
     <t t-name="discuss.ChannelInvitation.main">
         <div class="d-flex flex-column flex-grow-1 bg-inherit" t-att-class="{ 'o-mail-Discuss-threadActionPopover w-100': props.hasSizeConstraints, 'px-1': !props.thread }">
             <t t-if="store.self.type === 'partner'">
-                <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-white" t-att-value="searchStr" t-ref="input" placeholder="Search people to invite" t-on-input="onInput"/>
+                <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-white" t-att-value="searchStr" t-ref="input" t-att-placeholder="searchPlaceholder" t-on-input="onInput"/>
                 <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': selectablePartners.length === 0 }">
                     <div t-if="selectablePartners.length === 0" class="small text-muted mx-1 fst-italic">
                         <t t-if="props.thread">No user found that is not already a member of this channel.</t>
