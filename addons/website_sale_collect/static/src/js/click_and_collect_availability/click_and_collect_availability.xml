@@ -3,7 +3,11 @@
 
     <t t-name="website_sale_collect.ClickAndCollectAvailability">
         <div class="btn border border-1 mb-3 text-start p-3 w-100 w-md-auto">
-            <div t-on-click="openLocationSelector" t-att-class="{'disabled': !this.state.active}">
+            <div
+                name="click_and_collect_availability"
+                t-on-click="openLocationSelector"
+                t-att-class="{'disabled': !this.state.active}"
+            >
                 <h6>
                     <i class="fa fa-fw fa-map-marker text-muted"/>
                     <t
@@ -35,7 +39,11 @@
                 </div>
             </div>
             <hr />
-            <div t-if="this.state.deliveryStockData" class="flex-row cursor-default">
+            <div
+                name="delivery_availability"
+                t-if="this.state.deliveryStockData"
+                class="flex-row cursor-default"
+            >
                 <h6>
                     <i class="fa fa-fw fa-truck text-muted"/>
                     Delivery
