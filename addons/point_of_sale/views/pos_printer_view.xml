@@ -41,10 +41,10 @@
         <field name="model">pos.printer</field>
         <field name="arch" type="xml">
             <list string="Preparation Printers">
-                <field name="company_id" invisible="1" />
                 <field name="name" />
-                <field name="proxy_ip" />
                 <field name="product_categories_ids" widget="many2many_tags"/>
+                <field name="proxy_ip" optional="hide"/>
+                <field name="company_id" optional="hide"/>
             </list>
         </field>
     </record>
