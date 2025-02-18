@@ -706,3 +706,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_orderpoint_locations(self):
         return self.env['stock.location'].search([('replenish_location', '=', True)])
+
+    @api.model
+    def get_visibility_days(self):
+        return self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days', 0)
