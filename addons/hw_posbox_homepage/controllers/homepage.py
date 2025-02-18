@@ -13,7 +13,7 @@ from itertools import groupby
 from pathlib import Path
 
 from odoo import http
-from odoo.addons.hw_drivers.tools import certificate, helpers, route, wifi
+from odoo.addons.hw_drivers.tools import certificate, helpers, route, upgrade, wifi
 from odoo.addons.hw_drivers.main import iot_devices, unsupported_devices
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.tools.misc import file_path
@@ -191,30 +191,29 @@ class IotBoxOwlHomePage(http.Controller):
 
     @route.iot_route('/hw_posbox_homepage/version_info', type="http", cors='*', linux_only=True)
     def get_version_info(self):
-        git = ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git"]
         # Check branch name and last commit hash on IoT Box
-        current_commit = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, check=False, text=True)
-        current_branch = subprocess.run(
-            [*git, "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, check=False, text=True
-        )
-        if current_commit.returncode != 0 or current_branch.returncode != 0:
-            return
-        current_commit = current_commit.stdout.strip()
-        current_branch = current_branch.stdout.strip()
+        current_commit = upgrade.git("rev-parse", "HEAD")
+        current_branch = upgrade.git("rev-parse", "--abbrev-ref", "HEAD")
+        if not current_commit or not current_branch:
+            return json.dumps({
+                'status': 'error',
+                'message': 'Failed to retrieve current commit or branch',
+            })
 
-        last_available_commit = subprocess.run(
-            [*git, "ls-remote", "origin", current_branch], capture_output=True, check=False, text=True
-        )
-        if last_available_commit.returncode != 0:
+        last_available_commit = upgrade.git("ls-remote", "origin", current_branch)
+        if not last_available_commit:
             _logger.error("Failed to retrieve last commit available for branch origin/%s", current_branch)
-            return
-        last_available_commit = last_available_commit.stdout.split()[0].strip()
+            return json.dumps({
+                'status': 'error',
+                'message': 'Failed to retrieve last commit available for branch origin/' + current_branch,
+            })
+        last_available_commit = last_available_commit.split()[0].strip()
 
         return json.dumps({
             'status': 'success',
             # Checkout requires db to align with its version (=branch)
             'odooIsUpToDate': current_commit == last_available_commit or not bool(helpers.get_odoo_server_url()),
-            'imageIsUpToDate': not bool(helpers.check_image()),
+            'imageIsUpToDate': platform.system() == "Linux" and not bool(helpers.check_image()),
             'currentCommitHash': current_commit,
         })
 
@@ -415,7 +414,7 @@ class IotBoxOwlHomePage(http.Controller):
 
     @route.iot_route('/hw_posbox_homepage/update_git_tree', type="jsonrpc", methods=['POST'], cors='*', linux_only=True)
     def update_git_tree(self):
-        helpers.check_git_branch()
+        upgrade.check_git_branch()
         return {
             'status': 'success',
             'message': 'Successfully updated the IoT Box',
