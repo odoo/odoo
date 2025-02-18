@@ -1296,7 +1296,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                                     ['virtual_remaining_leaves', '>', 0],
                                     ['allows_negative', '=', False]]
 
-        search_result = self.env['hr.leave.type'].with_context(employee_id=False).name_search(args=search_domain)
+        search_result = self.env['hr.leave.type'].with_context(employee_id=False).name_search(domain=search_domain)
         self.assertFalse(self.holidays_type_2.id in [alloc_id for (alloc_id, _) in search_result])
 
     def test_holiday_type_allocation_requirement_edit(self):

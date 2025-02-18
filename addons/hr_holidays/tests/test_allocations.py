@@ -324,7 +324,7 @@ class TestAllocations(TestHrHolidaysCommon):
             employee_id=self.employee.id,
             default_date_from='2024-08-18 06:00:00',
             default_date_to='2024-08-18 15:00:00'
-        ).name_search(args=[['id', '=', leave_type.id]])
+        ).name_search(domain=[['id', '=', leave_type.id]])
         self.assertEqual(result[0][1], 'Compensatory Days (9 remaining out of 9 days)')
 
     def test_allocation_hourly_leave_type(self):

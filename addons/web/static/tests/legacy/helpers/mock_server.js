@@ -873,7 +873,7 @@ export class MockServer {
     mockNameSearch(model, args, kwargs) {
         const str = args && typeof args[0] === "string" ? args[0] : kwargs.name;
         const limit = kwargs.limit || 100;
-        const domain = (args && args[1]) || kwargs.args || [];
+        const domain = (args && args[1]) || kwargs.domain || [];
         const { records } = this.models[model];
         const result = [];
         for (const r of records) {

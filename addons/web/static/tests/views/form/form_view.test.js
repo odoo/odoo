@@ -8332,7 +8332,7 @@ test.tags("desktop");
 test(`action context is used when evaluating domains`, async () => {
     onRpc("name_search", ({ kwargs }) => {
         expect.step("name_search");
-        expect(kwargs.args[0]).toEqual(["id", "in", [45, 46, 47]]);
+        expect(kwargs.domain[0]).toEqual(["id", "in", [45, 46, 47]]);
     });
     await mountView({
         resModel: "partner",
