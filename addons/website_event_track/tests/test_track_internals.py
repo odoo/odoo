@@ -4,9 +4,13 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
+import pytz
+
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
+from odoo.addons.website.tools import MockRequest
 from odoo.tests.common import users
 
 class TestTrackData(TestEventOnlineCommon):
@@ -94,6 +98,51 @@ class TestTrackData(TestEventOnlineCommon):
         self.assertEqual(
             new_track.contact_phone, customer.phone,
             'Track customer should take over existing contact phone value')
+
+    def test_prepare_calendar_values(self):
+        today = fields.Datetime.today()
+        self.event_0.write({
+            'date_begin': today + timedelta(days=1),
+            'date_end': today + timedelta(days=15),
+            'website_menu': True,
+            'track_ids': [
+                (0, 0, {
+                    'name': 'Portfolio Status & Strategy',
+                    'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
+                    'date': today + timedelta(days=1),
+                    'duration': 70,
+                }),
+                (0, 0, {
+                    'name': 'Future Strategy',
+                    'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
+                    'date': today + timedelta(days=1),
+                    'duration': 1,
+                }),
+            ],
+        })
+        with MockRequest(self.env):
+            track_data = EventTrackController()._prepare_calendar_values(self.event_0)
+
+            tracks = self.event_0.track_ids
+            track_start_day = track_end_day = tracks[0].date
+            for track in tracks:
+                track_date = track.date
+                if track_date < track_start_day:
+                    track_start_day = track_date
+                track_end_time = track_date + timedelta(hours=track.duration)
+                if track_end_time > track_end_day:
+                    track_end_day = track_end_time
+
+            all_timeslot = track_data['time_slots']
+            local_tz = pytz.timezone(self.event_0.date_tz or 'UTC')
+            start_datetime = fields.Datetime.from_string(track_start_day).replace(tzinfo=pytz.utc).astimezone(local_tz)
+            end_datetime = fields.Datetime.from_string(track_end_day).replace(tzinfo=pytz.utc).astimezone(local_tz)
+
+            # compare tracks start datetime
+            self.assertEqual(next(iter(all_timeslot[track_start_day.date()].keys())), start_datetime, 'Track start datetime')
+            # compare tracks end datetime
+            self.assertEqual(list(all_timeslot[track_end_day.date()].keys())[-1], end_datetime, 'Track end datetime')
+
 
 class TestTrackSuggestions(TestEventOnlineCommon):
 
