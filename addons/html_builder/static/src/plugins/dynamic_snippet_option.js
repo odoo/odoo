@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { defaultBuilderComponents } from "../core/default_builder_components";
-import { useDomState } from "../core/building_blocks/utils";
+import { useDomState, useIsActiveItem } from "@html_builder/core/building_blocks/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
 import { Cache } from "@web/core/utils/cache";
@@ -142,6 +142,7 @@ export class DynamicSnippetOption extends Component {
     };
 
     setup() {
+        this.isActiveItem = useIsActiveItem();
         // specify model name in subclasses to filter the list of available model record filters
         this.modelNameFilter = undefined;
         this.contextualFilterDomain = [];
