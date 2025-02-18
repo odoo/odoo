@@ -2527,7 +2527,7 @@ class AccountMove(models.Model):
                 or not self.invoice_date
                 or reference_date <= self.invoice_payment_term_id._get_last_discount_date(self.invoice_date)
             ) \
-            and not (payment_terms.matched_debit_ids + payment_terms.matched_credit_ids)
+            and not (payment_terms.sudo().matched_debit_ids + payment_terms.sudo().matched_credit_ids)
 
     # -------------------------------------------------------------------------
     # BUSINESS MODELS SYNCHRONIZATION
