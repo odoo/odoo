@@ -310,7 +310,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         })
         # Tag name_search should not raise Error if project_id is False
         task.tag_ids.with_context(project_id=task.project_id.id).name_search(
-            args=["!", ["id", "in", []]])
+            domain=["!", ["id", "in", []]])
 
     def test_copy_project_with_default_name(self):
         """ Test the new project after the duplication got the exepected name

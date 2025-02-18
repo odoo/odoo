@@ -300,7 +300,7 @@ export class Many2OneField extends Component {
     async search(barcode) {
         const results = await this.orm.call(this.relation, "name_search", [], {
             name: barcode,
-            args: this.getDomain(),
+            domain: this.getDomain(),
             operator: "ilike",
             limit: 2, // If one result we set directly and if more than one we use normal flow so no need to search more
             context: this.context,

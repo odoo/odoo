@@ -320,7 +320,7 @@ export class SearchBar extends Component {
         }
         const limitToFetch = this.state.subItemsLimits[searchItem.id] + 1;
         const options = await this.orm.call(relation, "name_search", [], {
-            args: domain,
+            domain: domain,
             operator: nameSearchOperator,
             context: { ...this.env.searchModel.globalContext, ...field.context },
             limit: limitToFetch,

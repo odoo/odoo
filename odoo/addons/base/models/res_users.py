@@ -620,8 +620,8 @@ class ResUsers(models.Model):
             raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        domain = args or []
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        domain = domain or []
         # first search only by login, then the normal search
         if (
             name and operator not in expression.NEGATIVE_TERM_OPERATORS

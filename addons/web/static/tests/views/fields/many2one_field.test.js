@@ -1591,7 +1591,7 @@ test("many2one inside one2many form view, with domain", async () => {
         search: "<search></search>",
     };
     onRpc("name_search", ({ kwargs }) => {
-        expect(kwargs.args).toEqual([["id", ">", 1]]);
+        expect(kwargs.domain).toEqual([["id", ">", 1]]);
     });
     onRpc("web_search_read", ({ kwargs }) => {
         expect(kwargs.domain).toEqual([["id", ">", 1]]);
@@ -2286,7 +2286,7 @@ test("X2Many sequence list in modal", async () => {
 test("autocompletion in a many2one, in form view with a domain", async () => {
     expect.assertions(1);
     onRpc("name_search", ({ kwargs }) => {
-        expect(kwargs.args).toEqual([]);
+        expect(kwargs.domain).toEqual([]);
     });
 
     await mountView({
@@ -2302,7 +2302,7 @@ test("autocompletion in a many2one, in form view with a domain", async () => {
 test("autocompletion in a many2one, in form view with a date field", async () => {
     expect.assertions(1);
     onRpc("name_search", ({ kwargs }) => {
-        expect(kwargs.args).toEqual([["bar", "=", true]]);
+        expect(kwargs.domain).toEqual([["bar", "=", true]]);
     });
 
     await mountView({
@@ -2400,7 +2400,7 @@ test("domain and context are correctly used when doing a name_search in a m2o", 
     const DEFAULT_USER_CTX = { ...user.context, allowed_company_ids: [1] };
     serverState.userContext = { hey: "ho" };
     onRpc("product", "name_search", ({ kwargs }) => {
-        expect(kwargs.args).toEqual(["&", ["foo", "=", "bar"], ["foo", "=", "yop"]]);
+        expect(kwargs.domain).toEqual(["&", ["foo", "=", "bar"], ["foo", "=", "yop"]]);
         expect(kwargs.context).toEqual({
             ...DEFAULT_USER_CTX,
             hey: "ho",
@@ -2410,7 +2410,7 @@ test("domain and context are correctly used when doing a name_search in a m2o", 
         return [];
     });
     onRpc("partner", "name_search", ({ kwargs }) => {
-        expect(kwargs.args).toEqual([["id", "in", [12]]]);
+        expect(kwargs.domain).toEqual([["id", "in", [12]]]);
         expect(kwargs.context).toEqual({
             ...DEFAULT_USER_CTX,
             hey: "ho",
@@ -3126,7 +3126,7 @@ test("many2one: dynamic domain set in the field's definition", async () => {
         domain: "[('foo' ,'=', foo)]",
     });
     onRpc("name_search", ({ kwargs }) => {
-        expect(kwargs.args).toEqual([["foo", "=", "yop"]]);
+        expect(kwargs.domain).toEqual([["foo", "=", "yop"]]);
     });
 
     await mountView({
@@ -3154,7 +3154,7 @@ test("many2one: domain set in view and on field", async () => {
     });
     onRpc("name_search", ({ kwargs }) => {
         // should only use the domain set in the view
-        expect(kwargs.args).toEqual([["foo", "=", "blip"]]);
+        expect(kwargs.domain).toEqual([["foo", "=", "blip"]]);
     });
 
     await mountView({
@@ -3190,7 +3190,7 @@ test("many2one: domain updated by an onchange", async () => {
         };
     });
     onRpc("name_search", ({ kwargs }) => {
-        expect(kwargs.args).toEqual(domain);
+        expect(kwargs.domain).toEqual(domain);
     });
     await mountView({
         type: "form",

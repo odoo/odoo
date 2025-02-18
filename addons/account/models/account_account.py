@@ -808,7 +808,7 @@ class AccountAccount(models.Model):
         return self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type)
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100) -> list[tuple[int, str]]:
+    def name_search(self, name='', domain=None, operator='ilike', limit=100) -> list[tuple[int, str]]:
         if (
             not name
             and (partner := self.env.context.get('partner_id'))
@@ -818,7 +818,7 @@ class AccountAccount(models.Model):
             records = self.sudo().browse(ordered_accounts)
             records.fetch(['display_name'])
             return [(record.id, record.display_name) for record in records]
-        return super().name_search(name, args, operator, limit)
+        return super().name_search(name, domain, operator, limit)
 
     @api.model
     def _search_display_name(self, operator, value):

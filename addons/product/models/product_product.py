@@ -590,14 +590,14 @@ class ProductProduct(models.Model):
         return combine(domains)
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
         if not name:
-            return super().name_search(name, args, operator, limit)
+            return super().name_search(name, domain, operator, limit)
         # search progressively by the most specific attributes
         positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
         is_positive = operator not in expression.NEGATIVE_TERM_OPERATORS
         products = self.browse()
-        domain = args or []
+        domain = domain or []
         if operator in positive_operators:
             products = self.search_fetch(expression.AND([domain, [('default_code', '=', name)]]), ['display_name'], limit=limit) \
                 or self.search_fetch(expression.AND([domain, [('barcode', '=', name)]]), ['display_name'], limit=limit)

@@ -494,7 +494,7 @@ test("O2M with parented m2o and domain on parent.m2o", async () => {
             </form>`,
     };
     onRpc("name_search", ({ kwargs }) => {
-        expect(kwargs.args).toEqual([["id", "in", []]]);
+        expect(kwargs.domain).toEqual([["id", "in", []]]);
     });
     await mountView({
         type: "form",

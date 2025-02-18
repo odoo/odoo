@@ -290,14 +290,14 @@ class TestPartner(TransactionCaseWithUserDemo):
         ns_res = self.env['res.partner'].name_search('Vlad', operator='ilike')
         self.assertEqual(set(i[0] for i in ns_res), set((test_partner | test_user.partner_id).ids))
 
-        ns_res = self.env['res.partner'].name_search('Vlad', args=[('user_ids.email', 'ilike', 'vlad')])
+        ns_res = self.env['res.partner'].name_search('Vlad', domain=[('user_ids.email', 'ilike', 'vlad')])
         self.assertEqual(set(i[0] for i in ns_res), set(test_user.partner_id.ids))
 
         # Check a partner may be searched when current user has no access but sudo is used
         public_user = self.env.ref('base.public_user')
         with self.assertRaises(AccessError):
             test_partner.with_user(public_user).check_access('read')
-        ns_res = self.env['res.partner'].with_user(public_user).sudo().name_search('Vlad', args=[('user_ids.email', 'ilike', 'vlad')])
+        ns_res = self.env['res.partner'].with_user(public_user).sudo().name_search('Vlad', domain=[('user_ids.email', 'ilike', 'vlad')])
         self.assertEqual(set(i[0] for i in ns_res), set(test_user.partner_id.ids))
 
     def test_partner_merge_wizard_dst_partner_id(self):

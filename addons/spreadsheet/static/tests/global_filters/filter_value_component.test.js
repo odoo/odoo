@@ -67,7 +67,7 @@ test("text filter with range", async function () {
 test("relational filter with domain", async function () {
     onRpc("partner", "name_search", ({ kwargs }) => {
         expect.step("name_search");
-        expect(kwargs.args).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", []]]);
+        expect(kwargs.domain).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", []]]);
     });
     const env = await makeMockEnv();
     const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
@@ -87,7 +87,7 @@ test("relational filter with domain", async function () {
 test("relational filter with a contextual domain", async function () {
     onRpc("partner", "name_search", ({ kwargs }) => {
         expect.step("name_search");
-        expect(kwargs.args).toEqual([
+        expect(kwargs.domain).toEqual([
             "&",
             ["user_ids", "in", [user.userId]],
             "!",
