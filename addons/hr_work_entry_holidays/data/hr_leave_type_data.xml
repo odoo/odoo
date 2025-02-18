@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="hr_holidays.leave_type_compensatory_days" model="hr.leave.type">
+<data noupdate="1">
+    <record id="hr_holidays.leave_type_compensatory_days" model="hr.leave.type" forcecreate="0">
         <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_compensatory"/>
     </record>
 
-    <record id="hr_holidays.leave_type_unpaid" model="hr.leave.type">
+    <record id="hr_holidays.leave_type_unpaid" model="hr.leave.type" forcecreate="0">
         <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_unpaid_leave"/>
     </record>
 
-    <record id="hr_holidays.leave_type_sick_time_off" model="hr.leave.type">
+    <record id="hr_holidays.leave_type_sick_time_off" model="hr.leave.type" forcecreate="0">
         <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_sick_leave"/>
     </record>
 
-    <record id="hr_holidays.leave_type_paid_time_off" model="hr.leave.type">
+    <record id="hr_holidays.leave_type_paid_time_off" model="hr.leave.type" forcecreate="0">
         <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_legal_leave"/>
     </record>
+</data>
 
 <!-- AE : United Arab Emirates -->
     <record id="hr_holidays.l10n_ae_leave_type_sick_leave_50" model="hr.leave.type">
