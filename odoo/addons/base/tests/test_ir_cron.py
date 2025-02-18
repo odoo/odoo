@@ -112,6 +112,16 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.assertEqual(self.cron.lastcall, fields.Datetime.now())
         self.assertEqual(self.partner.name, 'You have been CRONWNED')
 
+    def test_cron_stats(self):
+        cron = self.cron
+        cron._update_stats(None)
+        self.assertEqual(cron.stat_total_count, 0)
+        with self.enter_registry_test_mode():
+            cron.method_direct_trigger()
+        self.assertEqual(cron.stat_total_count, 1)
+        cron.reset_stats()
+        self.assertEqual(cron.stat_total_count, 0)
+
     def test_cron_no_job_ready(self):
         self.cron.nextcall = fields.Datetime.now() + timedelta(days=1)
         self.cron.flush_recordset()
