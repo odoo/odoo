@@ -21,7 +21,7 @@ class ChatbotScriptStep(models.Model):
     message = fields.Text(string='Message', translate=True)
     sequence = fields.Integer(string='Sequence')
     chatbot_script_id = fields.Many2one(
-        'chatbot.script', string='Chatbot', required=True, ondelete='cascade')
+        'chatbot.script', string='Chatbot', required=True, index=True, ondelete='cascade')
     step_type = fields.Selection([
         ('text', 'Text'),
         ('question_selection', 'Question'),

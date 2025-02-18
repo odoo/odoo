@@ -224,6 +224,7 @@ class AccountJournal(models.Model):
     bank_account_id = fields.Many2one('res.partner.bank',
         string="Bank Account",
         ondelete='restrict', copy=False,
+        index='btree_not_null',
         check_company=True,
         domain="[('partner_id','=', company_partner_id)]")
     bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")

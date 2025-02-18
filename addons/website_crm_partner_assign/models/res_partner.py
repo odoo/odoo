@@ -30,7 +30,7 @@ class ResPartner(models.Model):
     date_review_next = fields.Date('Next Review')
     # customer implementation
     assigned_partner_id = fields.Many2one(
-        'res.partner', 'Implemented by',
+        'res.partner', 'Implemented by', index='btree_not_null',
     )
     implemented_partner_ids = fields.One2many(
         'res.partner', 'assigned_partner_id',

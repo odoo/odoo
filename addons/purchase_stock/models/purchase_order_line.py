@@ -30,7 +30,7 @@ class PurchaseOrderLine(models.Model):
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
     location_final_id = fields.Many2one('stock.location', 'Location from procurement')
-    group_id = fields.Many2one('procurement.group', 'Procurement group that generated this line')
+    group_id = fields.Many2one('procurement.group', 'Procurement group that generated this line', index='btree_not_null')
 
     def _compute_qty_received_method(self):
         super(PurchaseOrderLine, self)._compute_qty_received_method()

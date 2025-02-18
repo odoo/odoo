@@ -16,7 +16,7 @@ class MrpRoutingWorkcenter(models.Model):
 
     name = fields.Char('Operation', required=True)
     active = fields.Boolean(default=True)
-    workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True, check_company=True, tracking=True)
+    workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True, check_company=True, tracking=True, index=True)
     sequence = fields.Integer(
         'Sequence', default=100,
         help="Gives the sequence order when displaying a list of routing Work Centers.")

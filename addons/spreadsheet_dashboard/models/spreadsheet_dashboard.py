@@ -11,7 +11,7 @@ class SpreadsheetDashboard(models.Model):
     _order = 'sequence'
 
     name = fields.Char(required=True, translate=True)
-    dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True)
+    dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True, index=True)
     sequence = fields.Integer()
     sample_dashboard_file_path = fields.Char(export_string_translation=False)
     is_published = fields.Boolean(default=True)

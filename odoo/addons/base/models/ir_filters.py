@@ -22,7 +22,7 @@ class IrFilters(models.Model):
                                 help="The menu action this filter applies to. "
                                      "When left empty the filter applies to all menus "
                                      "for this model.")
-    embedded_action_id = fields.Many2one('ir.embedded.actions', help="The embedded action this filter is applied to", ondelete="cascade")
+    embedded_action_id = fields.Many2one('ir.embedded.actions', help="The embedded action this filter is applied to", ondelete="cascade", index='btree_not_null')
     embedded_parent_res_id = fields.Integer(help="id of the record the filter should be applied to. Only used in combination with embedded actions")
     active = fields.Boolean(default=True)
 

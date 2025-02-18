@@ -28,6 +28,7 @@ class LoyaltyCard(models.Model):
     program_id = fields.Many2one(
         comodel_name='loyalty.program',
         ondelete='restrict',
+        index='btree_not_null',
         default=lambda self: self.env.context.get('active_id', None),
     )
     program_type = fields.Selection(related='program_id.program_type')

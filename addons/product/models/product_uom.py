@@ -10,8 +10,8 @@ class ProductUom(models.Model):
     _description = 'Link between products and their UoMs'
     _rec_name = 'barcode'
 
-    uom_id = fields.Many2one('uom.uom', 'Unit', required=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', 'Product', required=True, ondelete='cascade')
+    uom_id = fields.Many2one('uom.uom', 'Unit', required=True, index=True, ondelete='cascade')
+    product_id = fields.Many2one('product.product', 'Product', required=True, index=True, ondelete='cascade')
     barcode = fields.Char(index='btree_not_null', required=True, copy=False)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
 

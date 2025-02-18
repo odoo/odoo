@@ -23,10 +23,10 @@ class PurchaseOrderGroup(models.Model):
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    requisition_id = fields.Many2one('purchase.requisition', string='Agreement', copy=False)
+    requisition_id = fields.Many2one('purchase.requisition', string='Agreement', copy=False, index='btree_not_null')
     requisition_type = fields.Selection(related='requisition_id.requisition_type')
 
-    purchase_group_id = fields.Many2one('purchase.order.group')
+    purchase_group_id = fields.Many2one('purchase.order.group', index='btree_not_null')
     alternative_po_ids = fields.One2many(
         'purchase.order', related='purchase_group_id.order_ids', readonly=False,
         domain="[('id', '!=', id), ('state', 'in', ['draft', 'sent', 'to approve'])]",

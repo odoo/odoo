@@ -12,7 +12,7 @@ class Data_RecycleRecord(models.Model):
 
     active = fields.Boolean('Active', default=True)
     name = fields.Char('Record Name', compute='_compute_name', compute_sudo=True)
-    recycle_model_id = fields.Many2one('data_recycle.model', string='Recycle Model', ondelete='cascade')
+    recycle_model_id = fields.Many2one('data_recycle.model', string='Recycle Model', index='btree_not_null', ondelete='cascade')
 
     res_id = fields.Integer('Record ID', index=True)
     res_model_id = fields.Many2one(related='recycle_model_id.res_model_id', store=True, readonly=True)

@@ -31,7 +31,7 @@ class MrpWorkorder(models.Model):
     sequence = fields.Integer("Sequence", default=_default_sequence)
     barcode = fields.Char(compute='_compute_barcode', store=True)
     workcenter_id = fields.Many2one(
-        'mrp.workcenter', 'Work Center', required=True,
+        'mrp.workcenter', 'Work Center', required=True, index=True,
         group_expand='_read_group_workcenter_id', check_company=True)
     working_state = fields.Selection(
         string='Workcenter Status', related='workcenter_id.working_state') # technical: used in views only
@@ -98,7 +98,7 @@ class MrpWorkorder(models.Model):
     progress = fields.Float('Progress Done (%)', digits=(16, 2), compute='_compute_progress')
 
     operation_id = fields.Many2one(
-        'mrp.routing.workcenter', 'Operation', check_company=True)
+        'mrp.routing.workcenter', 'Operation', check_company=True, index='btree_not_null')
         # Should be used differently as BoM can change in the meantime
     worksheet = fields.Binary(
         'Worksheet', related='operation_id.worksheet', readonly=True)

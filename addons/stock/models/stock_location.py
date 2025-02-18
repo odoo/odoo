@@ -91,7 +91,7 @@ class StockLocation(models.Model):
     next_inventory_date = fields.Date("Next Expected", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
     warehouse_view_ids = fields.One2many('stock.warehouse', 'view_location_id', readonly=True)
     warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', store=True)
-    storage_category_id = fields.Many2one('stock.storage.category', string='Storage Category', check_company=True)
+    storage_category_id = fields.Many2one('stock.storage.category', string='Storage Category', check_company=True, index='btree_not_null')
     outgoing_move_line_ids = fields.One2many('stock.move.line', 'location_id') # used to compute weight
     incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id') # used to compute weight
     net_weight = fields.Float('Net Weight', compute="_compute_weight")
@@ -526,7 +526,7 @@ class StockRoute(models.Model):
     product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.")
     warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.")
     package_type_selectable = fields.Boolean('Applicable on Package Type', help="When checked, the route will be selectable on package types")
-    supplied_wh_id = fields.Many2one('stock.warehouse', 'Supplied Warehouse')
+    supplied_wh_id = fields.Many2one('stock.warehouse', 'Supplied Warehouse', index='btree_not_null')
     supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse')
     company_id = fields.Many2one(
         'res.company', 'Company',

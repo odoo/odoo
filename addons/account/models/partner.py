@@ -35,7 +35,7 @@ class AccountFiscalPosition(models.Model):
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
     company_id = fields.Many2one(
         comodel_name='res.company',
-        string='Company', required=True, readonly=True,
+        string='Company', required=True, readonly=True, index=True,
         default=lambda self: self.env.company)
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     account_map = fields.Binary(compute='_compute_account_map')
@@ -302,7 +302,7 @@ class AccountFiscalPositionTax(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
-        required=True, ondelete='cascade')
+        required=True, index=True, ondelete='cascade')
     company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
     tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True, check_company=True)
     tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply', check_company=True)

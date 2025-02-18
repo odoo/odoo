@@ -16,7 +16,7 @@ class HrEmployeeBase(models.AbstractModel):
     name = fields.Char()
     active = fields.Boolean("Active")
     color = fields.Integer('Color Index', default=0)
-    department_id = fields.Many2one('hr.department', 'Department', check_company=True)
+    department_id = fields.Many2one('hr.department', 'Department', check_company=True, index='btree_not_null')
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
     job_id = fields.Many2one('hr.job', 'Job Position', check_company=True)
@@ -35,7 +35,7 @@ class HrEmployeeBase(models.AbstractModel):
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     email = fields.Char(related="user_id.email")
-    work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False)
+    work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False, index='btree_not_null')
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', domain="[('address_id', '=', address_id)]")
     work_location_name = fields.Char("Work Location Name", compute="_compute_work_location_name_type")
     work_location_type = fields.Selection([
@@ -48,7 +48,7 @@ class HrEmployeeBase(models.AbstractModel):
     resource_calendar_id = fields.Many2one('resource.calendar', check_company=True)
     is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True)
     is_fully_flexible = fields.Boolean(compute='_compute_is_flexible', store=True)
-    parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False,
+    parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     coach_id = fields.Many2one(
         'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,

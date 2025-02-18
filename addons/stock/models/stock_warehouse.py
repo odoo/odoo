@@ -42,7 +42,7 @@ class StockWarehouse(models.Model):
     view_location_id = fields.Many2one(
         'stock.location', 'View Location',
         domain="[('usage', '=', 'view'), ('company_id', '=', company_id)]",
-        required=True, check_company=True)
+        required=True, check_company=True, index=True)
     lot_stock_id = fields.Many2one(
         'stock.location', 'Location Stock',
         domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]",
