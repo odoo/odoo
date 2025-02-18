@@ -21,7 +21,7 @@ before(() => {
             mimetype: "image/jpeg",
         },
     }));
-    onRpcReal("/web_editor/static/image_shapes/geometric/geo_shuriken.svg");
+    onRpcReal("/html_builder/static/image_shapes/geometric/geo_shuriken.svg");
     onRpcReal("/web/image/website.s_text_image_default_image");
     onRpcReal("/website/static/src/img/snippets_demo/s_text_image.jpg");
 });
@@ -36,7 +36,7 @@ test("Should set a shape on an image", async () => {
     await contains(":iframe .test-options-target img").click();
 
     await contains("[data-label='Shape'] .dropdown").click();
-    await contains("[data-action-value='web_editor/geometric/geo_shuriken']").click();
+    await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
     // ensure the shape action has been applied
     await editor.shared.operation.next(() => {});
 
@@ -54,7 +54,7 @@ test("Should set a shape on an image", async () => {
     );
     expect(":iframe .test-options-target img").toHaveAttribute(
         "data-shape",
-        "web_editor/geometric/geo_shuriken"
+        "html_builder/geometric/geo_shuriken"
     );
     expect(":iframe .test-options-target img").toHaveAttribute(
         "data-file-name",

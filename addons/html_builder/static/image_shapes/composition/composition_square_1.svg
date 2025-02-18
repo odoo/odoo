@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="shape" width="800" height="600">
+    <defs>
+        <clipPath id="clip-path" clipPathUnits="objectBoundingBox">
+            <use xlink:href="#filterPath" fill="none"/>
+        </clipPath>
+        <path id="filterPath" d="M.8925.85 0 .85 0 0 .8925.1844Z">
+            <animate dur="6s" repeatCount="indefinite" attributeName="d" attributeType="XML"
+            values="
+            M.8925.85 0 .85 0 0 .8925.1844Z;
+            M.8925.85 0 .85 0 .05.8925.1644Z;
+            M.8925.85 0 .85 0 0 .8925.1844Z"
+            calcMode="spline"
+            keySplines=".56 .37 .43 .58; .56 .37 .43 .58"/>
+            <animateTransform attributeName="transform" attributeType="XML" type="translate" dur="6s" values="0 .02;0 0;0 .02" repeatCount="indefinite" calcMode="spline" keySplines=".45 .05 .55 .95;.45 .05 .55 .95"/>
+        </path>
+        <g id="animation">
+            <animateTransform xlink:href="#shape" attributeName="transform" attributeType="XML" type="translate" dur="6s" values="0 0;0 8;0 0" repeatCount="indefinite" calcMode="spline" keySplines=".45 .05 .55 .95;.45 .05 .55 .95"/>
+            <animateTransform xlink:href="#dots_grp_1" attributeName="transform" attributeType="XML" type="translate" dur="6s" values="0 0;0 -5;0 0" repeatCount="indefinite" calcMode="spline" keySplines=".45 .05 .55 .95;.45 .05 .55 .95"/>
+            <animateTransform xlink:href="#dots_grp_2" attributeName="transform" attributeType="XML" type="translate" dur="6s" begin="0.3s" values="0 0;0 -5;0 0" repeatCount="indefinite" calcMode="spline" keySplines=".45 .05 .55 .95;.45 .05 .55 .95"/>
+            <animateTransform xlink:href="#dots_grp_3" attributeName="transform" attributeType="XML" type="translate" dur="6s" begin="0.6s" values="0 0;0 -5;0 0" repeatCount="indefinite" calcMode="spline" keySplines=".45 .05 .55 .95;.45 .05 .55 .95"/>
+            <animateTransform xlink:href="#dots_grp_4" attributeName="transform" attributeType="XML" type="translate" dur="6s" begin="0.9s" values="0 0;0 -5;0 0" repeatCount="indefinite" calcMode="spline" keySplines=".45 .05 .55 .95;.45 .05 .55 .95"/>
+        </g>
+    </defs>
+    <svg id="background" viewBox="0 0 28.35 28.35" preserveAspectRatio="none" width="90%" height="65%" x="7%" y="30%">
+        <rect width="28.35" height="28.35" fill="#7C6576"/>
+    </svg>
+    <svg viewBox="0 0 1 1" id="preview" preserveAspectRatio="none">
+        <use xlink:href="#filterPath" fill="darkgrey"/>
+    </svg>
+    <image xlink:href="" clip-path="url(#clip-path)"/>
+    <svg id="dots" viewBox="0 0 27.4 46.88" width="15%" height="30%" x="65%">
+        <g id="dots_grp_1">
+			<rect y="5.62" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect y="15.53" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect y="25.44" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect y="35.35" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect y="45.26" width="1.62" height="1.62" fill="#3AADAA"/>
+		</g>
+		<g id="dots_grp_2">
+			<rect x="8.59" y="5.62" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="8.59" y="15.53" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="8.59" y="25.44" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="8.59" y="35.35" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="8.59" y="45.26" width="1.62" height="1.62" fill="#3AADAA"/>
+		</g>
+		<g id="dots_grp_3">
+			<rect x="17.18" y="5.62" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="17.18" y="15.53" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="17.18" y="25.44" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="17.18" y="35.35" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="17.18" y="45.26" width="1.62" height="1.62" fill="#3AADAA"/>
+		</g>
+		<g id="dots_grp_4">
+			<rect x="25.78" y="5.62" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="25.78" y="15.53" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="25.78" y="25.44" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="25.78" y="35.35" width="1.62" height="1.62" fill="#3AADAA"/>
+			<rect x="25.78" y="45.26" width="1.62" height="1.62" fill="#3AADAA"/>
+		</g>
+    </svg>
+</svg>
