@@ -584,14 +584,7 @@ export function globalCachedFetch(input, init) {
     if (init?.method && init.method.toLowerCase() !== "get") {
         throw new Error(`cannot use a global cached fetch with HTTP method "${init.method}"`);
     }
-    const key = String(input);
-    if (!(key in globalFetchCache)) {
-        globalFetchCache[key] = realFetch(input, init).catch((reason) => {
-            delete globalFetchCache[key];
-            throw reason;
-        });
-    }
-    return globalFetchCache[key];
+    return realFetch(input, init);
 }
 
 /**
