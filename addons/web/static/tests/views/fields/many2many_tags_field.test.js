@@ -101,9 +101,7 @@ class Turtle extends models.Model {
 
 defineModels([Partner, PartnerType, Turtle]);
 
-onRpc("has_group", () => {
-    return true;
-});
+onRpc("has_group", () => true);
 
 test.tags("desktop");
 test("Many2ManyTagsField with and without color on desktop", async () => {
@@ -1937,12 +1935,12 @@ test("Many2ManyTagsField with edit_tags option", async () => {
 });
 
 test("Many2ManyTagsField with edit_tags option overrides color edition", async () => {
-    expect.assertions(4);
+    expect.assertions(9);
 
     PartnerType._views = {
         form: `<form><field name="name"/><field name="color"/></form>`,
     };
-    Partner._records[0].timmy = [12];
+    Partner._records[0].timmy = [12, 14];
 
     onRpc("get_formview_id", ({ args }) => {
         expect(args[0]).toEqual([12], {
@@ -1964,6 +1962,9 @@ test("Many2ManyTagsField with edit_tags option overrides color edition", async (
         resId: 1,
     });
 
+    expect(".o_field_widget[name=timmy] .o_badge").toHaveCount(2);
+    expect(queryAllTexts(".o_field_widget[name=timmy] .o_badge")).toEqual(["gold", "silver"]);
+
     // Click to try to open form view dialog
     expect(".o_dialog").toHaveCount(0);
     await contains(".o_tag.badge").click();
@@ -1972,6 +1973,10 @@ test("Many2ManyTagsField with edit_tags option overrides color edition", async (
     // Edit name of tag
     await fieldInput("name").edit("new");
     await clickSave();
+
+    expect(".o_field_widget[name=timmy] .o_badge").toHaveCount(2);
+    expect(queryAllTexts(".o_field_widget[name=timmy] .o_badge")).toEqual(["new", "silver"]);
+    expect(".o_form_status_indicator_buttons").not.toBeVisible();
 });
 
 test.tags("mobile");
