@@ -53,32 +53,32 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCommon):
         defaults = tracks._message_get_default_recipients()
         expected_all = {
             self.tracks[0].id: {
-                'email_cc': False, 'email_to': 'not.partner@test.example.com',
+                'email_cc': '', 'email_to': 'not.partner@test.example.com',
                 'partner_ids': [],
             },
-            # event with a partner, partner_email is used
+            # partner wins, being the contact
             self.tracks[1].id: {
-                'email_cc': False, 'email_to': self.event_customer.email,
-                'partner_ids': [],
+                'email_cc': '', 'email_to': '',
+                'partner_ids': self.event_customer.ids,
             },
-            # contact_email > partner_email (speaker info), and normalized is used only
+            # contact(_email) > partner_email (speaker info)
             self.tracks[2].id: {
-                'email_cc': False, 'email_to': 'contact@test.example.com',
-                'partner_ids': [],
+                'email_cc': '', 'email_to': '',
+                'partner_ids': self.event_customer.ids,
             },
-            # find at least one email (no contact_email -> partner_email)
+            # contact wins (whatever email)
             self.tracks[3].id: {
-                'email_cc': False, 'email_to': 'speaker@test.example.com',
-                'partner_ids': [],
+                'email_cc': '', 'email_to': '',
+                'partner_ids': self.event_customer.ids,
             },
-            # FIXME wrong contact email
+            # wrong email -> fallback on valid speaker email
             self.tracks[4].id: {
-                'email_cc': False, 'email_to': 'wrong',
+                'email_cc': '', 'email_to': 'speaker@test.example.com',
                 'partner_ids': [],
             },
             # no partner: contact then speaker
             self.tracks[5].id: {
-                'email_cc': False, 'email_to': 'contact@test.example.com',
+                'email_cc': '', 'email_to': '"Contact" <contact@test.example.com>',
                 'partner_ids': [],
             },
         }
@@ -110,7 +110,21 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCommon):
                     'partner_id': self.event_customer.id,
                 },
             ],
-            # partner > contact_email (should be the same anyway)
+            # suggested take both partner and contact_email, as they are different
+            [
+                {
+                    'create_values': {},
+                    'email': self.event_customer.email_normalized,
+                    'name': self.event_customer.name,
+                    'partner_id': self.event_customer.id,
+                }, {
+                    'create_values': {},
+                    'email': 'contact@test.example.com',
+                    'name': 'Contact',
+                    'partner_id': False,
+                },
+            ],
+            # contact wins (whatever email)
             [
                 {
                     'create_values': {},
@@ -119,22 +133,18 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCommon):
                     'partner_id': self.event_customer.id,
                 },
             ],
-            # FIXME partner wo email is taken
-            [
-                {
-                    'create_values': {},
-                    'email': self.event_customer.email_normalized,
-                    'name': self.event_customer.name,
-                    'partner_id': self.event_customer.id,
-                },
-            ],
-            # partner with wrong email
+            # partner with wrong email: add speaker as fallback
             [
                 {
                     'create_values': {},
                     'email': self.event_customer_wrongemail.email_normalized,
                     'name': self.event_customer_wrongemail.name,
                     'partner_id': self.event_customer_wrongemail.id,
+                }, {
+                    'create_values': {},
+                    'email': 'speaker@test.example.com',
+                    'name': 'Speaker',
+                    'partner_id': False,
                 },
             ],
             # no partner: contact then speaker

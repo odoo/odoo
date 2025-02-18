@@ -239,7 +239,7 @@ class Base(models.AbstractModel):
             email_cc_lst, email_to_lst = [], []
             # main recipients (res.partner)
             recipients_all = customers.get(record.id).filtered(lambda p: not p.is_public)
-            recipients = recipients_all.filtered(lambda p: p.email)
+            recipients = recipients_all.filtered(lambda p: p.email_normalized)
             # to computation
             to_fn = next(
                 (
@@ -269,7 +269,13 @@ class Base(models.AbstractModel):
                 # if no valid recipients nor emails, fallback on recipients even
                 # invalid to have at least some information
                 if recipients:
-                    partner_ids = recipients.ids or recipients_all.ids
+                    partner_ids = recipients.ids
+                    email_to = ''
+                elif recipients_all and len(recipients_all) == len(email_to_lst) and all(
+                    email in recipients_all.mapped('email') for email in email_to_lst
+                ):
+                    # here we just have partners with invalid emails, same as email fields
+                    partner_ids = recipients_all.ids
                     email_to = ''
                 else:
                     partner_ids = [] if email_to_lst else recipients_all.ids
