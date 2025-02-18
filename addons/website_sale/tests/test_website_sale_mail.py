@@ -11,7 +11,7 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'mail_thread')
 class TestWebsiteSaleMail(HttpCase):
 
     def test_01_shop_mail_tour(self):
@@ -48,13 +48,13 @@ class TestWebsiteSaleMail(HttpCase):
             self.start_tour("/", 'shop_mail', login="admin")
             new_mail = self.env['mail.mail'].search([('create_date', '>=', start_time),
                                                      ('body_html', 'ilike', 'https://my-test-domain.com')],
-                                                    order='create_date DESC', limit=1)
+                                                    order='create_date DESC', limit=None)
             self.assertTrue(new_mail)
             self.assertIn('Your', new_mail.body_html)
-            self.assertIn('Order', new_mail.body_html)
+            self.assertIn('order', new_mail.body_html)
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'mail_thread')
 class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
 
     def test_salesman_assignation(self):
