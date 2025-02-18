@@ -347,6 +347,7 @@ class ResPartner(models.Model):
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
     partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
+    duplicate_bank_partner_ids = fields.Many2many(related="bank_ids.duplicate_bank_partner_ids")
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -623,6 +624,7 @@ class ResPartner(models.Model):
     )
 
     # Technical field holding the amount partners that share the same account number as any set on this partner.
+    # TODO remove in master
     duplicated_bank_account_partners_count = fields.Integer(
         compute='_compute_duplicated_bank_account_partners_count',
     )
@@ -668,6 +670,7 @@ class ResPartner(models.Model):
                     partner.supplier_invoice_count += count
                 partner = partner.parent_id
 
+    # TODO remove in master
     def _get_duplicated_bank_accounts(self):
         self.ensure_one()
         if not self.bank_ids:
@@ -747,6 +750,7 @@ class ResPartner(models.Model):
         action['context'] = {'default_move_type': 'out_invoice', 'move_type': 'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
         return action
 
+    # TODO remove in master
     def action_view_partner_with_same_bank(self):
         self.ensure_one()
         bank_partners = self._get_duplicated_bank_accounts()
@@ -1059,3 +1063,6 @@ class ResPartner(models.Model):
         for partner in self:
             country_code = partner.country_id.code or ''
             partner.partner_company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')
+
+    def action_open_business_doc(self):
+        return self._get_records_action()
