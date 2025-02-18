@@ -3,9 +3,16 @@ import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2on
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core"
+import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
+import { PartnerAutoComplete } from "@partner_autocomplete/js/partner_autocomplete_component";
 
 export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
+    static template = "partner_autocomplete.PartnerAutoCompleteMany2XField";
+    static components = {
+        ...Many2XAutocomplete.components,
+        PartnerAutoComplete,
+    };
+
     setup() {
         super.setup();
         this.partnerAutocomplete = usePartnerAutocomplete();
@@ -22,9 +29,13 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
         }
         return sources.concat(
             {
-                options: async (request) => {
+                options: async (request, shouldSearchWorldWide) => {
                     if (this.validateSearchTerm(request)) {
-                        const suggestions = await this.partnerAutocomplete.autocomplete(request);
+                        let queryCountryId = false;
+                    	if (shouldSearchWorldWide){
+							queryCountryId = 0;
+						}
+                        const suggestions = await this.partnerAutocomplete.autocomplete(request, queryCountryId);
                         suggestions.forEach((suggestion) => {
                             suggestion.classList = "partner_autocomplete_dropdown_many2one";
                             suggestion.isFromPartnerAutocomplete = true;

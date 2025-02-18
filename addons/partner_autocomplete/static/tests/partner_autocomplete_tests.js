@@ -263,7 +263,7 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
-            3,
+            4,  // 3 options + 1 for the worldwide option
             "Odoo autocomplete options should be shown"
         );
 
@@ -315,7 +315,7 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
-            3,
+            4,  // 3 options + 1 for the worldwide option
             "Odoo read_by_vat options should be shown"
         );
 
@@ -388,7 +388,7 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
-            5,  //3 suggestions + create + create & edit
+            6,  //3 suggestions + create + create & edit + search worldwide
             "Odoo autocomplete options should be shown"
         );
     });
@@ -407,7 +407,7 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
-            3,
+            4,  // 3 options + 1 for the worldwide option
             "Odoo autocomplete options should be shown"
         );
         // Click on the second option (include realistic events) - "Second company"

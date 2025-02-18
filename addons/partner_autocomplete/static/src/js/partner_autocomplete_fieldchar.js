@@ -1,17 +1,17 @@
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { CharField, charField } from "@web/views/fields/char/char_field";
 import { useInputField } from "@web/views/fields/input_field_hook";
 
-import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core"
+import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
+import { PartnerAutoComplete } from "@partner_autocomplete/js/partner_autocomplete_component";
 
 export class PartnerAutoCompleteCharField extends CharField {
     static template = "partner_autocomplete.PartnerAutoCompleteCharField";
     static components = {
         ...CharField.components,
-        AutoComplete,
+        PartnerAutoComplete,
     };
     setup() {
         super.setup();
@@ -30,9 +30,12 @@ export class PartnerAutoCompleteCharField extends CharField {
     get sources() {
         return [
             {
-                options: async (request) => {
+                options: async (request, shouldSearchWorldWide) => {
                     if (await this.validateSearchTerm(request)) {
-                        const queryCountryId = this.props.record.data?.country_id ? this.props.record.data.country_id[0] : false;
+                        let queryCountryId = this.props.record.data?.country_id ? this.props.record.data.country_id[0] : false;
+                        if (shouldSearchWorldWide){
+                        	queryCountryId = 0;
+                        }
                         const suggestions = await this.partnerAutocomplete.autocomplete(request, queryCountryId);
                         suggestions.forEach((suggestion) => {
                             suggestion.classList = "partner_autocomplete_dropdown_char";
