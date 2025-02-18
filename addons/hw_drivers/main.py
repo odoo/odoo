@@ -7,7 +7,7 @@ import schedule
 from threading import Thread
 import time
 
-from odoo.addons.hw_drivers.tools import helpers, wifi
+from odoo.addons.hw_drivers.tools import certificate, helpers, wifi
 from odoo.addons.hw_drivers.websocket_client import WebsocketClient
 
 if platform.system() == 'Linux':
@@ -84,10 +84,8 @@ class Manager(Thread):
         if platform.system() == 'Linux' and helpers.get_odoo_server_url():
             helpers.check_git_branch()
             helpers.generate_password()
-        is_certificate_ok, certificate_details = helpers.get_certificate_status()
-        if not is_certificate_ok and certificate_details != 'ERR_IOT_HTTPS_CHECK_NO_SERVER':
-            _logger.warning("An error happened when trying to get the HTTPS certificate: %s",
-                            certificate_details)
+
+        certificate.ensure_validity()
 
         # We first add the IoT Box to the connected DB because IoT handlers cannot be downloaded if
         # the identifier of the Box is not found in the DB. So add the Box to the DB.
@@ -99,7 +97,7 @@ class Manager(Thread):
             interface().start()
 
         # Set scheduled actions
-        schedule.every().day.at("00:00").do(helpers.get_certificate_status)
+        schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
 
         # Set up the websocket connection

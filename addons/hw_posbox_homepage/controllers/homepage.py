@@ -13,7 +13,7 @@ from itertools import groupby
 from pathlib import Path
 
 from odoo import http
-from odoo.addons.hw_drivers.tools import helpers, route, wifi
+from odoo.addons.hw_drivers.tools import certificate, helpers, route, wifi
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.tools.misc import file_path
@@ -141,8 +141,6 @@ class IotBoxOwlHomePage(http.Controller):
                     'ip': conf.get('addr', 'No Internet'),
                 } for conf in netifaces.ifaddresses(iface_id).get(netifaces.AF_INET, [])])
 
-        is_certificate_ok, certificate_details = helpers.get_certificate_status()
-
         devices = [{
             'name': device.device_name,
             'value': str(device.data['value']),
@@ -176,8 +174,7 @@ class IotBoxOwlHomePage(http.Controller):
             'network_interfaces': network_interfaces,
             'version': helpers.get_version(),
             'system': platform.system(),
-            'is_certificate_ok': is_certificate_ok,
-            'certificate_details': certificate_details,
+            'certificate_end_date': certificate.get_certificate_end_date(),
             'wifi_ssid': helpers.get_conf('wifi_ssid'),
             'qr_code_wifi' : network_qr_codes.get('qr_wifi'),
             'qr_code_url' : network_qr_codes.get('qr_url'),
