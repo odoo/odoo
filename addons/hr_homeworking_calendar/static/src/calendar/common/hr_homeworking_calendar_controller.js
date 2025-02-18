@@ -9,6 +9,7 @@ patch(AttendeeCalendarController.prototype, {
     setup() {
         super.setup();
         this.action = useService("action");
+        this._baseRendererProps.openWorkLocationWizard = this.openWorkLocationWizard.bind(this);
     },
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {
         if (record.homeworking && 'start' in record) {
@@ -66,11 +67,5 @@ patch(AttendeeCalendarController.prototype, {
                 this.model.load()
             },
         })
-    },
-    get rendererProps() {
-        return {
-            ...super.rendererProps,
-            openWorkLocationWizard: (date) => this.openWorkLocationWizard(date),
-        }
     },
 })
