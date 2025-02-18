@@ -212,7 +212,6 @@ export class CalendarModel extends Model {
             // remove the filter directly, to provide a direct feedback to the user
             this.keepLast.add(Promise.resolve());
             section.filters = section.filters.filter((f) => f.recordId !== recordId);
-            this.notify();
         }
         if (info && info.writeResModel) {
             await this.orm.unlink(info.writeResModel, [recordId]);
@@ -229,7 +228,6 @@ export class CalendarModel extends Model {
         for (const filter of filters) {
             filter.active = active;
         }
-        this.notify();
         const info = this.meta.filtersInfo[fieldName];
         if (info && info.writeFieldName && info.writeResModel && info.filterFieldName) {
             const userFilter = filters.find((f) => f.type === "user");

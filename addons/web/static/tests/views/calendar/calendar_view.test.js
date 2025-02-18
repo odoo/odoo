@@ -19,7 +19,7 @@ import {
     mockTimeZone,
     runAllTimers,
 } from "@odoo/hoot-mock";
-import { Component, onWillRender, onWillStart, xml } from "@odoo/owl";
+import { Component, onRendered, onWillRender, onWillStart, xml } from "@odoo/owl";
 import {
     MockServer,
     contains,
@@ -39,6 +39,7 @@ import {
     patchWithCleanup,
     preloadBundle,
     serverState,
+    validateSearch,
 } from "@web/../tests/web_test_helpers";
 import {
     changeScale,
@@ -5616,4 +5617,26 @@ test(`calendar view with show_unusual_days`, async () => {
         "get_unusual_days from 2016-11-26 23:00:00 to 2017-01-07 22:59:59",
         "get_unusual_days from 2016-12-17 23:00:00 to 2016-12-24 22:59:59",
     ]);
+});
+
+test.tags("desktop");
+test(`calendar renderer is rendered once after search refresh`, async () => {
+    patchWithCleanup(CalendarRenderer.prototype, {
+        setup() {
+            super.setup();
+            onRendered(() => expect.step("rendered"));
+        },
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <filter name="user_id"/>
+            </calendar>
+        `,
+    });
+    expect.verifySteps(["rendered"]);
+    await validateSearch();
+    expect.verifySteps(["rendered"]);
 });

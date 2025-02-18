@@ -178,16 +178,19 @@ export class CalendarFilterPanel extends Component {
 
     onFilterInputChange(section, filter, ev) {
         this.props.model.updateFilters(section.fieldName, [filter], ev.target.checked);
+        this.render();
     }
 
     onAllFilterInputChange(section, ev) {
         this.props.model.updateFilters(section.fieldName, section.filters, ev.target.checked);
+        this.render();
     }
 
     onFilterRemoveBtnClick(section, filter, ev) {
         if (!ev.currentTarget.dataset.unlinked) {
             ev.currentTarget.dataset.unlinked = true;
             this.props.model.unlinkFilter(section.fieldName, filter.recordId);
+            this.render();
         }
     }
 }
