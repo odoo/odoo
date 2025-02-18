@@ -13609,3 +13609,35 @@ test("selection can be enabled by long touch with drag & drop enabled", async ()
     await contains(".o_kanban_record:nth-of-type(1)").click();
     expect(".o_record_selected").toHaveCount(1);
 });
+
+test.tags("desktop");
+test("selection can be enabled by pressing 'space' key", async () => {
+    Product._records[1].fold = true;
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    await press("ArrowDown");
+    await press("Space");
+    await animationFrame();
+    expect(".o_selection_box").toHaveCount(1);
+    await press("ArrowDown");
+    await press("Space");
+    await animationFrame();
+    expect(".o_record_selected").toHaveCount(2);
+    await press("ArrowDown");
+    await press("ArrowDown");
+    await keyDown("Shift");
+    await press("Space");
+    await animationFrame();
+    expect(".o_record_selected").toHaveCount(4);
+});
