@@ -1450,12 +1450,16 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     @api.readonly
-    def name_search(self, name='', args=None, operator='ilike', limit=100) -> list[tuple[int, str]]:
-        """ name_search(name='', args=None, operator='ilike', limit=100)
-
-        Search for records that have a display name matching the given
+    def name_search(
+        self,
+        name: str = '',
+        domain: DomainType | None = None,
+        operator: str = 'ilike',
+        limit: int = 100,
+    ) -> list[tuple[int, str]]:
+        """Search for records that have a display name matching the given
         ``name`` pattern when compared with the given ``operator``, while also
-        matching the optional search domain (``args``).
+        matching the optional search domain (``domain``).
 
         This is used for example to provide suggestions based on a partial
         value for a relational field. Should usually behave as the reverse of
@@ -1466,15 +1470,14 @@ class BaseModel(metaclass=MetaModel):
         the resulting search.
 
         :param str name: the name pattern to match
-        :param list args: optional search domain (see :meth:`~.search` for
-                          syntax), specifying further restrictions
+        :param list domain: optional search domain (see :meth:`~.search` for
+                            syntax), specifying further restrictions
         :param str operator: domain operator for matching ``name``, such as
                              ``'like'`` or ``'='``.
         :param int limit: optional max number of records to return
-        :rtype: list
         :return: list of pairs ``(id, display_name)`` for all matching records.
         """
-        domain = Domain('display_name', operator, name) & Domain(args or [])
+        domain = Domain('display_name', operator, name) & Domain(domain or Domain.TRUE)
         records = self.search_fetch(domain, ['display_name'], limit=limit)
         return [(record.id, record.display_name) for record in records.sudo()]
 

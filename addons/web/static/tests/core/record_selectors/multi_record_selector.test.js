@@ -128,7 +128,7 @@ test("Can give domain and context props for the name search", async () => {
     expect.assertions(4);
     onRpc("partner", "name_search", ({ kwargs }) => {
         expect.step("name_search");
-        expect(kwargs.args).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", [1]]]);
+        expect(kwargs.domain).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", [1]]]);
         expect(kwargs.context.blip).toBe("blop");
     });
 

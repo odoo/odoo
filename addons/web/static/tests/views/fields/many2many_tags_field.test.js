@@ -383,7 +383,7 @@ test("Many2ManyTagsField view a domain on desktop", async () => {
     Partner._records[0].timmy = [12];
     PartnerType._records.push({ id: 99, name: "red", color: 8 });
     onRpc("name_search", (args) => {
-        expect(args.kwargs.args).toEqual([["id", "<", 50]]);
+        expect(args.kwargs.domain).toEqual([["id", "<", 50]]);
     });
 
     await mountView({
@@ -1761,7 +1761,7 @@ test("Many2ManyTagsField doesn't use virtualId for 'name_search' on desktop", as
     onRpc("name_search", ({ kwargs }) => {
         expect.step("name_search");
         // no virtualId in domain
-        expect(kwargs.args).toEqual([]);
+        expect(kwargs.domain).toEqual([]);
     });
     await mountView({
         type: "form",

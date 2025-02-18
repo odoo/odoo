@@ -313,7 +313,7 @@ export class Many2XAutocomplete extends Component {
         return this.orm.call(this.props.resModel, "name_search", [], {
             name: name,
             operator: "ilike",
-            args: this.props.getDomain(),
+            domain: this.props.getDomain(),
             limit: this.props.searchLimit + 1,
             context: this.props.context,
         });
@@ -418,7 +418,7 @@ export class Many2XAutocomplete extends Component {
         if (request.length) {
             const nameGets = await this.orm.call(resModel, "name_search", [], {
                 name: request,
-                args: domain,
+                domain: domain,
                 operator: "ilike",
                 limit: this.props.searchMoreLimit,
                 context,

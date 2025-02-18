@@ -565,13 +565,13 @@ class ProductTemplate(models.Model):
         return domain
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
         # Only use the product.product heuristics if there is a search term and the domain
         # does not specify a match on `product.template` IDs.
         self_obj = self
-        if 'search_product_product' not in self.env.context and any(term[0] == 'id' for term in (args or [])):
+        if 'search_product_product' not in self.env.context and any(term[0] == 'id' for term in (domain or [])):
             self_obj = self_obj.with_context(search_product_product=False)
-        return super(ProductTemplate, self_obj).name_search(name, args, operator, limit)
+        return super(ProductTemplate, self_obj).name_search(name, domain, operator, limit)
 
     #=== ACTION METHODS ===#
 

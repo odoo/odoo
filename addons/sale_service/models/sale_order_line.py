@@ -71,8 +71,8 @@ class SaleOrderLine(models.Model):
         return name_per_id
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        domain = args or []
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        domain = domain or []
         # optimization for a SOL services name_search, to avoid joining on sale_order with too many lines
         if domain and ('is_service', '=', True) in domain and operator in ('like', 'ilike') and limit is not None:
             sols = self.search_fetch(

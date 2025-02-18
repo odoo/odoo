@@ -15797,7 +15797,7 @@ test.tags("desktop");
 test(`view's context is passed down as evalContext`, async () => {
     onRpc("name_search", ({ kwargs }) => {
         expect.step(`name_search`);
-        expect(kwargs.args).toEqual([["someField", "=", "some_value"]]);
+        expect(kwargs.domain).toEqual([["someField", "=", "some_value"]]);
     });
 
     await mountView({
