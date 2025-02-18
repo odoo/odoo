@@ -89,6 +89,31 @@ test("Add image in gallery", async () => {
     );
 });
 
+test("Remove all images in gallery", async () => {
+    await setupWebsiteBuilder(
+        `
+        <section class="s_image_gallery o_masonry" data-columns="2">
+            <div class="container">
+                <div class="o_masonry_col col-lg-6">
+                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
+                </div>
+                <div class="o_masonry_col col-lg-6">
+                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
+                </div>
+            </div>
+        </section>
+        `
+    );
+    await contains(":iframe .first_img").click();
+    expect("[data-action-id='removeAllImages']").toHaveCount(1);
+    await contains("[data-action-id='removeAllImages']").click();
+
+    expect(":iframe .s_image_gallery img").toHaveCount(0);
+    expect(":iframe .o_add_images").toHaveCount(1);
+    await contains(":iframe .o_add_images").click();
+    expect(".o_select_media_dialog").toHaveCount(1);
+});
+
 function dataURItoBlob(dataURI) {
     const binary = atob(dataURI.split(",")[1]);
     const array = [];
