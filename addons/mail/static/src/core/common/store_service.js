@@ -232,8 +232,10 @@ export class Store extends BaseStore {
 
     /** Import data received from init_messaging */
     async initialize() {
-        await this.fetchStoreData("init_messaging");
-        this.isReady.resolve();
+        this.env.services["lazy_session"].getValue("storeData", (storeData) => {
+            this.insert(storeData);
+            this.isReady.resolve();
+        });
     }
 
     /**
@@ -635,7 +637,7 @@ export class Store extends BaseStore {
 Store.register();
 
 export const storeService = {
-    dependencies: ["bus_service", "im_status", "ui"],
+    dependencies: ["bus_service", "im_status", "lazy_session", "ui"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
