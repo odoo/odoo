@@ -46,6 +46,7 @@ class SaleOrderLine(models.Model):
         return description
 
     def get_description_following_lines(self):
+        self._compute_name()
         return self.name.splitlines()[1:]
 
     def _get_order_date(self):
