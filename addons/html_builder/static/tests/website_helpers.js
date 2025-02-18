@@ -1,5 +1,5 @@
 import { Builder } from "@html_builder/builder";
-import { DropZonePlugin } from "@html_builder/core/plugins/drop_zone_plugin";
+import { SetupEditorPlugin } from "@html_builder/core/plugins/setup_editor_plugin";
 import { EditInteractionPlugin } from "@html_builder/website_builder/plugins/edit_interaction_plugin";
 import { WebsiteSessionPlugin } from "@html_builder/website_builder/plugins/website_session_plugin";
 import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";
@@ -76,7 +76,7 @@ export async function setupWebsiteBuilder(
     let editableContent;
     await mountWithCleanup(WebClient);
     let originalIframeLoaded;
-    let resolveIframeLoaded = () => {};
+    let resolveIframeLoaded = () => { };
     const iframeLoaded = new Promise((resolve) => {
         resolveIframeLoaded = (el) => {
             const iframe = el;
@@ -125,8 +125,8 @@ export async function setupWebsiteBuilder(
             super.setup();
             // See loadAssetsEditBundle override in WebsiteBuilder patch.
             this.websiteEditService = {
-                update: () => {},
-                stop: () => {},
+                update: () => { },
+                stop: () => { },
             };
         },
     });
@@ -138,10 +138,12 @@ export async function setupWebsiteBuilder(
         },
     });
 
-    patchWithCleanup(DropZonePlugin.prototype, {
+    patchWithCleanup(SetupEditorPlugin.prototype, {
         setup() {
             super.setup();
-            editableContent = this.editableContentEls[0];
+            editableContent = this.getEditableElements(
+                '.oe_structure.oe_empty, [data-oe-type="html"]'
+            )[0];
         },
     });
 

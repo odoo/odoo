@@ -4,25 +4,13 @@ import { isBlock } from "@html_editor/utils/blocks";
 import { _t } from "@web/core/l10n/translation";
 import { closest, touching } from "@web/core/utils/ui";
 
-function filterFunction(el, exclude) {
-    // TODO add all filter like website
-    if (exclude && el.matches(exclude)) {
-        return false;
-    }
-    return true;
-}
-
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
     static dependencies = ["history"];
     static shared = ["displayDropZone", "dragElement", "clearDropZone", "getAddElement"];
 
-    // Elements in which the initial dropzone can appear.
-    static editableContentsSelector = '.oe_structure.oe_empty, [data-oe-type="html"]';
-
     resources = {
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
-        normalize_handlers: this.updateEmptyDropZone.bind(this),
     };
 
     setup() {
@@ -43,12 +31,12 @@ export class DropZonePlugin extends Plugin {
         return true;
     }
 
-    isDroppable(el, { selector, exclude }) {
-        return el.matches(selector) && filterFunction(el, exclude);
+    isDroppable(el, { selector, exclude = false }) {
+        return el.matches(selector) && !el.matches(exclude);
     }
 
     getAll(selector) {
-        return [...this.editable.querySelectorAll(selector)].filter((el) => filterFunction(el));
+        return [...this.editable.querySelectorAll(selector)];
     }
 
     getSelectors(snippet) {
@@ -75,34 +63,12 @@ export class DropZonePlugin extends Plugin {
         };
     }
 
-    /**
-     * Return the element(s) where the initial area to drag & drop snippets
-     * should appear.
-     */
-    get editableContentEls() {
-        return Array.from(
-            this.editable.querySelectorAll(this.constructor.editableContentsSelector)
-        ).filter((el) => {
-            const parent = el.closest(".o_editable, .o_not_editable");
-            return !parent || parent.classList.contains("o_editable");
-        });
-    }
-
-    /**
-     * Return the initial drop zone(s) which show a message to start dropping
-     * snippets.
-     */
-    get emptyDropZoneEls() {
-        return this.editableContentEls
-            .map((el) => el.querySelector(".oe_drop_zone.oe_insert[data-editor-message]"))
-            .filter((el) => el);
-    }
-
     createDropZone() {
-        const dropZone = this.document.createElement("div");
-        dropZone.className = "oe_drop_zone oe_insert";
-        this.dropZoneElements.push(dropZone);
-        return dropZone;
+        const dropZoneEl = this.document.createElement("div");
+        dropZoneEl.className = "oe_drop_zone oe_insert";
+        dropZoneEl.dataset.editorMessage = _t("DRAG BUILDING BLOCKS HERE");
+        this.dropZoneElements.push(dropZoneEl);
+        return dropZoneEl;
     }
 
     displayDropZone(snippet) {
@@ -113,12 +79,10 @@ export class DropZonePlugin extends Plugin {
         const targets = [];
         for (const el of selectorChildren) {
             targets.push(...el.children);
+            el.prepend(this.createDropZone());
         }
         targets.push(...selectorSiblings);
 
-        if (this.emptyDropZoneEls.length) {
-            return;
-        }
         for (const target of targets) {
             if (!target.nextElementSibling?.classList.contains("oe_drop_zone")) {
                 target.after(this.createDropZone());
@@ -138,22 +102,6 @@ export class DropZonePlugin extends Plugin {
         }
 
         this.dropZoneElements = [];
-        this.updateEmptyDropZone();
-    }
-
-    updateEmptyDropZone() {
-        const emptyEditableContentEls = this.editableContentEls.filter((el) =>
-            el.matches(":empty")
-        );
-        if (emptyEditableContentEls.length) {
-            emptyEditableContentEls.forEach((el) => {
-                const emptyDropZoneEl = this.createDropZone();
-                emptyDropZoneEl.dataset.editorMessage = _t("DRAG BUILDING BLOCKS HERE");
-                el.appendChild(emptyDropZoneEl);
-            });
-        } else {
-            this.emptyDropZoneEls.forEach((el) => el.remove());
-        }
     }
 
     dragElement(element) {
@@ -176,41 +124,35 @@ export class DropZonePlugin extends Plugin {
      * @returns {Function}
      */
     getAddElement(position) {
-        const cancel = () => {
-            this.clearDropZone();
-            return () => {};
-        };
         // Drag & drop over sidebar: cancel the action.
         if (position && !touching([this.document.body], position).length) {
             // TODO: do we want that key with an empty function? Or should we
             // check everytime we call getAddElement if the result is undefined
             // before continuing?
-            cancel.noDrop = true;
-            return cancel;
+            this.clearDropZone();
+            return;
         }
         const dropZone = position
             ? closest(touching(this.dropZoneElements, position), position) ||
-              closest(this.dropZoneElements, position)
+            closest(this.dropZoneElements, position)
             : closest(this.dropZoneElements, {
-                  x: window.innerWidth / 2,
-                  y: window.innerHeight / 2,
-              });
+                x: window.innerWidth / 2,
+                y: window.innerHeight / 2,
+            });
         if (!dropZone) {
-            return cancel();
+            this.clearDropZone();
+            return;
         }
 
-        let target, insertMethod;
-        if (this.emptyDropZoneEls.includes(dropZone)) {
-            insertMethod = "appendChild";
-            target = dropZone.parentElement;
-        }
+        let target = dropZone.previousSibling;
+        let insertMethod = "after";
         if (!target) {
-            insertMethod = "after";
-            target = dropZone.previousSibling;
-        }
-        if (!target) {
-            insertMethod = "before";
             target = dropZone.nextSibling;
+            insertMethod = "before";
+        }
+        if (!target) {
+            target = dropZone.parentElement;
+            insertMethod = "appendChild";
         }
         this.clearDropZone();
         return (elementToAdd) => {

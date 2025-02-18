@@ -43,15 +43,13 @@ test("drag & drop inner content block", async () => {
 
     const { moveTo, drop } = await contains(".o-website-builder_sidebar [name='Button A']").drag();
     await animationFrame(); // TODO we should remove it maybe bug utils hoot
-    expect(contentEl).toHaveInnerHTML(
-        `<div><div class="oe_drop_zone oe_insert"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
-    );
+    expect(":iframe .oe_drop_zone:nth-child(1)").toHaveCount(1);
+    expect(":iframe .oe_drop_zone:nth-child(3)").toHaveCount(1);
+
     expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
 
     await moveTo(contentEl.querySelector(".oe_drop_zone"));
-    expect(contentEl).toHaveInnerHTML(
-        `<div><div class="oe_drop_zone oe_insert o_dropzone_highlighted"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
-    );
+    expect(":iframe .oe_drop_zone.o_dropzone_highlighted:nth-child(1)").toHaveCount(1);
     expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
 
     await drop(contentEl.querySelector(".oe_drop_zone"));
@@ -93,9 +91,8 @@ test("drag inner content & drop in outside of a dropzone", async () => {
     expect(contentEl).toHaveInnerHTML(`<div><p>Text</p></div>`);
 
     const { drop } = await contains(".o-website-builder_sidebar [name='Button A']").drag();
-    expect(contentEl).toHaveInnerHTML(
-        `<div><div class="oe_drop_zone oe_insert"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
-    );
+    expect(":iframe .oe_drop_zone:nth-child(1)").toHaveCount(1);
+    expect(":iframe .oe_drop_zone:nth-child(3)").toHaveCount(1);
 
     await drop(builderEl);
     expect(contentEl).toHaveInnerHTML(`<div><p>Text</p></div>`);

@@ -1,5 +1,5 @@
 import { Builder } from "@html_builder/builder";
-import { DropZonePlugin } from "@html_builder/core/plugins/drop_zone_plugin";
+import { SetupEditorPlugin } from "@html_builder/core/plugins/setup_editor_plugin";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
@@ -155,7 +155,7 @@ export async function setupHTMLBuilder(content = "", { snippetContent, dropzoneS
     });
 
     // hack to get a promise that resolves when editor is ready
-    patchWithCleanup(DropZonePlugin.prototype, {
+    patchWithCleanup(SetupEditorPlugin.prototype, {
         setup() {
             super.setup();
             _resolve();

@@ -68,6 +68,9 @@ export class BlockTab extends Component {
                     return;
                 }
                 const addElement = this.dropzonePlugin.getAddElement(position);
+                if (!addElement) {
+                    return;
+                }
                 addElement(snippet.content.cloneNode(true));
             },
             onDragEnd: () => {
@@ -88,7 +91,7 @@ export class BlockTab extends Component {
             this.dropzonePlugin.displayDropZone(snippet);
         }
         const addElement = this.dropzonePlugin.getAddElement(position);
-        if (addElement.noDrop) {
+        if (!addElement) {
             return;
         }
         this.snippetModel.select(snippet, {

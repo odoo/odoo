@@ -353,20 +353,11 @@ test("drag&drop snippet structure", async () => {
     const { moveTo, drop } = await contains(
         `.o-snippets-menu [data-category="snippet_groups"] div`
     ).drag();
-    expect(editableContent).toHaveInnerHTML(
-        unformat(`
-        <div class="oe_drop_zone oe_insert"></div>
-        <section class="o_colored_level"><p>Text</p></section>
-        <div class="oe_drop_zone oe_insert"></div>`)
-    );
+    expect(":iframe .oe_drop_zone:nth-child(1)").toHaveCount(1);
+    expect(":iframe .oe_drop_zone:nth-child(3)").toHaveCount(1);
 
     await moveTo(editableContent.querySelector(".oe_drop_zone"));
-    expect(editableContent).toHaveInnerHTML(
-        unformat(`
-        <div class="oe_drop_zone oe_insert o_dropzone_highlighted"></div>
-        <section class="o_colored_level"><p>Text</p></section>
-        <div class="oe_drop_zone oe_insert"></div>`)
-    );
+    expect(":iframe .oe_drop_zone.o_dropzone_highlighted:nth-child(1)").toHaveCount(1);
     await drop();
     expect(".o_add_snippet_dialog").toHaveCount(1);
     expect(editableContent).toHaveInnerHTML(
@@ -389,21 +380,19 @@ test("drag&drop snippet structure", async () => {
 
 test("cancel snippet drag & drop over sidebar", async () => {
     const { getEditableContent } = await setupWebsiteBuilderWithDummySnippet();
-    const initialDropZone = `<div class="oe_drop_zone oe_insert" data-editor-message="DRAG BUILDING BLOCKS HERE"></div>`;
     const editableContent = getEditableContent();
-    expect(editableContent).toHaveInnerHTML(initialDropZone);
+
     const { moveTo, drop } = await contains(
         `.o-snippets-menu [data-category="snippet_groups"] div`
     ).drag();
-    expect(editableContent).toHaveInnerHTML(unformat(initialDropZone));
+    expect(":iframe .oe_drop_zone").toHaveCount(1);
 
     await moveTo(".o-website-builder_sidebar");
-    expect(editableContent).toHaveInnerHTML(unformat(initialDropZone));
     // Specifying an explicit target should not be needed, but the test
     // sometimes fails, probably because the snippet is partially touching the
     // iframe. We drop on the "Save" button to be as far as possible from the
     // iframe.
     await drop("button[data-action=save]");
     expect(".o_add_snippet_dialog").toHaveCount(0);
-    expect(editableContent).toHaveInnerHTML(unformat(initialDropZone));
+    expect(editableContent).toHaveInnerHTML("");
 });
