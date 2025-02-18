@@ -60,7 +60,7 @@ export class Homepage extends Component {
         );
         if (wifiInterface) {
             return this.state.data.is_access_point_up
-                ? "No internet connection - click on \"Configure\""
+                ? 'No internet connection - click on "Configure"'
                 : `Wi-Fi: ${wifiInterface.ssid}`;
         }
         return "Not Connected";
@@ -162,7 +162,8 @@ export class Homepage extends Component {
 					<ServerDialog />
 				</t>
 			</SingleData>
-            <SingleData t-if="state.data.pairing_code and !this.store.base.is_access_point_up" name="'Pairing Code'" value="state.data.pairing_code" icon="'fa-code'"/>
+            <SingleData t-if="state.data.pairing_code and !this.store.base.is_access_point_up" name="'Pairing Code'" value="state.data.pairing_code + ' - Enter this code in the IoT app in your Odoo database'" icon="'fa-code'"/>
+            <SingleData t-if="state.data.pairing_code_expired" name="'Pairing Code'" value="'Code has expired - restart the IoT Box to generate a new one'" icon="'fa-code'"/>
             <SingleData  t-if="store.advanced and !store.base.is_access_point_up" name="'Six terminal'" value="state.data.six_terminal" icon="'fa-money'">
                 <t t-set-slot="button">
                     <SixDialog />
