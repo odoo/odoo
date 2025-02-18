@@ -912,15 +912,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
      */
     function loadData(rawData, load = [], fromSerialized = false) {
         const results = {};
-        const oldStates = {};
         const ignoreConnection = {};
 
         for (const model in rawData) {
             ignoreConnection[model] = [];
             const modelKey = database[model]?.key || "id";
-            if (!oldStates[model]) {
-                oldStates[model] = {};
-            }
 
             if (!load.includes(model) && load.length !== 0) {
                 continue;
@@ -942,17 +938,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
                 const oldRecord = indexedRecords[model][modelKey][record[modelKey]];
                 if (oldRecord) {
-                    oldStates[model][oldRecord[modelKey]] = oldRecord.serializeState();
-                    for (const [f, p] of Object.entries(modelClasses[model]?.extraFields || {})) {
-                        if (X2MANY_TYPES.has(p.type)) {
-                            record[f] = oldRecord[f]?.map((r) => r.id) || [];
-                            continue;
-                        }
-                        record[f] = oldRecord[f]?.id || false;
-                    }
-                }
-
-                if (oldRecord) {
                     const raw = {};
                     for (const [field, value] of Object.entries(record)) {
                         const params = getFields(model)[field];
@@ -961,11 +946,18 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         }
 
                         if (X2MANY_TYPES.has(params.type)) {
-                            value.push(
-                                ...oldRecord[field]
-                                    .filter((r) => typeof r.id === "string")
-                                    .map((r) => r.id)
-                            );
+                            if (
+                                fromSerialized ||
+                                (oldRecord._dynamicModels.includes(params.relation) &&
+                                    database[params.relation]?.key &&
+                                    database[params.relation]?.key !== "id")
+                            ) {
+                                value.push(
+                                    ...oldRecord[field]
+                                        .filter((r) => typeof r.id === "string")
+                                        .map((r) => r.id)
+                                );
+                            }
                             const existingRecords = value
                                 .map((r) => models[params.relation]?.get(r))
                                 .filter(Boolean);
@@ -973,7 +965,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             if (existingRecords.length) {
                                 record[field] = [["set", ...existingRecords]];
                             } else {
-                                record[field] = [];
+                                record[field] = [["clear"]];
                             }
 
                             raw[field] = value.filter((id) => typeof id === "number");
@@ -1000,14 +992,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
 
                 const result = create(model, record, true, false, true);
-                if (oldRecord && oldRecord.id !== result.id) {
-                    oldRecord.delete();
-                }
-
-                if (!(model in results)) {
-                    results[model] = [];
-                }
-
                 results[model].push(result);
             }
         }
@@ -1088,12 +1072,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         // Setup all records when relations are linked
         for (const { raw, record } of modelToSetup) {
             record.setup(raw);
-            const model = record.model.modelName;
-            const modelKey = database[model]?.key || "id";
-            const states = oldStates[model][record[modelKey]];
-            if (states) {
-                record.setupState(states);
-            }
         }
 
         makeRecordsAvailable(results, rawData);
