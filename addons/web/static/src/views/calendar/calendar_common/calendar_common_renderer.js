@@ -1,6 +1,6 @@
 import { getLocalYearAndWeek, is24HourFormat } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { renderToString } from "@web/core/utils/render";
+import { renderToFragment, renderToString } from "@web/core/utils/render";
 import { getColor } from "../colors";
 import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
@@ -225,14 +225,12 @@ export class CalendarCommonRenderer extends Component {
         const record = this.props.model.records[event.id];
         if (record) {
             // This is needed in order to give the possibility to change the event template.
-            const injectedContentStr = renderToString(this.constructor.eventTemplate, {
+            const fragment = renderToFragment(this.constructor.eventTemplate, {
                 ...record,
                 startTime: this.getStartTime(record),
                 endTime: this.getEndTime(record),
             });
-            const domParser = new DOMParser();
-            const { children } = domParser.parseFromString(injectedContentStr, "text/html").body;
-            return { domNodes: children };
+            return { domNodes: fragment.children };
         }
         return true;
     }
