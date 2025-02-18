@@ -29,6 +29,14 @@ export const barcodeService = {
         return barcode.replace(/Alt|Shift|Control/g, '');
     },
 
+    handleBarcode(bus, barcode, target) {
+        bus.trigger('barcode_scanned', {barcode,target});
+        if (target.getAttribute('barcode_events') === "true") {
+            const barcodeScannedEvent = new CustomEvent("barcode_scanned", { detail: { barcode, target } });
+            target.dispatchEvent(barcodeScannedEvent);
+        }
+    },
+
     start() {
         const bus = new EventBus();
         let timeout = null;
@@ -36,14 +44,6 @@ export const barcodeService = {
         let bufferedBarcode = "";
         let currentTarget = null;
         let barcodeInput = null;
-
-        function handleBarcode(barcode, target) {
-            bus.trigger('barcode_scanned', {barcode,target});
-            if (target.getAttribute('barcode_events') === "true") {
-                const barcodeScannedEvent = new CustomEvent("barcode_scanned", { detail: { barcode, target } });
-                target.dispatchEvent(barcodeScannedEvent);
-            }
-        }
 
         /**
          * check if we have a barcode, and trigger appropriate events
@@ -55,7 +55,7 @@ export const barcodeService = {
                 if (ev) {
                     ev.preventDefault();
                 }
-                handleBarcode(str, currentTarget);
+                barcodeService.handleBarcode(bus, str, currentTarget);
             }
             if (barcodeInput) {
                 barcodeInput.value = "";
@@ -105,9 +105,6 @@ export const barcodeService = {
         }
 
         function mobileChromeHandler(ev) {
-            if (ev.key === "Unidentified") {
-                return;
-            }
             if (document.activeElement && !document.activeElement.matches('input:not([type]), input[type="text"], textarea, [contenteditable], ' +
                 '[type="email"], [type="number"], [type="password"], [type="tel"], [type="search"]')) {
                 barcodeInput.focus();
