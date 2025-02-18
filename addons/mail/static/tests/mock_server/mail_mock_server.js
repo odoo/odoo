@@ -648,6 +648,9 @@ async function mail_message_update_content(request) {
     if (body === "" && attachment_ids.length === 0) {
         MailMessage.write([message_id], { pinned_at: false });
         MailMessage._cleanup_side_records([message_id]);
+        BusBus._sendone(MailMessage._bus_notification_target(message_id), "mail.message/delete", {
+            message_ids: [message_id],
+        });
     }
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
     const broadcast_store = new mailDataHelpers.Store(IrAttachment.browse(attachment_ids));
