@@ -13,6 +13,8 @@
         'web.assets_backend': [
             'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
+            'barcodes_gs1_nomenclature/static/src/js/epc_model.js',
+            'barcodes_gs1_nomenclature/static/src/js/epc_utils.js',
         ],
         'web.assets_unit_tests': [
             'barcodes_gs1_nomenclature/static/src/js/tests/**/*',
