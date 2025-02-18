@@ -15,9 +15,5 @@ registry.category("web_tour.tours").add("chatbot_fw_operator_matching_lang", {
             trigger:
                 ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(joined the channel)",
         },
-        {
-            trigger:
-                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(left the channel)",
-        },
     ],
 });

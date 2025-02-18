@@ -23,9 +23,5 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_forward", {
             trigger:
                 ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(joined the channel)",
         },
-        {
-            trigger:
-                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(Forward Bot left the channel)",
-        },
     ],
 });
