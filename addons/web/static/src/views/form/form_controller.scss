@@ -53,6 +53,7 @@
 
 .o_form_view {
     --fieldWidget-margin-bottom: #{$o-form-spacing-unit};
+    --Ribbon-z-index: 1;
 
     @include media-breakpoint-up(md) {
         display: flex;
@@ -313,7 +314,7 @@
         @include media-breakpoint-up(md) {
             position: sticky;
             top: 0;
-            z-index: 1;
+            z-index: $zindex-sticky;
 
             &:not(.modal .o_form_statusbar) {
                 background-color: $body-bg;
