@@ -27,6 +27,7 @@ class TestUBLNL(TestUBLCommon):
             'peppol_eas': '0106',
             'peppol_endpoint': '77777677',
             'ref': 'ref_partner_1',
+            'invoice_edi_format': 'nlcius',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -40,6 +41,7 @@ class TestUBLNL(TestUBLCommon):
             'peppol_eas': '0106',
             'peppol_endpoint': '1234567',
             'ref': 'ref_partner_2',
+            'invoice_edi_format': 'nlcius',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({

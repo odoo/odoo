@@ -1572,6 +1572,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             "default_code": "CHAIR_01",
         })
+        self.env['product.product'].create({
+            'name': 'clémentine',
+            'available_in_pos': True,
+        })
         self.main_pos_config.open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchProducts', login="pos_user")
 
