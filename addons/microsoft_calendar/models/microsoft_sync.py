@@ -87,15 +87,14 @@ class MicrosoftSync(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        if self.env.user.microsoft_synchronization_stopped:
-            for vals in vals_list:
-                vals.update({'need_sync_m': False})
         records = super().create(vals_list)
 
-        if self.env.user._get_microsoft_sync_status() != "sync_paused":
-            for record in records:
-                if record.need_sync_m and record.active:
-                    record._microsoft_insert(record._microsoft_values(self._get_microsoft_synced_fields()), timeout=3)
+        for record in records:
+            user_id = record._get_event_user_m()
+            if user_id.microsoft_synchronization_stopped:
+                record.need_sync_m = False
+            if record.need_sync_m and record.active and user_id._get_microsoft_sync_status() != "sync_paused":
+                record._microsoft_insert(record._microsoft_values(self._get_microsoft_synced_fields()), timeout=3)
         return records
 
     @api.model
