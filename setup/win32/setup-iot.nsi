@@ -171,7 +171,7 @@ Section $(TITLE_Odoo_IOT) SectionOdoo_IOT
     # cloning odoo
     SetOutPath "$INSTDIR"
     DetailPrint "Cloning Odoo"
-    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter tree:0 -b 18.0 --single-branch https://github.com/odoo/odoo.git "$INSTDIR\server"'
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter tree:0 -b 18.0 --single-branch https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
     pop $0
 
     DetailPrint "Installing vcredist"
@@ -184,12 +184,12 @@ Section $(TITLE_Odoo_IOT) SectionOdoo_IOT
 
     DetailPrint "Writing odoo.conf"
     # Fix the addons path
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "addons_path" "$INSTDIR\server\odoo\addons,$INSTDIR\server\addons"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "addons_path" "$INSTDIR\odoo\odoo\addons,$INSTDIR\odoo\addons"
     # Set data_dir
     WriteIniStr "$INSTDIR\odoo.conf" "options" "data_dir" "$INSTDIR\sessions"
 
     DetailPrint "Configuring $(TITLE_Odoo_IOT)"
-    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init -c "$INSTDIR\odoo.conf" --logfile "$INSTDIR\odoo.log" -s'
+    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\odoo\odoo-bin" --stop-after-init -c "$INSTDIR\odoo.conf" --logfile "$INSTDIR\odoo.log" -s'
     WriteIniStr "$INSTDIR\odoo.conf" "options" "server_wide_modules" "web,hw_posbox_homepage,hw_drivers"
     WriteIniStr "$INSTDIR\odoo.conf" "options" "list_db" "False"
     WriteIniStr "$INSTDIR\odoo.conf" "options" "max_cron_threads" "0"
@@ -197,7 +197,7 @@ Section $(TITLE_Odoo_IOT) SectionOdoo_IOT
     DetailPrint "Installing Windows service"
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe"'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\python$\""'
-    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\server\odoo-bin\" -c "\"$INSTDIR\odoo.conf\"'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\odoo\odoo-bin\" -c "\"$INSTDIR\odoo.conf\"'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
     AccessControl::GrantOnFile  "$INSTDIR" "LOCALSERVICE" "FullAccess"
 
@@ -285,7 +285,7 @@ Section "Uninstall"
     nsExec::Exec "sc delete ${SERVICENAME}"
     sleep 2
 
-    Rmdir /r "$INSTDIR\server"
+    Rmdir /r "$INSTDIR\odoo"
     Rmdir /r "$INSTDIR\sessions"
     Rmdir /r "$INSTDIR\thirdparty"
     Rmdir /r "$INSTDIR\python"
