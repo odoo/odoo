@@ -213,7 +213,7 @@ class Base(models.AbstractModel):
             sequence = 100
         return sequence
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         """ Generic implementation for finding default recipient to mail on
         a recordset. This method is a generic implementation available for
         all models as we could send an email through mail templates on models
@@ -225,8 +225,12 @@ class Base(models.AbstractModel):
         compared to partner if `_mail_defaults_to_email` class parameter is set.
 
         Override this method on a specific model to implement model-specific
-        behavior. Also consider inheriting from ``mail.thread``. """
-        include_cc = self.env.context.get('mail_recipients_include_cc')
+        behavior. Also consider inheriting from ``mail.thread``.
+
+        :param with_cc: take into account CC-like field. By default those are
+          not considered as valid for 'default recipients' e.g. in mailings,
+          automated actions, ...
+        """
         res = {}
         customers = self._mail_get_partners()
         prioritize_email = getattr(self, '_mail_defaults_to_email', False)
@@ -257,11 +261,10 @@ class Base(models.AbstractModel):
                     fname for fname in ['email_cc', 'partner_email_cc', 'x_email_cc']
                     if fname in record and record[fname]
                 ), False
-            ) if include_cc else ''
+            ) if with_cc else ''
             if cc_fn:
                 email_cc_lst = tools.mail.email_split_and_format_normalize(record[cc_fn]) or [record[cc_fn]]
-            # prioritize recipients: default, or when to == recipients emails, or
-            # when no email_to
+            # prioritize recipients: default unless asked through '_mail_defaults_to_email', or when no email_to
             if not prioritize_email or not email_to_lst:
                 # if no valid recipients nor emails, fallback on recipients even
                 # invalid to have at least some information

@@ -146,7 +146,7 @@ class MailingContact(models.Model):
         contact = self.create({'name': name, 'email': email, 'list_ids': [(4, list_id)]})
         return contact.id, contact.display_name
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         return {
             r.id: {
                 'partner_ids': [],

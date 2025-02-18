@@ -1982,7 +1982,7 @@ class CrmLead(models.Model):
             res.update(super(CrmLead, leftover)._notify_get_reply_to(default=default, author_id=author_id))
         return res
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         return {
             r.id: {
                 'partner_ids': [],

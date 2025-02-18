@@ -473,7 +473,7 @@ class EventTrack(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         return {
             track.id: {
                 'partner_ids': [],

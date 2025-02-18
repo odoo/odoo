@@ -348,8 +348,8 @@ class TestAPI(MailCommon, TestRecipients):
         # test default computation of recipients
         self.env.invalidate_all()
         with self.assertQueryCount(20):
-            defaults_withcc = test_records.with_context(mail_recipients_include_cc=True)._message_get_default_recipients()
-            defaults_withoutcc = test_records.with_context(mail_recipients_include_cc=False)._message_get_default_recipients()
+            defaults_withcc = test_records.with_context()._message_get_default_recipients(include_cc=True)
+            defaults_withoutcc = test_records.with_context()._message_get_default_recipients()
         for record, expected in zip(test_records, [
             {
                 # customer_id first for partner_ids; partner > email
