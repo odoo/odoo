@@ -8,6 +8,8 @@ from markupsafe import Markup
 
 from odoo import api, exceptions, models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
+from odoo.tools import parse_contact_from_email
+from odoo.tools.mail import email_normalize, email_split_and_format
 
 import logging
 
@@ -295,6 +297,126 @@ class Base(models.AbstractModel):
                 'partner_ids': partner_ids,
             }
         return res
+
+    def _message_add_suggested_recipients(self, primary_email=False):
+        self.ensure_one()
+        email_to_lst, partners = [], self.env['res.partner']
+
+        # add responsible
+        user_field = self._fields.get('user_id')
+        if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
+            # SUPERUSER because of a read on res.users that would crash otherwise
+            partners += self.sudo().user_id.partner_id
+
+        # add customers
+        partners += self._mail_get_partners()[self.id].filtered(lambda p: not p.is_public)
+
+        # add email
+        if not primary_email:
+            email_fname = self._mail_get_primary_email_field()
+            if email_fname and self[email_fname]:
+                email_to_lst.append(self[email_fname])
+        else:
+            email_to_lst.append(primary_email)
+
+        return email_to_lst, partners
+
+    def _message_get_suggested_recipients(self, reply_discussion=False, reply_message=None,
+                                          no_create=True, primary_email=False, additional_partners=None):
+        """ Get suggested recipients, contextualized depending on discussion.
+
+        :param bool reply_discussion: consider user replies to the discussion.
+          Last relevant message is fetched and used to search for additional
+          'To' and 'Cc' to propose;
+        :param bool reply_message: specific message user is replying-to. Bypasses
+          'reply_discussion';
+        :param bool no_create: do not create partners when emails are not linked
+          to existing partners, see '_partner_find_from_emails';
+        :param bool primary_email: new primary_email that isn't stored inside DB;
+        :param bool additional_partners: partners that needs to be added to the suggested recipients;
+
+        :returns: list of dictionaries (per suggested recipient) containing:
+            * create_values:         dict: data to populate new partner, if not found
+            * email:                 str: email of recipient
+            * name:                  str: name of the recipient
+            * partner_id:            int: recipient partner id
+        """
+        def email_key(email):
+            return email_normalize(email, strict=False) or email.strip()
+
+        self.ensure_one()
+        email_to_lst, partners = self._message_add_suggested_recipients(primary_email)
+        partners += additional_partners or self.env['res.partner']
+
+        # find last relevant message
+        if reply_discussion and 'message_ids' in self:
+            messages = self.message_ids.sorted(
+                lambda msg: (
+                    msg.message_type == 'email',              # incoming email = probably customer
+                    msg.message_type == 'comment',            # user input > other input
+                    msg.date, msg.id,                         # newer first
+                ), reverse=True,
+            )
+            reply_message = next(
+                (msg for msg in messages if msg.message_type in ('comment', 'email')),
+                self.env['mail.message']
+            )
+        # fetch answer-based recipients as well as author
+        if reply_message:
+            # direct recipients, and author if not archived / root
+            partners += (reply_message.partner_ids | reply_message.author_id).filtered(lambda p: p.active)
+            # To and Cc emails (mainly for incoming email), and email_from if not linked to hereabove author
+            email_to_lst += [reply_message.incoming_email_to or '', reply_message.incoming_email_cc or '', reply_message.email_from or '']
+            from_normalized = email_normalize(reply_message.email_from)
+            if from_normalized and from_normalized != reply_message.author_id.email_normalized:
+                email_to_lst.append(reply_message.email_from)
+        # flatten emails, as some inputs are stringified list of emails (e.g. Cc, To)
+        email_to_lst = [
+            e for email_input in email_to_lst
+            for e in email_split_and_format(email_input)
+            if e and e.strip()
+        ]
+
+        # organize and deduplicate partners, exclude followers, keep ordering
+        followers = self.message_partner_ids if 'message_partner_ids' in self else self.env['res.partner']
+        # sanitize email inputs, exclude followers and aliases, add some banned emails, keep ordering, then link to partners
+        skip_emails_normalized = (followers | partners).mapped('email_normalized') + (followers | partners).mapped('email')
+        skip_emails_normalized += [self.env.ref('base.partner_root').email_normalized]  # never propose odoobot
+        if email_to_lst:
+            skip_emails_normalized.extend(
+                self.env['mail.alias'].sudo().search(
+                    [('alias_full_name', 'in', [email_key(e) for e in email_to_lst])]
+                ).mapped('alias_full_name')
+            )
+        email_to_lst = [e for e in email_to_lst if email_key(e) not in skip_emails_normalized]
+        partners += self._partner_find_from_emails_single(email_to_lst, no_create=no_create)
+
+        # final filtering
+        partners = self.env['res.partner'].browse(tools.misc.unique(
+            p.id for p in partners if p not in followers
+        ))
+        email_to_lst = list(tools.misc.unique(
+            e for e in email_to_lst
+            if email_key(e) not in (partners.mapped('email_normalized') + partners.mapped('email'))
+        ))
+        # fetch model-related additional information
+        emails_normalized_info = self._get_customer_information() if email_to_lst else {}
+
+        recipients = [{
+            'email': partner.email_normalized,
+            'name': partner.name,
+            'partner_id': partner.id,
+            'create_values': {},
+        } for partner in partners]
+        for email_input in email_to_lst:
+            name, email_normalized = parse_contact_from_email(email_input)
+            recipients.append({
+                'email': email_normalized,
+                'name': emails_normalized_info.get(email_normalized, {}).pop('name', False) or name,
+                'partner_id': False,
+                'create_values': emails_normalized_info.get(email_normalized, {}),
+            })
+        return recipients
 
     def _notify_get_reply_to(self, default=None, author_id=False):
         """ Returns the preferred reply-to email address when replying to a thread
