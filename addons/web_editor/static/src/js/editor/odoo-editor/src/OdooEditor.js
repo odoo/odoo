@@ -85,6 +85,7 @@ import {
     getAdjacentCharacter,
     isLinkEligibleForZwnbsp,
     isZwnbsp,
+    fixInvalidHTML,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -894,7 +895,7 @@ export class OdooEditor extends EventTarget {
 
     resetContent(value) {
         value = value || '<p><br></p>';
-        this.editable.innerHTML = value;
+        this.editable.innerHTML = fixInvalidHTML(value);
         this.sanitize(this.editable);
         this.historyStep(true);
         // The unbreakable protection mechanism detects an anomaly and attempts
