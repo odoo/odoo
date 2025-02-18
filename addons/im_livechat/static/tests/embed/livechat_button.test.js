@@ -1,4 +1,3 @@
-import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
@@ -43,13 +42,16 @@ test("open/close persisted channel", async () => {
         }
     });
     const env = await start({ authenticateAs: false });
+    env.services.bus_service.subscribe("discuss.channel/new_message", () =>
+        asyncStep("discuss.channel/new_message")
+    );
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "How can I help?");
     await triggerHotkey("Enter");
     await waitForSteps(["persisted"]);
     await contains(".o-mail-Message-content", { text: "How can I help?" });
-    await waitNotifications([env, "discuss.channel/new_message"]);
+    await waitForSteps(["discuss.channel/new_message"]);
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
     await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
