@@ -387,7 +387,7 @@ class ChatbotScriptStep(models.Model):
             if bot_member := channel_sudo.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.chatbot_script_id.operator_partner_id
             ):
-                channel_sudo._action_unfollow(partner=bot_member.partner_id)
+                channel_sudo._action_unfollow(partner=bot_member.partner_id, post_leave_message=False)
             # finally, rename the channel to include the operator's name
             channel_sudo.write(
                 {
