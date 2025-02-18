@@ -11,6 +11,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 
 function getSnippetView(snippets) {
     const { snippet_groups, snippet_custom, snippet_structure, snippet_content } = snippets;
@@ -46,7 +47,7 @@ class BuilderContainer extends Component {
         <div class="d-flex h-100 w-100" t-ref="container">
             <div class="o_website_preview flex-grow-1" t-ref="website_preview">
                 <div class="o_iframe_container">
-                    <iframe class="h-100 w-100" t-ref="iframe" />
+                    <iframe class="h-100 w-100" t-ref="iframe" t-on-load="onLoad"/>
                     <div t-if="this.state.isMobile" class="o_mobile_preview_layout">
                         <img alt="phone" src="/html_builder/static/img/phone.png"/>
                     </div>
@@ -63,8 +64,15 @@ class BuilderContainer extends Component {
     setup() {
         this.state = useState({ isMobile: false, isEditing: false });
         this.iframeRef = useRef("iframe");
+        const originalIframeLoaded = new Promise((resolve) => {
+            this._originalIframeLoadedResolve = resolve;
+        });
         this.iframeLoaded = new Promise((resolve) => {
-            onMounted(() => {
+            onMounted(async () => {
+                if (isBrowserFirefox()) {
+                    await originalIframeLoaded;
+                }
+
                 const el = this.iframeRef.el;
                 el.contentDocument.body.innerHTML = `<div id="wrapwrap"><div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${this.props.content}</div></div>`;
                 resolve(el);
@@ -73,6 +81,10 @@ class BuilderContainer extends Component {
         useSubEnv({
             builderRef: useRef("container"),
         });
+    }
+
+    onLoad() {
+        this._originalIframeLoadedResolve();
     }
 
     getBuilderProps() {
