@@ -147,9 +147,13 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             Seller Vat Number (BT-31), Date (BT-2), Time (KSA-25), Invoice Number (BT-1)
         """
         vat = invoice.company_id.partner_id.commercial_partner_id.vat
-        invoice_number = re.sub("[^a-zA-Z0-9 -]", "-", invoice.name)
+        invoice_number = re.sub(r'[^a-zA-Z0-9 -]+', '-', invoice.name)
         invoice_date = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), invoice.l10n_sa_confirmation_datetime)
-        return '%s_%s_%s.xml' % (vat, invoice_date.strftime('%Y%m%dT%H%M%S'), invoice_number)
+        file_name = f"{vat}_{invoice_date.strftime('%Y%m%dT%H%M%S')}_{invoice_number}"
+        file_format = self.env.context.get('l10n_sa_file_format', 'xml')
+        if file_format:
+            file_name = f'{file_name}.{file_format}'
+        return file_name
 
     def _l10n_sa_get_invoice_transaction_code(self, invoice):
         """
