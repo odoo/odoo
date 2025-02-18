@@ -1,5 +1,5 @@
 cryptocode==0.1
-cryptography==36.0.2
+cryptography==38.0.4; sys_platform == "win32" # installed with apt on Linux
 evdev==1.6.0; sys_platform == "linux"
 freezegun==1.2.1
 gatt
@@ -10,7 +10,7 @@ polib
 pycups; sys_platform == "linux"
 PyKCS11==1.5.16
 PyPDF2==1.26.0
-pyOpenssl==22.0.0
+pyOpenssl==23.0.0; sys_platform == "win32" # installed with apt on Linux
 pysmb==1.2.9.1
 pyusb; sys_platform == "linux"
 RPi.GPIO; sys_platform == "linux"
