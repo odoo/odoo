@@ -771,7 +771,7 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.users = []
-        for n in range(1, 3):
+        for n in range(1, 4):
             user = cls.env['res.users'].create({
                 'name': f'user{n}',
                 'login': f'user{n}',
@@ -799,15 +799,31 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCommon):
             'start': datetime(2020, 1, 15, 8, 0),
             'stop': datetime(2020, 1, 15, 18, 0),
         }
-        for create_user, organizer, expect_mail in [
-            (user_root, self.users[0], True), (user_root, None, True),
-                (self.users[0], None, False), (self.users[0], self.users[0], False), (self.users[0], self.users[1], False)]:
-            with self.subTest(create_uid=create_user.name if create_user else None, user_id=organizer.name if organizer else None):
+        
+        paused_sync_user = self.users[2]
+        paused_sync_user.write({
+            'email': 'ms.sync.paused@test.lan',
+            'microsoft_synchronization_stopped': True,
+            'name': 'Paused Microsoft Sync User',
+            'login': 'ms_sync_paused_user',
+        })
+        self.assertTrue(paused_sync_user.microsoft_synchronization_stopped)
+
+        for create_user, organizer, expect_mail, attendee in [
+            (user_root, self.users[0], True, partner), # emulates online appointment with user 0
+            (user_root, None, True, partner), # emulates online resource appointment
+            (self.users[0], None, False, partner),
+            (self.users[0], self.users[0], False, partner),
+            (self.users[0], self.users[1], False, partner),
+            # create user has paused sync and organizer can sync -> will not sync because of bug
+            (paused_sync_user, self.users[0], True, paused_sync_user.partner_id),
+        ]:
+            with self.subTest(create_uid=create_user.name if create_user else None, user_id=organizer.name if organizer else None, attendee=attendee.name):
                 with self.mock_mail_gateway(), patch.object(MicrosoftCalendarService, 'insert') as mock_insert:
                     mock_insert.return_value = ('1', '1')
-                    self.env['calendar.event'].with_user(create_user).create({
+                    self.env['calendar.event'].with_user(create_user).with_context(mail_notify_author=True).create({
                         **event_values,
-                        'partner_ids': [(4, organizer.partner_id.id), (4, partner.id)] if organizer else [(4, partner.id)],
+                        'partner_ids': [(4, organizer.partner_id.id), (4, attendee.id)] if organizer else [(4, attendee.id)],
                         'user_id': organizer.id if organizer else False,
                     })
                     self.env.cr.postcommit.run()
@@ -817,6 +833,6 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCommon):
                     self.assert_dict_equal(mock_insert.call_args[0][0]['organizer'], {
                         'emailAddress': {'address': organizer.email if organizer else '', 'name': organizer.name if organizer else ''}
                     })
-                else:
+                elif expect_mail:
                     mock_insert.assert_not_called()
-                    self.assertMailMail(partner, 'sent', author=(organizer or create_user).partner_id)
+                    self.assertMailMail(attendee, 'sent', author=(organizer or create_user).partner_id)
