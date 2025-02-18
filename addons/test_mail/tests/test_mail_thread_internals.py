@@ -933,26 +933,15 @@ class TestNoThread(MailCommon, TestRecipients):
             'customer_id': cls.partner_1.id,
             'name': 'Not A Thread',
         })
-
-    @users('employee')
-    def test_mail_template_send_mail(self):
-        template = self.env['mail.template'].create({
-            'model_id': self.env['ir.model']._get_id('mail.test.nothread'),
+        cls.test_template = cls.env['mail.template'].create({
+            'body_html': 'Hello <t t-out="object.name"/>',
+            'model_id': cls.env['ir.model']._get_id('mail.test.nothread'),
+            'subject': 'Subject {{ object.name }}',
             'use_default_to': True,
         })
-        test_record = self.test_record_nothread.with_env(self.env)
-        with self.mock_mail_gateway():
-            template.send_mail(
-                test_record.id,
-                email_layout_xmlid='mail.mail_notification_light',
-            )
-        self.assertMailMail(
-            self.partner_1,
-            'outgoing',
-        )
 
     @users('employee')
-    def test_mail_sending_on_non_thread_model(self):
+    def test_mail_composer_with_template(self):
         """ This test simulates scenarios where a required method called `_process_attachments_for_post` is missing,
         in such case composer should fallback to the method implementation in mail.thread. """
         record = self.env['mail.test.nothread'].sudo().create({
@@ -965,10 +954,7 @@ class TestNoThread(MailCommon, TestRecipients):
             'res_id': record.id,
             'mimetype': 'text/plain',
         })
-        template = self.env['mail.template'].create({
-            'name': 'TestTemplate',
-            'model_id': self.env['ir.model']._get_id('mail.test.nothread'),
-        })
+        template = self.test_template.with_env(self.env)
         mail_compose_message = self.env['mail.compose.message'].create({
             'composition_mode': 'mass_mail',
             'model': 'mail.test.nothread',
@@ -980,6 +966,20 @@ class TestNoThread(MailCommon, TestRecipients):
             mail_compose_message.action_send_mail()
         self.assertEqual(self._new_mails.attachment_ids['datas'], base64.b64encode(b'This is test attachment content'),
             "The attachment was not included correctly in the sent message")
+
+    @users('employee')
+    def test_mail_template_send_mail(self):
+        template = self.test_template.with_env(self.env)
+        test_record = self.test_record_nothread.with_env(self.env)
+        with self.mock_mail_gateway():
+            template.send_mail(
+                test_record.id,
+                email_layout_xmlid='mail.mail_notification_light',
+            )
+        self.assertMailMail(
+            self.partner_1,
+            'outgoing',
+        )
 
     @users('employee')
     def test_message_to_store(self):
