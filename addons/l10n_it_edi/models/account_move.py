@@ -328,20 +328,13 @@ class AccountMove(models.Model):
                 it_values['prezzo_unitario'] = 0.0
 
             # Discount.
-            discount_list = it_values['sconto_maggiorazione_list'] = []
-            delta_discount = base_line.get('discount_amount', 0.0) - base_line.get('discount_amount_before_dispatching', 0.0)
+            it_values['sconto_maggiorazione_list'] = []
             if discount:
-                discount_list.append({
+                it_values['sconto_maggiorazione_list'] = [{
                     'tipo': 'SC' if discount > 0 else 'MG',
                     'percentuale': abs(discount),
                     'importo': None,
-                })
-            if not base_line['currency_id'].is_zero(delta_discount):
-                discount_list.append({
-                    'tipo': 'SC',
-                    'percentuale': None,
-                    'importo': abs(delta_discount / (quantity or 1.0)),
-                })
+                }]
 
             # Tax rates.
             rates = it_values['aliquota_iva_list'] = []
@@ -520,11 +513,7 @@ class AccountMove(models.Model):
                     'quantity': -quantity,
                     'price_unit': -price_unit,
                 })
-        for downpayment_line in downpayment_lines:
-            base_lines.remove(downpayment_line)
 
-        dispatched_results = self.env['account.tax']._dispatch_negative_lines(base_lines)
-        base_lines = dispatched_results['result_lines'] + dispatched_results['nulled_candidate_lines'] + dispatched_results['orphan_negative_lines'] + downpayment_lines
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, self._l10n_it_edi_grouping_function_base_lines)
         self._l10n_it_edi_add_base_lines_xml_values(base_lines_aggregated_values, is_downpayment)
