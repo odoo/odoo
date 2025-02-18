@@ -1061,14 +1061,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             callback = callback or '/shop/checkout'
 
-        self._handle_extra_form_data(extra_form_data, address_values)
         self._format_form_phone_numbers(partner_sudo)
 
         return json.dumps({
             'successUrl': callback,
         })
-      
-        return json.dumps(feedback_dict)
 
     def _format_form_phone_numbers(self, partner_id):
         """
