@@ -1,3 +1,4 @@
+import { browser } from "@web/core/browser/browser";
 import { isBrowserChrome, isMobileOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -16,6 +17,8 @@ function makeBarcodeInput() {
     inputEl.setAttribute('name', 'barcode');
     return inputEl;
 }
+
+const REGEX_END_CHARACTER = /[\n|\t|;]/;
 
 export const barcodeService = {
     // Keys from a barcode scanner are usually processed as quick as possible,
@@ -55,7 +58,9 @@ export const barcodeService = {
                 if (ev) {
                     ev.preventDefault();
                 }
-                handleBarcode(str, currentTarget);
+                for (let scannedCode of str.split(RegExp(REGEX_END_CHARACTER)).filter(Boolean)) {
+                    handleBarcode(scannedCode, currentTarget);
+                }
             }
             if (barcodeInput) {
                 barcodeInput.value = "";
@@ -105,24 +110,37 @@ export const barcodeService = {
         }
 
         function mobileChromeHandler(ev) {
-            if (ev.key === "Unidentified") {
-                return;
-            }
+            currentTarget = ev.target;
             if (document.activeElement && !document.activeElement.matches('input:not([type]), input[type="text"], textarea, [contenteditable], ' +
                 '[type="email"], [type="number"], [type="password"], [type="tel"], [type="search"]')) {
                 barcodeInput.focus();
+                browser.requestAnimationFrame(() => barcodeInput.setAttribute("inputmode", "text"));
             }
-            keydownHandler(ev);
+        }
+
+        function inputHandler() {
+            barcodeInput.setAttribute("inputmode", "none");
+
+            const isEndCharacter = barcodeInput.value.slice(-1).match(REGEX_END_CHARACTER);;
+
+            clearTimeout(timeout);
+            if (isEndCharacter) {
+                checkBarcode();
+            } else {
+                timeout = setTimeout(checkBarcode, barcodeService.maxTimeBetweenKeysInMs);
+            }
         }
 
         whenReady(() => {
-            const isMobileChrome = barcodeService.isMobileChrome;
-            if (isMobileChrome) {
+            if (barcodeService.isMobileChrome) {
                 barcodeInput = makeBarcodeInput();
                 document.body.appendChild(barcodeInput);
+                barcodeInput.addEventListener('input', inputHandler);
+
+                document.body.addEventListener('keydown', mobileChromeHandler);
+            } else {
+                document.body.addEventListener('keydown', keydownHandler);
             }
-            const handler = isMobileChrome ? mobileChromeHandler : keydownHandler;
-            document.body.addEventListener('keydown', handler);
         });
 
         return {
