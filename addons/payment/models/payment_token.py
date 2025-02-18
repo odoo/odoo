@@ -24,7 +24,7 @@ class PaymentToken(models.Model):
     payment_details = fields.Char(
         string="Payment Details", help="The clear part of the payment method's payment details.",
     )
-    partner_id = fields.Many2one(string="Partner", comodel_name='res.partner', required=True)
+    partner_id = fields.Many2one(string="Partner", comodel_name='res.partner', required=True, index=True)
     provider_ref = fields.Char(
         string="Provider Reference",
         help="The provider reference of the token of the transaction.",

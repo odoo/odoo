@@ -18,7 +18,7 @@ class EventTypeTicket(models.Model):
     description = fields.Text(compute='_compute_description', readonly=False, store=True)
     # product
     product_id = fields.Many2one(
-        'product.product', string='Product', required=True,
+        'product.product', string='Product', required=True, index=True,
         domain=[("service_tracking", "=", "event")], default=_default_product_id)
     currency_id = fields.Many2one(related="product_id.currency_id", string="Currency")
     price = fields.Float(

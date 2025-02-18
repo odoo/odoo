@@ -14,7 +14,7 @@ class LunchTopping(models.Model):
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     price = fields.Monetary('Price', required=True)
-    supplier_id = fields.Many2one('lunch.supplier', ondelete='cascade')
+    supplier_id = fields.Many2one('lunch.supplier', ondelete='cascade', index='btree_not_null')
     topping_category = fields.Integer('Topping Category', required=True, default=1)
 
     @api.depends('price')

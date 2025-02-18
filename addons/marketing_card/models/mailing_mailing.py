@@ -6,7 +6,7 @@ class MailingMailing(models.Model):
 
     mailing_model_id = fields.Many2one(compute="_compute_mailing_model_id", store=True, readonly=False)
     card_requires_sync_count = fields.Integer(compute="_compute_card_requires_sync_count")
-    card_campaign_id = fields.Many2one('card.campaign')
+    card_campaign_id = fields.Many2one('card.campaign', index='btree_not_null')
 
     @api.constrains('card_campaign_id', 'mailing_domain', 'mailing_model_id')
     def _check_mailing_domain(self):

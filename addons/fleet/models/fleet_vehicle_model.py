@@ -25,7 +25,7 @@ class FleetVehicleModel(models.Model):
     _order = 'name asc'
 
     name = fields.Char('Model name', required=True, tracking=True)
-    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Manufacturer', required=True, tracking=True)
+    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Manufacturer', required=True, tracking=True, index='btree_not_null')
     category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', tracking=True)
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
     image_128 = fields.Image(related='brand_id.image_128', readonly=True)

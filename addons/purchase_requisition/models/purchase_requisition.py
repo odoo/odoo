@@ -176,7 +176,7 @@ class PurchaseRequisitionLine(models.Model):
         string='Unit Price', digits='Product Price', default=0.0,
         compute="_compute_price_unit", readonly=False, store=True)
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered')
-    requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
+    requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade', index=True)
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True)
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
 

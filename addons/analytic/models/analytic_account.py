@@ -39,6 +39,7 @@ class AccountAnalyticAccount(models.Model):
         'account.analytic.plan',
         string='Plan',
         required=True,
+        index=True,
     )
     root_plan_id = fields.Many2one(
         'account.analytic.plan',
@@ -70,6 +71,7 @@ class AccountAnalyticAccount(models.Model):
         auto_join=True,
         tracking=True,
         check_company=True,
+        index='btree_not_null',
     )
 
     balance = fields.Monetary(

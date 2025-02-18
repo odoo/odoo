@@ -14,8 +14,8 @@ class EventMailRegistration(models.Model):
     _rec_name = 'scheduler_id'
     _order = 'scheduled_date DESC, id ASC'
 
-    scheduler_id = fields.Many2one('event.mail', 'Mail Scheduler', required=True, ondelete='cascade')
-    registration_id = fields.Many2one('event.registration', 'Attendee', required=True, ondelete='cascade')
+    scheduler_id = fields.Many2one('event.mail', 'Mail Scheduler', required=True, index=True, ondelete='cascade')
+    registration_id = fields.Many2one('event.registration', 'Attendee', required=True, index=True, ondelete='cascade')
     scheduled_date = fields.Datetime('Scheduled Time', compute='_compute_scheduled_date', store=True)
     mail_sent = fields.Boolean('Mail Sent')
 

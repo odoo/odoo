@@ -30,7 +30,7 @@ class EventTrack(models.Model):
 
     # description
     name = fields.Char('Title', required=True, translate=True)
-    event_id = fields.Many2one('event.event', 'Event', required=True)
+    event_id = fields.Many2one('event.event', 'Event', required=True, index=True)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', related='event_id.company_id')

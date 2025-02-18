@@ -592,7 +592,7 @@ class MrpWorkcenterCapacity(models.Model):
         workcenter_id = self.workcenter_id.id or self.env.context.get('default_workcenter_id')
         return self.env['mrp.workcenter'].browse(workcenter_id).time_stop if workcenter_id else 0.0
 
-    workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True)
+    workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True, index=True)
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Product Unit', related='product_id.uom_id')
     capacity = fields.Float('Capacity', default=1.0, help="Number of pieces that can be produced in parallel for this product.")

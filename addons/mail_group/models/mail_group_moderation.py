@@ -15,7 +15,7 @@ class MailGroupModeration(models.Model):
     status = fields.Selection(
         [('allow', 'Always Allow'), ('ban', 'Permanent Ban')],
         string='Status', required=True, default='ban')
-    mail_group_id = fields.Many2one('mail.group', string='Group', required=True, ondelete='cascade')
+    mail_group_id = fields.Many2one('mail.group', string='Group', required=True, index=True, ondelete='cascade')
 
     _mail_group_email_uniq = models.Constraint(
         'UNIQUE(mail_group_id, email)',

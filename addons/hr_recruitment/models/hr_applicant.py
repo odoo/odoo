@@ -69,7 +69,7 @@ class HrApplicant(models.Model):
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     color = fields.Integer("Color Index", default=0)
-    employee_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False)
+    employee_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False, index='btree_not_null')
     emp_is_active = fields.Boolean(string="Employee Active", related='employee_id.active')
     employee_name = fields.Char(related='employee_id.name', string="Employee Name", readonly=False, tracking=False)
 

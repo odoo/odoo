@@ -14,6 +14,7 @@ class FleetVehicle(models.Model):
         compute='_compute_driver_employee_id', store=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         tracking=True,
+        index='btree_not_null',
     )
     driver_employee_name = fields.Char(related="driver_employee_id.name")
     future_driver_employee_id = fields.Many2one(

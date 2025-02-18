@@ -44,7 +44,7 @@ class StockMoveLine(models.Model):
         'stock.quant.package', 'Source Package', ondelete='restrict',
         check_company=True,
         domain="[('location_id', '=', location_id)]")
-    package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True)
+    package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, index='btree_not_null')
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number',
         domain="[('product_id', '=', product_id)]", check_company=True)
@@ -64,9 +64,9 @@ class StockMoveLine(models.Model):
         help="When validating the transfer, the products will be taken from this owner.")
     location_id = fields.Many2one(
         'stock.location', 'From', domain="[('usage', '!=', 'view')]", check_company=True, required=True,
-        compute="_compute_location_id", store=True, readonly=False, precompute=True,
+        compute="_compute_location_id", store=True, readonly=False, precompute=True, index=True,
     )
-    location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True, compute="_compute_location_id", store=True, readonly=False, precompute=True)
+    location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True, compute="_compute_location_id", store=True, index=True, readonly=False, precompute=True)
     location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
     location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
     lots_visible = fields.Boolean(compute='_compute_lots_visible')

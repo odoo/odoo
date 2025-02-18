@@ -296,7 +296,7 @@ class LinkTrackerCode(models.Model):
     _rec_name = 'code'
 
     code = fields.Char(string='Short URL Code', required=True, store=True)
-    link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
+    link_id = fields.Many2one('link.tracker', 'Link', required=True, index=True, ondelete='cascade')
 
     _code = models.Constraint(
         'unique( code )',

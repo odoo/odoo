@@ -21,6 +21,7 @@ class ProjectMilestone(models.Model):
     project_partner_id = fields.Many2one(related='project_id.partner_id', export_string_translation=False)
 
     sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, help='Sales Order Item that will be updated once the milestone is reached.',
+        index='btree_not_null',
         domain="[('order_partner_id', '=?', project_partner_id), ('qty_delivered_method', '=', 'milestones')]")
     quantity_percentage = fields.Float('Quantity (%)', compute="_compute_quantity_percentage", store=True, help='Percentage of the ordered quantity that will automatically be delivered once the milestone is reached.')
 

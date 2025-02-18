@@ -201,7 +201,7 @@ class CalendarEvent(models.Model):
     # RECURRENCE FIELD
     recurrency = fields.Boolean('Recurrent')
     recurrence_id = fields.Many2one(
-        'calendar.recurrence', string="Recurrence Rule")
+        'calendar.recurrence', string="Recurrence Rule", index='btree_not_null')
     follow_recurrence = fields.Boolean(default=False) # Indicates if an event follows the recurrence, i.e. is not an exception
     recurrence_update = fields.Selection([
         ('self_only', "This event"),

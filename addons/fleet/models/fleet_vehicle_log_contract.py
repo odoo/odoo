@@ -17,7 +17,7 @@ class FleetVehicleLogContract(models.Model):
         start_date = fields.Date.from_string(strdate)
         return fields.Date.to_string(start_date + oneyear)
 
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, check_company=True, tracking=True)
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, check_company=True, tracking=True, index=True)
     cost_subtype_id = fields.Many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost', domain=[('category', '=', 'contract')])
     amount = fields.Monetary('Cost', tracking=True)
     date = fields.Date(help='Date when the cost has been executed')

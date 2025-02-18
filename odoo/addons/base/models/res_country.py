@@ -166,7 +166,7 @@ class ResCountryState(models.Model):
     _order = 'code'
     _rec_names_search = ['name', 'code']
 
-    country_id = fields.Many2one('res.country', string='Country', required=True)
+    country_id = fields.Many2one('res.country', string='Country', required=True, index=True)
     name = fields.Char(string='State Name', required=True,
                help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton')
     code = fields.Char(string='State Code', help='The state code.', required=True)

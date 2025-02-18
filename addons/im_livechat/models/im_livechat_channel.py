@@ -452,7 +452,7 @@ class Im_LivechatChannelRule(models.Model):
         required=True,
         default="always",
     )
-    channel_id = fields.Many2one('im_livechat.channel', 'Channel',
+    channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null',
         help="The channel of the rule")
     country_ids = fields.Many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Country',
         help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.")

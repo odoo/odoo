@@ -29,7 +29,7 @@ class SmsTracker(models.Model):
     }
 
     sms_uuid = fields.Char('SMS uuid', required=True)
-    mail_notification_id = fields.Many2one('mail.notification', ondelete='cascade')
+    mail_notification_id = fields.Many2one('mail.notification', ondelete='cascade', index='btree_not_null')
 
     _sms_uuid_unique = models.Constraint(
         'unique(sms_uuid)',

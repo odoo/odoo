@@ -9,9 +9,11 @@ class StockScrap(models.Model):
 
     production_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
+        index='btree_not_null',
         check_company=True)
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order',
+        index='btree_not_null',
         check_company=True) # Not to restrict or prefer quants, but informative
     product_is_kit = fields.Boolean(related='product_id.is_kits')
     product_template = fields.Many2one(related='product_id.product_tmpl_id')

@@ -8,7 +8,7 @@ class EventRegistration(models.Model):
     _inherit = ['event.registration', 'pos.load.mixin']
 
     pos_order_id = fields.Many2one(related='pos_order_line_id.order_id', string='PoS Order')
-    pos_order_line_id = fields.Many2one('pos.order.line', string='PoS Order Line', ondelete='cascade', copy=False)
+    pos_order_line_id = fields.Many2one('pos.order.line', string='PoS Order Line', ondelete='cascade', copy=False, index='btree_not_null')
 
     def _has_order(self):
         return super()._has_order() or self.pos_order_id

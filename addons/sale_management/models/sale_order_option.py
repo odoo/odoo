@@ -18,7 +18,7 @@ class SaleOrderOption(models.Model):
         required=True,
         domain=lambda self: self._product_id_domain())
     line_id = fields.Many2one(
-        comodel_name='sale.order.line', ondelete='set null', copy=False)
+        comodel_name='sale.order.line', ondelete='set null', copy=False, index='btree_not_null')
     sequence = fields.Integer(
         string='Sequence', help="Gives the sequence order when displaying a list of optional products.")
 

@@ -15,7 +15,7 @@ class StockPackage_Level(models.Model):
     package_id = fields.Many2one(
         'stock.quant.package', 'Package', required=True, check_company=True,
         domain="[('location_id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    picking_id = fields.Many2one('stock.picking', 'Picking', check_company=True)
+    picking_id = fields.Many2one('stock.picking', 'Picking', check_company=True, index='btree_not_null')
     move_ids = fields.One2many('stock.move', 'package_level_id')
     move_line_ids = fields.One2many('stock.move.line', 'package_level_id')
     location_id = fields.Many2one('stock.location', 'From', compute='_compute_location_id', check_company=True)

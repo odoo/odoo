@@ -22,7 +22,7 @@ class PurchaseRequisition(models.Model):
 class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"
 
-    move_dest_id = fields.Many2one('stock.move', 'Downstream Move')
+    move_dest_id = fields.Many2one('stock.move', 'Downstream Move', index='btree_not_null')
 
     def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
         res = super(PurchaseRequisitionLine, self)._prepare_purchase_order_line(name, product_qty, price_unit, taxes_ids)

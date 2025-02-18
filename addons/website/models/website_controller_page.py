@@ -17,7 +17,7 @@ class WebsiteControllerPage(models.Model):
         'url should be unique',
     )
 
-    view_id = fields.Many2one('ir.ui.view', string='Listing view', required=True, ondelete="cascade")
+    view_id = fields.Many2one('ir.ui.view', string='Listing view', required=True, index=True, ondelete="cascade")
     record_view_id = fields.Many2one('ir.ui.view', string='Record view', ondelete="cascade")
     menu_ids = fields.One2many('website.menu', 'controller_page_id', 'Related Menus')
 

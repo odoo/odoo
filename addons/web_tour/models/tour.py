@@ -87,7 +87,7 @@ class Web_TourTourStep(models.Model):
 
     trigger = fields.Char(required=True)
     content = fields.Char()
-    tour_id = fields.Many2one("web_tour.tour", required=True, ondelete="cascade")
+    tour_id = fields.Many2one("web_tour.tour", required=True, index=True, ondelete="cascade")
     run = fields.Char()
     sequence = fields.Integer()
 

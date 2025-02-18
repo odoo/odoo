@@ -140,7 +140,7 @@ class StockMove(models.Model):
              "this second option should be chosen.")
     scrapped = fields.Boolean(
         'Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
-    scrap_id = fields.Many2one('stock.scrap', 'Scrap operation', readonly=True, check_company=True)
+    scrap_id = fields.Many2one('stock.scrap', 'Scrap operation', readonly=True, check_company=True, index='btree_not_null')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id, index=True)
     rule_id = fields.Many2one(
         'stock.rule', 'Stock Rule', ondelete='restrict', help='The stock rule that created this stock move',
@@ -180,7 +180,7 @@ class StockMove(models.Model):
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     move_lines_count = fields.Integer(compute='_compute_move_lines_count')
-    package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, copy=False)
+    package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, copy=False, index='btree_not_null')
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     display_import_lot = fields.Boolean(compute='_compute_display_assign_serial')

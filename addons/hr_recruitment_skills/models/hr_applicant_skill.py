@@ -13,6 +13,7 @@ class HrApplicantSkill(models.Model):
     applicant_id = fields.Many2one(
         comodel_name='hr.applicant',
         required=True,
+        index=True,
         ondelete='cascade')
     skill_id = fields.Many2one(
         comodel_name='hr.skill',

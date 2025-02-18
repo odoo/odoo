@@ -12,7 +12,7 @@ class LoyaltyMail(models.Model):
     _description = "Loyalty Communication"
 
     active = fields.Boolean(default=True)
-    program_id = fields.Many2one(comodel_name='loyalty.program', ondelete='cascade', required=True)
+    program_id = fields.Many2one(comodel_name='loyalty.program', ondelete='cascade', required=True, index=True)
     trigger = fields.Selection(
         string="When",
         selection=[
