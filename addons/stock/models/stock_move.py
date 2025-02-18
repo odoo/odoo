@@ -2256,8 +2256,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 continue
 
             move.rule_id = rule.id
-            if rule.procure_method in ['make_to_stock', 'make_to_order']:
-                move.procure_method = rule.procure_method
+            if rule.procure_method in ['mts_else_mto', 'make_to_order']:
+                move.procure_method = 'make_to_order'
             else:
                 move.procure_method = 'make_to_stock'
 
