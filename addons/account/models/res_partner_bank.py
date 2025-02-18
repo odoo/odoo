@@ -48,6 +48,7 @@ class ResPartnerBank(models.Model):
     )
     currency_id = fields.Many2one(tracking=True)
     lock_trust_fields = fields.Boolean(compute='_compute_lock_trust_fields')
+    duplicate_account_warning = fields.Html(compute="_compute_alert_duplicate_bank_account")
 
     @api.constrains('journal_id')
     def _check_journal_id(self):
@@ -62,6 +63,21 @@ class ResPartnerBank(models.Model):
             if bank.allow_out_payment:
                 if not self.env.user.has_group('account.group_validate_bank_account'):
                     raise ValidationError(_('You do not have the right to trust or un-trust a bank account.'))
+
+    @api.depends('acc_number')
+    def _compute_alert_duplicate_bank_account(self):
+        """Add a warning if the bank account is already in use elsewhere"""
+        acc_numbers = [bank.acc_number for bank in self if bank.acc_number]
+        duplicates = self.env['res.partner.bank'].search([('acc_number', 'in', acc_numbers)])
+        for bank in self:
+            bank.duplicate_account_warning = False
+            if bank.acc_number:
+                duplicate = next((dup for dup in duplicates if dup.acc_number == bank.acc_number and bank.id != dup.id), None)
+                if duplicate:
+                    bank.duplicate_account_warning = _("Warning : The Bank Account could be a duplicate of %(name)s (<a href=%(url)s>%(partner)s</a>)",
+                                                       name=duplicate.display_name,
+                                                       url=duplicate.partner_id.id,
+                                                       partner=duplicate.partner_id.display_name)
 
     @api.depends('partner_id.country_id', 'sanitized_acc_number', 'allow_out_payment', 'acc_type')
     def _compute_display_account_warning(self):
