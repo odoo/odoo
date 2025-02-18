@@ -86,12 +86,17 @@ class StatusPage extends Component {
             </div>
         </div>
         <div class="status-display-boxes">
-            <div t-if="state.data.pairing_code and !state.data.is_access_point_up" class="status-display-box">
+            <div t-if="(state.data.pairing_code || state.data.pairing_code_expired) and !state.data.is_access_point_up" class="status-display-box">
                 <h4 class="text-center mb-3">Pairing Code</h4>
                 <hr/>
-                <h4 t-out="state.data.pairing_code" class="text-center mb-3"/>
-                <p class="text-center mb-3">
-                    Enter this code in the IoT app in your Odoo database to pair the IoT Box.
+                <t t-if="state.data.pairing_code">
+                    <h4 t-out="state.data.pairing_code" class="text-center mb-3"/>
+                    <p class="text-center mb-3">
+                        Enter this code in the IoT app in your Odoo database to pair the IoT Box.
+                    </p>
+                </t>
+                <p t-else="" class="text-center mb-3">
+                    The pairing code has expired. Please restart your IoT Box to generate a new one.
                 </p>
             </div>
             <div t-if="state.data.is_access_point_up and accessPointSsid" class="status-display-box">
