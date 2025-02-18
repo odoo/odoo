@@ -100,6 +100,13 @@ export class CalendarController extends Component {
         });
 
         this.searchBarToggler = useSearchBarToggler();
+
+        this._baseRendererProps = {
+            createRecord: this.createRecord.bind(this),
+            deleteRecord: this.deleteRecord.bind(this),
+            editRecord: this.editRecord.bind(this),
+            setDate: this.setDate.bind(this),
+        };
     }
 
     get currentDate() {
@@ -165,12 +172,9 @@ export class CalendarController extends Component {
 
     get rendererProps() {
         return {
+            ...this._baseRendererProps,
             model: this.model,
             isWeekendVisible: this.model.scale === "day" || this.state.isWeekendVisible,
-            createRecord: this.createRecord.bind(this),
-            deleteRecord: this.deleteRecord.bind(this),
-            editRecord: this.editRecord.bind(this),
-            setDate: this.setDate.bind(this),
         };
     }
     get containerProps() {
