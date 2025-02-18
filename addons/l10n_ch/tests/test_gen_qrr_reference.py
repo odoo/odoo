@@ -41,6 +41,7 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
         cls.invoice = cls.init_invoice("out_invoice", products=cls.product_a+cls.product_b)
 
     def test_qrr(self):
+        self.env.ref('base.EUR').active = True
         test_invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner.id,
@@ -49,11 +50,13 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
         })
+        test_invoice.action_post()
         test_invoice.name = "INV/01234567890"
         expected_qrr = "000000000000000012345678903"
         self.assertEqual(test_invoice.get_l10n_ch_qrr_number(), expected_qrr)
 
     def test_qrr_long_reference(self):
+        self.env.ref('base.EUR').active = True
         test_invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner.id,
@@ -62,6 +65,7 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
         })
+        test_invoice.action_post()
         test_invoice.name = "INV/123456789012345678901234567890"
         expected_qrr = "567890123456789012345678901"
         self.assertEqual(test_invoice.get_l10n_ch_qrr_number(), expected_qrr)

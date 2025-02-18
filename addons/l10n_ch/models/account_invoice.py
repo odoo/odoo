@@ -13,25 +13,24 @@ class AccountMove(models.Model):
 
     l10n_ch_is_qr_valid = fields.Boolean(compute='_compute_l10n_ch_qr_is_valid', help="Determines whether an invoice can be printed as a QR or not")
 
-    @api.depends('partner_id', 'currency_id')
+    @api.depends('partner_id', 'currency_id', 'display_qr_code')
     def _compute_l10n_ch_qr_is_valid(self):
         for move in self:
             error_messages = move.partner_bank_id._get_error_messages_for_qr('ch_qr', move.partner_id, move.currency_id)
             move.l10n_ch_is_qr_valid = (
+                move.display_qr_code and
                 move.move_type == 'out_invoice' and
                 not error_messages and
-                (
-                    # QR codes must be printed on all Swiss transactions
-                    move.company_id.account_fiscal_country_id.code == 'CH' or
-                    (
-                        # QR code is also printed if the fiscal country is not Switzerland but the receivale account is eligible
-                        move.partner_bank_id.acc_type == 'iban' and
-                        (iban := (move.partner_bank_id.acc_number or '').replace(' ', '')).startswith('CH') and
-                        iban[4:9].isdigit() and
-                        30000 <= int(iban[4:9]) <= 31999
-                    )
-                )
+                (move.company_id.account_fiscal_country_id.code == 'CH' or move._is_swiss_qr_iban())
             )
+
+    @api.depends('company_id', 'state')
+    def _compute_display_qr_code(self):
+        # Extends account
+        super()._compute_display_qr_code()
+        moves_ch = self.filtered(lambda m: m._is_swiss_qr_iban())
+        for move in moves_ch:
+            move.display_qr_code = move.state != 'draft'
 
     def get_l10n_ch_qrr_number(self):
         """Generates the QRR reference.
@@ -71,6 +70,12 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         return self.get_l10n_ch_qrr_number()
+
+    def _is_swiss_qr_iban(self):
+        """QR code is also printed if the fiscal country is not Switzerland but the receivable account is eligible"""
+        self.ensure_one()
+        iban = (self.partner_bank_id.acc_number or '').replace(' ', '')
+        return self.partner_bank_id.acc_type == 'iban' and iban.startswith('CH') and iban[4:9].isdigit() and 30000 <= int(iban[4:9]) <= 31999
 
     @api.model
     def space_qrr_reference(self, qrr_ref):
