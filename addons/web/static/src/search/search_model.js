@@ -633,7 +633,7 @@ export class SearchModel extends EventBus {
             if (enrichedSearchitem) {
                 const isInvisible =
                     "invisible" in searchItem &&
-                    evaluateExpr(searchItem.invisible, this.globalContext);
+                    evaluateExpr(searchItem.invisible, this.domainEvalContext);
                 if (!isInvisible && (!predicate || predicate(enrichedSearchitem))) {
                     searchItems.push(enrichedSearchitem);
                 }
@@ -882,7 +882,7 @@ export class SearchModel extends EventBus {
             resModel: this.resModel,
             defaultConnector: "|",
             domain,
-            context: this.domainEvalContext,
+            context: this.globalContext,
             onConfirm: (domain) => this.splitAndAddDomain(domain),
             disableConfirmButton: (domain) => domain === `[]`,
             title: _t("Add Custom Filter"),
