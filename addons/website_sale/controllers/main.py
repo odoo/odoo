@@ -1114,7 +1114,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # Unsubscribe the public partner if the cart was previously anonymous.
             order_sudo.message_unsubscribe(order_sudo.website_id.partner_id.ids)
 
-        if is_new_address or order_sudo.only_services:
+        is_extra_step_active = request.website.viewref('website_sale.extra_info').active
+        if is_extra_step_active:
+            callback = callback or 'shop/extra_info'
+        elif is_new_address or order_sudo.only_services:
             callback = callback or '/shop/checkout?try_skip_step=true'
         else:
             callback = callback or '/shop/checkout'
