@@ -155,6 +155,7 @@ class IotBoxOwlHomePage(http.Controller):
 
         six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
         network_qr_codes = wifi.generate_network_qr_codes()
+        odoo_server_url = helpers.get_odoo_server_url()
 
         return json.dumps({
             'db_uuid': helpers.get_conf('db_uuid'),
@@ -163,8 +164,9 @@ class IotBoxOwlHomePage(http.Controller):
             'ip': helpers.get_ip(),
             'mac': helpers.get_mac_address(),
             'devices': grouped_devices,
-            'server_status': helpers.get_odoo_server_url() or 'Not Configured',
+            'server_status': odoo_server_url or 'Not Configured',
             'pairing_code': connection_manager.pairing_code,
+            'pairing_code_expired': not connection_manager.running and not odoo_server_url,
             'six_terminal': six_terminal,
             'is_access_point_up': platform.system() == 'Linux' and wifi.is_access_point(),
             'network_interfaces': network_interfaces,
