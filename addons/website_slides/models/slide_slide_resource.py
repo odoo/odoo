@@ -13,7 +13,7 @@ class SlideSlideResource(models.Model):
     _description = "Additional resource for a particular slide"
     _order = "sequence, id"
 
-    slide_id = fields.Many2one('slide.slide', required=True, ondelete='cascade')
+    slide_id = fields.Many2one('slide.slide', required=True, index=True, ondelete='cascade')
     resource_type = fields.Selection([('file', 'File'), ('url', 'Link')], required=True)
     name = fields.Char('Name', compute="_compute_name", readonly=False, store=True)
     data = fields.Binary('Resource', compute='_compute_reset_resources', store=True, readonly=False)

@@ -22,8 +22,8 @@ class MailPresence(models.Model):
     _description = "User/Guest Presence"
     _log_access = False
 
-    user_id = fields.Many2one("res.users", "Users", ondelete="cascade")
-    guest_id = fields.Many2one("mail.guest", "Guest", ondelete="cascade")
+    user_id = fields.Many2one("res.users", "Users", index='btree_not_null', ondelete="cascade")
+    guest_id = fields.Many2one("mail.guest", "Guest", ondelete="cascade", index='btree_not_null')
     last_poll = fields.Datetime("Last Poll", default=lambda self: fields.Datetime.now())
     last_presence = fields.Datetime("Last Presence", default=lambda self: fields.Datetime.now())
     status = fields.Selection(

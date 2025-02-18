@@ -232,6 +232,7 @@ class HrExpense(models.Model):
         comodel_name='account.move',
         readonly=True,
         copy=False,
+        index='btree_not_null',
     )
     payment_mode = fields.Selection(
         selection=[

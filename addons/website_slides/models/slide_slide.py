@@ -119,14 +119,14 @@ class SlideSlide(models.Model):
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Html('Description', translate=True, sanitize_attributes=False, sanitize_overridable=True)
-    channel_id = fields.Many2one('slide.channel', string="Course", required=True, ondelete='cascade')
+    channel_id = fields.Many2one('slide.channel', string="Course", required=True, index=True, ondelete='cascade')
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
     is_new_slide = fields.Boolean('Is New Slide', compute='_compute_is_new_slide')
     completion_time = fields.Float('Duration', digits=(10, 4), compute='_compute_category_completion_time', recursive=True, readonly=False, store=True)
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
-    category_id = fields.Many2one('slide.slide', string="Section", compute="_compute_category_id", store=True)
+    category_id = fields.Many2one('slide.slide', string="Section", compute="_compute_category_id", store=True, index='btree_not_null')
     slide_ids = fields.One2many('slide.slide', "category_id", string="Content")
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',

@@ -26,7 +26,7 @@ class ForumPost(models.Model):
     _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
 
     name = fields.Char('Title')
-    forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
+    forum_id = fields.Many2one('forum.forum', string='Forum', required=True, index=True)
     content = fields.Html('Content', strip_style=True)
     plain_content = fields.Text(
         'Plain Content',

@@ -87,7 +87,7 @@ class ResourceCalendar(models.Model):
                             help="If the active field is set to false, it will allow you to hide the Working Time without removing it.")
     company_id = fields.Many2one(
         'res.company', 'Company', domain=lambda self: [('id', 'in', self.env.companies.ids)],
-        default=lambda self: self.env.company)
+        default=lambda self: self.env.company, index='btree_not_null')
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
         compute='_compute_attendance_ids', store=True, readonly=False, copy=True)

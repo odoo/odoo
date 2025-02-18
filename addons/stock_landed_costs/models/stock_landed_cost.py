@@ -66,7 +66,7 @@ class StockLandedCost(models.Model):
     company_id = fields.Many2one('res.company', string="Company", required=True, default=lambda self: self.env.company)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
     vendor_bill_id = fields.Many2one(
-        'account.move', 'Vendor Bill', copy=False, domain=[('move_type', '=', 'in_invoice')])
+        'account.move', 'Vendor Bill', copy=False, domain=[('move_type', '=', 'in_invoice')], index='btree_not_null')
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     @api.depends('cost_lines.price_unit')
@@ -346,7 +346,7 @@ class StockLandedCostLines(models.Model):
     name = fields.Char('Description')
     cost_id = fields.Many2one(
         'stock.landed.cost', 'Landed Cost',
-        required=True, ondelete='cascade')
+        required=True, index=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True)
     price_unit = fields.Monetary('Cost', required=True)
     split_method = fields.Selection(
@@ -378,7 +378,7 @@ class StockValuationAdjustmentLines(models.Model):
         'Description', compute='_compute_name', store=True)
     cost_id = fields.Many2one(
         'stock.landed.cost', 'Landed Cost',
-        ondelete='cascade', required=True)
+        ondelete='cascade', required=True, index=True)
     cost_line_id = fields.Many2one(
         'stock.landed.cost.lines', 'Cost Line', readonly=True)
     move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True)

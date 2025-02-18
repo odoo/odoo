@@ -34,7 +34,7 @@ class EventTag(models.Model):
 
     name = fields.Char("Name", required=True, translate=True)
     sequence = fields.Integer('Sequence', default=0)
-    category_id = fields.Many2one("event.tag.category", string="Category", required=True, ondelete='cascade')
+    category_id = fields.Many2one("event.tag.category", string="Category", required=True, index=True, ondelete='cascade')
     category_sequence = fields.Integer(related='category_id.sequence', string='Category Sequence', store=True)
     color = fields.Integer(
         string='Color Index', default=lambda self: self._default_color(),

@@ -210,7 +210,7 @@ class ProjectTask(models.Model):
         help="The current user's personal task stage.", domain="[('user_id', '=', uid)]",
         group_expand='_read_group_personal_stage_type_ids')
     partner_id = fields.Many2one('res.partner',
-        string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False,
+        string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False, index='btree_not_null',
         domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
@@ -283,7 +283,7 @@ class ProjectTask(models.Model):
     # recurrence fields
     recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
-    recurrence_id = fields.Many2one('project.task.recurrence', copy=False)
+    recurrence_id = fields.Many2one('project.task.recurrence', copy=False, index='btree_not_null')
     repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', compute_sudo=True, readonly=False)
     repeat_unit = fields.Selection([
         ('day', 'Days'),

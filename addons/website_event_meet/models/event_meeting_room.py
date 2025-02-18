@@ -20,7 +20,7 @@ class EventMeetingRoom(models.Model):
     name = fields.Char("Topic", required=True, translate=True)
     active = fields.Boolean('Active', default=True)
     is_published = fields.Boolean(copy=True)  # make the inherited field copyable
-    event_id = fields.Many2one("event.event", string="Event", required=True, ondelete="cascade")
+    event_id = fields.Many2one("event.event", string="Event", required=True, index=True, ondelete="cascade")
     is_pinned = fields.Boolean("Is Pinned")
     chat_room_id = fields.Many2one("chat.room", required=True, ondelete="restrict")
     room_max_capacity = fields.Selection(default="8", copy=True)

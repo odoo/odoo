@@ -11,7 +11,7 @@ class EventQuiz(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
     question_ids = fields.One2many('event.quiz.question', 'quiz_id', string="Questions")
-    event_track_id = fields.Many2one('event.track', readonly=True)
+    event_track_id = fields.Many2one('event.track', readonly=True, index='btree_not_null')
     event_id = fields.Many2one(
         'event.event', related='event_track_id.event_id',
         readonly=True, store=True)
@@ -26,7 +26,7 @@ class EventQuizQuestion(models.Model):
 
     name = fields.Char("Question", required=True, translate=True)
     sequence = fields.Integer("Sequence")
-    quiz_id = fields.Many2one("event.quiz", "Quiz", required=True, ondelete='cascade')
+    quiz_id = fields.Many2one("event.quiz", "Quiz", required=True, index=True, ondelete='cascade')
     correct_answer_id = fields.One2many('event.quiz.answer', compute='_compute_correct_answer_id')
     awarded_points = fields.Integer("Number of Points", compute='_compute_awarded_points')
     answer_ids = fields.One2many('event.quiz.answer', 'question_id', string="Answer")
@@ -57,7 +57,7 @@ class EventQuizAnswer(models.Model):
     _order = 'question_id, sequence, id'
 
     sequence = fields.Integer("Sequence")
-    question_id = fields.Many2one('event.quiz.question', string="Question", required=True, ondelete='cascade')
+    question_id = fields.Many2one('event.quiz.question', string="Question", required=True, index=True, ondelete='cascade')
     text_value = fields.Char("Answer", required=True, translate=True)
     is_correct = fields.Boolean('Correct', default=False)
     comment = fields.Text(

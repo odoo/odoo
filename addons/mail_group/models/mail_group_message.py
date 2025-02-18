@@ -37,11 +37,11 @@ class MailGroupMessage(models.Model):
     # Thread
     mail_group_id = fields.Many2one(
         'mail.group', string='Group',
-        required=True, ondelete='cascade')
+        required=True, index=True, ondelete='cascade')
     mail_message_id = fields.Many2one('mail.message', 'Mail Message', required=True, ondelete='cascade', index=True, copy=False)
     # Parent and children
     group_message_parent_id = fields.Many2one(
-        'mail.group.message', string='Parent', store=True)
+        'mail.group.message', string='Parent', store=True, index=True)
     group_message_child_ids = fields.One2many('mail.group.message', 'group_message_parent_id', string='Children')
     # Moderation
     author_moderation = fields.Selection([('ban', 'Banned'), ('allow', 'Whitelisted')], string='Author Moderation Status',

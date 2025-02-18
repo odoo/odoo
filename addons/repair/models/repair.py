@@ -167,7 +167,7 @@ class RepairOrder(models.Model):
 
     # Sale Order Binding
     sale_order_id = fields.Many2one(
-        'sale.order', 'Sale Order', check_company=True, readonly=True,
+        'sale.order', 'Sale Order', check_company=True, readonly=True, index='btree_not_null',
         copy=False, help="Sale Order from which the Repair Order comes from.")
     sale_order_line_id = fields.Many2one(
         'sale.order.line', check_company=True, readonly=True,
@@ -179,7 +179,7 @@ class RepairOrder(models.Model):
 
     # Return Binding
     picking_id = fields.Many2one(
-        'stock.picking', 'Return', check_company=True,
+        'stock.picking', 'Return', check_company=True, index='btree_not_null',
         domain="[('return_id', '!=', False), ('product_id', '=?', product_id)]",
         copy=False, help="Return Order from which the product to be repaired comes from.")
     is_returned = fields.Boolean(

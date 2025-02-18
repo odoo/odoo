@@ -49,7 +49,7 @@ class StockWarehouseOrderpoint(models.Model):
         domain=("[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
             " [('id', '=', context.get('default_product_id', False))] if context.get('default_product_id') else"
             " [('is_storable', '=', True)]"),
-        ondelete='cascade', required=True, check_company=True)
+        ondelete='cascade', required=True, check_company=True, index=True)
     product_category_id = fields.Many2one('product.category', name='Product Category', related='product_id.categ_id')
     product_uom = fields.Many2one(
         'uom.uom', 'Unit', related='product_id.uom_id')

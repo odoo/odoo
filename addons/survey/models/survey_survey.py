@@ -141,7 +141,7 @@ class SurveySurvey(models.Model):
     #       So it can be edited but not removed or replaced.
     certification_give_badge = fields.Boolean('Give Badge', compute='_compute_certification_give_badge',
                                               readonly=False, store=True, copy=False)
-    certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge', copy=False)
+    certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge', copy=False, index='btree_not_null')
     certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
     # live sessions
     session_available = fields.Boolean('Live session available', compute='_compute_session_available')
