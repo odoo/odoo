@@ -154,6 +154,8 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _get_default_mail_partner_ids(self, move, mail_template, mail_lang):
+        # TDE FIXME: this should use standard composer / template code to be sure
+        # it is aligned with standard recipients management. Todo later
         partners = self.env['res.partner'].with_company(move.company_id)
         if mail_template.use_default_to:
             defaults = move._message_get_default_recipients()[move.id]

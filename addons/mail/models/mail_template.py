@@ -325,6 +325,7 @@ class MailTemplate(models.Model):
         return render_results
 
     def _generate_template_recipients(self, res_ids, render_fields,
+                                      allow_suggested=False,
                                       find_or_create_partners=False,
                                       render_results=None):
         """ Render recipients of the template 'self', returning values for records
@@ -344,6 +345,8 @@ class MailTemplate(models.Model):
         :param list res_ids: list of record IDs on which template is rendered;
         :param list render_fields: list of fields to render on template which
           are specific to recipients, e.g. email_cc, email_to, partner_to);
+        :param boolean allow_suggested: when computing default recipients,
+          include suggested recipients in addition to minimal defaults;
         :param boolean find_or_create_partners: transform emails into partners
           (calling ``find_or_create`` on partner model);
         :param dict render_results: res_ids-based dictionary of render values.
@@ -361,11 +364,28 @@ class MailTemplate(models.Model):
         Model = self.env[self.model].with_prefetch(res_ids)
 
         # if using default recipients -> ``_message_get_default_recipients`` gives
-        # values for email_to, email_cc and partner_ids
+        # values for email_to, email_cc and partner_ids; if using suggested recipients
+        # -> ``_message_get_suggested_recipients_batch`` gives a list of potential
+        # recipients (TODO: decide which API to keep)
         if self.use_default_to and self.model:
-            default_recipients = Model.browse(res_ids)._message_get_default_recipients()
-            for res_id, recipients in default_recipients.items():
-                render_results.setdefault(res_id, {}).update(recipients)
+            if allow_suggested:
+                suggested_recipients = Model.browse(res_ids)._message_get_suggested_recipients_batch(
+                    reply_discussion=True, no_create=not find_or_create_partners,
+                )
+                for res_id, suggested_list in suggested_recipients.items():
+                    pids = [r['partner_id'] for r in suggested_list if r['partner_id']]
+                    email_to_lst = [
+                        tools.mail.formataddr(
+                            (r['name'] or '', r['email'] or '')
+                        ) for r in suggested_list if not r['partner_id']
+                    ]
+                    render_results.setdefault(res_id, {})
+                    render_results[res_id]['partner_ids'] = pids
+                    render_results[res_id]['email_to'] = ', '.join(email_to_lst)
+            else:
+                default_recipients = Model.browse(res_ids)._message_get_default_recipients()
+                for res_id, recipients in default_recipients.items():
+                    render_results.setdefault(res_id, {}).update(recipients)
         # render fields dynamically which generates recipients
         else:
             for field in set(render_fields) & {'email_cc', 'email_to', 'partner_to'}:
@@ -465,6 +485,7 @@ class MailTemplate(models.Model):
         return render_results
 
     def _generate_template(self, res_ids, render_fields,
+                           recipients_allow_suggested=False,
                            find_or_create_partners=False):
         """ Render values from template 'self' on records given by 'res_ids'.
         Those values are generally used to create a mail.mail or a mail.message.
@@ -472,6 +493,11 @@ class MailTemplate(models.Model):
 
         :param list res_ids: list of record IDs on which template is rendered;
         :param list render_fields: list of fields to render on template;
+
+        # recipients generation
+        :param boolean recipients_allow_suggested: when computing default
+          recipients, include suggested recipients in addition to minimal
+          defaults;
         :param boolean find_or_create_partners: transform emails into partners
           (see ``_generate_template_recipients``);
 
@@ -517,6 +543,7 @@ class MailTemplate(models.Model):
                 template._generate_template_recipients(
                     template_res_ids, render_fields_set,
                     render_results=render_results,
+                    allow_suggested=recipients_allow_suggested,
                     find_or_create_partners=find_or_create_partners
                 )
 
