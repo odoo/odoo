@@ -13,11 +13,15 @@
     'installable': True,
     'assets': {
         'web.assets_backend': [
-            'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',
-            'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
+            'barcodes_gs1_nomenclature/static/src/barcode_parser.js',
+            'barcodes_gs1_nomenclature/static/src/barcode_service.js',
+            'barcodes_gs1_nomenclature/static/src/epc_model.js',
+            'barcodes_gs1_nomenclature/static/src/epc_service.js',
         ],
-        'web.qunit_suite_tests': [
-            'barcodes_gs1_nomenclature/static/src/js/tests/**/*',
+        'web.qunit_suite_tests': ['barcodes/static/tests/legacy/basic/**/*.js'],
+        'web.assets_unit_tests': [
+            'barcodes_gs1_nomenclature/static/src/tests/**/*.js',
+            ('remove', 'barcodes_gs1_nomenclature/static/src/tests/legacy/**/*',),  # to remove when all legacy tests are ported
         ],
     },
     'author': 'Odoo S.A.',
