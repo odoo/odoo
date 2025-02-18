@@ -221,7 +221,7 @@ export class DynamicList extends DataPoint {
 
     deleteRecordsWithConfirmation(dialogProps = {}, records) {
         let body = deleteConfirmationMessage;
-        if (this.model.root.isDomainSelected || this.model.root.selection.length > 1) {
+        if (this.isDomainSelected || this.selection.length > 1) {
             body = _t("Are you sure you want to delete these records?");
         }
         const defaultProps = {
