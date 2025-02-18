@@ -2026,6 +2026,8 @@ class Request:
                     ):
                         raise  # bubble up to werkzeug.debug.DebuggedApplication
                     if not hasattr(exc, 'error_response'):
+                        if isinstance(exc, AccessDenied):
+                            exc.suppress_traceback()
                         exc.error_response = self.registry['ir.http']._handle_error(exc)
                     raise
 
@@ -2474,6 +2476,8 @@ class Application:
 
                 # Ensure there is always a WSGI handler attached to the exception.
                 if not hasattr(exc, 'error_response'):
+                    if isinstance(exc, AccessDenied):
+                        exc.suppress_traceback()
                     exc.error_response = request.dispatcher.handle_error(exc)
 
                 return exc.error_response(environ, start_response)
