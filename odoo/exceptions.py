@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 """The Odoo Exceptions module defines a few core exception types.
 
 Those types are understood by the RPC layer.
@@ -16,8 +14,9 @@ class UserError(Exception):
     """Generic error managed by the client.
 
     Typically when the user tries to do something that has no sense given the current
-    state of a record. Semantically comparable to the generic 400 HTTP status codes.
+    state of a record.
     """
+    http_status = 422  # Unprocessable Entity
 
     def __init__(self, message):
         """
@@ -52,6 +51,7 @@ class AccessDenied(UserError):
 
         When you try to log with a wrong password.
     """
+    http_status = 403  # Forbidden
 
     def __init__(self, message="Access Denied"):
         super().__init__(message)
@@ -85,6 +85,7 @@ class AccessError(UserError):
 
         When you try to read a record that you are not allowed to.
     """
+    http_status = 403  # Forbidden
 
 
 class CacheMiss(KeyError):
@@ -106,6 +107,7 @@ class MissingError(UserError):
 
         When you try to write on a deleted record.
     """
+    http_status = 404  # Not Found
 
 
 class LockError(UserError):
@@ -115,6 +117,7 @@ class LockError(UserError):
 
         Code tried to lock records, but could not succeed.
     """
+    http_status = 409  # Conflict
 
 
 class ValidationError(UserError):

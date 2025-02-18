@@ -46,7 +46,7 @@ class TestHttpModels(TestHttpBase):
     @mute_logger('odoo.http')
     def test_models1_galaxy_ko(self):
         res = self.url_open("/test_http/404")  # unknown galaxy
-        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
         self.assertIn('The Ancients did not settle there.', res.text)
 
     def test_models2_stargate_ok(self):
@@ -71,9 +71,9 @@ class TestHttpModels(TestHttpBase):
         milky_way = self.env.ref('test_http.milky_way')
         with self.assertLogs("odoo.http", level="WARNING") as logs:
             res = self.url_open(f'/test_http/{milky_way.id}/9999')  # unknown gate
-        self.assertEqual(res.status_code, 400)
-        self.assertIn(markupsafe.escape("The goa'uld destroyed the gate"), res.text)
-        self.assertEqual(logs.output, ["WARNING:odoo.http:The goa'uld destroyed the gate"])
+        self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
+        self.assertIn(markupsafe.escape("The goauld destroyed the gate"), res.text)
+        self.assertEqual(logs.output, ["WARNING:odoo.http:The goauld destroyed the gate"])
 
     def test_models4_stargate_setname(self):
         milky_way = self.env.ref('test_http.milky_way')
