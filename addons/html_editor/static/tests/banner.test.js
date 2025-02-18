@@ -54,9 +54,9 @@ test("press 'ctrl+a' inside a banner should select all the banner content", asyn
         unformat(
             `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                     <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3 o_editable" contenteditable="true">[
-                        <p>Test</p><p>Test1</p><p>Test2<br></p>
-                    ]</div>
+                    <div class="w-100 px-3 o_editable" contenteditable="true">
+                        <p>[Test</p><p>Test1</p><p>Test2]<br></p>
+                    </div>
                 </div><p><br></p>`
         )
     );
@@ -79,9 +79,9 @@ test("remove all content should preserve the first paragraph tag inside the bann
         unformat(
             `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                     <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3 o_editable" contenteditable="true">[
-                        <p>Test</p><p>Test1</p><p>Test2<br></p>
-                    ]</div>
+                    <div class="w-100 px-3 o_editable" contenteditable="true">
+                        <p>[Test</p><p>Test1</p><p>Test2]<br></p>
+                    </div>
                 </div><p><br></p>`
         )
     );
@@ -132,7 +132,7 @@ test("Everything gets selected with ctrl+a, including a contenteditable=false as
                 <div class="w-100 px-3 o_editable" contenteditable="true">
                     <p><br></p>
                 </div>
-            </div><p placeholder='Type "/" for commands' class="o-we-hint"><br></p>]`
+            </div><p placeholder='Type "/" for commands' class="o-we-hint">]<br></p>`
     );
 });
 
@@ -149,12 +149,12 @@ test("Everything gets selected with ctrl+a, including a banner", async () => {
     await insertText(editor, "Test2");
     await press(["ctrl", "a"]);
     expect(getContent(el)).toBe(
-        `[<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
+        `<p>[<br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
                 <div class="w-100 px-3 o_editable" contenteditable="true">
                     <p>test</p>
                 </div>
-            </div><p>Test1</p><p>Test2<br></p>]`,
+            </div><p>Test1</p><p>Test2]<br></p>`,
         { message: "should select everything" }
     );
     await press("Backspace");
@@ -169,7 +169,7 @@ test("Everything gets selected with ctrl+a, including a contenteditable=false as
     );
     await press(["ctrl", "a"]);
     expect(getContent(el)).toBe(
-        '[<div contenteditable="false">a</div><div contenteditable="false">b</div><p>cd</p>]'
+        '[<div contenteditable="false">a</div><div contenteditable="false">b</div><p>cd]</p>'
     );
 
     await press("Backspace");
