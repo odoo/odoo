@@ -85,7 +85,7 @@ class ImageShapePlugin extends Plugin {
      * Sets the image in the supplied SVG and replace the src with a dataURL
      *
      * @param {string} svgText svg text file
-     * @param img JQuery image
+     * @param {HTMLImageElement} img
      * @returns {Promise} resolved once the svg is properly loaded
      * in the document
      */

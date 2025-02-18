@@ -8,12 +8,14 @@
             <h5 class="mb-0 text-white">Background Shapes</h5>
         </div>
         <div class="d-flex">
-            <button type="button" class="p-0 text-uppercase active" t-on-click="() => this.scrollToShapes('basic')">
-                <span class="w-100">Basic</span>
-            </button>
+            <t t-foreach="Object.entries(this.shapeGroups)" t-as="group" t-key="group_index">
+                <button type="button" class="p-0 text-uppercase active" t-on-click="() => this.scrollToShapes(group[0])">
+                    <span class="w-100" t-out="group[1].label"/>
+                </button>
+            </t>
         </div>
     </header>
-    <div class="o_pager_container">
+    <div class="o_pager_container" t-ref="root">
         <t t-foreach="Object.entries(this.shapeGroups)" t-as="group" t-key="group_index">
             <div t-att-data-shape-group-id="group[0]">
                 <t t-foreach="Object.entries(group[1].subgroups)" t-as="subgroup" t-key="subgroup_index">

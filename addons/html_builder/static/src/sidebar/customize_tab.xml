@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.CustomizeTab">
-    <div class="o_customize_tab">
+    <div class="o_customize_tab h-100">
         <t t-if="!props.currentOptionsContainers.length || !this.state.hasContent">
             <div class="text-center pt-5">
                 Select a block on your page to style it.
             </div>
         </t>
         <t t-else="">
-            <div t-ref="content">
+            <div t-ref="content" class="d-flex flex-column h-100">
                 <CustomizeComponent t-if="state.customizeComponent"
                     editingElements="state.customizeComponent.editingEls"
                     comp="state.customizeComponent.comp"
