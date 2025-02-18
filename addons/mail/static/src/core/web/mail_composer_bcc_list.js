@@ -1,5 +1,4 @@
 import { MailComposerBccPopover } from "@mail/core/web/mail_composer_bcc_list_popover";
-import { formatList } from "@web/core/l10n/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
@@ -27,17 +26,22 @@ export class MailComposerBccList extends Component {
             elements.push(`
                 <span class="text-muted" title="${escape(
                     partner.email_normalized || _t("no email address")
-                )}">${escape(partner.name)}</span>
+                )}"> ${escape(partner.name)}</span>
             `);
         }
+        return markup(elements);
+    }
+
+    getRecipientCount() {
+        const records = this.getRecords();
         if (records.length > this.limit) {
-            elements.push(escape(
-                _t("%(recipientCount)s more", {
-                    recipientCount: records.length - this.limit
-                }))
+            return escape(
+                _t(" out of %(recipientCount)s", {
+                    recipientCount: records.length,
+                })
             );
         }
-        return markup(formatList(elements));
+        return "";
     }
 
     /** @returns {Array[Record]} */
@@ -71,7 +75,7 @@ export const mailComposerBccList = {
     relatedFields: (fieldInfo) => {
         return [
             { name: "name", type: "char" },
-            { name: "email_normalized", type: "char" }
+            { name: "email_normalized", type: "char" },
         ];
     },
 };
