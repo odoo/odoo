@@ -407,12 +407,20 @@
                             <setting string="Preparation Printers" help="Print orders at the kitchen, at the bar, etc." id="is_order_printer">
                                 <field name="pos_is_order_printer"/>
                                 <div class="content-group" invisible="not pos_is_order_printer">
-                                    <div class="mt16">
-                                        <label string="Printers" for="pos_printer_ids" class="o_light_label"/>
+                                    <div class="mt16 mb-1">
+                                        <label string="Printers" for="pos_printer_ids" class="o_light_label me-2"/>
                                         <field name="pos_printer_ids" widget="many2many_tags"/>
                                     </div>
                                     <div>
-                                        <button name="%(point_of_sale.action_pos_printer_form)d" icon="oi-arrow-right" type="action" string="Printers" class="btn-link"/>
+                                        <button name="action_pos_printer_dialog"
+                                            context="{'default_pos_config_ids': [pos_config_id]}"
+                                            icon="oi-arrow-right"
+                                            type="object"
+                                            string="Add Printer"
+                                            class="btn-link"/>
+                                    </div>
+                                    <div>
+                                        <button name="%(point_of_sale.action_pos_printer_form)d" icon="oi-arrow-right" type="action" string="Manage Printers" class="btn-link"/>
                                     </div>
                                 </div>
                             </setting>
