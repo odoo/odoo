@@ -20,7 +20,7 @@ class MailingTestCustomer(models.Model):
         for mailing in self.filtered(lambda rec: not rec.email_from and rec.customer_id):
             mailing.email_from = mailing.customer_id.email
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         """ Default recipient checks for 'partner_id', here the field is named
         'customer_id'. """
         default_recipients = super()._message_get_default_recipients()
@@ -69,7 +69,7 @@ class MailingTestBlacklist(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         """ Default recipient checks for 'partner_id', here the field is named
         'customer_id'. """
         default_recipients = super()._message_get_default_recipients()
@@ -105,7 +105,7 @@ class MailingTestOptout(models.Model):
         ]).mapped('email_normalized'))
         return opt_out_contacts
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         """ Default recipient checks for 'partner_id', here the field is named
         'customer_id'. """
         default_recipients = super()._message_get_default_recipients()

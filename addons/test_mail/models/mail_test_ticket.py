@@ -29,7 +29,7 @@ class MailTestTicket(models.Model):
         self.ensure_one()
         return f"Ticket for {self.name} on {self.datetime.strftime('%m/%d/%Y, %H:%M:%S')}"
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         return {
             record.id:  {
                 'email_cc': False,
@@ -226,7 +226,7 @@ class MailTestContainer(models.Model):
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         return {
             record.id: {
                 'email_cc': False,

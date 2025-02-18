@@ -78,7 +78,7 @@ class ResPartner(models.Model):
         partners += self
         return email_to_lst, partners
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         return {
             r.id:
             {
