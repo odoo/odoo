@@ -8,6 +8,12 @@
             <field name="mode">primary</field>
             <field name="priority">14</field>
             <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <div class="alert alert-warning" role="alert" invisible="not duplicate_account_warning">
+                        <field name="duplicate_account_warning"/>
+                    </div>
+                </xpath>
+
                 <xpath expr="//form[@name='bank_account_form']/sheet[1]" position="after">
                     <chatter/>
                 </xpath>
