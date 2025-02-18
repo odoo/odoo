@@ -444,7 +444,7 @@ class TestPartner(MailCommon):
         for partner in partners:
             with self.subTest(partner=partner.name):
                 self.assertEqual(defaults[partner.id], {
-                    'email_cc': False, 'email_to': False,
+                    'email_cc': '', 'email_to': '',
                     'partner_ids': partner.ids,
                 })
 
