@@ -517,6 +517,7 @@ class ResPartner(models.Model):
         help="This payment term will be used instead of the default one for purchase orders and vendor bills")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
+    supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
     has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
         help="The partner has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
     last_time_entries_checked = fields.Datetime(
@@ -546,6 +547,26 @@ class ResPartner(models.Model):
         mapped_data = dict([(bank['partner_id'][0], bank['partner_id_count']) for bank in bank_data])
         for partner in self:
             partner.bank_account_count = mapped_data.get(partner.id, 0)
+
+    def _compute_supplier_invoice_count(self):
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+        all_partners.read(['parent_id'])
+
+        supplier_invoice_groups = self.env['account.move']._read_group(
+            domain=[('partner_id', 'in', all_partners.ids),
+                    ('move_type', 'in', ('in_invoice', 'in_refund'))],
+            fields=['partner_id'], groupby=['partner_id']
+        )
+        partners = self.browse()
+        for group in supplier_invoice_groups:
+            partner = self.browse(group['partner_id'][0])
+            while partner:
+                if partner in self:
+                    partner.supplier_invoice_count += group['partner_id_count']
+                    partners |= partner
+                partner = partner.parent_id
+        (self - partners).supplier_invoice_count = 0
 
     def _get_duplicated_bank_accounts(self):
         self.ensure_one()
