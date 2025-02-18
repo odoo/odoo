@@ -61,13 +61,10 @@ test("initial dropzone appears after undo", async () => {
 });
 
 test("initial dropzone appears after delete & redo", async () => {
-    const startContent = (withColoredLevelClass = false) => {
-        const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
-        return `<section class="${className}"></section>`;
-    };
-    const { contentEl } = await setupHTMLBuilder(startContent());
+    const startContent = `<section class="s_test"></section>`;
+    const { contentEl } = await setupHTMLBuilder(startContent);
 
-    expect(contentEl).toHaveInnerHTML(startContent(true));
+    expect(contentEl).toHaveInnerHTML(startContent);
     await click(contentEl.querySelector(".s_test"));
     await animationFrame();
     // Delete should display the initial dropzone
@@ -78,7 +75,7 @@ test("initial dropzone appears after delete & redo", async () => {
     // Undo, then redo should display the initial dropzone
     await click(".o-snippets-menu button.fa-undo");
     await animationFrame();
-    expect(contentEl).toHaveInnerHTML(startContent(true));
+    expect(contentEl).toHaveInnerHTML(startContent);
     await click(".o-snippets-menu button.fa-repeat");
     await animationFrame();
     expect(contentEl).toHaveInnerHTML(initialDropZone());

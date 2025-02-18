@@ -36,6 +36,7 @@ export class Builder extends Component {
         isTranslation: { type: Boolean },
         iframeLoaded: { type: Object },
         isMobile: { type: Boolean },
+        Plugins: { type: Array, optional: true },
     };
 
     setup() {
@@ -58,12 +59,12 @@ export class Builder extends Component {
         this.notification = useService("notification");
 
         const editorBus = new EventBus();
+        const Plugins = [...MAIN_PLUGINS, ...CORE_PLUGINS, ...(this.props.Plugins || [])];
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
-        const websitePlugins = registry.category("website-plugins").getAll();
         this.editor = new Editor(
             {
-                Plugins: [...MAIN_PLUGINS, ...CORE_PLUGINS, ...websitePlugins],
+                Plugins,
                 onChange: ({ isPreviewing }) => {
                     this.state.canUndo = this.editor.shared.history.canUndo();
                     this.state.canRedo = this.editor.shared.history.canRedo();

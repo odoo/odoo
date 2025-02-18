@@ -75,6 +75,7 @@ export class WebsiteBuilder extends Component {
     }
 
     get menuProps() {
+        const WebsitePlugins = registry.category("website-plugins").getAll();
         return {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
             snippetsName: "website.snippets",
@@ -83,6 +84,7 @@ export class WebsiteBuilder extends Component {
             isTranslation: this.translation,
             iframeLoaded: this.iframeLoaded,
             isMobile: this.state.isMobile,
+            Plugins: WebsitePlugins,
         };
     }
 
@@ -119,7 +121,7 @@ export class WebsiteBuilder extends Component {
     }
 
     setupEditInteraction() {
-        this.updateEditInteraction = ({ detail: { websiteEditService }}) => {
+        this.updateEditInteraction = ({ detail: { websiteEditService } }) => {
             if (status(this) !== "destroyed") {
                 const targetEl = this.websiteContent.el.contentDocument.querySelector("#wrapwrap");
                 websiteEditService.update(targetEl, true);

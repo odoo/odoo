@@ -91,18 +91,13 @@ class BuilderContainer extends Component {
 }
 
 export async function setupHTMLBuilder(content = "") {
-    let snippetContent = null;
-
     defineMailModels(); // fuck this shit
     defineModels([IrUiView]);
 
-    const getSnippetEl = (withColoredLevelClass = false) => {
-        const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
-        return `<section class="${className}" data-snippet="s_test" data-name="Test">
+    const snippetContent = `<section class="s_test" data-snippet="s_test" data-name="Test">
             <div class="test_a"></div>
         </section>`;
-    };
-    const snippetsDescription = () => [{ name: "Test", groupName: "a", content: getSnippetEl() }];
+    const snippetsDescription = () => [{ name: "Test", groupName: "a", content: snippetContent }];
     const snippetsDescr = {
         snippet_groups: [
             '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -129,12 +124,10 @@ export async function setupHTMLBuilder(content = "") {
     const comp = await mountWithCleanup(BuilderContainer, { props: { content } });
     await comp.iframeLoaded;
     comp.state.isEditing = true;
-    await animationFrame();
-    await animationFrame();
     await prom;
     await animationFrame();
     return {
         contentEl: comp.iframeRef.el.contentDocument.body.firstChild.firstChild,
-        snippetContent: getSnippetEl(true),
+        snippetContent,
     };
 }

@@ -100,15 +100,9 @@ export async function setupWebsiteBuilder(
             };
         },
         get menuProps() {
-            return {
-                closeEditor: this.reloadIframeAndCloseEditor.bind(this),
-                snippetsName: "website.snippets",
-                toggleMobile: this.toggleMobile.bind(this),
-                isTranslation: !!this.translation,
-                iframeLoaded: iframeLoaded,
-                overlayRef: this.overlayRef,
-                isMobile: this.state.isMobile,
-            };
+            const props = super.menuProps;
+            props.iframeLoaded = iframeLoaded;
+            return props;
         },
         loadAssetsEditBundle() {
             // To instanciate interactions in the iframe test we need to

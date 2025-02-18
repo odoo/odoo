@@ -8,7 +8,7 @@ import { defaultBuilderComponents } from "@html_builder/core/default_builder_com
 
 defineWebsiteModels();
 
-test("basic many2many: find tag, select tag, unselect tag", async () => {
+test.tags("focus required")("basic many2many: find tag, select tag, unselect tag", async () => {
     onRpc("/web/dataset/call_kw/test/name_search", async (args) => [
         [1, "First"],
         [2, "Second"],
