@@ -426,6 +426,7 @@ class TestItEdiExport(TestItEdi):
         self.italian_partner_a.zip = False  # invalid configuration for partner -> proforma pdf
         invoice = self.env['account.move'].with_company(self.company).create({
             'partner_id': self.italian_partner_a.id,
+            'invoice_date': '2024-03-24',
             'move_type': 'out_invoice',
             'invoice_line_ids': [
                 Command.create({
