@@ -8,6 +8,13 @@
             <field name="mode">primary</field>
             <field name="priority">14</field>
             <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <div class="alert alert-warning" role="alert" invisible="not duplicate_bank_partner_ids">
+                        <span>The Bank Account could be a duplicate of</span>
+                        <field name="duplicate_bank_partner_ids" widget="x2many_buttons" string="Partners with same bank"/>
+                    </div>
+                </xpath>
+
                 <xpath expr="//form[@name='bank_account_form']/sheet[1]" position="after">
                     <chatter/>
                 </xpath>
