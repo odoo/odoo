@@ -16,7 +16,6 @@ import {
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
-/** @typedef {import("./misc").RecordField} RecordField */
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 export class Record {
