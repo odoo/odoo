@@ -555,6 +555,10 @@ class Meeting(models.Model):
                 res_model = all_models.filtered(lambda m: m.id == res_model_id)
                 res_id = values.get('res_id', defaults.get('res_id'))
                 user_id = values.get('user_id', defaults.get('user_id'))
+                name = values.get('name', defaults.get('name'))
+                description = values.get('description', defaults.get('description'))
+                start = fields.Datetime.from_string(values.get('start', defaults.get('start')))
+                allday = values.get('allday', defaults.get('allday'))
                 if not res_model_id or not res_id:
                     continue
                 if res_model not in valid_models:
@@ -569,6 +573,17 @@ class Meeting(models.Model):
                 }
                 if user_id:
                     activity_vals['user_id'] = user_id
+                if name:
+                    activity_vals['summary'] = name            
+                if description:
+                    activity_vals['note'] = description
+                if start:
+                    deadline = start
+                    user_tz = self.env.context.get('tz')
+                    if user_tz and not allday:
+                        deadline = pytz.utc.localize(deadline)
+                        deadline = deadline.astimezone(pytz.timezone(user_tz))
+                    activity_vals['date_deadline'] = deadline.date()
                 values['activity_ids'] = [(0, 0, activity_vals)]
         self._set_videocall_location(vals_list)
 
@@ -600,7 +615,6 @@ class Meeting(models.Model):
 
         events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_invitation_emails()
 
-        events._sync_activities(fields={f for vals in vals_list for f in vals.keys()})
         if not self.env.context.get('dont_notify'):
             alarm_events = self.env['calendar.event']
             for event, values in zip(events, vals_list):
