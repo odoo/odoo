@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
 from odoo.exceptions import UserError
-from odoo.tests.common import users
+from odoo.tests.common import users, HttpCase, tagged
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from odoo.addons.mail.controllers.thread import ThreadController
@@ -115,21 +116,36 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         self.assertEqual(self.test_blog_post.teaser, "Test Content...")
 
 
-class TestWebsiteBlogTranslationFlow(TestWebsiteBlogCommon):
-    def setUp(self):
-        self.parseltongue = self.env['res.lang'].create({
+@tagged('-at_install', 'post_install')
+class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
+    
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.parseltongue = cls.env['res.lang'].create({
             'name': 'Parseltongue',
             'code': 'pa_GB',
             'iso_code': 'pa_GB',
             'url_code': 'pa_GB',
         })
-        self.env["base.language.install"].create({
+        cls.env["base.language.install"].create({
             'overwrite': True,
-            'lang_ids': [(6, 0, [self.parseltongue.id])],
+            'lang_ids': [(6, 0, [cls.parseltongue.id])],
         }).lang_install()
+        cls.headers = {"Content-Type": "application/json"}
+
+    def _build_payload(self, params=None):
+        """
+        Helper to properly build jsonrpc payload
+        """
+        return {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "id": 0,
+            "params": params or {},
+        }
 
     def test_teaser_manual(self):
-        super().setUp()
         blog_post_parseltongue = self.test_blog_post.with_context(lang=self.parseltongue.code)
 
         # No manual teaser, ensure everything works as expected in multi langs
@@ -171,3 +187,40 @@ class TestWebsiteBlogTranslationFlow(TestWebsiteBlogCommon):
         self.assertEqual(blog_post_parseltongue.teaser, "New Parseltongue Content...", "Should still fallback to content")
         self.assertEqual(self.test_blog_post.teaser_manual, "English Teaser Manual")
         self.assertFalse(blog_post_parseltongue.teaser_manual, "Should still be empty")
+
+    def test_update_field_translation(self):
+        """Test updating the translated text when default lang isn't en_US"""
+        self.authenticate('admin', 'admin')
+
+        # Setup
+        br_lang = self.env['res.lang']._activate_lang('pt_BR')
+        en_lang = self.env['res.lang']._activate_lang('en_US')
+        
+        website = self.env['website'].browse(1)
+        website.language_ids += br_lang
+        website.default_lang_id = br_lang
+
+        blog_post = self.env['blog.post'].with_context(lang=br_lang.code).create({
+            'name':'Test Blog',
+            'content':'Todos os blogs', 
+        })
+        # sha256 encoding of 'Todos os blogs'
+        sha = 'c10cb3d9aeec6fe03ed86f24efb262c65ed9de7e9263db1605e3196c343de7a3'
+
+        # Ensure that initial translations for 'en_US' and 'pt_BR' are different
+        blog_post.update_field_translations('content', {
+            en_lang.code: {'Todos os blogs' : 'All blogs'}
+        })
+        self.assertEqual('Todos os blogs', blog_post.with_context(lang=br_lang.code).content)
+        self.assertEqual('All blogs', blog_post.with_context(lang=en_lang.code).content)
+        
+        # Test updating translation
+        payload = self._build_payload({
+            'model': blog_post._name,
+            'record_id': blog_post.id,
+            'field_name': 'content',
+            'translations': {en_lang.code: {sha: 'Updated blogs'}},
+        })
+        self.url_open('/web_editor/field/translation/update', data=json.dumps(payload), headers=self.headers)
+        self.assertEqual('Todos os blogs', blog_post.with_context(lang=br_lang.code).content)
+        self.assertEqual('Updated blogs', blog_post.with_context(lang=en_lang.code).content)
