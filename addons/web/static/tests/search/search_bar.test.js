@@ -742,7 +742,7 @@ test("check kwargs of a rpc call with a domain", async () => {
             method: "name_search",
             args: [],
             kwargs: {
-                args: [["bool", "=", true]],
+                domain: [["bool", "=", true]],
                 context: { lang: "en", uid: 7, tz: "taht", allowed_company_ids: [1] },
                 limit: 8 + 1,
                 operator: "ilike",
@@ -1392,7 +1392,7 @@ test("edit a field", async () => {
 test("no rpc for getting display_name for facets if known", async () => {
     onRpc("/web/domain/validate", () => true);
     onRpc("name_search", ({ kwargs }) => {
-        expect.step(kwargs.args /** domain */);
+        expect.step(kwargs.domain);
     });
     onRpc(({ method }) => expect.step(method));
 

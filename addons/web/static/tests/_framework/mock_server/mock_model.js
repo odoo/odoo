@@ -1672,8 +1672,8 @@ export class Model extends Array {
      * @param {number} [limit]
      */
     name_search(name, domain, operator, limit) {
-        const kwargs = getKwArgs(arguments, "name", "args", "operator", "limit");
-        ({ name = "", args: domain = [], operator = "ilike", limit = 100 } = kwargs);
+        const kwargs = getKwArgs(arguments, "name", "domain", "operator", "limit");
+        ({ name = "", domain = [], operator = "ilike", limit = 100 } = kwargs);
 
         const actualDomain = new Domain(domain);
         /** @type {[number, string][]} */

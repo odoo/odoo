@@ -62,11 +62,11 @@ class ProjectTags(models.Model):
         return [tags_by_id[id] for id in id_order if id in tags_by_id]
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
         if limit is None:
-            return super().name_search(name, args, operator, limit)
+            return super().name_search(name, domain, operator, limit)
         tags = self.browse()
-        domain = expression.AND([self._search_display_name(operator, name), args or []])
+        domain = expression.AND([self._search_display_name(operator, name), domain or []])
         if self.env.context.get('project_id'):
             # optimisation for large projects, we look first for tags present on the last 1000 tasks of said project.
             # when not enough results are found, we complete them with a fallback on a regular search

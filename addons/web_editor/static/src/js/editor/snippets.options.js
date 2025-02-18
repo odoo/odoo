@@ -2968,7 +2968,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     async _search(needle) {
         const recTuples = await this.orm.call(this.options.model, "name_search", [], {
             name: needle,
-            args: (await this._getSearchDomain()).concat(
+            domain: (await this._getSearchDomain()).concat(
                 Object.values(this.options.domainComponents).filter(item => item !== null)
             ),
             operator: "ilike",

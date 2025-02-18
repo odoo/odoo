@@ -65,7 +65,7 @@ export class CalendarFilterPanel extends Component {
         const records = await this.orm.call(resModel, "name_search", [], {
             name: request,
             operator: "ilike",
-            args: domain,
+            domain: domain,
             limit: 8,
             context: {},
         });
@@ -100,7 +100,7 @@ export class CalendarFilterPanel extends Component {
         if (request.length) {
             const nameGets = await this.orm.call(resModel, "name_search", [], {
                 name: request,
-                args: domain,
+                domain: domain,
                 operator: "ilike",
                 context: {},
             });
