@@ -30,7 +30,7 @@ export class AccountMoveListController extends FileUploadListController {
     }
 
     async onDeleteSelectedRecords() {
-        const selectedResIds = await this.getSelectedResIds();
+        const selectedResIds = await this.model.root.getResIds(true);
         if (this.props.resModel !== "account.move" || !await this.account_move_service.addDeletionDialog(this, selectedResIds)) {
             return super.onDeleteSelectedRecords(...arguments);
         }

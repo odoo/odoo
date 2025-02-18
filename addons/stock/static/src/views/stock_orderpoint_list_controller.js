@@ -12,7 +12,7 @@ export class StockOrderpointListController extends ListController {
     }
 
     async onClickOrder(force_to_max) {
-        const resIds = await this.getSelectedResIds();
+        const resIds = await this.model.root.getResIds(true);
         const action = await this.model.orm.call(this.props.resModel, 'action_replenish', [resIds], {
             context: this.props.context,
             force_to_max: force_to_max,
@@ -26,7 +26,7 @@ export class StockOrderpointListController extends ListController {
     }
 
     async onClickSnooze() {
-        const resIds = await this.getSelectedResIds();
+        const resIds = await this.model.root.getResIds(true);
         this.actionService.doAction('stock.action_orderpoint_snooze', {
             additionalContext: { default_orderpoint_ids: resIds },
             onClose: () => {
