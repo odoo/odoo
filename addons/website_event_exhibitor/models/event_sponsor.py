@@ -26,7 +26,7 @@ class EventSponsor(models.Model):
     def _default_sponsor_type_id(self):
         return self.env['event.sponsor.type'].search([], order="sequence desc", limit=1).id
 
-    event_id = fields.Many2one('event.event', 'Event', required=True)
+    event_id = fields.Many2one('event.event', 'Event', required=True, index=True)
     sponsor_type_id = fields.Many2one(
         'event.sponsor.type', 'Sponsorship Level',
         default=lambda self: self._default_sponsor_type_id(), required=True, auto_join=True)

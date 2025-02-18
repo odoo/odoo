@@ -93,7 +93,7 @@ class RestaurantTable(models.Model):
     _description = 'Restaurant Table'
     _inherit = ['pos.load.mixin']
 
-    floor_id = fields.Many2one('restaurant.floor', string='Floor')
+    floor_id = fields.Many2one('restaurant.floor', string='Floor', index='btree_not_null')
     table_number = fields.Integer('Table Number', required=True, help='The number of the table as displayed on the floor plan', default=0)
     shape = fields.Selection([('square', 'Square'), ('round', 'Round')], string='Shape', required=True, default='square')
     position_h = fields.Float('Horizontal Position', default=10,

@@ -7,7 +7,7 @@ class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
 
     employee_id = fields.Many2one('hr.employee', compute='_compute_equipment_assign',
-        store=True, readonly=False, string='Assigned Employee', tracking=True)
+        store=True, readonly=False, string='Assigned Employee', tracking=True, index='btree_not_null')
     department_id = fields.Many2one('hr.department', compute='_compute_equipment_assign',
         store=True, readonly=False, string='Assigned Department', tracking=True)
     equipment_assign_to = fields.Selection(

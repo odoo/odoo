@@ -52,11 +52,11 @@ class StockStorageCategoryCapacity(models.Model):
     _order = "storage_category_id"
 
     storage_category_id = fields.Many2one('stock.storage.category', ondelete='cascade', required=True, index=True)
-    product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', check_company=True,
+    product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', check_company=True, index='btree_not_null',
         domain=("[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
             " [('id', '=', context.get('default_product_id', False))] if context.get('default_product_id') else"
             " [('is_storable', '=', True)]"))
-    package_type_id = fields.Many2one('stock.package.type', 'Package Type', ondelete='cascade', check_company=True)
+    package_type_id = fields.Many2one('stock.package.type', 'Package Type', ondelete='cascade', check_company=True, index='btree_not_null')
     quantity = fields.Float('Quantity', required=True)
     product_uom_id = fields.Many2one(related='product_id.uom_id')
     company_id = fields.Many2one('res.company', 'Company', related="storage_category_id.company_id")

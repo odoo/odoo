@@ -66,7 +66,7 @@ class SurveyQuestion(models.Model):
     question_placeholder = fields.Char("Placeholder", translate=True, compute="_compute_question_placeholder", store=True, readonly=False)
     background_image = fields.Image("Background Image", compute="_compute_background_image", store=True, readonly=False)
     background_image_url = fields.Char("Background Url", compute="_compute_background_image_url")
-    survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
+    survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade', index='btree_not_null')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
     session_available = fields.Boolean(related='survey_id.session_available', string='Live Session available', readonly=True)

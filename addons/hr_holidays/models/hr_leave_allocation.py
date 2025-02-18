@@ -119,7 +119,7 @@ class HrLeaveAllocation(models.Model):
     ], string="Allocation Type", default="regular", required=True, readonly=True)
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan',
-        compute="_compute_accrual_plan_id", inverse="_inverse_accrual_plan_id", store=True, readonly=False, tracking=True,
+        compute="_compute_accrual_plan_id", inverse="_inverse_accrual_plan_id", store=True, index='btree_not_null', readonly=False, tracking=True,
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')

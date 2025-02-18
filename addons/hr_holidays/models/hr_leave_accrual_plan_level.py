@@ -24,7 +24,7 @@ class HrLeaveAccrualLevel(models.Model):
     sequence = fields.Integer(
         string='sequence', compute='_compute_sequence', store=True,
         help='Sequence is generated automatically by start time delta.')
-    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True, ondelete="cascade")
+    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True, index=True, ondelete="cascade")
     accrued_gain_time = fields.Selection(related='accrual_plan_id.accrued_gain_time')
     start_count = fields.Integer(
         "Start after",

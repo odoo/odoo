@@ -54,7 +54,7 @@ class SlideSlide(models.Model):
     slide_type = fields.Selection(selection_add=[
         ('certification', 'Certification')
     ], ondelete={'certification': 'set null'})
-    survey_id = fields.Many2one('survey.survey', 'Certification')
+    survey_id = fields.Many2one('survey.survey', 'Certification', index='btree_not_null')
     nbr_certification = fields.Integer("Number of Certifications", compute='_compute_slides_statistics', store=True)
     # small override of 'is_preview' to uncheck it automatically for slides of type 'certification'
     is_preview = fields.Boolean(compute='_compute_is_preview', readonly=False, store=True)

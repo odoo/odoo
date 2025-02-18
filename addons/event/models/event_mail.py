@@ -30,7 +30,7 @@ class EventMail(models.Model):
     _rec_name = 'event_id'
     _description = 'Event Automated Mailing'
 
-    event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
+    event_id = fields.Many2one('event.event', string='Event', required=True, index=True, ondelete='cascade')
     sequence = fields.Integer('Display order')
     interval_nbr = fields.Integer('Interval', default=1)
     interval_unit = fields.Selection([

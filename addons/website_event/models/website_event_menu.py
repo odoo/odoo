@@ -13,7 +13,7 @@ class WebsiteEventMenu(models.Model):
     _rec_name = "menu_id"
 
     menu_id = fields.Many2one('website.menu', string='Menu', ondelete='cascade')
-    event_id = fields.Many2one('event.event', string='Event', ondelete='cascade')
+    event_id = fields.Many2one('event.event', string='Event', index='btree_not_null', ondelete='cascade')
     view_id = fields.Many2one('ir.ui.view', string='View', ondelete='cascade', help='Used when not being an url based menu')
     menu_type = fields.Selection(
         [('community', 'Community Menu'),

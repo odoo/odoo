@@ -42,6 +42,7 @@ class Website(models.Model):
     salesteam_id = fields.Many2one(
         string="Sales Team",
         comodel_name='crm.team',
+        index='btree_not_null',
         ondelete='set null',
         default=_default_salesteam_id,
     )

@@ -48,6 +48,7 @@ class HrEmployee(models.Model):
         readonly=False,
         check_company=True,
         precompute=True,
+        index='btree_not_null',
         ondelete='restrict')
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
@@ -137,7 +138,7 @@ class HrEmployee(models.Model):
         ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
         help="Categorize your Employees by type. This field also has an impact on contracts. Only Employees, Students and Trainee will have contract history.")
 
-    job_id = fields.Many2one(tracking=True)
+    job_id = fields.Many2one(tracking=True, index=True)
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     category_ids = fields.Many2many(

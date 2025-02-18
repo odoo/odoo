@@ -5,8 +5,26 @@ BTREE_INDEX_PY_DEFS = (True, '1', 'btree', 'btree_not_null')
 # usually because the table is known to always be small,
 # or there is a custom index that covers this btree index
 # A separate ignore list for models is provided to simplify maintenance.
-BTREE_INDEX_IGNORE_MODELS = set()  # model._name
-BTREE_INDEX_IGNORE_FIELDS = set()  # str(field)  (fully-qualified field name)
+BTREE_INDEX_IGNORE_MODELS = {  # model._name
+    'res.company',
+    'stock.warehouse',
+}
+BTREE_INDEX_IGNORE_FIELDS = {  # str(field)  (fully-qualified field name)
+    'mail.message.res_id',                              # covered by _model_res_id_idx, should always be accessed via a domain adding the model
+    'ir.attachment.res_id',                             # covered by _res_idx, should always be accessed via a domain adding the model
+    'spreadsheet.revision.res_id',                      # covered by _res_model_res_id_idx, should be accessed via a domain adding the model
+    'discuss.channel.member.channel_id',                # covered by first key of _seen_message_id_idx
+    'discuss.channel.rtc.session.channel_member_id',    # covered by _channel_member_unique
+    'documents.document.attachment_id',                 # covered by _attachment_unique, which is enforced with an unique btree index
+    'account.fiscal.position.account.position_id',      # covered by first key of _account_src_dest_uniq
+    'mailing.subscription.contact_id',                  # covered by first key of _unique_contact_list
+    'iap.extracted.words.res_id',                       # covered by first key of _res_id_res_model_idx
+    'knowledge.article.member.article_id',              # covered by first key of _unique_article_partner
+    'slide.channel.forum_id',                           # covered by _forum_uniq
+    'hr.appraisal.skill.appraisal_id',                  # covered by first key of __unique_skill
+    'mail.presence.user_id',                            # covered by _user_unique
+    'mail.presence.guest_id',                           # covered by _guest_unique
+}
 
 @common.tagged('post_install', '-at_install')
 class TestOne2manyInverseIndexing(common.TransactionCase):

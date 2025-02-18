@@ -83,7 +83,7 @@ class MailTemplate(models.Model):
         domain="[('model', '=', model)]")
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
     # options
-    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
+    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False, index='btree_not_null',
                                      help="Optional preferred server for outgoing mails. If not set, the highest "
                                           "priority one will be used.")
     scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. You can use dynamic expression.")

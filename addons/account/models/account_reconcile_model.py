@@ -10,7 +10,7 @@ class AccountReconcileModelPartnerMapping(models.Model):
     _description = 'Partner mapping for reconciliation models'
     _check_company_auto = True
 
-    model_id = fields.Many2one(comodel_name='account.reconcile.model', readonly=True, required=True, ondelete='cascade')
+    model_id = fields.Many2one(comodel_name='account.reconcile.model', readonly=True, required=True, index=True, ondelete='cascade')
     company_id = fields.Many2one(related='model_id.company_id')
     partner_id = fields.Many2one(comodel_name='res.partner', string="Partner", required=True, ondelete='cascade', check_company=True)
     payment_ref_regex = fields.Char(string="Find Text in Label")
@@ -40,7 +40,7 @@ class AccountReconcileModelLine(models.Model):
     _order = 'sequence, id'
     _check_company_auto = True
 
-    model_id = fields.Many2one('account.reconcile.model', readonly=True, ondelete='cascade')
+    model_id = fields.Many2one('account.reconcile.model', readonly=True, index='btree_not_null', ondelete='cascade')
     allow_payment_tolerance = fields.Boolean(related='model_id.allow_payment_tolerance')
     payment_tolerance_param = fields.Float(related='model_id.payment_tolerance_param')
     rule_type = fields.Selection(related='model_id.rule_type')

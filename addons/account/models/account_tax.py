@@ -2777,7 +2777,7 @@ class AccountTaxRepartitionLine(models.Model):
         check_company=True,
         help="Account on which to post the tax amount")
     tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True, ondelete='restrict')
-    tax_id = fields.Many2one(comodel_name='account.tax', ondelete='cascade', check_company=True)
+    tax_id = fields.Many2one(comodel_name='account.tax', index='btree_not_null', ondelete='cascade', check_company=True)
     company_id = fields.Many2one(string="Company", comodel_name='res.company', related="tax_id.company_id", store=True, help="The company this distribution line belongs to.")
     sequence = fields.Integer(string="Sequence", default=1,
         help="The order in which distribution lines are displayed and matched. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")

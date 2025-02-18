@@ -24,6 +24,7 @@ class PaymentMethod(models.Model):
         help="The primary payment method of the current payment method, if the latter is a brand."
              "\nFor example, \"Card\" is the primary payment method of the card brand \"VISA\".",
         comodel_name='payment.method',
+        index='btree_not_null',
     )
     brand_ids = fields.One2many(
         string="Brands",

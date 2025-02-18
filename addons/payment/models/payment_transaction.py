@@ -54,7 +54,7 @@ class PaymentTransaction(models.Model):
     currency_id = fields.Many2one(
         string="Currency", comodel_name='res.currency', readonly=True, required=True)
     token_id = fields.Many2one(
-        string="Payment Token", comodel_name='payment.token', readonly=True,
+        string="Payment Token", comodel_name='payment.token', readonly=True, index='btree_not_null',
         domain='[("provider_id", "=", "provider_id")]', ondelete='restrict')
     state = fields.Selection(
         string="Status",
@@ -84,6 +84,7 @@ class PaymentTransaction(models.Model):
     source_transaction_id = fields.Many2one(
         string="Source Transaction",
         comodel_name='payment.transaction',
+        index='btree_not_null',
         help="The source transaction of the related child transactions",
         readonly=True,
     )

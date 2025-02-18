@@ -35,7 +35,7 @@ class AccountReport(models.Model):
     active = fields.Boolean(string="Active", default=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
     column_ids = fields.One2many(string="Columns", comodel_name='account.report.column', inverse_name='report_id')
-    root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', help="The report this report is a variant of.")
+    root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', index='btree_not_null', help="The report this report is a variant of.")
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
     section_report_ids = fields.Many2many(string="Sections", comodel_name='account.report', relation="account_report_section_rel", column1="main_report_id", column2="sub_report_id")
     section_main_report_ids = fields.Many2many(string="Section Of", comodel_name='account.report', relation="account_report_section_rel", column1="sub_report_id", column2="main_report_id")
@@ -318,6 +318,7 @@ class AccountReportLine(models.Model):
         required=True,
         recursive=True,
         precompute=True,
+        index=True,
         ondelete='cascade'
     )
     hierarchy_level = fields.Integer(
@@ -329,7 +330,7 @@ class AccountReportLine(models.Model):
         required=True,
         precompute=True,
     )
-    parent_id = fields.Many2one(string="Parent Line", comodel_name='account.report.line', ondelete='set null')
+    parent_id = fields.Many2one(string="Parent Line", comodel_name='account.report.line', ondelete='set null', index='btree_not_null')
     children_ids = fields.One2many(string="Child Lines", comodel_name='account.report.line', inverse_name='parent_id')
     groupby = fields.Char(string="Group By", help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.")
     user_groupby = fields.Char(
@@ -536,7 +537,7 @@ class AccountReportExpression(models.Model):
     _description = "Accounting Report Expression"
     _rec_name = 'report_line_name'
 
-    report_line_id = fields.Many2one(string="Report Line", comodel_name='account.report.line', required=True, ondelete='cascade')
+    report_line_id = fields.Many2one(string="Report Line", comodel_name='account.report.line', required=True, index=True, ondelete='cascade')
     report_line_name = fields.Char(string="Report Line Name", related="report_line_id.name")
     label = fields.Char(string="Label", required=True)
     engine = fields.Selection(
@@ -875,7 +876,7 @@ class AccountReportColumn(models.Model):
     name = fields.Char(string="Name", translate=True, required=True)
     expression_label = fields.Char(string="Expression Label", required=True)
     sequence = fields.Integer(string="Sequence")
-    report_id = fields.Many2one(string="Report", comodel_name='account.report')
+    report_id = fields.Many2one(string="Report", comodel_name='account.report', index='btree_not_null')
     sortable = fields.Boolean(string="Sortable")
     figure_type = fields.Selection(string="Figure Type", selection=FIGURE_TYPE_SELECTION_VALUES, default="monetary", required=True)
     blank_if_zero = fields.Boolean(string="Blank if Zero", help="When checked, 0 values will not show in this column.")

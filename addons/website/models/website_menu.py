@@ -40,8 +40,8 @@ class WebsiteMenu(models.Model):
 
     name = fields.Char('Menu', required=True, translate=True)
     url = fields.Char("Url", compute="_compute_url", store=True, required=True, default="#", copy=True)
-    page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
-    controller_page_id = fields.Many2one('website.controller.page', 'Related Model Page', ondelete='cascade')
+    page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade', index='btree_not_null')
+    controller_page_id = fields.Many2one('website.controller.page', 'Related Model Page', ondelete='cascade', index='btree_not_null')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
     website_id = fields.Many2one('website', 'Website', ondelete='cascade')

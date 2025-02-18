@@ -45,6 +45,7 @@ class AccountBankStatementLine(models.Model):
     statement_id = fields.Many2one(
         comodel_name='account.bank.statement',
         string='Statement',
+        index=True,
     )
 
     # Payments generated during the reconciliation of this bank statement lines.

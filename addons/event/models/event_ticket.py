@@ -26,7 +26,7 @@ class EventEventTicket(models.Model):
     event_type_id = fields.Many2one(ondelete='set null', required=False)
     event_id = fields.Many2one(
         'event.event', string="Event",
-        ondelete='cascade', required=True)
+        ondelete='cascade', required=True, index=True)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     # sale
     start_sale_datetime = fields.Datetime(string="Registration Start")

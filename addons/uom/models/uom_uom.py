@@ -27,7 +27,7 @@ class UomUom(models.Model):
         help='How much bigger or smaller this unit is compared to the reference UoM for this unit')
     rounding = fields.Float('Rounding Precision', compute="_compute_rounding")
     active = fields.Boolean('Active', default=True, help="Uncheck the active field to disable a unit of measure without deleting it.")
-    relative_uom_id = fields.Many2one('uom.uom', 'Reference Unit', ondelete='cascade')
+    relative_uom_id = fields.Many2one('uom.uom', 'Reference Unit', ondelete='cascade', index='btree_not_null')
     related_uom_ids = fields.One2many('uom.uom', 'relative_uom_id', 'Related UoMs')
     factor = fields.Float('Absolute Quantity', digits=0, compute='_compute_factor', recursive=True, store=True)
     parent_path = fields.Char(index=True)
