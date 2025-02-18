@@ -95,3 +95,23 @@ export function useOptionsSubEnv(getEditingElements) {
         weContext: {},
     });
 }
+
+/**
+ * Ensures that `element` will be visible in its `scrollable`.
+ *
+ * @param {HTMLElement} element
+ * @param {object} options
+ * @param {string} [options.behavior] "smooth", "instant", "auto" <=> undefined
+ *        @url https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollTo#behavior
+ * @param {number} [options.offset] applies a vertical offset
+ */
+export function scrollToWindow(element, { behavior, offset } = {}) {
+    const window = element.ownerDocument.defaultView;
+    const top = element.getBoundingClientRect().top + window.scrollY - offset;
+
+    const prom = new Promise((resolve) => {
+        window.addEventListener("scrollend", () => resolve(), { once: true });
+    });
+    window.scrollTo({ top, behavior });
+    return prom;
+}

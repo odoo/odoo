@@ -7,7 +7,12 @@ import { OverlayButtons } from "./overlay_buttons";
 export class OverlayButtonsPlugin extends Plugin {
     static id = "overlayButtons";
     static dependencies = ["selection", "overlay", "history", "operation"];
-    static shared = ["hideOverlayButtons", "showOverlayButtons"];
+    static shared = [
+        "hideOverlayButtons",
+        "showOverlayButtons",
+        "hideOverlayButtonsUi",
+        "showOverlayButtonsUi",
+    ];
     resources = {
         step_added_handlers: this.refreshButtons.bind(this),
         change_current_options_containers_listeners: this.addOverlayButtons.bind(this),
@@ -38,6 +43,7 @@ export class OverlayButtonsPlugin extends Plugin {
         this.target = null;
         this.state = reactive({
             isVisible: true,
+            showUi: true,
             buttons: [],
         });
 
@@ -111,8 +117,16 @@ export class OverlayButtonsPlugin extends Plugin {
         this.state.isVisible = false;
     }
 
+    hideOverlayButtonsUi() {
+        this.state.showUi = false;
+    }
+
     showOverlayButtons() {
         this.state.isVisible = true;
+    }
+
+    showOverlayButtonsUi() {
+        this.state.showUi = true;
     }
 
     addOverlayButtons(optionsContainer) {

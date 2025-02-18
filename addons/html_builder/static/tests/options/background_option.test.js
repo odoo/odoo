@@ -1,7 +1,8 @@
-import { expect, test } from "@odoo/hoot";
-import { contains } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { BackgroundComponent } from "@html_builder/plugins/background_option/background_option";
+import { BgPositionOverlay } from "@html_builder/plugins/background_option/background_position_component";
+import { expect, test } from "@odoo/hoot";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
 defineWebsiteModels();
 
@@ -116,3 +117,53 @@ test("toggle Show/Hide on mobile of the shape background", async () => {
     await contains("button[data-action-id='showOnMobile']").click();
     expect(":iframe section .o_we_shape").not.toHaveClass("o_shape_show_mobile");
 });
+
+test("Change the background position and apply", async () => {
+    await dragAndDropBgImage();
+    await contains(".overlay .btn-primary").click();
+    expect("button.fa-undo").toBeEnabled();
+});
+
+test("Change the background position and discard", async () => {
+    await dragAndDropBgImage();
+    await contains(".overlay .btn-primary").click();
+    expect("button.fa-undo").toBeEnabled();
+});
+
+test("Change the background position and click out of the iframe", async () => {
+    await dragAndDropBgImage();
+    await contains(".o_customize_tab").click();
+    expect("button.fa-undo").not.toBeEnabled();
+});
+
+async function dragAndDropBgImage() {
+    patchWithCleanup(BgPositionOverlay.prototype, {
+        onDragBackgroundMove(ev) {
+            const movementX = ev.clientX === 200 ? 1 : 0;
+            const movementY = ev.clientY === 200 ? 1 : 0;
+            // Mock the movementX and movementY readonly property
+            const newEv = {
+                preventDefault: () => {},
+                movementX: movementX,
+                movementY: movementY,
+            };
+            super.onDragBackgroundMove(newEv);
+        },
+    });
+    await setupWebsiteBuilder(`
+        <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px">
+            <div class="o_we_shape o_web_editor_Connections_01">
+                AAAA
+            </div>
+        </section>`);
+    await contains(":iframe section").click();
+    await contains("button[data-action-id='backgroundPositionOverlay']").click();
+
+    const sectionOverlaySelector = ".overlay .o_overlay_background section";
+    expect(".overlay .o_overlay_background section").not.toHaveStyle("backgroundPosition");
+    const dragActions = await contains(sectionOverlaySelector).drag({
+        position: { x: 199, y: 199 },
+    });
+    await dragActions.moveTo(sectionOverlaySelector, { position: { x: 200, y: 200 } });
+    await dragActions.drop();
+}
