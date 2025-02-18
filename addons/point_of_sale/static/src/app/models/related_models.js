@@ -141,6 +141,7 @@ export class Base extends WithLazyGetterTrap {
         super({ traps });
         this.model = model;
         this._dynamicModels = dynamicModels;
+        this._indexMaps = {};
     }
     get models() {
         return this.model.models;
@@ -205,12 +206,11 @@ export class Base extends WithLazyGetterTrap {
             DATE_TIME_TYPE,
         });
     }
-    getCacheMap(fieldName) {
-        const cacheName = `_${fieldName}`;
-        if (!(cacheName in this)) {
-            this[cacheName] = new Map();
+    getIndexMaps(fieldName) {
+        if (!this._indexMaps[fieldName]) {
+            this._indexMaps[fieldName] = new Map();
         }
-        return this[cacheName];
+        return this._indexMaps[fieldName];
     }
     get raw() {
         return this._raw ?? {};
@@ -259,32 +259,37 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return;
         }
 
-        const cacheMap = record.getCacheMap(fieldName);
+        const indexMap = record.getIndexMaps(fieldName);
         const key = database[item.model.name]?.key || "id";
         const keyVal = item[key];
+        const existingIndex = indexMap.get(keyVal);
 
-        if (cacheMap.has(keyVal)) {
-            cacheMap.delete(keyVal);
-            const index = record[fieldName].findIndex((r) => r[key] === keyVal);
-            record[fieldName].splice(index, 1);
+        if (existingIndex !== undefined) {
+            indexMap.delete(keyVal);
+            record[fieldName].splice(existingIndex, 1);
+
+            // update indexes for items after existingIndex
+            for (let i = existingIndex; i < record[fieldName].length; i++) {
+                const shiftedItem = record[fieldName][i];
+                const shiftedKeyVal = shiftedItem[key];
+                indexMap.set(shiftedKeyVal, i);
+            }
         }
     }
 
     function addItem(record, fieldName, item) {
-        const cacheMap = record.getCacheMap(fieldName);
+        const indexMap = record.getIndexMaps(fieldName);
         const key = database[item.model.name]?.key || "id";
         const keyVal = item[key];
-
         if (!keyVal) {
             console.warn(`Key ${key} not found in ${item.model.name}`);
         }
-
-        if (!cacheMap.has(keyVal)) {
-            cacheMap.set(keyVal, item);
+        const existingIndex = indexMap.get(keyVal);
+        if (existingIndex === undefined) {
             record[fieldName].push(item);
+            indexMap.set(keyVal, record[fieldName].length - 1);
         } else {
-            const index = record[fieldName].findIndex((r) => r[key] === keyVal);
-            record[fieldName].splice(index, 1, item);
+            record[fieldName][existingIndex] = item;
         }
     }
 
