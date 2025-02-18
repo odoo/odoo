@@ -771,6 +771,9 @@ class WebsiteSale(http.Controller):
             order.order_line.filtered(lambda l: l.product_id and not l.product_id.active).unlink()
             values['suggested_products'] = order._cart_accessories()
             values.update(self._get_express_shop_payment_values(order))
+            if request.env.context.get('lang') != request.env['ir.http'].session_info().get('bundle_params', {}).get('lang'):
+                for line in order.order_line:
+                    line._compute_name()
 
         if post.get('type') == 'popover':
             # force no-cache so IE11 doesn't cache this XHR
