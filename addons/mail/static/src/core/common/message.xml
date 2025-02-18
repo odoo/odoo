@@ -61,13 +61,13 @@
                                    'flex-row-reverse': isAlignedRight,
                                    }"
                         >
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
+                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'o-py-0_5': message.is_note }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing or message.edited))">
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="false"/>
                                         <t t-else="">
-                                            <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
+                                            <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block rounded-bottom-3" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div t-if="message.bubbleColor" class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
                                                     'o-blue': message.bubbleColor === 'blue',
                                                     'o-green': message.bubbleColor === 'green',
@@ -131,7 +131,7 @@
         t-att-class="{
             'start-0': isAlignedRight,
             'mx-1': !isMobileOS,
-            'mt-1': !message.is_note,
+            'o-my-0_5': !message.is_note,
             'my-n2': message.is_note,
             'invisible': !isActive and !isMobileOS,
             'o-expanded': optionsDropdown.isOpen

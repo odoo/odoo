@@ -1,5 +1,6 @@
 .o-mail-Message {
-    transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
+    transition: background-color .2s ease-out, opacity .2s ease-out, box-shadow .2s ease-out, transform .2s ease-out, border-left-color .3s ease-out, outline .3s ease-out;
+    border-left: inset 3px transparent;
 
     &.o-card {
         outline: $border-width solid rgba($border-color, .35);
@@ -9,7 +10,14 @@
     }
 
     &.o-highlighted {
-        transform: translateY(-#{map-get($spacers, 3)});
+        background-color: rgba(lighten($o-action, 15%), .05);
+        border-left-color: rgba(lighten($o-action, 15%), var(--mail-Message-highlightBorderOpacity, .5));
+        box-shadow: $box-shadow-sm;
+
+        .o-mail-Message-bubble:not(.o-muted) {
+            outline: 1px solid rgba($o-action, .35);
+            outline-offset: -1px;
+        }
     }
 
     &.o-actionMenuMobileOpen {
