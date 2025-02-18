@@ -202,6 +202,29 @@ class AccountMove(models.Model):
             </div>
         """) % (bootstrap_cls, title, content))
 
+    def _is_l10n_sa_eligibile_invoice(self):
+        self.ensure_one()
+        return self.is_invoice() and self.l10n_sa_confirmation_datetime and self.country_code == 'SA'
+
+    def _get_report_base_filename(self):
+        """
+            Generate the name of the invoice PDF file according to ZATCA business rules:
+            Seller Vat Number (BT-31), Date (BT-2), Time (KSA-25), Invoice Number (BT-1)
+        """
+        if self._is_l10n_sa_eligibile_invoice():
+            return self.with_context(l10n_sa_file_format=False).env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(self)
+        return super()._get_report_base_filename()
+
+    def _get_report_attachment_filename(self):
+        if self._is_l10n_sa_eligibile_invoice():
+            return self.with_context(l10n_sa_file_format='pdf').env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(self)
+        return super()._get_report_attachment_filename()
+
+    def _get_report_mail_attachment_filename(self):
+        if self._is_l10n_sa_eligibile_invoice():
+            return self.with_context(l10n_sa_file_format=False).env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(self)
+        return super()._get_report_mail_attachment_filename()
+
     def _l10n_sa_is_in_chain(self):
         """
         If the invoice was successfully posted and confirmed by the government, then this would return True.
