@@ -1385,6 +1385,8 @@ class MailComposeMessage(models.TransientModel):
         template_values = self.template_id._generate_template(
             res_ids,
             template_fields,
+            # monorecord comment mode -> ok to use suggested instead of defaults
+            recipients_allow_suggested=self.composition_mode == 'comment' and not self.composition_batch and self.message_type == 'comment',
             find_or_create_partners=find_or_create_partners,
         )
 
@@ -1553,6 +1555,8 @@ class MailComposeMessage(models.TransientModel):
                 self[composer_fname] = self.template_id._generate_template(
                     rendering_res_ids,
                     {template_fname},
+                    # monorecord comment -> ok to use suggested recipients
+                    recipients_allow_suggested=self.message_type == 'comment',
                 )[rendering_res_ids[0]][template_fname]
             else:
                 self[composer_fname] = self.template_id[template_fname]
