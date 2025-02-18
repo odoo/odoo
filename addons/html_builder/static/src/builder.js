@@ -84,8 +84,8 @@ export class Builder extends Component {
                         }
                         this.setTab("customize");
                     },
-                    unsplittable_node_predicates: (node) =>
-                        node.querySelector("[data-oe-translation-source-sha]"),
+                    unsplittable_node_predicates: (/** @type {Node} */ node) =>
+                        node.querySelector?.("[data-oe-translation-source-sha]"),
                     can_display_toolbar: (namespace) =>
                         // disable the toolbar for images and icons
                         namespace === undefined ? true : false,
