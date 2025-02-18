@@ -50,7 +50,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     for (const orderline of order.getOrderlines()) {
         const product = orderline.getProduct();
         const note = orderline.getNote();
-        const lineKey = `${orderline.uuid} - ${note}`;
+        const lineKey = orderline.uuid;
         const productCategoryIds = product.parentPosCategIds.filter((id) =>
             prepaCategoryIds.has(id)
         );
