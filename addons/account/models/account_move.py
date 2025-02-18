@@ -440,6 +440,7 @@ class AccountMove(models.Model):
         help="Fiscal positions are used to adapt taxes and accounts for particular "
              "customers or sales orders/invoices. The default value comes from the customer.",
     )
+    partner_country = fields.Char(string='Partner Country', related='partner_id.country_id.name')
 
     # === Payment fields === #
     payment_reference = fields.Char(
