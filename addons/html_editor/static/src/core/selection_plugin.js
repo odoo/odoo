@@ -16,7 +16,7 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
-import { DIRECTIONS, boundariesIn, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
+import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
     normalizeCursorPosition,
@@ -190,7 +190,8 @@ export class SelectionPlugin extends Plugin {
         const selection = this.getEditableSelection();
         const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
         const container = selection && closestElement(selection.anchorNode, containerSelector);
-        const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(container);
+        const [anchorNode, anchorOffset] = getDeepestPosition(container, 0);
+        const [focusNode, focusOffset] = getDeepestPosition(container, nodeSize(container));
         this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
     }
 
