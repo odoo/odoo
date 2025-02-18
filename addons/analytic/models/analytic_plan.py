@@ -281,6 +281,7 @@ class AccountAnalyticPlan(models.Model):
                     'ttype': 'many2one',
                     'relation': 'account.analytic.account',
                     'copied': True,
+                    'on_delete': 'restrict',
                 })
                 Model = self.env[model]
                 if Model._auto:
