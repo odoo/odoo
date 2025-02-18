@@ -182,13 +182,14 @@ patch(PaymentScreen.prototype, {
                     }
                 }
             }
-            const loyaltyPoints = await this.currentOrder.getLoyaltyPoints().map((item) => ({
-                order_id: this.currentOrder.id,
-                card_id: item.couponId,
-                spent: item.points.spent,
-                won: item.points.won,
-                total: item.points.total,
+
+            const loyaltyPoints = Object.keys(couponData).map((coupon_id) => ({
+                order_id: order.id,
+                card_id: coupon_id,
+                spent: couponData[coupon_id].points < 0 ? -couponData[coupon_id].points : 0,
+                won: couponData[coupon_id].points > 0 ? couponData[coupon_id].points : 0,
             }));
+
             const couponUpdates = payload.coupon_updates.map((item) => ({
                 id: item.id,
                 old_id: item.old_id,

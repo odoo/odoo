@@ -106,9 +106,9 @@
                     </div>
                 </div>
             </t>
+            <hr class="o-discuss-separator my-2"/>
+            <h4>Technical Settings</h4>
             <t t-if="env.debug">
-                <hr class="o-discuss-separator my-2"/>
-                <h4>Technical Settings</h4>
                 <div class="d-flex flex-column my-1">
                     <t t-call="discuss.CallSettings.textToggler">
                         <t t-set="text">Log RTC events</t>
@@ -116,8 +116,8 @@
                         <t t-set="onchange" t-value="onChangeLogRtc"/>
                     </t>
                 </div>
-                <button t-if="store.settings.logRtc" class="btn btn-primary mt-1 mb-2 w-100" t-att-disabled="rtc.state.logs.size === 0" t-on-click="onClickDownloadLogs">Download logs</button>
             </t>
+            <button class="btn btn-secondary mt-1 mb-2 w-100" t-on-click="onClickDownloadLogs">Download logs</button>
         </div>
     </t>
     <t t-name="discuss.CallSettings.textToggler">

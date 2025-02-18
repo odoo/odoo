@@ -410,3 +410,21 @@ test("Mention with @everyone", async () => {
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-bubble.o-orange");
 });
+
+test("Suggestions that begin with the search term should have priority", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create([{ name: "Party Partner" }, { name: "Best Partner" }]);
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", {
+        text: "Best Partner",
+        before: [".o-mail-Composer-suggestion", { text: "Party Partner" }],
+    });
+    await insertText(".o-mail-Composer-input", "part");
+    await contains(".o-mail-Composer-suggestion", {
+        text: "Party Partner",
+        before: [".o-mail-Composer-suggestion", { text: "Best Partner" }],
+    });
+});

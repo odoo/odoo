@@ -22,10 +22,10 @@ class kioskAttendanceApp extends Component{
         token: { type: String },
         companyId: { type: Number },
         companyName: { type: String },
-        employees: { type: Array },
         departments: { type: Array },
         kioskMode: { type: String },
         barcodeSource: { type: String },
+        fromTrialMode: { type: Boolean },
     };
     static components = {
         KioskBarcodeScanner,

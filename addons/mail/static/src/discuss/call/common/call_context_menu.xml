@@ -6,10 +6,12 @@
             <input t-if="!isSelf" type="range" min="0.0" max="1" step="0.01" t-att-value="volume" t-on-change="onChangeVolume" class="form-range"/>
             <t t-if="env.debug and !isSelf and rtc.state.connectionType === rtcConnectionTypes.P2P">
                 <hr class="w-100 border-top"/>
+                <div><span class="fw-bolder">RTC Session ID: </span><t t-out="props.rtcSession.id"/></div>
                 <div><span class="fw-bolder">Connection type: </span><t t-out="rtc.state.connectionType"/></div>
                 <div><span class="fw-bolder">To peer: </span><t t-out="outboundConnectionTypeText"/></div>
                 <div><span class="fw-bolder">From peer: </span><t t-out="inboundConnectionTypeText"/></div>
                 <div><span class="fw-bolder">Connection: </span><t t-out="state.peerStats.connectionState"/></div>
+                <div><span class="fw-bolder">ICE connection: </span><t t-out="state.peerStats.iceConnectionState"/></div>
                 <div><span class="fw-bolder">ICE: </span><t t-out="state.peerStats.iceState"/></div>
                 <div><span class="fw-bolder">DTLS: </span><t t-out="state.peerStats.dtlsState"/></div>
                 <div><span class="fw-bolder">Data channel: </span><t t-out="state.peerStats.dataChannelState"/></div>

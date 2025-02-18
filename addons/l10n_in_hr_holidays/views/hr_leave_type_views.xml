@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
         <field name="arch" type="xml">
             <field name="show_on_dashboard" position="after">
-                <field name="l10n_in_is_sandwich_leave" string="Sandwich Leaves" invisible="country_code != 'IN'" />
+                <field name="l10n_in_is_sandwich_leave" string="Sandwich Leaves" invisible="country_code and country_code != 'IN'"/>
             </field>
         </field>
     </record>

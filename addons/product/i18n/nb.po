@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Jens Nymoen <jens@nettimport.no>, 2024
-# Bjørn H. Sandvik, 2024
 # Lars Petter Lilleng, 2024
 # Thor Arne Hvidsten <thor.arne.hvidsten@gmail.com>, 2024
 # Cécile Collart <cco@odoo.com>, 2024
@@ -13,7 +12,8 @@
 # Jorunn D. Newth, 2024
 # Aleksander, 2024
 # Martin Trigaux, 2024
-# Marius Stedjan <marius@stedjan.com>, 2024
+# Marius Stedjan <marius@stedjan.com>, 2025
+# Bjørn H. Sandvik, 2025
 # Rune Restad, 2025
 # 
 msgid ""
@@ -140,6 +140,8 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
+"- GTIN \"%(barcode)s\" er allerede registrert på produkt(ene): "
+"%(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -2875,7 +2877,7 @@ msgstr "Produktprissøk"
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "Produkter: %(category)s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
@@ -3991,6 +3993,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Du kan ikke endre opprettelsesmetoden for varianter på attributten %(attribute)s, fordi den er i bruk på følgende produkter:\n"
+"%(products)s "
 
 #. module: product
 #. odoo-python

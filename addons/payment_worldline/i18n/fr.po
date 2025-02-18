@@ -77,8 +77,12 @@ msgstr "Données reçus avec référence manquante %(ref)s."
 #. module: payment_worldline
 #. odoo-python
 #: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "Received invalid transaction status %(status)s."
-msgstr "Réception d'un statut de transaction invalide %(status)s."
+msgid ""
+"Received invalid transaction status %(status)s with error code "
+"%(error_code)s."
+msgstr ""
+"Statut de transaction invalide reçu : %(status)s avec le code d'erreur "
+"%(error_code)s."
 
 #. module: payment_worldline
 #. odoo-python
@@ -96,6 +100,18 @@ msgstr "Le code technique de ce fournisseur de paiement."
 #: code:addons/payment_worldline/models/payment_transaction.py:0
 msgid "The transaction is not linked to a token."
 msgstr "La transaction n'est pas liée à un jeton."
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "Transaction cancelled with error code %(error_code)s."
+msgstr "Transaction annulée avec le code d'erreur %(error_code)s."
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "Transaction declined with error code %(error_code)s."
+msgstr "Transaction refusée avec le code d'erreur %(error_code)s."
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form

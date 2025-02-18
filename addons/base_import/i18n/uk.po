@@ -3,8 +3,8 @@
 # 	* base_import
 # 
 # Translators:
-# Wil Odoo, 2024
 # Martin Trigaux, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "%(property_string)s (%(parent_name)s)"
-msgstr ""
+msgstr "%(property_string)s (%(parent_name)s)"
 
 #. module: base_import
 #. odoo-javascript
@@ -148,7 +148,7 @@ msgstr "Натисніть 'Продовжити' щоб продовжити і
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Column %(column)s contains incorrect values (value: %(value)s)"
-msgstr ""
+msgstr "Колонка %(column)s містить невірні значення (значення: %(value)s)"
 
 #. module: base_import
 #. odoo-python
@@ -157,6 +157,8 @@ msgid ""
 "Column %(column)s contains incorrect values. Error in line %(line)d: "
 "%(error)s"
 msgstr ""
+"Колонка %(column)s містить невірні значення. Помилка в рядку %(line)d: "
+"%(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -280,13 +282,13 @@ msgstr "Кодування:"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
-msgstr ""
+msgstr "Помилка аналізу дати [%(field)s:L%(line)d]: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Error at row %(row)s: \"%(error)s\""
-msgstr ""
+msgstr "Помилка на рядку %(row)s: \"%(error)s\""
 
 #. module: base_import
 #. odoo-python
@@ -305,6 +307,10 @@ msgid ""
 "title row has %(title_row_entries)d entries while the first row has "
 "%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
+"Помилка під час імпорту записів: усі рядки мають бути однакового розміру, "
+"але рядок заголовка має записи %(title_row_entries)d у той час як перший "
+"рядок має %(first_row_entries)d. Можливо, вам знадобиться змінити символ "
+"роздільника."
 
 #. module: base_import
 #. odoo-javascript
