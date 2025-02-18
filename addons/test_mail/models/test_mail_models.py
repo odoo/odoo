@@ -144,7 +144,7 @@ class MailTestGatewayGroups(models.Model):
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
-    def _message_get_default_recipients(self):
+    def _message_get_default_recipients(self, with_cc=False):
         return dict(
             (record.id, {
                 'email_cc': False,
