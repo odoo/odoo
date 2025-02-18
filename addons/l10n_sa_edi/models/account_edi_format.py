@@ -1,4 +1,5 @@
 import json
+import logging
 import pytz
 from hashlib import sha256
 from base64 import b64decode, b64encode
@@ -11,6 +12,8 @@ from cryptography.hazmat.primitives.asymmetric.ec import ECDSA
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_der_x509_certificate
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountEdiFormat(models.Model):
@@ -476,3 +479,37 @@ class AccountEdiFormat(models.Model):
             'post': self._l10n_sa_post_zatca_edi,
             'edi_content': self._l10n_sa_get_invoice_content_edi,
         }
+
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
+        """
+        Prepare invoice report to be printed.
+        :param pdf_writer: The pdf writer with the invoice pdf content loaded.
+        :param edi_document: The edi document to be added to the pdf file.
+        """
+        self.ensure_one()
+        super()._prepare_invoice_report(pdf_writer, edi_document)
+        if self.code != 'sa_zatca' or edi_document.move_id.country_code != 'SA':
+            return
+
+        attachment = edi_document.attachment_id
+        if not attachment or not attachment.datas:
+            _logger.warning(f"No attachment found for invoice {edi_document.move_id.name}")
+            return
+
+        xml_content = attachment.raw
+        file_name = attachment.name
+
+        pdf_writer.addAttachment(file_name, xml_content, subtype='text/xml')
+        if not pdf_writer.is_pdfa:
+            try:
+                pdf_writer.convert_to_pdfa()
+            except Exception as e:
+                _logger.exception("Error while converting to PDF/A: %s", e)
+            content = self.env['ir.qweb']._render(
+                'account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata',
+                {
+                    'title': edi_document.move_id.name,
+                    'date': fields.Date.context_today(self),
+                },
+            )
+            pdf_writer.add_file_metadata(content.encode())
