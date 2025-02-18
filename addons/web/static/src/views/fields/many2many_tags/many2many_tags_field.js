@@ -89,12 +89,10 @@ export class Many2ManyTagsField extends Component {
                 onDelete: removeRecord,
                 edit: this.props.record.isInEdition,
             },
-            getEvalParams: (props) => {
-                return {
-                    evalContext: this.evalContext,
-                    readonly: props.readonly,
-                };
-            },
+            getEvalParams: (props) => ({
+                evalContext: this.evalContext,
+                readonly: props.readonly,
+            }),
         });
 
         this.openMany2xRecord = useOpenMany2XRecord({
@@ -103,17 +101,17 @@ export class Many2ManyTagsField extends Component {
                 create: false,
                 write: true,
             },
-            onRecordSaved: async (record) => {
-                await this.props.record.data[this.props.name].forget(record);
-                return saveRecord([record.resId]);
+            onRecordSaved: (record) => {
+                const records = this.props.record.data[this.props.name].records;
+                return records.find((r) => r.resId === record.resId).load();
             },
         });
 
         this.update = (recordlist) => {
             recordlist = recordlist
-                ? recordlist.filter((element) => {
-                      return !this.tags.some((record) => record.resId === element.id);
-                  })
+                ? recordlist.filter(
+                      (element) => !this.tags.some((record) => record.resId === element.id)
+                  )
                 : [];
             if (!recordlist.length) {
                 return;
