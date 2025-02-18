@@ -1,14 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
 import { CSS_SHORTHANDS, areCssValuesEqual } from "@html_builder/utils/utils_css";
 
-class CoreBuilderActionPlugin extends Plugin {
+export class CoreBuilderActionPlugin extends Plugin {
     static id = "CoreBuilderAction";
     resources = {
         builder_actions: coreBuilderActions,
     };
 }
-registry.category("website-plugins").add(CoreBuilderActionPlugin.id, CoreBuilderActionPlugin);
 
 function getNumericStyle(styleName) {
     return {

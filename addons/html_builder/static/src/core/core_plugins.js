@@ -17,6 +17,7 @@ import { ReplacePlugin } from "./plugins/replace/replace_plugin";
 import { SaveSnippetPlugin } from "./plugins/save_snippet/save_snippet_plugin";
 import { SetupEditorPlugin } from "./plugins/setup_editor_plugin";
 import { VisibilityPlugin } from "./plugins/visibility_plugin";
+import { CoreBuilderActionPlugin } from "./plugins/core_builder_action_plugin";
 
 export const CORE_PLUGINS = [
     BuilderOptionsPlugin,
@@ -38,4 +39,5 @@ export const CORE_PLUGINS = [
     VisibilityPlugin,
     DropZoneSelectorPlugin,
     CachedModelPlugin,
+    CoreBuilderActionPlugin,
 ];

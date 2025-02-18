@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { ModelEdit } from "./cached_model_utils";
 
@@ -69,4 +68,3 @@ export class CachedModelPlugin extends Plugin {
         return !!inventory.length;
     }
 }
-registry.category("website-plugins").add(CachedModelPlugin.id, CachedModelPlugin);
