@@ -670,11 +670,6 @@ class ResPartner(models.Model):
             else:
                 partner.invoice_edi_format_store = partner.invoice_edi_format
 
-    @api.depends('bank_ids')
-    def _compute_duplicated_bank_account_partners_count(self):
-        for partner in self:
-            partner.duplicated_bank_account_partners_count = len(partner._get_duplicated_bank_accounts())
-
     @api.depends_context('company')
     def _compute_use_partner_credit_limit(self):
         company_limit = self._fields['credit_limit'].get_company_dependent_fallback(self)
