@@ -100,7 +100,9 @@ class AccountMoveLine(models.Model):
             ('project_id', '!=', False),
             '|', '|',
                 ('timesheet_invoice_id', '=', False),
-                ('timesheet_invoice_id.state', '=', 'cancel'),
+                '&',
+                    ('timesheet_invoice_id.state', '=', 'cancel'),
+                    ('timesheet_invoice_id.payment_state', '!=', 'invoicing_legacy'),
                 ('timesheet_invoice_id.payment_state', '=', 'reversed')
         ]
 
