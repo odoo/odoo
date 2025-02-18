@@ -537,7 +537,7 @@ class IrHttp(models.AbstractModel):
         code = 500  # default code
         values = dict(
             exception=exception,
-            traceback=traceback.format_exc(),
+            traceback=''.join(traceback.format_exception(exception)),
         )
         if isinstance(exception, exceptions.AccessDenied):
             code = 403
