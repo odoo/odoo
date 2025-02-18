@@ -713,6 +713,7 @@ describe("models without backlinks", () => {
     });
 });
 
+<<<<<<< 7b140bc7c1243cde449a2bb74b8bcb3f63428010
 describe("Base data", () => {
     test("baseData is updated when the record id is updated", () => {
         const { models, baseData } = createRelatedModels(
@@ -751,5 +752,123 @@ describe("Base data", () => {
 
         expect(baseData["pos.order"][oldId]).toBeEmpty(); // Old Basedata is deleted
         expect(baseData["pos.order"][updatedOrder.id].id).toBe(updatedOrder.id);
+||||||| 98db5a2698c5d9c119141b5fb32540c234125801
+=======
+describe("loadData function", () => {
+    const getModels = () =>
+        createRelatedModels(
+            {
+                "product.product": {
+                    id: { type: "integer" },
+                    uuid: { type: "char" },
+                    category_ids: { type: "many2many", relation: "product.category" },
+                },
+                "product.category": {
+                    id: { type: "integer" },
+                    name: { type: "char" },
+                },
+            },
+            {},
+            {
+                databaseIndex: { "product.product": ["uuid"], "product.category": ["id"] },
+                databaseTable: {
+                    "product.product": {
+                        key: "uuid",
+                        condition: (record) => true,
+                    },
+                    "product.category": {
+                        key: "id",
+                        condition: (record) => true,
+                    },
+                },
+                dynamicModels: ["product.product", "product.category"],
+            }
+        ).models;
+
+    test("loadData should load new data correctly", () => {
+        const models = getModels();
+
+        const rawData = {
+            "product.category": [
+                { id: 1, name: "Electronics" },
+                { id: 2, name: "Accessories" },
+            ],
+            "product.product": [
+                { id: 1, uuid: "prod-123", category_ids: [1] },
+                { id: 2, uuid: "prod-456", category_ids: [2] },
+            ],
+        };
+
+        models.loadData(models, rawData);
+
+        const product1 = models["product.product"].read(1);
+        const product2 = models["product.product"].read(2);
+        const category1 = models["product.category"].read(1);
+        const category2 = models["product.category"].read(2);
+
+        expect(product1.uuid).toBe("prod-123");
+        expect(product1.category_ids.includes(category1)).toBe(true);
+
+        expect(product2.uuid).toBe("prod-456");
+        expect(product2.category_ids.includes(category2)).toBe(true);
+
+        expect(category1.name).toBe("Electronics");
+        expect(category2.name).toBe("Accessories");
+    });
+
+    test("loadData should update existing data when loading the same UUID", () => {
+        const models = getModels();
+
+        const initialRawData = {
+            "product.category": [{ id: 1, name: "Electronics" }],
+            "product.product": [{ id: 1, uuid: "prod-123", category_ids: [1] }],
+        };
+
+        models.loadData(models, initialRawData);
+
+        const updatedRawData = {
+            "product.category": [{ id: 2, name: "Updated Category" }], // New category
+            "product.product": [{ id: 1, uuid: "prod-123", category_ids: [2] }],
+        };
+
+        models.loadData(models, updatedRawData);
+
+        const updatedProduct = models["product.product"].read(1);
+        const updatedCategory = models["product.category"].read(2);
+
+        expect(updatedProduct.uuid).toBe("prod-123");
+        expect(updatedProduct.category_ids.includes(updatedCategory)).toBe(true);
+    });
+    test("replace string-based ID records when loading integer-based IDs", () => {
+        const models = getModels();
+
+        models["product.category"].create({
+            id: "product.category_1",
+            name: "Electronics",
+        });
+        models["product.product"].create({
+            id: "product.product_1",
+            uuid: "prod-123",
+            category_ids: ["product.category_1"],
+        });
+
+        const updatedRawData = {
+            "product.category": [{ id: 1, name: "Updated Electronics" }],
+            "product.product": [{ id: 1, uuid: "prod-123", category_ids: [1] }],
+        };
+
+        models.loadData(models, updatedRawData);
+
+        const updatedCategory = models["product.category"].read(1);
+        const updatedProduct = models["product.product"].read(1);
+
+        expect(updatedCategory).not.toBeEmpty();
+        expect(updatedCategory.name).toBe("Updated Electronics");
+
+        expect(updatedProduct).not.toBeEmpty();
+        expect(updatedProduct.uuid).toBe("prod-123");
+        expect(updatedProduct.category_ids.includes(updatedCategory)).toBe(true);
+        expect(updatedProduct.category_ids.length).toBe(1);
+>>>>>>> fd4905fc1dd9aade9f2764de3d073176ba666775
     });
 });
