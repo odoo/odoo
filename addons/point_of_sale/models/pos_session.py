@@ -111,6 +111,8 @@ class PosSession(models.Model):
                     'relation': params.comodel_name,
                     'type': params.type,
                 }
+                if params.type == 'many2one' and params.ondelete:
+                    relations[name]['ondelete'] = params.ondelete
                 if params.type == 'one2many' and params.inverse_name:
                     relations[name]['inverse_name'] = params.inverse_name
                 if params.type == 'many2many':
@@ -128,10 +130,10 @@ class PosSession(models.Model):
     @api.model
     def _load_pos_data_models(self, config_id):
         return ['pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
-            'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
-            'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
+            'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'pos.category', 'product.attribute', 'product.attribute.custom.value',
+            'product.template.attribute.line', 'product.template.attribute.value', 'product.template.attribute.exclusion', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
-            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view', 'product.tag', 'ir.module.module']
+            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module']
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -261,8 +263,8 @@ class PosSession(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_picking_count(self):
         for session in self:
-            session.picking_count = self.env['stock.picking'].search_count([('pos_session_id', '=', session.id)])
-            session.failed_pickings = bool(self.env['stock.picking'].search([('pos_session_id', '=', session.id), ('state', '!=', 'done')], limit=1))
+            session.picking_count = self.env['stock.picking'].search_count([('pos_session_id', 'in', session.ids)])
+            session.failed_pickings = bool(self.env['stock.picking'].search([('pos_session_id', 'in', session.ids), ('state', '!=', 'done')], limit=1))
 
     def action_stock_picking(self):
         self.ensure_one()
@@ -397,8 +399,6 @@ class PosSession(models.Model):
         # we only open sessions that haven't already been opened
         for session in self.filtered(lambda session: session.state == 'opening_control'):
             values = {}
-            if not session.start_at:
-                values['start_at'] = fields.Datetime.now()
             if session.config_id.cash_control and not session.rescue:
                 last_session = self.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
                 session.cash_register_balance_start = last_session.cash_register_balance_end_real  # defaults to 0 if lastsession is empty
@@ -412,7 +412,7 @@ class PosSession(models.Model):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         for session in self:
             if any(order.state == 'draft' for order in self.get_session_orders()):
-                raise UserError(_("You cannot close the POS when orders are still in draft"))
+                raise UserError(_("You cannot close the POS while there are still draft orders for the day."))
             if session.state == 'closed':
                 raise UserError(_('This session is already closed.'))
             stop_at = self.stop_at or fields.Datetime.now()
@@ -684,7 +684,7 @@ class PosSession(models.Model):
         """
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         if any(order.state == 'draft' for order in self.get_session_orders()):
-            return {'successful': False, 'message': _("You cannot close the POS when orders are still in draft"), 'redirect': False}
+            return {'successful': False, 'message': _("You cannot close the POS while there are still draft orders for the day."), 'redirect': False}
         if self.state == 'closed':
             return {
                 'successful': False,
@@ -1108,11 +1108,7 @@ class PosSession(models.Model):
         outstanding_account = payment_method.outstanding_account_id
         destination_account = self._get_receivable_account(payment_method)
 
-        if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
-            # revert the accounts because account.payment doesn't accept negative amount.
-            outstanding_account, destination_account = destination_account, outstanding_account
-
-        account_payment = self.env['account.payment'].create({
+        account_payment = self.env['account.payment'].with_context(pos_payment=True).create({
             'amount': abs(amounts['amount']),
             'journal_id': payment_method.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
@@ -1122,6 +1118,14 @@ class PosSession(models.Model):
             'pos_session_id': self.id,
             'company_id': self.company_id.id,
         })
+
+        if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
+            # revert the accounts because account.payment doesn't accept negative amount.
+            account_payment.write({
+                'outstanding_account_id': account_payment.destination_account_id,
+                'destination_account_id': account_payment.outstanding_account_id,
+            })
+
         account_payment.action_post()
 
         diff_amount_compare_to_zero = self.currency_id.compare_amounts(diff_amount, 0)
@@ -1695,11 +1699,11 @@ class PosSession(models.Model):
 
     def set_opening_control(self, cashbox_value: int, notes: str):
         self.state = 'opened'
-
-        self.name = self.env['ir.sequence'].with_context(
+        self.start_at = fields.Datetime.now()
+        self.name = self.config_id.name + self.env['ir.sequence'].with_context(
             company_id=self.config_id.company_id.id
         ).next_by_code('pos.session') + (self.name if self.name != '/' else '')
-            
+
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         if cash_payment_method_ids:
             self.opening_notes = notes

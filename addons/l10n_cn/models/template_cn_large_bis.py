@@ -38,6 +38,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'cash': {
                 'name': 'Cash on Hand',
+                'type': 'cash',
                 'default_account_id': 'l10n_cn_common_100100',
             },
             'bank': {

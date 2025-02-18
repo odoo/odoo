@@ -148,7 +148,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         let attributeIds = [];
         inputs.forEach((element) => attributeIds.push(element.dataset.attributeValueId));
         if (attributeIds.length > 0) {
-            window.location.hash = `attribute_values=${attributeIds.join(',')}`;
+            // Avoid adding new entries in session history by replacing the current one
+            history.replaceState(null, '', '#attribute_values=' + attributeIds.join(','));
         }
     },
     /**
@@ -666,7 +667,11 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
     selector: '#o_product_page_reviews',
     disabledInEditableMode: false,
 
+    /**
+     * @override
+     */
     init() {
+        this._super(...arguments);
         this.website_menus = this.bindService("website_menus");
     },
 

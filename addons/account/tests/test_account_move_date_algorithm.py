@@ -177,6 +177,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         amls = (invoice + refund).line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
         amls.reconcile()
         exchange_move = amls.matched_debit_ids.exchange_move_id
+        self.assertEqual(exchange_move.state, 'posted')
 
         self._set_lock_date('2017-01-31')
         (invoice + refund).line_ids.remove_move_reconcile()
@@ -267,7 +268,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                 'account.group_account_invoice',
         ):
             with self.subTest(group=group), closing(self.cr.savepoint()):
-                self.env.user.groups_id = [Command.set(self.env.ref(group).ids)]
+                self.env.user.group_ids = [Command.set(self.env.ref(group).ids)]
 
                 self.assertTrue(self.env.user.has_group(group))
 

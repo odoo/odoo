@@ -86,7 +86,10 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "removeFormat",
-                title: _t("Remove Format"),
+                title: (sel, nodes) =>
+                    nodes && this.hasAnyFormat(nodes)
+                        ? _t("Remove Format")
+                        : _t("Selection has no format"),
                 icon: "fa-eraser",
                 run: this.removeFormat.bind(this),
             },
@@ -373,6 +376,9 @@ export class FormatPlugin extends Plugin {
             this.dependencies.selection.setSelection(newSelection, { normalize: false });
             return true;
         }
+        if (selectedFieldNodes.size > 0) {
+            return true;
+        }
     }
 
     normalize(root) {
@@ -529,12 +535,22 @@ export class FormatPlugin extends Plugin {
 function getOrCreateSpan(node, ancestors) {
     const document = node.ownerDocument;
     const span = ancestors.find((element) => element.tagName === "SPAN" && element.isConnected);
+    const lastInlineAncestor = ancestors.findLast(
+        (element) => !isBlock(element) && element.isConnected
+    );
     if (span) {
         return span;
     } else {
         const span = document.createElement("span");
-        node.after(span);
-        span.append(node);
+        // Apply font span above current inline top ancestor so that
+        // the font style applies to the other style tags as well.
+        if (lastInlineAncestor) {
+            lastInlineAncestor.after(span);
+            span.append(lastInlineAncestor);
+        } else {
+            node.after(span);
+            span.append(node);
+        }
         return span;
     }
 }

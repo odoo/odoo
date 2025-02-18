@@ -10,8 +10,8 @@ from werkzeug.urls import url_encode
 
 from odoo import api, Command, fields, models, _
 from odoo.osv import expression
-from odoo.tools import format_amount, format_date, format_list, formatLang, groupby
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools import format_amount, format_date, format_list, formatLang, groupby, SQL
+from odoo.tools.float_utils import float_is_zero, float_repr
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -75,7 +75,7 @@ class PurchaseOrder(models.Model):
     name = fields.Char('Order Reference', required=True, index='trigram', copy=False, default='New')
     priority = fields.Selection(
         [('0', 'Normal'), ('1', 'Urgent')], 'Priority', default='0', index=True)
-    origin = fields.Char('Source Document', copy=False,
+    origin = fields.Char('Source', copy=False,
         help="Reference of the document that generated this purchase order "
              "request (e.g. a sales order)")
     partner_ref = fields.Char('Vendor Reference', copy=False,
@@ -101,6 +101,9 @@ class PurchaseOrder(models.Model):
         ('cancel', 'Cancelled')
     ], string='Status', readonly=True, index=True, copy=False, default='draft', tracking=True)
     order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', copy=True)
+    acknowledged = fields.Boolean(
+        'Acknowledged', copy=False, tracking=True,
+        help="It indicates that the vendor has acknowledged the receipt of the purchase order.")
     notes = fields.Html('Terms and Conditions')
 
     partner_bill_count = fields.Integer(related='partner_id.supplier_invoice_count')
@@ -120,7 +123,7 @@ class PurchaseOrder(models.Model):
     tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
-    amount_total_cc = fields.Monetary(string="Company Total", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
+    amount_total_cc = fields.Monetary(string="Total in currency", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tax_country_id = fields.Many2one(
@@ -151,12 +154,11 @@ class PurchaseOrder(models.Model):
         precompute=True,
     )
 
-    mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
-    mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
-    mail_reception_declined = fields.Boolean("Reception Declined", readonly=True, copy=False, help="True if PO reception is declined by the vendor.")
+    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email', store=True, readonly=False)
+    reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
 
-    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email')
-    reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email')
+    is_late = fields.Boolean('Is Late', store=False, search='_search_is_late')
+    show_comparison = fields.Boolean('Show Comparison', compute='_compute_show_comparison')
 
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
@@ -221,7 +223,7 @@ class PurchaseOrder(models.Model):
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             po.display_name = name
 
-    @api.depends('company_id', 'partner_id')
+    @api.depends('company_id', 'partner_id', 'partner_id.reminder_date_before_receipt')
     def _compute_receipt_reminder_email(self):
         for order in self:
             order.receipt_reminder_email = order.partner_id.with_company(order.company_id).receipt_reminder_email
@@ -253,22 +255,37 @@ class PurchaseOrder(models.Model):
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
 
+    @api.depends('order_line', 'order_line.product_id')
+    def _compute_show_comparison(self):
+        line_groupby_product = self.env['purchase.order.line']._read_group(
+            [('product_id', 'in', self.order_line.product_id.ids), ('state', '=', 'purchase')],
+            ['product_id'],
+            ['order_id:array_agg']
+        )
+
+        order_by_product = {p: set(o_ids) for p, o_ids in line_groupby_product}
+        for record in self:
+            record.show_comparison = any(set(record.ids) != order_by_product[p] for p in record.order_line.product_id if p in order_by_product)
+
     @api.onchange('date_planned')
     def onchange_date_planned(self):
         if self.date_planned:
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
-    def write(self, vals):
-        vals, partner_vals = self._write_partner_values(vals)
-        res = super().write(vals)
-        if partner_vals:
-            self.partner_id.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
-        return res
+    def _search_is_late(self, operator, value):
+        if operator not in ["=", "!="]:
+            raise ValidationError(_("Unsupported operator"))
+        purchase_ids = self._search([('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())])
+        if operator == "=" and value or operator == "!=" and not value:
+            purchase_lines_late = self.env['purchase.order.line'].search([('order_id', 'in', purchase_ids), ('qty_received', '<', SQL('product_qty'))])
+            return [('id', 'in', purchase_lines_late.order_id.ids)]
+        else:
+            purchase_lines_on_time = self.env['purchase.order.line']._search([('order_id', 'in', purchase_ids), ('qty_received', '>=', SQL('product_qty'))])
+            return [('id', 'in', purchase_lines_on_time.order_id.ids)]
 
     @api.model_create_multi
     def create(self, vals_list):
         orders = self.browse()
-        partner_vals_list = []
         for vals in vals_list:
             company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
             # Ensures default picking type and currency are taken from the right company.
@@ -278,12 +295,7 @@ class PurchaseOrder(models.Model):
                 if 'date_order' in vals:
                     seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
                 vals['name'] = self_comp.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
-            vals, partner_vals = self._write_partner_values(vals)
-            partner_vals_list.append(partner_vals)
             orders |= super(PurchaseOrder, self_comp).create(vals)
-        for order, partner_vals in zip(orders, partner_vals_list):
-            if partner_vals:
-                order.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
         return orders
 
     @api.ondelete(at_uninstall=False)
@@ -500,6 +512,16 @@ class PurchaseOrder(models.Model):
             'context': ctx,
         }
 
+    def action_acknowledge(self):
+        self.acknowledged = True
+
+    def action_purchase_comparison(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
+        action['domain'] = [('product_id', 'in', self.order_line.product_id.ids)]
+        action['display_name'] = _("Purchase Comparison for %s", self.display_name)
+        return action
+
     def print_quotation(self):
         self.write({'state': "sent"})
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
@@ -533,7 +555,7 @@ class PurchaseOrder(models.Model):
         purchase_orders_with_invoices = self.filtered(lambda po: any(i.state not in ('cancel', 'draft') for i in po.invoice_ids))
         if purchase_orders_with_invoices:
             raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", format_list(self.env, purchase_orders_with_invoices.mapped('display_name'))))
-        self.write({'state': 'cancel', 'mail_reminder_confirmed': False})
+        self.write({'state': 'cancel'})
 
     def button_unlock(self):
         self.write({'state': 'purchase'})
@@ -846,60 +868,81 @@ class PurchaseOrder(models.Model):
         self.browse().check_access('read')
 
         result = {
-            'all_to_send': 0,
-            'all_waiting': 0,
-            'all_late': 0,
-            'my_to_send': 0,
-            'my_waiting': 0,
-            'my_late': 0,
-            'all_avg_order_value': 0,
-            'all_avg_days_to_purchase': 0,
-            'all_total_last_7_days': 0,
-            'all_sent_rfqs': 0,
-            'company_currency_symbol': self.env.company.currency_id.symbol
+            'global': {
+                'draft': {'all': 0, 'priority': 0},
+                'sent':  {'all': 0, 'priority': 0},
+                'late':  {'all': 0, 'priority': 0},
+                'not_acknowledged': {'all': 0, 'priority': 0},
+                'late_receipt': {'all': 0, 'priority': 0},
+                'days_to_order': 0,
+            },
+            'my': {
+                'draft': {'all': 0, 'priority': 0},
+                'sent':  {'all': 0, 'priority': 0},
+                'late':  {'all': 0, 'priority': 0},
+                'not_acknowledged': {'all': 0, 'priority': 0},
+                'late_receipt': {'all': 0, 'priority': 0},
+                'days_to_order': 0,
+            },
+            'days_to_purchase': 0,
         }
 
-        one_week_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(days=7))
-
-        query = """SELECT COUNT(1)
-                   FROM mail_message m
-                   JOIN purchase_order po ON (po.id = m.res_id)
-                   WHERE m.create_date >= %s
-                     AND m.model = 'purchase.order'
-                     AND m.message_type = 'notification'
-                     AND m.subtype_id = %s
-                     AND po.company_id = %s;
-                """
-
-        self.env.cr.execute(query, (one_week_ago, self.env.ref('purchase.mt_rfq_sent').id, self.env.company.id))
-        res = self.env.cr.fetchone()
-        result['all_sent_rfqs'] = res[0] or 0
+        def _update(key, dict_to_update, group):
+            for priority, user_id, count in group:
+                my = user_id == self.env.user
+                dict_to_update['global'][key]['all'] += count
+                if priority != '0':
+                    dict_to_update['global'][key]['priority'] += count
+                if not my:
+                    continue
+                dict_to_update['my'][key]['all'] += count
+                if priority != '0':
+                    dict_to_update['my'][key]['priority'] += count
 
         # easy counts
-        po = self.env['purchase.order']
-        result['all_to_send'] = po.search_count([('state', '=', 'draft')])
-        result['my_to_send'] = po.search_count([('state', '=', 'draft'), ('user_id', '=', self.env.uid)])
-        result['all_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now())])
-        result['my_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
-        result['all_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now())])
-        result['my_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
+        groupby = ['priority', 'user_id']
+        aggregate = ['id:count_distinct']
+        rfq_draft_domain = [('state', '=', 'draft')]
+        rfq_draft_group = self.env['purchase.order']._read_group(rfq_draft_domain, groupby, aggregate)
+        _update('draft', result, rfq_draft_group)
 
-        # Calculated values ('avg order value', 'avg days to purchase', and 'total last 7 days') note that 'avg order value' and
-        # 'total last 7 days' takes into account exchange rate and current company's currency's precision.
-        # This is done via SQL for scalability reasons
-        query = """SELECT AVG(COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total)),
-                          AVG(extract(epoch from age(po.date_approve,po.create_date)/(24*60*60)::decimal(16,2))),
-                          SUM(CASE WHEN po.date_approve >= %s THEN COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total) ELSE 0 END)
-                   FROM purchase_order po
-                   WHERE po.state in ('purchase', 'done')
-                     AND po.company_id = %s
-                """
-        self._cr.execute(query, (one_week_ago, self.env.company.id))
-        res = self.env.cr.fetchone()
-        result['all_avg_days_to_purchase'] = round(res[1] or 0, 2)
-        currency = self.env.company.currency_id
-        result['all_avg_order_value'] = format_amount(self.env, res[0] or 0, currency)
-        result['all_total_last_7_days'] = format_amount(self.env, res[2] or 0, currency)
+        rfq_sent_domain = [('state', '=', 'sent')]
+        rfq_sent_group = self.env['purchase.order']._read_group(rfq_sent_domain, groupby, aggregate)
+        _update('sent', result, rfq_sent_group)
+
+        rfq_late_domain = [('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now())]
+        rfq_late_group = self.env['purchase.order']._read_group(rfq_late_domain, groupby, aggregate)
+        _update('late', result, rfq_late_group)
+
+        rfq_not_acknowledge = [('state', '=', 'purchase'), ('acknowledged', '=', False)]
+        rfq_not_acknowledge_group = self.env['purchase.order']._read_group(rfq_not_acknowledge, groupby, aggregate)
+        _update('not_acknowledged', result, rfq_not_acknowledge_group)
+
+        rfq_late_receipt = [('is_late', '=', True)]
+        rfq_late_receipt_group = self.env['purchase.order']._read_group(rfq_late_receipt, groupby, aggregate)
+        _update('late_receipt', result, rfq_late_receipt_group)
+
+        three_months_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(months=3))
+
+        purchases = self.env['purchase.order'].search_fetch(
+            [('state', 'in', ['purchase', 'done']), ('create_date', '>=', three_months_ago), ('date_approve', '!=', False)],
+            ['create_date', 'date_approve', 'user_id'])
+
+        global_deliveries_seconds = 0
+        my_deliveries_seconds = 0
+        my_deliveries_count = 0
+
+        for po in purchases:
+            delivery_seconds = (po.date_approve - po.create_date).total_seconds()
+            global_deliveries_seconds += delivery_seconds
+            if po.user_id == self.env.user:
+                my_deliveries_seconds += delivery_seconds
+                my_deliveries_count += 1
+
+        avg_global_deliveries_seconds = global_deliveries_seconds / len(purchases) if purchases else 0
+        avg_my_deliveries_seconds = my_deliveries_seconds / my_deliveries_count if my_deliveries_count else 0
+        result['global']['days_to_order'] = float_repr(avg_global_deliveries_seconds / 60 / 60 / 24, precision_digits=2)
+        result['my']['days_to_order'] = float_repr(avg_my_deliveries_seconds / 60 / 60 / 24, precision_digits=2)
 
         return result
 
@@ -979,9 +1022,9 @@ class PurchaseOrder(models.Model):
         return self.search([
             ('partner_id', '!=', False),
             ('state', 'in', ['purchase', 'done']),
-            ('mail_reminder_confirmed', '=', False)
-        ]).filtered(lambda p: p.partner_id.with_company(p.company_id).receipt_reminder_email and\
-            p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
+            ('acknowledged', '=', False),
+            ('receipt_reminder_email', '=', True)
+        ]).filtered(lambda p: p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
 
     def _default_order_line_values(self, child_field=False):
         default_data = super()._default_order_line_values(child_field)
@@ -1061,15 +1104,15 @@ class PurchaseOrder(models.Model):
 
         return product_infos
 
+    def get_acknowledge_url(self):
+        return self.get_portal_url(query_string='&acknowledge=True')
+
     def get_confirm_url(self, confirm_type=None):
         """Create url for confirm reminder or purchase reception email for sending
-        in mail."""
+        in mail. Unsuported anymore. We only use the acknowledge mechanism. Keep it
+        for backward compatibility"""
         if confirm_type in ['reminder', 'reception', 'decline']:
-            param = url_encode({
-                'confirm': confirm_type,
-                'confirmed_date': self.date_planned and self.date_planned.date(),
-            })
-            return self.get_portal_url(query_string='&%s' % param)
+            return self.get_acknowledge_url()
         return self.get_portal_url()
 
     def get_update_url(self):
@@ -1077,13 +1120,6 @@ class PurchaseOrder(models.Model):
         order lines."""
         update_param = url_encode({'update': 'True'})
         return self.get_portal_url(query_string='&%s' % update_param)
-
-    def confirm_reminder_mail(self, confirmed_date=False):
-        for order in self:
-            if order.state in ['purchase', 'done'] and not order.mail_reminder_confirmed:
-                order.mail_reminder_confirmed = True
-                date_planned = order.get_localized_date_planned(confirmed_date).date()
-                order.message_post(body=_("%(vendor)s confirmed the receipt will take place on %(date)s.", vendor=order.partner_id.name, date=date_planned))
 
     def _approval_allowed(self):
         """Returns whether the order qualifies to be approved by the current user"""
@@ -1095,27 +1131,6 @@ class PurchaseOrder(models.Model):
                     self.company_id.po_double_validation_amount, self.currency_id, self.company_id,
                     self.date_order or fields.Date.today()))
             or self.env.user.has_group('purchase.group_purchase_manager'))
-
-    def _confirm_reception_mail(self):
-        for order in self:
-            if order.state in ['purchase', 'done'] and not order.mail_reception_confirmed:
-                order.mail_reception_confirmed = True
-                order.message_post(body=_("The order receipt has been acknowledged by %s.", order.partner_id.name))
-            elif order.state == 'sent' and not order.mail_reception_confirmed:
-                order.mail_reception_confirmed = True
-                order.message_post(body=_("The RFQ has been acknowledged by %s.", order.partner_id.name))
-
-    def _decline_reception_mail(self):
-        for order in self:
-            if order.state in ['purchase', 'done'] and not order.mail_reception_declined:
-                order.mail_reception_declined = True
-                order.activity_schedule(
-                    'mail.mail_activity_data_todo',
-                    note=_('The vendor asked to decline this confirmed RfQ, if you agree on that, cancel this PO'))
-                order.message_post(body=_("The order receipt has been declined by %s.", order.partner_id.name))
-            elif order.state  == 'sent' and not order.mail_reception_declined:
-                order.mail_reception_declined = True
-                order.message_post(body=_("The RFQ has been declined by %s.", order.partner_id.name))
 
     def get_localized_date_planned(self, date_planned=False):
         """Returns the localized date planned in the timezone of the order's user or the
@@ -1215,14 +1230,6 @@ class PurchaseOrder(models.Model):
                 original_receipt_date=line.date_planned.date(),
                 new_receipt_date=date.date()
             )
-
-    def _write_partner_values(self, vals):
-        partner_values = {}
-        if 'receipt_reminder_email' in vals:
-            partner_values['receipt_reminder_email'] = vals.pop('receipt_reminder_email')
-        if 'reminder_date_before_receipt' in vals:
-            partner_values['reminder_date_before_receipt'] = vals.pop('reminder_date_before_receipt')
-        return vals, partner_values
 
     def _is_readonly(self):
         """ Return whether the purchase order is read-only or not based on the state.

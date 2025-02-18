@@ -1,5 +1,4 @@
 import { describe, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import { testEditor } from "../_helpers/editor";
 import { insertText, splitBlock } from "../_helpers/user_actions";
@@ -434,29 +433,29 @@ describe("Selection collapsed", () => {
         // see `anchor.nodeName === "A" && brEls.includes(anchor.firstChild)` in line_break_plugin.js
         test("should insert line breaks outside the edges of an anchor in unbreakable", async () => {
             await testEditor({
-                contentBefore: "<div>ab<a>[]cd</a></div>",
+                contentBefore: `<div class="oe_unbreakable">ab<a>[]cd</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div>ab<br><a>[]cd</a></div>",
+                contentAfter: `<div class="oe_unbreakable">ab<br><a>[]cd</a></div>`,
             });
             await testEditor({
-                contentBefore: "<div><a>a[]b</a></div>",
+                contentBefore: `<div class="oe_unbreakable"><a>a[]b</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div><a>a<br>[]b</a></div>",
+                contentAfter: `<div class="oe_unbreakable"><a>a<br>[]b</a></div>`,
             });
             await testEditor({
-                contentBefore: "<div><a>ab[]</a></div>",
+                contentBefore: `<div class="oe_unbreakable"><a>ab[]</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div><a>ab</a><br><br>[]</div>",
+                contentAfter: `<div class="oe_unbreakable"><a>ab</a><br><br>[]</div>`,
             });
             await testEditor({
-                contentBefore: "<div><a>ab[]</a>cd</div>",
+                contentBefore: `<div class="oe_unbreakable"><a>ab[]</a>cd</div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div><a>ab</a><br>[]cd</div>",
+                contentAfter: `<div class="oe_unbreakable"><a>ab</a><br>[]cd</div>`,
             });
             await testEditor({
-                contentBefore: '<div><a style="display: block;">ab[]</a></div>',
+                contentBefore: `<div class="oe_unbreakable"><a style="display: block;">ab[]</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: '<div><a style="display: block;">ab</a>[]<br></div>',
+                contentAfter: `<div class="oe_unbreakable"><a style="display: block;">ab</a>[]<br></div>`,
             });
         });
 
@@ -488,15 +487,12 @@ describe("Selection collapsed", () => {
         test("should insert a paragraph break outside the ending edge of an anchor", async () => {
             await testEditor({
                 contentBefore: "<p><a>ab[]</a></p>",
-                stepFunction: async (editor) => {
-                    splitBlock(editor);
-                    await press("enter");
-                    editor.shared.selection.focusEditable();
-                    await tick();
-                },
-                contentAfterEdit: `<p>\ufeff<a href="">\ufeffab\ufeff</a>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
-                contentAfter: `<p><a href="">ab</a></p><p>[]<br></p>`,
+                stepFunction: splitBlockA,
+                contentAfterEdit: `<p>\ufeff<a>\ufeffab\ufeff</a>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+                contentAfter: `<p><a>ab</a></p><p>[]<br></p>`,
             });
+        });
+        test("should insert a paragraph break outside the ending edge of an anchor (2)", async () => {
             await testEditor({
                 contentBefore: "<p><a>ab[]</a>cd</p>",
                 stepFunction: splitBlockA,

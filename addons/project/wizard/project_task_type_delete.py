@@ -59,7 +59,7 @@ class ProjectTaskTypeDeleteWizard(models.TransientModel):
 
         if project_id:
             action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
-            action['domain'] = [('project_id', '=', project_id), ('display_in_project', '=', 'True')]
+            action['domain'] = [('project_id', '=', project_id)]
             action['context'] = str({
                 'pivot_row_groupby': ['user_ids'],
                 'default_project_id': project_id,

@@ -350,7 +350,7 @@ class AccountPayment(models.Model):
     @api.depends('move_id.name', 'state')
     def _compute_name(self):
         for payment in self:
-            if payment.id and not payment.name and payment.state in ('in_process', 'paid'):
+            if payment.id and (not payment.name or payment.move_id and payment.name != payment.move_id.name) and payment.state in ('in_process', 'paid'):
                 payment.name = (
                     payment.move_id.name
                     or self.env['ir.sequence'].with_company(payment.company_id).next_by_code(
@@ -1029,7 +1029,11 @@ class AccountPayment(models.Model):
         ''' draft -> posted '''
         # Do not allow posting if the account is required but not trusted
         for payment in self:
-            if payment.require_partner_bank_account and not payment.partner_bank_id.allow_out_payment:
+            if (
+                payment.require_partner_bank_account
+                and not payment.partner_bank_id.allow_out_payment
+                and payment.payment_type == 'outbound'
+            ):
                 raise UserError(_(
                     "To record payments with %(method_name)s, the recipient bank account must be manually validated. "
                     "You should go on the partner bank account of %(partner)s in order to validate it.",

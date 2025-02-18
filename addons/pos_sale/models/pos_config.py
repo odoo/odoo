@@ -26,6 +26,7 @@ class PosConfig(models.Model):
             pos_config.write({'down_payment_product_id': downpayment_product.id})
 
     @api.model
-    def load_onboarding_furniture_scenario(self):
-        super().load_onboarding_furniture_scenario()
+    def load_onboarding_furniture_scenario(self, with_demo_data=True):
+        res = super().load_onboarding_furniture_scenario(with_demo_data)
         self._ensure_downpayment_product()
+        return res

@@ -100,7 +100,7 @@ class MailThread(models.AbstractModel):
                             break
 
                 if not valid_number:
-                    fname = 'mobile' if partner.mobile else ('phone' if partner.phone else 'mobile')
+                    fname = 'phone'
 
                 result[record.id] = {
                     'partner': partner,
@@ -269,7 +269,7 @@ class MailThread(models.AbstractModel):
         partner_ids = [r['id'] for r in partners_data]
         if partner_ids:
             for partner in self.env['res.partner'].sudo().browse(partner_ids):
-                number = sms_pid_to_number.get(partner.id) or partner.mobile or partner.phone
+                number = sms_pid_to_number.get(partner.id) or partner.phone
                 sms_create_vals.append(dict(
                     sms_base_vals,
                     partner_id=partner.id,

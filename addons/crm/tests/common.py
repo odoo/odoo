@@ -50,7 +50,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
     FIELDS_FIRST_SET = [
         'name', 'partner_id', 'campaign_id', 'company_id', 'country_id',
         'team_id', 'state_id', 'stage_id', 'medium_id', 'source_id', 'user_id',
-        'city', 'contact_name', 'mobile', 'partner_name',
+        'city', 'contact_name', 'partner_name',
         'phone', 'probability', 'expected_revenue', 'street', 'street2', 'zip',
         'create_date', 'date_automation_last', 'email_from', 'email_cc', 'website'
     ]
@@ -92,7 +92,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         })
 
         (cls.user_sales_manager + cls.user_sales_leads + cls.user_sales_salesman).write({
-            'groups_id': [(4, cls.env.ref('crm.group_use_lead').id)]
+            'group_ids': [(4, cls.env.ref('crm.group_use_lead').id)]
         })
 
         cls.env['crm.stage'].search([]).write({'sequence': 9999})  # ensure search will find test data first
@@ -159,13 +159,18 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         })
         cls.lead_team_1_won.action_set_won()
         cls.lead_team_1_lost = cls.env['crm.lead'].create({
-            'name': 'Already Won',
+            'name': 'Already Lost',
             'type': 'lead',
             'user_id': cls.user_sales_leads.id,
             'team_id': cls.sales_team_1.id,
         })
         cls.lead_team_1_lost.action_set_lost()
         (cls.lead_team_1_won + cls.lead_team_1_lost).flush_recordset()
+
+        # make lead 1 take team history into account for its automated proba.
+        # it should now be 50% as auto proba. (1 lost 1 won for team 1)
+        cls.lead_1._compute_probabilities()
+        cls.lead_1.flush_recordset()
 
         # email / phone data
         cls.test_email_data = [
@@ -202,7 +207,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.contact_1 = cls.env['res.partner'].create({
             'name': 'Philip J Fry',
             'email': cls.test_email_data[1],
-            'mobile': cls.test_phone_data[0],
             'function': 'Delivery Boy',
             'lang': cls.lang_en.code,
             'phone': False,
@@ -217,7 +221,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'name': 'Turanga Leela',
             'email': cls.test_email_data[2],
             'lang': cls.lang_en.code,
-            'mobile': cls.test_phone_data[1],
             'phone': cls.test_phone_data[2],
             'parent_id': False,
             'is_company': False,
@@ -234,7 +237,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'city': 'New new York',
             'country_id': base_us.id,
             'lang': cls.lang_en.code,
-            'mobile': '+1 202 555 0888',
             'zip': '87654',
         })
 

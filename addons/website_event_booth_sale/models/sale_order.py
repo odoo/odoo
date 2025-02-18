@@ -1,22 +1,20 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo import models, _
+from odoo import _, models
+from odoo.fields import Command
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _cart_find_product_line(
-        self, product_id=None, line_id=None,
-        event_booth_pending_ids=None, **kwargs
-    ):
+    def _cart_find_product_line(self, product_id, event_booth_pending_ids=None, **kwargs):
         """Check if there is another sale order line which already contains the requested event_booth_pending_ids
         to overwrite it with the newly requested booths to avoid having multiple so_line related to the same booths"""
-        lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
+        lines = super()._cart_find_product_line(
+            product_id, event_booth_pending_ids=event_booth_pending_ids, **kwargs,
+        )
 
-        if not event_booth_pending_ids or line_id:
+        if not event_booth_pending_ids:
             return lines
 
         return lines.filtered(

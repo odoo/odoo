@@ -34,9 +34,7 @@
             </t>
         </xpath>
         <xpath expr="//th[@name='th_total']//span[2]" position="attributes">
-            <span>
-                 <attribute name="class">d-none</attribute>
-            </span>
+            <attribute name="class">d-none</attribute>
         </xpath>
         <xpath expr="//th[@name='th_total']//span[2]" position="after">
             <span>
@@ -52,9 +50,7 @@
             </span>
         </xpath>
         <xpath expr="//th[@name='th_subtotal']//span[2]" position="attributes">
-            <span>
-                <attribute name="class">d-none</attribute>
-            </span>
+            <attribute name="class">d-none</attribute>
         </xpath>
         <xpath expr="//th[@name='th_subtotal']//span[2]" position="after">
             <span>
@@ -62,9 +58,7 @@
             </span>
         </xpath>
         <xpath expr="//th[@name='th_subtotal']//span" position="attributes">
-            <span>
-                <attribute name="class">d-none</attribute>
-            </span>
+            <attribute name="class">d-none</attribute>
         </xpath>
         <xpath expr="//th[@name='th_subtotal']//span" position="after">
             <span>
@@ -113,6 +107,9 @@
         </xpath>
         <xpath expr="//div[@name='invoice_date']//span[@t-field='o.invoice_date']" position="attributes">
             <attribute name="t-if">not o.l10n_sa_confirmation_datetime</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]" position="attributes">
+            <attribute name="class">clearfix pt-2 pb-2</attribute>
         </xpath>
     </template>
 </odoo>

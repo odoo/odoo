@@ -190,6 +190,9 @@ registerWebsitePreviewTour('test_html_editor_scss_2', {
 
         // 4. Open Html Editor and select a scss file
         {
+            trigger: "[is-ready=true]:iframe #wrapwrap",
+        },
+        {
             content: "open site menu",
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
             run: "click",

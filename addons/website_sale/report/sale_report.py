@@ -8,6 +8,10 @@ class SaleReport(models.Model):
 
     website_id = fields.Many2one('website', readonly=True)
     is_abandoned_cart = fields.Boolean(string="Abandoned Cart", readonly=True)
+    public_categ_ids = fields.Many2many(
+        string="eCommerce Categories",
+        related='product_tmpl_id.public_categ_ids',
+    )
 
     def _select_additional_fields(self):
         res = super()._select_additional_fields()

@@ -20,6 +20,7 @@ This module provides the core of the Odoo Web Client.
         'views/base_document_layout_views.xml',
         'views/partner_view.xml',
         'views/speedscope_template.xml',
+        'views/speedscope_config_wizard.xml',
         'views/neutralize_views.xml',
         'data/ir_attachment.xml',
         'data/report_layout.xml',
@@ -472,7 +473,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/legacy_tests/helpers/**/*',
             ('remove', 'web/static/tests/legacy/legacy_tests/helpers/test_utils_tests.js'),
 
-            'web/static/lib/jquery/jquery.js',
+            ('include', 'web._assets_jquery'),
 
             'web/static/lib/fullcalendar/core/index.global.js',
             'web/static/lib/fullcalendar/interaction/index.global.js',

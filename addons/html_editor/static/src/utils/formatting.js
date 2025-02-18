@@ -81,6 +81,17 @@ export const formatsSpecs = {
                 "line-through"
             ),
     },
+    fontFamily: {
+        isFormatted: (node) => !!closestElement(node, (el) => el.style["font-family"]),
+        hasStyle: (node) => node.style && node.style["font-family"],
+        addStyle: (node, props) => {
+            removeStyle(node, "font-family");
+            if (props.fontFamily) {
+                node.style["font-family"] = props.fontFamily;
+            }
+        },
+        removeStyle: (node) => removeStyle(node, "font-family"),
+    },
     fontSize: {
         isFormatted: (node) => closestElement(node)?.style["font-size"],
         hasStyle: (node) => node.style && node.style["font-size"],

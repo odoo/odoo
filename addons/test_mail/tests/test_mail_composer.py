@@ -47,7 +47,7 @@ class TestMailComposer(MailCommon, TestRecipients):
             notification_type='inbox',
             signature='--\nErnest'
         )
-        cls.env.ref('mail.group_mail_template_editor').users -= cls.user_rendering_restricted
+        cls.env.ref('mail.group_mail_template_editor').write({'implied_by_ids': [Command.clear()]})
 
         with cls.mock_datetime_and_now(cls, cls.reference_now):
             cls.test_record = cls.env['mail.test.ticket.mc'].with_context(cls._test_context).create({
@@ -1064,7 +1064,7 @@ class TestComposerInternals(TestMailComposer):
 
                 # creation values are taken
                 if composition_mode == 'comment' and not batch_mode:
-                    self.assertEqual(composer.notified_bcc, self.partner_employee_2.name)
+                    self.assertEqual(composer.notified_bcc, self.partner_employee_2)
                 else:
                     self.assertFalse(composer.notified_bcc)
                 self.assertEqual(composer.partner_ids, base_recipients)
@@ -1338,9 +1338,8 @@ class TestComposerInternals(TestMailComposer):
                 'email_from': f'newpartner{idx}@example.com',
                 'company_id': companies[idx].id,
                 'customer_id': False,
-                'mobile_number': f'+3319900{idx:02d}{idx:02d}',
+                'phone_number': f'+3319900{idx:02d}{idx:02d}',
                 'name': f'TestRecord{idx}',
-                'phone_number': False,
                 'user_id': False,
             } for idx in range(2)
         ])
@@ -1386,8 +1385,8 @@ class TestComposerInternals(TestMailComposer):
                         test_records.mapped('company_id')
                     )
                     self.assertEqual(
-                        new_partners.mapped('mobile'),
-                        test_records.mapped('mobile_number')
+                        new_partners.mapped('phone'),
+                        test_records.mapped('phone_number')
                     )
                 finally:
                     new_partners.unlink()
@@ -2588,6 +2587,11 @@ class TestComposerResultsMass(TestMailComposer):
         """ Ensures emails sent to the same recipient multiple times
             are only sent when they are not duplicates
         """
+        # add access to Mail Template Editor
+        self.user_employee.group_ids += self.env.ref('mail.group_mail_template_editor')
+        # Access can also be made available to all users.
+        # self.env['ir.config_parameter'].sudo().set_param('mail.restrict.template.rendering', False)
+
         self.template.write({
             'auto_delete': False,
             'body_html': '<p>Common Body</p>',
@@ -2974,6 +2978,8 @@ class TestComposerResultsMass(TestMailComposer):
                                             ],
                                             'body_content': exp_body,
                                             'email_from': self.partner_employee_2.email_formatted,
+                                            # profit from this test to check references are set to message_id in mailing emails
+                                            'references_message_id_check': True,
                                             'subject': exp_subject,
                                         },
                                         fields_values={
@@ -3486,6 +3492,9 @@ class TestComposerResultsMass(TestMailComposer):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_mail_composer_wtpl_reply_to_force_new(self):
         """ Test no auto thread behavior, notably with reply-to. """
+        # add access to Mail Template Editor
+        self.user_employee.group_ids += self.env.ref('mail.group_mail_template_editor')
+
         # launch composer in mass mode
         composer_form = Form(self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_records, add_web=True,

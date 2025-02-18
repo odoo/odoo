@@ -35,4 +35,26 @@
             <attribute name="t-on-click">ev => this.onClickAuthor(ev)</attribute>
         </xpath>
     </t>
+    <t t-name="mail.Message.bodyInForward">
+        <div><br/></div>
+        <div>
+            <span>---------- Forwarded message ----------</span><br/>
+            <span>Date: <t t-esc="date"/></span><br/>
+            <span>From: <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a></span><br/>
+            <span>Subject: <t t-esc="message.subject || message.default_subject"/></span>
+        </div>
+        <t t-out="body"/>
+    </t>
+
+    <t t-name="mail.Message.bodyInReply">
+        <div><br/></div>
+        <div class="o_mail_reply_container">
+            <div class="o_mail_reply_content">
+                <div>
+                    <span>On <t t-esc="date"/> <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a>wrote</span>
+                </div>
+                <blockquote t-out="body"/>
+            </div>
+        </div>
+    </t>
 </templates>

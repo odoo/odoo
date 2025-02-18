@@ -30,7 +30,7 @@ class TestDevice(TestHttpBase):
             'password': 'internal',
             'name': 'Internal',
             'email': 'internal@example.com',
-            'groups_id': [Command.set([self.env.ref('base.group_user').id])],
+            'group_ids': [Command.set([self.env.ref('base.group_user').id])],
         })
 
     def hit(self, time, endpoint, headers=None, ip=None):

@@ -44,19 +44,20 @@ export class Form extends Interaction {
             "t-on-input": this.onFieldInput,
             "t-att-class": (el) => ({ "d-none": !this.isFieldVisible(el) }),
         },
-        ".s_website_form_field .s_website_form_input": {
+        // Do not disable inputs that are required for the model.
+        ".s_website_form_field:not(.s_website_form_model_required) .s_website_form_input": {
             "t-att-disabled": (el) => !this.isInputVisible(el) || undefined,
         },
         ".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date": {
             "t-att-class": () => ({
-                "s_website_form_datepicker_initialized": this.datapickerInitialized,
+                "s_website_form_datepicker_initialized": this.datepickerInitialized,
             }),
         },
     };
 
     setup() {
         this.isHidden = false;
-        this.datapickersInitialized = false;
+        this.datepickerInitialized = false;
         this.recaptcha = new ReCaptcha();
         this.initialValues = new Map();
         this.disabledStates = new Map();
@@ -197,7 +198,7 @@ export class Form extends Interaction {
                 },
             }).enable());
         }
-        this.datapickerInitialized = true
+        this.datepickerInitialized = true;
     }
 
     prefillValues() {

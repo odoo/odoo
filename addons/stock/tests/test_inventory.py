@@ -317,7 +317,7 @@ class TestInventory(TransactionCase):
         """ Ensures when a request to count a quant for tracked product is done, other quants for
         the same product in the same location are also marked as to count."""
         # Config: enable tracking and multilocations.
-        self.env.user.groups_id = [
+        self.env.user.group_ids = [
             Command.link(self.env.ref('stock.group_production_lot').id),
             Command.link(self.env.ref('stock.group_stock_multi_locations').id)
         ]
@@ -513,7 +513,7 @@ class TestInventory(TransactionCase):
         dates auto-generate and apply relevant dates.
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
         now = datetime.now()
         today = now.date()
 

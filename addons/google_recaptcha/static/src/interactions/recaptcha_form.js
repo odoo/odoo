@@ -35,11 +35,15 @@ export class RecaptchaForm extends Interaction {
             }
             const action = this.el.dataset.captcha || "generic";
             const tokenCaptcha = await this.waitFor(this.recaptcha.getToken(action));
-            const inputEl = document.createElement("input");
-            inputEl.name = "recaptcha_token_response";
-            inputEl.type = "hidden";
-            inputEl.value = tokenCaptcha.token;
-            this.insert(inputEl);
+            if (tokenCaptcha.token) {
+                // Do not send an 'undefined' value when reCAPTCHA is disabled
+                // or not configured.
+                const inputEl = document.createElement("input");
+                inputEl.name = "recaptcha_token_response";
+                inputEl.type = "hidden";
+                inputEl.value = tokenCaptcha.token;
+                this.insert(inputEl);
+            }
             this.el.submit();
         }
     }

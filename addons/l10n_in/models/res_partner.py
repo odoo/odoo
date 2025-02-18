@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import logging
 import re
 
@@ -90,6 +87,9 @@ class ResPartner(models.Model):
 
     def action_l10n_in_verify_gstin_status(self):
         self.ensure_one()
+        self.check_access('write')
+        if self.env.company.sudo().account_fiscal_country_id.code != 'IN':
+            raise UserError(_('You must be logged in an Indian company to use this feature'))
         if not self.vat:
             raise ValidationError(_("Please enter the GSTIN"))
         if not self.env.company.l10n_in_gstin_status_feature:

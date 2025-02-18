@@ -22,7 +22,7 @@ class TestMultiCompany(TransactionCase):
         cls.user_a = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user a',
-            'groups_id': [(6, 0, [
+            'group_ids': [(6, 0, [
                 group_user.id,
                 group_stock_manager.id,
             ])],
@@ -32,7 +32,7 @@ class TestMultiCompany(TransactionCase):
         cls.user_b = cls.env['res.users'].create({
             'name': 'user company b with access to company a',
             'login': 'user b',
-            'groups_id': [(6, 0, [
+            'group_ids': [(6, 0, [
                 group_user.id,
                 group_stock_manager.id,
             ])],
@@ -251,7 +251,7 @@ class TestMultiCompany(TransactionCase):
         """As a user of company A, create an orderpoint for company B. Check itsn't possible to
         use a warehouse of companny A"""
         # Required for `warehouse_id` and `location_id` to be visible in the view
-        self.user_a.groups_id += self.env.ref("stock.group_stock_multi_locations")
+        self.user_a.group_ids += self.env.ref("stock.group_stock_multi_locations")
         product = self.env['product.product'].create({
             'is_storable': True,
             'name': 'shared product',
@@ -272,7 +272,7 @@ class TestMultiCompany(TransactionCase):
         orderpoint to Company B.
         """
         # Required for `warehouse_id` and `location_id` to be visible in the view
-        self.user_a.groups_id += self.env.ref("stock.group_stock_multi_locations")
+        self.user_a.group_ids += self.env.ref("stock.group_stock_multi_locations")
         product = self.env['product.product'].create({
             'is_storable': True,
             'name': 'shared product',
@@ -628,6 +628,52 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, customer_location, lot_a), 1.0)
 
         self.assertEqual(lot_a.name, 'lot a')
+
+    def test_intercom_pull_and_cancel(self):
+        """ Create a pull flow between company a and b.
+        Then cancel the delivery in company a and ensure the
+        delivery in company b is cancelled as well.
+        """
+        intercom_location = self.env.ref('stock.stock_location_inter_company')
+        intercom_location.write({'active': True})
+        self.warehouse_a.resupply_wh_ids = [(6, 0, [self.warehouse_b.id])]
+        self.warehouse_a.resupply_route_ids.rule_ids.propagate_cancel = True
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'is_storable': True,
+            'route_ids': [(6, 0, self.warehouse_a.resupply_route_ids.ids)],
+        })
+
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location_a, -10)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Test Orderpoint',
+            'location_id': self.stock_location_a.id,
+            'product_id': product.id,
+            'company_id': self.company_a.id,
+        })
+
+        # Classic flow
+        orderpoint._procure_orderpoint_confirm()
+        moves = self.env['stock.move'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(moves), 2)
+        in_move = moves.filtered(lambda m: m.location_dest_id == self.stock_location_a)
+        out_move = moves.filtered(lambda m: m.location_id == self.stock_location_b)
+        in_move._action_cancel()
+        self.assertEqual(in_move.state, 'cancel')
+        self.assertEqual(out_move.state, 'confirmed')
+        out_move._action_cancel()
+        self.assertEqual(out_move.state, 'cancel')
+
+        # Propagate cancel
+        self.env['ir.config_parameter'].sudo().set_param('stock.cancel_moves_origin', True)
+        orderpoint._procure_orderpoint_confirm()
+        moves = self.env['stock.move'].search([('product_id', '=', product.id), ('state', '!=', 'cancel')])
+        self.assertEqual(len(moves), 2)
+        in_move = moves.filtered(lambda m: m.location_dest_id == self.stock_location_a)
+        out_move = moves.filtered(lambda m: m.location_id == self.stock_location_b)
+        in_move._action_cancel()
+        self.assertEqual(in_move.state, 'cancel')
+        self.assertEqual(out_move.state, 'cancel')
 
     def test_route_rules_company_consistency(self):
         route = self.env['stock.route'].create({

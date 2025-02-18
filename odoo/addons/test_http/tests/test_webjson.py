@@ -20,13 +20,13 @@ CSRF_USER_HEADERS = {
 }
 
 
-def read_group_list(model, domain=None, groupby=(), fields=('__count',)):
-    result = model.web_read_group(domain or [], groupby=groupby, fields=fields, lazy=False)
+def read_group_list(model, domain=None, groupby=(), aggregates=('__count',)):
+    result = model.web_read_group(domain or [], groupby=groupby, aggregates=aggregates)
     # transform result:
     # - tuple into list
-    # - pop '__domain'
+    # - pop '__extra_domain'
     for group in result['groups']:
-        del group['__domain']
+        del group['__extra_domain']
         for k, v in group.items():
             if isinstance(v, tuple):
                 group[k] = list(v)
@@ -42,7 +42,7 @@ class TestHttpWebJson_1(TestHttpBase):
         # enable explicitely and make sure demo has permissions
         cls.env['ir.config_parameter'].set_param('web.json.enabled', True)
         cls.user_demo.write({
-            'groups_id': [Command.link(cls.env.ref('base.group_allow_export').id)],
+            'group_ids': [Command.link(cls.env.ref('base.group_allow_export').id)],
         })
 
         cls.milky_way = cls.env.ref('test_http.milky_way')
@@ -83,7 +83,7 @@ class TestHttpWebJson_1(TestHttpBase):
             self.skipTest("crm is not installed")
 
         self.authenticate_demo()
-        self.user_demo.groups_id += self.env.ref('sales_team.group_sale_salesman')
+        self.user_demo.group_ids += self.env.ref('sales_team.group_sale_salesman')
         self.url_open_json('/crm')
 
         self.env['ir.model.access'].search([
@@ -105,7 +105,7 @@ class TestHttpWebJson_1(TestHttpBase):
 
         # remove export permssion
         group_export = self.env.ref('base.group_allow_export')
-        self.user_demo.write({'groups_id': [Command.unlink(group_export.id)]})
+        self.user_demo.write({'group_ids': [Command.unlink(group_export.id)]})
 
         # check that demo has no access to /json
         with self.assertLogs('odoo.http', 'WARNING') as capture:
@@ -275,7 +275,7 @@ class TestHttpWebJson_1(TestHttpBase):
         self.assertEqual(
             res.json(),
             read_group_list(
-                env['test_http.stargate'], [], ['galaxy_id', 'has_galaxy_crystal'], ['availability']),
+                env['test_http.stargate'], [], ['galaxy_id', 'has_galaxy_crystal'], ['availability:avg']),
         )
 
         res = self.url_open_json('/test_http.stargate?view_type=pivot&groupby=has_galaxy_crystal&fields=availability:min')

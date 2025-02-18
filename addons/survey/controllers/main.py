@@ -246,7 +246,10 @@ class Survey(http.Controller):
             else:
                 return request.render("survey.survey_403_page", {'survey': survey_sudo})
 
-        return request.redirect('/survey/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token))
+        # When resuming survey, restore language  + always enforce that the language is supported by the survey
+        lang = self._get_lang_with_fallback(answer_sudo.sudo(False))
+        url_from = f'/survey/{survey_sudo.access_token}/{answer_sudo.access_token}'
+        return request.redirect(self.env['ir.http']._url_for(url_from, lang.code))
 
     def _prepare_survey_data(self, survey_sudo, answer_sudo, **post):
         """ This method prepares all the data needed for template rendering, in function of the survey user input state.
@@ -266,6 +269,12 @@ class Survey(http.Controller):
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
         }
+        if answer_sudo.state == 'new':
+            # Data for the language selector
+            supported_lang_codes = survey_sudo._get_supported_lang_codes()
+            data['languages'] = [(lang_code, self.env['res.lang']._get_data(code=lang_code)['name'])
+                                 for lang_code in supported_lang_codes]
+            data['lang_code'] = self._get_lang_with_fallback(answer_sudo.sudo(False)).code
         if survey_sudo.questions_layout != 'page_per_question':
             triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({
@@ -352,16 +361,19 @@ class Survey(http.Controller):
         object at frontend side."""
         survey_data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
 
+        IrQweb = request.env['ir.qweb'].with_context(
+            lang=self.env['res.lang']._get_data(id=answer_sudo.lang_id.id).code
+                 or self._get_lang_with_fallback(answer_sudo.sudo(False)).code)
         if answer_sudo.state == 'done':
-            survey_content = request.env['ir.qweb']._render('survey.survey_fill_form_done', survey_data)
+            survey_content = IrQweb._render('survey.survey_fill_form_done', survey_data)
         else:
-            survey_content = request.env['ir.qweb']._render('survey.survey_fill_form_in_progress', survey_data)
+            survey_content = IrQweb._render('survey.survey_fill_form_in_progress', survey_data)
 
         survey_progress = False
         if answer_sudo.state == 'in_progress' and not survey_data.get('question', request.env['survey.question']).is_page:
             if survey_sudo.questions_layout == 'page_per_section':
                 page_ids = survey_sudo.page_ids.ids
-                survey_progress = request.env['ir.qweb']._render('survey.survey_progression', {
+                survey_progress = IrQweb._render('survey.survey_progression', {
                     'survey': survey_sudo,
                     'page_ids': page_ids,
                     'page_number': page_ids.index(survey_data['page'].id) + (1 if survey_sudo.progression_mode == 'number' else 0)
@@ -370,7 +382,7 @@ class Survey(http.Controller):
                 page_ids = (answer_sudo.predefined_question_ids.ids
                             if not answer_sudo.is_session_answer and survey_sudo.questions_selection == 'random'
                             else survey_sudo.question_ids.ids)
-                survey_progress = request.env['ir.qweb']._render('survey.survey_progression', {
+                survey_progress = IrQweb._render('survey.survey_progression', {
                     'survey': survey_sudo,
                     'page_ids': page_ids,
                     'page_number': page_ids.index(survey_data['question'].id)
@@ -386,7 +398,7 @@ class Survey(http.Controller):
             'has_skipped_questions': any(answer_sudo._get_skipped_questions()),
             'survey_content': survey_content,
             'survey_progress': survey_progress,
-            'survey_navigation': request.env['ir.qweb']._render('survey.survey_navigation', survey_data),
+            'survey_navigation': IrQweb._render('survey.survey_navigation', survey_data),
             'background_image_url': background_image_url
         }
 
@@ -468,6 +480,8 @@ class Survey(http.Controller):
         if answer_sudo.state != "new":
             return {}, {'error': _("The survey has already started.")}
 
+        if 'lang_code' in post:
+            answer_sudo.lang_id = self.env['res.lang']._lang_get(post['lang_code'])
         answer_sudo._mark_in_progress()
         return {}, self._prepare_question_html(survey_sudo, answer_sudo, **post)
 
@@ -874,3 +888,23 @@ class Survey(http.Controller):
             'model_short_key': 'L',
             'record_id': user_input_line.id,
         }
+
+    def _get_lang_with_fallback(self, user_input):
+        """ :return: the most suitable language for the user that is supported by the survey. """
+        user_input.ensure_one()
+        user_input_sudo = user_input.sudo()
+        if user_input_sudo.lang_id:
+            return user_input_sudo.lang_id.sudo(False)
+        lang_code = self.env.context.get('lang') or self.env['ir.http']._get_default_lang().code
+        ResLang = self.env['res.lang']
+        supported_lang_codes = user_input_sudo.survey_id._get_supported_lang_codes()
+        supported_lang_codes_set = set(supported_lang_codes)
+        if lang_code in supported_lang_codes_set:
+            return ResLang._lang_get(lang_code)
+        # Take the first frontend language supported by the survey and if there are none, the first survey language
+        return ResLang._lang_get(
+            next((
+                lang.code
+                for lang in self.env['res.lang']._get_frontend().values()
+                if lang['code'] in supported_lang_codes_set
+            ), supported_lang_codes[0]))

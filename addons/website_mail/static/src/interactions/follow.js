@@ -130,7 +130,7 @@ export class Follow extends Interaction {
                 "object": jsFollowEl.dataset.object,
                 "message_is_follower": jsFollowEl.dataset.follow || "off",
                 "email": email,
-                "recaptcha_token_response": token,
+                ...(token ? { "recaptcha_token_response": token } : {}),
                 "turnstile_captcha": turnstile,
             }));
 

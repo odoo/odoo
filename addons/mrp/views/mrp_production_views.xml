@@ -94,7 +94,7 @@
             <field name="name">Split</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list,form</field>
+            <field name="binding_view_types">list,kanban,form</field>
             <field name="state">code</field>
             <field name="code">action = records.action_split()</field>
         </record>
@@ -103,7 +103,7 @@
             <field name="name">Labels</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list,form</field>
+            <field name="binding_view_types">list,kanban,form</field>
             <field name="binding_type">report</field>
             <field name="state">code</field>
             <field name="code">
@@ -149,7 +149,7 @@
             <field name="name">Plan based on Components Availability</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list,form</field>
+            <field name="binding_view_types">list,kanban,form</field>
             <field name="state">code</field>
             <field name="code">action = records.action_plan_with_components_availability()</field>
         </record>
@@ -158,7 +158,7 @@
             <field name="name">Merge</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">list,kanban</field>
             <field name="state">code</field>
             <field name="code">action = records.action_merge()</field>
         </record>
@@ -167,7 +167,7 @@
             <field name="name">Mark as Done</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">list,kanban</field>
             <field name="state">code</field>
             <field name="code">
             if records:
@@ -355,7 +355,7 @@
                                 <list editable="bottom">
                                     <field name="product_id" readonly="state == 'done'"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                                    <field name="product_uom"/>
+                                    <field name="product_uom" widget="many2one_uom"/>
                                     <field name="operation_id"/>
                                     <field name="byproduct_id"/>
                                     <field name="name"/>
@@ -382,7 +382,7 @@
                                     and `quantity_done` is not within the finished move views,
                                     (byproduct moves are a subset of finished moves)
                                     the `quantity_done` of byproducts is not updated correctly with the onchange
-                                    Another solution is to add `self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')`
+                                    Another solution is to add `self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')`
                                     to the test `test_00_mrp_byproduct`, which could makes sense as it's a test testing the byproducts features,
                                     for which you should have the byproducts group to have access to,
                                     but it seemed better to keep the feature working even if you do not see the byproducts features with your user.
@@ -444,6 +444,8 @@
                                     <!-- TODO put forecast back -->
                                     <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="Forecast" widget="forecast_widget" optional="hide"/>
                                     <field name="quantity" string="Quantity"
+                                        decoration-success="not is_done and (quantity - should_consume_qty == 0)"
+                                        decoration-warning="not is_done and (quantity - should_consume_qty &gt; 0.0001)"
                                         column_invisible="parent.state == 'draft'"
                                         decoration-info="manual_consumption"
                                         decoration-bf="manual_consumption"
@@ -723,7 +725,7 @@
             <field name="name">Unreserve</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">list,kanban</field>
             <field name="state">code</field>
             <field name="code">
             if records:

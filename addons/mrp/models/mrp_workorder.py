@@ -150,10 +150,10 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
 
-    @api.depends('production_availability', 'blocked_by_workorder_ids.state', 'qty_ready')
+    @api.depends('production_availability', 'blocked_by_workorder_ids.state', 'qty_ready', 'product_uom_id')
     def _compute_state(self):
         for workorder in self:
-            if workorder.state not in ('pending', 'waiting', 'ready'):
+            if not workorder.product_uom_id or workorder.state not in ('pending', 'waiting', 'ready'):
                 continue
             blocked = any(w.state not in ('done', 'cancel') for w in workorder.blocked_by_workorder_ids)
             has_qty_ready = float_compare(workorder.qty_ready, 0, precision_rounding=workorder.product_uom_id.rounding) > 0
@@ -226,7 +226,7 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             if workorder.qty_producing != 0 and workorder.production_id.qty_producing != workorder.qty_producing:
                 workorder.production_id.qty_producing = workorder.qty_producing
-                workorder.production_id._set_qty_producing()
+                workorder.production_id._set_qty_producing(False)
 
     @api.depends('blocked_by_workorder_ids')
     def _compute_qty_ready(self):
@@ -549,8 +549,6 @@ class MrpWorkorder(models.Model):
         # Plan workorder after its predecessors
         date_start = max(self.production_id.date_start, datetime.now())
         for workorder in self.blocked_by_workorder_ids:
-            if workorder.state in ['done', 'cancel']:
-                continue
             workorder._plan_workorder(replan)
             if workorder.date_finished and workorder.date_finished > date_start:
                 date_start = workorder.date_finished

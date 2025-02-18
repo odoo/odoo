@@ -116,7 +116,7 @@
     Thank you,
     <t t-if="object.event_id.user_id.signature">
         <br />
-        <t t-out="object.event_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        <div>--<br/><t t-out="object.event_id.user_id.signature or ''">Mitchell Admin</t></div>
     </t>
 </div>
             </field>
@@ -248,7 +248,7 @@
     Thank you,
     <t t-if="object.event_id.user_id.signature">
         <br />
-        <t t-out="object.event_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        <div>--<br/><t t-out="object.event_id.user_id.signature or ''">Mitchell Admin</t></div>
     </t>
 </div>
             </field>
@@ -356,7 +356,7 @@
     Thank you,
     <t t-if="object.event_id.user_id.signature">
         <br />
-        <t t-out="object.event_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        <div>--<br/><t t-out="object.event_id.user_id.signature or ''">Mitchell Admin</t></div>
     </t>
 </div>
             </field>
@@ -452,7 +452,7 @@
     </div>
     <t t-if="object.user_id.signature">
         <br />
-        <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        <div>--<br/><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
     </t>
 </div>
             </field>

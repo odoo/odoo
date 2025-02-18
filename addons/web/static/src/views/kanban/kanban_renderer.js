@@ -13,7 +13,15 @@ import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Component, onPatched, onWillDestroy, onWillPatch, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onPatched,
+    onWillDestroy,
+    onWillPatch,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { evaluateExpr } from "@web/core/py_js/py";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
@@ -73,6 +81,7 @@ export class KanbanRenderer extends Component {
          * @type {{ processedIds: string[], columnQuickCreateIsFolded: boolean }}
          */
         this.state = useState({
+            selectionAvailable: false,
             processedIds: [],
             columnQuickCreateIsFolded:
                 !this.props.list.isGrouped || this.props.list.groups.length > 0,
@@ -85,6 +94,7 @@ export class KanbanRenderer extends Component {
             validateColumnQuickCreateExamples(this.exampleData);
         }
         this.ghostColumns = this.generateGhostColumns();
+        this.lastCheckedRecord = null;
 
         // Sortable
         let dataRecordId;
@@ -105,6 +115,11 @@ export class KanbanRenderer extends Component {
                     const { element, group } = params;
                     dataRecordId = element.dataset.id;
                     dataGroupId = group && group.dataset.id;
+                    if (this.props.list.selection?.length) {
+                        this.props.list.selection.forEach((record) => {
+                            record.toggleSelection(false);
+                        });
+                    }
                     return this.sortStart(params);
                 },
                 onDragEnd: (params) => this.sortStop(params),
@@ -169,6 +184,10 @@ export class KanbanRenderer extends Component {
         useHotkey(
             "Enter",
             ({ target }) => {
+                if (target.closest(".o_kanban_selection_active") !== null) {
+                    return;
+                }
+
                 if (!target.classList.contains("o_kanban_record")) {
                     return;
                 }
@@ -183,6 +202,14 @@ export class KanbanRenderer extends Component {
                 if (firstLink) {
                     firstLink.click();
                 }
+            },
+            { area: () => this.rootRef.el }
+        );
+
+        useHotkey(
+            "space",
+            ({ target }) => {
+                this.handleRecordSelection(target);
             },
             { area: () => this.rootRef.el }
         );
@@ -210,6 +237,27 @@ export class KanbanRenderer extends Component {
         onPatched(() => {
             this.rootRef.el.scrollTop = previousScrollTop;
         });
+        const handleAltKeyDown = (ev) => {
+            if (ev.key === "Alt") {
+                this.state.selectionAvailable = true;
+            }
+        };
+        const handleAltKeyUp = () => {
+            this.state.selectionAvailable = false;
+        };
+        useEffect(
+            () => {
+                window.addEventListener("keydown", handleAltKeyDown);
+                window.addEventListener("keyup", handleAltKeyUp);
+                window.addEventListener("blur", handleAltKeyUp);
+                return () => {
+                    window.removeEventListener("keydown", handleAltKeyDown);
+                    window.removeEventListener("keyup", handleAltKeyUp);
+                    window.removeEventListener("blur", handleAltKeyUp);
+                };
+            },
+            () => []
+        );
     }
 
     // ------------------------------------------------------------------------
@@ -284,6 +332,10 @@ export class KanbanRenderer extends Component {
         return !model.hasData();
     }
 
+    getSelection() {
+        return this.props.list.selection || [];
+    }
+
     /**
      * When the kanban records are grouped, the 'false' or 'undefined' group
      * must appear first.
@@ -348,6 +400,12 @@ export class KanbanRenderer extends Component {
             name: colName,
             cards: new Array(Math.floor(Math.random() * 4) + 2),
         }));
+    }
+
+    handleRecordSelection(target) {
+        if (target.closest(".o_kanban_selection_active") !== null) {
+            target.click();
+        }
     }
 
     /**
@@ -439,6 +497,26 @@ export class KanbanRenderer extends Component {
             this.state.processedIds = this.state.processedIds.filter(
                 (processedId) => processedId !== id
             );
+        }
+    }
+
+    toggleSelection(record, isRange = false) {
+        if (isRange) {
+            this.toggleRangeSelection(record);
+        } else {
+            record.toggleSelection();
+        }
+        this.lastCheckedRecord = record;
+    }
+
+    toggleRangeSelection(record) {
+        const { records } = this.props.list;
+        const recordIndex = records.findIndex((e) => e.id === record.id);
+        const lastCheckedRecordIndex = records.findIndex((e) => e.id === this.lastCheckedRecord.id);
+        const start = Math.min(recordIndex, lastCheckedRecordIndex);
+        const end = Math.max(recordIndex, lastCheckedRecordIndex);
+        for (let i = start; i <= end; i++) {
+            records[i].toggleSelection(!record.selected);
         }
     }
 

@@ -9,7 +9,9 @@
                <field name="company_id" groups="base.group_multi_company"/>
                <separator/>
                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+               <filter string="Partial working schedules" name="partial_working_schedules" domain="[('work_time_rate', '&lt;', 100)]"/>
                <group expand='0'>
+                    <filter string="Flexible" name="groupby_flexible_hours" context="{'group_by': 'flexible_hours'}"/>
                     <filter name="groupby_company" context="{'group_by': 'company_id'}"/>
                 </group>
            </search>
@@ -26,7 +28,7 @@
                     <button name="switch_calendar_type" invisible="two_weeks_calendar or flexible_hours" string="Switch to 2 weeks calendar" type="object"
                         confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
                         confirm-label="Switch"/>
-                    <button name="switch_calendar_type" invisible="not two_weeks_calendar" string="Switch to 1 week calendar" type="object"
+                    <button name="switch_calendar_type" invisible="flexible_hours or not two_weeks_calendar" string="Switch to 1 week calendar" type="object"
                         confirm="Are you sure you want to switch to a 1-week calendar? All work entries will be lost."
                         confirm-label="Switch"/>
                 </header>
@@ -46,7 +48,9 @@
                                 class="oe_stat_button"
                                 groups="base.group_user">
                                 <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_text">Work Resources</span>
+                                    <span class="o_stat_text">
+                                        <field name="work_resources_count" string="Work Resources" widget="statinfo"/>
+                                    </span>
                                 </div>
                         </button>
                     </div>
@@ -101,10 +105,12 @@
         <field name="arch" type="xml">
             <list string="Working Time">
                 <field name="name" string="Working Time"/>
+                <field name="hours_per_week" string="Schedule Total Time" optional="hide"/>
                 <field name="work_time_rate" invisible="flexible_hours"/>
-                <field name="flexible_hours"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="flexible_hours" optional="hide"/>
                 <field name="full_time_required_hours" widget="float_time" optional="hide"/>
+                <field name="work_resources_count" string="# Work Resources" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
     </record>

@@ -11,13 +11,6 @@ export class WorkEntryCalendarModel extends CalendarModel {
         this.generateWorkEntries = generateWorkEntries;
     }
 
-    computeRange() {
-        const { scale, date } = this.meta;
-        const start = date.startOf(scale);
-        const end = date.endOf(scale);
-        return { start, end };
-    }
-
     makeFilterAll() {
         return {
             ...super.makeFilterAll(...arguments),

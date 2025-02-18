@@ -186,7 +186,7 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 
     Some specific fields are automatically filled to avoid issues
 
-     * groups_id: it is filled using groups function parameter;
+     * group_ids: it is filled using groups function parameter;
      * name: "login (groups)" by default as it is required;
      * email: it is either the login (if it is a valid email) or a generated
        string 'x.x@example.com' (x being the first login letter). This is due
@@ -199,8 +199,8 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     if context is None:
         context = {}
 
-    groups_id = [Command.set(kwargs.pop('groups_id', False) or [env.ref(g.strip()).id for g in groups.split(',')])]
-    create_values = dict(kwargs, login=login, groups_id=groups_id)
+    group_ids = [Command.set(kwargs.pop('group_ids', False) or [env.ref(g.strip()).id for g in groups.split(',')])]
+    create_values = dict(kwargs, login=login, group_ids=group_ids)
     # automatically generate a name as "Login (groups)" to ease user comprehension
     if not create_values.get('name'):
         create_values['name'] = '%s (%s)' % (login, groups)
@@ -861,7 +861,7 @@ class TransactionCase(BaseCase):
         def reset_changes():
             if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
                 with cls.registry.cursor() as cr:
-                    cls.registry.setup_models(cr)
+                    cls.registry._setup_models__(cr)
             cls.registry.registry_invalidated = cls.registry_start_invalidated
             cls.registry.registry_sequence = cls.registry_start_sequence
             with cls.muted_registry_logger:
@@ -950,13 +950,17 @@ class TransactionCase(BaseCase):
         Make so that all new cursors opened on this database registry reuse the
         one currenly used by the tests. See ``Registry.enter_test_mode``.
         """
+        # entering the test mode should flush/invalidate all changes in the
+        # current environment because changes happen inside other cursors
         env = self.env
+        env.flush_all()
         registry = env.registry
         registry.enter_test_mode(env.cr)
         try:
             yield
         finally:
             registry.leave_test_mode()
+            env.invalidate_all()
 
 
 class SingleTransactionCase(BaseCase):
@@ -2008,17 +2012,27 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, **kw):
-        """ Test js code running in the browser
-        - optionnally log as 'login'
-        - load page given by url_path
-        - wait for ready object to be available
-        - eval(code) inside the page
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+        """ Test JavaScript code running in the browser.
 
-        To signal success test do: console.log() with the expected success signal ("test successful" by default)
-        To signal test failure raise an exception or call console.error with a message.
-        Test will stop when a failure occurs if error_checker is not defined or returns True for this message
+        To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
+        To signal test failure raise an exception or call `console.error` with a message.
+        Test will stop when a failure occurs if `error_checker` is not defined or returns `True` for this message
 
+        :param string url_path: URL path to load the browser page on
+        :param string code: JavaScript code to be executed
+        :param string ready: JavaScript object to wait for before proceeding with the test
+        :param string login: logged in user which will execute the test. e.g. 'admin', 'demo'
+        :param int timeout: maximum time to wait for the test to complete (in seconds). Default is 60 seconds
+        :param dict cookies: dictionary of cookies to set before loading the page
+        :param error_checker: function to filter failures out. 
+            If provided, the function is called with the error log message, and if it returns `False` the log is ignored and the test continue
+            If not provided, every error log triggers a failure
+        :param bool watch: open a new browser window to watch the test execution
+        :param string success_signal: string signal to wait for to consider the test successful
+        :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour. 
+            The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
+        :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
         """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
@@ -2034,7 +2048,29 @@ class HttpCase(TransactionCase):
             self._logger.warning('watch mode is only suitable for local testing')
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
+        sendone_patch = None
+        websocket_allowed_patch = None
+        kick_all_websockets = None
         try:
+            if "bus.bus" in self.env.registry:
+                from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler
+                from odoo.addons.bus.models.bus import BusBus
+
+                kick_all_websockets = partial(_kick_all, CloseCode.KILL_NOW)
+                original_send_one = BusBus._sendone
+
+                def sendone_wrapper(self, target, notification_type, message):
+                    original_send_one(self, target, notification_type, message)
+                    self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+                    self.env.cr.postcommit.run()  # Trigger notification dispatching
+
+                sendone_patch = patch.object(BusBus, "_sendone", sendone_wrapper)
+                websocket_allowed_patch = patch.object(
+                    WebsocketConnectionHandler, "websocket_allowed", return_value=True
+                )
+                sendone_patch.start()
+                websocket_allowed_patch.start()
+
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
@@ -2058,6 +2094,18 @@ class HttpCase(TransactionCase):
                 for name, value in cookies.items():
                     browser.set_cookie(name, value, '/', HOST)
 
+            cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING') # used by dedicated runbot builds
+            cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
+
+            if cpu_throttling:
+                assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
+                timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
+                _logger.log(
+                    logging.INFO if cpu_throttling_os else logging.WARNING,
+                    'CPU throttling mode is only suitable for local testing - ' \
+                    'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
+                browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
+
             browser.navigate_to(url, wait_stop=not bool(ready))
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
@@ -2078,6 +2126,12 @@ class HttpCase(TransactionCase):
 
         finally:
             browser.stop()
+            if sendone_patch:
+                sendone_patch.stop()
+            if websocket_allowed_patch:
+                websocket_allowed_patch.stop()
+            if kick_all_websockets:
+                kick_all_websockets()
             self._wait_remaining_requests()
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):

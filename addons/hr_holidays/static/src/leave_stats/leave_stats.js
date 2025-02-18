@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -127,22 +128,16 @@ export class LeaveStatsComponent extends Component {
 
         const dateFrom = date.startOf("year");
         const dateTo = date.endOf("year");
-
-        this.state.leaves = await this.orm.readGroup(
+        this.state.leaves = await this.orm.formattedReadGroup(
             "hr.leave",
             [
                 ["employee_id", "=", employee[0]],
                 ["state", "=", "validate"],
-                ["date_from", "<=", dateTo],
-                ["date_to", ">=", dateFrom],
+                ["date_from", "<=", serializeDateTime(dateTo)],
+                ["date_to", ">=", serializeDateTime(dateFrom)],
             ],
-            [
-                "holiday_status_id",
-                "number_of_days",
-                "number_of_hours",
-                "leave_type_request_unit:array_agg",
-            ],
-            ["holiday_status_id"]
+            ["holiday_status_id"],
+            ["number_of_days:sum", "number_of_hours:sum", "leave_type_request_unit:array_agg"]
         );
     }
 }

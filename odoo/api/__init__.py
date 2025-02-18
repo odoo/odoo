@@ -11,6 +11,7 @@ from odoo.orm.decorators import (
     model_create_multi,
     onchange,
     ondelete,
+    private,
     readonly,
 )
 from odoo.orm.environments import Environment

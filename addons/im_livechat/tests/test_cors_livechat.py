@@ -14,12 +14,7 @@ class TestCorsLivechat(HttpCase):
                 "login": "operator",
             }
         )
-        cls.env["bus.presence"].create(
-            {
-                "user_id": cls.operator.id,
-                "status": "online",
-            }
-        )
+        cls.env["mail.presence"]._update_presence(cls.operator)
         cls.livechat_channel = cls.env["im_livechat.channel"].create(
             {"name": "Test Livechat Channel", "user_ids": [cls.operator.id]}
         )
@@ -34,7 +29,7 @@ class TestCorsLivechat(HttpCase):
                 "persisted": True,
             },
         )
-        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertEqual(channel.channel_member_ids[0].partner_id, self.operator.partner_id)
         self.assertFalse(channel.channel_member_ids[1].partner_id)
         self.assertTrue(channel.channel_member_ids[1].guest_id)
@@ -50,7 +45,7 @@ class TestCorsLivechat(HttpCase):
             },
             headers={"Cookie": f"{guest._cookie_name}={guest.id}{guest._cookie_separator}{guest.access_token};"},
         )
-        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
         channel_guest = channel.channel_member_ids.filtered(lambda member: member.guest_id).guest_id
         self.assertNotEqual(channel_guest, guest)
 
@@ -67,8 +62,8 @@ class TestCorsLivechat(HttpCase):
         self.make_jsonrpc_request(
             "/im_livechat/cors/channel/messages",
             {
-                "guest_token": data["Store"]["guest_token"],
-                "channel_id": data["discuss.channel"][0]["id"],
+                "guest_token": data["store_data"]["Store"]["guest_token"],
+                "channel_id": data["channel_id"],
             },
         )
 
@@ -88,6 +83,6 @@ class TestCorsLivechat(HttpCase):
                 "/im_livechat/cors/channel/messages",
                 {
                     "guest_token": guest.access_token,
-                    "channel_id": data["discuss.channel"][0]["id"],
+                    "channel_id": data["channel_id"],
                 },
             )

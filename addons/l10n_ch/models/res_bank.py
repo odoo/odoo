@@ -6,7 +6,7 @@ from stdnum.util import clean
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_bank import sanitize_account_number
-from odoo.addons.base_iban.models.res_partner_bank import normalize_iban, pretty_iban, validate_iban
+from odoo.addons.base_iban.models.res_partner_bank import normalize_iban, pretty_iban, validate_iban, get_iban_part
 from odoo.exceptions import ValidationError
 from odoo.tools import LazyTranslate
 from odoo.tools.misc import mod10r
@@ -33,9 +33,7 @@ def validate_qr_iban(qr_iban):
 def check_qr_iban_range(iban):
     if not iban or len(iban) < 9:
         return False
-    iid_start_index = 4
-    iid_end_index = 8
-    iid = iban[iid_start_index : iid_end_index+1]
+    iid = get_iban_part(iban, 'bank')
     return re.match(r'\d+', iid) and 30000 <= int(iid) <= 31999 # Those values for iid are reserved for QR-IBANs only
 
 

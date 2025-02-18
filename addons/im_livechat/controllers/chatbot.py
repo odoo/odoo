@@ -2,8 +2,7 @@
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
 class LivechatChatbotScriptController(http.Controller):
@@ -16,7 +15,10 @@ class LivechatChatbotScriptController(http.Controller):
             return None
         chatbot_language = chatbot._get_chatbot_language()
         message = discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)
-        return Store(message, for_current_user=True).get_result()
+        return {
+            "message_id": message.id,
+            "store_data": Store(message, for_current_user=True).get_result(),
+        }
 
     @http.route("/chatbot/answer/save", type="jsonrpc", auth="public")
     @add_guest_to_context

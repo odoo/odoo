@@ -246,6 +246,7 @@
                     <filter string="Model" name="groupby_model" context="{'group_by': 'model_id'}"/>
                     <filter string="Brand" name="groupby_make" context="{'group_by': 'brand_id'}"/>
                     <filter string="Fuel Type" name="groupby_fueltype" context="{'group_by': 'fuel_type'}"/>
+                    <filter string="Properties" name="group_by_vehicle_properties" context="{'group_by': 'vehicle_properties'}"/>
                 </group>
            </search>
         </field>
@@ -591,7 +592,7 @@
         <field name="name">Mail to Driver</field>
         <field name="model_id" ref="fleet.model_fleet_vehicle"/>
         <field name="binding_model_id" ref="fleet.model_fleet_vehicle"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="code">action = records.action_send_email()</field>
     </record>

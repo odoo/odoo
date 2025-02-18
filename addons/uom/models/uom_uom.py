@@ -57,7 +57,7 @@ class UomUom(models.Model):
     def _check_factor(self):
         for uom in self:
             if not uom.relative_uom_id and uom.relative_factor != 1.0:
-                raise UserError(_("The conversion ratio for a unit of measure without a reference unit must be 1!"))
+                raise UserError(_("Reference unit of measure is missing."))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):

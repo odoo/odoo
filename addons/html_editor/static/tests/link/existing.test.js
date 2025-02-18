@@ -1,6 +1,10 @@
-import { test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { deleteBackward, insertText } from "../_helpers/user_actions";
+import { click, waitFor } from "@odoo/hoot-dom";
+import { getContent } from "../_helpers/selection";
+import { cleanLinkArtifacts } from "../_helpers/format";
+import { contains } from "@web/../tests/_framework/dom_test_helpers";
 
 test("should parse correctly a span inside a Link", async () => {
     await testEditor({
@@ -186,3 +190,66 @@ test("should not add a character in the link if start of paragraph", async () =>
 //         contentAfter: '<div><p>123</p><p><a href="#">d[]</a></p></div>',
 //     });
 // });
+test("should not allow to extends a link if selection span multiple link", async () => {
+    const { el } = await setupEditor(
+        '<p>xxx <a href="exist">lin[k1</a> yyy <a href="exist">li]nk2</a> zzz</p>'
+    );
+    await waitFor(".o-we-toolbar");
+    // link button should be disabled
+    expect('.o-we-toolbar button[title="Link"]').toHaveClass("disabled");
+    expect('.o-we-toolbar button[title="Link"]').toHaveAttribute("disabled");
+    await click('.o-we-toolbar button[title="Link"]');
+    expect(cleanLinkArtifacts(getContent(el))).toBe(
+        '<p>xxx <a href="exist">lin[k1</a> yyy <a href="exist">li]nk2</a> zzz</p>'
+    );
+});
+test("should not allow to extends a link if selection span multiple link (2)", async () => {
+    const { el } = await setupEditor(
+        '<p>xxx <a href="exist">[link1</a> yyy <a href="exist">li]nk2</a> zzz</p>'
+    );
+    await waitFor(".o-we-toolbar");
+    // link button should be disabled
+    expect('.o-we-toolbar button[title="Link"]').toHaveClass("disabled");
+    expect('.o-we-toolbar button[title="Link"]').toHaveAttribute("disabled");
+    await click('.o-we-toolbar button[title="Link"]');
+    expect(cleanLinkArtifacts(getContent(el))).toBe(
+        '<p>xxx <a href="exist">[link1</a> yyy <a href="exist">li]nk2</a> zzz</p>'
+    );
+});
+test("should not allow to extends a link if selection span multiple link (3)", async () => {
+    const { el } = await setupEditor(
+        '<p>xxx <a href="exist">[link1</a> yyy <a href="exist">link2]</a> zzz</p>'
+    );
+    await waitFor(".o-we-toolbar");
+    // link button should be disabled
+    expect('.o-we-toolbar button[title="Link"]').toHaveClass("disabled");
+    expect('.o-we-toolbar button[title="Link"]').toHaveAttribute("disabled");
+    await click('.o-we-toolbar button[title="Link"]');
+    expect(cleanLinkArtifacts(getContent(el))).toBe(
+        '<p>xxx <a href="exist">[link1</a> yyy <a href="exist">link2]</a> zzz</p>'
+    );
+});
+
+test("when label === url popover label input should be empty", async () => {
+    await setupEditor('<p>abc <a href="http://odoo.com">http://odo[]o.com</a> def</p>');
+    await waitFor(".o-we-linkpopover");
+    await click(".o_we_edit_link");
+    await waitFor(".o_we_label_link");
+    expect(".o_we_label_link").toHaveValue("");
+});
+
+test("when label === url changing url should change label", async () => {
+    const { el } = await setupEditor(
+        '<p>abc <a href="http://odoo.com">http://odo[]o.com</a> def</p>'
+    );
+    await waitFor(".o-we-linkpopover");
+    await click(".o_we_edit_link");
+    await waitFor(".o_we_label_link");
+    expect(".o_we_label_link").toHaveValue("");
+
+    await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.com");
+
+    expect(cleanLinkArtifacts(getContent(el))).toBe(
+        '<p>abc <a href="http://test.com">http://test.com[]</a> def</p>'
+    );
+});

@@ -36,8 +36,23 @@ class ProductProduct(models.Model):
         ])
         return super()._count_returned_sn_products_domain(sn_lot, or_domains)
 
+    def _update_uom(self, to_uom_id):
+        for uom, product, repairs in self.env['repair.order']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom', 'product_id'],
+            ['id:recordset'],
+        ):
+            if uom != product.product_tmpl_id.uom_id:
+                raise UserError(_(
+                'As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.display_name, uom=product.product_tmpl_id.uom_id.display_name))
+            repairs.product_uom = to_uom_id
+        return super()._update_uom(to_uom_id)
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    create_repair = fields.Boolean('Create Repair', help="Create a linked Repair Order on Sale Order confirmation of this product.", groups='stock.group_stock_user')
+    service_tracking = fields.Selection(selection_add=[('repair', 'Repair Order')],
+                                        ondelete={'repair': 'set default'})

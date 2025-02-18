@@ -16,13 +16,14 @@ from os.path import join as opj
 
 import odoo.release as release
 import odoo.upgrade
+from odoo.orm.registry import Registry
 from odoo.tools.misc import file_path
 from odoo.tools.parse_version import parse_version
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterator
     from odoo.sql_db import Cursor
-    from . import graph
+    from . import module_graph
 
 _logger = logging.getLogger(__name__)
 
@@ -96,7 +97,7 @@ class MigrationManager:
     """
     migrations: defaultdict[str, dict]
 
-    def __init__(self, cr: Cursor, graph: graph.Graph):
+    def __init__(self, cr: Cursor, graph: module_graph.ModuleGraph):
         self.cr = cr
         self.graph = graph
         self.migrations = defaultdict(dict)
@@ -138,9 +139,8 @@ class MigrationManager:
             except FileNotFoundError:
                 return ''
 
-        for pkg in self.graph.packages():
-            if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade' or
-                    getattr(pkg, 'load_state', None) == 'to upgrade'):
+        for pkg in self.graph:
+            if pkg.load_state != 'to upgrade' and pkg.name not in Registry(self.cr.dbname)._force_upgrade_scripts:
                 continue
 
 
@@ -155,16 +155,14 @@ class MigrationManager:
                     scripts[v].extend(s)
             self.migrations[pkg.name]["upgrade"] = scripts
 
-    def migrate_module(self, pkg: graph.Node, stage: typing.Literal['pre', 'post', 'end']) -> None:
+    def migrate_module(self, pkg: module_graph.ModuleNode, stage: typing.Literal['pre', 'post', 'end']) -> None:
         assert stage in ('pre', 'post', 'end')
         stageformat = {
             'pre': '[>%s]',
             'post': '[%s>]',
             'end': '[$%s]',
         }
-        state = pkg.state if stage in ('pre', 'post') else getattr(pkg, 'load_state', None)
-
-        if not (hasattr(pkg, 'update') or state == 'to upgrade') or state == 'to install':
+        if pkg.load_state != 'to upgrade' and pkg.name not in Registry(self.cr.dbname)._force_upgrade_scripts:
             return
 
         def convert_version(version: str) -> str:
@@ -205,9 +203,9 @@ class MigrationManager:
                 key=os.path.basename,
             )
 
-        installed_version = getattr(pkg, 'load_version', pkg.installed_version) or ''
+        installed_version = pkg.load_version or ''
         parsed_installed_version = parse_version(installed_version)
-        current_version = parse_version(convert_version(pkg.data['version']))
+        current_version = parse_version(convert_version(pkg.manifest['version']))
 
         def compare(version: str) -> bool:
             if version == "0.0.0" and parsed_installed_version < current_version:

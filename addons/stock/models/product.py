@@ -12,6 +12,7 @@ from odoo.osv import expression
 from odoo.tools import float_is_zero, check_barcode_encoding
 from odoo.tools.float_utils import float_round
 from odoo.tools.mail import html2plaintext, is_html_empty
+from odoo.tools.misc import groupby
 
 OPERATORS = {
     '<': py_operator.lt,
@@ -30,7 +31,7 @@ class ProductProduct(models.Model):
     stock_move_ids = fields.One2many('stock.move', 'product_id') # used to compute quantities
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
-        digits='Product Unit', compute_sudo=False,
+        inverse='_inverse_qty_available', digits='Product Unit', compute_sudo=False,
         help="Current quantity of products.\n"
              "In a context with a single Stock Location, this includes "
              "goods stored at this Location, or any of its children.\n"
@@ -101,6 +102,7 @@ class ProductProduct(models.Model):
     storage_category_capacity_ids = fields.One2many('stock.storage.category.capacity', 'product_id', 'Storage Category Capacity')
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
+    show_qty_update_button = fields.Boolean(compute='_compute_show_qty_update_button')
     valid_ean = fields.Boolean('Barcode is valid EAN', compute='_compute_valid_ean')
     lot_properties_definition = fields.PropertiesDefinition('Lot Properties')
 
@@ -109,6 +111,14 @@ class ProductProduct(models.Model):
         for product in self:
             product.show_on_hand_qty_status_button = product.product_tmpl_id.show_on_hand_qty_status_button
             product.show_forecasted_qty_status_button = product.product_tmpl_id.show_forecasted_qty_status_button
+
+    @api.depends('product_tmpl_id')
+    def _compute_show_qty_update_button(self):
+        for product in self:
+            product.show_qty_update_button = (
+                product.product_tmpl_id._should_open_product_quants()
+                or product.tracking != 'none'
+            )
 
     @api.depends('barcode')
     def _compute_valid_ean(self):
@@ -126,7 +136,7 @@ class ProductProduct(models.Model):
         products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
         res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in products:
-            product.update(res[product.id])
+            product.with_context(skip_qty_available_update=True).update(res[product.id])
         # Services need to be set with 0.0 for all quantities
         services = self - products
         services.qty_available = 0.0
@@ -213,6 +223,27 @@ class ProductProduct(models.Model):
                 precision_rounding=rounding)
 
         return res
+
+    def _inverse_qty_available(self):
+        """
+        Inverse method for the 'qty_available' field, enabling manual adjustment of stock on hand quantity
+        in the product form. To prevent the automatic creation of stock quants when the
+        'compute_quantities' method is triggered, this method skips quant creation by custom context key.
+        """
+        if self.env.context.get('skip_qty_available_update', False):
+            return
+        for product in self:
+            if (
+                product.type == "consu" and product.is_storable and product.qty_available > 0
+            ):
+                warehouse = self.env['stock.warehouse'].search(
+                    [('company_id', '=', self.env.company.id)], limit=1
+                )
+                self.env['stock.quant'].with_context(inventory_mode=True).create({
+                    'product_id': product.id,
+                    'location_id': warehouse.lot_stock_id.id,
+                    'inventory_quantity': product.qty_available,
+                })._apply_inventory()
 
     def _compute_nbr_moves(self):
         incoming_moves = self.env['stock.move.line']._read_group([
@@ -577,9 +608,6 @@ class ProductProduct(models.Model):
             action["name"] = _('Update Quantity')
         return action
 
-    def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context(default_product_id=self.id, create=True).action_update_quantity_on_hand()
-
     def action_product_forecast_report(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_forecasted_product_product_action")
@@ -659,6 +687,32 @@ class ProductProduct(models.Model):
         or_domains = expression.OR(or_domains)
         return expression.AND([base_domain, or_domains])
 
+    def _update_uom(self, to_uom_id):
+        for uom, product, moves in self.env['stock.move']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom', 'product_id'],
+            ['id:recordset'],
+        ):
+            if uom != product.product_tmpl_id.uom_id:
+                raise UserError(_('As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
+            moves.product_uom = to_uom_id
+
+        for uom, product, move_lines in self.env['stock.move.line']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom_id', 'product_id'],
+            ['id:recordset'],
+        ):
+            if uom != product.product_tmpl_id.uom_id:
+                raise UserError(_('As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
+            move_lines.product_uom_id = to_uom_id
+        return super()._update_uom(to_uom_id)
+
     def filter_has_routes(self):
         """ Return products with route_ids
             or whose categ_id has total_route_ids.
@@ -669,6 +723,15 @@ class ProductProduct(models.Model):
         # retrive products with categ_ids having routes
         products_with_routes += self.search([('id', 'in', (self - products_with_routes).ids), ('categ_id.total_route_ids', '!=', False)])
         return products_with_routes
+
+    def _trigger_uom_warning(self):
+        res = super()._trigger_uom_warning()
+        if res:
+            return res
+        moves = self.env['stock.move'].sudo().search_count(
+            [('product_id', 'in', self.ids)], limit=1
+        )
+        return bool(moves)
 
 
 class ProductTemplate(models.Model):
@@ -704,7 +767,7 @@ class ProductTemplate(models.Model):
     description_pickingin = fields.Text('Description on Receptions', translate=True)
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
-        compute_sudo=False, digits='Product Unit')
+        inverse='_inverse_qty_available',compute_sudo=False, digits='Product Unit')
     virtual_available = fields.Float(
         'Forecasted Quantity', compute='_compute_quantities', search='_search_virtual_available',
         compute_sudo=False, digits='Product Unit')
@@ -738,6 +801,7 @@ class ProductTemplate(models.Model):
         string="Category Routes", related='categ_id.total_route_ids', related_sudo=False)
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
+    show_qty_update_button = fields.Boolean(compute='_compute_show_qty_update_button')
 
     @api.depends('type')
     def compute_is_storable(self):
@@ -753,15 +817,26 @@ class ProductTemplate(models.Model):
     def _compute_has_available_route_ids(self):
         self.has_available_route_ids = self.env['stock.route'].search_count([('product_selectable', '=', True)])
 
+    @api.depends('product_variant_count', 'tracking')
+    def _compute_show_qty_update_button(self):
+        for product in self:
+            product.show_qty_update_button = (
+                product._should_open_product_quants()
+                or product.product_variant_count > 1
+                or product.tracking != 'none'
+            )
+
     @api.depends(
         'product_variant_ids.qty_available',
         'product_variant_ids.virtual_available',
         'product_variant_ids.incoming_qty',
         'product_variant_ids.outgoing_qty',
+        'tracking',
     )
+    @api.depends_context('warehouse_id')
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
-        for template in self:
+        for template in self.with_context(skip_qty_available_update=True):
             template.qty_available = res[template.id]['qty_available']
             template.virtual_available = res[template.id]['virtual_available']
             template.incoming_qty = res[template.id]['incoming_qty']
@@ -813,6 +888,15 @@ class ProductTemplate(models.Model):
         for template in self:
             template.nbr_moves_in = res[template.id]['moves_in']
             template.nbr_moves_out = res[template.id]['moves_out']
+
+    def _inverse_qty_available(self):
+        if self.env.context.get('skip_qty_available_update', False):
+            return
+        for template in self:
+            if template.qty_available and not template.product_variant_id:
+                raise UserError(_("Save the product form before updating the Quantity On Hand."))
+            else:
+                template.product_variant_id.qty_available = template.qty_available
 
     @api.model
     def _get_action_view_related_putaway_rules(self, domain):
@@ -887,22 +971,25 @@ class ProductTemplate(models.Model):
             }
         return res
 
-    @api.onchange('uom_id')
-    def _onchange_uom_id(self):
-        moves = self.env['stock.move'].sudo().search_count(
-            [('product_id', 'in', self.with_context(active_test=False).product_variant_ids.ids)], limit=1
-        )
-        if moves:
-            return {
-                'warning': {
-                    'title': _('Warning!'),
-                    'message': _(
-                        'This product has been used in at least one inventory movement. '
-                        'It is not advised to change the Unit of Measure since it can lead to inconsistencies. '
-                        'The existing moves will not be recalculated with the new unit of measure.'
+    @api.model_create_multi
+    def create(self, vals_list):
+        product_tmpl_quantities = [
+            vals.pop('qty_available', 0) for vals in vals_list
+        ]
+
+        product_templates = super().create(vals_list)
+
+        if any(product_tmpl_quantities):
+            warehouse = self.env['stock.warehouse'].search(
+                [('company_id', '=', self.env.company.id)], limit=1
+            )
+            stock_quant = self.env['stock.quant']
+            for product_tmpl, qty in zip(product_templates, product_tmpl_quantities):
+                if qty > 0 and product_tmpl.tracking == 'none':
+                    stock_quant._update_available_quantity(
+                        product_tmpl.product_variant_id, warehouse.lot_stock_id, qty
                     )
-                }
-            }
+        return product_templates
 
     def write(self, vals):
         if 'company_id' in vals and vals['company_id']:
@@ -959,29 +1046,23 @@ class ProductTemplate(models.Model):
         self.env['stock.storage.category.capacity'].create(storage_category_capacity_vals)
         return new_products
 
+    def _should_open_product_quants(self):
+        self.ensure_one()
+        advanced_option_groups = [
+            'stock.group_stock_multi_locations',
+            'stock.group_tracking_owner',
+            'stock.group_tracking_lot',
+        ]
+        return (
+            any(self.env.user.has_group(g) for g in advanced_option_groups)
+            or self.tracking != "none"
+        )
+
     # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
         if 'product_variant' in self.env.context:
             return self.env['product.product'].browse(self.env.context['default_product_id']).action_open_quants()
         return self.product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
-
-    def action_update_quantity_on_hand(self):
-        advanced_option_groups = [
-            'stock.group_stock_multi_locations',
-            'stock.group_tracking_owner',
-            'stock.group_tracking_lot'
-        ]
-        if any(self.env.user.has_group(g) for g in advanced_option_groups) or self.tracking != 'none':
-            return self.action_open_quants()
-        else:
-            default_product_id = self.env.context.get('default_product_id', len(self.product_variant_ids) == 1 and self.product_variant_id.id)
-            action = self.env["ir.actions.actions"]._for_xml_id("stock.action_change_product_quantity")
-            action['context'] = dict(
-                self.env.context,
-                default_product_id=default_product_id,
-                default_product_tmpl_id=self.id
-            )
-            return action
 
     def action_view_related_putaway_rules(self):
         self.ensure_one()

@@ -35,7 +35,7 @@ class FleetVehicle(models.Model):
     active = fields.Boolean('Active', default=True, tracking=True)
     manager_id = fields.Many2one(
         'res.users', 'Fleet Manager',
-        domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id), ('company_id', 'in', self.env.companies.ids)],
+        domain=lambda self: [('all_group_ids', 'in', self.env.ref('fleet.fleet_group_manager').id), ('company_id', 'in', self.env.companies.ids)],
     )
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -155,18 +155,21 @@ class FleetVehicle(models.Model):
     def _get_odometer(self):
         FleetVehicalOdometer = self.env['fleet.vehicle.odometer']
         for record in self:
-            vehicle_odometer = FleetVehicalOdometer.search([('vehicle_id', '=', record.id)], limit=1, order='value desc')
+            vehicle_odometer = FleetVehicalOdometer.search([('vehicle_id', 'in', record.ids)], limit=1, order='value desc')
             if vehicle_odometer:
                 record.odometer = vehicle_odometer.value
             else:
                 record.odometer = 0
 
     def _set_odometer(self):
-        for record in self:
-            if record.odometer:
-                date = fields.Date.context_today(record)
-                data = {'value': record.odometer, 'date': date, 'vehicle_id': record.id}
-                self.env['fleet.vehicle.odometer'].create(data)
+        self.env['fleet.vehicle.odometer'].create([
+            {
+                'value': vehicle.odometer,
+                'date': fields.Date.context_today(vehicle),
+                'vehicle_id': vehicle.id,
+                'driver_id': vehicle.driver_id.id
+            } for vehicle in self if vehicle.odometer
+        ])
 
     def _compute_count_all(self):
         Odometer = self.env['fleet.vehicle.odometer']

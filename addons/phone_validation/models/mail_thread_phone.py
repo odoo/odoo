@@ -44,11 +44,7 @@ class MailThreadPhone(models.AbstractModel):
         string='Blacklisted Phone is Phone', compute="_compute_blacklisted", compute_sudo=True, store=False, groups="base.group_user",
         help="Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted \
             when there is both a mobile and phone field in a model.")
-    mobile_blacklisted = fields.Boolean(
-        string='Blacklisted Phone Is Mobile', compute="_compute_blacklisted", compute_sudo=True, store=False, groups="base.group_user",
-        help="Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted \
-            when there is both a mobile and phone field in a model.")
-    phone_mobile_search = fields.Char("Phone/Mobile", store=False, search='_search_phone_mobile_search')
+    phone_mobile_search = fields.Char("Phone Number", store=False, search='_search_phone_mobile_search')
 
     def init(self):
         super().init()
@@ -92,7 +88,7 @@ class MailThreadPhone(models.AbstractModel):
             return op([[(phone_field, operator, False)] for phone_field in phone_fields])
 
         if self._phone_search_min_length and len(value) < self._phone_search_min_length:
-            raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
+            raise UserError(_('Please enter at least 3 characters when searching a Phone number.'))
 
         sql_operator = {'=like': 'LIKE', '=ilike': 'ILIKE'}.get(operator, operator)
 
@@ -166,17 +162,13 @@ class MailThreadPhone(models.AbstractModel):
         number_fields = self._phone_get_number_fields()
         for record in self:
             record.phone_sanitized_blacklisted = record.phone_sanitized in blacklist
-            mobile_blacklisted = phone_blacklisted = False
+            phone_blacklisted = False
             # This is a bit of a hack. Assume that any "mobile" numbers will have the word 'mobile'
             # in them due to varying field names and assume all others are just "phone" numbers.
             # Note that the limitation of only having 1 phone_sanitized value means that a phone/mobile number
             # may not be calculated as blacklisted even though it is if both field values exist in a model.
             for number_field in number_fields:
-                if 'mobile' in number_field:
-                    mobile_blacklisted = record.phone_sanitized_blacklisted and record._phone_format(fname=number_field) == record.phone_sanitized
-                else:
-                    phone_blacklisted = record.phone_sanitized_blacklisted and record._phone_format(fname=number_field) == record.phone_sanitized
-            record.mobile_blacklisted = mobile_blacklisted
+                phone_blacklisted = record.phone_sanitized_blacklisted and record._phone_format(fname=number_field) == record.phone_sanitized
             record.phone_blacklisted = phone_blacklisted
 
     @api.model

@@ -27,6 +27,21 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         super.getCellTitle(column, record);
     }
 
+    processAllColumn(allColumns, list) {
+        allColumns = allColumns.map((column) => {
+            if (column["optional"] === "conditional" && column["name"] === "product_id") {
+                /**
+                 * The preference should be different for Bills & Invoices lines
+                 * Invoices -> Should show the products by default
+                 * Bills -> Should show the labels by default
+                 */
+                column["optional"] = ['in_invoice', 'in_refund', 'in_receipt'].includes(this.props.list.evalContext.parent.move_type) ? "hide" : "show";
+            }
+            return column;
+        });
+        return super.processAllColumn(allColumns, list);
+    }
+
     getActiveColumns(list) {
         let activeColumns = super.getActiveColumns(list);
         const productCol = activeColumns.find((col) => this.productColumns.includes(col.name));
@@ -224,10 +239,7 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
 
     updateLabel(value) {
         this.props.record.update({
-          name:
-            this.productName && this.productName !== value
-              ? `${this.productName}\n${value}`
-              : value,
+            name: value ? value : this.productName,
         });
     }
 }

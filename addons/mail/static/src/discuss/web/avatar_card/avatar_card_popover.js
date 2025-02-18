@@ -35,6 +35,10 @@ export class AvatarCardPopover extends Component {
         return true;
     }
 
+    get hasFooter() {
+        return false;
+    }
+
     async getProfileAction() {
         return {
             res_id: this.user.partner_id[0],

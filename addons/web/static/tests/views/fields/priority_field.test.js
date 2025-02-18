@@ -35,7 +35,13 @@ class Partner extends models.Model {
         { id: 5, foo: "blop" },
     ];
 }
-defineModels([Partner]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+defineModels([Partner, User]);
 
 test("PriorityField when not set", async () => {
     await mountView({

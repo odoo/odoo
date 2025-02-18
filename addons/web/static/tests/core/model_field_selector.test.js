@@ -26,6 +26,7 @@ class Partner extends models.Model {
     foo = fields.Char();
     bar = fields.Boolean();
     product_id = fields.Many2one({ relation: "product" });
+    json_field = fields.Json();
 
     _records = [
         { id: 1, foo: "yop", bar: true, product_id: 37 },

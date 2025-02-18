@@ -3,7 +3,6 @@ import { Thread } from "@mail/core/common/thread_model";
 import "@mail/discuss/core/common/thread_model_patch";
 
 import { patch } from "@web/core/utils/patch";
-import { SESSION_STATE } from "./livechat_service";
 import { _t } from "@web/core/l10n/translation";
 
 /** @type {typeof Thread} */
@@ -23,6 +22,7 @@ patch(Thread, threadStaticPatch);
 patch(Thread.prototype, {
     setup() {
         super.setup();
+        this.livechat_operator_id = Record.one("Persona");
         this.chatbotTypingMessage = Record.one("mail.message", {
             compute() {
                 if (this.chatbot) {
@@ -44,19 +44,24 @@ patch(Thread.prototype, {
             },
         });
         this.chatbot = Record.one("Chatbot");
-        this._startChatbot = Record.attr(false, {
+        this._toggleChatbot = Record.attr(false, {
             compute() {
-                return (
-                    this.chatbot?.thread?.eq(
-                        this.store.env.services["im_livechat.livechat"].thread
-                    ) && this.isLoaded
-                );
+                return this.chatbot && this.isLoaded && this.livechat_active;
             },
             onUpdate() {
-                if (this._startChatbot) {
-                    this.store.env.services["im_livechat.chatbot"].start();
+                if (this._toggleChatbot) {
+                    this.chatbot.start();
+                } else {
+                    this.chatbot?.stop();
                 }
             },
+            eager: true,
+        });
+        this.storeAsActiveLivechats = Record.one("Store", {
+            compute() {
+                return this.livechat_active ? this.store : null;
+            },
+            eager: true,
         });
         this.requested_by_operator = false;
     },
@@ -88,18 +93,15 @@ patch(Thread.prototype, {
     },
     /** @returns {Promise<import("models").Message} */
     async post() {
-        if (
-            this.channel_type === "livechat" &&
-            this.store.env.services["im_livechat.livechat"].state !== SESSION_STATE.PERSISTED
-        ) {
-            const thread = await this.store.env.services["im_livechat.livechat"].persist();
+        if (this.channel_type === "livechat" && this.isTransient) {
+            const thread = await this.store.env.services["im_livechat.livechat"].persist(this);
             if (!thread) {
                 return;
             }
             return thread.post(...arguments);
         }
         const message = await super.post(...arguments);
-        this.store.env.services["im_livechat.chatbot"].bus.trigger("MESSAGE_POST", message);
+        await this.chatbot?.processAnswer(message);
         return message;
     },
 

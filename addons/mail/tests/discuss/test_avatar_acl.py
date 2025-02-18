@@ -18,7 +18,7 @@ class TestAvatarAcl(HttpCase):
         self.env["res.users"].create(
             {
                 "email": "testuser@testuser.com",
-                "groups_id": [Command.set([self.ref("base.group_user")])],
+                "group_ids": [Command.set([self.ref("base.group_user")])],
                 "name": "Test User",
                 "login": "testuser",
                 "password": "testuser",
@@ -33,7 +33,7 @@ class TestAvatarAcl(HttpCase):
         testuser = self.env["res.users"].create(
             {
                 "email": "testuser@testuser.com",
-                "groups_id": [Command.set([self.ref("base.group_user")])],
+                "group_ids": [Command.set([self.ref("base.group_user")])],
                 "name": "Test User",
                 "login": "testuser",
                 "password": "testuser",
@@ -59,7 +59,7 @@ class TestAvatarAcl(HttpCase):
         testuser = self.env["res.users"].create(
             {
                 "email": "testuser@testuser.com",
-                "groups_id": [Command.set([self.ref("base.group_user")])],
+                "group_ids": [Command.set([self.ref("base.group_user")])],
                 "name": "Test User",
                 "login": "testuser",
                 "password": "testuser",
@@ -76,7 +76,7 @@ class TestAvatarAcl(HttpCase):
         testuser = self.env["res.users"].create(
             {
                 "email": "testuser@testuser.com",
-                "groups_id": [Command.set([self.ref("base.group_user")])],
+                "group_ids": [Command.set([self.ref("base.group_user")])],
                 "name": "Test User",
                 "login": "testuser",
                 "password": "testuser",
@@ -99,7 +99,7 @@ class TestAvatarAcl(HttpCase):
         testuser = self.env["res.users"].create(
             {
                 "email": "testuser@testuser.com",
-                "groups_id": [Command.set([self.ref("base.group_user")])],
+                "group_ids": [Command.set([self.ref("base.group_user")])],
                 "name": "Test User",
                 "login": "testuser",
                 "password": "testuser",
@@ -109,7 +109,7 @@ class TestAvatarAcl(HttpCase):
         testuser2 = self.env["res.users"].create(
             {
                 "email": "testuser2@testuser.com",
-                "groups_id": [Command.set([self.ref("base.group_user")])],
+                "group_ids": [Command.set([self.ref("base.group_user")])],
                 "name": "Test User 2",
                 "login": "testuser 2",
                 "password": "testuser 2",
@@ -156,7 +156,7 @@ class TestAvatarAcl(HttpCase):
         self.env["res.users"].create(
             {
                 "email": "testuser@testuser.com",
-                "groups_id": [Command.set([self.ref("base.group_portal")])],
+                "group_ids": [Command.set([self.ref("base.group_portal")])],
                 "name": "Test User",
                 "login": "testuser",
                 "password": "testuser",
@@ -166,7 +166,7 @@ class TestAvatarAcl(HttpCase):
         testuser2 = self.env["res.users"].create(
             {
                 "email": "testuser2@testuser.com",
-                "groups_id": [Command.set([self.ref("base.group_user")])],
+                "group_ids": [Command.set([self.ref("base.group_user")])],
                 "name": "Test User 2",
                 "login": "testuser 2",
                 "password": "testuser 2",
@@ -180,7 +180,7 @@ class TestAvatarAcl(HttpCase):
         testuser = self.env["res.users"].create(
             {
                 "email": "testuser@testuser.com",
-                "groups_id": [Command.set([self.ref("base.group_portal")])],
+                "group_ids": [Command.set([self.ref("base.group_portal")])],
                 "name": "Test User",
                 "login": "testuser",
                 "password": "testuser",
@@ -190,7 +190,7 @@ class TestAvatarAcl(HttpCase):
         testuser2 = self.env["res.users"].create(
             {
                 "email": "testuser2@testuser.com",
-                "groups_id": [Command.set([self.ref("base.group_user")])],
+                "group_ids": [Command.set([self.ref("base.group_user")])],
                 "name": "Test User 2",
                 "login": "testuser 2",
                 "password": "testuser 2",

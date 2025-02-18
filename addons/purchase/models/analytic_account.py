@@ -13,7 +13,7 @@ class AccountAnalyticAccount(models.Model):
     def _compute_purchase_order_count(self):
         for account in self:
             account.purchase_order_count = self.env['purchase.order'].search_count([
-                ('order_line.invoice_lines.analytic_line_ids.account_id', '=', account.id)
+                ('order_line.invoice_lines.analytic_line_ids.account_id', 'in', account.ids)
             ])
 
     def action_view_purchase_orders(self):

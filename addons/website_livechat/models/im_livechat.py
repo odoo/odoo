@@ -13,7 +13,10 @@ class Im_LivechatChannel(models.Model):
     def _compute_website_url(self):
         super()._compute_website_url()
         for channel in self:
-            channel.website_url = "/livechat/channel/%s" % (self.env['ir.http']._slug(channel),)
+            if channel.id:
+                channel.website_url = "/livechat/channel/%s" % (self.env['ir.http']._slug(channel),)
+            else:
+                channel.website_url = channel._origin.website_url
 
     website_description = fields.Html(
         "Website description", default=False, translate=html_translate,

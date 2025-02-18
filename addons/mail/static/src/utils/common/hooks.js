@@ -552,18 +552,19 @@ export function useDiscussSystray() {
 export const useMovable = makeDraggableHook({
     name: "useMovable",
     onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
-        const { height } = getRect(ctx.current.element);
         ctx.current.container = document.createElement("div");
         addStyle(ctx.current.container, {
             position: "fixed",
             top: 0,
-            bottom: `${height}px`,
+            bottom: 0,
             left: 0,
             right: 0,
         });
         ctx.current.element.after(ctx.current.container);
         addCleanup(() => ctx.current.container.remove());
     },
+    onDragStart: () => true,
+    onDragEnd: () => true,
     onDrop({ ctx, getRect }) {
         const { top, left } = getRect(ctx.current.element);
         return { top, left };

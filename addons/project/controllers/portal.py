@@ -298,7 +298,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _task_get_searchbar_sortings(self, milestones_allowed, project=False):
         values = {
-            'create_date desc': {'label': _('Newest'), 'order': 'create_date desc', 'sequence': 10},
+            'id desc': {'label': _('Newest'), 'order': 'id desc', 'sequence': 10},
             'name': {'label': _('Title'), 'order': 'name', 'sequence': 20},
             'stage_id, project_id': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 50},
             'state': {'label': _('Status'), 'order': 'state', 'sequence': 60},
@@ -381,7 +381,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
         # default sort by value
         if not sortby or (sortby == 'milestone_id' and not milestones_allowed):
-            sortby = 'create_date desc'
+            sortby = next(iter(searchbar_sortings))
 
         # default group by value
         if not groupby or (groupby == 'milestone_id' and not milestones_allowed):
@@ -480,12 +480,12 @@ class ProjectCustomerPortal(CustomerPortal):
 
         # extends filterby criteria with project (criteria name is the project id)
         # Note: portal users can't view projects they don't follow
-        project_groups = request.env['project.task']._read_group(AND([[('project_id', 'not in', projects.ids)], task_domain or []]),
-                                                                ['project_id'])
+        project_groups = request.env['project.task']._read_group(
+            AND([[('project_id', 'not in', projects.ids), ('project_id', '!=', False)], task_domain or []]),
+            ['project_id'])
         for [project] in project_groups:
-            proj_name = project.sudo().display_name if project else _('Others')
             searchbar_filters.update({
-                str(project.id): {'label': proj_name, 'domain': [('project_id', '=', project.id)]}
+                str(project.id): {'label': project.sudo().display_name, 'domain': [('project_id', '=', project.id)]}
             })
         return searchbar_filters
 

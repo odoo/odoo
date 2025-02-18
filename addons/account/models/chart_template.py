@@ -78,8 +78,8 @@ class AccountChartTemplate(models.AbstractModel):
         cls._template_register = template_register
         return template_register
 
-    def _setup_complete(self):
-        super()._setup_complete()
+    def _post_model_setup__(self):
+        super()._post_model_setup__()
         self.env.registry[self._name]._template_register = AccountChartTemplate._template_register
 
 
@@ -199,7 +199,7 @@ class AccountChartTemplate(models.AbstractModel):
         reload_template = template_code == company.chart_template
         company.chart_template = template_code
 
-        if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
+        if not reload_template and (not company.root_id._existing_accounting() or install_demo):
             children_companies = self.env['res.company'].search([('id', 'child_of', company.id)])
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
                 if not company.parent_id:
@@ -232,7 +232,7 @@ class AccountChartTemplate(models.AbstractModel):
         AccountGroup._adapt_parent_account_group(company=company)
 
         # Install the demo data when the first localization is instanciated on the company
-        if install_demo and self.ref('base.module_account').demo and not reload_template:
+        if install_demo and not reload_template:
             try:
                 with self.env.cr.savepoint():
                     self = self.with_context(lang=original_context_lang)
@@ -1033,7 +1033,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_account_journal(self, template_code):
         return {
             "sale": {
-                'name': _('Customer Invoices'),
+                'name': _('Sales'),
                 'type': 'sale',
                 'code': _('INV'),
                 'show_on_dashboard': True,
@@ -1041,7 +1041,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'sequence': 5,
             },
             "purchase": {
-                'name': _('Vendor Bills'),
+                'name': _('Purchases'),
                 'type': 'purchase',
                 'code': _('BILL'),
                 'show_on_dashboard': True,
@@ -1073,11 +1073,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
                 'sequence': 7,
             },
-            "cash": {
-                'name': _('Cash'),
-                'type': 'cash',
-                'show_on_dashboard': True,
-            },
         }
 
     @template(model='account.reconcile.model')
@@ -1088,7 +1083,6 @@ class AccountChartTemplate(models.AbstractModel):
                 "sequence": 1,
                 "rule_type": 'invoice_matching',
                 "auto_reconcile": True,
-                "match_nature": 'both',
                 "match_same_currency": True,
                 "allow_payment_tolerance": True,
                 "payment_tolerance_type": 'percentage',
@@ -1100,7 +1094,6 @@ class AccountChartTemplate(models.AbstractModel):
                 "sequence": 2,
                 "rule_type": 'invoice_matching',
                 "auto_reconcile": False,
-                "match_nature": 'both',
                 "match_same_currency": True,
                 "allow_payment_tolerance": False,
                 "match_partner": True,
@@ -1376,9 +1369,9 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Gather translations for records that are created from the chart_template data
         for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
-            template_data = template_data or self.env['account.chart.template']._get_chart_template_data(chart_template)
-            template_data.pop('template_data', None)
-            for mname, data in template_data.items():
+            chart_template_data = template_data or self.env['account.chart.template']._get_chart_template_data(chart_template)
+            chart_template_data.pop('template_data', None)
+            for mname, data in chart_template_data.items():
                 for _xml_id, record in data.items():
                     fnames = {fname.split('@')[0] for fname in record if fname != '__translation_module__'}
                     for lang in langs:

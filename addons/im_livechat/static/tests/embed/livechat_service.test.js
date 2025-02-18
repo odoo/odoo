@@ -3,7 +3,6 @@ import {
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
-import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     click,
     contains,
@@ -18,7 +17,7 @@ import { describe, test } from "@odoo/hoot";
 import {
     asyncStep,
     Command,
-    mountWithCleanup,
+    onRpc,
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
@@ -59,7 +58,6 @@ test("persisted session history", async () => {
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
-    await mountWithCleanup(LivechatButton);
     await contains(".o-mail-Message-content", { text: "Old message in history" });
 });
 
@@ -74,7 +72,6 @@ test("previous operator prioritized", async () => {
     pyEnv["im_livechat.channel"].write([livechatChannelId], { user_ids: [Command.link(userId)] });
     expirableStorage.setItem("im_livechat_previous_operator", JSON.stringify(previousOperatorId));
     await start({ authenticateAs: false });
-    await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message-author", { text: "John Doe" });
 });
@@ -89,9 +86,18 @@ test("Only necessary requests are made when creating a new chat", async () => {
         }
     });
     await start({ authenticateAs: false });
-    await mountWithCleanup(LivechatButton);
     await contains(".o-livechat-LivechatButton");
-    await waitForSteps([`/im_livechat/init - {"channel_id":${livechatChannelId}}`]);
+    await waitForSteps([
+        `/mail/action - ${JSON.stringify({
+            fetch_params: [
+                "failures", // called because mail/core/web is loaded in test bundle
+                "systray_get_activities", // called because mail/core/web is loaded in test bundle
+                "init_messaging",
+                ["init_livechat", livechatChannelId],
+            ],
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
+        })}`,
+    ]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
     await waitForSteps([
@@ -145,4 +151,31 @@ test("Only necessary requests are made when creating a new chat", async () => {
             },
         })}`,
     ]);
+});
+
+test("do not create new thread when operator answers to visitor", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    onRpc("/im_livechat/get_session", async () => asyncStep("/im_livechat/get_session"));
+    onRpc("/mail/message/post", async () => asyncStep("/mail/message/post"));
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+        channel_type: "livechat",
+        livechat_active: true,
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: serverState.partnerId,
+        create_uid: serverState.publicUserId,
+    });
+    setupChatHub({ opened: [channelId] });
+    await start({
+        authenticateAs: pyEnv["res.users"].search_read([["id", "=", serverState.userId]])[0],
+    });
+    await insertText(".o-mail-Composer-input", "Hello!");
+    await triggerHotkey("Enter");
+    await contains(".o-mail-Message", { text: "Hello!" });
+    await waitForSteps(["/mail/message/post"]);
 });

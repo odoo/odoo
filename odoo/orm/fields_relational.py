@@ -134,6 +134,11 @@ class _Relational(Field[M], typing.Generic[M]):
                 return f"({field_to_check} and {company_domain} or {no_company_domain}) + ({domain or []})"
         return domain
 
+    def _description_allow_hierachy_operators(self, env):
+        """ Return if the child_of/parent_of makes sense on this field """
+        comodel = env[self.comodel_name]
+        return comodel._parent_name in comodel._fields
+
     def _internal_description_domain_raw(self, env) -> str | list:
         domain = self.domain
         if callable(domain):
@@ -183,8 +188,8 @@ class Many2one(_Relational[M]):
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, string: str | Sentinel = SENTINEL, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
-    def _setup_attrs(self, model_class, name):
-        super()._setup_attrs(model_class, name)
+    def _setup_attrs__(self, model_class, name):
+        super()._setup_attrs__(model_class, name)
         # determine self.delegate
         if not self.delegate and name in model_class._inherits.values():
             self.delegate = True

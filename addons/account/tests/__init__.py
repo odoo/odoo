@@ -4,6 +4,7 @@ from . import test_account_move_out_invoice
 from . import test_account_move_out_refund
 from . import test_account_move_in_invoice
 from . import test_account_move_in_refund
+from . import test_account_move_duplicate
 from . import test_account_move_entry
 from . import test_account_move_date_algorithm
 from . import test_account_inalterable_hash
@@ -54,3 +55,4 @@ from . import test_mail_tracking_value
 from . import test_res_partner_merge
 from . import test_account_merge_wizard
 from . import test_account_move_attachment
+from . import test_account_bill_deductibility

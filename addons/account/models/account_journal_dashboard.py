@@ -80,6 +80,18 @@ class AccountJournal(models.Model):
 
         (self - bank_cash_journals - sale_purchase_journals).kanban_dashboard_graph = False
 
+    def _transform_activity_dict(self, activity_data):
+        return {
+            'id': activity_data['id'],
+            'res_id': activity_data['res_id'],
+            'res_model': activity_data['res_model'],
+            'status': activity_data['status'],
+            'name': activity_data['summary'] or activity_data['act_type_name'],
+            'activity_category': activity_data['activity_category'],
+            'act_type_id': activity_data['act_type_id'],
+            'date': odoo_format_date(self.env, activity_data['date_deadline']),
+        }
+
     def _get_json_activity_data(self):
         today = fields.Date.context_today(self)
         activities = defaultdict(list)
@@ -92,6 +104,7 @@ class AccountJournal(models.Model):
                 activity.res_model,
                 activity.summary,
       CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
+                act_type.id as act_type_id,
                 %(act_type_name)s as act_type_name,
                 act_type.category as activity_category,
                 activity.date_deadline,
@@ -109,6 +122,7 @@ class AccountJournal(models.Model):
                 activity.res_model,
                 activity.summary,
       CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
+                act_type.id as act_type_id,
                 %(act_type_name)s as act_type_name,
                 act_type.category as activity_category,
                 activity.date_deadline,
@@ -125,18 +139,8 @@ class AccountJournal(models.Model):
             company_ids=self.env.companies.ids,
         )
         self.env.cr.execute(sql_query)
-        for activity in self.env.cr.dictfetchall():
-            act = {
-                'id': activity['id'],
-                'res_id': activity['res_id'],
-                'res_model': activity['res_model'],
-                'status': activity['status'],
-                'name': activity['summary'] or activity['act_type_name'],
-                'activity_category': activity['activity_category'],
-                'date': odoo_format_date(self.env, activity['date_deadline'])
-            }
-
-            activities[activity['journal_id']].append(act)
+        for activity_data in self.env.cr.dictfetchall():
+            activities[activity_data['journal_id']].append(self._transform_activity_dict(activity_data))
         for journal in self:
             journal.json_activity_data = json.dumps({'activities': activities[journal.id]})
 
@@ -543,8 +547,8 @@ class AccountJournal(models.Model):
             return
         bills_field_list = [
             "account_move.journal_id",
-            "(CASE WHEN account_move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * account_move.amount_residual AS amount_total",
-            "(CASE WHEN account_move.move_type IN ('in_invoice', 'in_refund', 'in_receipt') THEN -1 ELSE 1 END) * account_move.amount_residual_signed AS amount_total_company",
+            "(CASE WHEN account_move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * account_move.amount_total AS amount_total",
+            "(CASE WHEN account_move.move_type IN ('in_invoice', 'in_refund', 'in_receipt') THEN -1 ELSE 1 END) * account_move.amount_total_signed AS amount_total_company",
             "account_move.currency_id AS currency",
             "account_move.move_type",
             "account_move.invoice_date",

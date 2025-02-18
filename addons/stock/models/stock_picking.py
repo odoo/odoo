@@ -642,7 +642,7 @@ class StockPicking(models.Model):
         readonly=True, store=True, index=True)
     user_id = fields.Many2one(
         'res.users', 'Responsible', tracking=True,
-        domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)],
+        domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)],
         default=lambda self: self.env.user, copy=False
     )
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
@@ -910,9 +910,15 @@ class StockPicking(models.Model):
             picking.move_ids.write({'date': picking.scheduled_date})
 
     def _has_scrap_move(self):
+        result = {
+            picking
+            for [picking] in self.env['stock.move']._read_group(
+                [('picking_id', 'in', self.ids), ('scrapped', '=', True)],
+                ['picking_id'],
+            )
+        }
         for picking in self:
-            # TDE FIXME: better implementation
-            picking.has_scrap_move = bool(self.env['stock.move'].search_count([('picking_id', '=', picking.id), ('scrapped', '=', True)]))
+            picking.has_scrap_move = picking._origin in result
 
     def _compute_move_line_exist(self):
         for picking in self:
@@ -1309,9 +1315,9 @@ class StockPicking(models.Model):
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
                             'company_id': pickings.company_id.id,
                         })
-                    # Propagate the result package in the next move for disposable packages only.
-                    if package.package_use == 'disposable':
-                        move_lines_to_pack.write({'result_package_id': package.id})
+                        # Propagate the result package in the next move for disposable packages only.
+                        if package.package_use == 'disposable':
+                            move_lines_to_pack.write({'result_package_id': package.id})
                 else:
                     move_lines_in_package_level = move_lines_to_pack.filtered(lambda ml: ml.move_id.package_level_id)
                     move_lines_without_package_level = move_lines_to_pack - move_lines_in_package_level

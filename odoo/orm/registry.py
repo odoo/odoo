@@ -35,13 +35,14 @@ from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector, format_frame
 
 from .utils import SUPERUSER_ID
+from . import model_classes
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
     from odoo.fields import Field
     from odoo.models import BaseModel
     from odoo.sql_db import BaseCursor, Connection, Cursor
-    from odoo.modules import graph
+    from odoo.modules import module_graph
 
 
 _logger = logging.getLogger('odoo.registry')
@@ -119,10 +120,30 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
     @classmethod
     @locked
-    def new(cls, db_name: str, force_demo: bool = False, status: None = None, update_module: bool = False) -> Registry:
-        """ Create and return a new registry for the given database name. """
-        if status is not None:
-            warnings.warn("Deprecated since 19.0, do not set status", DeprecationWarning)
+    def new(
+        cls,
+        db_name: str,
+        *,
+        update_module: bool = False,
+        install_modules: Collection[str] = (),
+        upgrade_modules: Collection[str] = (),
+        new_db_demo: bool | None = None,
+    ) -> Registry:
+        """Create and return a new registry for the given database name.
+
+        :param db_name: The name of the database to associate with the Registry instance.
+
+        :param update_module: If True, update modules while loading the registry. Defaults to ``False``.
+
+        :param install_modules: Names of modules to install. Their direct or indirect dependency
+                                modules will also be installed. Defaults to an empty tuple.
+
+        :param upgrade_modules: Names of modules to upgrade. Their direct or indirect dependent
+                                modules will also be upgraded. Defaults to an empty tuple.
+
+        :param new_db_demo: Whether to install demo data for the new database. If set to ``None``, the value will be
+                            determined by the ``not config['without_demo']``. Defaults to ``None``
+        """
         t0 = time.time()
         registry: Registry = object.__new__(cls)
         registry.init(db_name)
@@ -139,7 +160,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # This should be a method on Registry
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
             try:
-                load_modules(registry, force_demo, update_module=update_module)
+                if new_db_demo is None:
+                    new_db_demo = not config['without_demo']
+                load_modules(
+                    registry,
+                    update_module=update_module or bool(upgrade_modules or install_modules),
+                    upgrade_modules=upgrade_modules,
+                    install_modules=install_modules,
+                    new_db_demo=new_db_demo,
+                )
             except Exception:
                 reset_modules_state(db_name)
                 raise
@@ -178,6 +207,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._constraint_queue: deque[tuple] = deque()  # queue of functions to call on finalization of constraints
         self.__caches: dict[str, LRU] = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
 
+        # update context during loading modules
+        self._force_upgrade_scripts = set()  # force the execution of the upgrade script for these modules
+
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules: set[str] = set()
         self.updated_modules: list[str] = []       # installed/updated modules
@@ -186,7 +218,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.db_name = db_name
         self._db: Connection = sql_db.db_connect(db_name, readonly=False)
         self._db_readonly: Connection | None = None
-        if config['db_replica_host'] or config['test_enable']:  # by default, only use readonly pool if we have a db_replica_host defined. Allows to have an empty replica host for testing
+        if config['db_replica_host'] or config['test_enable'] or 'replica' in config['dev_mode']:  # by default, only use readonly pool if we have a db_replica_host defined.
             self._db_readonly = sql_db.db_connect(db_name, readonly=True)
 
         # cursor for test mode; None means "normal" mode
@@ -284,7 +316,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 queue.extend(func(model))
         return models
 
-    def load(self, cr: Cursor, module: graph.Node) -> OrderedSet[str]:
+    def load(self, cr: Cursor, module: module_graph.ModuleNode) -> OrderedSet[str]:
         """ Load a given module in the registry, and return the names of the
         modified models.
 
@@ -307,15 +339,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
         model_names = []
-        for cls in models.MetaModel.module_to_models.get(module.name, []):
+        for model_def in models.MetaModel.module_to_models.get(module.name, []):
             # models register themselves in self.models
-            model = cls._build_model(self, cr)
-            model_names.append(model._name)
+            model_cls = model_classes.add_to_registry(self, model_def)
+            model_names.append(model_cls._name)
 
         return self.descendants(model_names, '_inherit', '_inherits')
 
     @locked
-    def setup_models(self, cr: BaseCursor) -> None:
+    def _setup_models__(self, cr: BaseCursor) -> None:
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
         """
@@ -338,39 +370,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._is_modifying_relations.clear()
         self.registry_invalidated = True
 
-        # we must setup ir.model before adding manual fields because _add_manual_models may
-        # depend on behavior that is implemented through overrides, such as is_mail_thread which
-        # is implemented through an override to env['ir.model']._instanciate
-        env['ir.model']._prepare_setup()
-
-        # add manual models
-        if self._init_modules:
-            env['ir.model']._add_manual_models()
-
-        # prepare the setup on all models
-        models = list(env.values())
-        for model in models:
-            model._prepare_setup()
-
         self.field_depends.clear()
         self.field_depends_context.clear()
         self.field_inverses.clear()
         self.many2one_company_dependents.clear()
 
-        # do the actual setup
-        for model in models:
-            model._setup_base()
-
-        self._m2m: defaultdict[tuple[str, str, str], list[Field]] = defaultdict(list)
-        for model in models:
-            model._setup_fields()
-        del self._m2m
-
-        for model in models:
-            model._setup_complete()
+        model_classes.setup_model_classes(env)
 
         # determine field_depends and field_depends_context
-        for model in models:
+        for model in env.values():
             for field in model._fields.values():
                 depends, depends_context = field.get_depends(model)
                 self.field_depends[field] = tuple(depends)
@@ -962,7 +970,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Reset the registry and cancel all invalidations. """
         if self.registry_invalidated:
             with closing(self.cursor()) as cr:
-                self.setup_models(cr)
+                self._setup_models__(cr)
                 self.registry_invalidated = False
         if self.cache_invalidated:
             for cache_name in self.cache_invalidated:

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="peppol_config_wizard_form" model="ir.ui.view">
+        <field name="name">peppol.config.wizard.form</field>
+        <field name="model">peppol.config.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="company_id" invisible="1"/>
+                <field name="account_peppol_edi_user" invisible="1"/>
+                <div invisible="account_peppol_proxy_state != 'sender'">
+                    You are sending your e-invoices via Odoo with this Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
+                </div>
+                <div invisible="account_peppol_proxy_state not in ('smp_registration', 'receiver')">
+                    You are sending and receiving your e-invoices via Odoo with this Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
+                </div>
+                <group string="Company information">
+                    <label for="account_peppol_contact_email" class="text-nowrap"/>
+                    <field name="account_peppol_contact_email"
+                           nolabel="1"
+                           required="account_peppol_proxy_state in ('sender', 'smp_registration', 'receiver')"/>
+                </group>
+                <group string="Receive your electronic invoices in Odoo" invisible="account_peppol_proxy_state != 'sender'">
+                    <div class="text-justify text-muted" colspan="2">
+                        Some service support migration keys. If this is your case you can enter your migration key below.
+                        If not, you should de-register from your current service provider and register with Odoo afterward.
+                    </div>
+                    <field name="account_peppol_migration_key"/>
+                </group>
+                <group string="Configure your Peppol Services and allowed formats" invisible="account_peppol_proxy_state != 'receiver'">
+                    <field name="service_json" invisible="1"/>
+                    <div colspan="2">
+                        <field name="service_info" role="status" class="o_field_html alert alert-info" invisible="not service_info"/>
+                        <field name="service_ids"
+                               nolabel="1"
+                               widget="one2many"
+                               columns="2">
+                            <list create="false" delete="false" edit="true">
+                                <field name="wizard_id" column_invisible="1"/>
+                                <field name="document_name" readonly="1"/>
+                                <field name="document_identifier" invisible="1"/>
+                                <field name="enabled" widget="boolean_toggle"/>
+                            </list>
+                        </field>
+                    </div>
+                </group>
+                <group string="Danger zone" invisible="account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')">
+                    <button string="Remove from Peppol"
+                            name="button_peppol_unregister"
+                            type="object"
+                            class="btn btn-danger text-nowrap"
+                            confirm="This will delete your Peppol registration."/>
+                </group>
+                <footer>
+                    <button string="Save" name="button_sync_form_with_peppol_proxy" type="object"
+                            class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

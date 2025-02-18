@@ -33,7 +33,7 @@ _logger = logging.getLogger('odoo.api')
 #  - method._ondelete: set by @ondelete, used to raise errors for unlink operations
 #
 # On wrapping method only:
-#  - method._api: decorator function, used for re-applying decorator
+#  - method._api_*: decorator function, used for re-applying decorator
 #
 
 def attrsetter(attr, value) -> Decorator:
@@ -43,17 +43,6 @@ def attrsetter(attr, value) -> Decorator:
         return method
 
     return setter
-
-
-def propagate(method1: T | None, method2: T) -> T:
-    """ Propagate decorators from ``method1`` to ``method2``, and return the
-        resulting method.
-    """
-    if method1:
-        for attr in ('_returns',):
-            if hasattr(method1, attr) and not hasattr(method2, attr):
-                setattr(method2, attr, getattr(method1, attr))
-    return method2
 
 
 @typing.overload
@@ -295,7 +284,24 @@ def model(method: C) -> C:
     """
     if method.__name__ == 'create':
         return model_create_multi(method)  # type: ignore
-    method._api = 'model'  # type: ignore
+    method._api_model = True  # type: ignore
+    return method
+
+
+def private(method: C) -> C:
+    """ Decorate a record-style method to indicate that the method cannot be
+        called using RPC. Example::
+
+            @api.private
+            def method(self, args):
+                ...
+
+        If you have business methods that should not be called over RPC, you
+        should prefix them with "_". This decorator may be used in case of
+        existing public methods that become non-RPC callable or for ORM
+        methods.
+    """
+    method._api_private = True  # type: ignore
     return method
 
 
@@ -307,7 +313,8 @@ def readonly(method: C) -> C:
             def method(self, args):
                 ...
     """
-    return attrsetter('_readonly', True)(method)
+    method._readonly = True  # type: ignore
+    return method
 
 
 def model_create_multi(method: Callable[[T, list[ValuesType]], T]) -> Callable[[T, list[ValuesType] | ValuesType], T]:
@@ -324,5 +331,5 @@ def model_create_multi(method: Callable[[T, list[ValuesType]], T]) -> Callable[[
             vals_list = [vals_list]
         return method(self, vals_list)
 
-    create._api = 'model_create'  # type: ignore
+    create._api_model = True  # type: ignore
     return create

@@ -32,7 +32,7 @@ export const exportAllItem = {
     Component: ExportAll,
     groupNumber: STATIC_ACTIONS_GROUP_NUMBER,
     isDisplayed: async (env) =>
-        env.config.viewType === "list" &&
+        ["kanban", "list"].includes(env.config.viewType) &&
         !env.model.root.selection.length &&
         (await user.hasGroup("base.group_allow_export")) &&
         exprToBoolean(env.config.viewArch.getAttribute("export_xlsx"), true),

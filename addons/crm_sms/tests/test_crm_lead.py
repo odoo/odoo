@@ -15,15 +15,12 @@ class TestCRMLead(TestCrmCommon):
             'phone': self.test_phone_data[0],
         })
         self.assertEqual(lead.phone, self.test_phone_data[0])
-        self.assertFalse(lead.mobile)
         self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[0])
 
-        lead.write({'phone': False, 'mobile': self.test_phone_data[1]})
+        lead.write({'phone': False})
         self.assertFalse(lead.phone)
-        self.assertEqual(lead.mobile, self.test_phone_data[1])
-        self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[1])
+        self.assertEqual(lead.phone_sanitized, False)
 
-        lead.write({'phone': self.test_phone_data[1], 'mobile': self.test_phone_data[2]})
+        lead.write({'phone': self.test_phone_data[1]})
         self.assertEqual(lead.phone, self.test_phone_data[1])
-        self.assertEqual(lead.mobile, self.test_phone_data[2])
-        self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[2])
+        self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[1])

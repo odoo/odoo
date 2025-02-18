@@ -21,4 +21,8 @@ class StockLandedCost(models.Model):
             self.mrp_production_ids = False
 
     def _get_targeted_move_ids(self):
-        return super()._get_targeted_move_ids() | self.mrp_production_ids.move_finished_ids
+        return (
+            super()._get_targeted_move_ids()
+            | self.mrp_production_ids.move_finished_ids
+            - self.mrp_production_ids.move_byproduct_ids.filtered(lambda move: not move.cost_share)
+        )

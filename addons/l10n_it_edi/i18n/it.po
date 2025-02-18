@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.1alpha1+e\n"
+"Project-Id-Version: Odoo Server 18.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 16:01+0000\n"
-"PO-Revision-Date: 2024-12-16 16:01+0000\n"
+"POT-Creation-Date: 2025-01-31 13:58+0000\n"
+"PO-Revision-Date: 2025-01-31 13:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -177,6 +177,11 @@ msgid "Check taxes on invoice lines"
 msgstr "Righe Fattura con Tasse da Controllare"
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__code
+msgid "Code"
+msgstr "Codice"
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_codice_fiscale
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__l10n_it_codice_fiscale
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__l10n_it_codice_fiscale
@@ -242,13 +247,20 @@ msgstr "Contratto"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__create_uid
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__create_uid
 msgid "Created by"
 msgstr "Creato da"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__create_date
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__create_date
 msgid "Created on"
 msgstr "Creato il"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_04
+msgid "Credit note"
+msgstr "Nota di credito"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_ddt_id
@@ -269,9 +281,38 @@ msgid "Dati Bollo"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_05
+msgid "Debit note"
+msgstr "Nota di debito"
+
+#. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid "Default Purchase Journal"
-msgstr ""
+msgstr "Giornale degli acquisti predefinito"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_24
+msgid ""
+"Deferred invoice (Article 21, paragraph 4, third period letter to "
+"Presidential Decree 633/72)"
+msgstr "Fattura differita (art. 21, comma 4, terzo periodo del DPR 633/72)"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_25
+msgid ""
+"Deferred invoice (Article 21, paragraph 4, third period, letter b "
+"(Dropshipping))"
+msgstr "Fattura differita [articolo 21, comma 4, terzo periodo, lettera b (Dropshipping)]"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_02
+msgid "Deposit/advance on invoice"
+msgstr "Deposito/anticipo su fattura"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_03
+msgid "Deposit/advance on parcel"
+msgstr "Deposito/anticipo sulla parcella"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__l10n_it_pa_index
@@ -288,13 +329,21 @@ msgstr "Il codice destinatario deve avere 6/7 caratteri"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.l10n_it_document_type_tree
+msgid "Document Type"
+msgstr "Tipo di documento"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -362,8 +411,10 @@ msgstr "Codice fiscale dell'azienda"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_ir_attachment__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__id
@@ -392,6 +443,13 @@ msgstr ""
 " entrambi."
 
 #. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_16
+msgid ""
+"Internal reverse charge self-invoice (Article 17 of Presidential Decree no. "
+"633/72 for invoices with Natura subcodes 'N6')"
+msgstr "Autofattura interna in reverse charge (art. 17 DPR n. .633/72 per fatture con sottocodice Natura 'N6')"
+
+#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_partner.py:0
 msgid ""
@@ -400,6 +458,13 @@ msgid ""
 msgstr ""
 "Codice fiscale non valido '%s': deve essere simile a 'MRTMTT91D08F205J' per "
 "persone fisiche e '12345670546' per le aziende"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_01
+msgid ""
+"Invoice (Immediate or Accompanying if <DatiTrasporto> or <DatiDDT> are "
+"completed)"
+msgstr "Fattura (Immediata o di accompagnamento se <DatiTrasporto> o <DatiDDT> sono stati compilati)"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__invoice_id
@@ -423,7 +488,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_edi_purchase_journal_id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_purchase_journal_id
 msgid "Italian Default Purchase Journal"
-msgstr ""
+msgstr "Giornale di acquisto del default italiano"
+
+#. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_l10n_it_document_type
+msgid "Italian Document Type"
+msgstr "Tipo di documento italiano"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_edi_proxy_client_user__proxy_type__l10n_it_edi
@@ -436,9 +506,20 @@ msgid "Italian Electronic Invoicing"
 msgstr "Fatturazione Elettronica Italiana"
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__l10n_it_payment_method
+msgid "Italian Payment Method"
+msgstr "Metodo di pagamento italiano"
+
+#. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_account_move
 msgid "Journal Entry"
 msgstr "Registrazione contabile"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_document_type
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_document_type
+msgid "L10N It Document Type"
+msgstr "L10N It Tipo di documento"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_file
@@ -491,12 +572,20 @@ msgid "L10N It Partner Pa"
 msgstr "Partner della Pubblica Amministrazione"
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_payment_method
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_payment_method
+msgid "L10N It Payment Method"
+msgstr "L10N It Metodo di pagamento"
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__write_uid
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__write_uid
 msgid "Last Updated by"
 msgstr "Ultimo aggiornamento di"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__write_date
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__write_date
 msgid "Last Updated on"
 msgstr "Ultimo aggiornamento il"
 
@@ -504,6 +593,144 @@ msgstr "Ultimo aggiornamento il"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_eco_index_liquidation_state
 msgid "Liquidation state"
 msgstr "Stato liquidazione"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp01
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp01
+msgid "MP01 - Cash"
+msgstr "MP01 - Contanti"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp02
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp02
+msgid "MP02 - Check"
+msgstr "MP02 - Controllo"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp03
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp03
+msgid "MP03 - Cashier's check"
+msgstr "MP03 - Assegno circolare"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp04
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp04
+msgid "MP04 - Cash at the Treasury"
+msgstr "MP04 - Liquidità presso la Tesoreria"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp05
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp05
+msgid "MP05 - Wire transfer"
+msgstr "MP05 - Bonifico bancario"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp06
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp06
+msgid "MP06 - Promissory note"
+msgstr "MP06 - Promissoria"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp07
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp07
+msgid "MP07 - Bank slip"
+msgstr "MP07 - Bollettino bancario"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp08
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp08
+msgid "MP08 - Payment card"
+msgstr "MP08 - Carta di pagamento"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp09
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp09
+msgid "MP09 - RID"
+msgstr "MP09 - RID"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp10
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp10
+msgid "MP10 - RID users"
+msgstr "MP10 - Utenti RID"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp11
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp11
+msgid "MP11 - Fast RID"
+msgstr "MP11 - RID veloce"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp12
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp12
+msgid "MP12 - RIBA"
+msgstr "MP12 - RIBA"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp13
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp13
+msgid "MP13 - MAV"
+msgstr "MP13 - MAV"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp14
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp14
+msgid "MP14 - Treasury receipt"
+msgstr "MP14 - Ricevuta del Tesoro"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp15
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp15
+msgid "MP15 - Transfer of special accounting accounts"
+msgstr "MP15 - Trasferimento di contabilità speciali"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp16
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp16
+msgid "MP16 - Bank direct debit"
+msgstr "MP16 - Addebito diretto in banca"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp17
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp17
+msgid "MP17 - Postal domiciliation"
+msgstr "MP17 - Domiciliazione postale"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp18
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp18
+msgid "MP18 - Postal account slip"
+msgstr "MP18 - Bollettino di conto corrente postale"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp19
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp19
+msgid "MP19 - SEPA Direct Debit"
+msgstr "MP19 - Addebito diretto SEPA"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp20
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp20
+msgid "MP20 - SEPA Direct Debit CORE"
+msgstr "MP20 - Addebito diretto SEPA CORE"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp21
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp21
+msgid "MP21 - SEPA Direct Debit B2B"
+msgstr "MP21 - Addebito diretto SEPA B2B"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp22
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp22
+msgid "MP22 - Withholding from sums already collected"
+msgstr "MP22 - Ritenuta su somme già riscosse"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp23
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp23
+msgid "MP23 - PagoPA"
+msgstr "MP23 - PagoPA"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_eco_index_share_capital
@@ -529,6 +756,11 @@ msgstr ""
 "nelle informazioni relative al servizio di fatturazione elettronica, "
 "associato all'ufficio dell'amministrazione che riceverà (ed elaborerà) la "
 "fattura."
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__name
+msgid "Name"
+msgstr "Nome"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__no
@@ -568,6 +800,11 @@ msgstr "Tipo Documento Origine"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__l10n_it_pec_email
 msgid "PEC e-mail"
 msgstr "E-mail PEC"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_06
+msgid "Parcel"
+msgstr "Parcella"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -616,6 +853,16 @@ msgstr ""
 "la città, il Codice Postale e la Nazione."
 
 #. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
+msgid "Payment Method"
+msgstr "Metodo di pagamento"
+
+#. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_payment_method_line
+msgid "Payment Methods"
+msgstr "Metodi di pagamento"
+
+#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Payment due date invalid in XML file: %s"
@@ -642,6 +889,11 @@ msgid "Please select the Tax system to which you are subjected."
 msgstr "Per favore, seleziona il regime fiscale a cui sei soggetto."
 
 #. module: l10n_it_edi
+#: model:account.account.tag,name:l10n_it_edi.l10n_it_edi_professional_fees_tag
+msgid "Professional fees"
+msgstr "Onorari professionali"
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_eco_index_office
 msgid "Province of the register-of-companies office"
 msgstr "Provincia dell'ufficio del registro delle imprese"
@@ -658,6 +910,11 @@ msgid "Public Investment Unique Identifier"
 msgstr "Codice Unico di Progetto"
 
 #. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__l10n_it_document_type__type__purchase
+msgid "Purchase"
+msgstr "Acquisto"
+
+#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_origin_document_type__purchase_order
 msgid "Purchase Order"
 msgstr "Ordine d'Acquisto"
@@ -672,6 +929,11 @@ msgstr "Richiede Firma Utente"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_state
 msgid "SDI State"
 msgstr "Stato SDI"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__l10n_it_document_type__type__sale
+msgid "Sale"
+msgstr "Vendita"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_edi_state__accepted_by_pa_partner
@@ -712,6 +974,67 @@ msgstr "Elaborazione SdI"
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_edi_state__rejected
 msgid "SdI Rejected"
 msgstr "Rifiutato SdI"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_20
+msgid ""
+"Self-invoice Report (ex art.6 c8 471/97 or art.46 c5 331/93), or for invoice"
+" not received or for a lower amount"
+msgstr "Rapporto di autofattura (ex art.6 c8 471/97 o art.46 c5 331/93), oppure per fattura non ricevuta o di importo inferiore"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_28
+msgid ""
+"Self-invoice for Italian tax from foreign suppliers identified but not "
+"established in Italy and for purchases from San Marino with VAT (paper "
+"invoice)"
+msgstr "Autofattura per imposta italiana da fornitori esteri identificati ma non stabiliti in Italia e per acquisti da San Marino con IVA (fattura cartacea)"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_21
+msgid "Self-invoice for ceiling clearance"
+msgstr "Autofattura per l'altezza del soffitto"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_23
+msgid ""
+"Self-invoice for extraction of goods from VAT warehouse with VAT liability"
+msgstr "Autofattura per l'estrazione di beni dal deposito IVA con IVA a debito"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_22
+msgid ""
+"Self-invoice for extraction of goods from VAT warehouse without VAT "
+"liability"
+msgstr "Autofattura per l'estrazione di beni dal deposito IVA senza assoggettamento ad IVA"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_19
+msgid ""
+"Self-invoice for foreign goods (both intra and non-EU) already present in "
+"Italy (Article 17 paragraph 2 of Presidential Decree 633/72) - Alternative "
+"to esterometro"
+msgstr "Autofattura per merci estere (sia intra che extra UE) già presenti in Italia (art. 17 comma 2 del DPR 633/72) - Alternativa all'esterometro"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_17
+msgid ""
+"Self-invoice for purchases of foreign services (both within and outside the "
+"EU) - Alternative to esterometro"
+msgstr "Autofattura per acquisti di servizi all'estero (sia all'interno che all'esterno dell'UE) - Alternativa all'esterometro"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_27
+msgid ""
+"Self-invoice for self-consumption or for free transfers without recourse"
+msgstr "Autofattura per autoconsumo o per cessione gratuita pro soluto"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_18
+msgid ""
+"Self-invoice for the purchase of intra-community goods - Alternative to "
+"esterometro"
+msgstr "Autofattura per l'acquisto di beni intracomunitari - Alternativa all'esterometro"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
@@ -761,6 +1084,21 @@ msgstr "Capitale sociale investito"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_eco_index_sole_shareholder
 msgid "Shareholder"
 msgstr "Socio"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_08
+msgid "Simplified credit note"
+msgstr "Nota di credito semplificata"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_09
+msgid "Simplified debit note"
+msgstr "Nota di debito semplificata"
+
+#. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_07
+msgid "Simplified invoice"
+msgstr "Fattura semplificata"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__su
@@ -825,6 +1163,11 @@ msgstr "L'azienda è in stato di liquidazione"
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_liquidation_state__ln
 msgid "The company is not in a state of liquidation"
 msgstr "L'azienda non è in stato di liquidazione"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,help:l10n_it_edi.field_l10n_it_document_type__name
+msgid "The document type name"
+msgstr "Il nome del tipo di documento"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1032,6 +1375,13 @@ msgid "Total amount from the XML File: %s"
 msgstr "Valore totale dal file XML: %s"
 
 #. module: l10n_it_edi
+#: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_26
+msgid ""
+"Transfer of depreciable assets and for internal transfers (ex art.36 "
+"Presidential Decree 633/72)"
+msgstr "Cessione di beni ammortizzabili e per trasferimenti interni (ex art.36 DPR 633/72)"
+
+#. module: l10n_it_edi
 #: model:ir.actions.act_window,name:l10n_it_edi.action_ddt_account
 #: model:ir.model,name:l10n_it_edi.model_l10n_it_ddt
 msgid "Transport Document"
@@ -1052,6 +1402,11 @@ msgstr "Numero documento di trasporto"
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Transport informations from XML file:"
 msgstr "Informazioni di trasporto dal file XML:"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__type
+msgid "Type"
+msgstr "Tipo"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1106,6 +1461,12 @@ msgid ""
 "mode."
 msgstr ""
 "L'invio della fattura elettronica %s è finto, per via della modalità Demo."
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "XML FatturaPA"
+msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1245,6 +1606,20 @@ msgid "[RF19] Regime forfettario (art.1, c.54-89, L. 190/2014)"
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+#: code:addons/l10n_it_edi/models/res_partner.py:0
+msgid "city"
+msgstr "città"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+#: code:addons/l10n_it_edi/models/res_partner.py:0
+msgid "country_id"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__invoice_edi_format
 msgid "eInvoice format"
@@ -1255,3 +1630,29 @@ msgstr "Formato fattura elettronica"
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "from XML file:"
 msgstr "dal file XML:"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+msgid "l10n_it_tax_system"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+#: code:addons/l10n_it_edi/models/res_partner.py:0
+msgid "street"
+msgstr "strada"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_partner.py:0
+msgid "vat"
+msgstr "iva"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+#: code:addons/l10n_it_edi/models/res_partner.py:0
+msgid "zip"
+msgstr "cerniera"

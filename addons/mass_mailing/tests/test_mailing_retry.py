@@ -31,7 +31,10 @@ class TestMailingRetry(MassMailCommon, CronMixinCase):
                                    alias_domain_id=False, mail_server=False, post_send_callback=None):
             mail_records.write({'state': 'exception', 'failure_reason': 'forced_failure'})
 
-        with patch('odoo.addons.mail.models.mail_mail.MailMail._send', patched_mail_mail_send):
+        with (
+            patch('odoo.addons.mail.models.mail_mail.MailMail._send', patched_mail_mail_send),
+            self.enter_registry_test_mode(),
+        ):
             self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().method_direct_trigger()
 
         with self.capture_triggers('mass_mailing.ir_cron_mass_mailing_queue') as captured_triggers:

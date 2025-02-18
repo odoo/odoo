@@ -16,7 +16,7 @@ class TestProjectStagesMulticompany(TestMultiCompanyProject):
             'email': 'manager@companies.com',
             'company_id': cls.company_a.id,
             'company_ids': [(4, cls.company_a.id), (4, cls.company_b.id)],
-            'groups_id':
+            'group_ids':
                 [(6, 0, [
                     cls.env.ref('base.group_user').id,
                     cls.env.ref('project.group_project_stages').id,

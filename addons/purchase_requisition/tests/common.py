@@ -21,14 +21,14 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
             'login': 'prm',
             'email': 'requisition_manager@yourcompany.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_purchase_manager.id])]})
+            'group_ids': [(6, 0, [user_group_purchase_manager.id])]})
 
         cls.user_purchase_requisition_user = Users.create({
             'name': 'Purchase requisition User',
             'login': 'pru',
             'email': 'requisition_user@yourcompany.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_purchase_user.id])]})
+            'group_ids': [(6, 0, [user_group_purchase_user.id])]})
 
         # Create Product
         cls.product_uom_id = cls.env.ref('uom.product_uom_unit')

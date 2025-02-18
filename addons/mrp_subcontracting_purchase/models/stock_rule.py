@@ -48,3 +48,10 @@ class StockRule(models.Model):
         for key, value in extra_delays.items():
             delays[key] += value
         return delays, delay_description + extra_delay_description
+
+    def _notify_responsible(self, procurement):
+        super()._notify_responsible(procurement)
+        origin_order = self.env.context.get('po_to_notify')
+        if origin_order:
+            notified_users = procurement.product_id.responsible_id.partner_id | origin_order.user_id.partner_id
+            self._post_vendor_notification(origin_order, notified_users, procurement.product_id)

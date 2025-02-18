@@ -116,7 +116,7 @@ class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
         self.assertEqual(len(res), 2, "There should be 2 embedded records linked to the parent action")
         self.assertTrue(self.embedded_action_1.id in res and self.embedded_action_2.id in res, "The correct embedded actions\
                         should be in embedded_actions")
-        self.env.user.write({'groups_id': [(4, arbitrary_group.id)]})
+        self.env.user.write({'group_ids': [(4, arbitrary_group.id)]})
         res = self.get_embedded_actions_ids(self.parent_action)
         self.assertEqual(len(res), 3, "There should be 3 embedded records linked to the parent action")
         self.assertTrue(self.embedded_action_1.id in res and self.embedded_action_2.id in res and embedded_action_custo.id in res, "The correct embedded actions\

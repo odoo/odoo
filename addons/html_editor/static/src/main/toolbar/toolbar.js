@@ -24,7 +24,7 @@ export class Toolbar extends Component {
                                         const base = {
                                             id: String,
                                             groupId: String,
-                                            title: String,
+                                            title: { type: [String, Function] },
                                             isAvailable: { type: Function, optional: true },
                                         };
                                         if (button.Component) {
@@ -56,6 +56,7 @@ export class Toolbar extends Component {
                         buttonsActiveState: Object,
                         buttonsDisabledState: Object,
                         buttonsAvailableState: Object,
+                        buttonsTitleState: Object,
                         namespace: {
                             type: String,
                             optional: true,
@@ -89,6 +90,6 @@ export class Toolbar extends Component {
 }
 
 export const toolbarButtonProps = {
-    title: String,
+    title: [String, Function],
     getSelection: Function,
 };

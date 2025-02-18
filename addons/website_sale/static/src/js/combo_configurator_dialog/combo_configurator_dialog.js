@@ -9,9 +9,9 @@ patch(ComboConfiguratorDialog, {
         ...ComboConfiguratorDialog.props,
         isFrontend: { type: Boolean, optional: true },
         options: {
-            type: Object,
-            optional: true,
+            ...ComboConfiguratorDialog.props.options,
             shape: {
+                ...ComboConfiguratorDialog.props.options.shape,
                 isBuyNow: { type: Boolean, optional: true },
             },
         },

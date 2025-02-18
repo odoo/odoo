@@ -1223,3 +1223,78 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertFalse(pm_3.journal_id)
         self.assertTrue(pm_4)
         self.assertEqual(pm_4.journal_id.type, "bank")
+
+    def test_single_config_global_invoice(self):
+        """For a single POS config, create multiple orders and consolidate them into a single invoice"""
+        self.open_new_session()
+        # create orders
+        orders = []
+        orders.append(self.create_ui_order_data(
+            [(self.product1, 2), (self.product4, 3)],
+            payments=[(self.bank_pm1, 49.88)]
+        ))
+        orders.append(self.create_ui_order_data(
+            [(self.product4, 1), (self.product2, 5)],
+            payments=[(self.bank_pm1, 109.96)]
+        ))
+
+        # sync orders
+        self.env['pos.order'].sync_from_ui(orders)
+        # close the session
+        self.pos_session.action_pos_session_validate()
+
+        pos_orders = self.env['pos.order'].search([])
+        # set customer for the orders
+        pos_orders.write({'partner_id': self.customer.id})
+
+        # create consolidated invoice
+        self.env['pos.make.invoice'].create({"consolidated_billing": True}).with_context({"active_ids": pos_orders.ids}).action_create_invoices()
+        # check if have single invoice
+        self.assertEqual(len(pos_orders), 2)
+        self.assertEqual(len(pos_orders.account_move), 1)
+        self.assertEqual(pos_orders.account_move.partner_id, self.customer)
+        self.assertEqual(pos_orders.account_move.amount_total, sum(pos_orders.mapped('amount_total')))
+        self.assertEqual(pos_orders.account_move.payment_state, 'paid')
+        self.assertEqual(pos_orders.account_move.state, 'posted')
+
+    def test_multi_config_global_invoice(self):
+        self.open_new_session()
+        orders = []
+        orders.append(self.create_ui_order_data(
+            [(self.product1, 3), (self.product2, 10)],
+            payments=[(self.bank_pm1, 230)]
+        ))
+        orders.append(self.create_ui_order_data(
+            [(self.product1, 5), (self.product0, 10)],
+            payments=[(self.bank_pm1, 50)]
+        ))
+        self.env['pos.order'].sync_from_ui(orders)
+        self.pos_session.action_pos_session_validate()
+
+        # open new session & create orders
+        self.open_new_session()
+        orders2 = []
+        orders2.append(self.create_ui_order_data(
+            [(self.product1, 2), (self.product4, 3)],
+            payments=[(self.bank_pm1, 49.88)]
+        ))
+        orders2.append(self.create_ui_order_data(
+            [(self.product4, 1), (self.product2, 5)],
+            payments=[(self.bank_pm1, 109.96)]
+        ))
+        self.env['pos.order'].sync_from_ui(orders2)
+        self.pos_session.action_pos_session_validate()
+
+        pos_orders = self.env['pos.order'].search([])
+        # set customer for the orders
+        pos_orders.write({'partner_id': self.customer.id})
+
+        # create consolidated invoice
+        self.env['pos.make.invoice'].create({"consolidated_billing": True}).with_context({"active_ids": pos_orders.ids}).action_create_invoices()
+        # check if have single invoice
+        self.assertEqual(len(pos_orders), 4)
+        self.assertEqual(len(pos_orders.account_move), 1)
+        self.assertEqual(pos_orders.account_move.partner_id, self.customer)
+        self.assertEqual(pos_orders.account_move.amount_total, round(sum(pos_orders.mapped('amount_total')), 2))
+        self.assertEqual(pos_orders.account_move.payment_state, 'paid')
+        self.assertEqual(pos_orders.account_move.state, 'posted')

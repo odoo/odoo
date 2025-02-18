@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
@@ -5,9 +7,7 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
 from odoo.tools import frozendict
-from odoo.tools import email_normalize
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
 class ThreadController(http.Controller):
@@ -79,6 +79,20 @@ class ThreadController(http.Controller):
             {'id': info['partner_id'], 'email': info['email'], 'name': info['name']}
             for info in suggested if info['partner_id']
         ]
+
+    @http.route("/mail/thread/recipients/fields", methods=["POST"], type="jsonrpc", auth="user")
+    def mail_thread_recipients_fields(self, thread_model):
+        return {
+            'partner_fields': request.env[thread_model]._mail_get_partner_fields(),
+            'primary_email_field': [request.env[thread_model]._mail_get_primary_email_field()]
+        }
+
+    @http.route("/mail/thread/recipients/get_suggested_recipients", methods=["POST"], type="jsonrpc", auth="user")
+    def mail_thread_recipients_get_suggested_recipients(self, thread_model, thread_id, partner_ids=None, main_email=False):
+        thread = self._get_thread_with_access(thread_model, thread_id)
+        partner_ids = request.env['res.partner'].search([('id', 'in', partner_ids)])
+        recipients = thread._message_get_suggested_recipients(reply_discussion=True, additional_partners=partner_ids, primary_email=main_email)
+        return [{key: recipient[key] for key in recipient if key in ['name', 'email', 'partner_id']} for recipient in recipients]
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_partner_from_email(self, thread_model, thread_id, emails):
@@ -197,8 +211,20 @@ class ThreadController(http.Controller):
         # sudo: mail.message - access is checked in _get_with_access and _can_edit_message
         message = message.sudo()
         body = Markup(body) if body else body  # may contain HTML such as @mentions
-        guest.env[message.model].browse([message.res_id])._message_update_content(
-            message, body=body, attachment_ids=attachment_ids, partner_ids=partner_ids
+        thread = guest.env[message.model].browse(message.res_id)
+        update_data = {
+            "attachment_ids": attachment_ids,
+            "body": body,
+            "partner_ids": partner_ids,
+            **kwargs,
+        }
+        thread._message_update_content(
+            message,
+            **{
+                key: value
+                for key, value in update_data.items()
+                if key in thread._get_allowed_message_update_params()
+            }
         )
         return Store(message, for_current_user=True).get_result()
 

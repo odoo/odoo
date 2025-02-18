@@ -23,6 +23,9 @@ export const patchAvatarCardResourcePopover = {
             "employee_skill_ids",
         ];
     },
+    get hasFooter() {
+        return this.skills?.length > 0 || super.hasFooter;
+    },
     get skillTags() {
         return this.skills.map(({ id, display_name, color }) => ({
             id,

@@ -468,7 +468,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             })
 
         with freeze_time("2024-1-1"):
-            self.env['hr.leave.allocation'].sudo()._update_accrual()
+            self.env['hr.leave.allocation'].with_user(self.user_hruser)._update_accrual()
 
         target_date = date(2024, 1, 1)
         allocation_data = self.leave_type.get_allocation_data(logged_in_emp, target_date)

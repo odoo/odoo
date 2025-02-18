@@ -480,12 +480,11 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         so = self._create_so(partner_id=user_partner.id)
         self.assertNotEqual(so.partner_shipping_id, shipping)
         self.assertNotEqual(so.partner_invoice_id, invoicing)
-        self.assertFalse(colleague._can_be_edited_by_current_customer(so, 'billing'))
-        self.assertFalse(colleague._can_be_edited_by_current_customer(so, 'delivery'))
 
         website = self.website.with_user(user).with_context({})
         with MockRequest(website.env, website=website, sale_order_id=so.id):
 
+            self.assertFalse(colleague._can_be_edited_by_current_customer(order_sudo=so))
             # Invalid addresses unaccessible to current customer
             with self.assertRaises(Forbidden):
                 # cannot use contact type addresses

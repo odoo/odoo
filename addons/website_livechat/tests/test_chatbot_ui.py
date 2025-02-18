@@ -77,7 +77,6 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
             ("I want to speak with an operator", False, False),
             ("I will transfer you to a human", operator, False),
             ("joined the channel", self.operator.partner_id, False), # human_operator has joined the channel
-            ("left the channel", self.chatbot_script.operator_partner_id, False), # chat bot operator has left the channel
         ]
 
         self.assertEqual(len(conversation_messages), len(expected_messages))
@@ -260,7 +259,7 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         )
         self.livechat_channel.user_ids = fr_op + en_op
         self.env["discuss.channel"].search([("livechat_channel_id", "=", self.livechat_channel.id)]).unlink()
-        self.start_tour("/fr", "chatbot_fw_operator_matching_lang", timeout=1e6)
+        self.start_tour("/fr", "chatbot_fw_operator_matching_lang")
         channel = self.livechat_channel.channel_ids[0]
         self.assertIn(channel.channel_member_ids.partner_id.user_ids, fr_op)
         self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, en_op)

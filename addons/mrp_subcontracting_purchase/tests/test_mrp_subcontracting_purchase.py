@@ -165,7 +165,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         ensures that the final received quantity is correctly computed
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
 
         po = self.env['purchase.order'].create({
             'partner_id': self.subcontractor_partner1.id,
@@ -735,12 +735,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})],
         })
 
-        inventory_wizard = self.env['stock.change.product.qty'].create({
-            'product_id': component.id,
-            'product_tmpl_id': component.product_tmpl_id.id,
-            'new_quantity': total_component_quantity,
-        })
-        inventory_wizard.change_product_qty()
+        self.env['stock.quant']._update_available_quantity(component, self.warehouse.lot_stock_id, total_component_quantity)
         # Check quantity was updated
         self.assertEqual(component.virtual_available, total_component_quantity)
         self.assertEqual(component.qty_available, total_component_quantity)
@@ -841,7 +836,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         Check the locations.
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [Command.link(grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [Command.link(grp_multi_loc.id)]})
         subcontract_loc = self.env.company.subcontracting_location_id
         production_loc = self.finished.property_stock_production
         final_loc = self.env['stock.location'].create({
@@ -956,3 +951,37 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             ]),
         ], limit=1)
         self.assertEqual(purchase_order.date_planned.date(), Date.today())
+
+    @freeze_time('2000-05-01')
+    def test_mrp_subcontract_modify_date(self):
+        """ Ensure consistent results when modifying date fields of a weakly-linked reception and
+        manufacturing order. Additionally, modifying `date_start` directly on an MO has a
+        well-defined result.
+        """
+        self.bom_finished2.produce_delay = 35
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': self.finished2.name,
+                'product_id': self.finished2.id,
+                'product_qty': 10,
+                'product_uom_id': self.finished2.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        po.button_confirm()
+        mo = po.picking_ids.move_ids.move_orig_ids.production_id
+        original_mo_start_date = mo.date_start
+        with Form(po.picking_ids[0]) as receipt_form:
+            receipt_form.scheduled_date = '2000-06-01'
+        self.assertEqual(mo.date_start, datetime(year=2000, month=6, day=1) - timedelta(days=self.bom_finished2.produce_delay))
+        with Form(po.picking_ids[0]) as receipt_form:
+            receipt_form.scheduled_date = '2000-05-01'
+        self.assertEqual(mo.date_start, original_mo_start_date)
+
+        with Form(mo) as production_form:
+            production_form.date_start = '2000-03-20'
+        self.assertEqual(mo.date_start.date(), Date.to_date('2000-03-20'))
+        with Form(mo) as production_form:
+            production_form.date_start = original_mo_start_date
+        self.assertEqual(mo.date_start, original_mo_start_date)

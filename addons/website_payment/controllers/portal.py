@@ -132,3 +132,22 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if kwargs.get('is_donation'):
             return 'website_payment.donation_pay'
         return super()._get_payment_page_template_xmlid(**kwargs)
+
+    @staticmethod
+    def _compute_show_tokenize_input_mapping(providers_sudo, **kwargs):
+        """ Override of `payment` to hide the "Save my payment details" input in the payment form
+        when its a donation and user is not logged in.
+
+        :param payment.provider providers_sudo: The providers for which to determine whether the
+                                                tokenization input should be shown or not.
+        :param dict kwargs: The optional data passed to the helper methods.
+        :return: The mapping of the computed value for each provider id.
+        :rtype: dict
+        """
+        res = super(PaymentPortal, PaymentPortal)._compute_show_tokenize_input_mapping(
+            providers_sudo, **kwargs
+        )
+        if kwargs.get('is_donation') and request.env.user._is_public():
+            for provider_sudo in providers_sudo:
+                res[provider_sudo.id] = False
+        return res

@@ -25,7 +25,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'name': 'Basic Accountman',
             'login': 'basic_accountman',
             'password': 'basic_accountman',
-            'groups_id': [(6, 0, cls.env.ref('account.group_account_invoice').ids)],
+            'group_ids': [(6, 0, cls.env.ref('account.group_account_invoice').ids)],
         })
 
     def _make_in_move(self, product, quantity=1, unit_cost=None):

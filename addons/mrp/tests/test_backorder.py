@@ -88,7 +88,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         Check that all MO are reachable through the procurement group.
         """
         # Required for `manufacture_steps` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_adv_location")
+        self.env.user.group_ids += self.env.ref("stock.group_adv_location")
         with Form(self.warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm'
 
@@ -133,7 +133,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         Check that all MO are reachable through the procurement group.
         """
         # Required for `manufacture_steps` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_adv_location")
+        self.env.user.group_ids += self.env.ref("stock.group_adv_location")
         with Form(self.warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
         production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.warehouse.manu_type_id)
@@ -635,18 +635,8 @@ class TestMrpProductionBackorder(TestMrpCommon):
         """
         mo, _, _, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=1, qty_final=10)
 
-        inventory_wizard_1 = self.env['stock.change.product.qty'].create({
-            'product_id': product_to_use_1.id,
-            'product_tmpl_id': product_to_use_1.product_tmpl_id.id,
-            'new_quantity': 10,
-        })
-        inventory_wizard_2 = self.env['stock.change.product.qty'].create({
-            'product_id': product_to_use_2.id,
-            'product_tmpl_id': product_to_use_2.product_tmpl_id.id,
-            'new_quantity': 9,
-        })
-        inventory_wizard_1.change_product_qty()
-        inventory_wizard_2.change_product_qty()
+        self.env['stock.quant']._update_available_quantity(product_to_use_1, self.stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(product_to_use_2, self.stock_location, 9)
 
         self.assertEqual(mo.state, 'confirmed')
         mo.action_assign()

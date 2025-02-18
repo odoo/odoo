@@ -317,9 +317,15 @@
             // 'initial' as it will force them to 'inline', not 'table-cell'.
             display: table-cell !important;
         }
-
-        &.o_resizing tr > :not(.o_column_resizing) {
-            opacity: 0.5;
+        
+        tbody .o_column_resizing {
+            position: relative;
+            &:after {
+                @include o-position-absolute($top: 0, $bottom: 0, $right: 0);
+                background-color: #{$border-color};
+                width: 4px;
+                content: '';
+            }
         }
 
         &.o_empty_list {
@@ -564,19 +570,4 @@
     > * {
         margin: auto 0;
     }
-}
-
-@include media-breakpoint-down(md) {
-    .o_web_client:has(.o_list_selection_container) .o_navbar {
-        opacity: 0.15;
-    }
-
-    .o_list_view .o_list_selection_container {
-        position: fixed;
-        top: 0;
-        left: 0;
-    }
-}
-.modal-footer .o_list_selection_box {
-    margin-bottom: 0rem !important;
 }

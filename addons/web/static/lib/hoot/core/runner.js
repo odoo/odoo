@@ -92,7 +92,7 @@ import { EXCLUDE_PREFIX, createUrlFromId, setParams, urlParams } from "./url";
 
 const {
     clearTimeout,
-    console: { groupEnd: $groupEnd, log: $log, table: $table },
+    console: { error: $error, groupEnd: $groupEnd, log: $log, table: $table },
     EventTarget,
     Map,
     Math: { floor: $floor },
@@ -1092,7 +1092,7 @@ export class Runner {
 
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
-            const errorMessage = ["test failed (see above for details)"];
+            const errorMessage = ["Some tests failed: see above for details"];
             if (this.config.headless) {
                 const link = createUrlFromId(this.state.failedIds, "test");
                 errorMessage.push(`Failed tests link: ${link.toString()}`);
@@ -1101,7 +1101,9 @@ export class Runner {
             logger.logGlobal(
                 `failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
             );
-            logger.logGlobalError(errorMessage.join("\n"));
+            // Do not use logger to not apply the [HOOT] prefix and allow the CI
+            // to stop the test run browser.
+            $error(errorMessage.join("\n"));
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(

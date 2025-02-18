@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="standard_delivery_product" model="product.product">
+        <field name="name">Standard Delivery (Gelato)</field>
+        <field name="default_code">normal</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="delivery.product_category_deliveries"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="list_price">0.0</field>
+    </record>
+
+    <record id="express_delivery_product" model="product.product">
+        <field name="name">Express Delivery (Gelato)</field>
+        <field name="default_code">express</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="delivery.product_category_deliveries"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="list_price">0.0</field>
+    </record>
+
+</odoo>

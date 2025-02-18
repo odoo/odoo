@@ -464,9 +464,6 @@
                                 <div t-if="lead.phone">
                                     <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
                                 </div>
-                                <div t-if="lead.mobile">
-                                    <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
-                                </div>
                                 <div t-if="lead.email_from">
                                     <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
                                 </div>
@@ -679,7 +676,7 @@
                         <strong class="col-12 col-sm-3">Customer</strong>
                         <div class="col">
                             <div class="d-flex justify-content-start align-items-center gap-2 mb-2" t-if="opportunity.partner_name or opportunity.contact_name">
-                                <img t-if="opportunity.partner_id.sudo().avatar_1024" class="o_avatar o_portal_contact_img rounded"
+                                <img t-if="opportunity.partner_id.sudo().avatar_1024" class="o_avatar rounded"
                                         t-att-src="image_data_uri(opportunity.partner_id.sudo().avatar_512)"
                                 alt="Contact" width="50"/>
                                 <div class="d-flex flex-column justify-content-center">

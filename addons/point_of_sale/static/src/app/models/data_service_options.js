@@ -20,6 +20,16 @@ export class DataServiceOptions {
         };
     }
 
+    get dynamicModels() {
+        return [
+            "pos.order",
+            "pos.order.line",
+            "pos.payment",
+            "pos.pack.operation.lot",
+            "product.attribute.custom.value",
+        ];
+    }
+
     get databaseIndex() {
         const databaseTable = this.databaseTable;
         const indexes = {

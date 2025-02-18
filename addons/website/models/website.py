@@ -278,7 +278,7 @@ class Website(models.Model):
         :return: True if the menu contains a record like url
         """
         return any(self.env['website.menu'].browse(self._get_menu_ids()).filtered(
-            lambda menu: (menu.url and re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url)) or menu.group_ids
+            lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url) or menu.group_ids
         ))
 
     @api.model_create_multi
@@ -1033,11 +1033,14 @@ class Website(models.Model):
             fallback_create_missing_industry_image('s_carousel_intro_default_image_3', 's_text_image_default_image')
             fallback_create_missing_industry_image('s_website_form_overlay_default_image', 's_cover_default_image')
             fallback_create_missing_industry_image('s_website_form_cover_default_image', 's_cover_default_image')
+            fallback_create_missing_industry_image('s_split_intro_default_image', 's_cover_default_image')
             fallback_create_missing_industry_image('s_framed_intro_default_image', 's_cover_default_image')
             fallback_create_missing_industry_image('s_wavy_grid_default_image_1', 's_cover_default_image')
             fallback_create_missing_industry_image('s_wavy_grid_default_image_2', 's_image_text_default_image')
             fallback_create_missing_industry_image('s_wavy_grid_default_image_3', 's_text_image_default_image')
             fallback_create_missing_industry_image('s_wavy_grid_default_image_4', 's_carousel_default_image_1')
+            fallback_create_missing_industry_image('s_timeline_images_default_image_1', 's_media_list_default_image_1')
+            fallback_create_missing_industry_image('s_timeline_images_default_image_2', 's_media_list_default_image_2')
 
         except Exception:
             pass
@@ -1546,9 +1549,9 @@ class Website(models.Model):
 
         for rule in router.iter_rules():
             if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
-                if rule.endpoint.func in sitemap_endpoint_done:
+                if rule.endpoint.func.__func__ in sitemap_endpoint_done:
                     continue
-                sitemap_endpoint_done.add(rule.endpoint.func)
+                sitemap_endpoint_done.add(rule.endpoint.func.__func__)
 
                 func = rule.endpoint.routing['sitemap']
                 if func is False:

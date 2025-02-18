@@ -264,7 +264,9 @@ class Website(models.Model):
         partner_sudo = website.env.user.partner_id
         is_user_public = self.env.user._is_public()
         if not is_user_public:
-            partner_pricelist_id = partner_sudo.property_product_pricelist.id
+            # Don't needlessly trigger `depends_context` recompute
+            ctx = {'country_code': country_code} if country_code else {}
+            partner_pricelist_id = partner_sudo.with_context(**ctx).property_product_pricelist.id
         else:  # public user: do not compute partner pl (not used)
             partner_pricelist_id = False
         website_pricelists = website.sudo().pricelist_ids
@@ -454,7 +456,7 @@ class Website(models.Model):
                 ('partner_id', '=', self.env.user.partner_id.id),
                 ('website_id', '=', self.id),
                 ('state', '=', 'draft'),
-            ])
+            ], limit=1)
             if abandonned_cart_sudo:
                 if not request.env.cr.readonly:
                     # Force the recomputation of the pricelist and fiscal position when resurrecting
@@ -543,13 +545,6 @@ class Website(models.Model):
                 template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
                 template.send_mail(sale_order.id, email_values={'email_to': sale_order.partner_id.email})
                 sale_order.cart_recovery_email_sent = True
-
-    def _display_partner_b2b_fields(self):
-        """ This method is to be inherited by localizations and return
-        True if localization should always displayed b2b fields """
-        self.ensure_one()
-
-        return self.is_view_active('website_sale.address_b2b')
 
     def _get_checkout_step_list(self):
         """ Return an ordered list of steps according to the current template rendered.

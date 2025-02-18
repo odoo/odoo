@@ -49,7 +49,7 @@ from psycopg2.extras import Json
 
 from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
 from odoo.tools import (
-    clean_context, config, date_utils, discardattr,
+    clean_context, config, date_utils,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
     frozendict, get_lang, lazy_classproperty, OrderedSet,
     ormcache, partition, Query, split_every, unique,
@@ -57,7 +57,7 @@ from odoo.tools import (
 )
 from odoo.tools.constants import GC_UNLINK_LIMIT, PREFETCH_MAX
 from odoo.tools.lru import LRU
-from odoo.tools.misc import LastOrderedSet, ReversedIterable, exception_to_unicode, unquote
+from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
 from odoo.tools.translate import _, LazyTranslate
 
 from . import domains
@@ -71,7 +71,7 @@ from .fields_textual import Char
 
 from .identifiers import NewId
 from .utils import (
-    OriginIds, check_pg_name, check_object_name, origin_ids, parse_field_expr,
+    OriginIds, check_object_name, origin_ids, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
     READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY,
     SUPERUSER_ID,
@@ -309,121 +309,6 @@ READ_GROUP_DISPLAY_FORMAT = {
 }
 
 
-# THE DEFINITION AND REGISTRY CLASSES
-#
-# The framework deals with two kinds of classes for models: the "definition"
-# classes and the "registry" classes.
-#
-# The "definition" classes are the ones defined in modules source code: they
-# define models and extend them.  Those classes are essentially "static", for
-# whatever that means in Python.  The only exception is custom models: their
-# definition class is created dynamically.
-#
-# The "registry" classes are the ones you find in the registry.  They are the
-# actual classes of the recordsets of their model.  The "registry" class of a
-# model is created dynamically when the registry is built.  It inherits (in the
-# Python sense) from all the definition classes of the model, and possibly other
-# registry classes (when the model inherits from another model).  It also
-# carries model metadata inferred from its parent classes.
-#
-#
-# THE REGISTRY CLASS OF A MODEL
-#
-# In the simplest case, a model's registry class inherits from all the classes
-# that define the model in a flat hierarchy.  Consider the model definition
-# below.  The registry class of model 'a' inherits from the definition classes
-# A1, A2, A3, in reverse order, to match the expected overriding order.  The
-# registry class carries inferred metadata that is shared between all the
-# model's instances for a given registry.
-#
-#       class A(Model):  # A1                 Model
-#           ...                               / | \
-#                                            A3 A2 A1   <- definition classes
-#       class A(Model):  # A2                 \ | /
-#           _inherit = 'a'                      a       <- registry class: registry['a']
-#                                               |
-#       class A(Model):  # A3                records    <- model instances, like env['a']
-#           _inherit = 'a'
-#
-# Note that when the model inherits from another model, we actually make the
-# registry classes inherit from each other, so that extensions to an inherited
-# model are visible in the registry class of the child model, like in the
-# following example.
-#
-#       class A(Model):  # A1
-#           ...                               Model
-#                                            / / \ \
-#       class B(Model):  # B1               / /   \ \
-#           ...                            / A2   A1 \
-#                                         B2  \   /  B1
-#       class B(Model):  # B2              \   \ /   /
-#           _inherit = ['a', 'b']           \   a   /
-#                                            \  |  /
-#       class A(Model):  # A2                 \ | /
-#           _inherit = 'a'                      b
-#
-#
-# THE FIELDS OF A MODEL
-#
-# The fields of a model are given by the model's definition classes, inherited
-# models ('_inherit' and '_inherits') and other parties, like custom fields.
-# Note that a field can be partially overridden when it appears on several
-# definition classes of its model.  In that case, the field's final definition
-# depends on the presence or absence of each definition class, which itself
-# depends on the modules loaded in the registry.
-#
-# By design, the registry class has access to all the fields on the model's
-# definition classes.  When possible, the field is used directly from the
-# model's registry class.  There are a number of cases where the field cannot be
-# used directly:
-#  - the field is related (and bits may not be shared);
-#  - the field is overridden on definition classes;
-#  - the field is defined for another model (and accessible by mixin).
-#
-# The last case prevents sharing the field, because the field object is specific
-# to a model, and is used as a key in several key dictionaries, like the record
-# cache and pending computations.
-#
-# Setting up a field on its definition class helps saving memory and time.
-# Indeed, when sharing is possible, the field's setup is almost entirely done
-# where the field was defined.  It is thus done when the definition class was
-# created, and it may be reused across registries.
-#
-# In the example below, the field 'foo' appears once on its model's definition
-# classes.  Assuming that it is not related, that field can be set up directly
-# on its definition class.  If the model appears in several registries, the
-# field 'foo' is effectively shared across registries.
-#
-#       class A1(Model):                      Model
-#           _name = 'a'                        / \
-#           foo = ...                         /   \
-#           bar = ...                       A2     A1
-#                                            bar    foo, bar
-#       class A2(Model):                      \   /
-#           _inherit = 'a'                     \ /
-#           bar = ...                           a
-#                                                bar
-#
-# On the other hand, the field 'bar' is overridden in its model's definition
-# classes.  In that case, the framework recreates the field on the model's
-# registry class.  The field's setup will be based on its definitions, and will
-# not be shared across registries.
-#
-# The so-called magic fields ('id', 'display_name', ...) used to be added on
-# registry classes.  But doing so prevents them from being shared.  So instead,
-# we add them on definition classes that define a model without extending it.
-# This increases the number of fields that are shared across registries.
-
-def is_definition_class(cls):
-    """ Return whether ``cls`` is a model definition class. """
-    return isinstance(cls, MetaModel) and getattr(cls, 'pool', None) is None
-
-
-def is_registry_class(cls):
-    """ Return whether ``cls`` is a model registry class. """
-    return getattr(cls, 'pool', None) is not None
-
-
 class BaseModel(metaclass=MetaModel):
     """Base class for Odoo models.
 
@@ -558,7 +443,7 @@ class BaseModel(metaclass=MetaModel):
     """dependencies of models backed up by SQL views
     ``{model_name: field_names}``, where ``field_names`` is an iterable.
     This is only used to determine the changes to flush to database before
-    executing ``search()`` or ``read_group()``. It won't be used for cache
+    executing any search/read operations. It won't be used for cache
     invalidation or recomputing fields.
     """
 
@@ -580,199 +465,9 @@ class BaseModel(metaclass=MetaModel):
         return name == 'related_sudo'
 
     @api.model
-    def _add_field(self, name, field):
-        """ Add the given ``field`` under the given ``name`` in the class """
-        cls = self.env.registry[self._name]
-
-        # Assert the name is an existing field in the model, or any model in the _inherits
-        # or a custom field (starting by `x_`)
-        is_class_field = any(
-            isinstance(getattr(model, name, None), Field)
-            for model in [cls] + [self.env.registry[inherit] for inherit in cls._inherits]
-        )
-        if not (is_class_field or self.env['ir.model.fields']._is_manual_name(name)):
-            raise ValidationError(  # pylint: disable=missing-gettext
-                f"The field `{name}` is not defined in the `{cls._name}` Python class and does not start with 'x_'"
-            )
-
-        # Assert the attribute to assign is a Field
-        if not isinstance(field, Field):
-            raise ValidationError("You can only add `fields.Field` objects to a model fields")  # pylint: disable=missing-gettext
-
-        if not isinstance(getattr(cls, name, field), Field):
-            _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
-        setattr(cls, name, field)
-        field._toplevel = True
-        field.__set_name__(cls, name)
-        # add field as an attribute and in cls._fields (for reflection)
-        cls._fields[name] = field
-
-    @api.model
-    def _pop_field(self, name):
-        """ Remove the field with the given ``name`` from the model.
-            This method should only be used for manual fields.
-        """
-        cls = self.env.registry[self._name]
-        field = cls._fields.pop(name, None)
-        discardattr(cls, name)
-        if cls._rec_name == name:
-            # fixup _rec_name and display_name's dependencies
-            cls._rec_name = None
-            if cls.display_name in cls.pool.field_depends:
-                cls.pool.field_depends[cls.display_name] = tuple(
-                    dep for dep in cls.pool.field_depends[cls.display_name] if dep != name
-                )
-        return field
-
-    #
-    # Goal: try to apply inheritance at the instantiation level and
-    #       put objects in the pool var
-    #
-    @classmethod
-    def _build_model(cls, pool, cr):
-        """ Instantiate a given model in the registry.
-
-        This method creates or extends a "registry" class for the given model.
-        This "registry" class carries inferred model metadata, and inherits (in
-        the Python sense) from all classes that define the model, and possibly
-        other registry classes.
-        """
-        if hasattr(cls, '_constraints'):
-            _logger.warning("Model attribute '_constraints' is no longer supported, "
-                            "please use @api.constrains on methods instead.")
-        if hasattr(cls, '_sql_constraints'):
-            _logger.warning("Model attribute '_sql_constraints' is no longer supported, "
-                            "please define model.Constraint on the model.")
-
-        # all models except 'base' implicitly inherit from 'base'
-        name = cls._name
-        parents = list(cls._inherit)
-        if name != 'base':
-            parents.append('base')
-
-        # create or retrieve the model's class
-        if name in parents:
-            if name not in pool:
-                raise TypeError("Model %r does not exist in registry." % name)
-            ModelClass = pool[name]
-            ModelClass._build_model_check_base(cls)
-            check_parent = ModelClass._build_model_check_parent
-        else:
-            ModelClass = type(name, (cls,), {
-                '_name': name,
-                '_register': False,
-                '_original_module': cls._module,
-                '_inherit_module': {},                  # map parent to introducing module
-                '_inherit_children': OrderedSet(),      # names of children models
-                '_inherits_children': set(),            # names of children models
-                '_fields': {},                          # populated in _setup_base()
-                '_table_objects': frozendict(),         # populated in _setup_base()
-            })
-            check_parent = cls._build_model_check_parent
-
-        # determine all the classes the model should inherit from
-        bases = LastOrderedSet([cls])
-        for parent in parents:
-            if parent not in pool:
-                raise TypeError("Model %r inherits from non-existing model %r." % (name, parent))
-            parent_class = pool[parent]
-            if parent == name:
-                for base in parent_class.__base_classes:
-                    bases.add(base)
-            else:
-                check_parent(cls, parent_class)
-                bases.add(parent_class)
-                ModelClass._inherit_module[parent] = cls._module
-                parent_class._inherit_children.add(name)
-
-        # ModelClass.__bases__ must be assigned those classes; however, this
-        # operation is quite slow, so we do it once in method _prepare_setup()
-        ModelClass.__base_classes = tuple(bases)
-
-        # determine the attributes of the model's class
-        ModelClass._build_model_attributes(pool)
-
-        check_pg_name(ModelClass._table)
-
-        # Transience
-        if ModelClass._transient:
-            assert ModelClass._log_access, \
-                "TransientModels must have log_access turned on, " \
-                "in order to implement their vacuum policy"
-
-        # link the class to the registry, and update the registry
-        ModelClass.pool = pool
-        pool[name] = ModelClass
-
-        return ModelClass
-
-    @classmethod
-    def _build_model_check_base(model_class, cls):
-        """ Check whether ``model_class`` can be extended with ``cls``. """
-        if model_class._abstract and not cls._abstract:
-            msg = ("%s transforms the abstract model %r into a non-abstract model. "
-                   "That class should either inherit from AbstractModel, or set a different '_name'.")
-            raise TypeError(msg % (cls, model_class._name))
-        if model_class._transient != cls._transient:
-            if model_class._transient:
-                msg = ("%s transforms the transient model %r into a non-transient model. "
-                       "That class should either inherit from TransientModel, or set a different '_name'.")
-            else:
-                msg = ("%s transforms the model %r into a transient model. "
-                       "That class should either inherit from Model, or set a different '_name'.")
-            raise TypeError(msg % (cls, model_class._name))
-
-    @classmethod
-    def _build_model_check_parent(model_class, cls, parent_class):
-        """ Check whether ``model_class`` can inherit from ``parent_class``. """
-        if model_class._abstract and not parent_class._abstract:
-            msg = ("In %s, the abstract model %r cannot inherit from the non-abstract model %r.")
-            raise TypeError(msg % (cls, model_class._name, parent_class._name))
-
-    @classmethod
-    def _build_model_attributes(cls, pool):
-        """ Initialize base model attributes. """
-        cls._description = cls._name
-        cls._table = cls._name.replace('.', '_')
-        cls._log_access = cls._auto
-        inherits = {}
-        depends = {}
-
-        for base in reversed(cls.__base_classes):
-            if is_definition_class(base):
-                # the following attributes are not taken from registry classes
-                if cls._name not in base._inherit and not base._description:
-                    _logger.warning("The model %s has no _description", cls._name)
-                cls._description = base._description or cls._description
-                cls._table = base._table or cls._table
-                cls._log_access = getattr(base, '_log_access', cls._log_access)
-
-            inherits.update(base._inherits)
-
-            for mname, fnames in base._depends.items():
-                depends.setdefault(mname, []).extend(fnames)
-
-        # avoid assigning an empty dict to save memory
-        if inherits:
-            cls._inherits = inherits
-        if depends:
-            cls._depends = depends
-
-        # update _inherits_children of parent models
-        for parent_name in cls._inherits:
-            pool[parent_name]._inherits_children.add(cls._name)
-
-        # recompute attributes of _inherit_children models
-        for child_name in cls._inherit_children:
-            child_class = pool[child_name]
-            child_class._build_model_attributes(pool)
-
-    @classmethod
-    def _init_constraints_onchanges(cls):
-        # reset properties memoized on cls
-        cls._constraint_methods = BaseModel._constraint_methods
-        cls._ondelete_methods = BaseModel._ondelete_methods
-        cls._onchange_methods = BaseModel._onchange_methods
+    def _post_model_setup__(self):
+        """ Method called after the model has been setup. """
+        pass
 
     @property
     def _table_sql(self) -> SQL:
@@ -1407,7 +1102,9 @@ class BaseModel(metaclass=MetaModel):
             # Get all following rows which have relational values attached to
             # the current record (no non-relational values)
             record_span = itertools.takewhile(
-                only_o2m_values, itertools.islice(data, index + 1, None))
+                only_o2m_values,
+                (data[j] for j in range(index + 1, len(data))),
+            )
             # stitch record row back on for relational fields
             record_span = list(itertools.chain([row], record_span))
 
@@ -1638,6 +1335,7 @@ class BaseModel(metaclass=MetaModel):
         return self.search_fetch(domain, [], offset=offset, limit=limit, order=order)
 
     @api.model
+    @api.private
     @api.readonly
     def search_fetch(self, domain: DomainType, field_names: Sequence[str], offset=0, limit=None, order=None) -> Self:
         """ search_fetch(domain, field_names[, offset=0][, limit=None][, order=None])
@@ -2215,7 +1913,7 @@ class BaseModel(metaclass=MetaModel):
 
         if field.relational:
             # groups is a recordset; determine order on groups's model
-            groups = self.env[field.comodel_name].browse([value.id for value in values])
+            groups = self.env[field.comodel_name].browse(value.id for value in values)
             values = group_expand(self, groups, domain).sudo()
             if read_group_order == groupby + ' desc':
                 values.browse(reversed(values._ids))
@@ -2257,7 +1955,7 @@ class BaseModel(metaclass=MetaModel):
         # add folding information if present
         if field.relational and groups._fold_name in groups._fields:
             fold = {group.id: group[groups._fold_name]
-                    for group in groups.browse([key for key in result if key])}
+                    for group in groups.browse(key for key in result if key)}
             for key, line in result.items():
                 line['__fold'] = fold.get(key, False)
 
@@ -2630,28 +2328,9 @@ class BaseModel(metaclass=MetaModel):
                 row['__domain'] &= Domain(fullname, '=', row[fullname])
 
     @api.model
-    def _read_group_get_annotated_groupby(self, groupby, lazy):
-        groupby = [groupby] if isinstance(groupby, str) else groupby
-        lazy_groupby = groupby[:1] if lazy else groupby
-
-        annotated_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
-        for group_spec in lazy_groupby:
-            field_name, property_name, granularity = parse_read_group_spec(group_spec)
-            if field_name not in self._fields:
-                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-            field = self._fields[field_name]
-            if property_name and field.type != 'properties':
-                raise ValueError(f"Property name {property_name!r} has to be used on a property field.")
-            if field.type in ('date', 'datetime'):
-                annotated_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
-            else:
-                annotated_groupby[group_spec] = group_spec
-        return annotated_groupby
-
-    @api.model
     @api.readonly
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """Get the list of records in list view grouped by the given ``groupby`` fields.
+        """Deprecated - Get the list of records in list view grouped by the given ``groupby`` fields.
 
         :param list domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
                      list to match all records.
@@ -2689,7 +2368,10 @@ class BaseModel(metaclass=MetaModel):
         :rtype: [{'field_name_1': value, ...}, ...]
         :raise AccessError: if user is not allowed to access requested information
         """
-
+        warnings.warn(
+            "Since 19.0, read_group is deprecated. Please use _read_group in the backend code or web_read_group for a complete formatted result",
+            DeprecationWarning,
+        )
         groupby = [groupby] if isinstance(groupby, str) else groupby
         lazy_groupby = groupby[:1] if lazy else groupby
 
@@ -2697,7 +2379,21 @@ class BaseModel(metaclass=MetaModel):
         # - Modify `groupby` default value 'month' into specific groupby specification
         # - Modify `fields` into aggregates specification of _read_group
         # - Modify the order to be compatible with the _read_group specification
-        annotated_groupby = self._read_group_get_annotated_groupby(groupby, lazy=lazy)
+        groupby = [groupby] if isinstance(groupby, str) else groupby
+        lazy_groupby = groupby[:1] if lazy else groupby
+
+        annotated_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
+        for group_spec in lazy_groupby:
+            field_name, property_name, granularity = parse_read_group_spec(group_spec)
+            if field_name not in self._fields:
+                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+            field = self._fields[field_name]
+            if property_name and field.type != 'properties':
+                raise ValueError(f"Property name {property_name!r} has to be used on a property field.")
+            if field.type in ('date', 'datetime'):
+                annotated_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
+            else:
+                annotated_groupby[group_spec] = group_spec
 
         annotated_aggregates = {  # Key as the name in the result, value as the explicit aggregate specification
             f"{lazy_groupby[0].split(':')[0]}_count" if lazy and len(lazy_groupby) == 1 else '__count': '__count',
@@ -3162,6 +2858,7 @@ class BaseModel(metaclass=MetaModel):
         if parent_path_compute:
             self._parent_store_compute()
 
+    @api.private
     def init(self):
         """ This method is called after :meth:`~._auto_init`, and may be
             overridden to create or modify a model's database schema.
@@ -3252,209 +2949,6 @@ class BaseModel(metaclass=MetaModel):
 
         # fallback
         return exception_to_unicode(exc)
-
-    #
-    # Update objects that use this one to update their _inherits fields
-    #
-
-    @api.model
-    def _add_inherited_fields(self):
-        """ Determine inherited fields. """
-        if self._abstract or not self._inherits:
-            return
-
-        # determine which fields can be inherited
-        to_inherit = {
-            name: (parent_fname, field)
-            for parent_model_name, parent_fname in self._inherits.items()
-            for name, field in self.env[parent_model_name]._fields.items()
-        }
-
-        # add inherited fields that are not redefined locally
-        for name, (parent_fname, field) in to_inherit.items():
-            if name not in self._fields:
-                # inherited fields are implemented as related fields, with the
-                # following specific properties:
-                #  - reading inherited fields should not bypass access rights
-                #  - copy inherited fields iff their original field is copied
-                Field = type(field)
-                self._add_field(name, Field(
-                    inherited=True,
-                    inherited_field=field,
-                    related=f"{parent_fname}.{name}",
-                    related_sudo=False,
-                    copy=field.copy,
-                    readonly=field.readonly,
-                    export_string_translation=field.export_string_translation,
-                ))
-
-    @api.model
-    def _inherits_check(self):
-        for table, field_name in self._inherits.items():
-            field = self._fields.get(field_name)
-            if not field:
-                _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, self._name)
-                from .fields import Many2one
-                field = Many2one(table, string="Automatically created field to link to parent %s" % table, required=True, ondelete="cascade")
-                self._add_field(field_name, field)
-            elif not (field.required and (field.ondelete or "").lower() in ("cascade", "restrict")):
-                _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
-                field.required = True
-                field.ondelete = "cascade"
-            field.delegate = True
-
-        # reflect fields with delegate=True in dictionary self._inherits
-        for field in self._fields.values():
-            if field.type == 'many2one' and not field.related and field.delegate:
-                if not field.required:
-                    _logger.warning("Field %s with delegate=True must be required.", field)
-                    field.required = True
-                if field.ondelete.lower() not in ('cascade', 'restrict'):
-                    field.ondelete = 'cascade'
-                self.pool[self._name]._inherits = {**self._inherits, field.comodel_name: field.name}
-                self.pool[field.comodel_name]._inherits_children.add(self._name)
-
-    @api.model
-    def _prepare_setup(self):
-        """ Prepare the setup of the model. """
-        cls = self.env.registry[self._name]
-        cls._setup_done = False
-
-        # changing base classes is costly, do it only when necessary
-        if cls.__bases__ != cls.__base_classes:
-            cls.__bases__ = cls.__base_classes
-
-        # reset those attributes on the model's class for _setup_fields() below
-        for attr in ('_rec_name', '_active_name'):
-            discardattr(cls, attr)
-
-    @api.model
-    def _setup_base(self):
-        """ Determine the inherited and custom fields of the model. """
-        cls = self.env.registry[self._name]
-        if cls._setup_done:
-            return
-
-        # the classes that define this model, i.e., the ones that are not
-        # registry classes; the purpose of this attribute is to behave as a
-        # cache of [c for c in cls.mro() if not is_registry_class(c))], which
-        # is heavily used in function fields.resolve_mro()
-        cls._model_classes = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
-
-        # 1. determine the proper fields of the model: the fields defined on the
-        # class and magic fields, not the inherited or custom ones
-
-        # retrieve fields from parent classes, and duplicate them on cls to
-        # avoid clashes with inheritance between different models
-        for name in cls._fields:
-            discardattr(cls, name)
-        cls._fields.clear()
-
-        # collect the definitions of each field (base definition + overrides)
-        definitions = defaultdict(list)
-        for klass in reversed(cls._model_classes):
-            # this condition is an optimization of is_definition_class(klass)
-            if isinstance(klass, MetaModel):
-                for field in klass._field_definitions:
-                    definitions[field.name].append(field)
-        for name, fields_ in definitions.items():
-            if f'{cls._name}.{name}' in cls.pool._database_translated_fields:
-                # the field is currently translated in the database; ensure the
-                # field is translated to avoid converting its column to varchar
-                # and losing data
-                translate = next((
-                    field.args['translate'] for field in reversed(fields_) if 'translate' in field.args
-                ), False)
-                if not translate:
-                    # patch the field definition by adding an override
-                    _logger.debug("Patching %s.%s with translate=True", cls._name, name)
-                    fields_.append(type(fields_[0])(translate=True))
-            if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
-                cls._fields[name] = fields_[0]
-            else:
-                Field = type(fields_[-1])
-                self._add_field(name, Field(_base_fields=fields_))
-
-        # 2. add manual fields
-        if self.pool._init_modules:
-            self.env['ir.model.fields']._add_manual_fields(self)
-
-        # 3. make sure that parent models determine their own fields, then add
-        # inherited fields to cls
-        self._inherits_check()
-        for parent in self._inherits:
-            self.env[parent]._setup_base()
-        self._add_inherited_fields()
-
-        # 4. initialize more field metadata
-        cls._setup_done = True
-
-        for field in cls._fields.values():
-            field.prepare_setup()
-
-        # 5. determine and validate rec_name
-        if cls._rec_name:
-            assert cls._rec_name in cls._fields, \
-                "Invalid _rec_name=%r for model %r" % (cls._rec_name, cls._name)
-        elif 'name' in cls._fields:
-            cls._rec_name = 'name'
-        elif cls._custom and 'x_name' in cls._fields:
-            cls._rec_name = 'x_name'
-
-        # 6. determine and validate active_name
-        if cls._active_name:
-            assert (cls._active_name in cls._fields
-                    and cls._active_name in ('active', 'x_active')), \
-                ("Invalid _active_name=%r for model %r; only 'active' and "
-                "'x_active' are supported and the field must be present on "
-                "the model") % (cls._active_name, cls._name)
-        elif 'active' in cls._fields:
-            cls._active_name = 'active'
-        elif 'x_active' in cls._fields:
-            cls._active_name = 'x_active'
-
-        # 7. determine table objects
-        assert not cls._table_object_definitions, "cls is a registry model"
-        cls._table_objects = frozendict({
-            cons.full_name(self): cons
-            for klass in reversed(cls._model_classes)
-            if isinstance(klass, MetaModel)
-            for cons in klass._table_object_definitions
-        })
-
-    @api.model
-    def _setup_fields(self):
-        """ Setup the fields, except for recomputation triggers. """
-        cls = self.env.registry[self._name]
-
-        # set up fields
-        bad_fields = []
-        many2one_company_dependents = self.env.registry.many2one_company_dependents
-        for name, field in cls._fields.items():
-            try:
-                field.setup(self)
-            except Exception:
-                if field.base_field.manual:
-                    # Something goes wrong when setup a manual field.
-                    # This can happen with related fields using another manual many2one field
-                    # that hasn't been loaded because the comodel does not exist yet.
-                    # This can also be a manual function field depending on not loaded fields yet.
-                    bad_fields.append(name)
-                    continue
-                raise
-            if field.type == 'many2one' and field.company_dependent:
-                many2one_company_dependents.add(field.comodel_name, field)
-
-        for name in bad_fields:
-            self._pop_field(name)
-
-    @api.model
-    def _setup_complete(self):
-        """ Setup recomputation triggers, and complete the model setup. """
-        cls = self.env.registry[self._name]
-
-        # register constraints and onchange methods
-        cls._init_constraints_onchanges()
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
@@ -3867,6 +3361,7 @@ class BaseModel(metaclass=MetaModel):
             fnames = [field.name]
         self.fetch(fnames)
 
+    @api.private
     def fetch(self, field_names):
         """ Make sure the given fields are in memory for the records in ``self``,
         by fetching what is necessary from the database.  Non-stored fields are
@@ -4139,22 +3634,22 @@ class BaseModel(metaclass=MetaModel):
                     ))
                     continue
                 for name in regular_fields:
-                    corecord = record.sudo()[name]
-                    if corecord:
-                        domain = corecord._check_company_domain(companies)
-                        if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
-                            inconsistencies.append((record, name, corecord))
+                    corecords = record.sudo()[name]
+                    if corecords:
+                        domain = corecords._check_company_domain(companies) # pylint: disable=0601
+                        if domain and corecords != corecords.with_context(active_test=False).filtered_domain(domain):
+                            inconsistencies.append((record, name, corecords))
             # The second part of the check (for property / company-dependent fields) verifies that the records
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
             # the company for which the value is being assigned, i.e:
             #      `self.property_account_payable_id.company_id == self.env.company
             company = self.env.company
             for name in property_fields:
-                corecord = record.sudo()[name]
-                if corecord:
-                    domain = corecord._check_company_domain(company)
-                    if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
-                        inconsistencies.append((record, name, corecord))
+                corecords = record.sudo()[name]
+                if corecords:
+                    domain = corecords._check_company_domain(company)
+                    if domain and corecords != corecords.with_context(active_test=False).filtered_domain(domain):
+                        inconsistencies.append((record, name, corecords))
 
         if inconsistencies:
             lines = [_("Incompatible companies on records:")]
@@ -4178,6 +3673,7 @@ class BaseModel(metaclass=MetaModel):
                 })
             raise UserError("\n".join(lines))
 
+    @api.private  # use has_access
     def check_access(self, operation: str) -> None:
         """ Verify that the current user is allowed to perform ``operation`` on
         all the records in ``self``. The method raises an :class:`AccessError`
@@ -5644,6 +5140,7 @@ class BaseModel(metaclass=MetaModel):
             old_record.copy_translations(new_record, excluded=default or ())
         return new_records
 
+    @api.private
     def exists(self) -> Self:
         """  exists() -> records
 
@@ -5915,6 +5412,7 @@ class BaseModel(metaclass=MetaModel):
         self._ids = ids
         self._prefetch_ids = prefetch_ids
 
+    @api.private
     def browse(self, ids: int | typing.Iterable[IdType] = ()) -> Self:
         """ browse([ids]) -> records
 
@@ -5956,6 +5454,7 @@ class BaseModel(metaclass=MetaModel):
     # Conversion methods
     #
 
+    @api.private
     def ensure_one(self) -> Self:
         """Verify that the current recordset holds a single record.
 
@@ -5969,6 +5468,7 @@ class BaseModel(metaclass=MetaModel):
         except ValueError:
             raise ValueError("Expected singleton: %s" % self)
 
+    @api.private
     def with_env(self, env: api.Environment) -> Self:
         """Return a new version of this recordset attached to the provided environment.
 
@@ -5980,6 +5480,7 @@ class BaseModel(metaclass=MetaModel):
         """
         return self.__class__(env, self._ids, self._prefetch_ids)
 
+    @api.private
     def sudo(self, flag=True) -> Self:
         """ sudo([flag=True])
 
@@ -6008,6 +5509,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(su=flag))
 
+    @api.private
     def with_user(self, user) -> Self:
         """ with_user(user)
 
@@ -6019,6 +5521,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(user=user, su=False))
 
+    @api.private
     def with_company(self, company) -> Self:
         """ with_company(company)
 
@@ -6053,7 +5556,8 @@ class BaseModel(metaclass=MetaModel):
 
         return self.with_context(allowed_company_ids=allowed_company_ids)
 
-    def with_context(self, *args, **kwargs) -> Self:
+    @api.private
+    def with_context(self, ctx: dict[str, typing.Any] | None = None, /, **kwargs) -> Self:
         """ with_context([context][, **overrides]) -> Model
 
         Returns a new version of this recordset attached to an extended
@@ -6073,25 +5577,25 @@ class BaseModel(metaclass=MetaModel):
 
             The returned recordset has the same prefetch object as ``self``.
         """  # noqa: RST210
-        if (args and 'force_company' in args[0]) or 'force_company' in kwargs:
-            _logger.warning(
-                "Context key 'force_company' is no longer supported. "
+        context = dict(ctx if ctx is not None else self.env.context, **kwargs)
+        if 'force_company' in context:
+            warnings.warn(
+                "Since 19.0, context key 'force_company' is no longer supported. "
                 "Use with_company(company) instead.",
-                stack_info=True,
+                DeprecationWarning,
             )
-        if (args and 'company' in args[0]) or 'company' in kwargs:
-            _logger.warning(
+        if 'company' in context:
+            warnings.warn(
                 "Context key 'company' is not recommended, because "
                 "of its special meaning in @depends_context.",
-                stack_info=True,
             )
-        context = dict(args[0] if args else self._context, **kwargs)
-        if 'allowed_company_ids' not in context and 'allowed_company_ids' in self._context:
+        if 'allowed_company_ids' not in context and 'allowed_company_ids' in self.env.context:
             # Force 'allowed_company_ids' to be kept when context is overridden
             # without 'allowed_company_ids'
-            context['allowed_company_ids'] = self._context['allowed_company_ids']
+            context['allowed_company_ids'] = self.env.context['allowed_company_ids']
         return self.with_env(self.env(context=context))
 
+    @api.private
     def with_prefetch(self, prefetch_ids=None) -> Self:
         """ with_prefetch([prefetch_ids]) -> records
 
@@ -6156,6 +5660,7 @@ class BaseModel(metaclass=MetaModel):
     # Record traversal and update
     #
 
+    @api.private
     def mapped(self, func):
         """Apply ``func`` on all records in ``self``, and return the result as a
         list or a recordset (if ``func`` return recordsets). In the latter
@@ -6215,6 +5720,7 @@ class BaseModel(metaclass=MetaModel):
             vals = func(self)
             return vals if isinstance(vals, BaseModel) else []
 
+    @api.private
     def filtered(self, func) -> Self:
         """Return the records in ``self`` satisfying ``func``.
 
@@ -6240,13 +5746,14 @@ class BaseModel(metaclass=MetaModel):
             func = self._fields[func].__get__
         return self.browse(rec.id for rec in self if func(rec))
 
+    @api.private
     def grouped(self, key):
         """Eagerly groups the records of ``self`` by the ``key``, returning a
         dict from the ``key``'s result to recordsets. All the resulting
         recordsets are guaranteed to be part of the same prefetch-set.
 
         Provides a convenience method to partition existing recordsets without
-        the overhead of a :meth:`~.read_group`, but performs no aggregation.
+        the overhead of a :meth:`~._read_group`, but performs no aggregation.
 
         .. note:: unlike :func:`itertools.groupby`, does not care about input
                   ordering, however the tradeoff is that it can not be lazy
@@ -6267,6 +5774,7 @@ class BaseModel(metaclass=MetaModel):
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
         return {key: browse(tuple(ids)) for key, ids in collator.items()}
 
+    @api.private
     def filtered_domain(self, domain) -> Self:
         """Return the records in ``self`` satisfying the domain and keeping the same order.
 
@@ -6440,6 +5948,7 @@ class BaseModel(metaclass=MetaModel):
         [result_ids] = stack
         return self.browse(id_ for id_ in self._ids if id_ in result_ids)
 
+    @api.private
     def sorted(self, key=None, reverse=False) -> Self:
         """Return the recordset ``self`` ordered by ``key``.
 
@@ -6466,11 +5975,13 @@ class BaseModel(metaclass=MetaModel):
             ids = tuple(item.id for item in sorted(self, key=key, reverse=reverse))
         return self.__class__(self.env, ids, self._prefetch_ids)
 
+    @api.private  # use write instead
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """
         for name, value in values.items():
             self[name] = value
 
+    @api.private
     def flush_model(self, fnames=None):
         """ Process the pending computations and database updates on ``self``'s
         model.  When the parameter is given, the method guarantees that at least
@@ -6482,6 +5993,7 @@ class BaseModel(metaclass=MetaModel):
         self._recompute_model(fnames)
         self._flush(fnames)
 
+    @api.private
     def flush_recordset(self, fnames=None):
         """ Process the pending computations and database updates on the records
         ``self``.   When the parameter is given, the method guarantees that at
@@ -6565,6 +6077,7 @@ class BaseModel(metaclass=MetaModel):
     #
 
     @api.model
+    @api.private
     def new(self, values=None, origin=None, ref=None) -> Self:
         """ new([values], [origin], [ref]) -> record
 
@@ -6609,24 +6122,45 @@ class BaseModel(metaclass=MetaModel):
 
     def __iter__(self) -> typing.Iterator[Self]:
         """ Return an iterator over ``self``. """
-        if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
-            for ids in split_every(PREFETCH_MAX, self._ids):
-                for id_ in ids:
-                    yield self.__class__(self.env, (id_,), ids)
+        ids = self._ids
+        size = len(ids)
+        if size <= 1:
+            # detect and handle small recordsets (single `1f`)
+            # early return if no records and avoid allocation if we have a one
+            if size == 1:
+                yield self
+            return
+        cls = self.__class__
+        env = self.env
+        prefetch_ids = self._prefetch_ids
+        if size > PREFETCH_MAX and prefetch_ids is ids:
+            for sub_ids in split_every(PREFETCH_MAX, ids):
+                for id_ in sub_ids:
+                    yield cls(env, (id_,), sub_ids)
         else:
-            for id_ in self._ids:
-                yield self.__class__(self.env, (id_,), self._prefetch_ids)
+            for id_ in ids:
+                yield cls(env, (id_,), prefetch_ids)
 
     def __reversed__(self) -> typing.Iterator[Self]:
         """ Return an reversed iterator over ``self``. """
-        if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
-            for ids in split_every(PREFETCH_MAX, reversed(self._ids)):
-                for id_ in ids:
-                    yield self.__class__(self.env, (id_,), ids)
-        elif self._ids:
-            prefetch_ids = ReversedIterable(self._prefetch_ids)
-            for id_ in reversed(self._ids):
-                yield self.__class__(self.env, (id_,), prefetch_ids)
+        # same as __iter__ but reversed
+        ids = self._ids
+        size = len(ids)
+        if size <= 1:
+            if size == 1:
+                yield self
+            return
+        cls = self.__class__
+        env = self.env
+        prefetch_ids = self._prefetch_ids
+        if size > PREFETCH_MAX and prefetch_ids is ids:
+            for sub_ids in split_every(PREFETCH_MAX, reversed(ids)):
+                for id_ in sub_ids:
+                    yield cls(env, (id_,), sub_ids)
+        else:
+            prefetch_ids = ReversedIterable(prefetch_ids)
+            for id_ in reversed(ids):
+                yield cls(env, (id_,), prefetch_ids)
 
     def __contains__(self, item):
         """ Test whether ``item`` (record or field name) is an element of ``self``.
@@ -6647,6 +6181,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return the concatenation of two recordsets. """
         return self.concat(other)
 
+    @api.private
     def concat(self, *args) -> Self:
         """ Return the concatenation of ``self`` with all the arguments (in
             linear time complexity).
@@ -6669,7 +6204,7 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} - {other}")
             other_ids = set(other._ids)
-            return self.browse([id for id in self._ids if id not in other_ids])
+            return self.browse(id_ for id_ in self._ids if id_ not in other_ids)
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} - {other!r}")
 
@@ -6681,7 +6216,7 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} & {other}")
             other_ids = set(other._ids)
-            return self.browse(OrderedSet(id for id in self._ids if id in other_ids))
+            return self.browse(OrderedSet(id_ for id_ in self._ids if id_ in other_ids))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} & {other!r}")
 
@@ -6691,6 +6226,7 @@ class BaseModel(metaclass=MetaModel):
         """
         return self.union(other)
 
+    @api.private
     def union(self, *args) -> Self:
         """ Return the union of ``self`` with all the arguments (in linear time
             complexity, with first occurrence order preserved).
@@ -6802,6 +6338,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return the cache of ``self``, mapping field names to values. """
         return RecordCache(self)
 
+    @api.private
     def invalidate_model(self, fnames=None, flush=True):
         """ Invalidate the cache of all records of ``self``'s model, when the
         cached values no longer correspond to the database values.  If the
@@ -6816,6 +6353,7 @@ class BaseModel(metaclass=MetaModel):
             self.flush_model(fnames)
         self._invalidate_cache(fnames)
 
+    @api.private
     def invalidate_recordset(self, fnames=None, flush=True):
         """ Invalidate the cache of the records in ``self``, when the cached
         values no longer correspond to the database values.  If the parameter
@@ -6844,6 +6382,7 @@ class BaseModel(metaclass=MetaModel):
                 spec.append((invf, None))
         self.env.cache.invalidate(spec)
 
+    @api.private
     def modified(self, fnames, create=False, before=False):
         """ Notify that fields will be or have been modified on ``self``. This
         invalidates the cache where necessary, and prepares the recomputation of

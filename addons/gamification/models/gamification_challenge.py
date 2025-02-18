@@ -67,7 +67,7 @@ class GamificationChallenge(models.Model):
         res = super().default_get(fields_list)
         if 'user_domain' in fields_list and 'user_domain' not in res:
             user_group_id = self.env.ref('base.group_user')
-            res['user_domain'] = f'["&", ("groups_id", "=", "{user_group_id.name}"), ("active", "=", True)]'
+            res['user_domain'] = f'["&", ("all_group_ids", "=", {user_group_id.id}), ("active", "=", True)]'
         return res
 
     # description
@@ -269,7 +269,8 @@ class GamificationChallenge(models.Model):
             return True
 
         Goals = self.env['gamification.goal']
-
+        self.flush_recordset()
+        self.user_ids.presence_ids.flush_recordset()
         # include yesterday goals to update the goals that just ended
         # exclude goals for users that have not interacted with the
         # webclient since the last update or whose session is no longer
@@ -277,9 +278,9 @@ class GamificationChallenge(models.Model):
         yesterday = fields.Date.to_string(date.today() - timedelta(days=1))
         self.env.cr.execute("""SELECT gg.id
                         FROM gamification_goal as gg
-                        JOIN bus_presence as bp ON bp.user_id = gg.user_id
-                       WHERE gg.write_date <= bp.last_presence
-                         AND bp.last_presence >= now() AT TIME ZONE 'UTC' - interval '%(session_lifetime)s seconds'
+                        JOIN mail_presence as mp ON mp.user_id = gg.user_id
+                       WHERE gg.write_date <= mp.last_presence
+                         AND mp.last_presence >= now() AT TIME ZONE 'UTC' - interval '%(session_lifetime)s seconds'
                          AND gg.closed IS NOT TRUE
                          AND gg.challenge_id IN %(challenge_ids)s
                          AND (gg.state = 'inprogress'

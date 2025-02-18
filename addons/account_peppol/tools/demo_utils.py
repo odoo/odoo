@@ -87,6 +87,7 @@ def _mock_call_peppol_proxy(func, self, *args, **kwargs):
         'ack': lambda _user, _args, _kwargs: {},
         # service routes are not available in demo mode, mocked by safety
         'add_services': lambda _user, _args, _kwargs: {},
+        'get_services': lambda _user, _args, _kwargs:  {'services': self.env['res.company']._peppol_supported_document_types()},
         'remove_services': lambda _user, _args, _kwargs: {},
     }[endpoint](self, args, kwargs)
 

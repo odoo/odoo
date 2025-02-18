@@ -20,8 +20,14 @@
                             <field name="activity_date_deadline_range_type" class="oe_inline" required="state == 'next_activity' and activity_date_deadline_range &gt; 0"/>
                         </div>
                         <field name="activity_user_type" required="state == 'next_activity'"/>
-                        <field name="activity_user_field_name" placeholder="e.g. user_id" invisible="activity_user_type == 'specific'" required="state == 'next_activity' and activity_user_type == 'generic'"/>
-                        <field name="activity_user_id" placeholder="Choose a user..." invisible="activity_user_type == 'generic'" required="state == 'next_activity' and activity_user_type == 'specific'"/>
+                        <field name="activity_user_field_name"
+                               widget="field_selector" options="{'model': 'model_name'}"
+                               invisible="activity_user_type != 'generic'"
+                               required="state == 'next_activity' and activity_user_type == 'generic'"/>
+                        <field name="activity_user_id"
+                               placeholder="Choose a user..."
+                               invisible="activity_user_type != 'specific'"
+                               required="state == 'next_activity' and activity_user_type == 'specific'"/>
                     </group>
                     <field name="activity_note" class="oe-bordered-editor" placeholder="Add a description to your activity..." invisible="state != 'next_activity'"/>
                 </xpath>
@@ -39,7 +45,7 @@
                            invisible="state != 'remove_followers' or followers_type != 'specific'"
                            required="state == 'remove_followers' and followers_type == 'specific'"/>
                     <field name="followers_partner_field_name"
-                           placeholder="e.g. partner_id"
+                           widget="field_selector" options="{'model': 'model_name'}"
                            invisible="state not in ['followers', 'remove_followers'] or followers_type != 'generic'"
                            required="state in ['followers', 'remove_followers'] and followers_type == 'generic'"/>
                     <!-- Send Email -->

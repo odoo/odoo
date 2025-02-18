@@ -19,7 +19,7 @@
             <button t-if="props.deletable" class="btn btn-danger btn-lg" t-on-click="props.removeItem">
                 <i class="oe_link_icon fa fa-trash-o" role="img" aria-label="Remove" title="Remove" />
             </button>
-            <div class="options-dropdown" t-ref="options-dropdown" t-if="props.shouldShowOptions and !state.hideOptions">
+            <div class="options-dropdown text-bg-100" t-ref="options-dropdown" t-if="props.shouldShowOptions and !state.hideOptions">
                 <span t-if="displayedOptions.length === 0" class="no-match">No existing serial/lot number matching...</span>
                 <t t-foreach="displayedOptions" t-as="option" t-key="option">
                     <div class="option" t-att-class="{'selected': option === state.selectedOptionValue}" t-on-click="() => this.onSelectOption(option)">

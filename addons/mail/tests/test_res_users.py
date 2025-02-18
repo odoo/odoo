@@ -21,28 +21,33 @@ class TestNotifySecurityUpdate(MailCommon):
         with self.mock_mail_gateway():
             self.env.user.write({'email': 'new@example.com'})
 
-        self.assertMailMailWEmails(['e.e@example.com'], 'outgoing', fields_values={
-            'subject': 'Security Update: Email Changed',
-        })
+        self.assertSentEmail(
+            '"YourTestCompany" <your.company@example.com>',
+            ['e.e@example.com'],
+            subject='Security Update: Email Changed',
+        )
 
     @users('employee')
     def test_security_update_login(self):
         with self.mock_mail_gateway():
             self.env.user.write({'login': 'newlogin'})
 
-        self.assertMailMailWEmails([self.env.user.email_formatted], 'outgoing', fields_values={
-            'subject': 'Security Update: Login Changed',
-        })
+        self.assertSentEmail(
+            '"YourTestCompany" <your.company@example.com>',
+            [self.env.user.email_formatted],
+            subject='Security Update: Login Changed',
+        )
 
     @users('employee')
     def test_security_update_password(self):
         with self.mock_mail_gateway():
             self.env.user.write({'password': 'newpassword'})
 
-        self.assertMailMailWEmails([self.env.user.email_formatted], 'outgoing', fields_values={
-            'subject': 'Security Update: Password Changed',
-        })
-
+        self.assertSentEmail(
+            '"YourTestCompany" <your.company@example.com>',
+            [self.env.user.email_formatted],
+            subject='Security Update: Password Changed',
+        )
 
 @tagged('-at_install', 'post_install', 'mail_tools', 'res_users')
 class TestUser(MailCommon):
@@ -73,15 +78,15 @@ class TestUser(MailCommon):
 
         # Ensure the internal user has well the inbox notification type
         self.assertEqual(user.notification_type, 'inbox')
-        self.assertIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.groups_id)
+        self.assertIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.group_ids)
 
         # Change the internal user to portal, and make sure it automatically converts from inbox to email notifications
-        user.write({'groups_id': [
+        user.write({'group_ids': [
             (3, self.env.ref('base.group_user').id),
             (4, self.env.ref('base.group_portal').id),
         ]})
         self.assertEqual(user.notification_type, 'email')
-        self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.groups_id)
+        self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.group_ids)
 
     def test_web_create_users(self):
         src = [
@@ -127,7 +132,7 @@ class TestUserTours(HttpCaseWithUserDemo):
                 'name': 'Marc Demo',
                 'user_id': self.user_demo.id,
             })
-            self.user_demo.groups_id += self.env.ref('hr.group_hr_user')
+            self.user_demo.group_ids += self.env.ref('hr.group_hr_user')
         self.user_demo.tz = "Europe/Brussels"
 
         # avoid 'reload_context' action in the middle of the tour to ease steps and form save checks
@@ -149,7 +154,7 @@ class TestUserSettings(MailCommon):
         user = self.env.user.create({
             'name': 'A portal user',
             'login': 'portal_test',
-            'groups_id': [(6, 0, [portal_group.id])],
+            'group_ids': [(6, 0, [portal_group.id])],
         })
         self.assertFalse(user.res_users_settings_ids, 'Portal users should not have settings by default')
 

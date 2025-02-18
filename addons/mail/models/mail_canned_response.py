@@ -72,7 +72,7 @@ class MailCannedResponse(models.Model):
             else:
                 store.add(canned_response)
             user = self.env.user | canned_response.create_uid
-            if not (user.groups_id & canned_response.group_ids):
+            if not (user.all_group_ids & canned_response.group_ids):
                 user._bus_send_store(store)
             canned_response.group_ids._bus_send_store(store)
 

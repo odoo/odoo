@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Timeline Images" id="s_timeline_images">
+    <section class="s_timeline_images o_colored_level pt48 pb48">
+        <div class="container">
+            <h2 class="h3-fs" style="text-align: center;">Evolving together</h2>
+            <p class="lead" style="text-align: center;">Highlight your history, showcase growth and key milestones.</p>
+            <div class="position-relative pt-3">
+                <div class="s_timeline_images_row position-relative d-flex flex-column" data-name="Milestone">
+                    <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                    <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                    <div class="s_timeline_images_content w-100 ps-4">
+                        <div class="row">
+                            <div class="col-12 col-lg-4 pb16">
+                                <small class="text-muted">13/06/2023</small>
+                                <h3 class="h4-fs">First Milestone</h3>
+                            </div>
+                            <div class="col-12 col-lg-8 pb16">
+                                <p>
+                                    <img src="/web/image/website.s_timeline_images_default_image_1" class="img img-fluid rounded" alt="" style="width: 100% !important;"/>
+                                </p>
+                                <p>A timeline is a graphical representation on which important events are marked.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="s_timeline_images_row position-relative d-flex flex-column" data-name="Milestone">
+                    <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                    <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                    <div class="s_timeline_images_content w-100 ps-4">
+                        <div class="row">
+                            <div class="col-12 col-lg-4 pb16">
+                                <small class="text-muted">13/06/2023</small>
+                                <h3 class="h4-fs">Second Milestone</h3>
+                            </div>
+                            <div class="col-12 col-lg-8 pb16">
+                                <p>
+                                    <img src="/web/image/website.s_timeline_images_default_image_2" class="img img-fluid rounded" alt="" style="width: 100% !important;"/>
+                                </p>
+                                <p>A timeline is a graphical representation on which important events are marked.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_timeline_images_options" inherit_id="website.snippet_options">
+    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="after">
+        <div data-js="MultipleItems" data-selector=".s_timeline_images">
+            <we-row string="Date">
+                <we-button data-add-item="" data-item=".s_timeline_images_row:first" data-select-item="" data-add-before="true" data-no-preview="true" class="o_we_bg_brand_primary">
+                    Add Date
+                </we-button>
+            </we-row>
+        </div>
+    </xpath>
+    <xpath expr="." position="inside">
+        <div data-selector=".s_timeline_images_row" data-drop-near=".s_timeline_images_row"/>
+    </xpath>
+    <xpath expr="//t[@t-set='o_dot_color_selector']" position="attributes">
+        <attribute name="t-valuef" add=".s_timeline_images .s_timeline_images_row" separator=", "/>
+    </xpath>
+    <xpath expr="//t[@t-set='o_dot_line_color_selector']" position="attributes">
+        <attribute name="t-valuef" add=".s_timeline_images" separator=", "/>
+    </xpath>
+    <xpath expr="//div[@data-js='SnippetMove'][contains(@data-selector,'section')]" position="attributes">
+        <attribute name="data-selector" add=".s_timeline_images_row" separator=","/>
+    </xpath>
+</template>
+
+</odoo>

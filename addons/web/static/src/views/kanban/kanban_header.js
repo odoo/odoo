@@ -128,19 +128,6 @@ export class KanbanHeader extends Component {
     // Edition methods
     // ------------------------------------------------------------------------
 
-    archiveGroup() {
-        this.dialog.add(ConfirmationDialog, {
-            body: _t("Are you sure that you want to archive all the records from this column?"),
-            confirmLabel: _t("Archive All"),
-            confirm: () => this.group.list.archive(),
-            cancel: () => {},
-        });
-    }
-
-    unarchiveGroup() {
-        this.group.list.unarchive();
-    }
-
     deleteGroup() {
         this.dialog.add(ConfirmationDialog, {
             body: _t("Are you sure you want to delete this column?"),
@@ -181,19 +168,10 @@ export class KanbanHeader extends Component {
     // ------------------------------------------------------------------------
 
     get permissions() {
-        return ["canArchiveGroup", "canDeleteGroup", "canEditGroup", "canQuickCreate"].reduce(
-            (o, key) => {
-                Object.defineProperty(o, key, { get: () => this[key]() });
-                return o;
-            },
-            {}
-        );
-    }
-
-    canArchiveGroup() {
-        const { archiveGroup } = this.props.activeActions;
-        const hasActiveField = "active" in this.group.fields;
-        return archiveGroup && hasActiveField && this.group.groupByField.type !== "many2many";
+        return ["canDeleteGroup", "canEditGroup", "canQuickCreate"].reduce((o, key) => {
+            Object.defineProperty(o, key, { get: () => this[key]() });
+            return o;
+        }, {});
     }
 
     canDeleteGroup() {
@@ -251,30 +229,4 @@ kanbanHeaderConfigItems.add(
         class: "o_column_delete",
     },
     { sequence: 30 }
-);
-kanbanHeaderConfigItems.add(
-    "archive_group",
-    {
-        label: _t("Archive All"),
-        method: "archiveGroup",
-        isVisible: ({ permissions }) => permissions.canArchiveGroup,
-        class: ({ props }) => ({
-            o_column_archive_records: true,
-            disabled: props.list.model.useSampleModel,
-        }),
-    },
-    { sequence: 40 }
-);
-kanbanHeaderConfigItems.add(
-    "unarchive_group",
-    {
-        label: _t("Unarchive All"),
-        method: "unarchiveGroup",
-        isVisible: ({ permissions }) => permissions.canArchiveGroup,
-        class: ({ props }) => ({
-            o_column_unarchive_records: true,
-            disabled: props.list.model.useSampleModel,
-        }),
-    },
-    { sequence: 50 }
 );

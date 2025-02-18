@@ -1,0 +1,17 @@
+[data-embedded="toggleBlock"] {
+    [data-embedded-editable] > p {
+        margin: 0;
+    }
+    button:has(i.fa-caret-down, i.fa-caret-right){
+        cursor: pointer !important;
+        width: 1.5rem; // Equivalent to ps-4
+        aspect-ratio: 1 / 1;
+        background-color: transparent;
+        &:hover {
+            background-color: rgba($o-gray-300, 0.5);
+        }
+        &:active {
+            background-color: rgba($o-gray-300, 0.2);
+        }
+    }
+}

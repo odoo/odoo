@@ -76,7 +76,6 @@ class TestConfigManager(TransactionCase):
             'init': {},
             'update': {},
             'without_demo': False,
-            'demo': {},
             'import_partial': '',
             'pidfile': '',
             'addons_path': [],
@@ -132,7 +131,7 @@ class TestConfigManager(TransactionCase):
             'db_maxconn': 64,
             'db_maxconn_gevent': None,
             'db_template': 'template0',
-            'db_replica_host': '',
+            'db_replica_host': None,
             'db_replica_port': None,
 
             # i18n
@@ -192,7 +191,6 @@ class TestConfigManager(TransactionCase):
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
             'without_demo': True,
-            'demo': {},  # blacklist for save, ignored from the config file
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],  # the path found in the config file is invalid
@@ -327,7 +325,7 @@ class TestConfigManager(TransactionCase):
             'db_template': 'template0',
             'db_user': '',
             'dbfilter': '',
-            'demo': {},
+            'demo': '{}',
             'email_from': '',
             'geoip_city_db': '/usr/share/GeoIP/GeoLite2-City.mmdb',
             'http_enable': True,
@@ -400,7 +398,7 @@ class TestConfigManager(TransactionCase):
 
             # new options since 14.0
             'db_maxconn_gevent': None,
-            'db_replica_host': '',
+            'db_replica_host': None,
             'db_replica_port': None,
             'geoip_country_db': '/usr/share/GeoIP/GeoLite2-Country.mmdb',
             'from_filter': '',
@@ -467,7 +465,6 @@ class TestConfigManager(TransactionCase):
             'init': {'hr': True, 'stock': True},
             'update': {'account': True, 'website': True},
             'without_demo': True,
-            'demo': {},
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],
@@ -610,14 +607,15 @@ class TestConfigManager(TransactionCase):
                 _, options = self.parse_reset(args)
                 self.assertEqual(options['stop_after_init'], stop_after_init)
 
-    def test_12_without_demo_equal_1(self):
-        _, options = self.parse_reset(['-i', 'mail'])
-        self.assertEqual(options['demo'], {'mail': 1})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo'])
-        self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['--without-demo', '-i', 'mail'])
-        self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo', '1'])
-        self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo=1'])
-        self.assertEqual(options['demo'], {})
+    def test_13_empty_db_replica_host(self):
+        with self.assertLogs('py.warnings', 'WARNING') as capture:
+            _, options = self.parse_reset(['--db_replica_host', ''])
+        self.assertIsNone(options['db_replica_host'])
+        self.assertEqual(options['dev_mode'], ['replica'])
+        self.assertEqual(len(capture.output), 1)
+        self.assertIn('Since 19.0, an empty --db_replica_host', capture.output[0])
+
+        with self.assertNoLogs('py.warnings', 'WARNING'):
+            _, options = self.parse_reset(['--db_replica_host', '', '--dev', 'replica'])
+        self.assertIsNone(options['db_replica_host'])
+        self.assertEqual(options['dev_mode'], ['replica'])

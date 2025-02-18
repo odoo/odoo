@@ -14,7 +14,7 @@ class TestLivechatHrHolidays(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env["bus.presence"].create({"user_id": cls.user_employee.id, "status": "online"})
+        cls.env["mail.presence"]._update_presence(cls.user_employee)
         leave_type = cls.env["hr.leave.type"].create(
             {"name": "Legal Leaves", "requires_allocation": "no", "time_type": "leave"}
         )

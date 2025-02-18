@@ -63,6 +63,9 @@ class TestLeadMerge(TestLeadMergeCommon):
         self.assertEqual(self.lead_1.user_id, self.user_sales_leads)
         self.assertEqual(self.lead_1.team_id, self.sales_team_1)
         self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
+        self.assertEqual(self.lead_1.probability, 20)
+        self.assertTrue(self.lead_1.automated_probability > 0)
+        self.assertFalse(self.lead_1.is_automated_probability)
 
         self.assertEqual(self.lead_w_partner.stage_id, self.env['crm.stage'])
         self.assertEqual(self.lead_w_partner.user_id, self.env['res.users'])
@@ -284,6 +287,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
         merged_lead = self._run_merge_wizard(leads)
         self.assertEqual(merged_lead, self.lead_1)
+        self.assertTrue(self.lead_1.automated_probability > 0)
         self.assertEqual(merged_lead.probability, 0, "Manual Probability should remain the same after the merge")
         self.assertFalse(merged_lead.is_automated_probability)
 

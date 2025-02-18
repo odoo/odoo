@@ -19,16 +19,16 @@
                     </button>
                 </div>
                 <!-- Center Side Div -->
-                <div class="floor-selector d-flex gap-1 py-2 align-items-center overflow-auto">
+                <div class="floor-selector btn-group py-2 overflow-auto">
                     <t t-foreach="pos.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
-                        <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
+                        <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
                             <t t-esc="floor.name" />
                             <t t-set="changeCount" t-value="this.getFloorChangeCount(floor)"/>
                             <span t-if="changeCount > 0" class="badge rounded-pill text-bg-danger ms-2 py-1 smaller fw-bolder" t-esc="changeCount"/>
                         </button>
                     </t>
-                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" >
-                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" title="Add Floor" t-on-click="addFloor"/>
+                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor" >
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" title="Add Floor" />
                     </button>
                 </div>
                 <!-- Right Side Div -->
@@ -58,7 +58,8 @@
                                 <div class="d-grid gap-1 py-2 px-1" style="grid-template-columns: repeat(3, 1fr);">
                                     <t t-foreach="Object.entries(getColors())" t-as="color" t-key="color[0]">
                                         <t t-set="adaptColor" t-value="!hasSelectedTable ? this.getLighterShade(color[0]) : color[0]" />
-                                        <DropdownItem closingMode="'none'" onSelected="() => this.setColor(hasSelectedTable, adaptColor)">
+                                        <t t-set="key" t-value="color[0]"/>
+                                        <DropdownItem closingMode="'none'" onSelected="() => this.setColor(hasSelectedTable, adaptColor, key)">
                                             <button
                                                 class="p-4 border-1 rounded"
                                                 t-attf-style="background-color: {{adaptColor}}"
@@ -99,12 +100,19 @@
                         <i t-else="" class="fa fa-floppy-o" role="img" aria-label="Save" title="Save"/>
                     </button>
                 </div>
-                <div t-else="" class="right-buttons d-flex gap-1 px-1 py-2" t-att-class="{'align-items-center gap-2 px-2': !this.ui.isSmall}">
+                <div t-else="" class="right-buttons d-flex gap-1 p-2 pe-0">
                     <NumpadDropdown/>
                 </div>
             </div>
             <t t-set="isKanban" t-value="pos.floorPlanStyle == 'kanban'"/>
-            <div t-ref="floor-map-scroll" class="overflow-auto flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" t-att-class="{'floor-grid': pos.isEditMode}" t-attf-style="background-color: {{activeFloor?.background_color}}">
+            <div
+                t-ref="floor-map-scroll" 
+                class="overflow-auto flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" 
+                t-att-class="{
+                    'floor-grid': pos.isEditMode, 
+                    'bg-view': !activeFloor?.background_color
+                }"
+                t-attf-style="background-color: rgba({{this._getColors()[activeFloor?.background_color]}},.75)">
                 <div t-on-click="onClickFloorMap" t-on-touchstart="_onPinchStart" t-on-touchmove="_onPinchMove" t-on-touchend="_onPinchEnd"
                     t-attf-class="floor-map position-relative w-100 h-100"
                     t-ref="floor-map-ref"
@@ -127,7 +135,7 @@
                                 <t t-set="isIntersected" t-value="state.potentialLink?.parent?.id === table.id"/>
                                 <div
                                     t-on-click="(ev) => this.onClickTable(table, ev)"
-                                    class="table o_draggable d-flex flex-column align-items-center justify-content-between cursor-pointer"
+                                    class="floor-table table o_draggable d-flex flex-column align-items-center justify-content-between cursor-pointer"
                                     t-att-class="{
                                         'position-relative m-0': isKanban,
                                         'position-absolute': pos.floorPlanStyle !== 'kanban',
@@ -135,10 +143,10 @@
                                     }"
                                     t-attf-class="tableId-{{table.id}}"
                                     t-attf-style="
-                                                border: 3px solid {{table.color}};
+                                                border: 3px solid {{table.color || 'var(--tableOccupied-bg-color, #35d374)'}};
                                                 border-radius: {{table.shape === 'round' ? 1000 : 6}}px;
-                                                background: {{isOccupied ? table.color || 'rgb(53, 211, 116)' : '#00000020'}};
-                                                color: {{!hasBg ? 'black' : 'white'}};
+                                                background: {{isOccupied ? table.color || 'var(--tableOccupied-bg-color, #35d374)' : 'var(--table-bg-color, #00000030)'}};
+                                                color: {{isOccupied ? 'var(--tableOccupied-color, #000000)' : 'var(--table-color, #FFFFFF)'}};
                                                 opacity: {{state.potentialLink ? (isIntersecting or isIntersected ? 1 : 0.25) : 1}};
                                                 {{isKanban ?
                                                     `
@@ -164,11 +172,10 @@
                                     </div>
                                     <t t-set="data" t-value="getChangeCount(table)"/>
                                     <div
-                                        t-if="data.changes > 0 || data.skip > 0"
-                                        t-esc="data.changes > 0 ? data.changes : data.skip"
+                                        t-if="data.changes > 0"
+                                        t-esc="data.changes"
                                         t-att-class="{
-                                            'text-bg-danger': data.changes,
-                                            'text-bg-info'  : !data.changes and data.skip,
+                                            'text-bg-danger': data.changes
                                         }"
                                         class="order-count d-flex align-items-center justify-content-center position-absolute top-0 end-0 rounded-3 smaller fw-bolder z-2 badge"
                                     />

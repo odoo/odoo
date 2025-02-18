@@ -266,13 +266,13 @@ test("building a domain with an expression for value", async () => {
     await makeDomainSelector({
         domain: `[("datetime", ">=", context_today())]`,
         update(domain) {
-            expect(domain).toBe(`[("datetime", ">=", "2023-04-20 17:00:00")]`);
+            expect(domain).toBe(`[("datetime", ">=", "2023-04-20 00:00:00")]`);
         },
     });
 
     expect(getCurrentValue()).toBe("context_today()");
     await clearNotSupported();
-    expect(getCurrentValue()).toBe("04/20/2023 17:00:00");
+    expect(getCurrentValue()).toBe("04/20/2023 00:00:00");
 });
 
 test("building a domain with an expression in value", async () => {
@@ -614,7 +614,7 @@ test("debug input in model field selector popover", async () => {
 test("between operator", async () => {
     mockTimeZone(0);
     await makeDomainSelector({
-        domain: `["&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00")]`,
+        domain: `["&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 23:59:59")]`,
         isDebugMode: true,
         update(domain) {
             expect.step(domain);
@@ -627,7 +627,7 @@ test("between operator", async () => {
 
     await contains(".o_datetime_input:first").edit("2023-01-02 00:00:00");
     expect.verifySteps([
-        `["&", ("datetime", ">=", "2023-01-02 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00")]`,
+        `["&", ("datetime", ">=", "2023-01-02 00:00:00"), ("datetime", "<=", "2023-01-10 23:59:59")]`,
     ]);
 
     await contains(".o_datetime_input:eq(1)").edit("2023-01-08 00:00:00");
@@ -639,7 +639,7 @@ test("between operator", async () => {
 test("between operator (2)", async () => {
     mockTimeZone(0);
     await makeDomainSelector({
-        domain: `["&", "&", ("foo", "=", "abc"), ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00")]`,
+        domain: `["&", "&", ("foo", "=", "abc"), ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 23:59:59")]`,
     });
     expect(SELECTORS.condition).toHaveCount(2);
     expect(getCurrentOperator()).toBe("is equal");
@@ -650,7 +650,7 @@ test("between operator (2)", async () => {
 test("between operator (3)", async () => {
     mockTimeZone(0);
     await makeDomainSelector({
-        domain: `["&", "&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00"), ("foo", "=", "abc")]`,
+        domain: `["&", "&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 23:59:59"), ("foo", "=", "abc")]`,
     });
     expect(SELECTORS.condition).toHaveCount(2);
     expect(getCurrentOperator()).toBe("is between");
@@ -692,7 +692,7 @@ test("expressions in between operator", async () => {
     expect(SELECTORS.condition).toHaveCount(1);
     expect(getCurrentOperator()).toBe("is between");
     expect(SELECTORS.valueEditor).toHaveCount(1);
-    expect(SELECTORS.valueEditor + " " + SELECTORS.editor).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
     expect(SELECTORS.clearNotSupported).toHaveCount(1);
     expect(`${SELECTORS.editor} .o_datetime_input`).toHaveCount(1);
 
@@ -1056,7 +1056,9 @@ test("support properties", async () => {
                 "is lower",
                 "is lower or equal",
                 "is between",
+                "is not between",
                 "is within",
+                "is not within",
                 "is set",
                 "is not set",
             ],
@@ -2002,16 +2004,17 @@ test("Include archived not shown when model doesn't have the active field", asyn
 });
 
 test("date/datetime edition: switch !=/is set", async () => {
+    mockDate("2023-04-20 17:00:00", 0);
     await makeDomainSelector({
         isDebugMode: true,
-        domain: `[("date", "!=", False)]`,
+        domain: `[("date", "!=", "2023-05-20")]`,
         update(domain) {
             expect.step(domain);
         },
     });
     expect(getCurrentOperator()).toBe("is not equal");
     expect(".o_datetime_input").toHaveCount(1);
-    expect(getCurrentValue()).toBe("");
+    expect(getCurrentValue()).toBe("05/20/2023");
 
     await selectOperator("set");
     expect(getCurrentOperator()).toBe("is set");
@@ -2021,8 +2024,47 @@ test("date/datetime edition: switch !=/is set", async () => {
     await selectOperator("!=");
     expect(getCurrentOperator()).toBe("is not equal");
     expect(".o_datetime_input").toHaveCount(1);
-    expect(getCurrentValue()).toBe("");
-    expect.verifySteps([`[("date", "!=", False)]`]);
+    expect(getCurrentValue()).toBe("04/20/2023");
+    expect.verifySteps([`[("date", "!=", "2023-04-20")]`]);
+});
+
+test("date/datetime edition: switch is_set to other operators", async () => {
+    mockDate("2023-04-20 17:00:00", 0);
+    await makeDomainSelector({
+        isDebugMode: true,
+        domain: `[("datetime", "!=", "2023-05-20")]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    await selectOperator("set");
+    expect(".o_datetime_input").toHaveCount(0);
+    expect(getCurrentValue()).toBe(null);
+    expect(getCurrentOperator()).toBe("is set");
+    expect.verifySteps(['[("datetime", "!=", False)]']);
+
+    await selectOperator("between");
+    expect(SELECTORS.condition).toHaveCount(1);
+    expect(getCurrentOperator()).toBe("is between");
+    expect(SELECTORS.valueEditor).toHaveCount(1);
+    expect(SELECTORS.valueEditor + " " + SELECTORS.editor).toHaveCount(2);
+    expect(SELECTORS.clearNotSupported).toHaveCount(0);
+    expect(`${SELECTORS.editor} .o_datetime_input`).toHaveCount(2);
+    expect.verifySteps([
+        '["&", ("datetime", ">=", "2023-04-20 00:00:00"), ("datetime", "<=", "2023-04-20 23:59:59")]',
+    ]);
+
+    await selectOperator("not_set");
+    expect(".o_datetime_input").toHaveCount(0);
+    expect(getCurrentValue()).toBe(null);
+    expect(getCurrentOperator()).toBe("is not set");
+    expect.verifySteps(['[("datetime", "=", False)]']);
+
+    await selectOperator(">=");
+    expect(".o_datetime_input").toHaveCount(1);
+    expect(getCurrentValue()).toBe("04/20/2023 00:00:00");
+    expect(getCurrentOperator()).toBe("is greater or equal");
+    expect.verifySteps(['[("datetime", ">=", "2023-04-20 00:00:00")]']);
 });
 
 test("render false and true leaves", async () => {
@@ -2381,4 +2423,82 @@ test("many2many: domain in autocompletion", async () => {
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_ids", "=", [41])]`]);
     expect(".dropdown-menu").toHaveCount(0);
+});
+
+test("Hierarchical operators", async () => {
+    Partner._fields.team_id = fields.Many2one({ relation: "team" });
+    onRpc("fields_get", ({ parent }) => {
+        const result = parent();
+        result.id.allow_hierachy_operators = true;
+        result.product_id.allow_hierachy_operators = true;
+        result.team_id.allow_hierachy_operators = false;
+        return result;
+    });
+    await makeDomainSelector({
+        isDebugMode: true,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    await addNewRule();
+    expect.verifySteps(['[("id", "=", 1)]']);
+    await openModelFieldSelectorPopover();
+    await contains(
+        ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:contains(Product)"
+    ).click();
+    expect.verifySteps(['[("product_id", "in", [])]']);
+    expect(getOperatorOptions()).toEqual([
+        "is in",
+        "is not in",
+        "is equal",
+        "is not equal",
+        "contains",
+        "does not contain",
+        "child of",
+        "parent of",
+        "is set",
+        "is not set",
+        "starts with",
+        "ends with",
+        "matches",
+        "matches none of",
+    ]);
+    await selectOperator("parent_of");
+    expect.verifySteps(['[("product_id", "parent_of", [])]']);
+    await editValue("x", { confirm: false });
+    await runAllTimers();
+
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu li")).toEqual(["xphone", "xpad"]);
+    await contains(".dropdown-menu li").click();
+    expect.verifySteps(['[("product_id", "parent_of", [37])]']);
+    await editValue("x", { confirm: false });
+    await runAllTimers();
+
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
+    await contains(".dropdown-menu li").click();
+    expect.verifySteps(['[("product_id", "parent_of", [37, 41])]']);
+    await openModelFieldSelectorPopover();
+    await contains(
+        ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:contains(Team)"
+    ).click();
+    expect.verifySteps(['[("team_id", "in", [])]']);
+    expect(getOperatorOptions()).toEqual(
+        [
+            "is in",
+            "is not in",
+            "is equal",
+            "is not equal",
+            "contains",
+            "does not contain",
+            "is set",
+            "is not set",
+            "starts with",
+            "ends with",
+            "matches",
+            "matches none of",
+        ],
+        { message: "no hierarchical operator if allow_hierachy_operators is set to false" }
+    );
 });

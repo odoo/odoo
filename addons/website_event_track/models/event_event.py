@@ -65,6 +65,11 @@ class EventEvent(models.Model):
     def toggle_website_track_proposal(self, val):
         self.website_track_proposal = val
 
+    def copy_event_menus(self, old_events):
+        super().copy_event_menus(old_events)
+        for new_event in self:
+            (new_event.track_menu_ids + new_event.track_proposal_menu_ids).menu_id.parent_id = new_event.menu_id
+
     def _get_menu_update_fields(self):
         return super()._get_menu_update_fields() + ['website_track', 'website_track_proposal']
 

@@ -14,7 +14,7 @@ import json
 import operator
 import pytz
 
-from odoo import exceptions, http, fields, tools, _
+from odoo import http, fields, tools, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import is_html_empty, plaintext2html
@@ -150,12 +150,13 @@ class EventTrackController(http.Controller):
         if tracks_announced:
             tracks_announced = tracks_announced.sorted('wishlisted_by_default', reverse=True)
             tracks_by_day.append({'date': False, 'name': _('Coming soon'), 'tracks': tracks_announced})
+        # Check if there are any ongoing or upcoming tracks
+        has_upcoming_or_ongoing = any(track for track in tracks_sudo if not track.is_track_done)
 
         for tracks_group in tracks_by_day:
-            # the tracks group is folded if all tracks are done (and if it's not "today")
-            tracks_group['default_collapsed'] = (today_tz != tracks_group['date']) and all(
-                track.is_track_done and not track.is_track_live
-                for track in tracks_group['tracks']
+           tracks_group['default_collapsed'] = (
+                has_upcoming_or_ongoing and
+                tracks_group['date'] and all(track.is_track_done for track in tracks_group['tracks'])
             )
 
         # return rendering values
@@ -180,6 +181,7 @@ class EventTrackController(http.Controller):
             'is_html_empty': is_html_empty,
             'hostname': request.httprequest.host.split(':')[0],
             'is_event_user': request.env.user.has_group('event.group_event_user'),
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 
     # ------------------------------------------------------------
@@ -196,6 +198,7 @@ class EventTrackController(http.Controller):
             'seo_object': seo_object,
             'tag': tag,
             'is_event_user': request.env.user.has_group('event.group_event_user'),
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 
         vals.update(self._prepare_calendar_values(event))
@@ -392,6 +395,7 @@ class EventTrackController(http.Controller):
             'hostname': request.httprequest.host.split(':')[0],
             'is_event_user': request.env.user.has_group('event.group_event_user'),
             'user_event_manager': request.env.user.has_group('event.group_event_manager'),
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 
     @http.route("/event/track/toggle_reminder", type="jsonrpc", auth="public", website=True)

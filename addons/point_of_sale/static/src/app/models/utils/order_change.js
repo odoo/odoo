@@ -1,13 +1,8 @@
-export const changesToOrder = (
-    order,
-    skipped = false,
-    orderPreparationCategories,
-    cancelled = false
-) => {
+export const changesToOrder = (order, orderPreparationCategories, cancelled = false) => {
     const toAdd = [];
     const toRemove = [];
 
-    const orderChanges = getOrderChanges(order, skipped, orderPreparationCategories);
+    const orderChanges = getOrderChanges(order, orderPreparationCategories);
     const linesChanges = !cancelled
         ? Object.values(orderChanges.orderlines)
         : Object.values(order.last_order_preparation_change.lines);
@@ -36,14 +31,13 @@ export const changesToOrder = (
  * it uses the variable last_order_preparation_change which contains the last changes sent
  * to perform this calculation.
  */
-export const getOrderChanges = (order, skipped = false, orderPreparationCategories) => {
+export const getOrderChanges = (order, orderPreparationCategories) => {
     const prepaCategoryIds = orderPreparationCategories;
     const oldChanges = order.last_order_preparation_change.lines;
     const changes = {};
     const noteUpdate = {};
     let changesCount = 0;
     let changeAbsCount = 0;
-    let skipCount = 0;
 
     // Compares the orderlines of the order with the last ones sent.
     // When one of them has changed, we add the change.
@@ -78,9 +72,10 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
                 display_name: product.display_name,
+                group: receiptLineGrouper.getGroup(orderline),
             };
 
-            if (quantityDiff && orderline.skip_change === skipped) {
+            if (quantityDiff) {
                 // if note update with qty add
                 changes[lineKey] = lineDetails;
                 changesCount += quantityDiff;
@@ -90,12 +85,9 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     noteUpdate[lineKey] = lineDetails;
                 }
 
-                if (!orderline.skip_change) {
-                    orderline.setHasChange(true);
-                }
+                orderline.setHasChange(true);
             } else {
                 if (quantityDiff) {
-                    skipCount += quantityDiff;
                     orderline.setHasChange(false);
                 } else {
                     // If only note updated
@@ -128,6 +120,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     isCombo: lineResume["isCombo"],
                     note: lineResume["note"],
                     attribute_value_names: lineResume["attribute_value_names"],
+                    group: lineResume["group"],
                     quantity: -quantity,
                 };
                 changeAbsCount += Math.abs(quantity);
@@ -139,7 +132,6 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     }
 
     const result = {
-        nbrOfSkipped: skipCount,
         nbrOfChanges: changeAbsCount,
         noteUpdate: noteUpdate,
         orderlines: changes,
@@ -156,4 +148,10 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
         result.internal_note = order.internal_note;
     }
     return result;
+};
+
+export const receiptLineGrouper = {
+    getGroup(orderLine) {
+        // To be overridden
+    },
 };

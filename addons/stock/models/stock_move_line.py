@@ -147,9 +147,10 @@ class StockMoveLine(models.Model):
                 continue
             product_uom = record.product_id.uom_id
             sml_uom = record.product_uom_id
+            move_visible_quantity = record.move_id and record.move_id._visible_quantity() or 0.0
 
             move_demand = record.move_id.product_uom._compute_quantity(record.move_id.product_uom_qty, sml_uom, rounding_method='HALF-UP')
-            move_quantity = record.move_id.product_uom._compute_quantity(record.move_id._visible_quantity(), sml_uom, rounding_method='HALF-UP')
+            move_quantity = record.move_id.product_uom._compute_quantity(move_visible_quantity, sml_uom, rounding_method='HALF-UP')
             quant_qty = product_uom._compute_quantity(record.quant_id.available_quantity, sml_uom, rounding_method='HALF-UP')
 
             if float_compare(move_demand, move_quantity, precision_rounding=sml_uom.rounding) > 0:
@@ -433,6 +434,8 @@ class StockMoveLine(models.Model):
             vals.update(self._copy_quant_info(vals))
         updates = {}
         for key, model in triggers:
+            if self.env.context.get('skip_uom_conversion'):
+                continue
             if key in vals:
                 updates[key] = vals[key] if isinstance(vals[key], models.BaseModel) else self.env[model].browse(vals[key])
 

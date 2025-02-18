@@ -1,20 +1,20 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, _
+from odoo import _, api, models
 from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def _cart_find_product_line(self, product_id=None, line_id=None, event_ticket_id=False, **kwargs):
-        lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
-        if line_id or not event_ticket_id:
+    def _cart_find_product_line(self, product_id, event_ticket_id=False, **kwargs):
+        lines = super()._cart_find_product_line(
+            product_id, event_ticket_id=event_ticket_id, **kwargs,
+        )
+        if not event_ticket_id:
             return lines
 
-        return lines.filtered(
-            lambda line: line.event_ticket_id.id == event_ticket_id
-        )
+        return lines.filtered(lambda line: line.event_ticket_id.id == event_ticket_id)
 
     def _verify_updated_quantity(self, order_line, product_id, new_qty, event_ticket_id=False, **kwargs):
         """Restrict quantity updates for event tickets according to available seats."""
@@ -76,22 +76,30 @@ class SaleOrder(models.Model):
 
         return values
 
-    def _update_cart_line_values(self, order_line, update_values):
-        """Remove event registrations on quantity decrease."""
+    def _cart_update_order_line(self, order_line, quantity, **kwargs):
         old_qty = order_line.product_uom_qty
 
-        super()._update_cart_line_values(order_line, update_values)
-        if not order_line.event_ticket_id:
-            return
+        updated_line = super()._cart_update_order_line(order_line, quantity, **kwargs)
 
-        new_qty = order_line.product_uom_qty
-        if new_qty < old_qty:
-            attendees = self.env['event.registration'].search([
-                ('state', '!=', 'cancel'),
-                ('sale_order_id', '=', self.id),
-                ('event_ticket_id', '=', order_line.event_ticket_id.id),
-            ], offset=new_qty, limit=(old_qty - new_qty), order='create_date asc')
+        # Remove event registrations on quantity decrease.
+        if (
+            updated_line
+            and updated_line.event_ticket_id
+            and (diff := old_qty - updated_line.product_uom_qty) > 0
+        ):
+            attendees = self.env['event.registration'].search(
+                domain=[
+                    ('state', '!=', 'cancel'),
+                    ('sale_order_id', '=', self.id),
+                    ('event_ticket_id', '=', order_line.event_ticket_id.id),
+                ],
+                offset=updated_line.product_uom_qty,
+                limit=diff,
+                order='create_date asc',
+            )
             attendees.action_cancel()
+
+        return updated_line
 
 
 class SaleOrderLine(models.Model):

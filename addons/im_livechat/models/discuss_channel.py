@@ -113,7 +113,10 @@ class DiscussChannel(models.Model):
         self.browse(empty_channel_ids).unlink()
 
     def execute_command_history(self, **kwargs):
-        self._bus_send("im_livechat.history_command", {"id": self.id})
+        self._bus_send(
+            "im_livechat.history_command",
+            {"id": self.id, "partner_id": self.env.user.partner_id.id},
+        )
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         return _('Visitor left the conversation.')
@@ -168,12 +171,23 @@ class DiscussChannel(models.Model):
         """
         Converting message body back to plaintext for correct data formatting in HTML field.
         """
-        return Markup("").join(
-            Markup("%s: %s<br/>")
-            % (message.author_id.name or self.anonymous_name, html2plaintext(message.body))
-            # sudo: discuss.channel: can read all previous messages when converting to lead
-            for message in self.sudo().message_ids.sorted("id")
-        )
+        self.ensure_one()
+        parts = []
+        # sudo: res.partner: accessing chat bot partner is acceptable to build channel history.
+        chatbot_op = self.sudo().chatbot_message_ids[
+            :1
+        ].script_step_id.chatbot_script_id.operator_partner_id
+        last_msg_from_chatbot = False
+        for message in (self.message_ids - self.message_ids._filter_empty()).sorted("id"):
+            if message.author_id == chatbot_op and not last_msg_from_chatbot:
+                parts.append(Markup("<br/>"))
+            if message.author_id == chatbot_op:
+                parts.append(Markup("<strong>%s</strong><br/>") % html2plaintext(message.body))
+            else:
+                parts.append(Markup("%s<br/>") % html2plaintext(message.body))
+            last_msg_from_chatbot = message.author_id == chatbot_op
+        return Markup("").join(parts)
+
 
     # =======================
     # Chatbot
@@ -289,9 +303,9 @@ class DiscussChannel(models.Model):
     def _types_allowing_unfollow(self):
         return super()._types_allowing_unfollow() + ["livechat"]
 
-    def _action_unfollow(self, partner=None, guest=None):
+    def _action_unfollow(self, partner=None, guest=None, post_leave_message=True):
         if partner and self.channel_type == "livechat" and len(self.channel_member_ids) <= 2:
             # sudo: discuss.channel - last operator left the conversation, state must be updated
             self.sudo().livechat_active = False
             self._bus_send_store(Store(self, "livechat_active"))
-        super()._action_unfollow(partner, guest)
+        super()._action_unfollow(partner, guest, post_leave_message)

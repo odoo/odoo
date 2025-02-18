@@ -47,6 +47,20 @@ class ProjectProject(models.Model):
     )
 
     @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        if self._context.get('order_state') == 'sale':
+            order_id = self._context.get('order_id')
+            sale_line_id = self.env['sale.order.line'].search(
+                [('order_id', '=', order_id), ('is_service', '=', True)],
+                limit=1).id
+            defaults.update({
+                'reinvoiced_sale_order_id': order_id,
+                'sale_line_id': sale_line_id,
+            })
+        return defaults
+
+    @api.model
     def _map_tasks_default_values(self, project):
         defaults = super()._map_tasks_default_values(project)
         defaults['sale_line_id'] = False
@@ -138,8 +152,11 @@ class ProjectProject(models.Model):
 
     @api.onchange('reinvoiced_sale_order_id')
     def _onchange_reinvoiced_sale_order_id(self):
-        if not self.sale_line_id and self.reinvoiced_sale_order_id.order_line:
-            self.sale_line_id = self.reinvoiced_sale_order_id.order_line[0]
+        if (
+            not self.sale_line_id
+            and (service_sols := self.reinvoiced_sale_order_id.order_line.filtered('is_service'))
+        ):
+            self.sale_line_id = service_sols[0]
 
     @api.onchange('sale_line_id')
     def _onchange_sale_line_id(self):
@@ -376,7 +393,7 @@ class ProjectProject(models.Model):
             ])
         project_query = self.env['project.project']._where_calc(project_domain)
         self._apply_ir_rules(project_query, 'read')
-        project_sql = project_query.select('id', 'sale_line_id')
+        project_sql = project_query.select(f'{self._table}.id ', f'{self._table}.sale_line_id')
 
         Task = self.env['project.task']
         task_domain = [('project_id', 'in', self.ids), ('sale_line_id', '!=', False)]
@@ -824,6 +841,7 @@ class ProjectProject(models.Model):
 
         action = super().action_view_tasks()
         action['context']['hide_partner'] = self._get_hide_partner()
+        action['context']['hide_sale_line'] = not self.allow_billable
         return action
 
     def action_open_project_vendor_bills(self):

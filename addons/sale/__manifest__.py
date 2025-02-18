@@ -86,7 +86,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'web.assets_frontend': [
             'sale/static/src/interactions/**/*',
             'sale/static/src/scss/sale_portal.scss',
-            'sale/static/src/js/sale_portal.js',
         ],
         'web.assets_tests': [
             'sale/static/tests/tours/**/*',

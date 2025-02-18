@@ -48,10 +48,6 @@ class ResPartner(models.Model):
             tel = vcard.add('tel')
             tel.type_param = 'work'
             tel.value = self.phone
-        if self.mobile:
-            tel = vcard.add('tel')
-            tel.type_param = 'cell'
-            tel.value = self.mobile
         # URL
         if self.website:
             url = vcard.add('url')

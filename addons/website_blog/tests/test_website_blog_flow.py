@@ -16,7 +16,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'login': 'portal_user',
             'email': 'portal_user@example.com',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [group_portal.id])]
+            'group_ids': [(6, 0, [group_portal.id])]
         })
 
     def test_website_blog_followers(self):

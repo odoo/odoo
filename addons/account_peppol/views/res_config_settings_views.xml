@@ -8,90 +8,60 @@
             <xpath expr="//div[@id='account_peppol_install']" position="replace">
                 <div id="account_peppol" class="col-12 o_setting_box">
                     <div class="o_setting_right_pane border-0">
-                        <div invisible="account_peppol_proxy_state not in ('sender', 'receiver', 'smp_registration')">
-                            Your Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/> <field name="account_peppol_proxy_state" class="oe_inline o_form_label text-lowercase" readonly="1"/> invoices and credit notes.
+                        <!-- Info in case of sender. -->
+                        <div invisible="account_peppol_proxy_state != 'sender'">
+                            You are sending your e-invoices via Odoo with this Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.<br/>
+                            But you are receiving your e-invoices via this Access Point: <field name="peppol_external_provider" class="oe_inline o_form_label" readonly="1"/>.
                         </div>
+                        <!-- Info in case of receiver/smp_registration. -->
+                        <div invisible="account_peppol_proxy_state not in ('receiver', 'smp_registration')">
+                            You are sending and receiving your e-invoices via Odoo with this Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
+                            <div invisible="account_peppol_proxy_state != 'smp_registration'">
+                                Your registration should be activated within a day.
+                            </div>
+                            <div invisible="account_peppol_proxy_state not in ('smp_registration', 'receiver')" class="mt-4">
+                                <div class="row" name="peppol_journal_config">
+                                    <label string="Incoming Invoices Journal"
+                                           for="account_peppol_purchase_journal_id"
+                                           class="col-lg-3"/>
+                                    <field name="account_peppol_purchase_journal_id"
+                                           required="account_peppol_proxy_state in ('smp_registration', 'receiver')"/>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Info in case of rejected. -->
                         <div invisible="account_peppol_proxy_state != 'rejected'">
                             You registration has been rejected, the reason has been sent to you via email.
                             Please contact our support if you need further assistance.
                         </div>
 
-                        <div class="row" invisible="account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')">
-                            <label string="Primary contact email"
-                                   for="account_peppol_contact_email"
-                                   class="col-lg-3 o_light_label"/>
-                            <field name="account_peppol_contact_email" required="account_peppol_proxy_state in ('sender', 'smp_registration', 'receiver')"/>
+                        <div class="d-flex gap-1 action_buttons mt-2"
+                             invisible="account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')">
+                            <button string="Advanced Configuration"
+                                icon="oi-arrow-right"
+                                name="button_open_peppol_config_wizard"
+                                type="object"
+                                class="btn-link"/>
                         </div>
-
-                        <div invisible="account_peppol_proxy_state not in ('smp_registration', 'receiver')">
-                            <div class="row">
-                                <label string="Incoming Invoices Journal"
-                                       for="account_peppol_purchase_journal_id"
-                                       class="col-lg-3 o_light_label"/>
-                                <field name="account_peppol_purchase_journal_id"
-                                       required="account_peppol_proxy_state in ('smp_registration', 'receiver')"/>
-                            </div>
-                            <div invisible="account_peppol_proxy_state != 'smp_registration'">
-                                <p class="mt-4">
-                                    Your registration should be activated within a day.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Optional: field related to registering as a receiver -->
-                        <div invisible="account_peppol_proxy_state != 'sender'" groups="base.group_no_one">
-                            <p colspan="2" class="mt-4 mb-2">
-                                I want to migrate my existing Peppol connection to Odoo (optional):
-                            </p>
-                            <field name="account_peppol_migration_key"/>
-                        </div>
-
-                        <div class="mt-4"
-                             invisible="account_peppol_proxy_state != 'receiver'"
-                             groups="base.group_no_one">
-                            <div invisible="not account_peppol_migration_key">
-                                Your migration key is:
-                                <field name="account_peppol_migration_key"
-                                       nolabel="1"
-                                       readonly="1"/>
-                            </div>
-                        </div>
-
-
-                        <!-- All action buttons -->
-                        <div invisible="account_peppol_proxy_state != 'receiver' or account_peppol_edi_mode == 'demo'">
-                            <button string="Configure Peppol Services"
-                                    name="button_account_peppol_configure_services"
-                                    type="object"
-                                    class="btn-link mt-3 mb-3"
-                                    icon="oi-arrow-right"/>
-                        </div>
-
                         <div class="d-flex gap-1 action_buttons" colspan="3">
+                            <!-- Not yet registered on Peppol -->
                             <div invisible="account_peppol_proxy_state not in ('not_registered', 'in_verification')">
                                 <div class="text-muted">
-                                    Allow sending and receiving invoices through the PEPPOL network
+                                    Allow sending and receiving invoices through the Peppol network
                                 </div>
                                 <button name="action_open_peppol_form"
                                         type="object"
                                         string="Activate Electronic Invoicing"
                                         class="oe_highlight mt-2"/>
                             </div>
-                            <div invisible="account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')">
-                                <button string="Allow reception"
+                            <!-- Registered on Peppol -->
+                            <div invisible="account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')" class="mt-3">
+                                <button string="Register with Odoo"
                                         name="button_peppol_register_sender_as_receiver"
                                         type="object"
                                         class="btn-primary me-1"
                                         invisible="account_peppol_proxy_state != 'sender'"/>
-                                <button string="Update"
-                                        name="button_peppol_update_user_data"
-                                        type="object"
-                                        class="btn-secondary me-1"/>
-                                <button string="Remove from Peppol"
-                                        name="button_peppol_unregister"
-                                        type="object"
-                                        class="btn-secondary me-1"
-                                        confirm="This will delete your Peppol registration."/>
                             </div>
                         </div>
                     </div>

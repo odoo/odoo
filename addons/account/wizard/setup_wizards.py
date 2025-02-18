@@ -151,7 +151,7 @@ class AccountSetupBankManualConfig(models.TransientModel):
         for record in self:
             selected_journal = record.linked_journal_id
             if not selected_journal:
-                new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code(journal_type, self.env.company)
+                new_journal_code = self.env['account.journal']._get_next_journal_default_code(journal_type, self.env.company)
                 company = self.env.company
                 record.linked_journal_id = self.env['account.journal'].create({
                     'name': record.new_journal_name,

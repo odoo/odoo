@@ -88,8 +88,10 @@ export class Countdown extends Interaction {
             if (this.hereBeforeTimerEnds) {
                 this.waitForTimeout(() => window.location = redirectUrl, 500);
             } else {
-                if (!this.el.querySelector(".s_countdown_end_redirect_message").length) {
-                    const container = this.el.querySelector("> .container, > .container-fluid, > .o_container_small");
+                if (!this.el.querySelector(".s_countdown_end_redirect_message")) {
+                    const container = this.el.querySelector(
+                        ":scope > .container, :scope > .container-fluid, :scope > .o_container_small"
+                    );
                     this.renderAt("website.s_countdown.end_redirect_message", {
                         redirectUrl: redirectUrl,
                     }, container);
@@ -189,6 +191,10 @@ export class Countdown extends Interaction {
         return this.display.includes(unit);
     }
 
+    get shouldHideCountdown() {
+        return this.isFinished && this.el.classList.contains("hide-countdown");
+    }
+
     /**
      * Draws the whole countdown, including one countdown for each time unit.
      */
@@ -199,7 +205,6 @@ export class Countdown extends Interaction {
         }
         this.updateTimediff();
 
-        const hideCountdown = this.isFinished && !this.editableMode && this.el.classList.contains("hide-countdown");
         if (this.layout === "text") {
             const canvasEls = this.el.querySelectorAll(".s_countdown_canvas_flex");
             for (const canvasEl of canvasEls) {
@@ -214,7 +219,7 @@ export class Countdown extends Interaction {
                 this.textWrapperEl.appendChild(spanEl);
                 this.insert(this.textWrapperEl, this.wrapperEl);
             }
-            this.textWrapperEl.classList.toggle("d-none", hideCountdown);
+            this.textWrapperEl.classList.toggle("d-none", this.shouldHideCountdown);
 
             const countdownText = this.timeDiff.map(e => e.nb + " " + e.label).join(", ");
             this.el.querySelector(".s_countdown_text").innerText = countdownText.toLowerCase();
@@ -226,8 +231,8 @@ export class Countdown extends Interaction {
                 ctx.canvas.height = this.size;
                 this.clearCanvas(ctx);
 
-                canvas.classList.toggle("d-none", hideCountdown);
-                if (hideCountdown) {
+                canvas.classList.toggle("d-none", this.shouldHideCountdown);
+                if (this.shouldHideCountdown) {
                     continue;
                 }
 
@@ -248,9 +253,7 @@ export class Countdown extends Interaction {
 
         if (this.isFinished) {
             clearInterval(this.setInterval);
-            if (!this.editableMode) {
-                this.handleEndCountdownAction();
-            }
+            this.handleEndCountdownAction();
         }
     }
 
@@ -401,9 +404,3 @@ export class Countdown extends Interaction {
 registry
     .category("public.interactions")
     .add("website.countdown", Countdown);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.countdown", {
-        Interaction: Countdown,
-    });

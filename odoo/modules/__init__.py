@@ -4,6 +4,7 @@
 """ Modules (also called addons) management.
 
 """
+import odoo.init  # import first for core setup
 
 from . import db  # used directly during some migration scripts
 

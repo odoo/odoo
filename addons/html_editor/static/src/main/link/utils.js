@@ -64,13 +64,13 @@ export function deduceURLfromText(text, link) {
             // Avoid converting a http link to https.
             return currentHttpProtocol + match[0];
         } else {
-            return "http://" + match[0];
+            return "https://" + match[0];
         }
     }
     // Check for telephone url.
     match = label.match(PHONE_REGEX);
     if (match) {
-        return match[1] ? match[0] : "tel://" + match[0];
+        return (match[1] ? match[0] : "tel:" + match[0]).replace(/\s+/g, "");
     }
     return null;
 }

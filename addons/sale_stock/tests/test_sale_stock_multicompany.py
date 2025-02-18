@@ -22,9 +22,9 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
         })
         cls.warehouse_B = cls.company_data_2['default_warehouse']
 
-        cls.env.user.groups_id |= cls.env.ref('stock.group_stock_user')
-        cls.env.user.groups_id |= cls.env.ref('stock.group_stock_multi_locations')
-        cls.env.user.groups_id |= cls.env.ref('sales_team.group_sale_salesman')
+        cls.env.user.group_ids |= cls.env.ref('stock.group_stock_user')
+        cls.env.user.group_ids |= cls.env.ref('stock.group_stock_multi_locations')
+        cls.env.user.group_ids |= cls.env.ref('sales_team.group_sale_salesman')
 
         cls.env.user.with_company(cls.company_data['company']).property_warehouse_id = cls.warehouse_A.id
         cls.env.user.with_company(cls.company_data_2['company']).property_warehouse_id = cls.warehouse_B.id

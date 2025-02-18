@@ -82,7 +82,7 @@
                 </div>
                 <div>
                     <div class="mt-3"
-                            t-if="lead.contact_name or lead.partner_name or lead.phone or lead.mobile or lead.email_from or lead.website">
+                            t-if="lead.contact_name or lead.partner_name or lead.phone or lead.email_from or lead.website">
                         <div class="fw-bold">
                             Contact Details:
                         </div>
@@ -94,9 +94,6 @@
                         </div>
                         <div t-if="lead.phone">
                             Phone: <span t-field="lead.phone"/>
-                        </div>
-                        <div t-if="lead.mobile">
-                            Mobile: <span t-field="lead.mobile"/>
                         </div>
                         <div t-if="lead.email_from">
                             Email: <span t-field="lead.email_from"/>

@@ -29,7 +29,7 @@ class IrUiMenu(models.Model):
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
     parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
     parent_path = fields.Char(index=True)
-    groups_id = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
+    group_ids = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
                                  'menu_id', 'gid', string='Groups',
                                  help="If you have groups, the visibility of this menu will be based on these groups. "\
                                       "If this field is empty, Odoo will compute visibility based on the related object's read access.")
@@ -42,6 +42,7 @@ class IrUiMenu(models.Model):
                                          ('ir.actions.client', 'ir.actions.client')])
 
     web_icon_data = fields.Binary(string='Web Icon Image', attachment=True)
+    web_invisible = fields.Char(string="Invisible", help="Python expression, when evaluated as true, the menu isn't shown.")
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
@@ -85,7 +86,7 @@ class IrUiMenu(models.Model):
         # It will be used to determine which ones are visible
         menus = self.with_context({}).search_fetch(
             # Don't use 'any' operator in the domain to avoid ir.rule
-            ['|', ('groups_id', '=', False), ('groups_id', 'in', tuple(group_ids))],
+            ['|', ('group_ids', '=', False), ('group_ids', 'in', tuple(group_ids))],
             ['parent_id', 'action'], order='id',
         ).sudo()
 
@@ -236,7 +237,7 @@ class IrUiMenu(models.Model):
         blacklisted_menu_ids = self._load_menus_blacklist()
         visible_menus = self.search_fetch(
             [('id', 'not in', blacklisted_menu_ids)],
-            ['name', 'parent_id', 'action', 'web_icon'],
+            ['name', 'parent_id', 'action', 'web_icon', 'web_invisible'],
         )._filter_visible_menus()
 
         children_dict = defaultdict(list)  # {parent_id: []} / parent_id == False for root menus
@@ -289,6 +290,7 @@ class IrUiMenu(models.Model):
                 'web_icon': menu.web_icon,
                 'web_icon_data': attachment['datas'].decode() if attachment else False,
                 'web_icon_data_mimetype': attachment['mimetype'] if attachment else False,
+                'web_invisible': menu.web_invisible,
                 'xmlid': xmlids.get(menu_id, ""),
             }
 

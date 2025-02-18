@@ -388,6 +388,7 @@
                         <filter string="Scheduled Date" name="expected_date" domain="[]" context="{'group_by': 'scheduled_date'}"/>
                         <filter string="Source Document" name="origin" domain="[]" context="{'group_by': 'origin'}"/>
                         <filter string="Operation Type" name="picking_type" domain="[]" context="{'group_by': 'picking_type_id'}"/>
+                        <filter string="Properties" name="group_by_picking_properties" context="{'group_by': 'picking_properties'}"/>
                     </group>
                 </search>
             </field>
@@ -435,7 +436,7 @@
             <field name="name">Validate</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">list,kanban</field>
             <field name="state">code</field>
             <field name="code">
             if records:
@@ -449,7 +450,7 @@
             <field name="name">Unreserve</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_view_types">list,form</field>
+            <field name="binding_view_types">list,kanban,form</field>
             <field name="state">code</field>
             <field name="code">
             if records:
@@ -461,7 +462,7 @@
             <field name="name">Labels</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_view_types">list,form</field>
+            <field name="binding_view_types">list,kanban,form</field>
             <field name="binding_type">report</field>
             <field name="state">code</field>
             <field name="code">
@@ -476,7 +477,7 @@
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
             <field name="binding_view_types">form</field>
             <field name="state">code</field>
-            <field name="groups_id" eval="[Command.link(ref('stock.group_stock_manager'))]"/>
+            <field name="group_ids" eval="[Command.link(ref('stock.group_stock_manager'))]"/>
             <field name="code">
             if records:
                 records.action_toggle_is_locked()</field>
@@ -502,7 +503,7 @@
                 'default_composition_mode': 'mass_mail',
             }</field>
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">list,kanban</field>
         </record>
 
         <record id="click_dashboard_graph" model="ir.actions.server">

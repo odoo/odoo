@@ -294,12 +294,29 @@ class PaymentProvider(models.Model):
                 "You cannot change the company of a payment provider with existing transactions."
             ))
 
+    # === CONSTRAINT METHODS === #
+
+    @api.constrains('capture_manually')
+    def _check_manual_capture_supported_by_payment_methods(self):
+        if self.capture_manually:
+            incompatible_pms = self.payment_method_ids.filtered(
+                lambda method: method.active and method.support_manual_capture == 'none'
+            )
+            if incompatible_pms:
+                raise ValidationError(_(
+                    "The following payment methods must be disabled in order to enable manual"
+                    " capture: %s", ", ".join(incompatible_pms.mapped('name'))
+                ))
+
+
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
     def create(self, values_list):
         providers = super().create(values_list)
         providers._check_required_if_provider()
+        if any(provider.state != 'disabled' for provider in providers):
+            self._toggle_post_processing_cron()
         return providers
 
     def write(self, values):
@@ -321,6 +338,8 @@ class PaymentProvider(models.Model):
 
         deactivated_providers._deactivate_unsupported_payment_methods()
         activated_providers._activate_default_pms()
+        if activated_providers or deactivated_providers:
+            self._toggle_post_processing_cron()
 
         return result
 
@@ -350,6 +369,22 @@ class PaymentProvider(models.Model):
             raise ValidationError(
                 _("The following fields must be filled: %s", ", ".join(field_names))
             )
+
+    def _toggle_post_processing_cron(self):
+        """ Enable the post-processing cron if some providers are enabled; disable it otherwise.
+
+        This allows for saving resources on the cron's wake-up overhead when it has nothing to do.
+
+        :return: None
+        """
+        post_processing_cron = self.env.ref(
+            'payment.cron_post_process_payment_tx', raise_if_not_found=False
+        )
+        if post_processing_cron:
+            any_active_provider = bool(
+                self.sudo().search_count([('state', '!=', 'disabled')], limit=1)
+            )
+            post_processing_cron.active = any_active_provider
 
     def _archive_linked_tokens(self):
         """ Archive all the payment tokens linked to the providers.

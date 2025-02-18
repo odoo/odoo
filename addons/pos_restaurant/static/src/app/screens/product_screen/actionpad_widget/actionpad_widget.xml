@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('actionpad')]/div/button[last()]" position="before">
+            <button t-if="pos.config.module_pos_restaurant and !this.currentOrder._isRefundOrder()"
+                    class="btn btn-secondary btn-lg flex-shrink-0 border-0" t-on-click="()=>this.pos.addCourse()">
+                <span>Course</span>
+            </button>
+        </xpath>
         <xpath expr="//BackButton" position="attributes">
             <attribute name="t-if">!this.swapButton and !props.showActionButton and pos.showBackButton()</attribute>
         </xpath>
@@ -34,6 +40,13 @@
                     </div>
                 </button>
                 <button
+                    class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center w-50"
+                    t-on-click="() => this.clickFireCourse()"
+                    t-elif="this.displayFireCourseBtn"
+                >
+                    <span t-esc="this.fireCourseBtnText"></span>
+                </button>
+                <button
                     class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                     t-on-click="() => this.submitOrder()"
                     t-elif="this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrint">
@@ -42,7 +55,7 @@
                 <button
                     class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center w-50"
                     t-on-click="() => this.pos.showDefault()"
-                    t-if="!this.currentOrder.isDirectSale and !this.displayCategoryCount.length and !this.currentOrder.isEmpty()"
+                    t-elif="!this.currentOrder.isDirectSale and !this.displayCategoryCount.length and !this.currentOrder.isEmpty()"
                 >
                     <span>New</span>
                 </button>

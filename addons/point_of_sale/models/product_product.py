@@ -13,7 +13,7 @@ class ProductProduct(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids', 'barcode', 'product_tag_ids']
+        return ['id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids', 'barcode', 'product_tag_ids', 'default_code']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
@@ -35,6 +35,6 @@ class ProductProduct(models.Model):
         return products
 
     def _can_return_content(self, field_name=None, access_token=None):
-        if self.available_in_pos and field_name == "image_128":
+        if field_name == "image_128" and self.sudo().available_in_pos:
             return True
         return super()._can_return_content(field_name, access_token)

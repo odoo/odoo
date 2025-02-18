@@ -1,4 +1,5 @@
 declare module "models" {
+    import { Activity as ActivityClass } from "@mail/core/common/activity_model";
     import { Attachment as AttachmentClass } from "@mail/core/common/attachment_model";
     import { CannedResponse as CannedResponseClass } from "@mail/core/common/canned_response_model";
     import { ChatHub as ChatHubClass } from "@mail/core/common/chat_hub_model";
@@ -19,6 +20,7 @@ declare module "models" {
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
 
     // define interfaces for jsdoc, including with patches
+    export interface Activity extends ActivityClass {}
     export interface Attachment extends AttachmentClass {}
     export interface CannedResponse extends CannedResponseClass {}
     export interface ChatHub extends ChatHubClass {}
@@ -45,6 +47,7 @@ declare module "models" {
         "Composer": Composer,
         "Failure": Failure,
         "ir.attachment": Attachment,
+        "mail.activity": Activity,
         "mail.canned.response": CannedResponse,
         "mail.followers": Follower,
         "mail.link.preview": LinkPreview,

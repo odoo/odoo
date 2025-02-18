@@ -172,7 +172,7 @@ class TransactionCaseWithUserDemo(TransactionCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': cls.partner_demo.id,
-                'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
+                'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
 
@@ -198,7 +198,7 @@ class HttpCaseWithUserDemo(HttpCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': cls.partner_demo.id,
-                'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
+                'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
 
@@ -221,7 +221,7 @@ class SavepointCaseWithUserDemo(TransactionCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': cls.partner_demo.id,
-                'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
+                'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
     @classmethod
@@ -346,7 +346,7 @@ class TransactionCaseWithUserPortal(TransactionCase):
                 'login': 'portal',
                 'password': 'portal',
                 'partner_id': cls.partner_portal.id,
-                'groups_id': [Command.set([cls.env.ref('base.group_portal').id])],
+                'group_ids': [Command.set([cls.env.ref('base.group_portal').id])],
             })
 
 
@@ -368,7 +368,7 @@ class HttpCaseWithUserPortal(HttpCase):
                 'login': 'portal',
                 'password': 'portal',
                 'partner_id': cls.partner_portal.id,
-                'groups_id': [Command.set([cls.env.ref('base.group_portal').id])],
+                'group_ids': [Command.set([cls.env.ref('base.group_portal').id])],
             })
 
 

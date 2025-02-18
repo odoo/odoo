@@ -14,12 +14,11 @@
 }
 
 .o_avatar_card {
+    --card-bg: #{$popover-bg};
+    --card-border-color: #{$popover-border-color};
+
     max-width: 380px;
     @media screen  and (max-width: 480px) {
         max-width: 90vw;
-    }
-
-    .card-body {
-        padding: $card-spacer-y $card-spacer-x;
     }
 }

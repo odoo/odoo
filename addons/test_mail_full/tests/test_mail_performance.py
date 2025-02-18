@@ -44,7 +44,6 @@ class FullBaseMailPerformance(BaseMailPerformance):
                 'country_id': cls.env.ref('base.be').id,
                 'email': f'customer.full.test.{idx}@example.com',
                 'name': f'Test Full Customer {idx}',
-                'mobile': f'045600000{idx}',
                 'phone': f'045611111{idx}',
             } for idx in range(5)
         ])
@@ -239,7 +238,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_norating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=13):
+        with self.assertQueryCount(employee=15):
             # res = messages_all.portal_message_format(options=None)
             res = messages_all.portal_message_format(options={'rating_include': False})
 
@@ -291,7 +290,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=27):
+        with self.assertQueryCount(employee=29):
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
@@ -313,7 +312,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_monorecord(self):
         message = self.messages_all[0].with_user(self.env.user)
 
-        with self.assertQueryCount(employee=19):
+        with self.assertQueryCount(employee=20):
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)

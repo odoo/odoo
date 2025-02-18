@@ -62,7 +62,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 1)
 
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
                 (4, self.env.ref('sales_team.group_sale_salesman_all_leads').id),
                 (4, self.env.ref('account.group_account_user').id),
@@ -524,7 +524,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.product_a.taxes_id = None
         self.product_a.available_in_pos = True
         self.product_a.name = 'Product A'
-        self.env['res.partner'].create({'name': 'Test Partner AAA'})
+        self.env['res.partner'].create({'name': 'A Test Partner AAA'})
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
             'order_line': [(0, 0, {
@@ -849,8 +849,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
     def test_pos_sale_warnings(self):
         self.env['res.partner'].create([
-            {'name': 'Test Customer', 'sale_warn': 'warning', 'sale_warn_msg': 'Highly infectious disease'},
-            {'name': 'Test Customer 2', 'sale_warn': 'block', 'sale_warn_msg': 'Cannot afford our services'}
+            {'name': 'A Test Customer', 'sale_warn': 'warning', 'sale_warn_msg': 'Highly infectious disease'},
+            {'name': 'A Test Customer 2', 'sale_warn': 'block', 'sale_warn_msg': 'Cannot afford our services'}
         ])
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSaleWarning', login="accountman")
@@ -883,13 +883,13 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'fixed_amount': 100,
         })
         payment.create_invoices()
-        all_groups = self.user.groups_id
-        self.user.groups_id = self.env.ref('account.group_account_manager') + self.env.ref('sales_team.group_sale_salesman_all_leads')
+        selected_groups = self.user.group_ids
+        self.user.group_ids = self.env.ref('account.group_account_manager') + self.env.ref('sales_team.group_sale_salesman_all_leads')
 
         downpayment_line = sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
         downpayment_invoice = downpayment_line.order_id.order_line.invoice_lines.move_id
         downpayment_invoice.action_post()
-        self.user.groups_id = all_groups
+        self.user.group_ids = selected_groups
         self.assertEqual(downpayment_line.price_unit, 100)
 
     def test_settle_order_ship_later_delivered_qty(self):

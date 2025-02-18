@@ -53,6 +53,9 @@ registerWebsitePreviewTour('edit_menus', {
     {
         trigger: "body:not(:has(.oe_menu_editor))",
     },
+    {
+        trigger: ":iframe body:contains(welcome to your)",
+    },
     clickOnExtraMenuItem({}, true),
     {
         content: "There should be a new megamenu item.",
@@ -92,20 +95,22 @@ registerWebsitePreviewTour('edit_menus', {
         run: "edit Random!",
     },
     {
+        content: "Remove the URL input value",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input#url_input",
+        run: "edit ",
+    },
+    {
         content: "Confirm the new menu entry without a url",
         trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
         run: "click",
     },
     {
-        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input.is-invalid",
-    },
-    {
-        content: "It didn't save without a url. Fill url input.",
-        trigger: '.modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(1)',
+        content: "It didn't save without URL input value. Fill url input.",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input#url_input",
         run: "edit #",
     },
     {
-        content: "Confirm the new menu entry",
+        content: "Confirm the new menu entry with # url",
         trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
         run: "click",
     },

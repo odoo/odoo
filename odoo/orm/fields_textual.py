@@ -201,7 +201,7 @@ class BaseString(Field[str | typing.Literal[False]]):
             return
 
         # flush dirty None values
-        dirty_records = records & cache.get_dirty_records(records, self)
+        dirty_records = cache.filtered_dirty_records(records, self)
         if any(v is None for v in cache.get_values(dirty_records, self)):
             dirty_records.flush_recordset([self.name])
 
@@ -216,7 +216,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         # model translation
         if not callable(self.translate):
             # invalidate clean fields because them may contain fallback value
-            clean_records = records - cache.get_dirty_records(records, self)
+            clean_records = cache.filtered_clean_records(records, self)
             clean_records.invalidate_recordset([self.name])
             cache.update(records, self, itertools.repeat(cache_value), dirty=True)
             if lang != 'en_US' and not records.env['res.lang']._get_data(code='en_US'):
@@ -372,8 +372,8 @@ class Char(BaseString):
     type = 'char'
     trim = True                         # whether value is trimmed (only by web client)
 
-    def _setup_attrs(self, model_class, name):
-        super()._setup_attrs(model_class, name)
+    def _setup_attrs__(self, model_class, name):
+        super()._setup_attrs__(model_class, name)
         assert self.size is None or isinstance(self.size, int), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
@@ -460,7 +460,7 @@ class Html(BaseString):
     strip_classes = False               # whether to strip classes attributes
 
     def _get_attrs(self, model_class, name):
-        # called by _setup_attrs(), working together with BaseString._setup_attrs()
+        # called by _setup_attrs__(), working together with BaseString._setup_attrs__()
         attrs = super()._get_attrs(model_class, name)
         # Shortcut for common sanitize options
         # Outgoing and incoming emails should not be sanitized with the same options.

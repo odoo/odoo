@@ -4,7 +4,6 @@
 from odoo import fields, models, tools
 
 from odoo.addons.rating.models.rating_data import RATING_LIMIT_MIN
-from odoo.addons.resource.models.utils import filter_domain_leaf
 
 
 class ReportProjectTaskUser(models.Model):
@@ -151,12 +150,3 @@ class ReportProjectTaskUser(models.Model):
           WHERE %s
        GROUP BY %s
         """ % (self._table, self._select(), self._from(), self._where(), self._group_by()))
-
-    def _where_calc(self, domain, active_test=True):
-        """ Tasks views don't show the sub-tasks / ('display_in_project', '=', True).
-            The pseudo-filter "Show Sub-tasks" adds the key 'show_subtasks' in the context.
-            In that case, we pop the leaf from the domain.
-        """
-        if self.env.context.get('show_subtasks'):
-            domain = filter_domain_leaf(domain, lambda field: field != 'display_in_project')
-        return super()._where_calc(domain, active_test)

@@ -125,6 +125,8 @@ class EventTrack(models.Model):
     website_image_url = fields.Char(
         string='Image URL', compute='_compute_website_image_url',
         compute_sudo=True, store=False)
+    header_visible = fields.Boolean(related='event_id.header_visible', readonly=False)
+    footer_visible = fields.Boolean(related='event_id.footer_visible', readonly=False)
     # wishlist / visitors management
     event_track_visitor_ids = fields.One2many(
         'event.track.visitor', 'track_id', string="Track Visitors",
@@ -480,8 +482,8 @@ class EventTrack(models.Model):
             } for track in self
         }
 
-    def _message_add_suggested_recipients(self):
-        email_to_lst, partners = super()._message_add_suggested_recipients()
+    def _message_add_suggested_recipients(self, primary_email=False):
+        email_to_lst, partners = super()._message_add_suggested_recipients(primary_email)
         if not self.partner_id:
             #  Priority: contact information then speaker information
             if self.contact_email:

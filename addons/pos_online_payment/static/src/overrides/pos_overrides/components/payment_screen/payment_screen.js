@@ -39,7 +39,7 @@ patch(PaymentScreen.prototype, {
             }
             remainingAmount += amount;
         }
-        if (!this.env.utils.floatIsZero(unpaidAmount - remainingAmount)) {
+        if (!this.pos.currency.isZero(unpaidAmount - remainingAmount)) {
             this.dialog.add(AlertDialog, {
                 title: _t("Invalid online payments"),
                 body: _t(

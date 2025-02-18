@@ -8,13 +8,6 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form string="Product">
-                <header>
-                    <button string="Print Labels"
-                        type="object"
-                        name="action_open_label_layout"
-                        invisible="type == 'service'"
-                    />
-                </header>
                 <sheet name="product_form">
                     <field name='product_variant_count' invisible='1'/>
                     <field name='is_product_variant' invisible='1'/>
@@ -119,7 +112,7 @@
                                             <field
                                                 name="uom_id" widget="many2one_uom"
                                                 class="oe_inline" style="max-width:136px"
-                                                options="{'no_create': True}"
+                                                options="{'no_quick_create': True}"
                                             />
                                         </span>
                                     </div>
@@ -154,7 +147,7 @@
                                             <field
                                                 name="uom_id" widget="many2one_uom"
                                                 class="oe_inline" style="max-width:136px"
-                                                options="{'no_create': True}"
+                                                options="{'no_quick_create': True}"
                                             />
                                         </span>
                                     </div>
@@ -267,6 +260,7 @@
                 <group expand="1" string="Group By">
                     <filter string="Product Type" name="group_by_type" context="{'group_by':'type'}"/>
                     <filter string="Product Category" name="group_by_categ_id" context="{'group_by':'categ_id'}"/>
+                    <filter string="Product Properties" name="group_by_product_properties" context="{'group_by': 'product_properties'}"/>
                 </group>
             </search>
         </field>
@@ -328,14 +322,6 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <form string="Variant Information" duplicate="false">
-                    <header>
-                        <field name="type" invisible="1"/>
-                        <button string="Print Labels"
-                            type="object"
-                            name="action_open_label_layout"
-                            invisible="type == 'service'"
-                        />
-                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -433,9 +419,6 @@
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <list string="Product Variants" multi_edit="1" duplicate="false" sample="1" default_order="is_favorite desc, default_code, name, id">
-                <header>
-                    <button string="Print Labels" type="object" name="action_open_label_layout"/>
-                </header>
                     <field name="is_favorite" widget="boolean_favorite" nolabel="1" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
@@ -629,9 +612,20 @@
             </field>
         </record>
 
+    <record id="action_product_print_labels" model="ir.actions.server">
+        <field name="name">Print Labels</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_open_label_layout()
+        </field>
+    </record>
+
     <record id="action_product_price_list_report" model="ir.actions.server">
         <field name="name">Pricelist Report</field>
-        <field name="groups_id" eval="[(4, ref('group_product_pricelist'))]"/>
+        <field name="group_ids" eval="[(4, ref('group_product_pricelist'))]"/>
         <field name="model_id" ref="product.model_product_product"/>
         <field name="binding_model_id" ref="product.model_product_product"/>
         <field name="state">code</field>

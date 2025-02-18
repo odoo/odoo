@@ -224,20 +224,20 @@ class TestBurndownChartCommon(TestProjectCommon):
 class TestBurndownChart(TestBurndownChartCommon):
 
     def map_read_group_result(self, read_group_result):
-        return {(res['date:month'], res['stage_id'][0]): int(res['__count']) for res in read_group_result if res['stage_id'][1]}
+        return {(res['date:month'][1], res['stage_id'][0]): int(res['__count']) for res in read_group_result if res['stage_id'][1]}
 
     def map_read_group_is_closed_result(self, read_group_result):
-        return {(res['date:month'], res['is_closed']): int(res['__count']) for res in read_group_result}
+        return {(res['date:month'][1], res['is_closed']): int(res['__count']) for res in read_group_result}
 
     def check_read_group_results(self, domain, expected_results_dict):
-        read_group_result = self.env['project.task.burndown.chart.report'].read_group(
-            domain, ['date', 'stage_id'], ['date:month', 'stage_id'], lazy=False)
+        read_group_result = self.env['project.task.burndown.chart.report'].formatted_read_group(
+            domain, ['date:month', 'stage_id'], ['__count'])
         read_group_result_dict = self.map_read_group_result(read_group_result)
         self.assertDictEqual(read_group_result_dict, expected_results_dict)
 
     def check_read_group_is_closed_results(self, domain, expected_results_dict):
-        read_group_result = self.env['project.task.burndown.chart.report'].read_group(
-            domain, ['date', 'is_closed'], ['date:month', 'is_closed'], lazy=False)
+        read_group_result = self.env['project.task.burndown.chart.report'].formatted_read_group(
+            domain, ['date:month', 'is_closed'], ['__count'])
         read_group_result_dict = self.map_read_group_is_closed_result(read_group_result)
         self.assertDictEqual(read_group_result_dict, expected_results_dict)
 

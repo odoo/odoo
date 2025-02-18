@@ -58,7 +58,7 @@ class HrEmployee(models.Model):
             if officer_group and vals.get('attendance_manager_id'):
                 group_updates.append((4, vals['attendance_manager_id']))
         if group_updates:
-            officer_group.sudo().write({'users': group_updates})
+            officer_group.sudo().write({'user_ids': group_updates})
         return super().create(vals_list)
 
     def write(self, values):
@@ -70,7 +70,7 @@ class HrEmployee(models.Model):
                 officer = self.env['res.users'].browse(values['attendance_manager_id'])
                 officers_group = self.env.ref('hr_attendance.group_hr_attendance_officer', raise_if_not_found=False)
                 if officers_group and not officer.has_group('hr_attendance.group_hr_attendance_officer'):
-                    officer.sudo().write({'groups_id': [(4, officers_group.id)]})
+                    officer.sudo().write({'group_ids': [(4, officers_group.id)]})
 
         res = super(HrEmployee, self).write(values)
         old_officers.sudo()._clean_attendance_officers()

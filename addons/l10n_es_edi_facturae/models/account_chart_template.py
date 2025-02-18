@@ -7,4 +7,11 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('es_common', 'account.tax')
     def _get_es_facturae_account_tax(self):
-        return self._parse_csv('es_common', 'account.tax', module='l10n_es_edi_facturae')
+        taxes = self._parse_csv('es_common', 'account.tax', module='l10n_es_edi_facturae')
+        # only return existing taxes
+        taxes = {
+            key: value
+            for key, value in taxes.items()
+            if self.env['account.chart.template'].ref(key, raise_if_not_found=False)
+        }
+        return taxes

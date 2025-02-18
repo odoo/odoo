@@ -8,7 +8,7 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.tools import mute_logger
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from .common import TestHrHolidaysCommon
 from odoo.addons.mail.tests.common import MailCase
 
 
@@ -25,7 +25,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
                 'name': 'Paid Time Off',
                 'requires_allocation': 'yes',
                 'employee_requests': 'no',
-                'allocation_validation_type': 'officer',
+                'allocation_validation_type': 'hr',
                 'leave_validation_type': 'both',
                 'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
             })

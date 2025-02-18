@@ -98,7 +98,7 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
                 'login': 'portal',
                 'password': 'portal',
                 'partner_id': self.partner_portal.id,
-                'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+                'group_ids': [(6, 0, [self.env.ref('base.group_portal').id])],
             })
         # Partner with no user associated, to test partner merge that forbids merging partners with more than 1 user
         self.partner_admin_duplicate = self.env['res.partner'].create({'name': 'Mitchell'})

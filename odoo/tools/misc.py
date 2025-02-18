@@ -63,6 +63,7 @@ __all__ = [
     'NON_BREAKING_SPACE',
     'SKIPPED_ELEMENT_TYPES',
     'DotDict',
+    'LastOrderedSet',
     'OrderedSet',
     'Reverse',
     'babel_locale_parse',

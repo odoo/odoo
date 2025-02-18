@@ -10,7 +10,7 @@
 
     <data noupdate="1">
         <record id="base.user_demo" model="res.users">
-            <field name="groups_id" eval="[
+            <field name="group_ids" eval="[
                 (3, ref('hr_contract.group_hr_contract_manager')),
                 (3, ref('hr_contract.group_hr_contract_employee_manager'))]"/>
         </record>

@@ -40,13 +40,8 @@ class MailTestSmsBl(models.Model):
     subject = fields.Char()
     email_from = fields.Char()
     phone_nbr = fields.Char(compute='_compute_phone_nbr', readonly=False, store=True)
-    mobile_nbr = fields.Char(compute='_compute_mobile_nbr', readonly=False, store=True)
+    mobile_nbr = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer')
-
-    @api.depends('customer_id')
-    def _compute_mobile_nbr(self):
-        for phone_record in self.filtered(lambda rec: not rec.mobile_nbr and rec.customer_id):
-            phone_record.mobile_nbr = phone_record.customer_id.mobile
 
     @api.depends('customer_id')
     def _compute_phone_nbr(self):

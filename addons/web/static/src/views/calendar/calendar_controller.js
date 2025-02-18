@@ -236,6 +236,14 @@ export class CalendarController extends Component {
         return !this.env.isSmall || !this.state.showSideBar;
     }
 
+    get showDatePicker() {
+        return this.model.showDatePicker && !this.env.isSmall;
+    }
+
+    get hasSideBar() {
+        return this.showDatePicker || this.model.filterSections.length > 0;
+    }
+
     get showSideBar() {
         return this.state.showSideBar;
     }

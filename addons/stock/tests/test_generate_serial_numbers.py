@@ -220,7 +220,7 @@ class StockGenerateCommon(TransactionCase):
 
         # We need to activate multi-locations to use putaway rules.
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
         # Creates a putaway rule
         self.env['stock.putaway.rule'].create({
             'product_id': self.product_serial.id,
@@ -248,7 +248,7 @@ class StockGenerateCommon(TransactionCase):
         -> The test ensures that the destination locations are correct
         """
         stock_location = self.warehouse.lot_stock_id
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
 
         # max 1 x product_serial
         stor_category = self.env['stock.storage.category'].create({

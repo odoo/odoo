@@ -169,13 +169,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertTrue(messages_send)
         self.assertTrue(po.partner_id in messages_send.mapped('partner_ids'))
 
-        # check confirm button + date planned localized in message
-        old_messages = po.message_ids
-        po.confirm_reminder_mail()
-        messages_send = po.message_ids - old_messages
-        self.assertTrue(po.mail_reminder_confirmed)
-        self.assertEqual(len(messages_send), 1)
-        self.assertIn(str(localized_date_planned.date()), messages_send.body)
+        po.action_acknowledge()
+        self.assertTrue(po.acknowledged)
 
     def test_reminder_2(self):
         """Set to send reminder tomorrow, check if no reminder can be send.
@@ -250,7 +245,7 @@ class TestPurchase(AccountTestInvoicingCommon):
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""
         # Required for `product_uom_id` to be visibile in the view
-        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
         uom_units = self.env.ref('uom.product_uom_unit')
         uom_dozens = self.env.ref('uom.product_uom_dozen')
         uom_pairs = self.env['uom.uom'].create({

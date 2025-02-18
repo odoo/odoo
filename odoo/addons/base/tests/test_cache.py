@@ -115,7 +115,7 @@ class TestRecordCache(TransactionCaseWithUserDemo):
         rss0 = process.memory_info().rss
 
         char_names = [
-            'name', 'display_name', 'email', 'website', 'phone', 'mobile',
+            'name', 'display_name', 'email', 'website', 'phone',
             'street', 'street2', 'city', 'zip', 'vat', 'ref',
         ]
         for name in char_names:

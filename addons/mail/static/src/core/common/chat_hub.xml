@@ -2,28 +2,28 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatHub">
-    <div class="o-mail-ChatHub" t-if="isShown or ui.isSmall">
+    <div class="o-mail-ChatHub d-print-none" t-if="isShown or ui.isSmall">
         <t t-if="!store.chatHub.compact">
             <t t-foreach="chatHub.opened" t-as="cw" t-key="cw.localId">
-                <ChatWindow chatWindow="cw" right="env.embedLivechat ? chatHub.WINDOW_GAP : (chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (chatHub.opened.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2))"/>
+                <ChatWindow chatWindow="cw" right="chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (chatHub.opened.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2)"/>
             </t>
         </t>
-        <div class="o-mail-ChatHub-bubbles position-fixed end-0 d-flex flex-column align-content-start justify-content-end align-items-center" t-att-class="{ 'bottom-0': !store.chatHub.compact or compactPosition.top === 'auto', 'o-liftUp': busMonitoring.hasConnectionIssues }" t-ref="bubbles" t-att-style="store.chatHub.compact ? `top: ${ compactPosition.top }; left: ${ compactPosition.left };` : ''">
+        <div class="o-mail-ChatHub-bubbles position-fixed d-flex flex-column align-content-start justify-content-end align-items-center" t-attf-style="top: {{position.top}}; left: {{position.left}}; right: {{position.right}}; bottom: {{position.bottom}}" t-att-class="{ 'o-liftUp': busMonitoring.hasConnectionIssues }" t-ref="bubbles">
             <div class="d-flex flex-column align-content-start justify-content-end align-items-center gap-1">
-                <t t-if="store.chatHub.compact">
-                    <t t-call="mail.ChatHub.compactButton"/>
-                </t>
-                <t t-else="">
-                    <Dropdown t-if="(chatHub.opened.length + chatHub.folded.length) gt 0" state="options" position="'top-end'" menuClass="'d-flex flex-column bg-100 shadow-sm m-0 p-0 mb-1 border-secondary'">
-                        <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn fa fa-ellipsis-h bg-100 mt-1" t-att-class="{ 'opacity-0': !bubblesHover.isHover and !options.isOpen and !isMobileOS, 'text-500': bubblesHover.isHover and !options.isOpen and !isMobileOS, 'o-active': bubblesHover.isHover or options.isOpen }" title="Chat Options"/>
-                        <t t-set-slot="content">
+                <Dropdown t-if="displayConversations or position.dragged" state="options" position="'top-end'" menuClass="'d-flex flex-column bg-100 shadow-sm m-0 p-0 mb-1 border-secondary'">
+                    <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn fa fa-ellipsis-h bg-100 mt-1" t-att-class="{ 'opacity-0': !bubblesHover.isHover and !position.dragged and !options.isOpen and !isMobileOS, 'text-500': (bubblesHover.isHover or position.dragged) and !options.isOpen and !isMobileOS, 'o-active': bubblesHover.isHover or options.isOpen }" title="Chat Options"/>
+                    <t t-set-slot="content">
+                        <t t-if="displayConversations">
                             <button class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal" t-on-click="() => chatHub.compact = true"><i class="fa fa-fw fa-eye-slash"></i>Hide all conversations</button>
                             <button class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal" t-on-click="() => chatHub.closeAll()"><i class="oi fa-fw oi-close"></i>Close all conversations</button>
                         </t>
-                    </Dropdown>
-                    <t t-foreach="chatHub.folded.slice(0, chatHub.maxFolded)" t-as="cw" t-key="cw.localId">
-                        <ChatBubble chatWindow="cw"/>
+                        <button t-if="position.dragged" class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal" t-on-click="resetPosition"><i class="fa fa-fw fa-undo"></i>Reset initial position</button>
                     </t>
+                </Dropdown>
+                <t t-if="store.chatHub.compact" t-call="mail.ChatHub.compactButton"/>
+                <t t-else="">
+                    <ChatBubble t-foreach="chatHub.folded.slice(0, chatHub.maxFolded)" t-as="cw" t-key="cw.localId" chatWindow="cw"/>
+                    <div class="o-mail-ChatHub-extraActions"/>
                     <t t-if="chatHub.folded.length > chatHub.maxFolded" t-call="mail.ChatHub.hiddenButton"/>
                 </t>
             </div>
@@ -34,12 +34,12 @@
 <t t-name="mail.ChatHub.compactButton">
     <!-- In dropdown to keep same layout as other items-->
     <Dropdown manual="true">
-        <div class="o-mail-ChatHub-bubbleBtn o-mail-ChatHub-compact o-mail-ChatBubble justify-content-center" t-ref="compact">
+        <div class="o-mail-ChatHub-bubbleBtn o-mail-ChatHub-compact o-mail-ChatBubble justify-content-center">
             <div t-if="compactCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow">
                 <t t-out="compactCounter"/>
             </div>
             <button class="o-mail-ChatHub-bubbleBtn btn fs-2" t-on-click="expand">
-                <i class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fa fa-commenting"/>
+                <i class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fa fa-comments"/>
             </button>
         </div>
     </Dropdown>

@@ -1,6 +1,10 @@
-import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { download } from "@web/core/network/download";
+import { rpc } from "@web/core/network/rpc";
+import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
 import { useComponent, useEffect } from "@odoo/owl";
 
@@ -112,4 +116,69 @@ export function useBounceButton(containerRef, shouldBounce) {
         },
         () => [containerRef.el]
     );
+}
+
+export function useExportRecords(env, context, getDefaultExportList) {
+    const { model, searchModel } = env;
+    useBus(searchModel, "direct-export-data", async () => {
+        _downloadExport(getDefaultExportList(), false, "xlsx");
+    });
+    const _getExportedFields = async (isCompatible, parentParams) => {
+        const root = model.root;
+        let domain = parentParams ? [] : root.domain;
+        if (!root.isDomainSelected && root.selection.length > 0) {
+            const ids = root.selection.map((e) => e.resId);
+            domain = [["id", "in", ids]];
+        }
+        return await rpc("/web/export/get_fields", {
+            model: root.resModel,
+            domain,
+            import_compat: isCompatible,
+            ...parentParams,
+        });
+    };
+
+    const _downloadExport = async (fields, import_compat, format) => {
+        const root = model.root;
+        const exportedFields = fields.map((field) => ({
+            name: field.name || field.id,
+            label: field.label || field.string,
+            store: field.store,
+            type: field.field_type || field.type,
+        }));
+        if (import_compat) {
+            exportedFields.unshift({
+                name: "id",
+                label: _t("External ID"),
+            });
+        }
+        await download({
+            data: {
+                data: JSON.stringify({
+                    import_compat,
+                    context,
+                    domain: root.domain,
+                    fields: exportedFields,
+                    groupby: root.groupBy,
+                    ids:
+                        !root.isDomainSelected && root.selection.length > 0
+                            ? root.selection.map((e) => e.resId)
+                            : false,
+                    model: root.resModel,
+                }),
+            },
+            url: `/web/export/${format}`,
+        });
+    };
+
+    return () => {
+        const root = model.root;
+        model.dialog.add(ExportDataDialog, {
+            context,
+            defaultExportList: getDefaultExportList(),
+            download: _downloadExport,
+            getExportedFields: _getExportedFields,
+            root,
+        });
+    };
 }

@@ -840,6 +840,7 @@ class Test_New_ApiComputeOnchange(models.Model):
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', store=True)
     baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+    quux = fields.Char(compute='_compute_quux')
     count = fields.Integer(default=0)
     line_ids = fields.One2many(
         'test_new_api.compute.onchange.line', 'record_id',
@@ -864,6 +865,10 @@ class Test_New_ApiComputeOnchange(models.Model):
         for record in self:
             if record.active:
                 record.baz = (record.foo or "") + "z"
+
+    # special case: this field has no dependency
+    def _compute_quux(self):
+        self.quux = "quux"
 
     @api.depends('foo')
     def _compute_line_ids(self):
@@ -1204,7 +1209,8 @@ class Test_New_ApiModel_Child(models.Model):
 
     name = fields.Char()
     company_id = fields.Many2one('res.company')
-    parent_id = fields.Many2one('test_new_api.model_parent', check_company=True)
+    parent_id = fields.Many2one('test_new_api.model_parent', string="Parent", check_company=True)
+    parent_ids = fields.Many2many('test_new_api.model_parent', string="Parents", check_company=True)
 
 
 class Test_New_ApiModel_Child_Nocheck(models.Model):

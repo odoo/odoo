@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import contextlib
 import logging
 import requests
 from lxml import etree
@@ -109,7 +108,7 @@ class ResPartner(models.Model):
 
     @api.model
     @handle_demo
-    def _check_peppol_participant_exists(self, participant_info, edi_identification, check_company=False):
+    def _check_peppol_participant_exists(self, participant_info, edi_identification):
         participant_identifier = participant_info.findtext('{*}ParticipantIdentifier')
         service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
         service_href = ''
@@ -120,19 +119,6 @@ class ResPartner(models.Model):
             # all Belgian companies are pre-registered on hermes-belgium, so they will
             # technically have an existing SMP url but they are not real Peppol participants
             return False
-
-        if check_company:
-            # if we are only checking company's existence on the network, we don't care about what documents they can receive
-            if not service_href:
-                return True
-
-            access_point_contact = True
-            with contextlib.suppress(requests.exceptions.RequestException, etree.XMLSyntaxError):
-                response = requests.get(service_href, timeout=TIMEOUT)
-                if response.status_code == 200:
-                    access_point_info = etree.fromstring(response.content)
-                    access_point_contact = access_point_info.findtext('.//{*}TechnicalContactUrl') or access_point_info.findtext('.//{*}TechnicalInformationUrl')
-            return access_point_contact
 
         return True
 
@@ -229,3 +215,9 @@ class ResPartner(models.Model):
                     return 'not_valid_format'
             else:
                 return 'not_valid'
+
+    def _get_frontend_writable_fields(self):
+        frontend_writable_fields = super()._get_frontend_writable_fields()
+        frontend_writable_fields.update({'peppol_eas', 'peppol_endpoint'})
+
+        return frontend_writable_fields

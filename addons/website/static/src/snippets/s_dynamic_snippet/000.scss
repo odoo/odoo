@@ -22,7 +22,7 @@
             @include media-breakpoint-up(lg) {
                 // Switch to a fluid layout in order to keep entries readable.
                 // Our target grid is 2columns based
-                flex: 0 1 MAX($-entry-min-width, 50%);
+                flex: 0 1 MAX(var(--DynamicSnippet__entry-maxWidth, #{$-entry-min-width}), 50%);
             }
         }
     }
@@ -30,7 +30,7 @@
     > .o_container_small {
         .s_dynamic_snippet_row > * {
             @include media-breakpoint-up(lg) {
-                flex: 0 1 MAX($-entry-min-width, 50%);
+                flex: 0 1 MAX(var(--DynamicSnippet__entry-maxWidth, #{$-entry-min-width}), 50%);
             }
         }
 
@@ -41,7 +41,7 @@
 
             + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
                 @include media-breakpoint-up(lg) {
-                    flex: 1 1 $-entry-min-width;
+                    flex: 1 1 var(--DynamicSnippet__entry-maxWidth, #{$-entry-min-width});
                 }
             }
         }

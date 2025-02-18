@@ -70,7 +70,7 @@ class ResUsers(models.Model):
             settings = self.env["res.users.settings"]._find_or_create_for_user(user)
             settings.livechat_expertise_ids = user.livechat_expertise_ids
 
-    @api.depends("groups_id")
+    @api.depends("group_ids")
     def _compute_has_access_livechat(self):
         for user in self.sudo():
             user.has_access_livechat = user.has_group('im_livechat.im_livechat_group_user')

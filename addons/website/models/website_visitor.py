@@ -92,28 +92,31 @@ class WebsiteVisitor(models.Model):
     def _compute_partner_id(self):
         # The browse in the loop is fine, there is no SQL Query on partner here
         for visitor in self:
+            if not visitor.id:
+                visitor.partner_id = visitor._origin.partner_id
+                continue
             # If the access_token is not a 32 length hexa string, it means that
             # the visitor is linked to a logged in user, in which case its
             # partner_id is used instead as the token.
             partner_id = len(visitor.access_token) != 32 and int(visitor.access_token)
             visitor.partner_id = self.env['res.partner'].browse(partner_id)
 
-    @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'partner_id.phone')
+    @api.depends('partner_id.email_normalized', 'partner_id.phone')
     def _compute_email_phone(self):
         results = self.env['res.partner'].search_read(
             [('id', 'in', self.partner_id.ids)],
-            ['id', 'email_normalized', 'mobile', 'phone'],
+            ['id', 'email_normalized', 'phone'],
         )
         mapped_data = {
             result['id']: {
                 'email_normalized': result['email_normalized'],
-                'mobile': result['mobile'] if result['mobile'] else result['phone']
+                'phone': result['phone']
             } for result in results
         }
 
         for visitor in self:
             visitor.email = mapped_data.get(visitor.partner_id.id, {}).get('email_normalized')
-            visitor.mobile = mapped_data.get(visitor.partner_id.id, {}).get('mobile')
+            visitor.mobile = mapped_data.get(visitor.partner_id.id, {}).get('phone')
 
     @api.depends('website_track_ids')
     def _compute_page_statistics(self):

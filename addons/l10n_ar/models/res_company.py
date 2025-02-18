@@ -42,3 +42,6 @@ class ResCompany(models.Model):
                     raise UserError(_('Could not change the AFIP Responsibility of this company because there are already accounting entries.'))
 
         return super().write(vals)
+
+    def _is_latam(self):
+        return super()._is_latam() or self.country_code == 'AR'

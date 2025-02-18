@@ -160,8 +160,10 @@ def initialize_sys_path() -> None:
     sys.modules["odoo.addons.base.maintenance"] = maintenance_pkg
     sys.modules["odoo.addons.base.maintenance.migrations"] = odoo.upgrade
 
-    # hook deprecated module alias from openerp to odoo and "crm"-like to odoo.addons
+    # hook for upgrades and namespace freeze
     if not getattr(initialize_sys_path, 'called', False):  # only initialize once
+        odoo.addons.__path__._path_finder = lambda *a: None  # prevent path invalidation
+        odoo.upgrade.__path__._path_finder = lambda *a: None  # prevent path invalidation
         sys.meta_path.insert(0, UpgradeHook())
         initialize_sys_path.called = True  # type: ignore
 
@@ -306,6 +308,12 @@ def load_manifest(module: str, mod_path: str | None = None) -> dict:
     if not manifest.get('license'):
         manifest['license'] = 'LGPL-3'
         _logger.warning("Missing `license` key in manifest for %r, defaulting to LGPL-3", module)
+
+    if module == 'base':
+        manifest['depends'] = []
+    elif not manifest['depends']:
+        # prevent the hack `'depends': []` except 'base' module
+        manifest['depends'] = ['base']
 
     depends = manifest['depends']
     assert isinstance(depends, Collection)

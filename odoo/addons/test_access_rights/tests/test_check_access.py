@@ -12,7 +12,7 @@ class TestAccess(odoo.tests.HttpCase):
         self.portal_user = self.env['res.users'].create({
             'login': 'P',
             'name': 'P',
-            'groups_id': [Command.set([self.env.ref('base.group_portal').id])],
+            'group_ids': [Command.set([self.env.ref('base.group_portal').id])],
         })
         # a partner that can't be read by the portal user, would typically be a user's
         self.internal_user_partner = self.env['res.partner'].create({'name': 'I'})
@@ -46,7 +46,7 @@ class TestAccess(odoo.tests.HttpCase):
         no_access_user = self.env['res.users'].create({
             'login': 'no_access',
             'name': 'no_access',
-            'groups_id': [Command.clear()],
+            'group_ids': [Command.clear()],
         })
         document = self.env['test_access_right.ticket'].with_user(no_access_user)
         res = document.sudo().name_search('Need help here')

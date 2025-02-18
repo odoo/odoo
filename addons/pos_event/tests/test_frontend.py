@@ -66,7 +66,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_selling_event_in_pos(self):
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('event.group_event_user').id),
             ]
         })

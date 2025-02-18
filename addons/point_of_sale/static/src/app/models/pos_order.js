@@ -1,11 +1,9 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { random5Chars, uuidv4, gte, lt } from "@point_of_sale/utils";
-import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
+import { random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
-import { getTaxesAfterFiscalPosition } from "./utils/tax_utils";
 
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 const { DateTime } = luxon;
@@ -131,7 +129,6 @@ export class PosOrder extends Base {
     get taxTotals() {
         const currency = this.currency;
         const company = this.company;
-        const extraValues = { currency_id: currency };
         const orderLines = this.lines;
 
         // If each line is negative, we assume it's a refund order.
@@ -139,24 +136,18 @@ export class PosOrder extends Base {
         // TODO: Properly differentiate refund orders from normal ones.
         const documentSign =
             this.lines.length === 0 ||
-            !this.lines.every((l) => lt(l.qty, 0, { decimals: currency.decimal_places }))
+            !this.lines.every((l) => l.product_id.uom_id.isNegative(l.qty))
                 ? 1
                 : -1;
 
-        const baseLines = [];
-        for (const line of orderLines) {
-            let taxes = line.tax_ids;
-            if (this.fiscal_position_id) {
-                taxes = getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models);
-            }
-            baseLines.push(
-                accountTaxHelpers.prepare_base_line_for_taxes_computation(line, {
-                    ...extraValues,
+        const baseLines = orderLines.map((line) =>
+            accountTaxHelpers.prepare_base_line_for_taxes_computation(
+                line,
+                line.prepareBaseLineForTaxesComputationExtraValues({
                     quantity: documentSign * line.qty,
-                    tax_ids: taxes,
                 })
-            );
-        }
+            )
+        );
         accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
         accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
 
@@ -188,7 +179,7 @@ export class PosOrder extends Base {
                         this.config.rounding_method,
                         remaining
                     );
-                    if (!floatIsZero(paymentAmount - remaining, this.currency.decimal_places)) {
+                    if (!this.currency.isZero(paymentAmount - remaining)) {
                         order_rounding = roundedRemaining - remaining;
                     }
                 }
@@ -212,7 +203,7 @@ export class PosOrder extends Base {
     get orderHasZeroRemaining() {
         const { order_remaining, order_rounding } = this.taxTotals;
         const remaining_with_rounding = order_remaining + order_rounding;
-        return floatIsZero(remaining_with_rounding, this.currency.decimal_places);
+        return this.currency.isZero(remaining_with_rounding);
     }
 
     /**
@@ -229,28 +220,13 @@ export class PosOrder extends Base {
     }
 
     getRoundedRemaining(roundingMethod, remaining) {
-        let { rounding_method: method, rounding } = roundingMethod;
-        if (
-            lt(remaining, 0, {
-                decimals: this.currency.decimal_places,
-            })
-        ) {
-            // oppose the rounding method if remaining is negative
-            method =
-                method === "UP"
-                    ? "DOWN"
-                    : method === "DOWN"
-                    ? "UP"
-                    : method === "HALF-UP"
-                    ? "HALF-DOWN"
-                    : method === "HALF-DOWN"
-                    ? "HALF-UP"
-                    : method;
-        }
-        if (floatIsZero(remaining, this.currency.decimal_places)) {
+        if (this.currency.isZero(remaining)) {
             return 0;
+        } else if (this.currency.isNegative(remaining)) {
+            return roundingMethod.asymmetricRound(remaining);
+        } else {
+            return roundingMethod.round(remaining);
         }
-        return roundPrecision(remaining, rounding, method);
     }
 
     getCashierName() {
@@ -285,27 +261,25 @@ export class PosOrder extends Base {
     updateLastOrderChange() {
         const orderlineIdx = [];
         this.lines.forEach((line) => {
-            if (!line.skip_change) {
-                orderlineIdx.push(line.preparationKey);
+            orderlineIdx.push(line.preparationKey);
 
-                if (this.last_order_preparation_change.lines[line.preparationKey]) {
-                    this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
-                        line.getQuantity();
-                } else {
-                    this.last_order_preparation_change.lines[line.preparationKey] = {
-                        attribute_value_names: line.attribute_value_ids.map((a) => a.name),
-                        uuid: line.uuid,
-                        isCombo: line.combo_item_id?.id,
-                        product_id: line.getProduct().id,
-                        name: line.getFullProductName(),
-                        basic_name: line.getProduct().name,
-                        display_name: line.getProduct().display_name,
-                        note: line.getNote(),
-                        quantity: line.getQuantity(),
-                    };
-                }
-                line.setHasChange(false);
+            if (this.last_order_preparation_change.lines[line.preparationKey]) {
+                this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
+                    line.getQuantity();
+            } else {
+                this.last_order_preparation_change.lines[line.preparationKey] = {
+                    attribute_value_names: line.attribute_value_ids.map((a) => a.name),
+                    uuid: line.uuid,
+                    isCombo: line.combo_item_id?.id,
+                    product_id: line.getProduct().id,
+                    name: line.getFullProductName(),
+                    basic_name: line.getProduct().name,
+                    display_name: line.getProduct().display_name,
+                    note: line.getNote(),
+                    quantity: line.getQuantity(),
+                };
             }
+            line.setHasChange(false);
         });
         // Checks whether an orderline has been deleted from the order since it
         // was last sent to the preparation tools or updated. If so we delete older changes.
@@ -320,14 +294,6 @@ export class PosOrder extends Base {
         this.last_order_preparation_change.general_customer_note = this.general_customer_note;
         this.last_order_preparation_change.internal_note = this.internal_note;
         this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
-    }
-
-    hasSkippedChanges() {
-        return Boolean(
-            this.lines.find(
-                (orderline) => orderline.skip_change && !orderline.uiState.hideSkipChangeClass
-            )
-        );
     }
 
     isEmpty() {
@@ -391,8 +357,8 @@ export class PosOrder extends Base {
                 line.getAllPrices().priceWithTax -
                 line
                     .getAllPrices()
-                    .taxesData.filter((tax) => !tax.price_include)
-                    .reduce((sum, tax) => (sum += tax.tax_amount), 0),
+                    .taxesData.filter((taxData) => !taxData.tax.price_include)
+                    .reduce((sum, taxData) => (sum += taxData.tax_amount_currency), 0),
             0
         );
         return base_amount;
@@ -624,11 +590,10 @@ export class PosOrder extends Base {
 
     /* ---- Payment Status --- */
     getSubtotal() {
-        return roundPrecision(
+        return this.currency.round(
             this.lines.reduce(function (sum, orderLine) {
                 return sum + orderLine.getDisplayPrice();
-            }, 0),
-            this.currency.rounding
+            }, 0)
         );
     }
 
@@ -659,7 +624,7 @@ export class PosOrder extends Base {
 
     getTotalDiscount() {
         const ignored_product_ids = this._getIgnoredProductIdsTotalDiscount();
-        return roundPrecision(
+        return this.currency.round(
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     sum +=
@@ -677,8 +642,7 @@ export class PosOrder extends Base {
                     }
                 }
                 return sum;
-            }, 0),
-            this.currency.rounding
+            }, 0)
         );
     }
 
@@ -687,14 +651,13 @@ export class PosOrder extends Base {
     }
 
     getTotalPaid() {
-        return roundPrecision(
+        return this.currency.round(
             this.payment_ids.reduce(function (sum, paymentLine) {
                 if (paymentLine.isDone()) {
                     sum += paymentLine.getAmount();
                 }
                 return sum;
-            }, 0),
-            this.currency.rounding
+            }, 0)
         );
     }
 
@@ -711,11 +674,11 @@ export class PosOrder extends Base {
                     taxDetails[taxId] = Object.assign({}, taxData, {
                         amount: 0.0,
                         base: 0.0,
-                        tax_percentage: taxData.amount,
+                        tax_percentage: taxData.tax.amount,
                     });
                 }
-                taxDetails[taxId].base += taxData.base_amount;
-                taxDetails[taxId].amount += taxData.tax_amount;
+                taxDetails[taxId].base += taxData.base_amount_currency;
+                taxDetails[taxId].amount += taxData.tax_amount_currency;
             }
         }
         return Object.values(taxDetails);
@@ -754,10 +717,7 @@ export class PosOrder extends Base {
      */
     hasRemainingAmount() {
         const { order_remaining } = this.taxTotals;
-        return (
-            this.orderHasZeroRemaining ||
-            gte(order_remaining, 0, { decimals: this.currency.decimal_places })
-        );
+        return this.orderHasZeroRemaining || !this.currency.isNegative(order_remaining);
     }
 
     getChange() {
@@ -769,10 +729,7 @@ export class PosOrder extends Base {
     }
 
     getDue() {
-        return (
-            this.taxTotals.order_sign *
-            roundPrecision(this.taxTotals.order_remaining, this.currency.rounding)
-        );
+        return this.taxTotals.order_sign * this.currency.round(this.taxTotals.order_remaining);
     }
 
     getRoundingApplied() {
@@ -781,10 +738,7 @@ export class PosOrder extends Base {
 
     isPaid() {
         const { order_remaining } = this.taxTotals;
-        return (
-            this.orderHasZeroRemaining ||
-            lt(order_remaining, 0, { decimals: this.currency.decimal_places })
-        );
+        return this.orderHasZeroRemaining || this.currency.isNegative(order_remaining);
     }
 
     isRefundInProcess() {
@@ -1030,11 +984,11 @@ export class PosOrder extends Base {
     }
 
     get showRounding() {
-        return !floatIsZero(this.taxTotals.order_rounding, this.currency.decimal_places);
+        return !this.currency.isZero(this.taxTotals.order_rounding);
     }
 
     get showChange() {
-        return !floatIsZero(this.orderChange, this.currency.decimal_places) && this.finalized;
+        return !this.currency.isZero(this.orderChange) && this.finalized;
     }
 }
 

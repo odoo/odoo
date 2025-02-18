@@ -769,7 +769,6 @@ class IrQwebFieldContact(models.AbstractModel):
             {'field_name': 'name', 'label': _('Name'), 'default': True},
             {'field_name': 'address', 'label': _('Address'), 'default': True},
             {'field_name': 'phone', 'label': _('Phone'), 'default': True},
-            {'field_name': 'mobile', 'label': _('Mobile'), 'default': True},
             {'field_name': 'email', 'label': _('Email'), 'default': True},
             {'field_name': 'vat', 'label': _('VAT')},
         ]
@@ -799,7 +798,7 @@ class IrQwebFieldContact(models.AbstractModel):
                 return self.env['ir.qweb']._render('base.no_contact', val, **template_options)
             return ''
 
-        opf = options.get('fields') or ["name", "address", "phone", "mobile", "email"]
+        opf = options.get('fields') or ["name", "address", "phone", "email"]
         sep = options.get('separator')
         if sep:
             opsep = escape(sep)
@@ -822,7 +821,6 @@ class IrQwebFieldContact(models.AbstractModel):
             'name': display_name.split("\n")[0],
             'address': address,
             'phone': value.phone,
-            'mobile': value.mobile,
             'city': value.city,
             'country_id': value.country_id.display_name,
             'website': value.website,

@@ -15,17 +15,12 @@
             run: "click",
         },
         {
-            content: "Go to My Expenses to Report",
-            trigger: 'a[data-menu-xmlid="hr_expense.menu_hr_expense_my_expenses_all"]',
-            run: "click",
-        },
-        {
             content: "Check Upload Button",
             trigger: '.o_button_upload_expense',
             run() {
                 const button = document.querySelector('.o_button_upload_expense');
                 if(!button) {
-                    console.error('Missing Upload button in My Expenses to Report > List View');
+                    console.error('Missing Upload button in My Expenses > List View');
                 }
             }
         },
@@ -55,17 +50,6 @@
             run: "click",
         },
         {
-            content: "Check Create Report Button, but not click on it",
-            trigger: "button.o_switch_view.o_list.active",
-            run() {
-                const button = Array.from(document.querySelectorAll('.btn-secondary'))
-                    .filter(element => element.textContent.includes('Create Report'));
-                if(!button) {
-                    console.error('Missing Create Report button in My Expenses to Report > List View');
-                }
-            }
-        },
-        {
             content: "Go to kanban view",
             trigger: "button.o_switch_view.o_kanban",
             run: "click",
@@ -76,22 +60,9 @@
             run() {
                 const button = document.querySelector('.o_button_upload_expense');
                 if(!button) {
-                    console.error('Missing Upload button in My Expenses to Report > Kanban View');
+                    console.error('Missing Upload button in My Expenses > Kanban View');
                 }
             }
-        },
-        {
-            content: "Check Create Report button and click on it",
-            trigger: ".btn-secondary:contains(\"Create Report\")",
-            run: "click"
-        },
-        {
-            trigger: ".o_breadcrumb",
-            run: "click",
-        },
-        {
-            content: "Create Report button should not be visible anymore",
-            trigger: '.o_control_panel_main:not(:contains(\"Create Report\"))',
         },
         {
             content: "Go to Reporting",
@@ -134,22 +105,17 @@
             run: "click",
         },
         {
-            content: "Go to My Reports",
-            trigger: 'a[data-menu-xmlid="hr_expense.menu_hr_expense_sheet_my_reports"]',
-            run: "click",
-        },
-        {
             content: "Go to First Expense for employee",
             trigger: 'td[data-tooltip="First Expense for employee"]',
             run: "click",
         },
         {
             content: "Click Submit to Manager Button",
-            trigger: '.o_expense_sheet_submit',
+            trigger: '.o_expense_submit',
             run: "click",
         },
         {
-            content: 'Verify the expene sheet is submitted',
+            content: 'Verify the expense is submitted',
             trigger: '.o_arrow_button_current:contains("Submitted")',
         },
     ]});

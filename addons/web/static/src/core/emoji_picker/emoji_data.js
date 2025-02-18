@@ -2756,6 +2756,7 @@ const _getEmojisData2 = () => `{
     ],
     "name": "` + _t("thumbs up") + `",
     "shortcodes": [
+        ":+1:",
         ":thumbs_up:"
     ]
 },

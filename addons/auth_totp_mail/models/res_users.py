@@ -42,8 +42,35 @@ class ResUsers(models.Model):
 
         return res
 
+    def authenticate(self, credential, user_agent_env):
+        """Send an alert on new connection.
+
+        - 2FA enabled -> only for new device
+        - Not enabled -> no alert
+        """
+        auth_info = super().authenticate(credential, user_agent_env)
+
+        user = self.env(user=auth_info['uid']).user
+
+        if request and user.email and user._mfa_type():
+            # Check the `request` object to ensure that we will be able to get the
+            # user information (like IP, user-agent, etc) and the cookie `td_id`.
+            # (Can be unbounded if executed from a server action or a unit test.)
+
+            key = request.cookies.get('td_id')
+            if not key or not request.env['auth_totp.device']._check_credentials_for_uid(
+                    scope="browser", key=key, uid=user.id):
+                # 2FA enabled but not a trusted device
+                user._notify_security_setting_update(
+                    subject=_('New Connection to your Account'),
+                    content=_('A new device was used to sign in to your account.'),
+                )
+                _logger.info("New device alert email sent for user <%s> to <%s>", user.login, user.email)
+
+        return auth_info
+
     def _notify_security_setting_update_prepare_values(self, content, suggest_2fa=True, **kwargs):
-        """" Prepare rendering values for the 'mail.account_security_setting_update' qweb template
+        """" Prepare rendering values for the 'mail.account_security_alert' qweb template
 
           :param bool suggest_2fa:
             Whether or not to suggest the end-user to turn on 2FA authentication in the email sent.

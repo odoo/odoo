@@ -18,7 +18,7 @@ test("image can be selected", async () => {
     await waitFor(".o-we-toolbar");
     expect(".btn-group[name='image_shape']").toHaveCount(1);
     const selectionPlugin = plugins.get("selection");
-    expect(selectionPlugin.getSelectedNodes()[0].tagName).toBe("IMG");
+    expect(selectionPlugin.getSelectedNodes()[1].tagName).toBe("IMG");
 });
 
 test("can shape an image", async () => {
@@ -62,7 +62,7 @@ test("can shape an image", async () => {
 
 test("shape_circle and shape_rounded are mutually exclusive", async () => {
     await setupEditor(`
-        <img src="${base64Img}">
+        <p><img src="${base64Img}"></p>
     `);
     const img = queryOne("img");
     await click(img);
@@ -491,7 +491,7 @@ test("can undo adding link to image", async () => {
 
     undo(editor);
     await animationFrame();
-    expect(img.parentElement.tagName).toBe("P");
+    expect(img.parentElement.tagName).toBe("DIV");
 });
 
 test("can remove the link of an image", async () => {
@@ -504,7 +504,7 @@ test("can remove the link of an image", async () => {
     expect("button[name='unlink']").toHaveCount(1);
     await click("button[name='unlink']");
     await animationFrame();
-    expect(img.parentElement.tagName).toBe("P");
+    expect(img.parentElement.tagName).toBe("DIV");
     expect(".o-we-linkpopover").toHaveCount(0);
 });
 
@@ -517,7 +517,7 @@ test("can undo link removing of an image", async () => {
     await waitFor(".o-we-toolbar");
     await click("button[name='unlink']");
     await animationFrame();
-    expect(img.parentElement.tagName).toBe("P");
+    expect(img.parentElement.tagName).toBe("DIV");
 
     undo(editor);
     await animationFrame();

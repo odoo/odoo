@@ -7,7 +7,7 @@
         <field name="view_mode">form</field>
         <field name="binding_model_id" ref="stock_account.model_stock_valuation_layer"/>
         <!-- Not available in form view because clicking a layer only opens its form view if it's already an adjustment layer, the action would always fail with a UserError because the quantity is 0 -->
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,kanban</field>
         <field name="target">new</field>
     </record>
 

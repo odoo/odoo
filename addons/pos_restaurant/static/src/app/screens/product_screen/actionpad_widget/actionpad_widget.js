@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @props partner
@@ -59,5 +60,33 @@ patch(ActionpadWidget.prototype, {
             return true;
         }
         return false;
+    },
+    get displayFireCourseBtn() {
+        const order = this.currentOrder;
+        if (order.isDirectSale || !order.hasCourses()) {
+            return false;
+        }
+        return this.getCourseToFire() != null;
+    },
+    get fireCourseBtnText() {
+        const selectedCourse = this.getCourseToFire();
+        if (selectedCourse) {
+            return _t("Fire %s", selectedCourse.name);
+        }
+        return "";
+    },
+    getCourseToFire() {
+        const course = this.currentOrder.getSelectedCourse();
+        if (course?.isReadyToFire()) {
+            return course;
+        }
+    },
+    async clickFireCourse() {
+        const course = this.getCourseToFire();
+        if (!course) {
+            return;
+        }
+        await this.pos.fireCourse(course);
+        this.pos.showDefault();
     },
 });

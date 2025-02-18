@@ -187,8 +187,8 @@ def _eval_xml(self, node, env):
         if 'context' in kwargs:
             model = model.with_context(**kwargs.pop('context'))
         method = getattr(model, method_name)
-        api = getattr(method, '_api', None)
-        if api and api.startswith('model'):
+        is_model_method = getattr(method, '_api_model', False)
+        if is_model_method:
             pass  # already bound to an empty recordset
         else:
             record_ids, *args = args
@@ -322,7 +322,7 @@ form: module.record_id""" % (xml_id,)
                 group_id = self.id_get(group)
                 groups.append(Command.link(group_id))
         if groups:
-            values['groups_id'] = groups
+            values['group_ids'] = groups
 
 
         data = {
@@ -513,7 +513,7 @@ form: module.record_id""" % (xml_id,)
         groups = el.attrib.pop('groups', None)
         if groups:
             grp_lst = [("ref('%s')" % x) for x in groups.split(',')]
-            record.append(Field(name="groups_id", eval="[Command.set(["+', '.join(grp_lst)+"])]"))
+            record.append(Field(name="group_ids", eval="[Command.set(["+', '.join(grp_lst)+"])]"))
         if el.get('primary') == 'True':
             # Pseudo clone mode, we'll set the t-name to the full canonical xmlid
             el.append(

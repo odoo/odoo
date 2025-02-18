@@ -1536,3 +1536,24 @@ test(`resize: unnamed columns cannot be resized`, async () => {
         message: "Columns without name should not have a resize handle",
     });
 });
+
+test(`dblclick on resize handle to force a recomputation of all widths`, async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="int_field"/>
+            </list>`,
+    });
+
+    const originalWidths = getColumnWidths();
+    await contains(`th:eq(1) .o_resize`, { visible: false }).dragAndDrop(`th:eq(2)`);
+    const widthsAfterResize = getColumnWidths();
+    expect(widthsAfterResize[0]).toBe(originalWidths[0]);
+    expect(widthsAfterResize[1]).toBeGreaterThan(originalWidths[1]);
+
+    await contains(".o_list_table th .o_resize", { visible: false }).dblclick();
+    expect(getColumnWidths()).toEqual(originalWidths);
+});

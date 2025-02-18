@@ -16,6 +16,7 @@ import subprocess
 import sys
 import threading
 import time
+from collections import deque
 from io import BytesIO
 
 import psutil
@@ -54,7 +55,7 @@ except ImportError:
 from odoo import api, sql_db
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
-from odoo.tools import config, osutil
+from odoo.tools import config, osutil, OrderedSet
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import stripped_sys_argv, dumpstacks
 from .db import list_dbs
@@ -94,6 +95,11 @@ def empty_pipe(fd):
     except OSError as e:
         if e.errno not in [errno.EAGAIN]:
             raise
+
+
+def cron_database_list():
+    return config['db_name'] or list_dbs(True)
+
 
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
@@ -453,7 +459,8 @@ class ThreadedServer(CommonServer):
         # just a bit prevents they all poll the database at the exact
         # same time. This is known as the thundering herd effect.
 
-        from odoo.addons.base.models.ir_cron import IrCron
+        from odoo.addons.base.models.ir_cron import IrCron  # noqa: PLC0415
+
         def _run_cron(cr):
             pg_conn = cr._cnx
             # LISTEN / NOTIFY doesn't work in recovery mode
@@ -464,6 +471,8 @@ class ThreadedServer(CommonServer):
             else:
                 _logger.warning("PG cluster in recovery mode, cron trigger not activated")
             cr.commit()
+            check_all_time = 0.0  # last time that we listed databases, initialized far in the past
+            all_db_names = []
             alive_time = time.monotonic()
             while config['limit_time_worker_cron'] <= 0 or (time.monotonic() - alive_time) <= config['limit_time_worker_cron']:
                 select.select([pg_conn], [], [], SLEEP_INTERVAL + number)
@@ -475,18 +484,39 @@ class ThreadedServer(CommonServer):
                         # connection closed, just exit the loop
                         return
                     raise
+                notified = OrderedSet(
+                    notif.payload
+                    for notif in pg_conn.notifies
+                    if notif.channel == 'cron_trigger'
+                )
+                pg_conn.notifies.clear()  # free resources
 
-                registries = Registry.registries
-                _logger.debug('cron%d polling for jobs', number)
-                for db_name, registry in registries.d.items():
-                    if registry.ready:
-                        thread = threading.current_thread()
-                        thread.start_time = time.time()
-                        try:
-                            IrCron._process_jobs(db_name)
-                        except Exception:
-                            _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
-                        thread.start_time = None
+                if time.time() - SLEEP_INTERVAL > check_all_time:
+                    # check all databases
+                    # last time we checked them was `now - SLEEP_INTERVAL`
+                    check_all_time = time.time()
+                    # process notified databases first, then the other ones
+                    all_db_names = OrderedSet(cron_database_list())
+                    db_names = [
+                        *(db for db in notified if db in all_db_names),
+                        *(db for db in all_db_names if db not in notified),
+                    ]
+                else:
+                    # restrict to notified databases only
+                    db_names = notified.intersection(all_db_names)
+                    if not db_names:
+                        continue
+
+                _logger.debug('cron%d polling for jobs (notified: %s)', number, notified)
+                for db_name in db_names:
+                    thread = threading.current_thread()
+                    thread.start_time = time.time()
+                    try:
+                        IrCron._process_jobs(db_name)
+                    except Exception:
+                        _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
+                    thread.start_time = None
+
         while True:
             conn = sql_db.db_connect('postgres')
             with contextlib.closing(conn.cursor()) as cr:
@@ -1177,15 +1207,15 @@ class WorkerCron(Worker):
     def __init__(self, multi):
         super(WorkerCron, self).__init__(multi)
         self.alive_time = time.monotonic()
-        # process_work() below process a single database per call.
-        # The variable db_index is keeping track of the next database to
-        # process.
-        self.db_index = 0
         self.watchdog_timeout = multi.cron_timeout  # Use a distinct value for CRON Worker
+        # process_work() below process a single database per call.
+        # self.db_queue keeps track of the databases to process (in order, from left to right).
+        self.db_queue: deque[str] = deque()
+        self.db_count: int = 0
 
     def sleep(self):
         # Really sleep once all the databases have been processed.
-        if self.db_index == 0:
+        if not self.db_queue:
             interval = SLEEP_INTERVAL + self.pid % 10   # chorus effect
 
             # simulate interruptible sleep with select(wakeup_fd, timeout)
@@ -1206,35 +1236,45 @@ class WorkerCron(Worker):
             _logger.info('WorkerCron (%s) max age (%ss) reached.', self.pid, config['limit_time_worker_cron'])
             self.alive = False
 
-    def _db_list(self):
-        if config['db_name']:
-            db_names = list(config['db_name'])
-        else:
-            db_names = list_dbs(True)
-        return db_names
-
     def process_work(self):
+        """Process a single database."""
         _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
-        db_names = self._db_list()
-        if len(db_names):
-            self.db_index = (self.db_index + 1) % len(db_names)
-            db_name = db_names[self.db_index]
-            self.setproctitle(db_name)
 
-            from odoo.addons.base.models import ir_cron  # noqa: PLC0415
-            ir_cron.IrCron._process_jobs(db_name)
+        if not self.db_queue:
+            # list databases
+            db_names = OrderedSet(cron_database_list())
+            pg_conn = self.dbcursor._cnx
+            notified = OrderedSet(
+                notif.payload
+                for notif in pg_conn.notifies
+                if notif.channel == 'cron_trigger'
+            )
+            pg_conn.notifies.clear()  # free resources
+            # add notified databases (in order) first in the queue
+            self.db_queue.extend(db for db in notified if db in db_names)
+            self.db_queue.extend(db for db in db_names if db not in notified)
+            self.db_count = len(self.db_queue)
+            if not self.db_count:
+                return
 
-            # dont keep cursors in multi database mode
-            if len(db_names) > 1:
-                sql_db.close_db(db_name)
+        # pop the leftmost element (because notified databases appear first)
+        db_name = self.db_queue.popleft()
+        self.setproctitle(db_name)
 
-            self.request_count += 1
-            if self.request_count >= self.request_max and self.request_max < len(db_names):
-                _logger.error("There are more dabatases to process than allowed "
-                              "by the `limit_request` configuration variable: %s more.",
-                              len(db_names) - self.request_max)
-        else:
-            self.db_index = 0
+        from odoo.addons.base.models.ir_cron import IrCron  # noqa: PLC0415
+        IrCron._process_jobs(db_name)
+
+        # dont keep cursors in multi database mode
+        if self.db_count > 1:
+            sql_db.close_db(db_name)
+
+        self.request_count += 1
+        if self.request_count >= self.request_max and self.request_max < self.db_count:
+            _logger.error(
+                "There are more dabatases to process than allowed "
+                "by the `limit_request` configuration variable: %s more.",
+                self.db_count - self.request_max,
+            )
 
     def start(self):
         os.nice(10)     # mommy always told me to be nice with others...
@@ -1298,9 +1338,9 @@ def preload_registries(dbnames):
     rc = 0
     for dbname in dbnames:
         try:
-            update_module = config['init'] or config['update']
             threading.current_thread().dbname = dbname
-            registry = Registry.new(dbname, update_module=update_module)
+            update_module = config['init'] or config['update']
+            registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'])
 
             # run post-install tests
             if config['test_enable']:

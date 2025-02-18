@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.OrderCourse">
+        <div t-att-class="{'mb-1' : course.isEmpty()}">
+            <div class="order-course-name p-2 fw-bolder text-truncate"
+                 t-att-class="{
+                  'o_colorlist_item_color_10' : course.isSelected(),
+                  'bg-secondary': !course.isSelected(),
+                  'cursor-pointer': !course.fired}"
+                 t-on-click="(event) => this.clickCourse(event, course)">
+                <t t-esc="course.name"></t>
+                <i t-if="course.fired" class="ms-2 fa fa-check text-success" />
+            </div>
+            <t t-foreach="course.lines" t-as="line" t-key="line_index">
+                <t t-slot="default" line="line" />
+            </t>
+        </div>
+    </t>
+</templates>

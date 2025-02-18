@@ -289,7 +289,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         # Enable inalterable hash
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
         # Required for `invoice_cash_rounding_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('account.group_cash_rounding')
+        self.env.user.group_ids += self.env.ref('account.group_cash_rounding')
         # Test 'add_invoice_line' rounding
         invoice = self.init_invoice('out_invoice', products=self.product_a+self.product_b)
         move_form = Form(invoice)

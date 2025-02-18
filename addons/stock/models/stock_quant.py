@@ -5,6 +5,7 @@ from collections import namedtuple
 
 from ast import literal_eval
 from collections import defaultdict
+from markupsafe import escape
 from psycopg2 import Error
 
 from odoo import _, api, fields, models, SUPERUSER_ID
@@ -115,7 +116,7 @@ class StockQuant(models.Model):
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
         'res.users', 'Assigned To', help="User assigned to do product count.",
-        domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)])
+        domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)])
 
     @api.depends('quantity', 'reserved_quantity')
     def _compute_available_quantity(self):
@@ -422,11 +423,12 @@ class StockQuant(models.Model):
             'help': """
                 <p class="o_view_nocontent_smiling_face">
                     {}
-                </p><p>
-                    {} <span class="fa fa-long-arrow-right"/> {}</p>
-                """.format(_('Your stock is currently empty'),
-                           _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
-                           _('Import')),
+                </p>
+                <p>
+                    {} <span class="fa fa-cog"/>
+                </p>
+                """.format(escape(_('Your stock is currently empty')),
+                           escape(_('Press the "New" button to define the quantity for a product in your stock or import quantities from a spreadsheet via the Actions menu'))),
         }
         return action
 
@@ -1537,10 +1539,11 @@ class StockQuantPackage(models.Model):
         for package in self:
             package.location_id = False
             package.company_id = False
-            if package.quant_ids:
-                package.location_id = package.quant_ids[0].location_id
-                if all(q.company_id == package.quant_ids[0].company_id for q in package.quant_ids):
-                    package.company_id = package.quant_ids[0].company_id
+            quants = package.quant_ids.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_uom_id.rounding) > 0)
+            if quants:
+                package.location_id = quants[0].location_id
+                if all(q.company_id == quants[0].company_id for q in package.quant_ids):
+                    package.company_id = quants[0].company_id
 
     @api.depends('quant_ids.owner_id')
     def _compute_owner_id(self):

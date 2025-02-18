@@ -59,7 +59,6 @@ class MailTestRating(models.Model):
     company_id = fields.Many2one('res.company', 'Company')
     customer_id = fields.Many2one('res.partner', 'Customer')
     email_from = fields.Char('From', compute='_compute_email_from', precompute=True, readonly=False, store=True)
-    mobile_nbr = fields.Char('Mobile', compute='_compute_mobile_nbr', precompute=True, readonly=False, store=True)
     phone_nbr = fields.Char('Phone Number', compute='_compute_phone_nbr', precompute=True, readonly=False, store=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
 
@@ -70,14 +69,6 @@ class MailTestRating(models.Model):
                 rating.email_from = rating.customer_id.email_normalized
             elif not rating.email_from:
                 rating.email_from = False
-
-    @api.depends('customer_id')
-    def _compute_mobile_nbr(self):
-        for rating in self:
-            if rating.customer_id.mobile:
-                rating.mobile_nbr = rating.customer_id.mobile
-            elif not rating.mobile_nbr:
-                rating.mobile_nbr = False
 
     @api.depends('customer_id')
     def _compute_phone_nbr(self):
@@ -91,7 +82,7 @@ class MailTestRating(models.Model):
         return ['customer_id']
 
     def _phone_get_number_fields(self):
-        return ['phone_nbr', 'mobile_nbr']
+        return ['phone_nbr']
 
     def _rating_apply_get_default_subtype_id(self):
         return self.env['ir.model.data']._xmlid_to_res_id("test_mail_full.mt_mail_test_rating_rating_done")

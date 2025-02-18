@@ -62,7 +62,7 @@ class ProjectProject(models.Model):
         # we need to make sure they are exclusive in the profitability report.
         move_line_ids = super()._get_already_included_profitability_invoice_line_ids()
         query = self.env['account.move.line'].sudo()._search([
-            ('move_id.expense_sheet_id', '!=', False),
+            ('expense_id', '!=', False),
             ('id', 'not in', move_line_ids),
         ])
         return move_line_ids + list(query)
@@ -74,7 +74,7 @@ class ProjectProject(models.Model):
 
         expenses_read_group = self.env['hr.expense']._read_group(
             [
-                ('sheet_id.state', 'in', ['post', 'done']),
+                ('state', 'in', ['posted', 'in_payment', 'paid']),
                 ('analytic_distribution', 'in', self.account_id.ids),
             ],
             groupby=['currency_id'],

@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+import contextlib
 
 from odoo import _, api, Command, fields, models, modules, tools
+from odoo.http import request
 from odoo.tools import email_normalize
 from odoo.addons.mail.tools.discuss import Store
 
@@ -24,15 +26,18 @@ class ResUsers(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
+    presence_ids = fields.One2many("mail.presence", "user_id", groups="base.group_system")
+    # sudo: res.users - can access presence of accessible user
+    im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
 
     _notification_type = models.Constraint(
         "CHECK (notification_type = 'email' OR NOT share)",
         'Only internal user can receive notifications in Odoo',
     )
 
-    @api.depends('share', 'groups_id')
+    @api.depends('share', 'all_group_ids')
     def _compute_notification_type(self):
-        # Because of the `groups_id` in the `api.depends`,
+        # Because of the `group_ids` in the `api.depends`,
         # this code will be called for any change of group on a user,
         # even unrelated to the group_mail_notification_type_inbox or share flag.
         # e.g. if you add HR > Manager to a user, this method will be called.
@@ -41,20 +46,27 @@ class ResUsers(models.Model):
         inbox_group_id = self.env['ir.model.data']._xmlid_to_res_id('mail.group_mail_notification_type_inbox')
 
         self.filtered_domain([
-            ('groups_id', 'in', inbox_group_id), ('notification_type', '!=', 'inbox')
+            ('group_ids', 'in', inbox_group_id), ('notification_type', '!=', 'inbox')
         ]).notification_type = 'inbox'
         self.filtered_domain([
-            ('groups_id', 'not in', inbox_group_id), ('notification_type', '=', 'inbox')
+            ('group_ids', 'not in', inbox_group_id), ('notification_type', '=', 'inbox')
         ]).notification_type = 'email'
 
         # Special case: internal users with inbox notifications converted to portal must be converted to email users
-        self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')]).notification_type = 'email'
+        new_portal_users = self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')])
+        new_portal_users.notification_type = 'email'
+        new_portal_users.write({"group_ids": [Command.unlink(inbox_group_id)]})
+
+    @api.depends("presence_ids.status")
+    def _compute_im_status(self):
+        for user in self:
+            user.im_status = user.presence_ids.status or "offline"
 
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
         inbox_users = self.filtered(lambda user: user.notification_type == 'inbox')
-        inbox_users.write({"groups_id": [Command.link(inbox_group.id)]})
-        (self - inbox_users).write({"groups_id": [Command.unlink(inbox_group.id)]})
+        inbox_users.write({"group_ids": [Command.link(inbox_group.id)]})
+        (self - inbox_users).write({"group_ids": [Command.unlink(inbox_group.id)]})
 
     # ------------------------------------------------------------
     # CRUD
@@ -87,7 +99,7 @@ class ResUsers(models.Model):
         return users
 
     def write(self, vals):
-        log_portal_access = 'groups_id' in vals and not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
+        log_portal_access = 'group_ids' in vals and not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
         user_portal_access_dict = {
             user.id: user._is_portal()
             for user in self
@@ -169,11 +181,14 @@ class ResUsers(models.Model):
 
         mail_create_values = []
         for user in self:
-            body_html = self.env['ir.qweb']._render(
-                'mail.account_security_setting_update',
-                user._notify_security_setting_update_prepare_values(content, **kwargs),
-                minimal_qcontext=True,
-            )
+            body_html = self.env['mail.render.mixin']._render_template(
+                'mail.account_security_alert',
+                model='res.users',
+                res_ids=user.ids,
+                engine='qweb_view',
+                options={'post_process': True},
+                add_context=user._notify_security_setting_update_prepare_values(content, **kwargs),
+            )[user.id]
 
             body_html = self.env['mail.render.mixin']._render_encapsulate(
                 'mail.mail_notification_light',
@@ -204,20 +219,45 @@ class ResUsers(models.Model):
 
             mail_create_values.append(vals)
 
-        self.env['mail.mail'].sudo().create(mail_create_values)
+        mails = self.env['mail.mail'].sudo().create(mail_create_values)
+        with contextlib.suppress(Exception):
+            mails.send()
+        return mails
 
     def _notify_security_setting_update_prepare_values(self, content, **kwargs):
-        """" Prepare rendering values for the 'mail.account_security_setting_update' qweb template """
-
+        """"Prepare rendering values for the 'mail.account_security_alert' qweb template."""
         reset_password_enabled = self.env['ir.config_parameter'].sudo().get_param("auth_signup.reset_password", True)
-        return {
-            'company': self.company_id,
-            'password_reset_url': f"{self.get_base_url()}/web/reset_password",
-            'security_update_text': content,
+
+        values = {
+            'browser': False,
+            'content': content,
+            'event_datetime': fields.Datetime.now(),
+            'ip_address': False,
+            'location_address': False,
             'suggest_password_reset': kwargs.get('suggest_password_reset', True) and reset_password_enabled,
             'user': self,
-            'update_datetime': fields.Datetime.now(),
+            'useros': False,
         }
+        if not request:
+            return values
+
+        city = request.geoip.get('city') or False
+        region = request.geoip.get('region_name') or False
+        country = request.geoip.get('country') or False
+        if country:
+            if region and city:
+                values['location_address'] = _("Near %(city)s, %(region)s, %(country)s", city=city, region=region, country=country)
+            elif region:
+                values['location_address'] = _("Near %(region)s, %(country)s", region=region, country=country)
+            else:
+                values['location_address'] = _("In %(country)s", country=country)
+        values['ip_address'] = request.httprequest.environ['REMOTE_ADDR']
+        if request.httprequest.user_agent:
+            if request.httprequest.user_agent.browser:
+                values['browser'] = request.httprequest.user_agent.browser.capitalize()
+            if request.httprequest.user_agent.platform:
+                values['useros'] = request.httprequest.user_agent.platform.capitalize()
+        return values
 
     def _get_portal_access_update_body(self, access_granted):
         body = _('Portal Access Granted') if access_granted else _('Portal Access Revoked')

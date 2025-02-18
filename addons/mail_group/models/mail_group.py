@@ -65,7 +65,7 @@ class MailGroup(models.Model):
     moderation_rule_count = fields.Integer(string='Moderated emails count', compute='_compute_moderation_rule_count')
     moderation_rule_ids = fields.One2many('mail.group.moderation', 'mail_group_id', string='Moderated Emails')
     moderator_ids = fields.Many2many('res.users', 'mail_group_moderator_rel', string='Moderators',
-                                     domain=lambda self: [('groups_id', 'in', self.env.ref('base.group_user').id)])
+                                     domain=lambda self: [('all_group_ids', 'in', self.env.ref('base.group_user').id)])
     moderation_notify = fields.Boolean(
         string='Automatic notification',
         help='People receive an automatic notification about their message being waiting for moderation.')
@@ -255,7 +255,7 @@ class MailGroup(models.Model):
 
         # Error Case: Selected group of users, but no user found for that email
         email = email_normalize(message_dict.get('email_from', ''))
-        email_has_access = self.search_count([('id', '=', self.id), ('access_group_id.users.email_normalized', '=', email)])
+        email_has_access = self.search_count([('id', '=', self.id), ('access_group_id.user_ids.email_normalized', '=', email)])
         if self.access_mode == 'groups' and not email_has_access:
             return AliasError('error_mail_group_members_restricted',
                                   _('Only selected groups of users can send email to the mailing list.'))

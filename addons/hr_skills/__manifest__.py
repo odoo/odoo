@@ -51,12 +51,8 @@ This module introduces skills and resume management for employees.
         'web.assets_backend_lazy': [
             'hr_skills/static/src/views/skills_graph.js',
         ],
-        'web.qunit_suite_tests': [
-            'hr_skills/static/tests/legacy/**/*',
-        ],
         'web.assets_unit_tests': [
             'hr_skills/static/tests/**/*',
-            ('remove', 'hr_skills/static/tests/legacy/**/*'),
             ('remove', 'hr_skills/static/tests/tours/**/*'),
         ],
         'web.assets_tests': [

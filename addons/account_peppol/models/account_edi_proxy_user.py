@@ -66,22 +66,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     def _get_can_send_domain(self):
         return ('sender', 'smp_registration', 'receiver')
 
-    def _check_company_on_peppol(self, company, edi_identification):
-        if (
-            not company.account_peppol_migration_key
-            and (participant_info := company.partner_id._get_participant_info(edi_identification)) is not None
-            and company.partner_id._check_peppol_participant_exists(participant_info, edi_identification, check_company=True)
-        ):
-            error_msg = _(
-                "A participant with these details has already been registered on the network. "
-                "If you have previously registered to an alternative Peppol service, please deregister from that service, "
-                "or request a migration key before trying again. "
-            )
-
-            if isinstance(participant_info, str):
-                error_msg += _("The Peppol service that is used is likely to be %s.", participant_info)
-            raise UserError(error_msg)
-
     # -------------------------------------------------------------------------
     # CRONS
     # -------------------------------------------------------------------------
@@ -268,13 +252,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         # EXTENDS 'account_edi_ubl_cii' - add handle_demo
         return super()._register_proxy_user(company, proxy_type, edi_mode)
 
-    def _peppol_migrate_registration(self):
-        """Migrates AWAY from Odoo's SMP."""
-        self.ensure_one()
-        response = self._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
-        if migration_key := response.get('migration_key'):
-            self.company_id.account_peppol_migration_key = migration_key
-
     def _get_company_details(self):
         self.ensure_one()
         return {
@@ -289,7 +266,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             'peppol_migration_key': self.company_id.account_peppol_migration_key,
         }
 
-    def _peppol_register_sender(self):
+    def _peppol_register_sender(self, peppol_external_provider=None):
         self.ensure_one()
         params = {
             'company_details': self._get_company_details(),
@@ -299,6 +276,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             params=params,
         )
         self.company_id.account_peppol_proxy_state = 'sender'
+        if peppol_external_provider:
+            self.company_id.peppol_external_provider = peppol_external_provider
 
     def _peppol_register_receiver(self):
         self.ensure_one()
@@ -318,12 +297,16 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
         if company.account_peppol_proxy_state != 'sender':
             # a participant can only try registering as a receiver if they are currently a sender
-            peppol_state_translated = dict(company._fields['account_peppol_proxy_state'].selection)[company.account_peppol_proxy_state]
+            peppol_states = dict(self.env['ir.model.fields'].get_field_selection('res.company', 'account_peppol_proxy_state'))[company.account_peppol_proxy_state]  # handles translation correctly
             raise UserError(
-                _('Cannot register a user with a %s application', peppol_state_translated))
+                _('Cannot register a user with a %s application', peppol_states))
 
         edi_identification = self._get_proxy_identification(company, 'peppol')
-        self._check_company_on_peppol(company, edi_identification)
+        peppol_info = company._get_company_info_on_peppol(edi_identification)
+        is_on_peppol, external_provider, error_msg = peppol_info['is_on_peppol'], peppol_info['external_provider'], peppol_info['error_msg']
+        if is_on_peppol:
+            company.peppol_external_provider = external_provider
+            raise UserError(error_msg)
 
         self._call_peppol_proxy(
             endpoint='/api/peppol/1/register_sender_as_receiver',
@@ -336,6 +319,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         # but we need the field for future in case the user decided to migrate away from Odoo
         company.account_peppol_migration_key = False
         company.account_peppol_proxy_state = 'smp_registration'
+        company.peppol_external_provider = None
 
     def _peppol_deregister_participant(self):
         self.ensure_one()
@@ -353,6 +337,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
         self.company_id.account_peppol_proxy_state = 'not_registered'
         self.company_id.account_peppol_migration_key = False
+        self.company_id.peppol_external_provider = None
         self.unlink()
 
     @api.model

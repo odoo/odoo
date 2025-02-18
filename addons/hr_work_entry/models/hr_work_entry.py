@@ -276,11 +276,12 @@ class HrWorkEntryType(models.Model):
             ('id', 'not in', self.ids)
         ])
         for work_entry_type in self:
-            if similar_work_entry_types.filtered_domain([
+            invalid_work_entry_types = similar_work_entry_types.filtered_domain([
                 ('code', '=', work_entry_type.code),
                 ('country_id', 'in', self.country_id.ids + [False]),
-            ]):
-                raise UserError(_("The same code cannot be associated to multiple work entry types."))
+            ])
+            if invalid_work_entry_types:
+                raise UserError(_("The same code cannot be associated to multiple work entry types (%s)", ', '.join(list(set(invalid_work_entry_types.mapped('code'))))))
 
 
 class HrUserWorkEntryEmployee(models.Model):

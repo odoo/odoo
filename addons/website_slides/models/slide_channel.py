@@ -635,7 +635,7 @@ class SlideChannel(models.Model):
             if record.user_id == self.env.user:
                 record.can_upload = True
             elif record.upload_group_ids:
-                record.can_upload = bool(record.upload_group_ids & self.env.user.groups_id)
+                record.can_upload = bool(record.upload_group_ids & self.env.user.group_ids)
             else:
                 record.can_upload = self.env.user.has_group('website_slides.group_website_slides_manager')
 
@@ -1014,7 +1014,7 @@ class SlideChannel(models.Model):
 
     def _add_groups_members(self):
         for channel in self:
-            channel._action_add_members(channel.mapped('enroll_group_ids.users.partner_id'))
+            channel._action_add_members(channel.mapped('enroll_group_ids.all_user_ids.partner_id'))
 
     def _get_earned_karma(self, partner_ids):
         """ Compute the number of karma earned by partners on a channel

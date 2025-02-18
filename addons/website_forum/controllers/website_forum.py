@@ -15,6 +15,7 @@ from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
+from odoo.tools import is_html_empty
 
 _logger = logging.getLogger(__name__)
 
@@ -412,7 +413,7 @@ class WebsiteForum(WebsiteProfile):
                  '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
                 type='http', auth="user", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, **post):
-        if post.get('content', '') == '<p><br></p>':
+        if is_html_empty(post.get('content', '')):
             return request.render('http_routing.http_error', {
                 'status_code': _('Bad Request'),
                 'status_message': post_parent and _('Reply should not be empty.') or _('Question should not be empty.')

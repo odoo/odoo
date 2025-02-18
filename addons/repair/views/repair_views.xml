@@ -269,6 +269,7 @@
                     <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Properties" name="group_by_repair_properties" context="{'group_by': 'repair_properties'}"/>
                 </group>
             </search>
         </field>
@@ -410,7 +411,7 @@
         <record id="action_repair_overview" model="ir.actions.server">
             <field name="name">stock.repair.type.overview</field>
             <field name="model_id" ref="model_stock_picking_type"/>
-            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+            <field name="group_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
             <field name="state">code</field>
             <field name="code">
                 action = model.action_repair_overview()

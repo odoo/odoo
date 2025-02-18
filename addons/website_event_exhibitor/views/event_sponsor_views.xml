@@ -94,7 +94,6 @@
                             <field name="email" widget="email" string="Email"
                                 placeholder="e.g. : open.wood.decoration@example.com"/>
                             <field name="phone" widget="phone" string="Phone" options="{'enable_sms': True}"/>
-                            <field name="mobile" widget="phone" string="Mobile" options="{'enable_sms': True}"/>
                             <field name="url" widget="url" string="Website"
                                 placeholder="e.g. : https://www.odoo.com"/>
                         </group>
@@ -104,7 +103,7 @@
                             <field name="exhibitor_type" required="1"/>
                             <!-- Use website_published because is_published already used and widget conflicts -->
                             <field name="website_published" widget="boolean_toggle"
-                                string="Display in footer"
+                                string="Display on website footer"
                                 invisible="exhibitor_type != 'sponsor'"/>
                             <label for="hour_from" string="Opening Hours"
                                 invisible="exhibitor_type == 'sponsor'"/>
@@ -114,6 +113,7 @@
                                 <field name="hour_to" widget="float_time" nolabel="1" class="oe_inline"/>
                                 <field name="event_date_tz" nolabel="1" class="oe_inline"/>
                             </div>
+                            <field name="show_on_ticket"/>
                         </group>
                     </group>
                     <notebook>
@@ -152,11 +152,11 @@
                 <field name="name"/>
                 <field name="email"/>
                 <field name="phone"/>
-                <field name="mobile"/>
                 <field name="url" string="Website"/>
                 <field name="sponsor_type_id"/>
                 <field name="is_published" optional="show"/>
                 <field name="exhibitor_type"/>
+                <field name="show_on_ticket" optional="hide"/>
             </list>
         </field>
     </record>

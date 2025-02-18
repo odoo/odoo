@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import Form, TransactionCase
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests.common import tagged
 
 
 class TestResUsers(TransactionCase):
@@ -52,10 +54,16 @@ class TestResUsers(TransactionCase):
             'name': 'Internal',
             'login': 'user_internal',
             'password': 'password',
-            'groups_id': [self.env.ref('base.group_user').id],
+            'group_ids': [self.env.ref('base.group_user').id],
         })
         with Form(self.env['change.password.wizard'].with_context(active_model='res.users', active_ids=user_internal.ids), view='base.change_password_wizard_view') as form:
             with form.user_ids.edit(0) as line:
                 line.new_passwd = 'bla'
         rec = form.save()
         rec.change_password_button()
+
+
+@tagged('post_install', '-at_install')
+class TestUserSettings(HttpCaseWithUserDemo):
+    def test_user_group_settings(self):
+        self.start_tour('/odoo?debug=1', 'test_user_group_settings', login='admin')

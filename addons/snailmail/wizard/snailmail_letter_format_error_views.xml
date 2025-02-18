@@ -3,7 +3,7 @@
     <record id="snailmail_letter_format_error" model="ir.ui.view">
         <field name="name">snailmail.letter.format.error.form</field>
         <field name="model">snailmail.letter.format.error</field>
-        <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+        <field name="group_ids" eval="[(4,ref('base.group_user'))]"/>
         <field name="arch" type="xml">
             <form string="Cancel notification in failure">
                 <p>Our service cannot read your letter due to its format.<br/>

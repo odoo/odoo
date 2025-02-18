@@ -921,7 +921,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 },
 ...stepUtils.statusbarButtonsSteps('Confirm Order', _t("Confirm quotation"), ".o_statusbar_status .o_arrow_button_current:contains('RFQ')"),
-...stepUtils.statusbarButtonsSteps('Receive Products', _t("Receive Product"), ".o_statusbar_status .o_arrow_button_current:contains('Purchase Order')"),
+...stepUtils.statusbarButtonsSteps('Receive', _t("Receive Product"), ".o_statusbar_status .o_arrow_button_current:contains('Purchase Order')"),
 ...stepUtils.statusbarButtonsSteps('Validate', _t("Validate"), ".o_statusbar_status:contains('Ready')"),
 {
     trigger: ".o_back_button:enabled, .breadcrumb-item:not('.active'):last",
@@ -1252,5 +1252,5 @@ stepUtils.toggleHomeMenu()[0],
 {
     isActive: ["auto", "desktop", "enterprise"],
     content: "check that we're back on the dashboard",
-    trigger: 'a:contains("Customer Invoices")',
+    trigger: 'a:contains("Sales")',
 }]});

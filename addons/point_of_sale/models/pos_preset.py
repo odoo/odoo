@@ -53,13 +53,13 @@ class PosPreset(models.Model):
 
     def _compute_count_linked_orders(self):
         for record in self:
-            record.count_linked_orders = self.env['pos.order'].search_count([('preset_id', '=', record.id)])
+            record.count_linked_orders = self.env['pos.order'].search_count([('preset_id', 'in', record.ids)])
 
     def _compute_count_linked_config(self):
         for record in self:
             record.count_linked_config = self.env['pos.config'].search_count([
-                '|', ('default_preset_id', '=', record.id),
-                ('available_preset_ids', 'in', record.id)
+                '|', ('default_preset_id', 'in', record.ids),
+                ('available_preset_ids', 'in', record.ids)
             ])
 
     # Slots are created directly here in the form of dates, to avoid polluting
@@ -68,38 +68,9 @@ class PosPreset(models.Model):
     def get_available_slots(self):
         self.ensure_one()
         usage = self._compute_slots_usage()
-        date_now = datetime.now()
-        interval = timedelta(minutes=self.interval_time)
-        slots = {}
-
-        # Compute slots for next 7 days
-        next_7_days = [date_now + timedelta(days=i) for i in range(7)]
-        for day in next_7_days:
-            day_of_week = day.weekday()
-            date = day.strftime("%Y-%m-%d")
-            slots[date] = {}
-
-            if self.interval_time <= 0:
-                continue
-
-            for attendance_id in self.attendance_ids.filtered(lambda a: int(a.dayofweek) == day_of_week):
-                date_opening = datetime(day.year, day.month, day.day, int(attendance_id.hour_from % 24), int((attendance_id.hour_from % 1) * 60))
-                date_closing = datetime(day.year, day.month, day.day, int(attendance_id.hour_to % 24), int((attendance_id.hour_to % 1) * 60))
-
-                start = date_opening
-                while start <= date_closing:
-                    sql_datetime = start.strftime("%Y-%m-%d %H:%M:%S")
-                    slots[date][sql_datetime] = {
-                        'periode': attendance_id.day_period,
-                        'datetime': start,
-                        'sql_datetime': start.strftime("%Y-%m-%d %H:%M:%S"),
-                    }
-                    start += interval
-
-                for slot in slots[date].items():
-                    slot[1]['order_ids'] = usage.get(slot[1]['sql_datetime'], [])
-
-        return slots
+        return {
+            'usage_utc': usage,
+        }
 
     def _compute_slots_usage(self):
         usage = defaultdict(int)

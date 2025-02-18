@@ -104,7 +104,8 @@
                         <div id="contacts_settings">
                             <block title="Contacts" name="contacts_setting_container">
                                 <setting id="sms" string="Send SMS" documentation="/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" help="Send texts to your contacts">
-                                    <field name="module_sms"/>
+                                    <!-- Invisible to avoid breaking any custom inheriting templates -->
+                                    <field name="module_sms" invisible="1"/>
                                 </setting>
                                 <setting help="Automatically enrich your contact base with company data" title="When populating your address book, Odoo provides a list of matching companies. When selecting one item, the company data and logo are auto-filled." id="partner_autocomplete">
                                     <field name="module_partner_autocomplete"/>
@@ -142,7 +143,6 @@
                             <setting string="Mail Plugin" documentation="/applications/productivity/mail_plugins.html" help="Integrate with mail client plugins" id="mail_pluggin_setting">
                                 <field name="module_mail_plugin" />
                             </setting>
-                            <div id="product_get_pic_setting"/>
                             <setting string="OAuth Authentication" help="Use external accounts to log in (Google, Facebook, etc.)" id="module_auth_oauth">
                                 <field name="module_auth_oauth" />
                                 <div class="content-group mt16" invisible="not module_auth_oauth" id="msg_module_auth_oauth">

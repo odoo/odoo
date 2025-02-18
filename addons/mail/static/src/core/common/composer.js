@@ -23,6 +23,7 @@ import {
     useState,
     useExternalListener,
     toRaw,
+    EventBus,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -110,7 +111,11 @@ export class Composer extends Component {
         this.fakeTextarea = useRef("fakeTextarea");
         this.inputContainerRef = useRef("input-container");
         this.pickerContainerRef = useRef("picker-container");
-        this.state = useState({ active: true });
+        this.state = useState({
+            active: true,
+            isFullComposerOpen: false,
+        });
+        this.fullComposerBus = new EventBus();
         this.selection = useSelection({
             refName: "textarea",
             model: this.props.composer.selection,
@@ -498,11 +503,11 @@ export class Composer extends Component {
     }
 
     async onClickFullComposer(ev) {
+        const allRecipients = [...this.thread.suggestedRecipients];
         if (this.props.type !== "note") {
-            // auto-create partners of checked suggested partners
-            const newPartners = this.thread.suggestedRecipients.filter(
-                (recipient) => recipient.checked && !recipient.persona
-            );
+            allRecipients.push(...this.thread.additionalRecipients);
+            // auto-create partners:
+            const newPartners = allRecipients.filter((recipient) => !recipient.persona);
             if (newPartners.length !== 0) {
                 const recipientEmails = [];
                 newPartners.forEach((recipient) => {
@@ -517,9 +522,7 @@ export class Composer extends Component {
                     const partnerData = partners[index];
                     const persona = this.store.Persona.insert({ ...partnerData, type: "partner" });
                     const email = recipientEmails[index];
-                    const recipient = this.thread.suggestedRecipients.find(
-                        (recipient) => recipient.email === email
-                    );
+                    const recipient = allRecipients.find((recipient) => recipient.email === email);
                     Object.assign(recipient, { persona });
                 }
             }
@@ -530,10 +533,27 @@ export class Composer extends Component {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
         });
-        const signature = this.store.self.signature;
-        const default_body =
-            (await prettifyMessageContent(body, validMentions)) +
-            (this.props.composer.emailAddSignature && signature ? "<br>" + signature : "");
+        let default_body = await prettifyMessageContent(body, validMentions);
+        if (!default_body) {
+            const composer = toRaw(this.props.composer);
+            // Reset signature when recovering an empty body.
+            composer.emailAddSignature = true;
+        }
+        let signature = this.store.self.signature;
+        if (signature) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(signature, 'text/html');
+            const divElement = document.createElement('div');
+            divElement.setAttribute('data-o-mail-quote', '1');
+            const br = document.createElement("br");
+            const textNode = document.createTextNode("-- ");
+            divElement.append(textNode, br, ...doc.body.childNodes);
+            signature = divElement.outerHTML;
+        }
+        default_body = this.formatDefaultBodyForFullComposer(
+            default_body,
+            this.props.composer.emailAddSignature ? markup(signature) : ""
+        );
         const context = {
             default_attachment_ids: attachmentIds,
             default_body,
@@ -542,11 +562,10 @@ export class Composer extends Component {
             default_partner_ids:
                 this.props.type === "note"
                     ? []
-                    : this.thread.suggestedRecipients
-                          .filter((recipient) => recipient.checked)
-                          .map((recipient) => recipient.persona.id),
+                    : allRecipients.map((recipient) => recipient.persona.id),
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
+            clicked_on_full_composer: true,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
         };
         const action = {
@@ -569,22 +588,37 @@ export class Composer extends Component {
                     this.notifySendFromMailbox();
                 }
                 if (accidentalDiscard) {
-                    const editor = document.querySelector(
-                        ".o_mail_composer_form_view .note-editable"
-                    );
-                    const editorIsEmpty = !editor || !editor.innerText.replace(/^\s*$/gm, "");
-                    if (!editorIsEmpty) {
-                        this.saveContent({ editor });
-                        this.restoreContent();
-                    }
+                    this.fullComposerBus.trigger("ACCIDENTAL_DISCARD", {
+                        onAccidentalDiscard: (isEmpty) => {
+                            if (!isEmpty) {
+                                this.saveContent();
+                                this.restoreContent();
+                            }
+                        },
+                    });
                 } else {
                     this.clear();
                 }
                 this.props.messageToReplyTo?.cancel();
                 this.onCloseFullComposerCallback();
+                this.state.isFullComposerOpen = false;
+                // Use another event bus so that no message is sent to the
+                // closed composer.
+                this.fullComposerBus = new EventBus();
+            },
+            props: {
+                fullComposerBus: this.fullComposerBus,
             },
         };
         await this.env.services.action.doAction(action, options);
+        this.state.isFullComposerOpen = true;
+    }
+
+    formatDefaultBodyForFullComposer(defaultBody, signature = "") {
+        if (signature) {
+            defaultBody = `${defaultBody}<br>${signature}`;
+        }
+        return `<div>${defaultBody}</div>`; // as to not wrap in <p> by html_sanitize
     }
 
     clear() {
@@ -685,6 +719,7 @@ export class Composer extends Component {
         this.suggestion?.clearCannedResponses();
         this.props.messageToReplyTo?.cancel();
         this.props.composer.emailAddSignature = true;
+        this.props.composer.thread.additionalRecipients = [];
     }
 
     async editMessage() {
@@ -750,22 +785,22 @@ export class Composer extends Component {
         this.props.composer.isFocused = false;
     }
 
-    /** @param {HTMLElement} [editor] if set, this is a save from full composer editor. */
-    saveContent({ editor = false } = {}) {
+    saveContent() {
         const composer = toRaw(this.props.composer);
-        const config = {};
-        if (editor) {
-            Object.assign(config, {
-                emailAddSignature: false,
-                text: editor.innerText.replace(/(\t|\n)+/g, "\n"),
+        const saveContentToLocalStorage = (text, emailAddSignature) => {
+            const config = {
+                emailAddSignature,
+                text,
+            };
+            browser.localStorage.setItem(composer.localId, JSON.stringify(config));
+        };
+        if (this.state.isFullComposerOpen) {
+            this.fullComposerBus.trigger("SAVE_CONTENT", {
+                onSaveContent: saveContentToLocalStorage,
             });
         } else {
-            Object.assign(config, {
-                emailAddSignature: true,
-                text: composer.text,
-            });
+            saveContentToLocalStorage(composer.text, true);
         }
-        browser.localStorage.setItem(composer.localId, JSON.stringify(config));
     }
 
     restoreContent() {

@@ -27,7 +27,7 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         cls.env['res.partner'].create({'name': 'Tajine Saucisse'})
 
     def test_01_product_configurator(self):
-        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
+        self.env.ref('base.user_admin').write({'group_ids': [(4, self.env.ref('product.group_product_variant').id)]})
         tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
         self.product_product_custo_desk.taxes_id = tax
         self.product_product_conf_chair_floor_protect.taxes_id = tax
@@ -37,7 +37,7 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
     def test_02_product_configurator_advanced(self):
         # group_delivery_invoice_address: show the shipping address (needed for a trigger)
         self.salesman.write({
-            'groups_id': [(4, self.env.ref('account.group_delivery_invoice_address').id)],
+            'group_ids': [(4, self.env.ref('account.group_delivery_invoice_address').id)],
         })
 
         # Prepare relevant test data

@@ -115,6 +115,12 @@ class AccountMove(models.Model):
             ('19', "Payment by card"),
         ], string="Payment Means", default='04')
 
+    def _get_fields_to_detach(self):
+        # EXTENDS account
+        fields_list = super()._get_fields_to_detach()
+        fields_list.append("l10n_es_edi_facturae_xml_file")
+        return fields_list
+
     def _l10n_es_edi_facturae_get_default_enable(self):
         self.ensure_one()
         return not self.invoice_pdf_report_id \

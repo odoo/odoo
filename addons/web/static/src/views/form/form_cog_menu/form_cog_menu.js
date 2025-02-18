@@ -7,8 +7,4 @@ export class FormCogMenu extends CogMenu {
         ...CogMenu.components,
         StatusBarDropdownItems,
     };
-    static props = {
-        ...CogMenu.props,
-        slots: { type: Object, optional: true },
-    };
 }

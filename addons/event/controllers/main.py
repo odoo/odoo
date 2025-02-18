@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http, _
 from odoo.http import Controller, request, route, content_disposition
-from odoo.tools import consteq
+from odoo.tools import consteq, format_datetime
 
 
 class EventController(Controller):
@@ -52,7 +52,8 @@ class EventController(Controller):
 
         event_registrations_sudo = event_sudo.registration_ids.filtered(lambda reg: reg.id in registration_ids)
         report_name_prefix = _("Ticket") if responsive_html else _("Badges") if badge_mode else _("Tickets")
-        report_name = f"{report_name_prefix} - {event_sudo.name} ({event_sudo.date_begin_located})"
+        report_date = format_datetime(request.env, event_sudo.date_begin, tz=event_sudo.date_tz, dt_format='medium')
+        report_name = f"{report_name_prefix} - {event_sudo.name} ({report_date})"
         if len(event_registrations_sudo) == 1:
             report_name += f" - {event_registrations_sudo[0].name}"
 

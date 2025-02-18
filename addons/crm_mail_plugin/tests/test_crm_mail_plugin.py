@@ -20,7 +20,7 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
         self.assertNotIn("leads", result,
             msg="The user has no access to crm.lead, the leads section should not be visible")
 
-        self.user_test.groups_id |= self.env.ref("sales_team.group_sale_salesman_all_leads")
+        self.user_test.group_ids |= self.env.ref("sales_team.group_sale_salesman_all_leads")
 
         lead_1, lead_2 = self.env["crm.lead"].create([
             {"name": "Lead Partner 1", "partner_id": partner.id},
@@ -60,7 +60,7 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
         # set default company to Company_A
         self.env.user.company_id = company_a.id
 
-        self.user_test.groups_id |= self.env.ref('sales_team.group_sale_salesman_all_leads')
+        self.user_test.group_ids |= self.env.ref('sales_team.group_sale_salesman_all_leads')
 
         # Add company_B to user_test to have access to records related to company_B
         self.user_test.write({'company_ids': [(4, company_b.id)]})

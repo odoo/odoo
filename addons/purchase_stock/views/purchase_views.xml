@@ -7,13 +7,10 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header/button[@name='action_rfq_send']" position="after">
-                <button name="action_view_picking" 
-                    string="Receive Products" class="oe_highlight" type="object" 
-                    invisible="is_shipped or state not in ('purchase', 'done') or incoming_picking_count == 0" 
+                <button name="action_view_picking"
+                    string="Receive" class="oe_highlight" type="object"
+                    invisible="is_shipped or state not in ('purchase', 'done') or incoming_picking_count == 0"
                     data-hotkey="y" groups="stock.group_stock_user"/>
-            </xpath>
-            <xpath expr="//header/button[@name='confirm_reminder_mail']" position="attributes">
-                <attribute name="invisible">state not in ('purchase', 'done') or mail_reminder_confirmed or not date_planned or effective_date</attribute>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button type="object"
@@ -38,7 +35,7 @@
                 <div>
                     <button name="%(action_purchase_vendor_delay_report)d" class="oe_link" type="action" context="{'search_default_partner_id': partner_id}" invisible="state in ['purchase', 'done'] or not partner_id">
                         <span invisible="on_time_rate &lt; 0"><field name="on_time_rate" digits="[42, 0]" class="oe_inline"/>% On-Time Delivery</span>
-                        <span invisible="on_time_rate &gt;= 0">No On-time Delivery Data</span>
+                        <span invisible="on_time_rate &gt;= 0">No data yet</span>
                     </button>
                 </div>
             </xpath>
@@ -73,8 +70,8 @@
                 <field name="incoterm_location"  readonly="state == 'done'"/>
             </xpath>
             <xpath expr="//div[@name='reminder']" position="after">
-                <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state in ['cancel', 'done', 'purchase']"/>
-                <field name="dest_address_id" groups="stock.group_stock_multi_locations" invisible="default_location_dest_id_usage != 'customer'" readonly="state in ['cancel', 'done', 'purchase']" required="default_location_dest_id_usage == 'customer'"/>
+                <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" readonly="state in ['cancel', 'done', 'purchase']"/>
+                <field name="dest_address_id" invisible="default_location_dest_id_usage != 'customer'" readonly="state in ['cancel', 'done', 'purchase']" required="default_location_dest_id_usage == 'customer'"/>
             </xpath>
         </field>
     </record>

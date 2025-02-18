@@ -227,7 +227,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             login='accountman',
             password='accountman',
             email='accountman@test.com',
-            groups_id=cls.get_default_groups().ids,
+            group_ids=cls.get_default_groups().ids,
             company_id=cls.env.company.id,
         )
 
@@ -264,7 +264,11 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def setup_other_currency(cls, code, **kwargs):
         if 'rates' not in kwargs:
-            return super().setup_other_currency(code, rates=[('2016-01-01', 3.0), ('2017-01-01', 2.0)], **kwargs)
+            return super().setup_other_currency(code, rates=[
+                ('1900-01-01', 1.0),
+                ('2016-01-01', 3.0),
+                ('2017-01-01', 2.0),
+            ], **kwargs)
         return super().setup_other_currency(code, **kwargs)
 
     @classmethod
@@ -336,10 +340,11 @@ class AccountTestInvoicingCommon(ProductCommon):
                     *journal_company_domain,
                     ('type', '=', 'bank')
                 ], limit=1),
-            'default_journal_cash': cls.env['account.journal'].search([
-                    *journal_company_domain,
-                    ('type', '=', 'cash')
-                ], limit=1),
+            'default_journal_cash': cls.env['account.journal'].create({
+                'type': 'cash',
+                'name': 'Cash',
+                'company_id': company.id,
+            }),
             'default_journal_credit': cls.env['account.journal'].create({
                 'name': 'Credit Journal',
                 'type': 'credit',
@@ -614,6 +619,8 @@ class AccountTestInvoicingCommon(ProductCommon):
             'total_amount': company_currency,
             'cash_rounding_base_amount_currency': currency,
             'cash_rounding_base_amount': company_currency,
+            'non_deductible_tax_amount_currency': currency,
+            'non_deductible_tax_amount': company_currency,
         }
 
         current_values = {k: len(v) if k == 'subtotals' else v for k, v in tax_totals.items() if k not in excluded_fields}
@@ -1219,6 +1226,19 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
 
 
 class TestAccountMergeCommon(AccountTestInvoicingCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # this field is added to account.journal because there are no many2many fields referencing account.account
+        # the many2many field is needed in `_create_references_to_account` function below
+        cls.env['ir.model.fields'].create({
+            'ttype': 'many2many',
+            'model_id': cls.env.ref('account.model_account_journal').id,
+            'relation': 'account.account',
+            'name': 'x_account_control_ids',
+        })
+
     def _create_account_merge_wizard(self, accounts):
         """ Open an account.merge.wizard with the given accounts. """
         return self.env['account.merge.wizard'].with_context({
@@ -1259,16 +1279,13 @@ class TestAccountMergeCommon(AccountTestInvoicingCommon):
             ]
         })
 
-        # Many2many (note that merging the accounts will technically
-        # break the check_company constraint on journal.account_control_ids,
-        # but we still test this as this is the easiest way to test that
-        # M2M fields are merged correctly.)
+        # Many2many
         journal = self.env['account.journal'].create({
             'name': f'For account {account.id}',
             'code': f'T{account.id}',
             'type': 'general',
             'company_id': account.company_ids.id,
-            'account_control_ids': [Command.set(account.ids)],
+            'x_account_control_ids': [Command.set(account.ids)],
         })
 
         # Company-dependent Many2one.
@@ -1288,7 +1305,7 @@ class TestAccountMergeCommon(AccountTestInvoicingCommon):
 
         return {
             move.line_ids[0]: 'account_id',
-            journal: 'account_control_ids',
+            journal: 'x_account_control_ids',
             partner: 'property_account_receivable_id',
             attachment: 'res_id',
         }

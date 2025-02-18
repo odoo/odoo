@@ -53,7 +53,7 @@ export class Store extends BaseStore {
     Failure;
     /** @type {typeof import("@mail/core/common/attachment_model").Attachment} */
     ["ir.attachment"];
-    /** @type {typeof import("@mail/core/web/activity_model").Activity} */
+    /** @type {typeof import("@mail/core/common/activity_model").Activity} */
     ["mail.activity"];
     /** @type {typeof import("@mail/core/common/canned_response_model").CannedResponse} */
     ["mail.canned.response"];
@@ -474,11 +474,12 @@ export class Store extends BaseStore {
         const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
         const recipientEmails = [];
         if (!isNote) {
-            const recipientIds = thread.suggestedRecipients
-                .filter((recipient) => recipient.persona && recipient.checked)
+            const allRecipients = [...thread.suggestedRecipients, ...thread.additionalRecipients];
+            const recipientIds = allRecipients
+                .filter((recipient) => recipient.persona)
                 .map((recipient) => recipient.persona.id);
-            thread.suggestedRecipients
-                .filter((recipient) => recipient.checked && !recipient.persona)
+            allRecipients
+                .filter((recipient) => !recipient.persona)
                 .forEach((recipient) => {
                     recipientEmails.push(recipient.email);
                 });

@@ -274,9 +274,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         operations = production.bom_id.operation_ids + kit_operation if kit_operation else production.bom_id.operation_ids
         if workorder.operation_id not in operations:
             return False
-        capacity = workorder.operation_id.workcenter_id._get_capacity(production.product_id)
-        operation_cycle = float_round(production.product_uom_qty / capacity, precision_rounding=1, rounding_method='UP')
-        return workorder.operation_id._compute_operation_cost() * operation_cycle
+        duration = workorder.operation_id._get_duration_expected(production.product_id, production.product_qty)
+        return self.env.company.currency_id.round(workorder.operation_id.with_context(op_duration=duration)._compute_operation_cost())
 
     def _get_operations_data(self, production, level=0, current_index=False):
         if production.state == "done":
@@ -607,7 +606,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             return self._format_receipt_date('available')
 
         replenishments_with_date = list(filter(lambda r: r.get('summary', {}).get('receipt', {}).get('date'), replenishments))
-        max_date = max([get(rep, 'date', True) for rep in replenishments_with_date], default=fields.Date.today())
+        max_date = max([get(rep, 'date', True) for rep in replenishments_with_date], default=fields.Datetime.today())
         if has_to_order_line or any(get(rep, 'type', True) == 'estimated' for rep in replenishments):
             return self._format_receipt_date('estimated', max_date)
         else:

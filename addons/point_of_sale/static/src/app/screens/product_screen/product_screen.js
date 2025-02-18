@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -99,6 +100,8 @@ export class ProductScreen extends Component {
             useWithBarcode: true,
         });
 
+        this.doLoadSampleData = useTrackedAsync(() => this.pos.loadSampleData());
+
         useEffect(
             () => {
                 this.state.quantityByProductTmplId = this.currentOrder?.lines?.reduce((acc, ol) => {
@@ -114,9 +117,9 @@ export class ProductScreen extends Component {
 
     getNumpadButtons() {
         const colorClassMap = {
-            [this.env.services.localization.decimalPoint]: "o_colorlist_item_color_transparent_6",
-            Backspace: "o_colorlist_item_color_transparent_1",
-            "-": "o_colorlist_item_color_transparent_3",
+            [this.env.services.localization.decimalPoint]: "o_colorlist_item_numpad_color_6",
+            Backspace: "o_colorlist_item_numpad_color_1",
+            "-": "o_colorlist_item_numpad_color_3",
         };
 
         const defaultLastRowValues =

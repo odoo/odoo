@@ -4,6 +4,7 @@
 from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 from odoo.tools import float_compare
 
 from odoo import api, fields, models, SUPERUSER_ID, _
@@ -71,9 +72,17 @@ class StockRule(models.Model):
                 lambda s: not s.company_id or s.company_id == procurement.company_id
             )[:1]
 
-            if not supplier:
+            if not supplier and self.env.context.get('from_orderpoint'):
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.', procurement.product_id.display_name)
                 errors.append((procurement, msg))
+            elif not supplier:
+                # If the supplier is not set, we cannot create a PO.
+                moves = procurement.values.get('move_dest_ids', self.env['stock.move'])
+                if moves.propagate_cancel:
+                    moves._action_cancel()
+                moves.procure_method = 'make_to_stock'
+                self._notify_responsible(procurement)
+                return
 
             partner = supplier.partner_id
             # we put `supplier_info` in values for extensibility purposes
@@ -153,6 +162,14 @@ class StockRule(models.Model):
                     if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
                         po.date_order = order_date_planned
             self.env['purchase.order.line'].sudo().create(po_line_values)
+
+    def _post_vendor_notification(self, records_to_notify, users_to_notify, product):
+        notification_msg = Markup(" ").join(Markup("%s") % user._get_html_link(f'@{user.name}') for user in users_to_notify)
+        notification_msg += Markup("<br/>%s <strong>%s</strong>, %s") % (_("No supplier has been found to replenish"), product.display_name, _("this product should be manually replenished."))
+        records_to_notify.message_post(body=notification_msg, partner_ids=users_to_notify.ids)
+
+    def _notify_responsible(self, procurement):
+        pass  # Override in sale_purchase_stock and purchase_mrp to notify salesperson or MO responsible
 
     def _get_lead_days(self, product, **values):
         """Add the company security lead time and the supplier delay to the cumulative delay
@@ -279,6 +296,7 @@ class StockRule(models.Model):
         # arbitrary procurement. In this case the first.
         values = values[0]
         partner = values['supplier'].partner_id
+        currency = values['supplier'].currency_id
 
         fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
 
@@ -291,7 +309,7 @@ class StockRule(models.Model):
             'user_id': partner.buyer_id.id,
             'picking_type_id': self.picking_type_id.id,
             'company_id': company_id.id,
-            'currency_id': partner.with_company(company_id).property_purchase_currency_id.id or company_id.currency_id.id,
+            'currency_id': currency.id or partner.with_company(company_id).property_purchase_currency_id.id or company_id.currency_id.id,
             'dest_address_id': values.get('partner_id', False),
             'origin': ', '.join(origins),
             'payment_term_id': partner.with_company(company_id).property_supplier_payment_term_id.id,
@@ -304,6 +322,9 @@ class StockRule(models.Model):
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id) or \
                 (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
+        currency = ('supplier' in values and values['supplier'].currency_id) or \
+                   partner.with_company(company_id).property_purchase_currency_id or \
+                   company_id.currency_id
 
         domain = (
             ('partner_id', '=', partner.id),
@@ -311,6 +332,7 @@ class StockRule(models.Model):
             ('picking_type_id', '=', self.picking_type_id.id),
             ('company_id', '=', company_id.id),
             ('user_id', '=', partner.buyer_id.id),
+            ('currency_id', '=', currency.id),
         )
         delta_days = self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge')
         if values.get('orderpoint_id') and delta_days is not False:

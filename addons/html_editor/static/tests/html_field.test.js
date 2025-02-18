@@ -95,7 +95,15 @@ class IrAttachment extends models.Model {
         },
     ];
 }
-defineModels([Partner, IrAttachment]);
+
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+
+defineModels([Partner, IrAttachment, User]);
 
 let htmlEditor;
 beforeEach(() => {
@@ -324,6 +332,54 @@ test("links should open on a new tab in readonly", async () => {
     }
 });
 
+test("XML-like self-closing elements are fixed in readonly mode", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<a href="#"/>outside<a href="#">inside</a>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1, 2],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" readonly="1"/>
+            </form>`,
+    });
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<a href="#" target="_blank" rel="noreferrer"></a>outside<a href="#" target="_blank" rel="noreferrer">inside</a>`
+    );
+});
+
+test("XML-like self-closing elements are fixed in editable mode", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<a href="#"/>outside<a href="#">inside</a>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1, 2],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    expect(".odoo-editor-editable").toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(0);
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
+        `<div class="o-paragraph">outside<a href="#">inside</a></div>`
+    );
+});
+
 test("edit and save a html field", async () => {
     onRpc("web_save", ({ args }) => {
         expect(args[1]).toEqual({
@@ -405,13 +461,13 @@ test("edit a html field in new form view dialog and close the dialog with 'escap
             </form>`,
     });
     expect(".modal").toHaveCount(1);
-    expect(".odoo-editor-editable p").toHaveText("");
+    expect(".odoo-editor-editable div.o-paragraph").toHaveText("");
 
     await contains("[name='txt'] .odoo-editor-editable").focus();
-    setSelectionInHtmlField();
+    setSelectionInHtmlField("div.o-paragraph");
     await insertText(htmlEditor, "test");
     await animationFrame();
-    expect(".odoo-editor-editable p").toHaveText("test");
+    expect(".odoo-editor-editable div.o-paragraph").toHaveText("test");
     expect(".o_form_button_save").toBeVisible();
 
     await press("escape");
@@ -754,12 +810,10 @@ test("Embed video by pasting video URL", async () => {
         },
     ];
 
-    onRpc("/html_editor/video_url/data", async () => {
-        return {
-            platform: "youtube",
-            embed_url: "//www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0",
-        };
-    });
+    onRpc("/html_editor/video_url/data", async () => ({
+        platform: "youtube",
+        embed_url: "//www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0",
+    }));
 
     await mountView({
         type: "form",
@@ -900,21 +954,21 @@ test("html field with a placeholder", async () => {
     });
 
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<p placeholder="test" class="o-we-hint"><br></p>',
+        '<div class="o-paragraph o-we-hint" placeholder="test"><br></div>',
         { type: "html" }
     );
 
-    setSelectionInHtmlField();
+    setSelectionInHtmlField("div.o-paragraph");
     await tick();
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<p placeholder="Type &quot;/&quot; for commands" class="o-we-hint"><br></p>',
+        '<div class="o-paragraph o-we-hint" placeholder="Type &quot;/&quot; for commands"><br></div>',
         { type: "html" }
     );
 
     moveSelectionOutsideEditor();
     await tick();
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<p placeholder="test" class="o-we-hint"><br></p>',
+        '<div class="o-paragraph o-we-hint" placeholder="test"><br></div>',
         { type: "html" }
     );
 });
@@ -1220,12 +1274,8 @@ test("edit and save a html field in collaborative should keep the same wysiwyg",
             ' data-last-history-steps="12345"'
         );
     });
-    onRpc("/html_editor/get_ice_servers", () => {
-        return [];
-    });
-    onRpc("/html_editor/bus_broadcast", (params) => {
-        return { id: 10 };
-    });
+    onRpc("/html_editor/get_ice_servers", () => []);
+    onRpc("/html_editor/bus_broadcast", (params) => ({ id: 10 }));
 
     await mountView({
         type: "form",
@@ -1776,8 +1826,8 @@ describe("save image", () => {
 
         const imageRecord = IrAttachment._records[0];
         // Method to get the html of a cropped image.
-        const getImageContainerHTML = (src, isModified) => {
-            return `
+        const getImageContainerHTML = (src, isModified) =>
+            `
             <p>
                 <img
                     class="img img-fluid o_we_custom_image o_we_image_cropped${
@@ -1798,7 +1848,6 @@ describe("save image", () => {
         `
                 .replace(/(?:\s|(?:\r\n))+/g, " ")
                 .replace(/\s?(<|>)\s?/g, "$1");
-        };
         // Promise to resolve when we want the response of the modify_image RPC.
         const modifyImagePromise = new Deferred();
         let writeCount = 0;

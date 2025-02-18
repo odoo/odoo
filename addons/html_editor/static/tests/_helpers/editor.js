@@ -149,7 +149,7 @@ export async function testEditor(config) {
     if (!compareFunction) {
         compareFunction = (content, expected, phase) => {
             expect(content).toBe(expected, {
-                message: `(testEditor) ${phase} is strictly equal to %actual%"`,
+                message: `(testEditor) ${phase} is strictly equal to "${expected}"`,
             });
         };
     }

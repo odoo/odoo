@@ -251,7 +251,7 @@ def check_image():
                 value_latest = value
             elif name == get_img_name():
                 value_actual = value
-    if value_actual == value_latest:
+    if value_actual == value_latest:  # pylint: disable=E0601
         return False
     version = check_file.get(value_latest, 'Error').replace('iotboxv', '').replace('.zip', '').split('_')
     return {'major': version[0], 'minor': version[1]}

@@ -2,8 +2,9 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { roundPrecision } from "@web/core/utils/numbers";
-import { getTaxesAfterFiscalPosition, getTaxesValues } from "./utils/tax_utils";
+import { getTaxesAfterFiscalPosition } from "./utils/tax_utils";
 import { markup } from "@odoo/owl";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 /**
  * ProductProduct, shadow of product.product in python.
@@ -17,46 +18,59 @@ import { markup } from "@odoo/owl";
 export class ProductTemplate extends Base {
     static pythonModel = "product.template";
 
-    getProductPriceDetails(price, pricelist = false, fiscalPosition = false) {
+    prepareProductBaseLineForTaxesComputationExtraValues(
+        price,
+        pricelist = false,
+        fiscalPosition = false
+    ) {
         const config = this.models["pos.config"].getFirst();
         const productTemplate = this instanceof ProductTemplate ? this : this.product_tmpl_id;
         const basePrice = this?.lst_price || productTemplate.getPrice(pricelist, 1);
-        const selectedPrice = price === undefined ? basePrice : price;
+        const priceUnit = price === undefined ? basePrice : price;
+        const currency = config.currency_id;
+        const extraValues = { currency_id: currency };
 
-        let taxes = productTemplate.taxes_id;
+        let taxes = this.taxes_id;
 
         // Fiscal position.
         if (fiscalPosition) {
             taxes = getTaxesAfterFiscalPosition(taxes, fiscalPosition, this.models);
         }
 
-        // Taxes computation.
-        const taxesData = getTaxesValues(
-            taxes,
-            selectedPrice,
-            1,
-            productTemplate,
-            config._product_default_values,
-            config.company_id,
-            config.currency_id
-        );
-
-        return taxesData;
+        return {
+            ...extraValues,
+            product_id: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+                config._product_default_values,
+                this
+            ),
+            quantity: 1,
+            price_unit: priceUnit,
+            tax_ids: taxes,
+        };
     }
 
     getProductPrice(price = false, pricelist = false, fiscalPosition = false) {
         const config = this.models["pos.config"].getFirst();
-        const taxesData = this.getProductPriceDetails(price, pricelist, fiscalPosition);
+        const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
+            {},
+            this.prepareProductBaseLineForTaxesComputationExtraValues(
+                price,
+                pricelist,
+                fiscalPosition
+            )
+        );
+        accountTaxHelpers.add_tax_details_in_base_line(baseLine, config.company_id);
+        accountTaxHelpers.round_base_lines_tax_details([baseLine], config.company_id);
+
         if (config.iface_tax_included === "total") {
-            return taxesData.total_included;
+            return baseLine.tax_details.total_included_currency;
         } else {
-            return taxesData.total_excluded;
+            return baseLine.tax_details.total_excluded_currency;
         }
     }
 
     isAllowOnlyOneLot() {
-        const productUnit = this.uom_id;
-        return this.tracking === "lot" || !productUnit || !productUnit.is_pos_groupable;
+        return this.tracking === "lot" || !this.uom_id || !this.uom_id.is_pos_groupable;
     }
 
     isTracked() {
@@ -230,7 +244,7 @@ export class ProductTemplate extends Base {
     }
 
     get searchString() {
-        const fields = ["display_name", "description_sale", "description"];
+        const fields = ["display_name"];
         return fields
             .map((field) => this[field] || "")
             .filter(Boolean)
@@ -239,7 +253,17 @@ export class ProductTemplate extends Base {
 
     exactMatch(searchWord) {
         const fields = ["barcode", "default_code"];
-        return fields.some((field) => this[field] && this[field].includes(searchWord));
+        const variantMatch = this.product_variant_ids.some(
+            (variant) =>
+                (variant.default_code && variant.default_code.toLowerCase() == searchWord) ||
+                variant.product_template_variant_value_ids.some((vv) =>
+                    vv.name.toLowerCase().includes(searchWord)
+                )
+        );
+        return (
+            variantMatch ||
+            fields.some((field) => this[field] && this[field].toLowerCase() == searchWord)
+        );
     }
 
     _isArchivedCombination(attributeValueIds) {

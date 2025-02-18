@@ -26,6 +26,17 @@ patch(ControlButtons.prototype, {
         this.dialog.closeAll();
         this.pos.startTransferOrder();
     },
+    showTransferCourse() {
+        const order = this.currentOrder;
+        if (!order || !order.hasCourses()) {
+            return false;
+        }
+        return order.getSelectedCourse() || order.getSelectedOrderline();
+    },
+    async clickTransferCourse() {
+        this.dialog.closeAll();
+        await this.pos.transferLinesToCourse();
+    },
 });
 patch(ControlButtons, {
     components: {

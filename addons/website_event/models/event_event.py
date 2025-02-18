@@ -24,6 +24,7 @@ class EventEvent(models.Model):
         'website.published.multi.mixin',
         'website.cover_properties.mixin',
         'website.searchable.mixin',
+        'website.page_visibility_options.mixin',
     ]
 
     def _default_cover_properties(self):
@@ -94,6 +95,12 @@ class EventEvent(models.Model):
         'Remaining before start', compute='_compute_time_data',
         help="Remaining time before event starts (minutes)")
 
+    @api.depends('website_url')
+    def _compute_event_share_url(self):
+        """Fall back on the website_url to share the event."""
+        for event in self:
+            event.event_share_url = event.event_url or werkzeug.urls.url_join(event.get_base_url(), event.website_url)
+ 
     @api.depends('registration_ids')
     @api.depends_context('uid')
     def _compute_is_participating(self):
@@ -247,6 +254,19 @@ class EventEvent(models.Model):
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
+
+    def copy(self, default=None):
+        res = super().copy(default=default)
+        res.copy_event_menus(self)
+        return res
+
+    def copy_event_menus(self, old_events):
+        for new_event, old_event in zip(self, old_events):
+            default_menu_values = {'event_id': new_event.id}
+            new_event.menu_id = old_event.menu_id.copy({'name': new_event.name, 'website_id': new_event.website_id.id})
+            new_event.introduction_menu_ids = old_event.introduction_menu_ids.copy(default_menu_values)
+            new_event.location_menu_ids = old_event.location_menu_ids.copy(default_menu_values)
+            (new_event.introduction_menu_ids + new_event.location_menu_ids + new_event.community_menu_ids + new_event.register_menu_ids).menu_id.parent_id = new_event.menu_id
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -459,13 +479,6 @@ class EventEvent(models.Model):
                 return self.env.ref('website_event.mt_event_published', raise_if_not_found=False)
             return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False)
         return super()._track_subtype(init_values)
-
-    def _get_external_description(self):
-        """ Adding the URL of the event into the description """
-        self.ensure_one()
-        event_url = f'<a href="{self.event_register_url}">{self.name}</a>'
-        description = event_url + '\n' + super()._get_external_description()
-        return description
 
     def _get_event_resource_urls(self):
         url_date_start = self.date_begin.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')

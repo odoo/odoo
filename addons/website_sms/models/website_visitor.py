@@ -12,14 +12,14 @@ class WebsiteVisitor(models.Model):
         """ Purpose of this method is to actualize visitor model prior to contacting
         him. Used notably for inheritance purpose, when dealing with leads that
         could update the visitor model. """
-        return bool(self.partner_id and (self.partner_id.mobile or self.partner_id.phone))
+        return bool(self.partner_id.phone)
 
     def _prepare_sms_composer_context(self):
         return {
             'default_res_model': 'res.partner',
             'default_res_id': self.partner_id.id,
             'default_composition_mode': 'comment',
-            'default_number_field_name': 'mobile' if self.partner_id.mobile else 'phone',
+            'default_number_field_name': 'phone',
         }
 
     def action_send_sms(self):

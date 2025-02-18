@@ -73,7 +73,7 @@ export const batchedOrmService = {
         "create",
         "nameGet",
         "read",
-        "readGroup",
+        "formattedReadGroup",
         "search",
         "searchRead",
         "unlink",

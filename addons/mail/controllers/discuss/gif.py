@@ -5,6 +5,8 @@ import werkzeug.urls
 
 from odoo.http import request, route, Controller
 
+TENOR_CONTENT_FILTER = "medium"
+TENOR_GIF_LIMIT = 8
 
 class DiscussGifController(Controller):
     def _request_gifs(self, endpoint):
@@ -23,8 +25,8 @@ class DiscussGifController(Controller):
                 "q": search_term,
                 "key": ir_config.get_param("discuss.tenor_api_key"),
                 "client_key": request.env.cr.dbname,
-                "limit": ir_config.get_param("discuss.tenor_gif_limit"),
-                "contentfilter": ir_config.get_param("discuss.tenor_content_filter"),
+                "limit": TENOR_GIF_LIMIT,
+                "contentfilter": TENOR_CONTENT_FILTER,
                 "locale": locale,
                 "country": country,
                 "media_filter": "tinygif",
@@ -43,8 +45,8 @@ class DiscussGifController(Controller):
             {
                 "key": ir_config.get_param("discuss.tenor_api_key"),
                 "client_key": request.env.cr.dbname,
-                "limit": ir_config.get_param("discuss.tenor_gif_limit"),
-                "contentfilter": ir_config.get_param("discuss.tenor_content_filter"),
+                "limit": TENOR_GIF_LIMIT,
+                "contentfilter": TENOR_CONTENT_FILTER,
                 "locale": locale,
                 "country": country,
             }

@@ -88,7 +88,7 @@ class RegistrationEditorLine(models.TransientModel):
         registration_data = {
             'partner_id': self.editor_id.sale_order_id.partner_id.id,
             'name': self.name or self.editor_id.sale_order_id.partner_id.name,
-            'phone': self.phone or self.editor_id.sale_order_id.partner_id.phone or self.editor_id.sale_order_id.partner_id.mobile,
+            'phone': self.phone or self.editor_id.sale_order_id.partner_id.phone,
             'email': self.email or self.editor_id.sale_order_id.partner_id.email,
         }
         if include_event_values:

@@ -62,7 +62,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'login': 'test_public_user',
             'name': 'test_public_user',
             'email': False,
-            'groups_id': [(6, 0, [self.env.ref('base.group_public').id])]
+            'group_ids': [(6, 0, [self.env.ref('base.group_public').id])]
         })
         invoice.with_user(pub_user).sudo().action_post()
         message_sent = self.env['mail.message'].search([('id', '>', id_max), ('subject', '=', 'YOUR PRODUCT')])

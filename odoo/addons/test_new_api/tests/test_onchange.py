@@ -1093,6 +1093,7 @@ class TestComputeOnchange2(TransactionCase):
         form = Form(self.env['test_new_api.compute.onchange'])
         self.assertEqual(form.bar, "r")
         self.assertEqual(form.baz, False)
+        self.assertEqual(form.quux, "quux")
         form.active = True
         self.assertEqual(form.bar, "r")
         self.assertEqual(form.baz, "z")
@@ -1123,10 +1124,12 @@ class TestComputeOnchange2(TransactionCase):
         record = form.save()
         self.assertEqual(record.bar, "foo3r")
         self.assertEqual(record.baz, "foo3z")
+        self.assertEqual(record.quux, "quux")
 
         form = Form(record)
         self.assertEqual(form.bar, "foo3r")
         self.assertEqual(form.baz, "foo3z")
+        self.assertEqual(form.quux, "quux")
         form.foo = "foo4"
         self.assertEqual(form.bar, "foo4r")
         self.assertEqual(form.baz, "foo4z")
@@ -1142,13 +1145,14 @@ class TestComputeOnchange2(TransactionCase):
 
     def test_onchange_default(self):
         form = Form(self.env['test_new_api.compute.onchange'].with_context(
-            default_active=True, default_foo="foo", default_baz="baz",
+            default_active=True, default_foo="foo", default_baz="baz", default_quux="no",
         ))
         # 'baz' is computed editable, so when given a default value it should
         # 'not be recomputed, even if a dependency also has a default value
         self.assertEqual(form.foo, "foo")
         self.assertEqual(form.bar, "foor")
         self.assertEqual(form.baz, "baz")
+        self.assertEqual(form.quux, "no")
 
     def test_onchange_once(self):
         """ Modifies `foo` field which will trigger an onchange method and

@@ -133,7 +133,7 @@ class TestEventSecurity(TestEventFullCommon):
         event_type.unlink()
 
         # Settings access rights required to enable some features
-        self.user_eventmanager.write({'groups_id': [
+        self.user_eventmanager.write({'group_ids': [
             (3, self.env.ref('base.group_system').id),
             (4, self.env.ref('base.group_erp_manager').id)
         ]})

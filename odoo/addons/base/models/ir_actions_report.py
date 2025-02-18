@@ -159,7 +159,7 @@ class IrActionsReport(models.Model):
     report_name = fields.Char(string='Template Name', required=True)
     report_file = fields.Char(string='Report File', required=False, readonly=False, store=True,
                               help="The path to the main report file (depending on Report Type) or empty if the content is in another field")
-    groups_id = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
+    group_ids = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper Format')
@@ -416,7 +416,8 @@ class IrActionsReport(models.Model):
                     'subst': False,
                     'body': Markup(lxml.html.tostring(node, encoding='unicode')),
                     'base_url': base_url,
-                    'report_xml_id': self.xml_id
+                    'report_xml_id': self.xml_id,
+                    'debug': self.env.context.get("debug"),
                 }, raise_if_not_found=False)
             bodies.append(body)
             if node.get('data-oe-model') == report_model:
@@ -439,13 +440,15 @@ class IrActionsReport(models.Model):
             'subst': True,
             'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
             'base_url': base_url,
-            'report_xml_id': self.xml_id
+            'report_xml_id': self.xml_id,
+            'debug': self.env.context.get("debug"),
         })
         footer = self.env['ir.qweb']._render(layout.id, {
             'subst': True,
             'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
             'base_url': base_url,
-            'report_xml_id': self.xml_id
+            'report_xml_id': self.xml_id,
+            'debug': self.env.context.get("debug"),
         })
 
         return bodies, res_ids, header, footer, specific_paperformat_args
@@ -542,6 +545,7 @@ class IrActionsReport(models.Model):
                 temp_session = root.session_store.new()
                 temp_session.update({
                     **request.session,
+                    'debug': '',
                     '_trace_disable': True,
                 })
                 if temp_session.uid:
@@ -844,6 +848,7 @@ class IrActionsReport(models.Model):
             # because the resources files are not loaded in time.
             # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
             additional_context = {'debug': False}
+            data.setdefault("debug", False)
 
             html = self.with_context(**additional_context)._render_qweb_html(report_ref, all_res_ids_wo_stream, data=data)[0]
 

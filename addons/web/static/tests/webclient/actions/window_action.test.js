@@ -220,6 +220,7 @@ test("can execute act_window actions from db ID", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 });
 
@@ -384,6 +385,7 @@ test("switching into a view with mode=edit lands in edit mode", async () => {
         "/web/action/load",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "onchange",
@@ -597,14 +599,12 @@ test("Props are updated and kept when switching/restoring views", async () => {
             </group>
         </form>`;
 
-    onRpc("get_formview_action", ({ args, model }) => {
-        return {
-            res_id: args[0][0],
-            res_model: model,
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", ({ args, model }) => ({
+        res_id: args[0][0],
+        res_model: model,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -1159,6 +1159,7 @@ test("execute smart button and fails on desktop", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
+        "has_group",
         "web_read",
     ]);
     expect.verifyErrors(["Oups"]);
@@ -1190,6 +1191,7 @@ test("execute smart button and fails on mobile", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
+        "has_group",
         "web_read",
     ]);
     expect.verifyErrors(["Oups"]);
@@ -1224,15 +1226,13 @@ test("requests for execute_action of type object: disable buttons", async () => 
 
 test.tags("desktop");
 test("action with html help returned by a call_button", async () => {
-    onRpc("/web/dataset/call_button/*", () => {
-        return {
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "list"]],
-            help: "<p>I am not a helper</p>",
-            domain: [[0, "=", 1]],
-        };
-    });
+    onRpc("/web/dataset/call_button/*", () => ({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
+        help: "<p>I am not a helper</p>",
+        domain: [[0, "=", 1]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -1409,15 +1409,13 @@ test("can open a many2one external window", async () => {
         </form>`;
 
     stepAllNetworkCalls();
-    onRpc("get_formview_action", () => {
-        return {
-            name: "Partner",
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            res_id: 3,
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", () => ({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        res_id: 3,
+        views: [[false, "form"]],
+    }));
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
     // open first record in form view
@@ -1890,14 +1888,12 @@ test("execute action from dirty, new record, and come back", async () => {
             <field name="bar" readonly="1"/>
         </form>`;
 
-    onRpc("get_formview_action", () => {
-        return {
-            res_id: 1,
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", () => ({
+        res_id: 1,
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    }));
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -1993,14 +1989,12 @@ test("go back to action with form view as main view, and res_id", async () => {
     ]);
     Partner._views["form,44"] = '<form><field name="m2o"/></form>';
 
-    onRpc("get_formview_action", () => {
-        return {
-            res_id: 3,
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", () => ({
+        res_id: 3,
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(999);
@@ -2033,9 +2027,7 @@ test("action with res_id, load another res_id, do new action, restore previous",
     defineActions([action]);
 
     Partner._views["form,44"] = '<form><field name="m2o"/></form>';
-    onRpc("get_formview_action", () => {
-        return { ...action, res_id: 3 };
-    });
+    onRpc("get_formview_action", () => ({ ...action, res_id: 3 }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(999, { props: { resIds: [1, 2] } });
@@ -2222,16 +2214,14 @@ test.tags("desktop");
 test("executing a window action with onchange warning does not hide it", async () => {
     Partner._views["form,false"] = `<form><field name="foo"/></form>`;
 
-    onRpc("onchange", () => {
-        return {
-            value: {},
-            warning: {
-                title: "Warning",
-                message: "Everything is alright",
-                type: "dialog",
-            },
-        };
-    });
+    onRpc("onchange", () => ({
+        value: {},
+        warning: {
+            title: "Warning",
+            message: "Everything is alright",
+            type: "dialog",
+        },
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -2344,8 +2334,8 @@ test("debugManager is active for views", async () => {
 
 test.tags("desktop");
 test("reload a view via the view switcher keep state", async () => {
-    onRpc("read_group", () => {
-        expect.step("read_group");
+    onRpc("formatted_read_group", () => {
+        expect.step("formatted_read_group");
     });
 
     await mountWithCleanup(WebClient);
@@ -2367,8 +2357,8 @@ test("reload a view via the view switcher keep state", async () => {
     await switchView("pivot");
     expect(".o_pivot_measure_row").toHaveClass("o_pivot_sort_order_asc");
     expect.verifySteps([
-        "read_group", // initial read_group
-        "read_group", // read_group at reload after switch view
+        "formatted_read_group", // initial formatted_read_group
+        "formatted_read_group", // formatted_read_group at reload after switch view
     ]);
 });
 
@@ -2540,7 +2530,7 @@ test("action and get_views rpcs are cached", async () => {
 
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
-    expect.verifySteps(["/web/action/load", "get_views", "web_search_read"]);
+    expect.verifySteps(["/web/action/load", "get_views", "web_search_read", "has_group"]);
 
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
@@ -2573,7 +2563,7 @@ test("get_views rpcs are cached (different context.active_id)", async () => {
         context: { active_id: 33 },
     });
     expect(".o_kanban_view").toHaveCount(1);
-    expect.verifySteps(["get_views", "web_search_read"]);
+    expect.verifySteps(["get_views", "web_search_read", "has_group"]);
 
     await getService("action").doAction({
         name: "Partner",
@@ -2683,27 +2673,19 @@ test("sample server: populate groups", async () => {
             </pivot>`,
         search: `<search/>`,
     };
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    date_count: 0,
-                    "write_date:month": "December 2022",
-                    __range: {
-                        "write_date:month": {
-                            from: "2022-12-01",
-                            to: "2023-01-01",
-                        },
-                    },
-                    __domain: [
-                        ["write_date", ">=", "2022-12-01"],
-                        ["write_date", "<", "2023-01-01"],
-                    ],
-                },
-            ],
-            length: 1,
-        };
-    });
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                __count: 0,
+                "write_date:month": ["2022-12-01", "December 2022"],
+                __extra_domain: [
+                    ["write_date", ">=", "2022-12-01"],
+                    ["write_date", "<", "2023-01-01"],
+                ],
+            },
+        ],
+        length: 1,
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
@@ -2800,4 +2782,23 @@ test("execute a window action with mobile_view_mode", async () => {
         ],
     });
     expect(".o_list_view").toHaveCount(1);
+});
+
+test("can use user evalContext (companies) on action domain", async () => {
+    onRpc("web_search_read", ({ kwargs }) => {
+        expect.step(kwargs.domain);
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_id: 1,
+        type: "ir.actions.act_window",
+        target: "current",
+        res_model: "partner",
+        views: [
+            [false, "kanban"],
+            [false, "pivot"],
+        ],
+        domain: "[('employee_id', '=', companies.active_ids)]",
+    });
+    expect.verifySteps([[["employee_id", "=", [1]]]]);
 });

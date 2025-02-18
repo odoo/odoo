@@ -50,21 +50,6 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='discuss.tenor_api_key',
         help="Add a Tenor GIF API key to enable GIFs support. https://developers.google.com/tenor/guides/quickstart#setup",
     )
-    tenor_content_filter = fields.Selection(
-        [('high', 'High'),
-        ('medium', 'Medium'),
-        ('low', 'Low'),
-        ('off', 'Off')],
-        string='Tenor content filter',
-        help="https://developers.google.com/tenor/guides/content-filtering",
-        config_parameter='discuss.tenor_content_filter',
-        default='low',
-    )
-    tenor_gif_limit = fields.Integer(
-        default=8,
-        config_parameter='discuss.tenor_gif_limit',
-        help="Fetch up to the specified number of GIF.",
-    )
     google_translate_api_key = fields.Char(
         "Message Translation API Key",
         help="A valid Google API key is required to enable message translation. https://cloud.google.com/translate/docs/setup",

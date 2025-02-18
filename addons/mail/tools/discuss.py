@@ -3,11 +3,37 @@
 import os
 from collections import defaultdict
 from datetime import date, datetime
+from functools import wraps
 
 import odoo
 from odoo import models
+from odoo.http import request
 from odoo.tools import groupby
+from odoo.addons.bus.websocket import wsrequest
 
+def add_guest_to_context(func):
+    """ Decorate a function to extract the guest from the request.
+    The guest is then available on the context of the current
+    request.
+    """
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        req = request or wsrequest
+        token = (
+            req.cookies.get(req.env["mail.guest"]._cookie_name, "")
+        )
+        guest = req.env["mail.guest"]._get_guest_from_token(token)
+        if guest and not guest.timezone and not req.env.cr.readonly:
+            timezone = req.env["mail.guest"]._get_timezone_from_request(req)
+            if timezone:
+                guest._update_timezone(timezone)
+        if guest:
+            req.update_context(guest=guest)
+            if hasattr(self, "env"):
+                self.env.context = {**self.env.context, "guest": guest}
+        return func(self, *args, **kwargs)
+
+    return wrapper
 
 def get_twilio_credentials(env) -> (str, str):
     """

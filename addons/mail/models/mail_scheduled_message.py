@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 import json
+import operator
+from collections import defaultdict
+from itertools import groupby
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import clean_context
 
 import logging
@@ -41,6 +44,9 @@ class MailScheduledMessage(models.Model):
     composition_comment_option = fields.Selection(
         [('reply_all', 'Reply-All'), ('forward', 'Forward')],
         string='Comment Options')  # mainly used for view in specific comment modes
+    notified_bcc = fields.Many2many(
+        string='Bcc', comodel_name='res.partner', compute='_compute_notified_bcc', readonly=True, store=False)
+    show_notified_bcc = fields.Boolean('Show BCC', store=False)
 
     # related document
     model = fields.Char('Related Document Model', required=True)
@@ -150,6 +156,47 @@ class MailScheduledMessage(models.Model):
         return res
 
     # ------------------------------------------------------
+    # Compute Methods
+    # ------------------------------------------------------
+
+    @api.depends('model', 'notification_parameters', 'partner_ids', 'res_id')
+    def _compute_notified_bcc(self):
+        """ Compute 'bcc' which are followers that are going to be 'silently'
+        notified by the scheduled message. """
+
+        mapped_records = self.mapped(
+            lambda record: [
+                record.model,
+                {key: value for key, value in json.loads(record.notification_parameters or '{}').items() if key in ['message_type', 'subtype_id']},
+                record.res_id,
+            ]
+        )
+
+        groupby_model = groupby(mapped_records, operator.itemgetter(0))
+
+        recipients_data_by_res_id = {}
+
+        for [model, grouping] in groupby_model:
+            for [params, id_group] in groupby(list(grouping), operator.itemgetter(1)):
+                res_ids = list(map(operator.itemgetter(2), id_group))
+                records = self.env[model].browse(res_ids)
+                recipients_data = self.env['mail.followers']._get_recipient_data(
+                    records, params.get('message_type', 'comment'), params.get('subtype_id', False)
+                )
+                recipients_data_by_res_id.update(recipients_data.items())
+
+        for composer in self:
+            recipients_data = recipients_data_by_res_id.get(composer.res_id)
+            partner_ids = [
+                pid
+                for pid, pdata in recipients_data.items()
+                if (pid and pdata['active']
+                    and pid != self.env.user.partner_id.id
+                    and pdata['id'] not in composer.partner_ids.ids)
+            ]
+            composer.notified_bcc = self.env['res.partner'].search([('id', 'in', partner_ids)])
+
+    # ------------------------------------------------------
     # Actions
     # ------------------------------------------------------
 
@@ -178,29 +225,45 @@ class MailScheduledMessage(models.Model):
             still post permission on the related record, and to allow for the attachments to be
             transferred to the messages (see _process_attachments_for_post in mail.thread)
             if raise_exception is set to False, the method will skip the posting of a message
-            instead of raising an error. This is useful when scheduled messages are sent from
-            the _post_messages_cron
+            instead of raising an error, and send a notification to the author about the failure.
+            This is useful when scheduled messages are sent from the _post_messages_cron.
         """
         notification_parameters_whitelist = self._notification_parameters_whitelist()
         for scheduled_message in self:
             message_creator = scheduled_message.create_uid
             try:
-                scheduled_message.with_user(message_creator)._check()
-            except AccessError:
+                with self.env.cr.savepoint():
+                    scheduled_message.with_user(message_creator)._check()
+                    self.env[scheduled_message.model].browse(scheduled_message.res_id).with_context(
+                        clean_context(scheduled_message.send_context or {})
+                    ).with_user(message_creator).message_post(
+                        attachment_ids=list(scheduled_message.attachment_ids.ids),
+                        author_id=scheduled_message.author_id.id,
+                        body=scheduled_message.body,
+                        partner_ids=list(scheduled_message.partner_ids.ids),
+                        subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
+                        **{k: v for k, v in json.loads(scheduled_message.notification_parameters or '{}').items() if k in notification_parameters_whitelist},
+                    )
+            except Exception:
                 if raise_exception:
                     raise
-                _logger.info("Posting of scheduled message %s failed: user %s cannot post on the record", scheduled_message.id, message_creator.id)
-                continue
-            self.env[scheduled_message.model].browse(scheduled_message.res_id).with_context(
-                clean_context(scheduled_message.send_context or {})
-            ).with_user(message_creator).message_post(
-                attachment_ids=list(scheduled_message.attachment_ids.ids),
-                author_id=scheduled_message.author_id.id,
-                body=scheduled_message.body,
-                partner_ids=list(scheduled_message.partner_ids.ids),
-                subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
-                **{k: v for k, v in json.loads(scheduled_message.notification_parameters or '{}').items() if k in notification_parameters_whitelist},
-            )
+                _logger.info("Posting of scheduled message with ID %s failed", scheduled_message.id, exc_info=True)
+                # notify user about the failure (send content as user might have lost access to the record)
+                try:
+                    with self.env.cr.savepoint():
+                        self.env['mail.thread'].message_notify(
+                            partner_ids=[message_creator.partner_id.id],
+                            subject=_("A scheduled message could not be sent"),
+                            body=_("The message scheduled on %(model)s(%(id)s) with the following content could not be sent:%(original_message)s",
+                                model=scheduled_message.model,
+                                id=scheduled_message.res_id,
+                                original_message=Markup("<br>-----<br>%s<br>-----<br>") % scheduled_message.body,
+                            )
+                        )
+                except Exception:
+                    # in case even message_notify fails, make sure the failing scheduled message
+                    # will be deleted
+                    _logger.exception("The notification about the failed scheduled message could not be sent")
         self.unlink()
 
     # ------------------------------------------------------
@@ -254,7 +317,7 @@ class MailScheduledMessage(models.Model):
         domain = [('scheduled_date', '<=', fields.Datetime.now())]
         messages_to_post = self.search(domain, limit=limit)
         _logger.info("Posting %s scheduled messages", len(messages_to_post))
-        messages_to_post._post_message()
+        messages_to_post._post_message(raise_exception=False)
 
         # restart cron if needed
         if self.search_count(domain, limit=1):

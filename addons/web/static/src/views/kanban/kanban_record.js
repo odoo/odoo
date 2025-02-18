@@ -1,6 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/browser/browser";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -166,8 +168,11 @@ export class KanbanRecord extends Component {
     static defaultProps = {
         colors: COLORS,
         deleteRecord: () => {},
+        getSelection: () => [],
         archiveRecord: () => {},
         openRecord: () => {},
+        selectionAvailable: false,
+        toggleSelection: () => {},
     };
     static props = [
         "archInfo",
@@ -175,6 +180,7 @@ export class KanbanRecord extends Component {
         "colors?",
         "Compiler?",
         "forceGlobalClick?",
+        "getSelection?",
         "group?",
         "groupByField?",
         "deleteRecord?",
@@ -182,7 +188,9 @@ export class KanbanRecord extends Component {
         "openRecord?",
         "readonly?",
         "record",
+        "selectionAvailable?",
         "progressBarState?",
+        "toggleSelection?",
     ];
     static KANBAN_CARD_ATTRIBUTE = KANBAN_CARD_ATTRIBUTE;
     static KANBAN_MENU_ATTRIBUTE = KANBAN_MENU_ATTRIBUTE;
@@ -190,6 +198,7 @@ export class KanbanRecord extends Component {
     static template = "web.KanbanRecord";
 
     setup() {
+        this.LONG_TOUCH_THRESHOLD = this.props.canResequence ? 600 : 400;
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.action = useService("action");
         this.dialog = useService("dialog");
@@ -210,6 +219,10 @@ export class KanbanRecord extends Component {
             Object.assign(this.dataState.record, getFormattedRecord(record))
         );
         this.rootRef = useRef("root");
+        this.hasTouch = hasTouch();
+
+        this.longTouchTimer = null;
+        this.touchStartMs = 0;
     }
 
     get record() {
@@ -264,6 +277,12 @@ export class KanbanRecord extends Component {
         if (!this.props.groupByField) {
             classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");
         }
+        if (this.props.selectionAvailable) {
+            classes.push("o_record_selection_available");
+        }
+        if (this.props.record.selected) {
+            classes.push("o_record_selected");
+        }
         classes.push(archInfo.cardClassName);
         return classes.join(" ");
     }
@@ -273,6 +292,13 @@ export class KanbanRecord extends Component {
      */
     onGlobalClick(ev, newWindow) {
         if (ev.target.closest(CANCEL_GLOBAL_CLICK)) {
+            return;
+        }
+        if (this.props.getSelection().length > 0 || ev.altKey) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            this.rootRef.el.focus();
+            this.props.toggleSelection(this.props.record, ev.shiftKey);
             return;
         }
         const { archInfo, forceGlobalClick, openRecord, record } = this.props;
@@ -296,6 +322,32 @@ export class KanbanRecord extends Component {
         } else if (forceGlobalClick || this.props.archInfo.canOpenRecords) {
             openRecord(record, { newWindow });
         }
+    }
+
+    resetLongTouchTimer() {
+        if (this.longTouchTimer) {
+            browser.clearTimeout(this.longTouchTimer);
+            this.longTouchTimer = null;
+        }
+    }
+
+    onTouchStart() {
+        this.touchStartMs = Date.now();
+        if (this.longTouchTimer === null) {
+            this.longTouchTimer = browser.setTimeout(() => {
+                this.props.record.toggleSelection(true);
+                this.resetLongTouchTimer();
+            }, this.LONG_TOUCH_THRESHOLD);
+        }
+    }
+    onTouchEnd() {
+        const elapsedTime = Date.now() - this.touchStartMs;
+        if (elapsedTime < this.LONG_TOUCH_THRESHOLD) {
+            this.resetLongTouchTimer();
+        }
+    }
+    onTouchMoveOrCancel() {
+        this.resetLongTouchTimer();
     }
 
     /**

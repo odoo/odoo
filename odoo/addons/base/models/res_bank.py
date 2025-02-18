@@ -74,6 +74,7 @@ class ResPartnerBank(models.Model):
     active = fields.Boolean(default=True)
     acc_type = fields.Selection(selection=lambda x: x.env['res.partner.bank'].get_supported_account_types(), compute='_compute_acc_type', string='Type', help='Bank account type: Normal or IBAN. Inferred from the bank account number.')
     acc_number = fields.Char('Account Number', required=True)
+    clearing_number = fields.Char('Clearing Number')
     sanitized_acc_number = fields.Char(compute='_compute_sanitized_acc_number', string='Sanitized Account Number', readonly=True, store=True)
     acc_holder_name = fields.Char(string='Account Holder Name', help="Account holder name, in case it is different than the name of the Account Holder", compute='_compute_account_holder_name', readonly=False, store=True)
     partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', index=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)], required=True)
@@ -126,3 +127,20 @@ class ResPartnerBank(models.Model):
             else:
                 value = sanitize_account_number(value)
         return super()._condition_to_sql(alias, field_expr, operator, value, query)
+
+    def action_archive_bank(self):
+        """
+            Custom archive function because the basic action_archive don't trigger a re-rendering of the page, so
+            the archived value is still visible in the view.
+        """
+        self.ensure_one()
+        self.action_archive()
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    def unlink(self):
+        """
+            Instead of deleting a bank account, we want to archive it since we cannot delete bank account that is linked
+            to any entries
+        """
+        self.action_archive()
+        return True

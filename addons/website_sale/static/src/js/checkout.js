@@ -82,7 +82,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const useDeliveryAsBilling = ev.target.checked;
 
         const addDeliveryAddressButton = this.el.querySelector(
-            '.o_wsale_add_address[data-address-type="delivery"]'
+            '.o_address_kanban_add_new[data-address-type="delivery"]'
         );
         if (addDeliveryAddressButton) {  // If `Add address` button for delivery.
             // Update the `use_delivery_as_billing` query param for a new delivery address URL.
@@ -342,6 +342,11 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const amountTotal = document.querySelectorAll(
             '#order_total .monetary_field, #amount_total_summary.monetary_field'
         );
+        // When no dm is set and a price span is hidden, hide the message and show the price span.
+        if (amountDelivery.classList.contains('d-none')) {
+            document.querySelector('#message_no_dm_set').classList.add('d-none');
+            amountDelivery.classList.remove('d-none');
+        }
         amountDelivery.innerHTML = result.amount_delivery;
         amountUntaxed.innerHTML = result.amount_untaxed;
         amountTax.innerHTML = result.amount_tax;

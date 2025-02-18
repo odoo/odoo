@@ -97,7 +97,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
         nr2_partner = self.env['res.partner'].create({
             'name': 'Partner_nr2',
             'country_id': country_be_id,
-            'mobile': '0456449999',
+            'phone': '0456449999',
         })
         new_record_2 = self.env['mail.test.sms'].create({
             'name': 'MassSMSTest_nr2',

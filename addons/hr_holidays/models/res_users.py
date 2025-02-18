@@ -71,7 +71,7 @@ class ResUsers(models.Model):
         responsibles_to_remove_ids = set(self.ids) - {leave_manager.id for [leave_manager] in res}
         if responsibles_to_remove_ids:
             self.browse(responsibles_to_remove_ids).write({
-                'groups_id': [Command.unlink(self.env.ref(approver_group).id)],
+                'group_ids': [Command.unlink(self.env.ref(approver_group).id)],
             })
 
     @api.model_create_multi

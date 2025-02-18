@@ -294,6 +294,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         - Create a MO with 12 final products to produce.
         - update the component quantity to 100
         """
+        self.bom_1.product_uom_id = self.bom_1.product_id.uom_id
         self.bom_1.product_id.uom_id = self.ref('uom.product_uom_unit')
         self.bom_1.product_id.tracking = 'serial'
         self.bom_1.product_qty = 1

@@ -158,7 +158,7 @@ class BaseAutomationTestUi(HttpCase):
         })
 
         action = {
-            "name": "This name should not survive :)",
+            "name": "Create Contact with name NameX",
             "base_automation_id": automation.id,
             "state": "object_create",
             "value": "NameX",

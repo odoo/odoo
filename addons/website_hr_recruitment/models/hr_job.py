@@ -71,6 +71,9 @@ class HrJob(models.Model):
     def _compute_website_url(self):
         super()._compute_website_url()
         for job in self:
+            # _slug call will fail with newId records.
+            if not job.id:
+                continue
             job.website_url = f'/jobs/{self.env["ir.http"]._slug(job)}'
 
     def set_open(self):

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanRenderer">
-        <div class="o_kanban_renderer o_renderer d-flex"
+        <div class="o_kanban_renderer o_renderer d-flex user-select-none"
             t-attf-class="{{ props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }}"
             t-ref="root"
         >
@@ -45,12 +45,15 @@
                                     forceGlobalClick="props.forceGlobalClick"
                                     group="group"
                                     groupByField="props.list.groupByField"
+                                    getSelection.bind="getSelection"
+                                    toggleSelection.bind="toggleSelection"
                                     deleteRecord="props.deleteRecord"
                                     archiveRecord.bind="archiveRecord"
                                     openRecord="props.openRecord"
                                     readonly="props.readonly"
                                     record="record"
                                     progressBarState="props.progressBarState"
+                                    selectionAvailable="state.selectionAvailable"
                                 />
                             </t>
                             <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
@@ -73,11 +76,14 @@
                         canResequence="!isProcessing(groupOrRecord.record.id) and canResequenceRecords"
                         forceGlobalClick="props.forceGlobalClick"
                         groupByField="props.list.groupByField"
+                        getSelection.bind="getSelection"
+                        toggleSelection.bind="toggleSelection"
                         deleteRecord="props.deleteRecord"
                         archiveRecord="(record, active) => this.archiveRecord(record, active)"
                         openRecord="props.openRecord"
                         readonly="props.readonly"
                         record="groupOrRecord.record"
+                        selectionAvailable="state.selectionAvailable"
                     />
                 </t>
             </t>

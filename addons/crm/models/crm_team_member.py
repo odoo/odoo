@@ -18,7 +18,8 @@ class CrmTeamMember(models.Model):
     # assignment
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")
     assignment_domain = fields.Char('Assignment Domain', tracking=True)
-    assignment_optout = fields.Boolean('Skip auto assignment')
+    assignment_domain_preferred = fields.Char('Preference assignment Domain', tracking=True)
+    assignment_optout = fields.Boolean('Pause assignment')
     assignment_max = fields.Integer('Average Leads Capacity (on 30 days)', default=30)
     lead_day_count = fields.Integer(
         'Leads (last 24h)', compute='_compute_lead_day_count',
@@ -66,6 +67,19 @@ class CrmTeamMember(models.Model):
             except Exception:
                 raise exceptions.ValidationError(_(
                     'Member assignment domain for user %(user)s and team %(team)s is incorrectly formatted',
+                    user=member.user_id.name, team=member.crm_team_id.name
+                ))
+
+    @api.constrains('assignment_domain_preferred')
+    def _constrains_assignment_domain_preferred(self):
+        for member in self:
+            try:
+                domain = literal_eval(member.assignment_domain_preferred or '[]')
+                if domain:
+                    self.env['crm.lead'].search(domain, limit=1)
+            except Exception:
+                raise exceptions.ValidationError(_(
+                    'Member preferred assignment domain for user %(user)s and team %(team)s is incorrectly formatted',
                     user=member.user_id.name, team=member.crm_team_id.name
                 ))
 

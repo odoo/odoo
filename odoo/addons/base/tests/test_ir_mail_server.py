@@ -9,7 +9,7 @@ from unittest.mock import patch
 import psycopg2.errors
 
 from odoo import tools
-from odoo.addons.base.tests import test_mail_examples
+from odoo.addons.base.tests import mail_examples
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.tests import tagged, users
 from odoo.tests.common import TransactionCase
@@ -108,8 +108,8 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             'content',
             '<p>content</p>',
             '<head><meta content="text/html; charset=utf-8" http-equiv="Content-Type"></head><body><p>content</p></body>',
-            test_mail_examples.MISC_HTML_SOURCE,
-            test_mail_examples.QUOTE_THUNDERBIRD_HTML,
+            mail_examples.MISC_HTML_SOURCE,
+            mail_examples.QUOTE_THUNDERBIRD_HTML,
         ]
         expected_list = [
             'content',

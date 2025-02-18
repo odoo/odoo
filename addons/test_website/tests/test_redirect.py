@@ -18,7 +18,7 @@ class TestRedirect(HttpCase):
             'login': 'portal_user',
             'password': 'portal_user',
             'email': 'portal_user@mail.com',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])]
+            'group_ids': [(6, 0, [self.env.ref('base.group_portal').id])]
         })
 
     def test_01_redirect_308_model_converter(self):

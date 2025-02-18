@@ -61,7 +61,7 @@ class AccountEdiXmlCii(models.AbstractModel):
             ),
             # [BR-DE-6] The element "Seller contact telephone number" (BT-42) must be transmitted.
             'seller_phone': self._check_required_fields(
-                vals['record']['company_id']['partner_id']['commercial_partner_id'], ['phone', 'mobile'],
+                vals['record']['company_id']['partner_id']['commercial_partner_id'], ['phone'],
             ),
             # [BR-DE-7] The element "Seller contact email address" (BT-43) must be transmitted.
             'seller_email': self._check_required_fields(

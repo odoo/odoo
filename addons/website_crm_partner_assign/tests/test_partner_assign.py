@@ -201,7 +201,7 @@ class TestPartnerLeadPortal(TestCrmCommon):
             'name': 'Poor Partner (not integrating one)',
             'email': 'poor.partner@ododo.com',
             'login': 'poorpartner',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+            'group_ids': [(6, 0, [self.env.ref('base.group_portal').id])],
         })
         # try to accept a lead that is not mine
         with self.assertRaises(AccessError):
@@ -231,7 +231,7 @@ class TestPartnerLeadPortal(TestCrmCommon):
         if using filter 'Today Activities' or 'Overdue Activities')."""
 
         lead_today = self.lead_portal
-        lead_yesterday = self.lead_portal.copy()
+        lead_yesterday = self.lead_portal.sudo().copy()
 
         (lead_today | lead_yesterday).type = "opportunity"
 

@@ -63,6 +63,9 @@ registerWebsitePreviewTour('test_restricted_editor_only', {
     ...closeErrorDialog,
     ...switchTo('en'),
     // Model item
+    {
+        trigger: ":iframe body:contains(welcome to your)"
+    },
     ...goToMenuItem,
     checkNoTranslate,
     ...clickOnEditAndWaitEditMode(),
@@ -70,6 +73,7 @@ registerWebsitePreviewTour('test_restricted_editor_only', {
         content: "Check icons cannot be dragged",
         trigger: "#oe_snippets .oe_snippet[name='Intro'].o_disabled",
     },
+    ...clickOnSave(),
     ...switchTo('fr'),
     ...translate,
     ...closeErrorDialog,

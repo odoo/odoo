@@ -104,7 +104,7 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
 
     def test_compare_list_price_price_list_display(self):
         self.env.user.write({
-            'groups_id': [Command.link(
+            'group_ids': [Command.link(
                 self.env.ref('website_sale.group_product_price_comparison').id
             )],
         })

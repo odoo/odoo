@@ -2,66 +2,9 @@ import { expect, test } from "@odoo/hoot";
 import { queryFirst, queryOne, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup, sortableDrag } from "@web/../tests/web_test_helpers";
 
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
-
-/**
- * Dragging methods taking into account the fact that it's the top of the
- * dragged element that triggers the moves (not the position of the cursor),
- * and the fact that during the first move, the dragged element is replaced by
- * a placeholder that does not have the same height. The moves are done with
- * the same x position to prevent triggering horizontal moves.
- *
- * @param {import("@odoo/hoot-dom").Target} from
- * @param {import("../../_framework/dom_test_helpers").DragAndDropOptions} [options]
- */
-const sortableDrag = async (from, options) => {
-    const fromRect = queryRect(from);
-    const { cancel, drop, moveTo } = await contains(from).drag({
-        initialPointerMoveDistance: 0,
-        ...options,
-    });
-
-    let isFirstMove = true;
-
-    /**
-     * @param {string} [targetSelector]
-     */
-    const moveAbove = async (targetSelector) => {
-        await moveTo(targetSelector, {
-            position: {
-                x: fromRect.x - queryRect(targetSelector).x + fromRect.width / 2,
-                y: fromRect.height / 2 + 5,
-            },
-            relative: true,
-        });
-        isFirstMove = false;
-    };
-
-    /**
-     * @param {string} [targetSelector]
-     */
-    const moveUnder = async (targetSelector) => {
-        const elRect = queryRect(targetSelector);
-        // Need to consider that the moved element will be replaced by a
-        // placeholder with a height of 5px
-        const firstMoveBelow = isFirstMove && elRect.y > fromRect.y;
-        await moveTo(targetSelector, {
-            position: {
-                x: fromRect.x - elRect.x + fromRect.width / 2,
-                y:
-                    ((firstMoveBelow ? -1 : 1) * fromRect.height) / 2 +
-                    elRect.height +
-                    (firstMoveBelow ? 4 : -1),
-            },
-            relative: true,
-        });
-        isFirstMove = false;
-    };
-
-    return { cancel, moveAbove, moveTo, moveUnder, drop };
-};
 
 /**
  * @param {import("@odoo/hoot-dom").Target} from

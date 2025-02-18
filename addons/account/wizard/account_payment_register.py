@@ -1186,7 +1186,6 @@ class AccountPaymentRegister(models.TransientModel):
                     .filtered_domain([
                         ('account_id', '=', account.id),
                         ('reconciled', '=', False),
-                        ('parent_state', '=', 'posted'),
                     ])\
                     .reconcile()
             lines.move_id.matched_payment_ids += payment

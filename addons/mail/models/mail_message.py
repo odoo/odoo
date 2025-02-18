@@ -829,6 +829,7 @@ class MailMessage(models.Model):
         """ Toggle messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
         """
+        self.ensure_one()
         # a user should always be able to star a message they can read
         self.check_access('read')
         starred = not self.starred
@@ -840,6 +841,7 @@ class MailMessage(models.Model):
         self.env.user._bus_send(
             "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
         )
+        return Store(self, {"starred": self.starred}).get_result()
 
     @api.model
     def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
@@ -924,6 +926,8 @@ class MailMessage(models.Model):
             "body",
             "create_date",
             "date",
+            "incoming_email_cc",
+            "incoming_email_to",
             Store.Attr("is_note", lambda m: m.subtype_id.id == note_id),
             Store.Attr("is_discussion", lambda m: m.subtype_id.id == com_id),
             # sudo: mail.message - reading link preview on accessible message is allowed
@@ -1054,6 +1058,11 @@ class MailMessage(models.Model):
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
                 "thread": Store.One(record, [], as_thread=True),
             }
+
+            if message.incoming_email_cc:
+                data["incoming_email_cc"] = tools.mail.email_split_tuples(message.incoming_email_cc)
+            if message.incoming_email_to:
+                data["incoming_email_to"] = tools.mail.email_split_tuples(message.incoming_email_to)
             if for_current_user:
                 # sudo: mail.message - filtering allowed tracking values
                 displayed_tracking_ids = message.sudo().tracking_value_ids._filter_has_field_access(

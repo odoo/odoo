@@ -16,7 +16,7 @@ class StockMove(TransactionCase):
         super(StockMove, cls).setUpClass()
         group_stock_multi_locations = cls.env.ref('stock.group_stock_multi_locations')
         group_production_lot = cls.env.ref('stock.group_production_lot')
-        cls.env.user.write({'groups_id': [
+        cls.env.user.write({'group_ids': [
             (4, group_stock_multi_locations.id),
             (4, group_production_lot.id)
         ]})
@@ -1423,7 +1423,7 @@ class StockMove(TransactionCase):
         with correct storage category.
         """
         # Required for `result_package_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
+        self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category"
@@ -1489,7 +1489,7 @@ class StockMove(TransactionCase):
         be applied on the first one but not the second one due to no space.
         """
         # Required for `result_package_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
+        self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category"
@@ -1595,7 +1595,7 @@ class StockMove(TransactionCase):
         the first one but not the second one.
         """
         # Required for `result_package_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
+        self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category",
@@ -1702,7 +1702,7 @@ class StockMove(TransactionCase):
         but not the second one.
         """
         # Required for `result_package_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
+        self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category",
@@ -4975,15 +4975,13 @@ class StockMove(TransactionCase):
         })
         warning_message = scrap.action_validate()
         self.assertEqual(warning_message.get('res_model', 'Wrong Model'), 'stock.warn.insufficient.qty.scrap')
-        insufficient_qty_wizard = self.env['stock.warn.insufficient.qty.scrap'].create({
-            'product_id': self.product.id,
-            'location_id': self.stock_location.id,
-            'scrap_id': scrap.id,
-            'quantity': 1,
-            'product_uom_name': self.product.uom_id.name
-        })
+        insufficient_qty_wizard = self.env['stock.warn.insufficient.qty.scrap']\
+            .with_context(warning_message['context']).create({})
         insufficient_qty_wizard.action_done()
         self.assertEqual(self.env['stock.quant']._gather(self.product, self.stock_location).quantity, -11)
+        self.assertEqual(scrap.scrap_qty, 1)
+        self.assertEqual(scrap.product_uom_id, self.uom_dozen)
+        self.assertEqual(scrap.state, 'done')
 
     def test_scrap_7_sn_warning(self):
         """ Check serial numbers are correctly double checked """
@@ -6246,7 +6244,7 @@ class StockMove(TransactionCase):
         `quantity`, the onchange should n't change the destination location L
         """
 
-        self.env.user.write({'groups_id': [(3, self.env.ref('stock.group_stock_multi_locations').id)]})
+        self.env.user.write({'group_ids': [(3, self.env.ref('stock.group_stock_multi_locations').id)]})
         internal_transfer = self.env.ref('stock.picking_type_internal')
 
         picking = self.env['stock.picking'].create({
@@ -6411,7 +6409,7 @@ class StockMove(TransactionCase):
         the user has defined himself the destination location, we should not try
         to apply any putaway rule that would override his choice.
         """
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
 
         child_location = self.stock_location.child_ids[0]
         in_type = self.env.ref('stock.picking_type_in')

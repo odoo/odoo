@@ -9,7 +9,7 @@
                             <t t-if="button.Component">
                                 <t t-component="button.Component"
                                     t-props="button.props"
-                                    title="button.title"
+                                    title="state.buttonsTitleState[button.id]"
                                     getSelection.bind="props.toolbar.getSelection"/>
                             </t>
                             <button t-else=""
@@ -19,7 +19,7 @@
                                     disabled: state.buttonsDisabledState[button.id]
                                 }"
                                 t-att-disabled="state.buttonsDisabledState[button.id]"
-                                t-att-title="button.title"
+                                t-att-title="state.buttonsTitleState[button.id]"
                                 t-att-name="button.id"
                                 t-on-click="() => this.onButtonClick(button)"
                             >

@@ -92,18 +92,20 @@ function getDomain(fieldDef) {
 function makeAutoCompleteEditor(fieldDef) {
     return {
         component: DomainSelectorAutocomplete,
-        extractProps: ({ value, update }) => {
-            return {
-                resModel: getResModel(fieldDef),
-                fieldString: fieldDef.string,
-                domain: getDomain(fieldDef),
-                update: (value) => update(unique(value)),
-                resIds: unique(value),
-            };
-        },
+        extractProps: ({ value, update }) => ({
+            resModel: getResModel(fieldDef),
+            fieldString: fieldDef.string,
+            domain: getDomain(fieldDef),
+            update: (value) => update(unique(value)),
+            resIds: unique(value),
+        }),
         isSupported: (value) => Array.isArray(value),
         defaultValue: () => [],
     };
+}
+
+function isLitteralObject(value) {
+    return typeof value === "object" && !Array.isArray(value) && value !== null;
 }
 
 // ============================================================================
@@ -125,8 +127,12 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "ilike":
         case "not ilike":
             return STRING_EDITOR;
+        case "is_not_between":
         case "between": {
             const editorInfo = getValueEditorInfo(fieldDef, "=");
+            const { defaultValue } = getValueEditorInfo(fieldDef, "=", {
+                forBetween: true,
+            });
             return {
                 component: Range,
                 extractProps: ({ value, update }) => ({
@@ -136,11 +142,12 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                 }),
                 isSupported: (value) => Array.isArray(value) && value.length === 2,
                 defaultValue: () => {
-                    const { defaultValue } = editorInfo;
-                    return [defaultValue(), defaultValue()];
+                    const value = defaultValue();
+                    return isLitteralObject(value) ? [value.start, value.end] : [value, value];
                 },
             };
         }
+        case "is_not_within":
         case "within": {
             return {
                 component: Within,
@@ -155,9 +162,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     value.length === 3 &&
                     typeof value[1] === "string" &&
                     value[2] === fieldDef.type,
-                defaultValue: () => {
-                    return [-1, "months", fieldDef.type];
-                },
+                defaultValue: () => [-1, "months", fieldDef.type],
             };
         }
         case "in":
@@ -224,7 +229,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     startEmpty: params.startEmpty,
                 }),
                 isSupported: () => true,
-                defaultValue: () => 1,
+                defaultValue: () => (params.forBetween ? { start: 1, end: 1 } : 1),
                 shouldResetValue: (value) => parseValue(formatType, value) === value,
             };
         }
@@ -240,13 +245,24 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     type,
                     onApply: (value) => {
                         if (!params.startEmpty || value) {
-                            update(genericSerializeDate(type, value || DateTime.local()));
+                            update(
+                                genericSerializeDate(type, value || DateTime.local().startOf("day"))
+                            );
                         }
                     },
                 }),
-                isSupported: (value) =>
-                    value === false || (typeof value === "string" && isParsable(type, value)),
-                defaultValue: () => genericSerializeDate(type, DateTime.local()),
+                isSupported: (value) => typeof value === "string" && isParsable(type, value),
+                defaultValue: () => {
+                    const datetime = DateTime.local();
+                    const defaultValue = genericSerializeDate(type, datetime.startOf("day"));
+                    if (params.forBetween) {
+                        return {
+                            start: defaultValue,
+                            end: genericSerializeDate(type, datetime.endOf("day")),
+                        };
+                    }
+                    return defaultValue;
+                },
                 stringify: (value) => {
                     if (value === false) {
                         return _t("False");
@@ -278,21 +294,21 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             return makeSelectEditor(options, params);
         }
         case "many2one": {
-            if (["=", "!=", "parent_of", "child_of"].includes(operator)) {
+            if (["=", "!="].includes(operator)) {
                 return {
                     component: DomainSelectorSingleAutocomplete,
-                    extractProps: ({ value, update }) => {
-                        return {
-                            resModel: getResModel(fieldDef),
-                            fieldString: fieldDef.string,
-                            update,
-                            resId: value,
-                        };
-                    },
+                    extractProps: ({ value, update }) => ({
+                        resModel: getResModel(fieldDef),
+                        fieldString: fieldDef.string,
+                        update,
+                        resId: value,
+                    }),
                     isSupported: () => true,
                     defaultValue: () => false,
                     shouldResetValue: (value) => value !== false && !isId(value),
                 };
+            } else if (["parent_of", "child_of"].includes(operator)) {
+                return makeAutoCompleteEditor(fieldDef);
             }
             break;
         }

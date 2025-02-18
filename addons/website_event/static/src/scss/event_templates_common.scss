@@ -18,6 +18,9 @@ $o-wevent-color: $body-color;
         border: $border-width solid var(--o-border-color);
         border-left: $border-width * 3 solid var(--badge-border-color);
     }
+    a.o_wesession_list_item:hover {
+        background-color: #e9e9e9;
+    }
 
     /*
      * COMMON MENU STYLING
@@ -75,6 +78,11 @@ $o-wevent-color: $body-color;
             outline: 0;
             box-shadow: 0 0 0 0.25rem rgba(134, 102, 126, 0.5);
         }
+    }
+
+    input[type="search"]::-webkit-search-cancel-button {
+        display: block;
+        opacity: 1;
     }
 }
 

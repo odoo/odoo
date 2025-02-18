@@ -232,8 +232,8 @@ test("webReadGroup method", async () => {
             args: [],
             kwargs: {
                 domain: [["user_id", "=", 2]],
-                fields: ["amount_total:sum"],
-                groupby: ["date_order"],
+                aggregates: ["amount_total:sum"],
+                groupby: ["date_order:month"],
                 context: {
                     allowed_company_ids: [1],
                     lang: "en",
@@ -245,75 +245,19 @@ test("webReadGroup method", async () => {
             method: "web_read_group",
             model: "sale.order",
         });
-        return false;
+        return {length: 0, groups: []};
     });
 
     const { services } = await makeMockEnv();
     await services.orm.webReadGroup(
         "sale.order",
         [["user_id", "=", 2]],
+        ["date_order:month"],
         ["amount_total:sum"],
-        ["date_order"],
         { offset: 1 }
     );
 
     expect.verifySteps(["/web/dataset/call_kw/sale.order/web_read_group"]);
-});
-
-test("readGroup method", async () => {
-    onRpc(async (params) => {
-        expect.step(params.route);
-        expect(getRelevantParams(params)).toEqual({
-            args: [],
-            kwargs: {
-                domain: [["user_id", "=", 2]],
-                fields: ["amount_total:sum"],
-                groupby: ["date_order"],
-                context: {
-                    allowed_company_ids: [1],
-                    lang: "en",
-                    uid: 7,
-                    tz: "taht",
-                },
-                offset: 1,
-            },
-            method: "read_group",
-            model: "sale.order",
-        });
-        return false;
-    });
-
-    const { services } = await makeMockEnv();
-    await services.orm.readGroup(
-        "sale.order",
-        [["user_id", "=", 2]],
-        ["amount_total:sum"],
-        ["date_order"],
-        { offset: 1 }
-    );
-
-    expect.verifySteps(["/web/dataset/call_kw/sale.order/read_group"]);
-});
-
-test("test readGroup method removes duplicate values from groupby", async () => {
-    onRpc(async (params) => {
-        expect.step(params.route);
-        expect(getRelevantParams(params).kwargs.groupby).toEqual(["date_order:month"], {
-            message: "Duplicate values should be removed from groupby",
-        });
-        return false;
-    });
-
-    const { services } = await makeMockEnv();
-    await services.orm.readGroup(
-        "sale.order",
-        [["user_id", "=", 2]],
-        ["amount_total:sum"],
-        ["date_order:month", "date_order:month"],
-        { offset: 1 }
-    );
-
-    expect.verifySteps(["/web/dataset/call_kw/sale.order/read_group"]);
 });
 
 test("search_read method", async () => {

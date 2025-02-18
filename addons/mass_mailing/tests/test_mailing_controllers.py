@@ -150,7 +150,7 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         # TEST: not mailing user
         self.user_marketing.write({
-            'groups_id': [(3, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
+            'group_ids': [(3, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         res = self.url_open(
             werkzeug.urls.url_join(
@@ -163,7 +163,7 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         # TEST: finally valid call
         self.user_marketing.write({
-            'groups_id': [(4, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
+            'group_ids': [(4, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         res = self.url_open(
             werkzeug.urls.url_join(
@@ -270,7 +270,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         # to run; test without and with mailing group
         self.user_marketing.write({
             'email': tools.formataddr(("Déboulonneur", "fleurus@example.com")),
-            'groups_id': [(3, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
+            'group_ids': [(3, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         test_mailing = self.test_mailing_on_documents.with_env(self.env)
         self.authenticate('user_marketing', 'user_marketing')
@@ -286,7 +286,7 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         # group -> direct access to /unsubscribe should wokr
         self.user_marketing.write({
-            'groups_id': [(4, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
+            'group_ids': [(4, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         # launch unsubscription tour
         with freeze_time(self._reference_now):
@@ -585,7 +585,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         doc_id, email_normalized = self.user_marketing.partner_id.id, self.user_marketing.email_normalized
         hash_token = test_mailing._generate_mailing_recipient_token(doc_id, email_normalized)
         self.user_marketing.write({
-            'groups_id': [(3, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
+            'group_ids': [(3, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         self.authenticate('user_marketing', 'user_marketing')
 
@@ -618,7 +618,7 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         # TEST: invalid credentials but mailing user
         self.user_marketing.write({
-            'groups_id': [(4, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
+            'group_ids': [(4, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         res = self.url_open(
             werkzeug.urls.url_join(

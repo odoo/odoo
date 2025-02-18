@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import Form, tagged
@@ -21,7 +21,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [Command.create({
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'product_uom_qty': 2,
@@ -37,7 +37,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         project.account_id = self.analytic_account_1
         so_values = {
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [Command.create({
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'product_uom_qty': 2,
@@ -47,9 +47,8 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         }
 
         so1 = self.env['sale.order'].create(so_values)
-        expense = self.env['hr.expense'].create({
+        expense = self.create_expenses({
             'name': 'Expense Test',
-            'employee_id': self.expense_employee.id,
             'sale_order_id': so1.id,
         })
         self.assertEqual(

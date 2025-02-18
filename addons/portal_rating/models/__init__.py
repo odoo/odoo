@@ -2,5 +2,4 @@
 
 from . import ir_http
 from . import mail_message
-from . import mail_thread
 from . import rating_rating

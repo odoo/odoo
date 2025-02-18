@@ -21,7 +21,6 @@ class MailTestTLead(models.Model):
     customer_name = fields.Char()
     partner_id = fields.Many2one('res.partner', tracking=2)
     lang_code = fields.Char()
-    mobile = fields.Char()
     phone = fields.Char()
 
     def _creation_message(self):
@@ -36,7 +35,6 @@ class MailTestTLead(models.Model):
             values = email_normalized_to_values.setdefault(email_key, {})
             values['lang'] = values.get('lang') or lead.lang_code
             values['name'] = values.get('name') or lead.customer_name or parse_contact_from_email(lead.email_from)[0] or lead.email_from
-            values['mobile'] = values.get('mobile') or lead.mobile
             values['phone'] = values.get('phone') or lead.phone
         return email_normalized_to_values
 

@@ -231,10 +231,7 @@
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
-        <!-- Add the main object as a cache key so that the footer_visible page
-        option is properly reflected across pages. Controllers and other objects
-        do not have any page option (yet) so they can share the same cache -->
-        <attribute name="t-cache" add="website,main_object._name == 'website.page' and main_object"/>
+        <attribute name="t-cache" add="website" separator=","/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
@@ -339,6 +336,7 @@
     <xpath expr="//footer[@id='bottom']" position="attributes">
         <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.footer_visible else ''}" separator=" "/>
         <attribute name="t-att-data-invisible">'1' if 'footer_visible' in main_object and not main_object.footer_visible else None</attribute>
+        <attribute name="t-cache" add="main_object.footer_visible if 'footer_visible' in main_object else True" separator=","/>
     </xpath>
 </template>
 
@@ -2783,10 +2781,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="one_hybrid" name="Single any Search Results">
     <a t-att-href="result.get('website_url')" class="dropdown-item p-2 text-wrap">
-        <div class="d-flex align-items-center o_search_result_item">
+        <div class="d-flex align-items-center flex-wrap o_search_result_item">
             <img t-if="result.get('image_url')" t-att-src="result.get('image_url')" class="flex-shrink-0 o_image_64_contain"/>
             <i t-else="" t-att-class="'o_image_64_contain text-center pt16 fa %s' % result.get('_fa')" style="font-size: 34px;"/>
-            <div class="o_search_result_item_detail px-3 text-break">
+            <div class="o_search_result_item_detail px-3">
                 <t t-set="description" t-value="result.get('description')"/>
                 <t t-set="extra_link" t-value="result.get('extra_link_url') and result.get('extra_link')"/>
                 <t t-set="extra_link_html" t-value="not result.get('extra_link_url') and result.get('extra_link')"/>
@@ -2796,7 +2794,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     t-attf-onclick="location.href='#{result.get('extra_link_url')}';return false;"/>
                 <t t-if="extra_link_html" t-out="extra_link_html"/>
             </div>
-            <div class="flex-shrink-0">
+            <div class="flex-shrink-0 ms-auto">
                 <t t-if="result.get('detail_strike')">
                     <span class="text-muted text-nowrap" style="text-decoration: line-through;">
                         <t t-out="result.get('detail_strike')"/>

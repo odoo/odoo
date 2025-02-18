@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-
-from odoo import api, fields, models, Command, tools, _
-from odoo.exceptions import UserError, ValidationError
 import re
-from math import copysign
-from collections import defaultdict
-from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountReconcileModelPartnerMapping(models.Model):
@@ -54,13 +51,7 @@ class AccountReconcileModelLine(models.Model):
 
     # This field is ignored in a bank statement reconciliation.
     journal_id = fields.Many2one(
-        comodel_name='account.journal',
-        string="Journal",
-        ondelete='cascade',
-        check_company=True,
-        store=True,
-        readonly=False,
-        compute='_compute_journal_id',
+        related='model_id.journal_id',
     )
     label = fields.Char(string='Journal Item Label', translate=True)
     amount_type = fields.Selection(
@@ -69,6 +60,7 @@ class AccountReconcileModelLine(models.Model):
             ('percentage', 'Percentage of balance'),
             ('percentage_st_line', 'Percentage of statement line'),
             ('regex', 'From label'),
+            ('from_transaction_details', 'From Transaction Details'),
         ],
         required=True,
         store=True,
@@ -77,9 +69,6 @@ class AccountReconcileModelLine(models.Model):
         readonly=False,
     )
 
-    # used to show the force tax included button'
-    show_force_tax_included = fields.Boolean(compute='_compute_show_force_tax_included')
-    force_tax_included = fields.Boolean(string='Tax Included in Price', help='Force the tax to be managed as a price included tax.')
     # technical shortcut to parse the amount to a float
     amount = fields.Float(string="Float Amount", compute='_compute_float_amount', store=True)
     amount_string = fields.Char(string="Amount", default='100', required=True, help="""Value for the amount of the writeoff line
@@ -95,18 +84,6 @@ class AccountReconcileModelLine(models.Model):
         readonly=False,
         store=True,
     )
-
-    @api.onchange('tax_ids')
-    def _onchange_tax_ids(self):
-        # Multiple taxes with force_tax_included results in wrong computation, so we
-        # only allow to set the force_tax_included field if we have one tax selected
-        if len(self.tax_ids) != 1:
-            self.force_tax_included = False
-
-    @api.depends('tax_ids')
-    def _compute_show_force_tax_included(self):
-        for record in self:
-            record.show_force_tax_included = False if len(record.tax_ids) != 1 else True
 
     @api.onchange('amount_type')
     def _onchange_amount_type(self):
@@ -132,14 +109,6 @@ class AccountReconcileModelLine(models.Model):
             else:
                 line.amount_type = line.amount_type or 'percentage'
 
-    @api.depends('model_id.counterpart_type')
-    def _compute_journal_id(self):
-        for line in self:
-            if line.journal_id.type != line.model_id.counterpart_type:
-                line.journal_id = None
-            else:
-                line.journal_id = line.journal_id
-
     @api.depends('model_id.counterpart_type', 'rule_type', 'account_id', 'company_id', 'company_id.account_purchase_tax_id')
     def _compute_tax_ids(self):
         for line in self:
@@ -164,7 +133,7 @@ class AccountReconcileModelLine(models.Model):
                 raise UserError(_("Balance percentage can't be 0"))
             if record.amount_type == 'percentage' and record.amount == 0:
                 raise UserError(_("Statement line percentage can't be 0"))
-            if record.amount_type == 'regex':
+            if record.amount_type in {'regex', 'from_transaction_details'}:
                 try:
                     re.compile(record.amount_string)
                 except re.error:
@@ -194,7 +163,7 @@ class AccountReconcileModel(models.Model):
     rule_type = fields.Selection(selection=[
         ('writeoff_button', 'Button to generate counterpart entry'),
         ('writeoff_suggestion', 'Rule to suggest counterpart entry'),
-        ('invoice_matching', 'Rule to match invoices/bills'),
+        ('invoice_matching', 'Match invoices & payments'),
     ], string='Type', default='writeoff_button', required=True, tracking=True)
     auto_reconcile = fields.Boolean(string='Auto-validate', tracking=True,
         help='Validate the statement line automatically (reconciliation based on your rule).')
@@ -217,6 +186,15 @@ class AccountReconcileModel(models.Model):
         string="Counterpart Type",
         default='general',
     )
+    journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string="Journal",
+        help="The journal in which the counterpart entry will be created.",
+        check_company=True,
+        store=True,
+        readonly=False,
+        compute='_compute_journal_id',
+    )
 
     # ===== Conditions =====
     match_text_location_label = fields.Boolean(
@@ -238,20 +216,11 @@ class AccountReconcileModel(models.Model):
         domain="[('type', 'in', ('bank', 'cash', 'credit'))]",
         check_company=True,
         help='The reconciliation model will only be available from the selected journals.')
-    match_nature = fields.Selection(selection=[
-        ('amount_received', 'Received'),
-        ('amount_paid', 'Paid'),
-        ('both', 'Paid/Received')
-    ], string='Amount Type', required=True, default='both', tracking=True,
-        help='''The reconciliation model will only be applied to the selected transaction type:
-        * Amount Received: Only applied when receiving an amount.
-        * Amount Paid: Only applied when paying an amount.
-        * Amount Paid/Received: Applied in both cases.''')
     match_amount = fields.Selection(selection=[
         ('lower', 'Is Lower Than'),
         ('greater', 'Is Greater Than'),
         ('between', 'Is Between'),
-    ], string='Amount Condition', tracking=True,
+    ], string='Amount', tracking=True,
         help='The reconciliation model will only be applied when the amount being lower than, greater than or between specified amount(s).')
     match_amount_min = fields.Float(string='Amount Min Parameter', tracking=True)
     match_amount_max = fields.Float(string='Amount Max Parameter', tracking=True)
@@ -264,6 +233,15 @@ class AccountReconcileModel(models.Model):
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_label_param = fields.Char(string='Label Parameter', tracking=True)
+    match_transaction_details = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Transaction details', tracking=True, help='''The reconciliation model will only be applied when the transaction details:
+            * Contains: The proposition label must contains this string (case insensitive).
+            * Not Contains: Negation of "Contains".
+            * Match Regex: Define your own regular expression. (Care that it's a jsonfield)''')
+    match_transaction_details_param = fields.Char(string='Transaction Details Parameter', tracking=True)
     match_note = fields.Selection(selection=[
         ('contains', 'Contains'),
         ('not_contains', 'Not Contains'),
@@ -273,15 +251,6 @@ class AccountReconcileModel(models.Model):
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_note_param = fields.Char(string='Note Parameter', tracking=True)
-    match_transaction_type = fields.Selection(selection=[
-        ('contains', 'Contains'),
-        ('not_contains', 'Not Contains'),
-        ('match_regex', 'Match Regex'),
-    ], string='Transaction Type', tracking=True, help='''The reconciliation model will only be applied when the transaction type:
-        * Contains: The proposition transaction type must contains this string (case insensitive).
-        * Not Contains: Negation of "Contains".
-        * Match Regex: Define your own regular expression.''')
-    match_transaction_type_param = fields.Char(string='Transaction Type Parameter', tracking=True)
     match_same_currency = fields.Boolean(string='Same Currency', default=True, tracking=True,
         help='Restrict to propositions having the same currency as the statement line.')
     allow_payment_tolerance = fields.Boolean(
@@ -307,9 +276,9 @@ class AccountReconcileModel(models.Model):
     )
     match_partner = fields.Boolean(string='Partner is Set', tracking=True,
         help='The reconciliation model will only be applied when a customer/vendor is set.')
-    match_partner_ids = fields.Many2many('res.partner', string='Matching partners',
+    match_partner_ids = fields.Many2many('res.partner', string='Partners',
         help='The reconciliation model will only be applied to the selected customers/vendors.')
-    match_partner_category_ids = fields.Many2many('res.partner.category', string='Matching categories',
+    match_partner_category_ids = fields.Many2many('res.partner.category', string='Categories',
         help='The reconciliation model will only be applied to the selected customer/vendor categories.')
 
     line_ids = fields.One2many('account.reconcile.model.line', 'model_id', copy=True)
@@ -359,7 +328,7 @@ class AccountReconcileModel(models.Model):
     @api.depends('line_ids.amount_type')
     def _compute_show_decimal_separator(self):
         for record in self:
-            record.show_decimal_separator = any(l.amount_type == 'regex' for l in record.line_ids)
+            record.show_decimal_separator = any(l.amount_type in {'regex', 'from_transaction_details'} for l in record.line_ids)
 
     @api.depends('payment_tolerance_param', 'payment_tolerance_type')
     def _compute_payment_tolerance_param(self):
@@ -368,6 +337,14 @@ class AccountReconcileModel(models.Model):
                 record.payment_tolerance_param = min(100.0, max(0.0, record.payment_tolerance_param))
             else:
                 record.payment_tolerance_param = max(0.0, record.payment_tolerance_param)
+
+    @api.depends('counterpart_type')
+    def _compute_journal_id(self):
+        for record in self:
+            if record.journal_id.type != record.counterpart_type:
+                record.journal_id = None
+            else:
+                record.journal_id = record.journal_id
 
     @api.constrains('allow_payment_tolerance', 'payment_tolerance_param', 'payment_tolerance_type')
     def _check_payment_tolerance_param(self):

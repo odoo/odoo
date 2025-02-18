@@ -49,7 +49,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <nav class="d-flex flex-wrap justify-content-between align-items-center gap-2 flex-grow-1">
                         <ul class="breadcrumb p-0 m-0">
-                            <li class="breadcrumb-item">
+                            <li class="breadcrumb-item" t-if="event.header_visible">
                                 <a href="/event" title="Back to All Events">All Events</a>
                             </li>
                             <t t-if="navbar__back_url">
@@ -61,7 +61,7 @@
                                 </li>
                             </t>
                             <t t-else="">
-                                <li class="breadcrumb-item active" aria-current="page"><span class="pe-3" t-field="event.name"/></li>
+                                <li t-attf-class="breadcrumb-item active #{'fw-bold' if not event.header_visible else ''}" aria-current="page"><span class="pe-3" t-field="event.name"/></li>
                             </t>
                         </ul>
                         <ul t-if="not navbar__back_url" class="nav" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">

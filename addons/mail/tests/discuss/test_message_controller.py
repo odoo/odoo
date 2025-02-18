@@ -300,7 +300,7 @@ class TestMessageController(HttpCaseWithUserDemo):
     def test_mail_cache_control_header(self):
         testuser = self.env['res.users'].create({
             'email': 'testuser@testuser.com',
-            'groups_id': [Command.set([self.ref('base.group_portal')])],
+            'group_ids': [Command.set([self.ref('base.group_portal')])],
             'name': 'Test User',
             'login': 'testuser',
             'password': 'testuser',

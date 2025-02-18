@@ -65,7 +65,7 @@
                 <page string="Point of Sale" name="pos" invisible="not available_in_pos">
                     <group>
                         <group name="pos" string="Point of Sale">
-                            <field name="color" invisible="true"/>
+                            <field name="color" invisible="True"/>
                             <field name="to_weight"/>
                             <field name="pos_categ_ids"
                                    widget="many2many_tags"
@@ -187,7 +187,7 @@
                                     options="{'create': false, 'create_edit': false}"/>
                                 <field name="tax_string"/>
                             </div>
-                            <field name="pos_categ_ids" string="POS Category" class="oe_inline" widget="many2many_tags" placeholder="Unsaleable"/>
+                            <field name="pos_categ_ids" string="POS Category" class="oe_inline" widget="many2many_tags"/>
                     </group>
                 </sheet>
             </form>

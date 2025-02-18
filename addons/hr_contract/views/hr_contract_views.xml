@@ -178,18 +178,23 @@
                         <div class="oe_title pe-0 w-100 mw-100" name="title">
                             <h1 class="d-flex flex-row justify-content-between">
                                 <field name="name" class="text-truncate" placeholder="Contract Reference"/>
-                                <field name="kanban_state"
-                                    class="d-flex align-items-center"
-                                    groups="!hr_contract.group_hr_contract_manager"
-                                    widget="state_selection" readonly="1"/>
-                                <field name="kanban_state"
-                                    class="d-flex align-items-center"
-                                    groups="hr_contract.group_hr_contract_manager"
-                                    widget="state_selection" readonly="0"/>
+                                <div id="kanban_state">
+                                    <field name="kanban_state"
+                                        class="d-flex align-items-center"
+                                        groups="!hr_contract.group_hr_contract_manager"
+                                        widget="state_selection" readonly="1"/>
+                                    <field name="kanban_state"
+                                        class="d-flex align-items-center"
+                                        groups="hr_contract.group_hr_contract_manager"
+                                        widget="state_selection" readonly="0"/>
+                                </div>
                             </h1>
                             <h2>
                                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                             </h2>
+                        </div>
+                        <div id="template_warning" class="alert alert-warning" role="alert" invisible="employee_id">
+                            <span>A contract configured without an employee will be saved as a template.</span>
                         </div>
                         <group name="top_info">
                             <group name="top_info_left">
@@ -218,6 +223,7 @@
                                 </div>
                             </group>
                             <group name="top_info_right">
+                                <field name="default_contract_id" context="{'form_view_ref': 'hr_contract.hr_contract_view_form_contract_templates'}"/>
                                 <field name="structure_type_id" groups="!hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="structure_type_id" groups="hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                                 <field name="department_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
@@ -351,6 +357,72 @@
             </field>
         </record>
 
+        <record id="hr_contract_view_form_contract_templates" model="ir.ui.view">
+            <field name="name">hr.contract.form</field>
+            <field name="model">hr.contract</field>
+            <field name="mode">primary</field>
+            <field name="priority">60</field>
+            <field name="inherit_id" ref="hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="after">
+                    <widget name="web_ribbon" title="Template" bg_color="text-bg-secondary"/>
+                </div>
+                <header position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </header>
+                <div id="kanban_state" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </div>
+                <div id="template_warning" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </div>
+                <field name="default_contract_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="date_start" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="date_end" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="employee_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="state" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_contract_view_tree_contract_templates" model="ir.ui.view">
+            <field name="name">hr.contract.list</field>
+            <field name="model">hr.contract</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="attributes">
+                    <attribute name="column_invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_hr_contract_templates" model="ir.actions.act_window">
+            <field name="name">Contract Templates</field>
+            <field name="res_model">hr.contract</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('employee_id', '=', False)]</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'sequence': 1, 'view_id': ref('hr_contract_view_tree_contract_templates')}),
+                (0, 0, {'view_mode': 'form', 'sequence': 2, 'view_id': ref('hr_contract_view_form_contract_templates')})]"/>
+            <field name="search_view_id" ref="hr_contract.hr_contract_view_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                  No Template found</p><p>
+                    Let's create one
+              </p>
+            </field>
+        </record>
+
         <menuitem
             id="menu_human_resources_configuration_contract"
             name="Contracts"
@@ -375,4 +447,12 @@
         <record id="hr.menu_resource_calendar_view" model="ir.ui.menu">
             <field name="parent_id" ref="menu_human_resources_configuration_contract"/>
         </record>
+
+        <menuitem
+            id="menu_hr_employee_contract_templates"
+            name="Templates"
+            action="action_hr_contract_templates"
+            parent="menu_human_resources_configuration_contract"
+            sequence="5"
+            groups="hr.group_hr_manager"/>
 </odoo>

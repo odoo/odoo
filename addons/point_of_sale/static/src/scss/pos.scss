@@ -9,16 +9,28 @@ button {
     transition: all 150ms linear;
 }
 
+select > option {
+    background: $light;
+}
+
+.navbar-menu {
+    :not(.btn-check) + .btn:active, .btn:first-child:active{
+        --btn-active-border-color: transparent;
+    }
+}
+
 .btn-light {
     --btn-hover-bg: #{$o-gray-100};
-    --btn-hover-border-color: #{$o-gray-100};
-    --btn-active-border-color: transparent;
+    --btn-hover-border-color: transparent;
     --btn-active-bg: #{$o-gray-300};
+    --btn-color: #{$o-gray-900};
+    --btn-active-border-color: transparent;
 }
 
 .btn-secondary {
     --btn-bg: #F4F4F4;
     --btn-border-color: #F4F4F4;
+    --btn-color: #{$o-gray-900};
 }
 
 .bg-secondary {
@@ -29,6 +41,10 @@ button {
     width: 100%;
     display: block;
     outline: none;
+}
+
+.form-select {
+    background-color: $body-bg;
 }
 
 .text-large {
@@ -179,18 +195,20 @@ button {
     .o_colorlist_item_color_transparent_#{$size - 1} {
         $-border-color: adjust-color(nth($o-colors, $size), $lightness: 15%, $saturation: 5%);
         $-background-color: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 5%);
-        $-text-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
         --bg: #{$-background-color};
         --hover-bg: #{darken($-background-color, 5%)};
-        @include o-print-color($-text-color, color, 1);
         --border-color: #{$-border-color};
+    }
+
+    .o_colorlist_item_numpad_color_#{$size - 1} {
+        $-border-color: adjust-color(nth($o-colors, $size), $lightness: 15%, $saturation: 5%);
+        $-background-color: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 5%);
+        --bg: #{$-background-color};
+        --border-color: #{$-border-color};
+        --hover-bg: #{darken($-background-color, 5%)};
     }
 }
 
-.pos-rightheader .status-buttons .btn-secondary{
-    background-color: #fff;
-    border: 0;
-}
 // this is to override the property in `web/static/src/webclient/webclient_layout.scss'
 body.modal-open {
     position: initial !important;

@@ -14,7 +14,6 @@ import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/p
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
-import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { sprintf } from "@web/core/utils/strings";
@@ -77,12 +76,12 @@ export class PaymentScreen extends Component {
 
     getNumpadButtons() {
         const colorClassMap = {
-            [this.env.services.localization.decimalPoint]: "o_colorlist_item_color_transparent_6",
-            Backspace: "o_colorlist_item_color_transparent_1",
-            "+10": "o_colorlist_item_color_transparent_10",
-            "+20": "o_colorlist_item_color_transparent_10",
-            "+50": "o_colorlist_item_color_transparent_10",
-            "-": "o_colorlist_item_color_transparent_3",
+            [this.env.services.localization.decimalPoint]: "o_colorlist_item_numpad_color_6",
+            Backspace: "o_colorlist_item_numpad_color_1",
+            "+10": "o_colorlist_item_numpad_color_10",
+            "+20": "o_colorlist_item_numpad_color_10",
+            "+50": "o_colorlist_item_numpad_color_10",
+            "-": "o_colorlist_item_numpad_color_3",
         };
 
         return enhancedButtons().map((button) => ({
@@ -205,7 +204,7 @@ export class PaymentScreen extends Component {
             this.selectedPaymentLine.setAmount(amount);
         }
     }
-    toggleIsToInvoice() {
+    async toggleIsToInvoice() {
         this.currentOrder.setToInvoice(!this.currentOrder.isToInvoice());
     }
     openCashbox() {
@@ -288,6 +287,12 @@ export class PaymentScreen extends Component {
         this.numberBuffer.capture();
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return;
+        }
+        const linesToRemove = this.currentOrder.lines.filter((line) =>
+            line.product_id.uom_id.isZero(line.qty)
+        );
+        for (const line of linesToRemove) {
+            this.currentOrder.removeOrderline(line);
         }
         if (await this._isOrderValid(isForceValidate)) {
             // remove pending payments before finalizing the validation
@@ -505,7 +510,7 @@ export class PaymentScreen extends Component {
         }
 
         if (
-            this.currentOrder.getTotalWithTax() != 0 &&
+            !this.pos.currency.isZero(this.currentOrder.getTotalWithTax()) &&
             this.currentOrder.payment_ids.length === 0
         ) {
             this.notification.add(_t("Select a payment method to validate the order."));
@@ -592,7 +597,7 @@ export class PaymentScreen extends Component {
         if (
             isPaymentSuccessful &&
             currentOrder.isPaid() &&
-            floatIsZero(currentOrder.getDue(), currency.decimal_places) &&
+            currency.isZero(currentOrder.getDue()) &&
             config.auto_validate_terminal_payment &&
             !currentOrder.isRefundInProcess()
         ) {
@@ -644,12 +649,8 @@ export class PaymentScreen extends Component {
             }
 
             const amountPaid = payment.getAmount();
-            const expectedAmountPaid = roundPrecision(
-                amountPaid,
-                cashRounding.rounding,
-                cashRounding.rounding_method
-            );
-            if (floatIsZero(expectedAmountPaid - amountPaid, currency.decimal_places)) {
+            const expectedAmountPaid = cashRounding.round(amountPaid);
+            if (currency.isZero(expectedAmountPaid - amountPaid)) {
                 continue;
             }
 

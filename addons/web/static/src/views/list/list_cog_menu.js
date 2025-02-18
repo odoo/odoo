@@ -5,7 +5,6 @@ export class ListCogMenu extends CogMenu {
     static props = {
         ...CogMenu.props,
         hasSelectedRecords: { type: Number, optional: true },
-        slots: { type: Object, optional: true },
     };
     _registryItems() {
         return this.props.hasSelectedRecords ? [] : super._registryItems();

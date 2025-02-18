@@ -179,7 +179,7 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
     const coModeldisplayNames = displayNames[getResModel(fieldDef)];
     const dis = disambiguate(value, coModeldisplayNames);
     const values =
-        operator == "within"
+        ["within", "is_not_within"].includes(operator)
             ? [value[0], Within.options.find((option) => option[0] === value[1])[1]]
             : (Array.isArray(value) ? value : [value])
                   .slice(0, 21)
@@ -189,10 +189,12 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
     let join;
     let addParenthesis = Array.isArray(value);
     switch (operator) {
+        case "is_not_between":
         case "between":
             join = _t("and");
             addParenthesis = false;
             break;
+        case "is_not_within":
         case "within":
             join = " ";
             addParenthesis = false;

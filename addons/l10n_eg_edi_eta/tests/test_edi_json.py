@@ -361,7 +361,7 @@ class TestEdiJson(TestEGEdiCommon):
                 },
             )
 
-    def test_4_simple_test_local_parter_vat_14_discount(self):
+    def test_4_simple_test_local_parter_vat_14_discount_multiple_tax(self):
         with freeze_time(self.frozen_today), patch(
             'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
             new=mocked_action_post_sign_invoices,
@@ -369,6 +369,7 @@ class TestEdiJson(TestEGEdiCommon):
             'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
             new=mocked_l10n_eg_edi_post_invoice_web_service,
         ):
+            ref_eg_standard_sale_14 = self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids
             invoice = self.create_invoice(
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
@@ -378,7 +379,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                         'discount': 10.0,
-                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
+                        'tax_ids': [Command.set(ref_eg_standard_sale_14)],
                     },
                     {
                         'product_id': self.product_a.id,
@@ -386,7 +387,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'discount': 10.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
+                        'tax_ids': [Command.set(ref_eg_standard_sale_14)],
                     },
                     {
                         'product_id': self.product_a.id,
@@ -394,12 +395,15 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                         'discount': 10.0,
-                        'tax_ids': [Command.create({
-                            "amount_type": "fixed",
-                            "amount": 10.0,
-                            "name": "Fixed Tax",
-                            "l10n_eg_eta_code": "t3_tbl02",
-                        })],
+                        'tax_ids': [
+                            Command.set(ref_eg_standard_sale_14),
+                            Command.create({
+                                "amount_type": "fixed",
+                                "amount": 10.0,
+                                "name": "Fixed Tax",
+                                "l10n_eg_eta_code": "t3_tbl02",
+                            }),
+                        ],
                     },
                 ],
             )
@@ -474,17 +478,17 @@ class TestEdiJson(TestEGEdiCommon):
                                 'itemsDiscount': 0.0,
                                 'unitValue': {'currencySold': 'EGP', 'amountEGP': 100.0},
                                 'discount': {'rate': 10.0, 'amount': 10.0},
-                                'taxableItems': [{'taxType': 'T3', 'amount': 10.0, 'subType': 'TBL02', 'rate': 0.0}],
+                                'taxableItems': [{'taxType': 'T1', 'amount': 12.6, 'subType': 'V009', 'rate': 14.0}, {'taxType': 'T3', 'amount': 10.0, 'subType': 'TBL02', 'rate': 0}],
                                 'salesTotal': 100.0,
                                 'netTotal': 90.0,
-                                'total': 100.0,
+                                'total': 112.6,
                             },
                         ],
-                        'taxTotals': [{'taxType': 'T1', 'amount': 141.18}, {'taxType': 'T3', 'amount': 10.0}],
+                        'taxTotals': [{'taxType': 'T1', 'amount': 153.78}, {'taxType': 'T3', 'amount': 10.0}],
                         'totalDiscountAmount': 122.05445,
                         'totalSalesAmount': 1220.54445,
                         'netAmount': 1098.49,
-                        'totalAmount': 1249.67,
+                        'totalAmount': 1262.27
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
@@ -915,8 +919,8 @@ class TestEdiJson(TestEGEdiCommon):
                         ],
                         'taxTotals': [{'taxType': 'T1', 'amount': 14.0}, {'amount': 3.0, 'taxType': 'T4'}],
                         'totalSalesAmount': 100.0,
-                        'netAmount': 200.0,
-                        'totalAmount': 211.0,
+                        'netAmount': 100.0,
+                        'totalAmount': 111.0,
                     },
                     'response': ETA_TEST_RESPONSE,
                 },

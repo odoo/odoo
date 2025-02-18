@@ -581,7 +581,7 @@ class AccountAccount(models.Model):
         for record in self:
             record.related_taxes_amount = self.env['account.tax'].search_count([
                 *self.env['account.tax']._check_company_domain(self.env.company),
-                ('repartition_line_ids.account_id', '=', record.id),
+                ('repartition_line_ids.account_id', 'in', record.ids),
             ])
 
     @api.depends_context('company')
@@ -694,6 +694,8 @@ class AccountAccount(models.Model):
                 account.reconcile = False
             elif account.account_type in ('asset_receivable', 'liability_payable'):
                 account.reconcile = True
+            elif account.account_type == 'asset_cash':
+                account.reconcile = False
             # For other asset/liability accounts, don't do any change to account.reconcile.
 
     def _set_opening_debit(self):

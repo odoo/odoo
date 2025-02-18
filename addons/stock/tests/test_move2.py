@@ -2378,7 +2378,7 @@ class TestSinglePicking(TestStockCommon):
 
     def test_owner_1(self):
         # Required for `owner_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_tracking_owner")
+        self.env.user.group_ids += self.env.ref("stock.group_tracking_owner")
         """Make a receipt, set an owner and validate"""
         owner1 = self.env['res.partner'].create({'name': 'owner'})
         receipt = self.env['stock.picking'].create({
@@ -2430,7 +2430,7 @@ class TestSinglePicking(TestStockCommon):
 
         # We need to activate multi-locations to use putaway rules.
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
         putaway_product = self.env['stock.putaway.rule'].create({
             'product_id': self.productA.id,
             'location_in_id': stock_location.id,
@@ -3038,55 +3038,6 @@ class TestRoutes(TestStockCommon):
         moves._adjust_procure_method()
         self.assertEqual(move_A.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
         self.assertEqual(move_B.procure_method, 'make_to_stock', 'Move B should be "make_to_stock"')
-
-    def test_cross_dock(self):
-        customer_loc = self.env['stock.location'].browse(self.customer_location)
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.write({'reception_steps': 'two_steps', 'delivery_steps': 'pick_ship'})
-        self.product1.write({
-            'route_ids': [Command.link(warehouse.crossdock_route_id.id)]
-        })
-
-        # Create a procurement for an Out using that should use the cross-dock route
-        group = self.env['procurement.group'].create({'name': 'Test-cross-dock'})
-        self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
-            self.product1, 5, self.uom_unit, customer_loc,
-            self.product1.name, '/', self.env.company, {'warehouse_id': warehouse, 'group_id': group})
-        ])
-
-        # Fetch the reception move that was created
-        receipt_move = self.env['stock.move'].search([('group_id', '=', group.id)])
-        self.assertRecordValues(receipt_move, [{
-            'location_id': self.supplier_location,
-            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
-            'location_final_id': self.customer_location,
-            'picking_type_id': warehouse.in_type_id.id,
-        }])
-
-        # Validate the chain
-        receipt_move.write({'picked': True})
-        receipt_move._action_done()
-
-        cross_dock_move = receipt_move.move_dest_ids
-        self.assertRecordValues(cross_dock_move, [{
-            'location_id': warehouse.wh_input_stock_loc_id.id,
-            'location_dest_id': warehouse.wh_output_stock_loc_id.id,
-            'location_final_id': self.customer_location,
-            'picking_type_id': warehouse.xdock_type_id.id,
-        }])
-        cross_dock_move.write({'picked': True})
-        cross_dock_move._action_done()
-
-        delivery_move = cross_dock_move.move_dest_ids
-        self.assertRecordValues(delivery_move, [{
-            'location_id': warehouse.wh_output_stock_loc_id.id,
-            'location_dest_id': self.customer_location,
-            'location_final_id': self.customer_location,
-            'picking_type_id': warehouse.out_type_id.id,
-        }])
-        delivery_move.write({'picked': True})
-        delivery_move._action_done()
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, customer_loc), 5)
 
 
 class TestAutoAssign(TestStockCommon):

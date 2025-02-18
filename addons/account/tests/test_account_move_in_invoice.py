@@ -128,7 +128,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_tax': 168.0,
             'amount_total': 1128.0,
         }
-        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+        cls.env.user.group_ids += cls.env.ref('uom.group_uom')
 
     @classmethod
     def setup_armageddon_tax(cls, tax_name, company_data, **kwargs):
@@ -797,7 +797,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_in_invoice_line_onchange_cash_rounding_1(self):
         # Required for `invoice_cash_rounding_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('account.group_cash_rounding')
+        self.env.user.group_ids += self.env.ref('account.group_cash_rounding')
         # Test 'add_invoice_line' rounding
         move_form = Form(self.invoice)
         # Add a cash rounding having 'add_invoice_line'.
@@ -1130,8 +1130,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             # `purchase` adds a view which makes `invoice_vendor_bill_id` invisible
             # for purchase users
             # https://github.com/odoo/odoo/blob/385884afd31f25d61e99d139ecd4c574d99a1863/addons/purchase/views/account_move_views.xml#L26
-            self.env.user.groups_id -= self.env.ref('purchase.group_purchase_manager')
-            self.env.user.groups_id -= self.env.ref('purchase.group_purchase_user')
+            self.env.user.group_ids -= self.env.ref('purchase.group_purchase_manager')
+            self.env.user.group_ids -= self.env.ref('purchase.group_purchase_user')
         copy_invoice = self.invoice.copy()
 
         move_form = Form(self.invoice)
@@ -1577,9 +1577,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
         move.action_post()
         self.assertFalse(move.payment_ids)  # don't auto reconcile payments
-
-        # Reconcile manually, the move is now fully paid
-        (move.line_ids[-1] | payment.move_id.line_ids.filtered(lambda line: line.account_id == move.line_ids[-1].account_id)).reconcile()
 
         # If the move is already fully paid, we should alert the user
         with self.assertRaisesRegex(UserError, r"You can't register a payment because there is nothing left"):
@@ -2302,7 +2299,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move = move_form.save()
         self.assertEqual(move.invoice_date.strftime('%Y-%m-%d'), '2022-05-06')
 
-    def _assert_payment_move_state(self, move_type, amount, counterpart_values_list, payment_state):
+    def _assert_payment_move_state(self, move_type, amount, counterpart_values_list, payment_state, post_move=True):
         def assert_partial(line1, line2):
             partial = self.env['account.partial.reconcile'].search(expression.OR([
                 [('debit_move_id', '=', line1.id), ('credit_move_id', '=', line2.id)],
@@ -2343,7 +2340,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                     }),
                 ]
             move = self.env['account.move'].create(move_vals)
-            move.action_post()
+            if post_move:
+                move.action_post()
             return move
 
         def create_payment(move, amount):
@@ -2486,6 +2484,69 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ):
                 self._assert_payment_move_state(move_type, amount, counterpart_values_list, payment_state)
 
+    def test_payment_move_state_draft(self):
+        for move_type, amount, counterpart_values_list, payment_state, *extra in (
+            ('out_invoice', 1000.0, [('out_refund', 1000.0)], 'reversed'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('out_refund', 500.0)], 'reversed'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('entry', -500.0)], 'reversed'),
+            ('out_receipt', 1000.0, [('out_refund', 1000.0)], 'reversed'),
+            ('out_receipt', 1000.0, [('out_refund', 500.0), ('out_refund', 500.0)], 'reversed'),
+            ('out_refund', 1000.0, [('entry', 1000.0)], 'reversed'),
+            ('in_invoice', 1000.0, [('in_refund', 1000.0)], 'reversed'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('in_refund', 500.0)], 'reversed'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('entry', 500.0)], 'reversed'),
+            ('in_receipt', 1000.0, [('in_refund', 1000.0)], 'reversed'),
+            ('in_receipt', 1000.0, [('in_refund', 500.0), ('in_refund', 500.0)], 'reversed'),
+            ('in_refund', 1000.0, [('entry', -1000.0)], 'reversed'),
+            ('entry', 1000.0, [('entry', -1000.0)], 'not_paid'),
+            ('out_invoice', 1000.0, [('payment', 500.0)], 'partial'),
+            ('out_invoice', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('out_invoice', 1000.0, [('statement_line', 500.0)], 'partial'),
+            ('out_invoice', 1000.0, [('statement_line', 1000.0)], 'paid'),
+            ('out_receipt', 1000.0, [('payment', 500.0)], 'partial'),
+            ('out_receipt', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('out_receipt', 1000.0, [('statement_line', 500.0)], 'partial'),
+            ('out_receipt', 1000.0, [('statement_line', 1000.0)], 'paid'),
+            ('out_refund', 1000.0, [('payment', 500.0)], 'partial'),
+            ('out_refund', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('out_refund', 1000.0, [('statement_line', -500.0)], 'partial'),
+            ('out_refund', 1000.0, [('statement_line', -1000.0)], 'paid'),
+            ('in_invoice', 1000.0, [('payment', 500.0)], 'partial'),
+            ('in_invoice', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('in_invoice', 1000.0, [('statement_line', -500.0)], 'partial'),
+            ('in_invoice', 1000.0, [('statement_line', -1000.0)], 'paid'),
+            ('in_receipt', 1000.0, [('payment', 500.0)], 'partial'),
+            ('in_receipt', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('in_receipt', 1000.0, [('statement_line', -500.0)], 'partial'),
+            ('in_receipt', 1000.0, [('statement_line', -1000.0)], 'paid'),
+            ('in_refund', 1000.0, [('payment', 500.0)], 'partial'),
+            ('in_refund', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('in_refund', 1000.0, [('statement_line', 500.0)], 'partial'),
+            ('in_refund', 1000.0, [('statement_line', 1000.0)], 'paid'),
+            ('entry', 1000.0, [('payment', 500.0)], 'not_paid'),
+            ('entry', 1000.0, [('payment', 1000.0)], 'not_paid'),
+            ('entry', 1000.0, [('statement_line', 500.0)], 'not_paid'),
+            ('entry', 1000.0, [('statement_line', 1000.0)], 'not_paid'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('payment', 500.0)], 'in_payment'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('payment', 400.0)], 'partial'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('statement_line', 500.0)], 'paid'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('statement_line', 400.0)], 'partial'),
+            ('out_invoice', 1000.0, [('entry', -1000.0)], 'paid'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('payment', 500.0)], 'in_payment'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('payment', 400.0)], 'partial'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('statement_line', -500.0)], 'paid'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('statement_line', -400.0)], 'partial'),
+            ('in_invoice', 1000.0, [('entry', 1000.0)], 'paid'),
+            ('out_invoice', 0.0, [], 'not_paid'),
+        ):
+            with self.subTest(
+                move_type=move_type,
+                amount=amount,
+                counterpart_values_list=counterpart_values_list,
+                payment_state=payment_state,
+            ):
+                self._assert_payment_move_state(move_type, amount, counterpart_values_list, payment_state, post_move=False)
+
     def test_onchange_journal_currency(self):
         """
         Ensure invoice currency changes on journal change, iff the journal
@@ -2542,7 +2603,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         Ensure that taxes are recomputed correctly when product uom and
         price unit are changed for users without 'uom.group_uom' group
         """
-        self.env.user.groups_id -= self.env.ref('uom.group_uom')
+        self.env.user.group_ids -= self.env.ref('uom.group_uom')
         tax = self.company_data['default_tax_purchase']
         product = self.env['product.product'].create({
             'name': 'product',
@@ -2755,3 +2816,12 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         action = credit_note_wizard.reverse_moves()
         credit_note = self.env['account.move'].browse(action['res_id'])
         self.assertEqual(credit_note.amount_total, invoice.amount_total)
+
+    def test_journal_item_on_payable_account(self):
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+
+        with move_form.line_ids.new() as line_form:
+            line_form.account_id = self.company_data['default_account_payable']
+
+        with self.assertRaisesRegex(UserError, 'Any journal item on a payable account must have a due date and vice versa.'):
+            move_form.save()

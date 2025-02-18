@@ -1,5 +1,6 @@
+import { baseContainerGlobalSelector } from "./base_container";
 import { closestBlock, isBlock } from "./blocks";
-import { closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
+import { childNodes, closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
 import { DIRECTIONS, nodeSize } from "./position";
 
 export function isEmpty(el) {
@@ -259,7 +260,7 @@ export function isVisible(node) {
     );
 }
 export function hasVisibleContent(node) {
-    return [...(node?.childNodes || [])].some((n) => isVisible(n));
+    return (node ? childNodes(node) : []).some((n) => isVisible(n));
 }
 
 export function isZwnbsp(node) {
@@ -271,7 +272,7 @@ export function isTangible(node) {
 }
 
 export function hasTangibleContent(node) {
-    return [...(node?.childNodes || [])].some((n) => isTangible(n));
+    return (node ? childNodes(node) : []).some((n) => isTangible(n));
 }
 
 export const isNotEditableNode = (node) =>
@@ -390,6 +391,37 @@ export function isPhrasingContent(node) {
     return false;
 }
 
+export function containsAnyInline(element) {
+    if (!element) {
+        return false;
+    }
+    let child = element.firstChild;
+    while (child) {
+        if (
+            (!isBlock(child) && child.nodeType === Node.ELEMENT_NODE) ||
+            (child.nodeType === Node.TEXT_NODE && child.textContent.trim() !== "")
+        ) {
+            return true;
+        }
+        child = child.nextSibling;
+    }
+    return false;
+}
+
+export function containsAnyNonPhrasingContent(element) {
+    if (!element) {
+        return false;
+    }
+    let child = element.firstChild;
+    while (child) {
+        if (!isPhrasingContent(child)) {
+            return true;
+        }
+        child = child.nextSibling;
+    }
+    return false;
+}
+
 /**
  * A "protected" node will have its mutations filtered and not be registered
  * in an history step. Some editor features like selection handling, command
@@ -439,18 +471,11 @@ export function isUnprotecting(node) {
 }
 
 // This is a list of "paragraph-related elements", defined as elements that
-// behave like paragraphs.
-export const paragraphRelatedElements = [
-    "P",
-    "H1",
-    "H2",
-    "H3",
-    "H4",
-    "H5",
-    "H6",
-    "PRE",
-    "BLOCKQUOTE",
-];
+// behave like paragraphs. It is non-exhaustive and should not be used as a
+// standalone. @see isParagraphRelatedElement
+// TODO add: this list should contain PRE, but the spec currently is to
+// paste flow content inside the PRE, so it is removed temporarily.
+export const paragraphRelatedElements = ["P", "H1", "H2", "H3", "H4", "H5", "H6"];
 
 /**
  * Return true if the given node allows "paragraph-related elements".
@@ -460,15 +485,16 @@ export const paragraphRelatedElements = [
  * @returns {boolean}
  */
 export function allowsParagraphRelatedElements(node) {
-    return isBlock(node) && !["P", "H1", "H2", "H3", "H4", "H5", "H6"].includes(node.nodeName);
+    return isBlock(node) && !isParagraphRelatedElement(node);
 }
 
 export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
 const flowContent = new Set([...phrasingContent, ...paragraphRelatedElements, "DIV", "HR"]);
 export const listItem = new Set(["LI"]);
+const listContainers = new Set(["UL", "OL"]);
 
 const allowedContent = {
-    BLOCKQUOTE: phrasingContent, // HTML spec: flow content
+    BLOCKQUOTE: flowContent,
     DIV: flowContent,
     H1: phrasingContent,
     H2: phrasingContent,
@@ -481,10 +507,37 @@ const allowedContent = {
     OL: listItem,
     UL: listItem,
     P: phrasingContent,
-    PRE: phrasingContent,
+    PRE: flowContent, // HTML spec: phrasing content
     TD: flowContent,
     TR: new Set(["TD"]),
 };
+
+export function isParagraphRelatedElement(node) {
+    if (!node) {
+        return false;
+    }
+    return (
+        paragraphRelatedElements.includes(node.nodeName) ||
+        (node.nodeType === Node.ELEMENT_NODE && node.matches(baseContainerGlobalSelector))
+    );
+}
+
+export const paragraphRelatedElementsSelector = [
+    ...paragraphRelatedElements,
+    baseContainerGlobalSelector,
+].join(",");
+
+export function isListItemElement(node) {
+    return [...listItem].includes(node.nodeName);
+}
+
+export const listItemElementSelector = [...listItem].join(",");
+
+export function isListElement(node) {
+    return [...listContainers].includes(node.nodeName);
+}
+
+export const listElementSelector = [...listContainers].join(",");
 
 /**
  * @param {Element} parentBlock
@@ -492,11 +545,15 @@ const allowedContent = {
  * @returns {boolean}
  */
 export function isAllowedContent(parentBlock, nodes) {
-    const allowedContentSet = allowedContent[parentBlock.nodeName];
+    let allowedContentSet = allowedContent[parentBlock.nodeName];
     if (!allowedContentSet) {
         // Spec: a block not listed in allowedContent allows anything.
         // See "custom-block" in tests.
         return true;
+    }
+    if (parentBlock.matches(baseContainerGlobalSelector)) {
+        // A baseContainer DIV can only have phrasingContent, as a P would.
+        allowedContentSet = phrasingContent;
     }
     return nodes.every((node) => allowedContentSet.has(node.nodeName));
 }
@@ -562,8 +619,9 @@ export function getDeepestPosition(node, offset) {
                 [node, offset] = [next, direction ? 0 : nodeSize(next)];
             }
             // First switch direction to left if offset is at the end.
-            direction = offset < node.childNodes.length;
-            next = node.childNodes[direction ? offset : offset - 1];
+            const childrenNodes = childNodes(node);
+            direction = offset < childrenNodes.length;
+            next = childrenNodes[direction ? offset : offset - 1];
         } else if (direction && next.nextSibling && closestBlock(node).contains(next.nextSibling)) {
             // Invalid node: skip to next sibling (without crossing blocks).
             next = next.nextSibling;
@@ -664,5 +722,12 @@ export function isElement(node) {
 
 export function isContentEditable(node) {
     const element = isTextNode(node) ? node.parentElement : node;
-    return element.isContentEditable;
+    return element && element.isContentEditable;
+}
+
+export function isContentEditableAncestor(node) {
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+        return false;
+    }
+    return node.isContentEditable && node.matches("[contenteditable]");
 }

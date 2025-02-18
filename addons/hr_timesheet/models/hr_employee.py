@@ -4,6 +4,7 @@ from ast import literal_eval
 
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
+from odoo.tools import SQL
 
 
 class HrEmployee(models.Model):
@@ -12,16 +13,21 @@ class HrEmployee(models.Model):
     has_timesheet = fields.Boolean(compute='_compute_has_timesheet', groups="hr.group_hr_user,base.group_system", export_string_translation=False)
 
     def _compute_has_timesheet(self):
-        self.env.cr.execute("""
-        SELECT id, EXISTS(SELECT 1 FROM account_analytic_line WHERE project_id IS NOT NULL AND employee_id = e.id limit 1)
-          FROM hr_employee e
-         WHERE id in %s
-        """, (tuple(self.ids), ))
-
-        result = {eid[0]: eid[1] for eid in self.env.cr.fetchall()}
+        if self.ids:
+            result = dict(self.env.execute_query(SQL(
+                """ SELECT id, EXISTS(
+                            SELECT 1 FROM account_analytic_line
+                             WHERE project_id IS NOT NULL AND employee_id = e.id
+                             LIMIT 1)
+                      FROM hr_employee e
+                     WHERE id in %s """,
+                tuple(self.ids),
+            )))
+        else:
+            result = {}
 
         for employee in self:
-            employee.has_timesheet = result.get(employee.id, False)
+            employee.has_timesheet = result.get(employee._origin.id, False)
 
     @api.depends('company_id', 'user_id')
     @api.depends_context('allowed_company_ids')

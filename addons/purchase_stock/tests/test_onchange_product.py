@@ -33,7 +33,7 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_onchange_product_id(self):
         # Required for `product_uom` to be visible in the view
-        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
 
         uom_id = self.product_uom_model.search([('name', '=', 'Units')])[0]
 

@@ -112,11 +112,16 @@ test("toolbar buttons react to selection change", async () => {
 
     // check that bold button is not active
     expect(".btn[name='bold']").not.toHaveClass("active");
+    // check that remove format buton isdisabled and have correct title
+    expect(".btn[name='remove_format']").toHaveAttribute("disabled");
+    expect(".btn[name='remove_format']").toHaveAttribute("title", "Selection has no format");
 
     // click on toggle bold
     await contains(".btn[name='bold']").click();
     expect(getContent(el)).toBe("<p><strong>[test]</strong> some text</p>");
     expect(".btn[name='bold']").toHaveClass("active");
+    expect(".btn[name='remove_format']").not.toHaveAttribute("disabled");
+    expect(".btn[name='remove_format']").toHaveAttribute("title", "Remove Format");
 
     // set selection where text is not bold
     setContent(el, "<p><strong>test</strong> some [text]</p>");
@@ -209,23 +214,24 @@ test("toolbar works: can select font", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
     setContent(el, "<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar [name='font']").toHaveText("Normal");
+    expect(".o-we-toolbar [title='Font style']").toHaveText("Paragraph");
 
     await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
     await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
     expect(getContent(el)).toBe("<h2>[test]</h2>");
-    expect(".o-we-toolbar [name='font']").toHaveText("Header 2");
+    expect(".o-we-toolbar [title='Font style']").toHaveText("Header 2");
 });
 
 test("toolbar works: show the right font name", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    for (const item of fontItems) {
+    const items = fontItems;
+    for (const item of items) {
         await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
         await animationFrame();
         const name = item.name.toString();
         let selector = `.o_font_selector_menu .dropdown-item:contains('${name}')`;
-        for (const tempItem of fontItems) {
+        for (const tempItem of items) {
             // we need to exclude the font names which have the current name as a substring.
             if (tempItem === item) {
                 continue;
@@ -237,27 +243,27 @@ test("toolbar works: show the right font name", async () => {
         }
         await contains(selector).click();
         await animationFrame();
-        expect(".o-we-toolbar [name='font']").toHaveText(name);
+        expect(".o-we-toolbar [title='Font style']").toHaveText(name);
     }
 });
 
 test("toolbar works: show the right font name after undo", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar [name='font']").toHaveText("Normal");
+    expect(".o-we-toolbar [title='Font style']").toHaveText("Paragraph");
 
     await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
     await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
     expect(getContent(el)).toBe("<h2>[test]</h2>");
-    expect(".o-we-toolbar [name='font']").toHaveText("Header 2");
+    expect(".o-we-toolbar [title='Font style']").toHaveText("Header 2");
     await press(["ctrl", "z"]);
     await animationFrame();
     expect(getContent(el)).toBe("<p>[test]</p>");
-    expect(".o-we-toolbar [name='font']").toHaveText("Normal");
+    expect(".o-we-toolbar [title='Font style']").toHaveText("Paragraph");
     await press(["ctrl", "y"]);
     await animationFrame();
     expect(getContent(el)).toBe("<h2>[test]</h2>");
-    expect(".o-we-toolbar [name='font']").toHaveText("Header 2");
+    expect(".o-we-toolbar [title='Font style']").toHaveText("Header 2");
 });
 
 test("toolbar works: can select font size", async () => {
@@ -281,9 +287,7 @@ test("toolbar works: can select font size", async () => {
 
     await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
     const sizes = new Set(
-        fontSizeItems.map((item) => {
-            return getFontSizeFromVar(item.variableName).toString();
-        })
+        fontSizeItems.map((item) => getFontSizeFromVar(item.variableName).toString())
     );
     expect(queryAllTexts(".o_font_selector_menu .dropdown-item")).toEqual([...sizes]);
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
@@ -455,9 +459,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
             toolbar_namespaces: [
                 {
                     id: "aNamespace",
-                    isApplied: (nodeList) => {
-                        return !!nodeList.find((node) => node.tagName === "DIV");
-                    },
+                    isApplied: (nodeList) => !!nodeList.find((node) => node.tagName === "DIV"),
                 },
             ],
             user_commands: { id: "test_cmd", run: () => null },
@@ -588,11 +590,12 @@ test("toolbar buttons should have title attribute", async () => {
 test("toolbar buttons should have title attribute with translated text", async () => {
     // Retrieve toolbar buttons descriptions in English
     const { editor, plugins } = await setupEditor("");
+    // map function to get the title string value
+    const itemTitleString = (item) =>
+        item.title instanceof Function ? item.title().toString() : item.title.toString();
+
     // item.label could be a LazyTranslatedString so we ensure it is a string with toString()
-    const titles = plugins
-        .get("toolbar")
-        .getButtons()
-        .map((item) => item.title.toString());
+    const titles = plugins.get("toolbar").getButtons().map(itemTitleString);
     editor.destroy();
 
     // Patch translations to return "Translated" for these terms
@@ -607,7 +610,7 @@ test("toolbar buttons should have title attribute with translated text", async (
         .getButtons()
         .forEach((item) => {
             // item.label could be a LazyTranslatedString so we ensure it is a string with toString()
-            expect(item.title.toString()).toBe("Translated");
+            expect(itemTitleString(item)).toBe("Translated");
         });
 
     await waitFor(".o-we-toolbar");

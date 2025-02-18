@@ -202,7 +202,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
     def test_pricelist_combination(self):
         # Enable discounts to view discount in sale_order
-        self.env.user.groups_id += self.env.ref('sale.group_discount_per_so_line')
+        self.env.user.group_ids += self.env.ref('sale.group_discount_per_so_line')
 
         product = self.env['product.product'].create({
             'name': 'Super Product',
@@ -244,7 +244,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         sol = so.order_line
         self.assertEqual(sol.price_total, 100.0)
         so.pricelist_id = promo_pricelist
-        so._cart_update(product_id=product.id, line_id=sol.id, set_qty=500)
+        so._cart_update_line_quantity(line_id=sol.id, quantity=500)
         self.assertEqual(sol.price_unit, 100.0, 'Both reductions should be applied')
         self.assertEqual(sol.discount, 72.25, 'Both reductions should be applied')
         self.assertEqual(sol.price_total, 13875)
@@ -281,7 +281,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         })
         sol = so.order_line
         self.assertEqual(sol.price_total, 0)
-        so._cart_update(product_id=product.id, line_id=sol.id, set_qty=6)
+        so._cart_update_line_quantity(line_id=sol.id, quantity=6)
         self.assertEqual(sol.price_unit, 10.0, 'Pricelist price should be applied')
         self.assertEqual(sol.discount, 0, 'Pricelist price should be applied')
         self.assertEqual(sol.price_total, 60.0)
@@ -410,7 +410,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             self.assertEqual(sol.price_total, 100.0)
 
             frozen_time.move_to(tomorrow + timedelta(seconds=10))
-            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=2)
+            so._cart_update_line_quantity(line_id=sol.id, quantity=2)
             self.assertEqual(sol.price_unit, 80.0, 'Reduction should be applied')
             self.assertEqual(sol.price_total, 160)
 
@@ -624,6 +624,31 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
             pricelists = self.website.get_pricelist_available()
         self.assertFalse(pricelists, "Pricelists specific to NL and BE should not be returned for US.")
 
+    def test_get_pricelist_available_geoip6(self):
+        """Remove country group from certain pricelists, and check that pricelists
+        with country group get prioritized when geoip is available."""
+        exclude = self.backend_pl + self.generic_pl_code + self.w1_pl_select + self.w1_pl_code
+        exclude.country_group_ids = False
+        self.website1_be_pl -= exclude
+
+        with patch(
+            'odoo.addons.website_sale.models.website.Website._get_geoip_country_code',
+            return_value=self.BE.code,
+        ):
+            pls = self.website.get_pricelist_available()
+
+        for pl in pls:
+            self.assertIn(
+                self.BE,
+                pl.country_group_ids.country_ids,
+                "Pricelists should have a country group that includes BE",
+            )
+        self.assertEqual(
+            pls,
+            self.website1_be_pl,
+            "Only pricelists for BE and accessible on website should be returned",
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
@@ -746,7 +771,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         # self.c2_pl | self.website  | self.company2 |
         # c2_pl2     | self.website  | self.company2 |
 
-        self.demo_user.groups_id += self.env.ref('sales_team.group_sale_manager')
+        self.demo_user.group_ids += self.env.ref('sales_team.group_sale_manager')
 
         # The test is here: while having access only to self.company2 records,
         # archive should not raise an error

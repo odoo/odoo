@@ -147,6 +147,17 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/tests/mock_server/**/*',
             'bus/static/tests/mock_websocket.js',
         ],
+        "im_livechat.assets_livechat_support_tours": [
+            "web_tour/static/src/tour_pointer/**/*",
+            "web/static/lib/hoot-dom/**/*",
+            # scss not needed in tests and depends on scss variables that are not in this bundle
+            ("remove", "web_tour/static/src/tour_pointer/**/*.scss"),
+            "web_tour/static/src/tour_service/**/*",
+            "web/static/tests/legacy/helpers/cleanup.js",
+            "web/static/tests/legacy/helpers/utils.js",
+            "web/static/tests/legacy/utils.js",
+            "im_livechat/static/tests/tours/support/*",
+        ],
         'im_livechat.embed_assets_unit_tests': [
             'web/static/tests/_framework/**/*',
             'im_livechat/static/tests/embed/**/*',

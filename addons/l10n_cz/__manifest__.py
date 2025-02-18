@@ -26,11 +26,14 @@ Tento modul definuje:
     'auto_install': ['account'],
     'data': [
         'data/tax_report.xml',
+        'data/l10n_cz.tax_office.csv',
         'views/report_invoice.xml',
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
         'views/account_move_views.xml',
         'views/report_template.xml',
+        'views/tax_office_view.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

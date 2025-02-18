@@ -12,7 +12,6 @@ from odoo.service import common as auth
 from odoo.service import model
 from odoo.tests import common
 from odoo.tools import DotDict
-from odoo.api import call_kw
 
 
 class TestExternalAPI(SavepointCaseWithUserDemo):
@@ -77,9 +76,9 @@ class TestXMLRPC(common.HttpCase):
         self.assertEqual(r['first_activity'], now.isoformat(" ", "seconds"))
 
     def test_xmlrpc_read_group(self):
-        groups = self.xmlrpc_object.execute(
+        self.xmlrpc_object.execute(
             common.get_db_name(), self.admin_uid, 'admin',
-            'res.partner', 'read_group', [], ['is_company', 'color'], ['parent_id']
+            'res.partner', 'formatted_read_group', [], ['parent_id'], ['color:sum'],
         )
 
     def test_xmlrpc_name_search(self):
@@ -130,7 +129,7 @@ class TestXMLRPC(common.HttpCase):
     def test_jsonrpc_read_group(self):
         self._json_call(
             common.get_db_name(), self.admin_uid, 'admin',
-            'res.partner', 'read_group', [], ['is_company', 'color'], ['parent_id']
+            'res.partner', 'formatted_read_group', [], ['parent_id'], ['color:sum'],
         )
 
     def test_jsonrpc_name_search(self):
@@ -235,7 +234,7 @@ class TestAPIKeys(common.HttpCase):
         ])
         self.assertEqual(ctx['tz'], 'Australia/Eucla')
 
-        api_key = call_kw(
+        api_key = model.call_kw(
             model=self.env['res.users.apikeys.description'],
             name='create',
             args=[{'name': 'Name of the key'}],
@@ -262,7 +261,7 @@ class TestAPIKeys(common.HttpCase):
         u = self.env['res.users'].create({
             'name': 'a',
             'login': 'a',
-            'groups_id': self.env.ref('base.group_user').ids,
+            'group_ids': self.env.ref('base.group_user').ids,
         })
         with self.assertRaises(AccessError):
             k2.with_user(u).remove()

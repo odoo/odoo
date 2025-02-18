@@ -10,6 +10,7 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
+from odoo.addons.point_of_sale.models.pos_config import PosConfig
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.exceptions import UserError
@@ -45,7 +46,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         super().setUpClass()
 
         env = cls.env
-        cls.env.user.groups_id += env.ref('point_of_sale.group_pos_manager')
+        cls.env.user.group_ids += env.ref('point_of_sale.group_pos_manager')
         journal_obj = env['account.journal']
         account_obj = env['account.account']
         main_company = cls._get_main_company()
@@ -66,7 +67,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'A simple PoS man!',
             'login': 'pos_user',
             'password': 'pos_user',
-            'groups_id': [
+            'group_ids': [
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
                 (4, cls.env.ref('stock.group_stock_user').id),
@@ -77,7 +78,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'A powerful PoS man!',
             'login': 'pos_admin',
             'password': 'pos_admin',
-            'groups_id': [
+            'group_ids': [
                 (4, cls.env.ref('point_of_sale.group_pos_manager').id),
             ],
             'tz': 'America/New_York',
@@ -601,7 +602,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_02_pos_with_invoiced(self):
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('account.group_account_invoice').id),
             ]
         })
@@ -615,6 +616,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         last_order = self.env['pos.order'].search([], limit=1, order="id desc")
         self.assertEqual(last_order.lines[0].price_subtotal, 30.0)
         self.assertEqual(last_order.lines[0].price_subtotal_incl, 30.0)
+        # Check if session name contains config name as prefix
+        self.assertEqual(self.main_pos_config.name in last_order.session_id.name, True)
 
     def test_04_product_configurator(self):
         # Making one attribute inactive to verify that it doesn't show
@@ -622,7 +625,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         fabrics_line = configurable_product.attribute_line_ids[2]
         fabrics_line.product_template_value_ids[1].ptav_active = False
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_manager').id),
             ]
         })
@@ -631,7 +634,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_05_ticket_screen(self):
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('account.group_account_invoice').id),
             ]
         })
@@ -643,7 +646,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         '''
         self.product_a.available_in_pos = True
         self.pos_admin.write({
-            'groups_id': [Command.link(self.env.ref('base.group_system').id)],
+            'group_ids': [Command.link(self.env.ref('base.group_system').id)],
         })
         self.assertFalse(self.product_a.is_storable)
         self.main_pos_config.with_user(self.pos_admin).open_ui()
@@ -1036,7 +1039,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ShowTaxExcludedTour', login="pos_user")
 
     def test_chrome_without_cash_move_permission(self):
-        self.env.user.write({'groups_id': [
+        self.env.user.write({'group_ids': [
             Command.set(
                 [
                     self.env.ref('base.group_user').id,
@@ -1253,7 +1256,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_multi_product_options(self):
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_manager').id),
             ]
         })
@@ -1425,7 +1428,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             "country_id": self.env.ref("base.us").id,
             "zip": "26432685463",
             "phone": "1234567890",
-            "mobile": "0987654321",
             "email": "john@doe.com"
         })
 
@@ -1498,15 +1500,20 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_product_categories_order(self):
         """ Verify that the order of categories doesnt change in the frontend """
         self.env['pos.category'].search([]).write({'sequence': 100})
-        self.env['pos.category'].create({
+        catgA = self.env['pos.category'].create({
             'name': 'AAA',
             'parent_id': False,
             'sequence': 1,
         })
-        self.env['pos.category'].create({
+        catgB = self.env['pos.category'].create({
             'name': 'AAC',
             'parent_id': False,
             'sequence': 3,
+        })
+        self.env['pos.category'].create({
+            'name': 'AAD',
+            'parent_id': False,
+            'sequence': 4,
         })
         parentA = self.env['pos.category'].create({
             'name': 'AAB',
@@ -1517,7 +1524,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'AAX',
             'parent_id': parentA.id,
         })
-        self.env['pos.category'].create({
+        catgC = self.env['pos.category'].create({
             'name': 'AAY',
             'parent_id': parentB.id,
         })
@@ -1525,7 +1532,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # It's presence is checked during the tour to make sure app doesn't crash.
         self.env['product.product'].create({
             'name': 'Product in AAB and AAX',
-            'pos_categ_ids': [(6, 0, [parentA.id, parentB.id])],
+            'pos_categ_ids': [(6, 0, [parentA.id, parentB.id, catgA.id, catgB.id, catgC.id])],
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
@@ -1574,6 +1581,23 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "AutofillCashCount", login="pos_user")
+
+    def test_product_search_2(self):
+        self.env['product.product'].create({
+            'name': 'Test chair 1',
+            'available_in_pos': True,
+        })
+        self.env['product.product'].create({
+            'name': 'Test CHAIR 2',
+            'available_in_pos': True,
+        })
+        self.env['product.product'].create({
+            'name': 'Test sofa',
+            'available_in_pos': True,
+            "default_code": "CHAIR_01",
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchProducts', login="pos_user")
 
     def test_lot(self):
         self.product1 = self.env['product.product'].create({
