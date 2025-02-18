@@ -16,7 +16,7 @@ class TestHttpErrorHttp(TestHttpBase):
 
         with self.subTest('Decorator/UserError'):
             res = self.nodb_url_open('/test_http/hide_errors/decorator?error=UserError')
-            self.assertEqual(res.status_code, 400, "UserError are not configured to be hidden, they should be kept as-is.")
+            self.assertEqual(res.status_code, 422, "UserError are not configured to be hidden, they should be kept as-is.")
             self.assertIn("Walter is AFK", res.text, "The real UserError message should be kept")
 
         with self.subTest('Context-Manager/AccessError'):
@@ -26,7 +26,7 @@ class TestHttpErrorHttp(TestHttpBase):
 
         with self.subTest('Context-Manager/UserError'):
             res = self.nodb_url_open('/test_http/hide_errors/context-manager?error=UserError')
-            self.assertEqual(res.status_code, 400, "UserError are not configured to be hidden, they should be kept as-is.")
+            self.assertEqual(res.status_code, 422, "UserError are not configured to be hidden, they should be kept as-is.")
             self.assertIn("Walter is AFK", res.text, "The real UserError message should be kept")
 
 
