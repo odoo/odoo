@@ -746,3 +746,14 @@ class StockMove(models.Model):
                         for move in self):
             res = 'assigned'
         return res
+
+    def _search_picking_for_assignation(self):
+        self.ensure_one()
+        # For a 3-step MRP process, when splitting an MO into backorders:
+        # If the first MO's post-picking/transfer are not done, and completing the second MO
+        # it will merge its post-picking/transfer with the first. So due to that Canceling the second MO or MO's post-picking
+        # would also show cancel in the first MO's transfer(also vice-versa), which is not desired.
+        # We need to ensure that each split MO's proceeds independently.
+        if self.move_orig_ids.production_id.mrp_production_backorder_count > 1:
+            return False
+        return super()._search_picking_for_assignation()
