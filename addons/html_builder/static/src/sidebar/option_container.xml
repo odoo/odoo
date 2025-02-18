@@ -39,7 +39,7 @@
                 </t>
             </div>
         </div>
-        <div class="we-bg-options-container p-1 pb-3" t-ref="content">
+        <div class="we-bg-options-container pb-3" t-ref="content">
             <t t-foreach="props.options" t-as="option" t-key="option.id">
                 <BuilderContext applyTo="option.applyTo">
                     <t t-if="option.OptionComponent" t-component="option.OptionComponent" t-props="option.props || {}"></t>
