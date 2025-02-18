@@ -415,7 +415,7 @@ def path_file(*args):
     if platform_os == 'Linux':
         return Path("~pi", *args).expanduser()  # Path.home() returns odoo user's home instead of pi's
     elif platform_os == 'Windows':
-        return Path().absolute().parent.joinpath('server', *args)
+        return Path().absolute().parent.joinpath(*args)
 
 
 def read_file_first_line(filename):
