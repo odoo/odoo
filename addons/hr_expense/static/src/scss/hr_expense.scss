@@ -48,18 +48,19 @@
     }
 }
 
-.o_graph_view, .o_pivot_view {
-    .o_view_nocontent {
-        h2:first-of-type {
-            visibility: hidden;
-            &::after {
-                content: "No expense found. Let's create one!";
-                visibility: visible;
-                display: block;
-            }
-        }
-    }
-}
+// TO FIX
+// .o_graph_view, .o_pivot_view {
+//     .o_view_nocontent {
+//         h2:first-of-type {
+//             visibility: hidden;
+//             &::after {
+//                 content: "No expense found. Let's create one!";
+//                 visibility: visible;
+//                 display: block;
+//             }
+//         }
+//     }
+// }
 
 .o_center_attachment .o-mail-Attachment-imgContainer {
     --o-Mail-Attachment-img-margin: #{map-get($spacers, 1)} auto auto auto;
