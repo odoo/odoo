@@ -118,22 +118,6 @@ export class Homepage extends Component {
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
                 <h4 class="text-center m-0">IoT Box - <t t-esc="state.data.hostname" /></h4>
             </div>
-            <div t-if="!store.advanced and !state.data.is_certificate_ok and !store.base.is_access_point_up" class="alert alert-warning" role="alert">
-                <p class="m-0 fw-bold">
-                    No subscription linked to your IoT Box.
-                </p>
-                <small>
-                    Please contact your account manager to take advantage of your IoT Box's full potential.
-                </small>
-            </div>
-            <div t-if="store.advanced" t-att-class="'alert ' + (state.data.is_certificate_ok === true ? 'alert-info' : 'alert-warning')" role="alert">
-                <p class="m-0 fw-bold">HTTPS Certificate</p>
-                <small>
-                    <t t-if="state.data.is_certificate_ok === true">Status: </t>
-                    <t t-else="">Error Code: </t>
-                    <t t-esc="state.data.certificate_details" />
-                </small>
-            </div>
             <div t-if="store.base.is_access_point_up" class="alert alert-info" role="alert">
                 <p class="m-0 fw-bold">No Internet Connection</p>
                 <small>
