@@ -206,13 +206,13 @@ export class KanbanRenderer extends Component {
             { area: () => this.rootRef.el }
         );
 
-        useHotkey(
-            "space",
-            ({ target }) => {
-                this.handleRecordSelection(target);
-            },
-            { area: () => this.rootRef.el }
-        );
+        useHotkey("space", ({ target }) => this.onSpaceKeyPress(target), {
+            area: () => this.rootRef.el,
+        });
+
+        useHotkey("shift+space", ({ target }) => this.onSpaceKeyPress(target, true), {
+            area: () => this.rootRef.el,
+        });
 
         const arrowsOptions = { area: () => this.rootRef.el, allowRepeat: true };
         if (this.env.searchModel) {
@@ -402,12 +402,6 @@ export class KanbanRenderer extends Component {
         }));
     }
 
-    handleRecordSelection(target) {
-        if (target.closest(".o_kanban_selection_active") !== null) {
-            target.click();
-        }
-    }
-
     /**
      * @param {string} id
      * @returns {boolean}
@@ -547,6 +541,13 @@ export class KanbanRenderer extends Component {
             await this.props.list.resequence(dataGroupId, refId);
         } finally {
             this.toggleProcessing(dataGroupId, false);
+        }
+    }
+
+    onSpaceKeyPress(target, isRange) {
+        if (target.classList.contains("o_kanban_record")) {
+            const record = this.props.list.records.find((e) => e.id === target.dataset.id);
+            this.toggleSelection(record, isRange);
         }
     }
 
