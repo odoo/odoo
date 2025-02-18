@@ -1273,11 +1273,13 @@ test("can download a file", async () => {
 test("download a file with single measure, measure row displayed in table", async () => {
     expect.assertions(2);
 
+    const downloadDef = new Deferred();
     patchWithCleanup(download, {
         _download: async ({ url, data }) => {
             data = JSON.parse(await data.data.text());
             expect(url).toBe("/web/pivot/export_xlsx");
             expect(data.measure_headers.length).toBe(4);
+            downloadDef.resolve();
             return Promise.resolve();
         },
     });
@@ -1294,6 +1296,7 @@ test("download a file with single measure, measure row displayed in table", asyn
     });
 
     await contains(".o_pivot_download").click();
+    await downloadDef;
 });
 
 test("download button is disabled when there is no data", async () => {
