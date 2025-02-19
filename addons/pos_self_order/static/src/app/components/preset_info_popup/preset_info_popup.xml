@@ -38,6 +38,12 @@
                 placeholder="Name"
                 t-model="state.name"
                 t-att-disabled="partnerIsSelected" />
+            <input t-if="preset.needsEmail || preset.needsPartner"
+                type="text"
+                class="form-control mb-3"
+                placeholder="Email"
+                t-model="state.email"
+                t-att-disabled="partnerIsSelected" />
             <t t-if="preset.needsPartner">
                 <input type="text"
                     class="form-control mb-3"

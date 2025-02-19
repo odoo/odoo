@@ -6,6 +6,7 @@ import { useState, Component, onMounted } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { isValidEmail } from "@point_of_sale/utils";
 
 export class ReceiptScreen extends Component {
     static template = "point_of_sale.ReceiptScreen";
@@ -70,7 +71,7 @@ export class ReceiptScreen extends Component {
         return { name: "TicketScreen" };
     }
     get isValidEmail() {
-        return this.state.email && /^.+@.+$/.test(this.state.email);
+        return isValidEmail(this.state.email);
     }
     get isValidPhone() {
         return this.state.phone && /^\+?[()\d\s-.]{8,18}$/.test(this.state.phone);

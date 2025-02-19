@@ -2,6 +2,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
 import { localization } from "@web/core/l10n/localization";
+import { isValidEmail } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
 export class PresetInfoPopup extends Component {
@@ -14,6 +15,7 @@ export class PresetInfoPopup extends Component {
             selectedSlot: null,
             selectedPartnerId: null,
             name: "",
+            email: "",
             phone: "",
             street: "",
             countryId: this.selfOrder.config.company_id.country_id.id,
@@ -51,7 +53,7 @@ export class PresetInfoPopup extends Component {
             this.selfOrder.currentOrder.preset_time = this.state.selectedSlot;
         }
 
-        this.props.callback(true);
+        this.props.callback(this.state);
     }
 
     selectExistingPartner(event) {
@@ -108,6 +110,7 @@ export class PresetInfoPopup extends Component {
         return (
             (!this.preset.needsSlot || DateTime.fromSQL(this.state.selectedSlot).isValid) &&
             (!this.preset.needsName || this.state.name) &&
+            (!this.preset.needsEmail || isValidEmail(this.state.email)) &&
             (!this.preset.needsPartner || partnerInfo)
         );
     }

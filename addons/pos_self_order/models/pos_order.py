@@ -72,3 +72,14 @@ class PosOrder(models.Model):
         elif open_order:
             order.pop('table_id', None)
         return self.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
+    
+    def action_send_self_order_receipt(self, email, mail_template_id, ticket_image, basic_image):
+        self.ensure_one()
+        self.email = email
+        mail_template = self.env['mail.template'].browse(mail_template_id)
+        if not mail_template:
+            raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
+        email_values = {'email_to': email}
+        if self.state == 'paid':
+            email_values['attachment_ids'] = self._get_mail_attachments(self.name, ticket_image, basic_image)
+        mail_template.send_mail(self.id, force_send=True, email_values=email_values)

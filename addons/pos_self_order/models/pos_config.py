@@ -265,7 +265,7 @@ class PosConfig(models.Model):
             'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value',
             'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
-            'res.country', 'res.country.state']
+            'res.country', 'res.country.state', 'mail.template']
 
     def load_self_data(self):
         # Init our first record, in case of self_order is pos_config
