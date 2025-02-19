@@ -8,7 +8,7 @@ describe("inline code", () => {
         await testEditor({
             contentBefore: "<p>`ab[]cd</p>",
             stepFunction: async (editor) => await insertText(editor, "`"),
-            contentAfter: '<p>\u200B<code class="o_inline_code">ab</code>\u200B[]cd</p>',
+            contentAfter: '<p>\u200B<code class="o_inline_code">ab[]</code>\u200Bcd</p>',
         });
         // BACKWARDS
         await testEditor({
@@ -22,7 +22,7 @@ describe("inline code", () => {
         await testEditor({
             contentBefore: "<p>ab`cd[]ef</p>",
             stepFunction: async (editor) => await insertText(editor, "`"),
-            contentAfter: '<p>ab<code class="o_inline_code">cd</code>\u200B[]ef</p>',
+            contentAfter: '<p>ab<code class="o_inline_code">cd[]</code>\u200Bef</p>',
         });
         // BACKWARDS
         await testEditor({
@@ -36,7 +36,7 @@ describe("inline code", () => {
         await testEditor({
             contentBefore: "<p>ab`cd[]</p>",
             stepFunction: async (editor) => await insertText(editor, "`"),
-            contentAfter: '<p>ab<code class="o_inline_code">cd</code>\u200B[]</p>',
+            contentAfter: '<p>ab<code class="o_inline_code">cd[]</code>\u200B</p>',
         });
         // BACKWARDS
         await testEditor({
@@ -51,7 +51,7 @@ describe("inline code", () => {
             contentBefore: "<p>a`b`cd[]e`f</p>",
             stepFunction: async (editor) => await insertText(editor, "`"),
             // The closest PREVIOUS backtick is prioritary
-            contentAfter: '<p>a`b<code class="o_inline_code">cd</code>\u200B[]e`f</p>',
+            contentAfter: '<p>a`b<code class="o_inline_code">cd[]</code>\u200Be`f</p>',
         });
         await testEditor({
             contentBefore: "<p>ab[]cd`e`f</p>",
@@ -97,7 +97,7 @@ describe("inline code", () => {
 
                 await insertText(editor, "`");
             },
-            contentAfter: '<p>ab<code class="o_inline_code">c</code>\u200B[]d</p>',
+            contentAfter: '<p>ab<code class="o_inline_code">c[]</code>\u200Bd</p>',
         });
         // AFTER
         await testEditor({
@@ -106,7 +106,7 @@ describe("inline code", () => {
                 editor.document.getSelection().anchorNode.after(document.createTextNode("d"));
                 await insertText(editor, "`");
             },
-            contentAfter: '<p>a<code class="o_inline_code">b</code>\u200B[]cd</p>',
+            contentAfter: '<p>a<code class="o_inline_code">b[]</code>\u200Bcd</p>',
         });
         // BOTH
         await testEditor({
@@ -116,7 +116,7 @@ describe("inline code", () => {
                 editor.document.getSelection().anchorNode.after(document.createTextNode("e"));
                 await insertText(editor, "`");
             },
-            contentAfter: '<p>ab<code class="o_inline_code">c</code>\u200B[]de</p>',
+            contentAfter: '<p>ab<code class="o_inline_code">c[]</code>\u200Bde</p>',
         });
     });
 
@@ -132,7 +132,7 @@ describe("inline code", () => {
 
                 await insertText(editor, "`");
             },
-            contentAfter: '<p>\u200B<code class="o_inline_code">ab</code>\u200B[]c</p>',
+            contentAfter: '<p>\u200B<code class="o_inline_code">ab[]</code>\u200Bc</p>',
         });
         // BACKTICK IS NEXT SIBLING
         await testEditor({
@@ -165,6 +165,38 @@ describe("inline code", () => {
             contentBefore: "<p>````[]</p>",
             stepFunction: async (editor) => insertText(editor, "`"),
             contentAfter: "<p>`````[]</p>",
+        });
+    });
+
+    test("should wrap selected text in inline code", async () => {
+        await testEditor({
+            contentBefore: "<p>a[bc]d</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: '<p>a<code class="o_inline_code">bc[]</code>\u200Bd</p>',
+        });
+    });
+
+    test("should wrap selected text in inline code and merge with existing inline code if selected", async () => {
+        await testEditor({
+            contentBefore: '<p>ab[c<code class="o_inline_code">de</code>fg]h</p>',
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: '<p>ab<code class="o_inline_code">cdefg[]</code>\u200Bh</p>',
+        });
+        await testEditor({
+            contentBefore:
+                '<p>ab[c<font style="color: rgb(255, 0, 0);">d<code class="o_inline_code">e</code></font>fg]h</p>',
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter:
+                '<p>ab<code class="o_inline_code">c<font style="color: rgb(255, 0, 0);">de</font>fg[]</code>\u200Bh</p>',
+        });
+    });
+
+    test("should split selected inline element and wrap only the selected text in inline code", async () => {
+        await testEditor({
+            contentBefore: "<p>ab[cd<strong>f]g</strong>h</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter:
+                '<p>ab<code class="o_inline_code">cd<strong>f[]</strong></code>\u200B<strong>g</strong>h</p>',
         });
     });
 });
