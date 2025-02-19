@@ -12,7 +12,6 @@ import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
