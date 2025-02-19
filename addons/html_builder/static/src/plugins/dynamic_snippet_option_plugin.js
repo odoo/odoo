@@ -61,18 +61,18 @@ class DynamicSnippetOptionPlugin extends Plugin {
                 },
             },
             customizeTemplate: {
-                isApplied: ({ editingElement: el, param }) => {
+                isApplied: ({ editingElement: el, param: { mainParam: customDataKey } }) => {
                     const customData = JSON.parse(el.dataset.customTemplateData);
-                    return customData[param];
+                    return customData[customDataKey];
                 },
-                apply: ({ editingElement: el, param, value }) => {
+                apply: ({ editingElement: el, param: { mainParam: customDataKey }, value }) => {
                     const customData = JSON.parse(el.dataset.customTemplateData);
-                    customData[param] = true;
+                    customData[customDataKey] = true;
                     el.dataset.customTemplateData = JSON.stringify(customData);
                 },
-                clean: ({ editingElement: el, param, value }) => {
+                clean: ({ editingElement: el, param: { mainParam: customDataKey }, value }) => {
                     const customData = JSON.parse(el.dataset.customTemplateData);
-                    customData[param] = false;
+                    customData[customDataKey] = false;
                     el.dataset.customTemplateData = JSON.stringify(customData);
                 },
             },

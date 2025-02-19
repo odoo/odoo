@@ -16,8 +16,8 @@ const falsy = () => false;
 test("call a specific action with some params and value", async () => {
     addActionOption({
         customAction: {
-            apply: ({ param, value }) => {
-                expect.step(`customAction ${param} ${value}`);
+            apply: ({ param: { mainParam: testParam }, value }) => {
+                expect.step(`customAction ${testParam} ${value}`);
             },
         },
     });
@@ -164,7 +164,7 @@ test("clean should provide the next action value", async () => {
     addActionOption({
         customAction: {
             clean({ nextAction }) {
-                expect.step(`customAction clean ${nextAction.param} ${nextAction.value}`);
+                expect.step(`customAction clean ${nextAction.param.mainParam} ${nextAction.value}`);
             },
             apply() {
                 expect.step(`customAction apply`);
@@ -335,11 +335,11 @@ describe("inherited actions", () => {
     function makeAction(n, { async, isApplied } = {}) {
         const action = {
             isApplied,
-            clean({ param, value }) {
-                expect.step(`customAction${n} clean ${param} ${value}`);
+            clean({ param: { mainParam: testParam }, value }) {
+                expect.step(`customAction${n} clean ${testParam} ${value}`);
             },
-            apply: ({ param, value }) => {
-                expect.step(`customAction${n} apply ${param} ${value}`);
+            apply: ({ param: { mainParam: testParam }, value }) => {
+                expect.step(`customAction${n} apply ${testParam} ${value}`);
             },
         };
         if (async) {
@@ -347,8 +347,8 @@ describe("inherited actions", () => {
             const promise = new Promise((r) => {
                 resolve = r;
             });
-            action.load = async ({ param, value }) => {
-                expect.step(`customAction${n} load ${param} ${value}`);
+            action.load = async ({ param: { mainParam: testParam }, value }) => {
+                expect.step(`customAction${n} load ${testParam} ${value}`);
                 return promise;
             };
             return { action, resolve };

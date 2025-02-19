@@ -112,28 +112,28 @@ class BackgroundShapeOptionPlugin extends Plugin {
                 isApplied: ({ editingElement }) => !this.getShapeData(editingElement).showOnMobile,
             },
             flipShape: {
-                apply: ({ editingElement, param }) => {
+                apply: ({ editingElement, param: { mainParam: axis } }) => {
                     this.applyShape(editingElement, () => {
                         const flip = new Set(this.getShapeData(editingElement).flip);
-                        flip.add(param);
+                        flip.add(axis);
                         return { flip: [...flip] };
                     });
                 },
-                clean: ({ editingElement, param }) => {
+                clean: ({ editingElement, param: { mainParam: axis } }) => {
                     this.applyShape(editingElement, () => {
                         const flip = new Set(this.getShapeData(editingElement).flip);
-                        flip.delete(param);
+                        flip.delete(axis);
                         return { flip: [...flip] };
                     });
                 },
-                isApplied: ({ editingElement, param }) => {
+                isApplied: ({ editingElement, param: { mainParam: axis } }) => {
                     // Compat: flip classes are no longer used but may be
                     // present in client db.
-                    const selector = `.o_we_flip_${param}`;
+                    const selector = `.o_we_flip_${axis}`;
                     const hasFlipClass = !!editingElement.querySelector(
                         `:scope > .o_we_shape${selector}`
                     );
-                    return hasFlipClass || this.getShapeData(editingElement).flip.includes(param);
+                    return hasFlipClass || this.getShapeData(editingElement).flip.includes(axis);
                 },
             },
             setBgAnimationSpeed: {
@@ -144,7 +144,7 @@ class BackgroundShapeOptionPlugin extends Plugin {
                     this.getShapeData(editingElement).shapeAnimationSpeed,
             },
             backgroundShapeColor: {
-                getValue: ({ editingElement, param: colorName }) => {
+                getValue: ({ editingElement, param: { mainParam: colorName } }) => {
                     // TODO check if it works when the colorpicker is
                     // implemented.
                     const { shape, colors: customColors } = this.getShapeData(editingElement);
@@ -152,7 +152,7 @@ class BackgroundShapeOptionPlugin extends Plugin {
                     const color = shape && colors[colorName];
                     return (color && normalizeColor(color)) || "";
                 },
-                apply: ({ editingElement, param: colorName, value }) => {
+                apply: ({ editingElement, param: { mainParam: colorName }, value }) => {
                     this.applyShape(editingElement, () => {
                         value = getValueFromVar(value);
                         const { colors: previousColors } = this.getShapeData(editingElement);

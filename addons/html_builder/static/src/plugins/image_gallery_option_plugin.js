@@ -29,12 +29,13 @@ class ImageGalleryOption extends Plugin {
             },
             setImageGalleryLayout: {
                 load: ({ editingElement }) => this.processImages(editingElement),
-                apply: ({ editingElement, param: mode, loadResult: images }) => {
+                apply: ({ editingElement, param: { mainParam: mode }, loadResult: images }) => {
                     if (mode !== this.getMode(editingElement)) {
                         this.setImages(editingElement, mode, images);
                     }
                 },
-                isApplied: ({ editingElement, param }) => param === this.getMode(editingElement),
+                isApplied: ({ editingElement, param: { mainParam: mode } }) =>
+                    mode === this.getMode(editingElement),
             },
         };
     }

@@ -443,13 +443,13 @@ export class ColorPlugin extends Plugin {
             element.style[mode] = "";
             if (mode === "color") {
                 element.style["background"] = "";
-                element.style["background-image"] = color;
+                this.delegateTo("apply_color_style", element, "background-image", color);
                 element.classList.add("text-gradient");
             } else {
-                element.style["background-image"] = color;
+                this.delegateTo("apply_color_style", element, "background-image", color);
             }
         } else {
-            element.style[mode] = color;
+            this.delegateTo("apply_color_style", element, mode, color);
         }
     }
 }

@@ -577,3 +577,43 @@ export async function isSrcCorsProtected(src) {
     dummyImg.src = src;
     return isImageCorsProtected(dummyImg);
 }
+
+/**
+ * Applies only the needed CSS in the style attribute:
+ * - no attribute if value is already the wanted one (possibly from a class)
+ * - plain attribute if that change is sufficient to make it applied
+ * - important attribute if the plain one did not work
+ *
+ * @param {HTMLElement} el
+ * @param {string} cssProp
+ * @param {string} cssValue
+ * @param {CSSStyleDeclaration} computedStyle of el
+ * @param {boolean} force to always apply as important
+ * @param {boolean} allowImportant to avoid applying the style as important
+ * @returns {boolean} if a value was applied
+ */
+export function applyNeededCss(
+    el,
+    cssProp,
+    cssValue,
+    computedStyle = window.getComputedStyle(el),
+    { force = false, allowImportant = true } = {}
+) {
+    if (force) {
+        el.style.setProperty(cssProp, cssValue, "important");
+        return true;
+    }
+    el.style.removeProperty(cssProp);
+    if (!areCssValuesEqual(computedStyle.getPropertyValue(cssProp), cssValue, cssProp)) {
+        el.style.setProperty(cssProp, cssValue);
+        // If change had no effect then make it important.
+        if (
+            allowImportant &&
+            !areCssValuesEqual(computedStyle.getPropertyValue(cssProp), cssValue, cssProp)
+        ) {
+            el.style.setProperty(cssProp, cssValue, "important");
+        }
+        return true;
+    }
+    return false;
+}

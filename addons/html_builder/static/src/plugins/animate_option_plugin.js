@@ -1,11 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
-import { defaultBuilderComponents } from "../core/default_builder_components";
-import { useDomState, useIsActiveItem } from "../core/building_blocks/utils";
-import { KeepLast } from "@web/core/utils/concurrency";
 import { AnimateOption } from "./animate_option";
 
 class AnimateOptionPlugin extends Plugin {
@@ -175,7 +171,11 @@ class AnimateOptionPlugin extends Plugin {
                         }
                     }
                 },
-                apply: ({ editingElement, param: directionClassName, value: effectClassName }) => {
+                apply: ({
+                    editingElement,
+                    param: { mainParam: directionClassName },
+                    value: effectClassName,
+                }) => {
                     if (directionClassName) {
                         editingElement.classList.add(directionClassName);
                     }
