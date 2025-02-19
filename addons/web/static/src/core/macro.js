@@ -11,30 +11,23 @@ const macroSchema = {
     steps: {
         type: Array,
         element: {
-            initialDelay: { type: Function, optional: true },
-            action: { type: Function },
-            trigger: { type: [Function, String], optional: true },
-            timeout: { type: Number, optional: true },
+            type: Object,
+            shape: {
+                action: { type: [Function, String], optional: true },
+                initialDelay: { type: Function, optional: true },
+                timeout: { type: Number, optional: true },
+                trigger: { type: [Function, String], optional: true },
+                value: { type: [String, Number], optional: true },
+            },
+            validate: (step) => {
+                return step.action || step.trigger;
+            },
         },
     },
     onComplete: { type: Function, optional: true },
     onStep: { type: Function, optional: true },
     onError: { type: Function, optional: true },
-    onTimeout: { type: Function, optional: true },
 };
-
-/**
- * @typedef MacroStep
- * @property {string} [trigger]
- * - An action returning a "truthy" value means that the step isn't successful.
- * - Current step index won't be incremented.
- * @property {string | (el: Element, step: MacroStep) => undefined | string} [action]
- * @property {*} [*] - any payload to the step.
- *
- * @typedef MacroDescriptor
- * @property {() => Element | undefined} trigger
- * @property {() => {}} action
- */
 
 export const ACTION_HELPERS = {
     click(el, _step) {
@@ -57,7 +50,12 @@ export const ACTION_HELPERS = {
 
 const mutex = new Mutex();
 
-class TimeoutError extends Error {}
+class MacroError extends Error {
+    constructor(type, message, options) {
+        super(message, options);
+        this.type = type;
+    }
+}
 
 export class Macro {
     currentIndex = 0;
@@ -75,6 +73,11 @@ export class Macro {
         this.name = this.name || "anonymous";
         this.onComplete = this.onComplete || (() => {});
         this.onStep = this.onStep || (() => {});
+        this.onError =
+            this.onError ||
+            ((e) => {
+                console.error(e);
+            });
         this.stepElFound = new Array(this.steps.length).fill(false);
         this.stepHasStarted = new Array(this.steps.length).fill(false);
         this.observer = new MacroMutationObserver(() => this.debounceAdvance("mutation"));
@@ -111,13 +114,16 @@ export class Macro {
             proceedToAction = this.findTrigger();
         }
         if (proceedToAction) {
-            this.safeCall(this.onStep, this.currentElement, this.currentStep);
+            this.onStep(this.currentElement, this.currentStep, this.currentIndex);
             this.clearTimer();
             const actionResult = await this.performAction();
             if (!actionResult) {
                 // If falsy action result, it means the action worked properly.
                 // So we can proceed to the next step.
-                this.increment();
+                this.currentIndex++;
+                if (this.currentIndex >= this.steps.length) {
+                    this.stop();
+                }
                 this.debounceAdvance("next");
             }
         }
@@ -128,13 +134,13 @@ export class Macro {
      * @returns {boolean}
      */
     findTrigger() {
+        const { trigger } = this.currentStep;
         if (this.isComplete) {
             return;
         }
-        const trigger = this.currentStep.trigger;
         try {
             if (typeof trigger === "function") {
-                this.currentElement = this.safeCall(trigger);
+                this.currentElement = trigger();
             } else if (typeof trigger === "string") {
                 const triggerEl = document.querySelector(trigger);
                 this.currentElement = isVisible(triggerEl) && triggerEl;
@@ -142,7 +148,11 @@ export class Macro {
                 throw new Error(`Trigger can only be string or function.`);
             }
         } catch (error) {
-            this.stop(`Error when trying to find trigger: ${error.message}`);
+            this.stop(
+                new MacroError("Trigger", `ERROR during find trigger:\n${error.message}`, {
+                    cause: error,
+                })
+            );
         }
         return !!this.currentElement;
     }
@@ -157,10 +167,14 @@ export class Macro {
             if (action in ACTION_HELPERS) {
                 actionResult = ACTION_HELPERS[action](this.currentElement, this.currentStep);
             } else if (typeof action === "function") {
-                actionResult = await this.safeCall(action, this.currentElement);
+                actionResult = await action(this.currentElement);
             }
         } catch (error) {
-            this.stop(`ERROR IN ACTION: ${error.message}`);
+            this.stop(
+                new MacroError("Action", `ERROR during perform action:\n${error.message}`, {
+                    cause: error,
+                })
+            );
         }
         return actionResult;
     }
@@ -177,24 +191,6 @@ export class Macro {
         this.stepElFound[this.currentIndex] = value;
     }
 
-    increment() {
-        this.currentIndex++;
-        if (this.currentIndex >= this.steps.length) {
-            this.stop();
-        }
-    }
-
-    safeCall(fn, ...args) {
-        if (this.isComplete) {
-            return;
-        }
-        try {
-            return fn(...args);
-        } catch (e) {
-            this.stop(e);
-        }
-    }
-
     /**
      * Timer for findTrigger only (not for doing action)
      */
@@ -203,7 +199,12 @@ export class Macro {
         const timeout = this.currentStep.timeout || this.timeout;
         if (timeout > 0) {
             this.timer = browser.setTimeout(() => {
-                this.stop(new TimeoutError(timeout));
+                this.stop(
+                    new MacroError(
+                        "Timeout",
+                        `TIMEOUT step failed to complete within ${timeout} ms.`
+                    )
+                );
             }, timeout);
         }
     }
@@ -259,19 +260,7 @@ export class Macro {
         if (!this.calledBack) {
             this.calledBack = true;
             if (error) {
-                if (error instanceof TimeoutError) {
-                    if (typeof this.onTimeout === "function") {
-                        this.onTimeout(error.message, this.currentStep, this.currentIndex);
-                    } else {
-                        console.error("Step timeout");
-                    }
-                } else {
-                    if (typeof this.onError === "function") {
-                        this.onError(error, this.currentStep, this.currentIndex);
-                    } else {
-                        console.error(error);
-                    }
-                }
+                this.onError(error, this.currentStep, this.currentIndex);
             } else if (this.currentIndex === this.steps.length) {
                 mutex.getUnlockedDef().then(() => {
                     this.onComplete();
