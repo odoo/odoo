@@ -735,6 +735,32 @@ test("should remove all formats when having multiple formats (3)", async () => {
     });
 });
 
+test("should remove color from entire heading when fully selected", async () => {
+    await testEditor({
+        contentBefore: '<div><h1 style="color: rgb(255, 0, 0);">[abcd]</h1></div>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<div><h1>[abcd]</h1></div>",
+    });
+});
+
+test("should remove color only from selected text within a heading", async () => {
+    await testEditor({
+        contentBefore: '<div><h1 style="color: rgb(255, 0, 0);">a[bc]d</h1></div>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<div><h1><font style="color: rgb(255, 0, 0);">a</font>[bc]<font style="color: rgb(255, 0, 0);">d</font></h1></div>',
+    });
+});
+
+test("should remove gradient color from span element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[ab]</span></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>[ab]</p>",
+    });
+});
+
 describe("Toolbar", () => {
     async function removeFormatClick() {
         await expectElementCount(".o-we-toolbar", 1);

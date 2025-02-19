@@ -544,3 +544,17 @@ test("should remove background gradient and apply new background color if gradie
         contentAfter: '<p><font style="background-color: rgb(255, 0, 0);">[abcd]</font></p>',
     });
 });
+test("should not split unsplittable element when applying color", async () => {
+    await testEditor({
+        contentBefore: '<div style="color: rgb(255, 0, 0);"><p>[test]</p></div>',
+        stepFunction: setColor("rgb(0, 0, 255)", "color"),
+        contentAfter:
+            '<div style="color: rgb(255, 0, 0);"><p><font style="color: rgb(0, 0, 255);">[test]</font></p></div>',
+    });
+    await testEditor({
+        contentBefore: '<div style="color: rgb(255, 0, 0);"><p>t[es]t</p></div>',
+        stepFunction: setColor("rgb(0, 0, 255)", "color"),
+        contentAfter:
+            '<div style="color: rgb(255, 0, 0);"><p>t<font style="color: rgb(0, 0, 255);">[es]</font>t</p></div>',
+    });
+});
