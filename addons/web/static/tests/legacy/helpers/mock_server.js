@@ -637,6 +637,8 @@ export class MockServer {
                 return this.mockSearchRead(args.model, args.args, args.kwargs);
             case "unlink":
                 return this.mockUnlink(args.model, args.args);
+            case "web_name_search":
+                return this.mockWebNameSearch(args.model, args.args, args.kwargs);
             case "web_read":
                 return this.mockWebRead(args.model, args.args, args.kwargs);
             case "web_save":
@@ -1923,6 +1925,18 @@ export class MockServer {
             context: kwargs.context,
         });
         return this.mockRead(modelName, [records.map((r) => r.id), fieldNames]);
+    }
+
+    mockWebNameSearch(modelName, args, kwargs) {
+        const idNamePairs = this.mockNameSearch(modelName, args, kwargs);
+        if (
+            Object.keys(kwargs.specification).length === 1 &&
+            "display_name" in kwargs.specification
+        ) {
+            return idNamePairs.map(([id, name]) => ({ id, display_name: name }));
+        }
+        const ids = idNamePairs.map(([id]) => id);
+        return this.mockWebRead(modelName, [ids], kwargs);
     }
 
     mockWebSave(modelName, args, kwargs) {
