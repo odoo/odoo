@@ -126,3 +126,16 @@ class TestProjectStagesMulticompany(TestMultiCompanyProject):
             'name': 'Project company B',
         })
         self.assertEqual(project.company_id, self.company_b)
+
+    def test_create_project_in_stage(self):
+        """ Test create project inside a specific stage """
+        self.env['res.config.settings'].create({'group_project_stages': True}).execute()
+        stage = self.env['project.project.stage'].create({
+            'name': 'Stage 2',
+            'sequence': 100,
+        })
+        project = self.env['project.project'].create({
+            'name': 'Project in stage 2',
+            'stage_id': stage.id,
+        })
+        self.assertEqual(project.stage_id, stage)
