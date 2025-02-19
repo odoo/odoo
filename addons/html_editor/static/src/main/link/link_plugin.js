@@ -276,6 +276,17 @@ export class LinkPlugin extends Plugin {
         delete_image_overrides: this.deleteImageLink.bind(this),
         double_click_overrides: this.doubleClickLinkOverrides.bind(this),
         triple_click_overrides: this.tripleClickButtonOverrides.bind(this),
+
+        /** Processors */
+        to_inline_code_processors: (node) => {
+            this.removeEmptyLinks(node);
+            for (const btn of selectElements(node, "a.btn")) {
+                // Remove all attributes from the button link except "href"
+                [...btn.attributes].forEach(
+                    (attr) => attr.name !== "href" && btn.removeAttribute(attr.name)
+                );
+            }
+        },
     };
 
     setup() {

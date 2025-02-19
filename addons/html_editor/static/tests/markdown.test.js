@@ -1,6 +1,6 @@
 import { describe, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { testEditor } from "./_helpers/editor";
+import { base64Img, testEditor } from "./_helpers/editor";
 import { insertText } from "./_helpers/user_actions";
 
 describe("inline code", () => {
@@ -165,6 +165,76 @@ describe("inline code", () => {
             contentBefore: "<p>````[]</p>",
             stepFunction: async (editor) => insertText(editor, "`"),
             contentAfter: "<p>`````[]</p>",
+        });
+    });
+
+    test("should wrap selection in inline code", async () => {
+        await testEditor({
+            contentBefore: "<p>a[bc]d</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: '<p>a<code class="o_inline_code">bc[]</code>\u200Bd</p>',
+        });
+        await testEditor({
+            contentBefore: `<p>ab[cd<a href="#">test</a>ef]gh</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: `<p>ab<code class="o_inline_code">cd<a href="#">test</a>ef[]</code>\u200Bgh</p>`,
+        });
+    });
+
+    test("should split selected inline element and wrap only the selected text in inline code", async () => {
+        await testEditor({
+            contentBefore: "<p>ab[cd<strong>ef]g</strong>h</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter:
+                '<p>ab<code class="o_inline_code">cd<strong>ef[]</strong></code>\u200B<strong>g</strong>h</p>',
+        });
+    });
+
+    test("should split selected inline element and wrap only the selected text in inline code(1)", async () => {
+        await testEditor({
+            contentBefore: "<p><strong>a<u>b[cd</u>ef]g</strong></p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter:
+                '<p><strong>a<u>b</u></strong>\u200b<code class="o_inline_code"><strong><u>cd</u>ef[]</strong></code>\u200b<strong>g</strong></p>',
+        });
+    });
+
+    test("should apply inline code when selection partially includes a link", async () => {
+        await testEditor({
+            contentBefore: `<p>ab[cd<a href="#">te]st</a>ef</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: '<p>ab`[]<a href="#">st</a>ef</p>',
+        });
+    });
+
+    test("should wrap text selection in inline code but skip images", async () => {
+        await testEditor({
+            contentBefore: `<p>a[bc<img src="${base64Img}">de]f</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: `<p>a<code class="o_inline_code">bc</code><img src="${base64Img}"><code class="o_inline_code">de[]</code>f</p>`,
+        });
+
+        await testEditor({
+            contentBefore: `<p>a[bcde<img src="${base64Img}">]</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: `<p>a<code class="o_inline_code">bcde[]</code><img src="${base64Img}"></p>`,
+        });
+    });
+
+    test("should convert partially selected button into link and wrap selection in inline code", async () => {
+        await testEditor({
+            contentBefore: `<p>ab[cd<a href="#" class="btn btn-primary">te]st</a>ef</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter:
+                '<p>ab<code class="o_inline_code">cd<a href="#">te[]</a></code><a href="#" class="btn btn-primary">st</a>ef</p>',
+        });
+    });
+
+    test("should not apply inline code when selection spans multiple block elements", async () => {
+        await testEditor({
+            contentBefore: "<p>a[b</p><p>cd</p><p>e]f</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: "<p>a`[]f</p>",
         });
     });
 });
