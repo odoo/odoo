@@ -43,3 +43,10 @@ export function endTour() {
 export function createFloatingOrder() {
     return { trigger: ".pos-topheader .list-plus-btn", run: "click" };
 }
+
+export function isSynced() {
+    return {
+        content: "Check if the request is proceeded",
+        trigger: ".oe_status .fa-wifi",
+    };
+}
