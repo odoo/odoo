@@ -83,11 +83,11 @@ export class ColorPlugin extends Plugin {
             getSelectedColors: () => this.selectedColors,
             applyColor: (color) => {
                 this.applyColor({ color, mode });
-                this.dependencies.selection.focusEditable();
             },
             applyColorPreview: (color) => this.applyColorPreview({ color, mode }),
             applyColorResetPreview: this.applyColorResetPreview.bind(this),
             colorPrefix: mode === "color" ? "text-" : "bg-",
+            onClose: () => this.dependencies.selection.focusEditable(),
         };
     }
 
