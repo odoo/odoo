@@ -15,7 +15,7 @@ export class WifiDialog extends Component {
         this.state = useState({
             scanning: true,
             waitRestart: false,
-            statusMessage: "",
+            status: "",
             availableWiFi: [],
         });
         this.form = useState({
@@ -74,7 +74,7 @@ export class WifiDialog extends Component {
             }
         } else {
             // The IoT box is no longer reachable, so we can't await the response.
-            this.state.statusMessage = `The IoT Box will now attempt to connect to ${this.form.essid}. You may close this page.`;
+            this.state.status = "connecting";
             this.state.waitRestart = false;
         }
     }
@@ -92,7 +92,7 @@ export class WifiDialog extends Component {
                 }
             } else {
                 // The IoT box is no longer reachable, so we can't await the response.
-                this.state.statusMessage = `The IoT Box Wi-Fi configuration has been cleared. You will need to connect to the IoT Box hotspot or connect an ethernet cable.`;
+                this.state.status = "disconnecting";
                 this.state.waitRestart = false;
             }
         } catch {
@@ -107,8 +107,22 @@ export class WifiDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <div t-if="state.statusMessage" class="position-fixed top-0 start-0 bg-white vh-100 w-100 justify-content-center align-items-center d-flex always-on-top">
-            <div class="alert alert-success" t-out="state.statusMessage"/>
+        <div t-if="state.status" class="position-fixed top-0 start-0 bg-white vh-100 w-100 justify-content-center align-items-center d-flex always-on-top">
+            <div class="alert alert-success mx-4">
+                <t t-if="state.status === 'connecting'">
+                    The IoT Box will now attempt to connect to <t t-out="form.essid"/>. The next step is to find your <b>pairing code</b>:
+                    <ul>
+                        <li>You will need a screen or a compatible USB printer connected.</li>
+                        <li>In a few seconds, the pairing code should display on your screen and/or print from your printer.</li>
+                        <li>Once you have the pairing code, you can enter it on the IoT app in your database to pair your IoT Box.</li>
+                    </ul>
+                    In the event that the pairing code does not appear, it may be because the IoT Box failed to connect to the Wi-Fi network.
+                    In this case you will need to reconnect to the Wi-Fi hotspot and try again.
+                </t>
+                <t t-if="state.status === 'disconnecting'">
+                    The IoT Box Wi-Fi configuration has been cleared. You will need to connect to the IoT Box hotspot or connect an ethernet cable.
+                </t>
+            </div>
         </div>
 
         <BootstrapDialog identifier="'wifi-configuration'" btnName="'Configure'" onOpen.bind="getWiFiNetworks" onClose.bind="onClose">
