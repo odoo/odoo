@@ -3,6 +3,20 @@
     outline-offset: -2px;
 }
 
+.o-mail-DiscussSidebarCallParticipants-expandBtn {
+    aspect-ratio: 1;
+    transform: translateY(50%);
+    opacity: 50%;
+
+    .o-mail-DiscussSidebarCallParticipants:hover & {
+        opacity: 100%;
+    }
+
+    &:hover {
+        background-color: $gray-300;
+    }
+}
+
 .o-mail-DiscussSidebarCallParticipants-name {
     color: $black;
     opacity: 60%;
