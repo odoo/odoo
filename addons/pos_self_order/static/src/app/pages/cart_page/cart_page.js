@@ -6,6 +6,8 @@ import { _t } from "@web/core/l10n/translation";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
 import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
@@ -20,6 +22,8 @@ export class CartPage extends Component {
             fillInformations: false,
             cancelConfirmation: false,
         });
+        this.renderer = useService("renderer");
+        this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
     }
 
     get lines() {
@@ -90,11 +94,40 @@ export class CartPage extends Component {
         this.selfOrder.rpcLoading = false;
     }
 
-    proceedInfos(state) {
+    async proceedInfos(state) {
         this.state.fillInformations = false;
         if (state) {
-            this.pay();
+            await this.pay();
+            if (this.selfOrder.currentOrder.preset_id?.mail_template_id) {
+                this.sendReceipt.call({
+                    action: "action_send_self_order_receipt",
+                    destination: state.email,
+                    mail_template_id: this.selfOrder.currentOrder.preset_id.mail_template_id.id,
+                });
+            }
         }
+    }
+
+    generateTicketImage = async () =>
+        await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                order: this.selfOrder.currentOrder,
+            },
+            { addClass: "pos-receipt-print p-3" }
+        );
+    async _sendReceiptToCustomer({ action, destination, mail_template_id }) {
+        const order = this.selfOrder.currentOrder;
+        const fullTicketImage = await this.generateTicketImage();
+        const basicTicketImage = await this.generateTicketImage(true);
+
+        await this.selfOrder.data.call("pos.order", action, [
+            [order.id],
+            destination,
+            mail_template_id,
+            fullTicketImage,
+            this.selfOrder.config.basic_receipt ? basicTicketImage : null,
+        ]);
     }
 
     selectTable(table) {

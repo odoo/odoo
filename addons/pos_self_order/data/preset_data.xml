@@ -6,10 +6,12 @@
         </record>
         <record model="pos.preset" id="pos_restaurant.pos_takeout_preset">
             <field name="available_in_self">True</field>
+            <field name="mail_template_id" ref="takeout_email_template" />
         </record>
         <record model="pos.preset" id="pos_restaurant.pos_delivery_preset">
             <field name="available_in_self">True</field>
             <field name="service_at">delivery</field>
+            <field name="mail_template_id" ref="delivery_email_template" />
         </record>
     </data>
 </odoo>
