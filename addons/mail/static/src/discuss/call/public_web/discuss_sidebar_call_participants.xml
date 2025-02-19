@@ -24,8 +24,8 @@
             'rounded-3': props.compact === undefined,
             'opacity-75': props.thread.notEq(rtc.state.channel) and compact,
         }">
-            <button class="btn btn-link p-1 m-n1 align-self-start" t-if="!compact" t-on-click="() => state.expanded = !state.expanded">
-                <i class="oi o-xxsmaller text-muted me-1" t-att-class="{'oi-chevron-right': !state.expanded, 'oi-chevron-down': state.expanded}" t-att-title="title"/>
+            <button class="o-mail-DiscussSidebarCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-if="!compact" t-on-click="() => state.expanded = !state.expanded">
+                <i class="oi o-xxsmaller text-muted text-dark" t-att-class="{'oi-chevron-right': !state.expanded, 'oi-chevron-down': state.expanded}" t-att-title="title"/>
             </button>
             <AvatarStack
                 t-if="!state.expanded"
