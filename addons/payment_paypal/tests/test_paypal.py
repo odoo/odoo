@@ -23,6 +23,15 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             processing_values = tx._get_processing_values()
         self.assertEqual(processing_values['order_id'], self.order_id)
 
+    def test_order_payload_values_for_public_user(self):
+        """ If a payment is made with the public user we need to make sure that the
+            email address is not sent to PayPal and that we provide the country code of the company instead."""
+        tx = self._create_transaction(flow='direct', partner_id=self.public_user.id)
+        payload = tx._paypal_prepare_order_payload()
+        customer_payload = payload['payment_source']['paypal']
+        self.assertTrue('email_address' not in customer_payload)
+        self.assertEqual(customer_payload['address']['country_code'], self.company.country_id.code)
+
     @mute_logger('odoo.addons.payment_paypal.controllers.main')
     def test_complete_order_confirms_transaction(self):
         """ Test the processing of a webhook notification. """
