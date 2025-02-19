@@ -10,6 +10,8 @@ export class SetupEditorPlugin extends Plugin {
     };
 
     setup() {
+        this.editable.setAttribute("contenteditable", false);
+
         // Add the `o_editable` class on the editable elements
         let editableEls = this.getEditableElements("[data-oe-model]")
             .filter((el) => !el.matches("link, script"))
@@ -35,6 +37,9 @@ export class SetupEditorPlugin extends Plugin {
                 el.setAttribute("data-editor-message", _t("DRAG BUILDING BLOCKS HERE"));
             }
         });
+
+        // Set the `contenteditable` attribute on the editables.
+        this.setContenteditable();
     }
 
     getEditableElements(selector) {
@@ -57,5 +62,16 @@ export class SetupEditorPlugin extends Plugin {
             el.removeAttribute("data-editor-message");
             el.removeAttribute("data-editor-message-default");
         });
+
+        [root, ...root.querySelectorAll("[contenteditable]")].forEach((el) =>
+            el.removeAttribute("contenteditable")
+        );
+    }
+
+    setContenteditable() {
+        const editableEls = this.getEditableElements(
+            '.oe_structure.oe_empty, [data-oe-type="html"]'
+        );
+        editableEls.forEach((el) => el.setAttribute("contenteditable", !el.matches(":empty")));
     }
 }

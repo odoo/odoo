@@ -7,7 +7,7 @@ import {
 import { Builder } from "@html_builder/builder";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup, contains } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
 
@@ -38,4 +38,19 @@ test("history back", async () => {
     builder_sidebar.onBeforeLeave();
     await animationFrame();
     expect(".modal-content:contains('If you proceed, your changes will be lost')").toHaveCount(1);
+});
+
+test("Set and update the 'contenteditable' attribute on the editable elements", async () => {
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(
+        "<section><p>TEST</p></section>"
+    );
+    const wrapwrapEl = getEditor().editable;
+    const wrapEl = getEditableContent();
+    expect(wrapwrapEl.getAttribute("contenteditable")).toBe("false");
+    expect(wrapEl.getAttribute("contenteditable")).toBe("true");
+
+    await contains(":iframe section").click();
+    await contains(".overlay .oe_snippet_remove").click();
+    expect(wrapwrapEl.getAttribute("contenteditable")).toBe("false");
+    expect(wrapEl.getAttribute("contenteditable")).toBe("false");
 });
