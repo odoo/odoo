@@ -34,6 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'dk_coa_2720',
                 'expense_account_id': 'dk_coa_1610',
                 'income_account_id': 'dk_coa_1010',
+                'check_account_audit_trail': True,
             },
         }
 
