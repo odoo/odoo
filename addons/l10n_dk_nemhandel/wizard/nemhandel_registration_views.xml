@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="nemhandel_registration_form" model="ir.ui.view">
+        <field name="name">nemhandel.registration.form</field>
+        <field name="model">nemhandel.registration</field>
+        <field name="groups_id" eval="[Command.link(ref('account.group_account_manager'))]"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="company_id" invisible="1"/>
+                <field name="l10n_dk_nemhandel_proxy_state" invisible="1"/>
+                <sheet>
+
+                    <group name="nemhandel_registration" invisible="l10n_dk_nemhandel_proxy_state not in ('not_registered', 'in_verification')">
+                        <div colspan="2" class="text-muted mb-3">
+                            You need to register in order to Send Customer Invoices on the Nemhandel network.
+                        </div>
+
+                        <!-- business fields -->
+                        <field name="identifier_type" string="Identifier Type"/>
+                        <field name="identifier_value" string="Identifier Value"/>
+                        <field name="contact_email" string="Email"/>
+
+                        <div colspan="2" class="row">
+                            <label for="phone_number" string="Phone" class="text-900 col-2"/>
+                            <field name="phone_number" required="edi_mode != 'demo'" class="col-2 w-25"/>
+                            <div class="text-muted col">for validation purposes</div>
+                        </div>
+                        <div colspan="2" invisible="not phone_number or l10n_dk_nemhandel_proxy_state == 'in_verification'">
+                            <button string="Send a registration code by SMS"
+                                    name="button_nemhandel_registration_sms"
+                                    type="object"
+                                    class="btn-link"
+                                    icon="fa-check"/>
+                        </div>
+
+                        <!-- The participant needs to fill in the SMS code they received -->
+                        <div colspan="2" name="kyc" invisible="l10n_dk_nemhandel_proxy_state != 'in_verification'" class="mb-4">
+                            <div class="text-muted mt-3">
+                                Fill in the code below that we sent you by SMS to
+                                <field name="phone_number"
+                                       class="oe_inline"
+                                       nolabel="1"
+                                       readonly="l10n_dk_nemhandel_proxy_state == 'in_verification'"/>
+                            </div>
+                            <div class="mt-1 ps-3 w-50">
+                                <field name="verification_code" class="o_field_highlight"/>
+                            </div>
+                        </div>
+                    </group>
+
+                    <!-- edi mode info -->
+                    <field name="edi_mode_constraint" invisible="1"/>
+                    <div colspan="2" class="row" invisible="l10n_dk_nemhandel_proxy_state != 'not_registered'">
+                        <field name="edi_mode" invisible="1"/>
+                        <div class="text-muted col" invisible="edi_mode != 'prod'">
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'test'">
+                            Test mode allows sending e-invoices through the test Nemhandel network.
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'demo'">
+                            In demo mode sending invoices is simulated.
+                            There will be no communication with the Nemhandel network.
+                        </div>
+                    </div>
+
+                    <footer>
+                        <widget name="nemhandel_settings_buttons"
+                                invisible="not l10n_dk_nemhandel_proxy_state"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
