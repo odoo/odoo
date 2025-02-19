@@ -5,14 +5,17 @@ import {
     htmlToTextContentInline,
     prettifyMessageContent,
 } from "@mail/utils/common/format";
-import { rpc } from "@web/core/network/rpc";
+import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
+
+import { toRaw } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
-import { url } from "@web/core/utils/urls";
 import { stateToUrl } from "@web/core/browser/router";
-import { toRaw } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
+import { setElementContent } from "@web/core/utils/html";
+import { url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
 export class Message extends Record {
@@ -32,8 +35,7 @@ export class Message extends Record {
     update(data) {
         super.update(data);
         if (this.isNotification && !this.notificationType) {
-            const parser = new DOMParser();
-            const htmlBody = parser.parseFromString(this.body, "text/html");
+            const htmlBody = createDocumentFragmentFromContent(this.body);
             this.notificationType = htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
         }
     }
@@ -50,11 +52,9 @@ export class Message extends Record {
     edited = Record.attr(false, {
         compute() {
             return Boolean(
-                new DOMParser()
-                    .parseFromString(this.body, "text/html")
-                    // ".o-mail-Message-edited" is the class added by the mail.thread in _message_update_content
-                    // when the message is edited
-                    .querySelector(".o-mail-Message-edited")
+                // ".o-mail-Message-edited" is the class added by the mail.thread in _message_update_content
+                // when the message is edited
+                createDocumentFragmentFromContent(this.body).querySelector(".o-mail-Message-edited")
             );
         },
     });
@@ -107,7 +107,7 @@ export class Message extends Record {
                 return false;
             }
             const div = document.createElement("div");
-            div.innerHTML = this.body;
+            setElementContent(div, this.body);
             return Boolean(div.querySelector("a:not([data-oe-model])"));
         },
     });
@@ -153,7 +153,7 @@ export class Message extends Record {
     onlyEmojis = Record.attr(false, {
         compute() {
             const div = document.createElement("div");
-            div.innerHTML = this.body;
+            setElementContent(div, this.body);
             const bodyWithoutTags = div.textContent;
             const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
             return bodyWithoutTags.length > 0 && withoutEmojis.trim().length === 0;

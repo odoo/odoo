@@ -6,7 +6,7 @@ patch(SelfOrder.prototype, {
     async setup(...args) {
         await super.setup(...args);
         this.onlinePaymentStatus = null;
-        this.onNotified("ONLINE_PAYMENT_STATUS", ({ status, data }) => {
+        this.data.connectWebSocket("ONLINE_PAYMENT_STATUS", ({ status, data }) => {
             this.models.loadData(data, [], false);
             this.onlinePaymentStatus = status;
             this.paymentError = status === "fail";

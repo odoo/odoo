@@ -234,6 +234,20 @@ describe("Link creation", () => {
             });
         });
 
+        test("creating link in an empty block using link command should not contain trailing br", async () => {
+            const { editor, el } = await setupEditor("<p>[]<br></p>");
+            await insertText(editor, "/link");
+            await animationFrame();
+            expect(".active .o-we-command-name").toHaveText("Link");
+            await click(".o-we-command-name:first");
+            await waitFor(".o-we-linkpopover");
+            await fill("test.com");
+            await click(".o_we_apply_link");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><a href="https://test.com">test.com[]</a></p>'
+            );
+        });
+
         test("when create a new link by powerbox and not input anything, the link should be removed", async () => {
             const { editor, el } = await setupEditor("<p>ab[]</p>");
             await insertText(editor, "/link");
@@ -954,7 +968,7 @@ describe("upload file via link popover", () => {
         await animationFrame();
         // Created link has the correct href and label
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            `<p><a href="${expectedUrl}">file.txt[]</a><br></p>`
+            `<p><a href="${expectedUrl}">file.txt[]</a></p>`
         );
     });
 

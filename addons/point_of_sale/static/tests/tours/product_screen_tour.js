@@ -449,9 +449,6 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             {
                 trigger: '.category-button:eq(3) > span:contains("AAY")',
             },
-            {
-                trigger: '.category-button:not(:contains("AAD"))',
-            },
         ].flat(),
 });
 
