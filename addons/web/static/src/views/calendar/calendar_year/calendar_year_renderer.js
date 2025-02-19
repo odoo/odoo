@@ -78,6 +78,7 @@ export class CalendarYearRenderer extends Component {
             eventContent: this.onEventContent,
             viewDidMount: this.viewDidMount,
             weekends: this.props.isWeekendVisible,
+            fixedWeekCount: false,
         };
     }
 
