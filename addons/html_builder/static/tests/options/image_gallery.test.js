@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, dummyBase64Img, setupWebsiteBuilder } from "../website_helpers";
-import { animationFrame, click, queryAll, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { MockResponse } from "@web/../lib/hoot/mock/network";
 
 defineWebsiteModels();
@@ -112,6 +112,35 @@ test("Remove all images in gallery", async () => {
     expect(":iframe .o_add_images").toHaveCount(1);
     await contains(":iframe .o_add_images").click();
     expect(".o_select_media_dialog").toHaveCount(1);
+});
+
+test("Change gallery layout", async () => {
+    await setupWebsiteBuilder(
+        `
+        <section class="s_image_gallery o_masonry" data-columns="2">
+            <div class="container">
+                <div class="o_masonry_col col-lg-6">
+                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
+                </div>
+                <div class="o_masonry_col col-lg-6">
+                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
+                </div>
+            </div>
+        </section>
+        `
+    );
+    await contains(":iframe .first_img").click();
+    expect("[data-label='Mode']").toHaveCount(1);
+    expect(queryOne("[data-label='Mode'] button").textContent).toBe("Masonry");
+    await contains("[data-label='Mode'] button").click();
+
+    await contains("[data-action-param='grid']").click();
+    await waitFor(":iframe .o_grid");
+    expect(":iframe .o_grid").toHaveCount(1);
+    expect(":iframe .o_masonry_col").toHaveCount(0);
+    // TODO DAFL: delete the next line when we fallback the selection
+    await contains(":iframe .first_img").click();
+    expect(queryOne("[data-label='Mode'] button").textContent).toBe("Grid");
 });
 
 function dataURItoBlob(dataURI) {

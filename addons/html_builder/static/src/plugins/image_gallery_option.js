@@ -27,6 +27,15 @@ class ImageGalleryOption extends Plugin {
                     this.insertEmptyGalleryAlert(this.getContainer(editingElement));
                 },
             },
+            setImageGalleryLayout: {
+                load: ({ editingElement }) => this.processImages(editingElement),
+                apply: ({ editingElement, param: mode, loadResult: images }) => {
+                    if (mode !== this.getMode(editingElement)) {
+                        this.setImages(editingElement, mode, images);
+                    }
+                },
+                isApplied: ({ editingElement, param }) => param === this.getMode(editingElement),
+            },
         };
     }
 
@@ -64,14 +73,12 @@ class ImageGalleryOption extends Plugin {
                 if (!selectedImages) {
                     return [];
                 }
-                await this.transformImagesToWebp(selectedImages);
-                this.setImageProperties(editingElement, selectedImages);
-                const clonedContainerImg = await this.cloneContainerImages(editingElement);
-                return [...clonedContainerImg, ...selectedImages];
+                return this.processImages(editingElement, selectedImages);
             },
             apply: ({ editingElement, loadResult: images }) => {
                 if (images.length) {
-                    this.setImages(editingElement, images);
+                    const mode = this.getMode(editingElement);
+                    this.setImages(editingElement, mode, images);
                 }
             },
         };
@@ -124,10 +131,17 @@ class ImageGalleryOption extends Plugin {
      * @param {Element[]} images
      */
     async setImages(imageGalleryElement, mode, images) {
+        if (mode !== this.getMode(imageGalleryElement)) {
+            imageGalleryElement.classList.remove("o_nomode", "o_masonry", "o_grid", "o_slideshow");
+            imageGalleryElement.classList.add(`o_${mode}`);
+        }
         //TODO: apply other layouts
         switch (mode) {
             case "masonry":
                 this.masonry(imageGalleryElement, images);
+                break;
+            case "grid":
+                this.grid(imageGalleryElement, images);
                 break;
         }
     }
@@ -171,6 +185,41 @@ class ImageGalleryOption extends Plugin {
             }
             smallestColEl.append(imageEl);
         }
+    }
+
+    /**
+     * Displays the images with the "grid" layout.
+     *
+     * @param {Element} imageGalleryElement
+     * @param {Element[]} images
+     */
+    grid(imageGalleryElement, images) {
+        const columnsNumber = this.getColumns(imageGalleryElement);
+        const colClass = "col-lg-" + 12 / columnsNumber;
+
+        const container = this.getContainer(imageGalleryElement);
+        let row = document.createElement("div");
+        row.classList.add("row", "s_nb_column_fixed");
+        container.replaceChildren(row);
+
+        for (const [index, img] of images.entries()) {
+            const col = this.document.createElement("div");
+            col.classList.add(colClass);
+            col.appendChild(img);
+            row.appendChild(col);
+            if ((index + 1) % columnsNumber === 0) {
+                row = document.createElement("div");
+                row.classList.add("row", "s_nb_column_fixed");
+                container.appendChild(row);
+            }
+        }
+    }
+
+    async processImages(editingElement, newImages = []) {
+        await this.transformImagesToWebp(newImages);
+        this.setImageProperties(editingElement, newImages);
+        const clonedContainerImg = await this.cloneContainerImages(editingElement);
+        return [...clonedContainerImg, ...newImages];
     }
 
     setImageProperties(imageGalleryElement, images) {
