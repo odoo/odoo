@@ -16,6 +16,8 @@ export class BuilderRange extends Component {
         step: { type: Number, optional: true },
         displayRangeValue: { type: Boolean, optional: true },
         computedOutput: { type: Function, optional: true },
+        id: { type: String, optional: true },
+        unit: { type: String, optional: true },
     };
     static defaultProps = {
         ...BuilderComponent.defaultProps,
@@ -28,7 +30,7 @@ export class BuilderRange extends Component {
 
     setup() {
         useBuilderComponent();
-        const { state, commit, preview } = useInputBuilderComponent();
+        const { state, commit, preview } = useInputBuilderComponent({ id: this.props.id });
 
         this.commit = commit;
         this.preview = preview;
