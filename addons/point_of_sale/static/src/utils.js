@@ -138,3 +138,7 @@ export class Counter {
         return this.value;
     }
 }
+
+export function isValidEmail(email) {
+    return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}

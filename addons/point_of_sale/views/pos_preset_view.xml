@@ -32,12 +32,18 @@
                             <field name="pricelist_id"/>
                             <field name="fiscal_position_id"/>
                             <field name="use_timing" />
-                            <field name="resource_calendar_id" invisible="not use_timing" />
-                            <label for="slot_params" string="Capacity" invisible="not use_timing" />
-                            <div invisible="not use_timing">
-                                <field id="slot_params" name="slots_per_interval" class="oe_inline border-bottom text-center" />
-                                <label for="interval_time" string="orders per" style="font-weight:bold;" />
-                                <field name="interval_time" class="oe_inline border-bottom text-center" />
+
+                            <label for="resource_calendar_id" string="Schedule based on" class="fw-bold ms-2" />
+                            <div>
+                                <field name="resource_calendar_id" readonly="not use_timing" />
+                            </div>
+
+                            <label for="slots_per_interval" string="Preparation capacity" class="fw-bold ms-2" />
+                            <div>
+                                <field name="slots_per_interval" class="oe_inline border-bottom text-center" readonly="not use_timing" />
+                                <label for="slots_per_interval" string="orders per" />
+                                <field name="interval_time" class="oe_inline border-bottom text-center" readonly="not use_timing" />
+                                <label for="interval_time" string="minutes" />
                             </div>
                         </group>
                         <group>
@@ -47,7 +53,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Resource" name="resource" invisible="not use_timing or not resource_calendar_id">
+                        <page string="Schedule" name="resource" invisible="not use_timing or not resource_calendar_id">
                             <field name="attendance_ids" widget="section_one2many" />
                         </page>
                     </notebook>
