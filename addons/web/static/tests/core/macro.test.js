@@ -147,13 +147,16 @@ test("onStep function is called at each step", async () => {
 
     new Macro({
         name: "test",
-        onStep: (el, step) => {
-            expect.step(step.info);
+        onStep: (el, step, index) => {
+            expect.step(index);
         },
         steps: [
-            { info: "1" },
             {
-                info: "2",
+                action: () => {
+                    console.log("brol");
+                },
+            },
+            {
                 trigger: "button.inc",
                 action: "click",
             },
@@ -161,7 +164,7 @@ test("onStep function is called at each step", async () => {
     }).start(queryOne(".counter"));
     await waitForStep(true);
     expect(span).toHaveText("1");
-    expect.verifySteps(["1", "2"]);
+    expect.verifySteps([0, 1]);
 });
 
 test("trigger can be a function returning an htmlelement", async () => {
