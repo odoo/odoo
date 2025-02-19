@@ -21,7 +21,9 @@ patch(PaymentScreen.prototype, {
                 if (await this._askForCustomerIfRequired() === false) {
                     return false;
                 }
-                order.partner = order.partner || this.pos.db.partner_by_id[this.pos.config.simplified_partner_id[0]];
+                if (order.to_invoice) {
+                    order.partner = order.partner || this.pos.db.partner_by_id[this.pos.config.simplified_partner_id[0]];
+                }
             }
         }
         return await super.validateOrder(...arguments);
