@@ -1,15 +1,21 @@
 import { Plugin } from "@html_editor/plugin";
-import { splitTextNode } from "@html_editor/utils/dom";
-import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
-import { DIRECTIONS } from "@html_editor/utils/position";
+import { isBlock, closestBlock } from "@html_editor/utils/blocks";
+import { splitTextNode, unwrapContents } from "@html_editor/utils/dom";
+import { isElement, isTextNode, isZWS } from "@html_editor/utils/dom_info";
+import { closestElement, selectElements, findFurthest } from "@html_editor/utils/dom_traversal";
+import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
-    static dependencies = ["selection", "history", "input"];
+    static dependencies = ["selection", "history", "input", "split"];
     resources = {
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
     };
+
+    setup() {
+        this.addDomListener(this.document, "keydown", this.onKeyDown.bind(this));
+    }
 
     normalize(root) {
         for (const code of selectElements(root, ".o_inline_code")) {
@@ -22,11 +28,86 @@ export class InlineCodePlugin extends Plugin {
         }
     }
 
+    onKeyDown(ev) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (
+            !(ev.key === "`" || ev.code === "Backquote") ||
+            selection.isCollapsed ||
+            closestElement(selection.anchorNode, "a, code") ||
+            closestElement(selection.focusNode, "a, code")
+        ) {
+            return;
+        }
+        const targetBlocks = this.dependencies.selection.getTargetedBlocks();
+        const hasTextNode = this.dependencies.selection.getTargetedNodes().some(isTextNode);
+        if (targetBlocks.size === 1 && hasTextNode) {
+            this.historySavePointRestore = this.dependencies.history.makeSavePoint();
+        }
+    }
+
     onInput(ev) {
         const selection = this.dependencies.selection.getEditableSelection();
         if (ev.data !== "`" || closestElement(selection.anchorNode, "code")) {
             return;
         }
+        if (this.historySavePointRestore) {
+            this.historySavePointRestore();
+            let { anchorNode, anchorOffset, focusNode, focusOffset, direction } =
+                this.dependencies.split.splitSelection();
+            if (direction === false) {
+                // Swap anchorNode and focusNode
+                [anchorNode, anchorOffset, focusNode, focusOffset] = [
+                    focusNode,
+                    focusOffset,
+                    anchorNode,
+                    anchorOffset,
+                ];
+            }
+            const blockEl = closestBlock(anchorNode);
+            const furthestAnchorElement = findFurthest(anchorNode, blockEl, (n) => !isBlock(n));
+            let start = this.dependencies.split.splitAroundUntil(anchorNode, furthestAnchorElement);
+            const furthestFocusElement = findFurthest(focusNode, blockEl, (n) => !isBlock(n));
+            const end = this.dependencies.split.splitAroundUntil(focusNode, furthestFocusElement);
+
+            // After splitting the anchorNode, if the start element contains
+            // the focusNode, splitting the focusNode could cause the start
+            // element to be detached from the DOM. In this case, find the
+            // valid start element again to ensure it remains connected.
+            if (!start.isConnected) {
+                start = findFurthest(anchorNode, blockEl, (n) => !isBlock(n));
+            }
+            const codeElement = this.document.createElement("code");
+            codeElement.classList.add("o_inline_code");
+            start.before(codeElement);
+            while (start) {
+                if (isElement(start)) {
+                    for (const code of selectElements(start, "code")) {
+                        if (isZWS(code.nextSibling)) {
+                            code.nextSibling.remove();
+                        }
+                        if (isZWS(code.previousSibling)) {
+                            code.previousSibling.remove();
+                        }
+                        start = unwrapContents(code)[0];
+                    }
+                }
+                const next = start.nextSibling;
+                codeElement.appendChild(start);
+                if (start === end) {
+                    break;
+                }
+                start = next;
+            }
+            codeElement.after(document.createTextNode("\u200B"));
+            this.dependencies.selection.setSelection({
+                anchorNode: codeElement,
+                anchorOffset: nodeSize(codeElement),
+            });
+            this.dependencies.history.addStep();
+            delete this.historySavePointRestore;
+            return;
+        }
+
         // We just inserted a backtick, check if there was another
         // one in the text.
         let textNode = selection.startContainer;
