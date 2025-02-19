@@ -57,6 +57,19 @@ export class ColorPlugin extends Plugin {
         /** Handlers */
         selectionchange_handlers: this.updateSelectedColor.bind(this),
         remove_format_handlers: this.removeAllColor.bind(this),
+
+        /** Overridables */
+        /**
+         * Makes the way colors are applied overridable.
+         *
+         * @param {Element} element
+         * @param {string} color hexadecimal or bg-name/text-name class
+         * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
+         */
+        apply_color_style: (element, mode, color) => {
+            element.style[mode] = color;
+            return true;
+        },
     };
 
     setup() {
@@ -367,13 +380,13 @@ export class ColorPlugin extends Plugin {
             element.style[mode] = "";
             if (mode === "color") {
                 element.style["background"] = "";
-                element.style["background-image"] = color;
+                this.delegateTo("apply_color_style", element, "background-image", color);
                 element.classList.add("text-gradient");
             } else {
-                element.style["background-image"] = color;
+                this.delegateTo("apply_color_style", element, "background-image", color);
             }
         } else {
-            element.style[mode] = color;
+            this.delegateTo("apply_color_style", element, mode, color);
         }
     }
 }
