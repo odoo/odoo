@@ -271,6 +271,11 @@ class MrpProduction(models.Model):
         string='Date Category', store=False,
         search='_search_date_category', readonly=True
     )
+    expected_start = fields.Datetime('Expected Start', readonly=True, copy=False,
+        help="Best date to start production based on latest simulation.",
+    )
+    expected_finished = fields.Datetime('Expected Receipt', readonly=True, copy=False,
+        help="Best Date to finish production based on latest simulation.")
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -1480,6 +1485,7 @@ class MrpProduction(models.Model):
         return True
 
     def _link_workorders_and_moves(self):
+        # (see _simulate_planning in bom & operation)
         self.ensure_one()
         if not self.workorder_ids:
             return
@@ -1533,7 +1539,7 @@ class MrpProduction(models.Model):
 
     def _plan_workorders(self, replan=False):
         """ Plan all the production's workorders depending on the workcenters
-        work schedule.
+        work schedule. (see _simulate_planning in bom & operation)
 
         :param replan: If it is a replan, only ready and pending workorder will be taken into account
         :type replan: bool.
@@ -1542,6 +1548,7 @@ class MrpProduction(models.Model):
 
         if not self.workorder_ids:
             self.is_planned = True
+            self.expected_start = self.expected_finished = False
             return
 
         self._link_workorders_and_moves()
@@ -1557,7 +1564,9 @@ class MrpProduction(models.Model):
 
         self.with_context(force_date=True).write({
             'date_start': min([workorder.leave_id.date_from for workorder in workorders]),
-            'date_finished': max([workorder.leave_id.date_to for workorder in workorders])
+            'date_finished': max([workorder.leave_id.date_to for workorder in workorders]),
+            'expected_start': False,
+            'expected_finished': False,
         })
 
     def button_unplan(self):
@@ -2853,7 +2862,20 @@ class MrpProduction(models.Model):
     def action_start(self):
         self.ensure_one()
         if self.state == "confirmed":
+            if not self.is_planned:
+                self.button_plan()
             self.state = "progress"
+
+    def action_simulate_planning(self):
+        simulated_leaves_per_workcenter = defaultdict(list)
+        for production in self:
+            if production.is_planned:
+                continue
+            if not production.bom_id:
+                continue
+            planning = production.bom_id._simulate_planning(production.product_id, production.date_start, production.product_qty, simulated_leaves_per_workcenter=simulated_leaves_per_workcenter)
+            self.expected_start =  min((p['date_start'] for p in planning.values()), default=production.date_start)
+            self.expected_finished = max((p['date_finished'] for p in planning.values()), default=production.date_finished)
 
     def _track_subtype(self, init_values):
         self.ensure_one()
