@@ -37,7 +37,7 @@ class IrAttachment(models.Model):
     def _compute_image_src(self):
         for attachment in self:
             # Only add a src for supported images
-            if attachment.mimetype not in SUPPORTED_IMAGE_MIMETYPES:
+            if not attachment.mimetype or attachment.mimetype.split(';')[0] not in SUPPORTED_IMAGE_MIMETYPES:
                 attachment.image_src = False
                 continue
 
