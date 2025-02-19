@@ -2087,6 +2087,10 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(purchase_order.order_line.product_id.id, product.id)
         self.assertEqual(purchase_order.order_line.product_qty, 2)
 
+        product_form.detailed_type = "consu"
+        product = product_form.save()
+        self.assertFalse(product.combo_ids)
+
     def test_change_is_deducted_from_cash(self):
         self.pos_config.open_ui()
         pos_session = self.pos_config.current_session_id
