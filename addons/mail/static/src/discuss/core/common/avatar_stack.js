@@ -18,6 +18,7 @@ export class AvatarStack extends Component {
         direction: { type: String, optional: true, validate: (d) => ["v", "h"].includes(d) },
         avatarClass: { type: Function, optional: true },
         max: { type: Number, optional: true },
+        overlap: { type: Boolean, optional: true },
         personas: Array,
         size: { type: Number, optional: true },
         slots: { optional: true },
@@ -27,6 +28,7 @@ export class AvatarStack extends Component {
         max: 4,
         size: 24,
         direction: "h",
+        overlap: true,
     };
 
     getStyle(index) {
@@ -36,7 +38,9 @@ export class AvatarStack extends Component {
         }
         // Compute cumulative offset,
         const marginDirection = this.props.direction === "v" ? "top" : "left";
-        style += `margin-${marginDirection}: -${this.props.size / 3}px`;
+        style += `margin-${marginDirection}: ${
+            ((this.props.overlap ? -1 : 1) * this.props.size) / 3
+        }px`;
         return style;
     }
 }

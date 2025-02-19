@@ -32,10 +32,11 @@
                 direction="compact ? 'v' : 'h'"
                 avatarClass="(p) => this.avatarClass(p)"
                 max="compact ? 1 : 4"
+                overlap="compact ? false : undefined"
                 personas="sessions.map((s) => s.channel_member_id?.persona).filter(p => p)"
             >
                 <t t-set-slot="avatarExtraInfo" t-slot-scope="scope">
-                    <div class="o-mail-DiscussSidebarCallParticipants-status small" t-att-class="{
+                    <div t-if="compact" class="o-mail-DiscussSidebarCallParticipants-status small" t-att-class="{
                         'position-absolute bg-inherit p-0 rounded-circle o-compact d-flex o-xsmaller text-start': compact,
                         'ms-1 d-flex align-items-center justify-content-center': !compact,
                     }">
