@@ -28,7 +28,7 @@
                                         <img t-att-src="this.getShapeUrl(shape[0])" />
                                         <span t-if="shape[1].imgSize" class="o_we_shape_animated_label">
                                             <i class="fa fa-expand"></i>
-                                            <span>2.17:1</span>
+                                            <span t-out="shape[1].imgSize"/>
                                         </span>
                                         <span t-elif="shape[1].animated" class="o_we_shape_animated_label">A<span>nimated</span></span>
                                     </div>
