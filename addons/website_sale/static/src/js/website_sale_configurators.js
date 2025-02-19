@@ -90,7 +90,7 @@ WebsiteSale.include({
             isFrontend: true,
             options: {
                 isMainProductConfigurable: !isOnProductPage,
-                showQuantity: Boolean(this.$form[0].querySelector('.css_quantity')),
+                showQuantity: Boolean(this.$form?.[0].querySelector('.css_quantity')),
             },
             save: async (mainProduct, optionalProducts, options) => {
                 this._trackProducts([mainProduct, ...optionalProducts]);
@@ -121,7 +121,7 @@ WebsiteSale.include({
             edit: false,
             isFrontend: true,
             options: {
-                showQuantity: Boolean(this.$form[0].querySelector('.css_quantity')),
+                showQuantity: Boolean(this.$form?.[0].querySelector('.css_quantity')),
             },
             save: (comboProductData, selectedComboItems, options) =>
                 this.addComboProductToCart(
