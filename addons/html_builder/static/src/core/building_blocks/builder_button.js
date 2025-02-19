@@ -17,8 +17,13 @@ export class BuilderButton extends Component {
         className: { type: String, optional: true },
         classActive: { type: String, optional: true },
         style: { type: String, optional: true },
+        type: { type: String, optional: true },
 
         slots: { type: Object, optional: true },
+    };
+
+    static defaultProps = {
+        type: "primary",
     };
 
     setup() {
@@ -31,6 +36,7 @@ export class BuilderButton extends Component {
 
     get className() {
         let className = this.props.className || "";
+        className += ` btn-${this.props.type}`;
         if (this.state.isActive) {
             className = `active ${className}`;
             if (this.props.classActive) {
