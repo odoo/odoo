@@ -176,6 +176,8 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
         cls.ChartTemplate = cls.env['account.chart.template'].with_company(cls.company)
         cls.country_be = cls.env.ref('base.be')
+        cls.demo_data_ready = cls.env.ref('base.module_account').demo
+
 
     def test_signed_and_unsigned_tags_tax(self):
         tax_report = self.env['account.report'].create({
@@ -692,7 +694,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         }])
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
-            self.env['account.chart.template'].try_loading('test', company=company, install_demo=True)
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=self.demo_data_ready)
         self.assertEqual(company.chart_template, 'test')
         self.assertEqual(branch.chart_template, 'test')
 
@@ -714,7 +716,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping),
             patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True)
         ):
-            self.env['account.chart.template'].try_loading('other_test', company=self.company, install_demo=True)
+            self.env['account.chart.template'].try_loading('other_test', company=self.company, install_demo=self.demo_data_ready)
 
             # Create a branch and an unrelated company
             branch, other_company = self.env['res.company'].create([
@@ -745,7 +747,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         }])
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
-            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=True)
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=self.demo_data_ready)
         self.assertEqual(self.company.chart_template, 'test')
         self.assertEqual(branch.chart_template, 'test')
 
