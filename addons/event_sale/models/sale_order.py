@@ -7,6 +7,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     attendee_count = fields.Integer('Attendee Count', compute='_compute_attendee_count')
+    has_soldout_event = fields.Boolean(compute="_compute_has_soldout_event")
 
     def write(self, vals):
         """ Synchronize partner from SO to registrations. This is done notably
@@ -53,6 +54,21 @@ class SaleOrder(models.Model):
         }
         for sale_order in self:
             sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
+
+    def _compute_has_soldout_event(self):
+        """Meant to be used in the portal to prevent customers from paying for an event
+        that is sold out and has autoconfirmation. Not only because we'd overbook the
+        event, but also because it will probably crash on the confirmation of the order
+        when the registrations are created."""
+        self.has_soldout_event = False
+        for order in self.filtered(lambda x: x.state in ["draft", "sent"]):
+            order.has_soldout_event = bool(order.order_line.event_id.filtered(
+                lambda x: x.seats_limited and x.seats_max and x.auto_confirm and x.seats_available <= 0
+            ))
+
+    def _has_to_be_paid(self, include_draft=False):
+        has_to_be_paid = super()._has_to_be_paid(include_draft=include_draft)
+        return has_to_be_paid and not self.has_soldout_event
 
     def unlink(self):
         self.order_line._unlink_associated_registrations()
