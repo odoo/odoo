@@ -25,7 +25,7 @@ patch(PaymentScreen.prototype, {
                 if ((await this._askForCustomerIfRequired()) === false) {
                     return false;
                 }
-                if (!order.partner_id) {
+                if (!order.partner_id && order.to_invoice) {
                     const setPricelist =
                         this.pos.config.pricelist_id?.id != order.pricelist_id?.id
                             ? order.pricelist_id
