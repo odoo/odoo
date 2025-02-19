@@ -703,10 +703,9 @@ QUnit.module("Fields", (hooks) => {
             </form>`,
         });
 
-        const list = new DataTransfer();
-        list.items.add(new File([imageData], "fake_file.png", { type: "png" }));
-
         async function setFiles() {
+            const list = new DataTransfer();
+            list.items.add(new File([imageData], "fake_file.png", { type: "png" }));
             const fileInput = target.querySelector("input[type=file]");
             fileInput.files = list.files;
             fileInput.dispatchEvent(new Event("change"));
