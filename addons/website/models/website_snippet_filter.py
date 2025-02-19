@@ -24,6 +24,11 @@ class WebsiteSnippetFilter(models.Model):
     limit = fields.Integer(help='The limit is the maximum number of records retrieved', required=True)
     website_id = fields.Many2one('website', string='Website', ondelete='cascade')
     model_name = fields.Char(string='Model name', compute='_compute_model_name')
+    help = fields.Text(
+        string="Description",
+        help="Optional help text describing the filter usage and/or purpose.",
+        translate=True,
+    )
 
     @api.depends('filter_id', 'action_server_id')
     def _compute_model_name(self):
