@@ -390,7 +390,8 @@ class PrinterDriver(Driver):
             homepage = '\nHomepage:\nhttp://%s:8069\n\n' % ips[0]
 
         if iot_status["pairing_code"]:
-            pairing_code = '\nPairing Code:\n%s\n' % iot_status["pairing_code"]
+            pairing_code = '\nPairing Code: %s\n' % iot_status["pairing_code"]
+            pairing_code += 'Enter this code in the Odoo IoT app to pair your IoT Box.\n'
 
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         title = commands['title'] % b'IoTBox Status'
@@ -408,6 +409,7 @@ class PrinterDriver(Driver):
             command += f"^FT35,155 ^A0N,25 ^FDIP: {', '.join(iot_status['ips'])}^FS"
         if iot_status["pairing_code"]:
             command += f"^FT35,190 ^A0N,25 ^FDPairing code: {iot_status['pairing_code']}^FS"
+            command += "^FT35,225 ^A0N,25 ^FDEnter this code in the Odoo IoT app^FS"
         command += "^XZ"
 
         self.print_raw(command.encode())
