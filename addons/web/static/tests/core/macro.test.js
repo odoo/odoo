@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
+import { click, edit, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -36,7 +36,9 @@ test("simple use", async () => {
         steps: [
             {
                 trigger: "button.inc",
-                action: "click",
+                async action(trigger) {
+                    await click(trigger);
+                },
             },
         ],
     }).start(queryOne(".counter"));
@@ -57,16 +59,18 @@ test("multiple steps", async () => {
         steps: [
             {
                 trigger: "button.inc",
-                action: "click",
-            },
-            {
-                trigger: () => {
-                    return span.textContent === "1" ? span : null;
+                async action(trigger) {
+                    await click(trigger);
                 },
             },
             {
+                trigger: () => (span.textContent === "1" ? span : null),
+            },
+            {
                 trigger: "button.inc",
-                action: "click",
+                async action(trigger) {
+                    await click(trigger);
+                },
             },
         ],
     }).start(queryOne(".counter"));
@@ -105,8 +109,10 @@ test("can input values", async () => {
         steps: [
             {
                 trigger: "div.counter input",
-                action: "text",
-                value: "aaron",
+                async action(trigger) {
+                    await click(trigger);
+                    await edit("aaron", { confirm: "blur" });
+                },
             },
         ],
     }).start(queryOne(".counter"));
@@ -125,8 +131,10 @@ test("a step can have no trigger", async () => {
             { action: () => expect.step("2") },
             {
                 trigger: "div.counter input",
-                action: "text",
-                value: "aaron",
+                async action(trigger) {
+                    await click(trigger);
+                    await edit("aaron", { confirm: "blur" });
+                },
             },
             { action: () => expect.step("3") },
         ],
@@ -158,7 +166,9 @@ test("onStep function is called at each step", async () => {
             },
             {
                 trigger: "button.inc",
-                action: "click",
+                async action(trigger) {
+                    await click(trigger);
+                },
             },
         ],
     }).start(queryOne(".counter"));
@@ -177,7 +187,9 @@ test("trigger can be a function returning an htmlelement", async () => {
         steps: [
             {
                 trigger: () => queryOne("button.inc"),
-                action: "click",
+                async action(trigger) {
+                    await click(trigger);
+                },
             },
         ],
     }).start(queryOne(".counter"));
@@ -190,6 +202,7 @@ test("macro does not click on invisible element", async () => {
     await mountWithCleanup(TestComponent);
     const span = queryOne("span.value");
     const button = queryOne("button.inc");
+    button.classList.add("d-none");
     expect(span).toHaveText("0");
 
     new Macro({
@@ -197,11 +210,12 @@ test("macro does not click on invisible element", async () => {
         steps: [
             {
                 trigger: "button.inc",
-                action: "click",
+                async action(trigger) {
+                    await click(trigger);
+                },
             },
         ],
     }).start(queryOne(".counter"));
-    button.classList.add("d-none");
     await animationFrame(); // let mutation observer trigger
     await advanceTime(100);
     expect(span).toHaveText("0");
