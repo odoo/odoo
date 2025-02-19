@@ -39,8 +39,8 @@ test("change the editingElement of sub widget through `applyTo` prop", async () 
 test("should propagate actionParam in the context", async () => {
     addActionOption({
         customAction: {
-            apply: ({ param }) => {
-                expect.step(`customAction ${param}`);
+            apply: ({ param: { mainParam: testParam } }) => {
+                expect.step(`customAction ${testParam}`);
             },
         },
     });
@@ -158,7 +158,9 @@ test("click on BuilderButton with empty value should remove styleAction", async 
             <BuilderButton styleAction="'width'" styleActionValue="'25%'"/>
         </BuilderButtonGroup>`,
     });
-    const { getEditableContent } = await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    const { getEditableContent } = await setupWebsiteBuilder(
+        `<div class="test-options-target">b</div>`
+    );
     const editableContent = getEditableContent();
     await contains(":iframe .test-options-target").click();
     await contains("[data-style-action='width'][data-style-action-value='25%']").click();

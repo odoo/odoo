@@ -21,7 +21,7 @@ class BackgroundImageOptionPlugin extends Plugin {
     getActions() {
         return {
             selectFilterColor: {
-                apply: ({ editingElement, param, value }) => {
+                apply: ({ editingElement, value }) => {
                     // Find the filter element.
                     let filterEl = editingElement.querySelector(":scope > .o_we_bg_filter");
 
@@ -47,7 +47,9 @@ class BackgroundImageOptionPlugin extends Plugin {
                     }
                     this.dependencies.builderActions.getAction("styleAction").apply({
                         editingElement: filterEl,
-                        param: "background-color",
+                        param: {
+                            mainParam: "background-color",
+                        },
                         value: value,
                     });
                 },
@@ -58,7 +60,9 @@ class BackgroundImageOptionPlugin extends Plugin {
                     }
                     return this.dependencies.builderActions.getAction("styleAction").getValue({
                         editingElement: filterEl,
-                        param: "background-color",
+                        param: {
+                            mainParam: "background-color",
+                        },
                     });
                 },
             },
@@ -79,9 +83,9 @@ class BackgroundImageOptionPlugin extends Plugin {
                 apply: this.applyReplaceBackgroundImage.bind(this),
             },
             dynamicColor: {
-                getValue: ({ editingElement, param: colorName }) =>
+                getValue: ({ editingElement, param: { mainParam: colorName } }) =>
                     getBackgroundImageColor(editingElement, colorName),
-                apply: ({ editingElement, param: colorName, value }) => {
+                apply: ({ editingElement, param: { mainParam: colorName }, value }) => {
                     value = getValueFromVar(value);
                     const currentSrc = getBgImageURLFromEl(editingElement);
                     const newURL = new URL(currentSrc, window.location.origin);
@@ -138,7 +142,9 @@ class BackgroundImageOptionPlugin extends Plugin {
         // removed too.
         this.dependencies.builderActions.getAction("styleAction").apply({
             editingElement: editingElement,
-            param: "background-image",
+            param: {
+                mainParam: "background-image",
+            },
             value: combined,
         });
     }

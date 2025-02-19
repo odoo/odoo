@@ -1,11 +1,24 @@
 import { Plugin } from "@html_editor/plugin";
-import { CSS_SHORTHANDS, areCssValuesEqual } from "@html_builder/utils/utils_css";
+import { CSS_SHORTHANDS, applyNeededCss, areCssValuesEqual } from "@html_builder/utils/utils_css";
+
+export function withoutTransition(editingElement, callback) {
+    if (editingElement.classList.contains("o_we_force_no_transition")) {
+        return callback();
+    }
+    editingElement.classList.add("o_we_force_no_transition");
+    try {
+        return callback();
+    } finally {
+        editingElement.classList.remove("o_we_force_no_transition");
+    }
+}
 
 export class CoreBuilderActionPlugin extends Plugin {
     static id = "coreBuilderAction";
     resources = {
         builder_actions: this.getActions(),
         builder_style_actions: this.getStyleActions(),
+        system_classes: ["o_we_force_no_transition"],
     };
 
     setup() {
@@ -31,104 +44,193 @@ export class CoreBuilderActionPlugin extends Plugin {
         };
     }
 
-    getStyleAction() {
-        const getValue = ({ editingElement, param: styleName }) => {
-            const customStyle = this.customStyleActions[styleName];
-            if (customStyle) {
-                return customStyle.getValue(editingElement);
-            } else {
-                return getComputedStyle(editingElement).getPropertyValue(styleName);
-            }
+    getStyleActions() {
+        const styleActions = {
+            "box-shadow": {
+                getValue: (el, param) => {
+                    const value = getStyleValue(el, param);
+                    const inset = value.includes("inset");
+                    let values = value
+                        .replace(/,\s/g, ",")
+                        .replace("inset", "")
+                        .trim()
+                        .split(/\s+/g);
+                    const color = values.find((s) => !s.match(/^\d/));
+                    values = values.join(" ").replace(color, "").trim();
+                    return `${color} ${values}${inset ? " inset" : ""}`;
+                },
+                apply: (el, value, param) => {
+                    setStyleValue(el, param, value);
+                },
+            },
+            "border-width": {
+                getValue: (el, param) => {
+                    let value = getStyleValue(el, param);
+                    if (value.endsWith("px")) {
+                        value = value
+                            .split(/\s+/g)
+                            .map(
+                                (singleValue) =>
+                                    // Rounding value up avoids zoom-in issues.
+                                    // Zoom-out issues are not an expected use case.
+                                    `${Math.ceil(parseFloat(singleValue))}px`
+                            )
+                            .join(" ");
+                    }
+                    return value;
+                },
+                apply: (el, value, param) => {
+                    setStyleValue(el, param, value);
+                },
+            },
         };
+        for (const borderWidthPropery of CSS_SHORTHANDS["border-width"]) {
+            styleActions[borderWidthPropery] = styleActions["border-width"];
+        }
+        return styleActions;
+    }
+
+    getStyleAction() {
+        const getValue = ({ editingElement, param }) =>
+            // Disable all transitions for the duration of the style check
+            // as we want to know the final value of a property to properly
+            // update the UI.
+            withoutTransition(editingElement, () => {
+                const customStyle = this.customStyleActions[param.mainParam];
+                if (customStyle) {
+                    return customStyle.getValue(editingElement, param);
+                } else {
+                    return getStyleValue(editingElement, param);
+                }
+            });
         return {
             getValue,
-            isApplied: ({ editingElement, param, value }) => {
+            isApplied: ({ editingElement, param = {}, value }) => {
                 const currentValue = getValue({ editingElement, param });
                 return currentValue === value;
             },
-            apply: ({ editingElement, param: styleName, value }) => {
-                // Always reset the inline style first to not put inline style on an
-                // element which already has this style through css stylesheets.
-                const cssProps = CSS_SHORTHANDS[styleName] || [styleName];
-                for (const cssProp of cssProps) {
-                    editingElement.style.setProperty(cssProp, "");
-                }
-                const customStyle = this.customStyleActions[styleName];
-                if (customStyle) {
-                    customStyle?.apply(editingElement, value);
-                } else {
-                    const styles = window.getComputedStyle(editingElement);
-                    if (!areCssValuesEqual(styles.getPropertyValue(styleName), value, styleName)) {
-                        editingElement.style.setProperty(styleName, value, "important");
+            apply: ({ editingElement, param = {}, value }) => {
+                // Disable all transitions for the duration of the method as many
+                // comparisons will be done on the element to know if applying a
+                // property has an effect or not. Also, changing a css property via the
+                // editor should not show any transition as previews would not be done
+                // immediately, which is not good for the user experience.
+                withoutTransition(editingElement, () => {
+                    const customStyle = this.customStyleActions[param.mainParam];
+                    if (customStyle) {
+                        customStyle.apply(editingElement, value, param);
+                    } else {
+                        setStyleValue(editingElement, param, value);
                     }
-                }
+                });
             },
+            // TODO clean() is missing !!
         };
     }
+}
 
-    getStyleActions() {
-        return styleMap;
+function getStyleValue(el, { mainParam: styleName } = {}) {
+    const computedStyle = window.getComputedStyle(el);
+    const cssProps = CSS_SHORTHANDS[styleName] || [styleName];
+    const cssValues = cssProps.map((cssProp) => computedStyle.getPropertyValue(cssProp).trim());
+    if (cssValues.length === 4 && areCssValuesEqual(cssValues[3], cssValues[1], styleName)) {
+        cssValues.pop();
+    }
+    if (cssValues.length === 3 && areCssValuesEqual(cssValues[2], cssValues[0], styleName)) {
+        cssValues.pop();
+    }
+    if (cssValues.length === 2 && areCssValuesEqual(cssValues[1], cssValues[0], styleName)) {
+        cssValues.pop();
+    }
+    return cssValues.join(" ");
+}
+
+function setStyleValue(
+    el,
+    { mainParam: styleName, extraClass, force = false, allowImportant = true } = {},
+    value
+) {
+    const computedStyle = window.getComputedStyle(el);
+    const cssProps = CSS_SHORTHANDS[styleName] || [styleName];
+    // Always reset the inline style first to not put inline style on an
+    // element which already has this style through css stylesheets.
+    for (const cssProp of cssProps) {
+        el.style.setProperty(cssProp, "");
+    }
+    el.classList.remove(extraClass);
+
+    // Replacing ', ' by ',' to prevent attributes with internal space separators from being split:
+    // eg: "rgba(55, 12, 47, 1.9) 47px" should be split as ["rgba(55,12,47,1.9)", "47px"]
+    const values = value.replace(/,\s/g, ",").split(/\s+/g);
+    // Compute missing values:
+    // "a" => "a a a a"
+    // "a b" => "a b a b"
+    // "a b c" => "a b c b"
+    // "a b c d" => "a b c d d d d"
+    while (values.length < cssProps.length) {
+        const len = values.length;
+        const index = len == 3 ? 1 : len == 1 || len == 2 ? 0 : len - 1;
+        values.push(values[index]);
+    }
+
+    let hasUserValue = false;
+    const applyAllCSS = (values) => {
+        for (let i = cssProps.length - 1; i > 0; i--) {
+            hasUserValue =
+                applyNeededCss(el, cssProps[i], values.pop(), computedStyle, {
+                    force,
+                    allowImportant,
+                }) || hasUserValue;
+        }
+        hasUserValue =
+            applyNeededCss(el, cssProps[0], values.join(" "), computedStyle, {
+                force,
+                allowImportant,
+            }) || hasUserValue;
+    };
+    applyAllCSS([...values]);
+
+    if (extraClass) {
+        el.classList.toggle(extraClass, hasUserValue);
+        if (hasUserValue) {
+            // Might have changed because of the class.
+            for (const cssProp of cssProps) {
+                el.style.removeProperty(cssProp);
+            }
+            applyAllCSS(values);
+        }
     }
 }
 
-function getNumericStyle(styleName) {
+export function getGeneralStyle(param) {
     return {
-        getValue: (editingElement) =>
-            parseInt(getComputedStyle(editingElement).getPropertyValue(styleName)).toString(),
+        getValue: (editingElement) => getStyleValue(editingElement, param),
         apply: (editingElement, value) => {
-            editingElement.style.setProperty(styleName, value, "important");
+            setStyleValue(editingElement, param, value);
         },
     };
 }
-
-function getNumericStyleWithClass(styleName, className) {
-    const action = getNumericStyle(styleName);
-    return {
-        ...action,
-        apply: (editingElement, value) => {
-            const parsedValue = parseInt(value);
-            const hasBorderClass = editingElement.classList.contains(className);
-            if (!parsedValue || parsedValue < 0) {
-                if (hasBorderClass) {
-                    editingElement.classList.remove(className);
-                }
-            } else {
-                if (!hasBorderClass) {
-                    editingElement.classList.add(className);
-                }
-            }
-            action.apply(editingElement, value);
-        },
-    };
-}
-
-const styleMap = {
-    "border-width": getNumericStyleWithClass("border-width", "border"),
-    "border-radius": getNumericStyleWithClass("border-radius", "rounded"),
-    // todo: handle all the other styles
-    padding: getNumericStyle("padding"),
-};
 
 export const classAction = {
-    getPriority: ({ param: classNames = "" }) =>
-        classNames?.trim().split(/\s+/).filter(Boolean).length || 0,
-    isApplied: ({ editingElement, param: classNames }) => {
-        if (classNames === "") {
+    getPriority: ({ param: { mainParam: classNames } = {} }) =>
+        (classNames || "")?.trim().split(/\s+/).filter(Boolean).length || 0,
+    isApplied: ({ editingElement, param: { mainParam: classNames } = {} }) => {
+        if (classNames === undefined || classNames === "") {
             return true;
         }
         return classNames
             .split(" ")
             .every((className) => editingElement.classList.contains(className));
     },
-    apply: ({ editingElement, param: classNames }) => {
-        for (const className of classNames.split(" ")) {
+    apply: ({ editingElement, param: { mainParam: classNames } = {} }) => {
+        for (const className of (classNames || "").split(" ")) {
             if (className !== "") {
                 editingElement.classList.add(className);
             }
         }
     },
-    clean: ({ editingElement, param: classNames }) => {
-        for (const className of classNames.split(" ")) {
+    clean: ({ editingElement, param: { mainParam: classNames } = {} }) => {
+        for (const className of (classNames || "").split(" ")) {
             if (className !== "") {
                 editingElement.classList.remove(className);
             }
@@ -137,9 +239,9 @@ export const classAction = {
 };
 
 const attributeAction = {
-    getValue: ({ editingElement, param: attributeName }) =>
+    getValue: ({ editingElement, param: { mainParam: attributeName } = {} }) =>
         editingElement.getAttribute(attributeName),
-    isApplied: ({ editingElement, param: attributeName, value }) => {
+    isApplied: ({ editingElement, param: { mainParam: attributeName } = {}, value }) => {
         if (value) {
             return (
                 editingElement.hasAttribute(attributeName) &&
@@ -149,42 +251,43 @@ const attributeAction = {
             return !editingElement.hasAttribute(attributeName);
         }
     },
-    apply: ({ editingElement, param: attributeName, value }) => {
+    apply: ({ editingElement, param: { mainParam: attributeName } = {}, value }) => {
         if (value) {
             editingElement.setAttribute(attributeName, value);
         } else {
             editingElement.removeAttribute(attributeName);
         }
     },
-    clean: ({ editingElement, param: attributeName }) => {
+    clean: ({ editingElement, param: { mainParam: attributeName } = {} }) => {
         editingElement.removeAttribute(attributeName);
     },
 };
 
 const dataAttributeAction = {
-    getValue: ({ editingElement, param: attributeName }) => editingElement.dataset[attributeName],
-    isApplied: ({ editingElement, param: attributeName, value }) => {
+    getValue: ({ editingElement, param: { mainParam: attributeName } = {} }) =>
+        editingElement.dataset[attributeName],
+    isApplied: ({ editingElement, param: { mainParam: attributeName } = {}, value }) => {
         if (value) {
             return editingElement.dataset[attributeName] === value;
         } else {
             return !(attributeName in editingElement.dataset);
         }
     },
-    apply: ({ editingElement, param: attributeName, value }) => {
+    apply: ({ editingElement, param: { mainParam: attributeName } = {}, value }) => {
         if (value) {
             editingElement.dataset[attributeName] = value;
         } else {
             delete editingElement.dataset[attributeName];
         }
     },
-    clean: ({ editingElement, param: attributeName }) => {
+    clean: ({ editingElement, param: { mainParam: attributeName } = {} }) => {
         delete editingElement.dataset[attributeName];
     },
 };
 
 // TODO maybe find a better place for this
 const setClassRange = {
-    getValue: ({ editingElement, param: classNames }) => {
+    getValue: ({ editingElement, param: { mainParam: classNames } }) => {
         for (const index in classNames) {
             const className = classNames[index];
             if (editingElement.classList.contains(className)) {
@@ -192,7 +295,7 @@ const setClassRange = {
             }
         }
     },
-    apply: ({ editingElement, param: classNames, value: index }) => {
+    apply: ({ editingElement, param: { mainParam: classNames }, value: index }) => {
         for (const className of classNames) {
             if (editingElement.classList.contains(className)) {
                 editingElement.classList.remove(className);

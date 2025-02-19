@@ -108,14 +108,14 @@ class ImageToolOptionPlugin extends Plugin {
                 },
             },
             glFilter: {
-                isApplied: ({ editingElement, param: glFilterName }) => {
+                isApplied: ({ editingElement, param: { mainParam: glFilterName } }) => {
                     if (glFilterName) {
                         return editingElement.dataset.glFilter === glFilterName;
                     } else {
                         return !editingElement.dataset.glFilter;
                     }
                 },
-                load: async ({ editingElement, param: glFilterName }) => {
+                load: async ({ editingElement, param: { mainParam: glFilterName } }) => {
                     editingElement.dataset.glFilter = glFilterName;
                     const newSrc = await applyModifications(editingElement, {
                         mimetype: getImageMimetype(editingElement),

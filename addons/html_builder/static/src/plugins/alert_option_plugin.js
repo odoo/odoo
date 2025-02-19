@@ -8,7 +8,7 @@ class AlertOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             alertIcon: {
-                apply: ({ editingElement, param: className }) => {
+                apply: ({ editingElement, param: { mainParam: className } }) => {
                     const icon = editingElement.querySelector(".s_alert_icon");
                     if (!icon) {
                         return;
@@ -18,19 +18,19 @@ class AlertOptionPlugin extends Plugin {
                     icon.classList.remove(...allFaIcons);
                     icon.classList.add(className);
                 },
-                clean: ({ editingElement, param: className }) => {
+                clean: ({ editingElement, param: { mainParam: className } }) => {
                     const icon = editingElement.querySelector(".s_alert_icon");
                     if (!icon) {
                         return;
                     }
                     icon.classList.remove(className);
                 },
-                isApplied: ({ editingElement, param }) => {
+                isApplied: ({ editingElement, param: { mainParam: className } }) => {
                     const iconEl = editingElement.querySelector(".s_alert_icon");
                     if (!iconEl) {
                         return;
                     }
-                    return iconEl.classList.contains(param);
+                    return iconEl.classList.contains(className);
                 },
             },
         },
