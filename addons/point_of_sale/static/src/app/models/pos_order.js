@@ -16,9 +16,17 @@ export class PosOrder extends Base {
 
     setup(vals) {
         super.setup(vals);
+        this.uiState = this.uiState ?? {};
 
         if (!this.session_id && (!this.finalized || typeof this.id !== "number")) {
             this.update({ session_id: this.session });
+
+            if (this.state === "draft" && this.lines.length == 0 && this.payment_ids.length == 0) {
+                this.uiState = {
+                    residual_order: true,
+                    ...this.uiState,
+                };
+            }
         }
 
         // Data present in python model
@@ -46,8 +54,8 @@ export class PosOrder extends Base {
         }
 
         // !!Keep all uiState in one object!!
-        if (!this.uiState) {
-            this.uiState = {
+        this.uiState = {
+            ...{
                 lineToRefund: {},
                 displayed: true,
                 booked: false,
@@ -59,8 +67,9 @@ export class PosOrder extends Base {
                 TipScreen: {
                     inputTipAmount: "",
                 },
-            };
-        }
+            },
+            ...this.uiState,
+        };
     }
 
     get user() {

@@ -595,6 +595,13 @@ export class PosStore extends Reactive {
             this.addPendingOrder(paidUnsyncedOrderIds);
         }
 
+        const residualOrders = this.data.models["pos.order"].filter(
+            (order) => order.uiState.residual_order
+        );
+        if (residualOrders.length) {
+            residualOrders.forEach((order) => (order.state = "cancel"));
+        }
+
         // Adding the not synced paid orders to the pending orders
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
         this.syncAllOrders();
