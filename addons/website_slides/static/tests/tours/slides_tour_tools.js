@@ -38,6 +38,23 @@ const addContentToSection = (prefix, sectionName) => ({
     run: "click",
 });
 
+const clickOnAddTagDropdown = (prefix) => [
+    {
+        content: "Wait content is loaded before continue to avoid miss click",
+        trigger: `${prefix} img[src*='boulonnate']`,
+    },
+    {
+        content: "eLearning: click on Add Tag",
+        trigger: `${prefix} a.o_wslides_js_channel_tag_add`,
+        run: "click",
+    },
+    {
+        content: "eLearning: click on tag dropdown",
+        trigger: `${prefix} button.o_select_menu_toggler:first`,
+        run: "click",
+    },
+];
+
 var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
     const prefix = backend ? ':iframe ' : '';
 	var base_steps = [
@@ -256,19 +273,8 @@ const addPdfToSection = function (sectionName, pageName, backend) {
 var addExistingCourseTag = function (backend = false) {
     const prefix = backend ? ':iframe ' : '';
 	return [
+        ...clickOnAddTagDropdown(prefix),
 {
-    content: "Wait content is loaded before continue to avoid miss click",
-    trigger: prefix + "img[src*='boulonnate']",
-},
-{
-    content: 'eLearning: click on Add Tag',
-    trigger: prefix + 'a.o_wslides_js_channel_tag_add',
-    run: "click",
-}, {
-    content: 'eLearning: click on tag dropdown',
-    trigger: prefix + 'button.o_select_menu_toggler:first',
-    run: "click",
-}, {
     content: 'eLearning: select advanced tag',
     trigger: prefix + 'div.o_select_menu_item_label:contains("Advanced")',
     run: "click",
@@ -284,16 +290,9 @@ var addExistingCourseTag = function (backend = false) {
 
 var addNewCourseTag = function (courseTagName, backend) {
     const prefix = backend ? ':iframe ' : '';
-	return [
-{
-    content: 'eLearning: click on Add Tag',
-    trigger: prefix + 'a.o_wslides_js_channel_tag_add',
-    run: "click",
-}, {
-    content: 'eLearning: click on tag dropdown',
-	trigger: prefix + 'button.o_select_menu_toggler:first',
-    run: "click",
-}, {
+    return [
+        ...clickOnAddTagDropdown(prefix),
+        {
     content: 'eLearning: add a new course tag',
 	trigger: prefix + 'input.dropdown-item:first',
 	run: "edit 123",
@@ -320,11 +319,11 @@ var addNewCourseTag = function (courseTagName, backend) {
 };
 
 export default {
-	addSection: addSection,
-	addImageToSection: addImageToSection,
-	addPdfToSection: addPdfToSection,
-	addVideoToSection: addVideoToSection,
-	addArticleToSection: addArticleToSection,
-	addExistingCourseTag: addExistingCourseTag,
-	addNewCourseTag: addNewCourseTag,
+    addSection: addSection,
+    addImageToSection: addImageToSection,
+    addPdfToSection: addPdfToSection,
+    addVideoToSection: addVideoToSection,
+    addArticleToSection: addArticleToSection,
+    addExistingCourseTag: addExistingCourseTag,
+    addNewCourseTag: addNewCourseTag,
 };
