@@ -206,7 +206,7 @@ test("many2one without hr.group_hr_user", async () => {
     env["m2x.avatar.employee"].create({});
     env["hr.employee"].create({ name: "babar" });
     env["hr.employee.public"].create({ name: "babar" });
-    onRpc("name_search", (args) => {
+    onRpc("web_name_search", (args) => {
         expect(args.model).toBe("hr.employee.public");
     });
     onRpc("web_search_read", (args) => {

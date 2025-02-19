@@ -493,7 +493,7 @@ test("O2M with parented m2o and domain on parent.m2o", async () => {
                 <field name="parent_id"/>
             </form>`,
     };
-    onRpc("name_search", ({ kwargs }) => {
+    onRpc("web_name_search", ({ kwargs }) => {
         expect(kwargs.domain).toEqual([["id", "in", []]]);
     });
     await mountView({
@@ -5099,7 +5099,7 @@ test("one2many list with inline form view with context with parent key", async (
     Partner._records[0].p = [2];
     Partner._records[0].product_id = 41;
     Partner._records[1].product_id = 37;
-    onRpc("name_search", (args) => {
+    onRpc("web_name_search", (args) => {
         expect(args.kwargs.context.partner_foo).toBe("yop", {
             message: "should have correctly evaluated parent foo field",
         });
@@ -5139,7 +5139,7 @@ test("value of invisible x2many fields is correctly evaluated in context", async
 
     Partner._records[0].timmy = [12];
     Partner._records[0].p = [2, 4];
-    onRpc("name_search", (args) => {
+    onRpc("web_name_search", (args) => {
         const { p, timmy } = args.kwargs.context;
         expect(p).toEqual([2, 4]);
         expect(timmy).toEqual([12]);
@@ -5165,7 +5165,7 @@ test("one2many list, editable, with many2one and with context with parent key", 
 
     Partner._records[0].p = [2];
     Partner._records[1].product_id = 37;
-    onRpc("name_search", (args) => {
+    onRpc("web_name_search", (args) => {
         expect(args.kwargs.context.partner_foo).toBe("yop", {
             message: "should have correctly evaluated parent foo field",
         });
@@ -7039,7 +7039,7 @@ test("one2many list editable: trigger onchange when row is valid", async () => {
     expect('.o_field_widget[name="int_field"] input').toHaveValue("1", {
         message: "int_field should now be 1 (the onchange should have been done",
     });
-    expect.verifySteps(["name_search", "web_read", "onchange"]);
+    expect.verifySteps(["web_name_search", "web_read", "onchange"]);
 });
 
 test("one2many list editable: 'required' modifiers is properly working", async () => {
