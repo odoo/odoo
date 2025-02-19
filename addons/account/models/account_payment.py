@@ -315,8 +315,8 @@ class AccountPayment(models.Model):
         currency_id = self.currency_id.id
 
         # Compute a default label to set on the journal items.
-        liquidity_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list())
-        counterpart_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list())
+        liquidity_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list() if x[1])
+        counterpart_line_name = liquidity_line_name
 
         line_vals_list = [
             # Liquidity line.
