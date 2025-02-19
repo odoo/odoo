@@ -197,10 +197,7 @@ export class CustomColorPicker extends Component {
             a = 100;
         }
 
-        // We update the hexadecimal code by transforming into a css color and
-        // ignoring the opacity (we don't display opacity component in hexa as
-        // not supported on all browsers)
-        const hex = convertRgbaToCSSColor(r, g, b);
+        const hex = convertRgbaToCSSColor(r, g, b, a);
         if (!hex) {
             return;
         }
@@ -233,7 +230,7 @@ export class CustomColorPicker extends Component {
             return;
         }
         // We receive an hexa as we ignore the opacity
-        const hex = convertRgbaToCSSColor(rgb.red, rgb.green, rgb.blue);
+        const hex = convertRgbaToCSSColor(rgb.red, rgb.green, rgb.blue, a);
         Object.assign(
             this.colorComponents,
             { hue: h, saturation: s, lightness: l },
@@ -254,6 +251,10 @@ export class CustomColorPicker extends Component {
             return;
         }
         Object.assign(this.colorComponents, { opacity: a });
+        const r = this.colorComponents.red;
+        const g = this.colorComponents.green;
+        const b = this.colorComponents.blue;
+        Object.assign(this.colorComponents, { hex: convertRgbaToCSSColor(r, g, b, a) });
         this._updateCssColor();
     }
     /**
@@ -459,7 +460,7 @@ export class CustomColorPicker extends Component {
      */
     onHexColorInput(ev) {
         const hexColorValue = ev.target.value.replaceAll("#", "");
-        if (hexColorValue.length === 6) {
+        if (hexColorValue.length === 6 || hexColorValue.length === 8) {
             this._updateHex(`#${hexColorValue}`);
             this._updateUI();
             this._colorSelected();
