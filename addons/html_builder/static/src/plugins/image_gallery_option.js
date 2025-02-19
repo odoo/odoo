@@ -118,11 +118,58 @@ class ImageGalleryOption extends Plugin {
     }
 
     /**
-     * Add the images selected in the media dialog in the gallery
+     * Set the images in the gallery by following the wanted layout
+     * @param {Element} imageGalleryElement
+     * @param {String('slideshow'|'masonry'|'grid'|'nomode')} mode
+     * @param {Element[]} images
      */
-    async setImages(imageGalleryElement, images) {
-        if (this.getMode(imageGalleryElement) === "masonry") {
-            this.masonry(imageGalleryElement, images);
+    async setImages(imageGalleryElement, mode, images) {
+        //TODO: apply other layouts
+        switch (mode) {
+            case "masonry":
+                this.masonry(imageGalleryElement, images);
+                break;
+        }
+    }
+
+    /**
+     * @param {Element} imageGalleryElement
+     * @param {Element[]} images
+     */
+    masonry(imageGalleryElement, images) {
+        const columnsNumber = this.getColumns(imageGalleryElement);
+        const colClass = "col-lg-" + 12 / columnsNumber;
+        const columns = [];
+
+        const row = document.createElement("div");
+        row.classList.add("row", "s_nb_column_fixed");
+        this.getContainer(imageGalleryElement).replaceChildren(row);
+
+        for (let i = 0; i < columnsNumber; i++) {
+            const column = document.createElement("div");
+            column.classList.add("o_masonry_col", "o_snippet_not_selectable", colClass);
+            row.append(column);
+            columns.push(column);
+        }
+
+        // Dispatch images in columns by always putting the next one in the smallest height column
+        for (const imageEl of images) {
+            let min = Infinity;
+            let smallestColEl;
+            for (const colEl of columns) {
+                const imagesInCol = colEl.querySelectorAll("img");
+                const lastImageRect =
+                    imagesInCol.length &&
+                    imagesInCol[imagesInCol.length - 1].getBoundingClientRect();
+                const height = lastImageRect
+                    ? Math.round(lastImageRect.top + lastImageRect.height)
+                    : 0;
+                if (height < min) {
+                    min = height;
+                    smallestColEl = colEl;
+                }
+            }
+            smallestColEl.append(imageEl);
         }
     }
 
@@ -173,41 +220,25 @@ class ImageGalleryOption extends Plugin {
         return Promise.all(imagePromises);
     }
 
-    masonry(imageGalleryElement, images) {
-        const columnsNumber = this.getColumns(imageGalleryElement);
-        const colClass = "col-lg-" + 12 / columnsNumber;
-        const columns = [];
-
-        const row = document.createElement("div");
-        row.classList.add("row", "s_nb_column_fixed");
-        this.getContainer(imageGalleryElement).replaceChildren(row);
-
-        for (let i = 0; i < columnsNumber; i++) {
-            const column = document.createElement("div");
-            column.classList.add("o_masonry_col", "o_snippet_not_selectable", colClass);
-            row.append(column);
-            columns.push(column);
+    async cloneContainerImages(imageGalleryElement) {
+        const imagesHolder = this.getImageHolder(imageGalleryElement);
+        const newImgs = [];
+        const imgLoaded = [];
+        for (const image of imagesHolder) {
+            // Only on Chrome: appended images are sometimes invisible
+            // and not correctly loaded from cache, we use a clone of the
+            // image to force the loading.
+            const newImg = image.cloneNode(true);
+            newImg.loading = "eager";
+            imgLoaded.push(
+                newImg.decode().then(() => {
+                    newImg.loading = "lazy";
+                })
+            );
+            newImgs.push(newImg);
         }
-
-        // Dispatch images in columns by always putting the next one in the smallest height column
-        for (const imageEl of images) {
-            let min = Infinity;
-            let smallestColEl;
-            for (const colEl of columns) {
-                const imagesInCol = colEl.querySelectorAll("img");
-                const lastImageRect =
-                    imagesInCol.length &&
-                    imagesInCol[imagesInCol.length - 1].getBoundingClientRect();
-                const height = lastImageRect
-                    ? Math.round(lastImageRect.top + lastImageRect.height)
-                    : 0;
-                if (height < min) {
-                    min = height;
-                    smallestColEl = colEl;
-                }
-            }
-            smallestColEl.append(imageEl);
-        }
+        await Promise.all(imgLoaded);
+        return newImgs;
     }
 
     /**
@@ -241,32 +272,6 @@ class ImageGalleryOption extends Plugin {
         const images = this.getImages(currentContainer);
         return [...images].map((image) => image.closest("a") || image);
     }
-
-    async cloneContainerImages(imageGalleryElement) {
-        const imagesHolder = this.getImageHolder(imageGalleryElement);
-        const newImgs = [];
-        const imgLoaded = [];
-        for (const image of imagesHolder) {
-            // Only on Chrome: appended images are sometimes invisible
-            // and not correctly loaded from cache, we use a clone of the
-            // image to force the loading.
-            const newImg = image.cloneNode(true);
-            newImg.loading = "eager";
-            imgLoaded.push(
-                newImg.decode().then(() => {
-                    newImg.loading = "lazy";
-                })
-            );
-            newImgs.push(newImg);
-        }
-        await Promise.all(imgLoaded);
-        return newImgs;
-    }
-
-    /**
-     * Relayout the imageGalleryElement with the "masonry" layout.
-     * @param {Element} imageGalleryElement
-     */
 
     getColumns(imageGalleryElement) {
         return parseInt(imageGalleryElement.dataset.columns) || 3;
