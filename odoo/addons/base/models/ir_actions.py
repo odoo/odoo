@@ -879,26 +879,11 @@ class IrActionsServer(models.Model):
     def _get_runner(self):
         multi = True
         t = self.env.registry[self._name]
-        fn = getattr(t, f'_run_action_{self.state}_multi', None)\
-          or getattr(t, f'run_action_{self.state}_multi', None)
+        fn = getattr(t, f'_run_action_{self.state}_multi', None)
         if not fn:
             multi = False
-            fn = getattr(t, f'_run_action_{self.state}', None)\
-              or getattr(t, f'run_action_{self.state}', None)
-        if fn and fn.__name__.startswith('run_action_'):
-            fn = partial(fn, self)
+            fn = getattr(t, f'_run_action_{self.state}', None)
         return fn, multi
-
-    def _register_hook(self):
-        super()._register_hook()
-
-        for cls in self.env.registry[self._name].mro():
-            for symbol in vars(cls).keys():
-                if symbol.startswith('run_action_'):
-                    _logger.warning(
-                        "RPC-public action methods are deprecated, found %r (in class %s.%s)",
-                        symbol, cls.__module__, cls.__name__
-                    )
 
     def create_action(self):
         """ Create a contextual action for each server action. """
