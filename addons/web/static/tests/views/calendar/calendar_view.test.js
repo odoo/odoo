@@ -3568,16 +3568,6 @@ test(`timezone does not affect calendar with date field on desktop`, async () =>
     expect(
         `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
     ).toHaveText("11/27/2016");
-
-    await closeCwPopOver();
-    await moveEventToDate(8, "2017-01-07");
-    expect.verifySteps(["write 2017-01-07"]);
-
-    await clickEvent(8);
-    expect(`.o_cw_popover`).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
-    ).toHaveText("01/07/2017");
 });
 
 test.tags("mobile");
@@ -3628,16 +3618,6 @@ test(`timezone does not affect calendar with date field on mobile`, async () => 
     expect(`.modal`).toHaveCount(1);
     expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
         "11/27/2016"
-    );
-
-    await closeCwPopOver();
-    await moveEventToDate(8, "2017-01-07");
-    expect.verifySteps(["write 2017-01-07"]);
-
-    await clickEvent(8);
-    expect(`.modal`).toHaveCount(1);
-    expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
-        "01/07/2017"
     );
 });
 
@@ -3879,8 +3859,8 @@ test(`default week start (US) month mode on desktop`, async () => {
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-week-number`).toHaveText("36");
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-day-number`).toHaveText("1");
     expect(`.fc-daygrid-day:eq(0)`).toHaveAttribute("data-date", "2019-09-01");
-    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("12");
-    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-12");
+    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("5");
+    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-05");
 });
 
 test.tags("mobile");
@@ -3906,8 +3886,8 @@ test(`default week start (US) month mode on mobile`, async () => {
     expect(`.o-fc-week:eq(0)`).toHaveText("36");
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-day-number`).toHaveText("1");
     expect(`.fc-daygrid-day:eq(0)`).toHaveAttribute("data-date", "2019-09-01");
-    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("12");
-    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-12");
+    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("5");
+    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-05");
 });
 
 test.tags("desktop");
@@ -4677,14 +4657,6 @@ test(`calendar with option month_overflow not set (default)`, async () => {
             user_id: serverState.userId,
             partner_id: 1,
         },
-        {
-            id: 3,
-            name: "event january",
-            start: "2017-01-02 10:00:00",
-            stop: "2016-01-02 15:00:00",
-            user_id: serverState.userId,
-            partner_id: 1,
-        },
     ];
 
     onRpc("search_read", ({ kwargs }) => {
@@ -4703,7 +4675,7 @@ test(`calendar with option month_overflow not set (default)`, async () => {
             </calendar>
         `,
     });
-    expect(`.o_event`).toHaveCount(3);
+    expect(`.o_event`).toHaveCount(2);
     expect(".fc-day-disabled").toHaveCount(0);
     expect.verifySteps(["search_read"]);
 });
@@ -4753,7 +4725,7 @@ test(`calendar with option month_overflow set to false`, async () => {
         `,
     });
     expect(".o_event").toHaveCount(1);
-    expect(".fc-day-disabled").toHaveCount(11);
+    expect(".fc-day-disabled").toHaveCount(4);
     expect.verifySteps(["search_read"]);
 });
 
