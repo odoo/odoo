@@ -15,7 +15,6 @@ from collections import defaultdict
 from functools import partial, reduce
 import logging
 from operator import getitem
-import requests
 import json
 import re
 import contextlib
@@ -963,20 +962,11 @@ class IrActionsServer(models.Model):
         json_values = json.dumps(vals, sort_keys=True, default=str)
         _logger.info("Webhook call to %s", url)
         _logger.debug("POST JSON data for webhook call: %s", json_values)
-        try:
-            # 'send and forget' strategy, and avoid locking the user if the webhook
-            # is slow or non-functional (we still allow for a 1s timeout so that
-            # if we get a proper error response code like 400, 404 or 500 we can log)
-            response = requests.post(url, data=json_values, headers={'Content-Type': 'application/json'}, timeout=1)
-            response.raise_for_status()
-        except requests.exceptions.ReadTimeout:
-            _logger.warning("Webhook call timed out after 1s - it may or may not have failed. "
-                            "If this happens often, it may be a sign that the system you're "
-                            "trying to reach is slow or non-functional.")
-        except requests.exceptions.RequestException as e:
-            _logger.warning("Webhook call failed: %s", e)
-        except Exception as e:  # noqa: BLE001
-            raise UserError(_("Wow, your webhook call failed with a really unusual error: %s", e)) from e
+        self.env['ir.webhook'].sudo().create({
+            "url": url,
+            "data": json_values
+        })
+        self.env.ref('base.execute_webhook')._trigger()
 
     def _run_action_object_create(self, eval_context=None):
         """Create specified model object with specified name contained in value.

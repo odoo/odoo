@@ -1565,6 +1565,7 @@ class TestHttp(common.HttpCase):
         obj.name = "new_name"
         self.cr.flush()
         self.cr.clear()
+        self.env.ref('base.execute_webhook').method_direct_trigger()
         self.assertEqual(json.loads(obj.another_field), {
             '_action': f'Send Webhook Notification(#{automation_sender.action_server_ids[0].id})',
             "_id": obj.id,
