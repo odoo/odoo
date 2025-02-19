@@ -297,7 +297,7 @@ export class Many2XAutocomplete extends Component {
         return {
             placeholder: _t("Loading..."),
             options: this.loadOptionsSource.bind(this),
-            optionSlot: this.props.slots?.recordItem ? "option" : undefined,
+            optionSlot: this.props.slots?.autoCompleteItem ? "option" : undefined,
         };
     }
 
@@ -354,7 +354,6 @@ export class Many2XAutocomplete extends Component {
             value: record.id,
             label: record.display_name ? record.display_name.split("\n")[0] : _t("Unnamed"),
             classList: this.props.getOptionClassnames(record),
-            record,
         };
     }
     async loadOptionsSource(request) {
@@ -364,7 +363,10 @@ export class Many2XAutocomplete extends Component {
         this.lastProm = this.abortableSearch(request);
         const records = await this.lastProm.promise;
 
-        const options = records.map((record) => this.mapRecordToOption(record));
+        const options = records.map((record) => ({
+            ...this.mapRecordToOption(record),
+            record,
+        }));
 
         if (this.props.quickCreate && request.length) {
             options.push({
