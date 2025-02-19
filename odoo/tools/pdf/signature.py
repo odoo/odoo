@@ -12,7 +12,7 @@ try:
     from cryptography.hazmat.primitives.serialization import Encoding, load_pem_private_key
     from cryptography.hazmat.primitives.asymmetric import padding
     from cryptography.x509 import Certificate, load_pem_x509_certificate
-except ModuleNotFoundError:
+except ImportError:
     # cryptography 41.0.7 and above is supported
     hashes = None
     PrivateKeyTypes = None
@@ -45,7 +45,7 @@ class PdfSigner:
     def __init__(self, stream: io.BytesIO, company: Optional[ResCompany] = None) -> None:
         self.company = company
         if not 'clone_document_from_reader' in dir(PdfWriter):
-            _logger.warning("PDF signature is supported by Python 3.12 and above")
+            _logger.info("PDF signature is supported by Python 3.12 and above")
             return
         reader = PdfReader(stream)
         self.writer = PdfWriter()
