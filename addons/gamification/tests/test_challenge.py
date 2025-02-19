@@ -2,6 +2,7 @@
 
 import datetime
 from freezegun import freeze_time
+from datetime import timedelta
 
 from odoo.addons.gamification.tests.common import TransactionCaseGamification
 from odoo.exceptions import UserError
@@ -117,9 +118,12 @@ class test_challenge(TestGamificationCommon):
         self.assertEqual(len(goal_ids), 4)
         self.assertEqual(set(goal_ids.mapped('state')), {'inprogress'})
 
-        # Update presence for 2 users
-        self.env["mail.presence"]._update_presence(internal_last_active_recent)
-        self.env["mail.presence"]._update_presence(portal_last_active_recent)
+        # +1 second to avoid microsecond inaccuracy when comparing to write_date in _update_all
+        current_date = datetime.datetime.now() + timedelta(seconds=1)
+        with freeze_time(current_date):
+            # Update presence for 2 users
+            self.env["mail.presence"]._update_presence(internal_last_active_recent)
+            self.env["mail.presence"]._update_presence(portal_last_active_recent)
 
         # Update goal objective checked by goal definition
         all_test_users.partner_id.write({'tz': 'Europe/Paris'})
