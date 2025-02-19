@@ -1,5 +1,12 @@
 import { parseHTML } from '../../src/utils/utils.js';
-import { BasicEditor, testEditor, unformat, insertText, deleteBackward } from '../utils.js';
+import {
+    BasicEditor,
+    testEditor,
+    unformat,
+    insertText,
+    deleteBackward,
+    nextTick,
+} from '../utils.js';
 
 const span = text => {
     const span = document.createElement('span');
@@ -231,7 +238,12 @@ describe('insert HTML', () => {
                         <tr><td>gh</td><td>ij</td></tr>
                     </tbody></table>`,
                 ),
-                stepFunction: editor => editor.execCommand('insert', span('TEST')),
+                stepFunction: async editor => {
+                    // Table selection happens on selectionchange event which is
+                    // fired in the next tick.
+                    await nextTick();
+                    editor.execCommand('insert', span('TEST'));
+                },
                 contentAfter: `<p><span class="a">TEST</span>[]</p>`,
             });
         });
