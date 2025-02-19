@@ -1,4 +1,5 @@
 import { useSequential } from "@mail/utils/common/hooks";
+import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 import { useState, onWillUnmount, markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -13,7 +14,7 @@ export function searchHighlight(searchTerm, target) {
     if (!searchTerm) {
         return target;
     }
-    const htmlDoc = new DOMParser().parseFromString(target, "text/html");
+    const htmlDoc = createDocumentFragmentFromContent(target);
     for (const term of searchTerm.split(" ")) {
         const regexp = new RegExp(`(${escapeRegExp(term)})`, "gi");
         // Special handling for '
