@@ -90,8 +90,10 @@ class PosOrder(models.Model):
 
     def _prepare_invoice_vals(self):
         vals = super()._prepare_invoice_vals()
-
-        if self.l10n_es_tbai_is_required:
+        mapped_tbai_req = self.mapped('l10n_es_tbai_is_required')
+        if len(set(mapped_tbai_req)) > 1:
+            raise UserError(self.env._("You cannot mix orders that require TicketBAI with those that don't."))
+        if mapped_tbai_req[0]:
             vals['l10n_es_tbai_refund_reason'] = self.l10n_es_tbai_refund_reason
 
         return vals
