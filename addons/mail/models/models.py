@@ -224,7 +224,7 @@ class Base(models.AbstractModel):
             sequence = 100
         return sequence
 
-    def _message_get_default_recipients(self, with_cc=False):
+    def _message_get_default_recipients(self, with_cc=False, all_tos=False):
         """ Generic implementation for finding default recipient to mail on
         a recordset. This method is a generic implementation available for
         all models as we could send an email through mail templates on models
@@ -241,6 +241,9 @@ class Base(models.AbstractModel):
         :param with_cc: take into account CC-like field. By default those are
           not considered as valid for 'default recipients' e.g. in mailings,
           automated actions, ...
+        :param all_tos: fetch all TOs, not only email or customer. Both are
+          fine. Used notably when default acts for suggested and should be
+          broader;
         """
         res = {}
         customers = self._mail_get_partners()
@@ -276,8 +279,12 @@ class Base(models.AbstractModel):
             ) if with_cc else ''
             if cc_fn:
                 email_cc_lst = tools.mail.email_split_and_format_normalize(record[cc_fn]) or [record[cc_fn]]
+            # take all default recipients
+            if all_tos:
+                partner_ids = recipients.ids or recipients_all.ids
+                email_to = ','.join(email_to_lst)
             # prioritize recipients: default unless asked through '_mail_defaults_to_email', or when no email_to
-            if not prioritize_email or not email_to_lst:
+            elif not prioritize_email or not email_to_lst:
                 # if no valid recipients nor emails, fallback on recipients even
                 # invalid to have at least some information
                 if recipients:
@@ -312,6 +319,8 @@ class Base(models.AbstractModel):
         self.ensure_one()
         email_to_lst, partners = [], self.env['res.partner']
 
+        defaults = self._message_get_default_recipients(with_cc=False, all_tos=True)
+
         # add responsible
         user_field = self._fields.get('user_id')
         if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
@@ -319,13 +328,11 @@ class Base(models.AbstractModel):
             partners += self.sudo().user_id.partner_id
 
         # add customers
-        partners += self._mail_get_partners()[self.id].filtered(lambda p: not p.is_public)
+        partners += self.env['res.partner'].browse(defaults[self.id]['partner_ids'])
 
         # add email
         if not primary_email:
-            email_fname = self._mail_get_primary_email_field()
-            if email_fname and self[email_fname]:
-                email_to_lst.append(self[email_fname])
+            email_to_lst.append(defaults[self.id]['email_to'])
         else:
             email_to_lst.append(primary_email)
 

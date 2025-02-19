@@ -108,7 +108,7 @@ class CalendarAttendee(models.Model):
             "use_default_to": True,
         }
 
-    def _message_get_default_recipients(self, with_cc=False):
+    def _message_get_default_recipients(self, with_cc=False, all_tos=False):
         # override: partner_id being the only stored field, we can currently
         # simplify computation, we have no other choice than relying on it
         return {
