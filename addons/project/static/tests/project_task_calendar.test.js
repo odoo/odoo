@@ -59,7 +59,7 @@ test("test Project Task Calendar Popover with task_stage_with_state_selection wi
     // There is a timeout set in the useCalendarPopover.
     await runAllTimers();
 
-    expect(queryOne(".o_field_task_stage_with_state_selection div").childElementCount).toBe(2);
+    expect(queryOne(".o_field_task_stage_with_state_selection > div").childElementCount).toBe(2);
 });
 
 test("test task_stage_with_state_selection widget with non-editable state", async () => {

@@ -297,7 +297,7 @@ export class Many2XAutocomplete extends Component {
         return {
             placeholder: _t("Loading..."),
             options: this.loadOptionsSource.bind(this),
-            optionSlot: this.props.slots?.recordItem ? "option" : undefined,
+            optionSlot: this.props.slots?.autoCompleteItem ? "option" : undefined,
         };
     }
 

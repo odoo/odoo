@@ -64,14 +64,11 @@ function clickSomewhereElse() {
 function checkSOLDescriptionContains(productName, text) {
     // currently must be called after exiting the edit mode on the SOL
     // TODO in the future: handle edit mode and look directly into the textarea value
-    if (!text) {
-        return {
-            trigger: `span:contains("${productName}")`,
-        }
+    let trigger = `.o_field_product_label_section_and_note_cell:contains("${productName}")`;
+    if (text) {
+        trigger = `${trigger} textarea`;
     }
-    return {
-        trigger: `span:contains("${productName}") ~ textarea`,
-    }
+    return { trigger };
 }
 
 function editLineMatching(productName, text) {
