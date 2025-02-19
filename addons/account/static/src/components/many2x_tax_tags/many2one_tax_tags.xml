@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.Many2OneTaxTagsField">
+        <Many2One t-props="m2oProps">
+            <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                <t t-set="taxScope" t-value="taxLabels[autoCompleteItemScope.record.tax_scope]"/>
+                <t t-if="taxScope">
+                    <div class="tax_autocomplete_grid">
+                        <div t-esc="autoCompleteItemScope.label"/>
+                        <div t-esc="taxScope" class="text-muted"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <span t-esc="autoCompleteItemScope.label"/>
+                </t>
+            </t>
+        </Many2One>
+    </t>
+
+</templates>

@@ -5,26 +5,37 @@ import { Component } from "@odoo/owl";
 
 export class Avatar extends Component {
     static template = "mail.Avatar";
+    static components = { Popover: AvatarCardPopover };
     static props = {
         resModel: { type: String },
         resId: { type: Number },
-        displayName: { type: String },
+        canOpenPopover: { type: Boolean, optional: true },
+        cssClass: { type: [String, Object], optional: true },
+        displayName: { type: String, optional: true },
         noSpacing: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        canOpenPopover: true,
     };
 
     setup() {
-        this.avatarCard = usePopover(AvatarCardPopover);
+        this.avatarCard = usePopover(this.constructor.components.Popover);
+    }
+
+    get canOpenPopover() {
+        return this.props.canOpenPopover && !this.env.isSmall && !!this.props.resId;
+    }
+
+    get popoverProps() {
+        return {
+            id: this.props.resId,
+        };
     }
 
     onClickAvatar(ev) {
-        if (this.env.isSmall || !this.props.resId) {
-            return;
-        }
         const target = ev.currentTarget;
-        if (!this.avatarCard.isOpen) {
-            this.avatarCard.open(target, {
-                id: this.props.resId,
-            });
+        if (!this.avatarCard.isOpen && this.canOpenPopover) {
+            this.avatarCard.open(target, this.popoverProps);
         }
     }
 }
