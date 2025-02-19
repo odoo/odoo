@@ -114,7 +114,7 @@ const HEADER = {
     contentType: "Content-Type",
 };
 const R_EQUAL = /\s*=\s*/;
-const R_INTERNAL_URL = /^(blob|file):/;
+const R_INTERNAL_URL = /^(blob|data|file):/;
 const R_SEMICOLON = /\s*;\s*/;
 
 /** @type {Set<NetworkInstance>} */
