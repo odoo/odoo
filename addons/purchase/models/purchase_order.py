@@ -1241,5 +1241,10 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         return self.state == 'cancel'
 
+    # EDI #
+
     def _get_edi_builders(self):
         return []
+
+    def _get_record_ubl_builder_from_xml_tree(self, file_data):
+        return None
