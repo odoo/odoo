@@ -52,6 +52,9 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             ReceiptScreen.totalAmountContains("72.0"),
             ReceiptScreen.setEmail("test@receiptscreen.com"),
             ReceiptScreen.clickSend(),
+            {
+                trigger: `.receipt-screen .send .fa-spin`,
+            },
             ReceiptScreen.emailIsSuccessful(),
             ReceiptScreen.clickNextOrder(),
 
