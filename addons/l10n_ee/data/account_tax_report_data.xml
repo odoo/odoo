@@ -87,6 +87,24 @@
                     </record>
                 </field>
             </record>
+            <record id="tax_report_line_2_2" model="account.report.line">
+                <field name="name">2² - Acts and transactions subject to tax at a rate of 13%</field>
+                <field name="name@et">2² - 13% määraga maksustatavad toimingud ja tehingud</field>
+                <field name="code">l10n_ee_vat_2_2</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_2_2_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">2_2_base</field>
+                    </record>
+                    <record id="tax_report_line_2_2_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">2_2_tax</field>
+                    </record>
+                </field>
+            </record>
             <record id="tax_report_line_3" model="account.report.line">
                 <field name="name">3 - Acts and transactions subject to tax at a rate of 0%, incl.</field>
                 <field name="name@et">3 - 0% määraga maksustatavad toimingud ja tehingud, sh</field>
@@ -195,12 +213,12 @@
                     <record id="tax_report_line_4_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ee_vat_1.balance * 0.22 + l10n_ee_vat_1_1.balance * 0.2 + l10n_ee_vat_2.balance * 0.09 + l10n_ee_vat_2_1.balance * 0.05</field>
+                        <field name="formula">l10n_ee_vat_1.balance * 0.22 + l10n_ee_vat_1_1.balance * 0.2 + l10n_ee_vat_2.balance * 0.09 + l10n_ee_vat_2_1.balance * 0.05 + l10n_ee_vat_2_2.balance * 0.13</field>
                     </record>
                     <record id="tax_report_line_4_tag_no_rounding" model="account.report.expression">
                         <field name="label">balance_from_tags</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ee_vat_1.tax + l10n_ee_vat_1_1.tax + l10n_ee_vat_2.tax + l10n_ee_vat_2_1.tax</field>
+                        <field name="formula">l10n_ee_vat_1.tax + l10n_ee_vat_1_1.tax + l10n_ee_vat_2.tax + l10n_ee_vat_2_1.tax + l10n_ee_vat_2_2.tax</field>
                     </record>
                 </field>
             </record>
