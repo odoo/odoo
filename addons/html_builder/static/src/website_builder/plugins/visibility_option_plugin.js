@@ -82,13 +82,13 @@ class VisibilityOptionPlugin extends Plugin {
                 isApplied: () => true,
             },
             toggleDeviceVisibility: {
-                apply: ({ editingElement, param }) => {
+                apply: ({ editingElement, param: { mainParam: visibility } }) => {
                     // Clean first as the widget is not part of a group
                     this.clean(editingElement);
                     const style = getComputedStyle(editingElement);
-                    if (param === "no_desktop") {
+                    if (visibility === "no_desktop") {
                         editingElement.classList.add("d-lg-none", "o_snippet_desktop_invisible");
-                    } else if (param === "no_mobile") {
+                    } else if (visibility === "no_mobile") {
                         editingElement.classList.add(
                             `d-lg-${style["display"]}`,
                             "d-none",
@@ -98,7 +98,7 @@ class VisibilityOptionPlugin extends Plugin {
 
                     // Update invisible elements
                     const isMobile = this.websiteService.context.isMobile;
-                    const show = param !== (isMobile ? "no_mobile" : "no_desktop");
+                    const show = visibility !== (isMobile ? "no_mobile" : "no_desktop");
                     this.dispatchTo("on_option_visibility_update", {
                         editingEl: editingElement,
                         show: show,
@@ -108,8 +108,8 @@ class VisibilityOptionPlugin extends Plugin {
                 clean: ({ editingElement }) => {
                     this.clean(editingElement);
                 },
-                isApplied: ({ editingElement, param: visibilityParam }) =>
-                    this.isApplied(editingElement, visibilityParam),
+                isApplied: ({ editingElement, param: { mainParam: visibility } }) =>
+                    this.isApplied(editingElement, visibility),
             },
         };
     }

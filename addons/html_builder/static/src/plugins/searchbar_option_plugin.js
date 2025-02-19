@@ -108,20 +108,20 @@ class SearchbarOptionPlugin extends Plugin {
                 },
             },
             setSearchbarStyle: {
-                isApplied: ({ editingElement, param }) => {
+                isApplied: ({ editingElement, param: { mainParam: style } }) => {
                     const searchInputIsLight = editingElement.matches(".border-0.bg-light");
                     const searchButtonIsLight =
                         this.getSearchButtonEl(editingElement).matches(".btn-light");
 
-                    if (param === "light") {
+                    if (style === "light") {
                         return searchInputIsLight && searchButtonIsLight;
                     }
-                    if (param === "default") {
+                    if (style === "default") {
                         return !searchInputIsLight && !searchButtonIsLight;
                     }
                 },
-                apply: ({ editingElement, param }) => {
-                    const isLight = param === "light";
+                apply: ({ editingElement, param: { mainParam: style } }) => {
+                    const isLight = style === "light";
                     const searchButtonEl = this.getSearchButtonEl(editingElement);
                     editingElement.classList.toggle("border-0", isLight);
                     editingElement.classList.toggle("bg-light", isLight);

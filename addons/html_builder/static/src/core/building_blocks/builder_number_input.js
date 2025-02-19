@@ -17,6 +17,7 @@ export class BuilderNumberInput extends Component {
         step: { type: Number, optional: true },
         id: { type: String, optional: true },
         placeholder: { type: String, optional: true },
+        // TODO support a min and max value
     };
     static components = { BuilderComponent };
 
@@ -24,7 +25,7 @@ export class BuilderNumberInput extends Component {
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
-            defaultValue: this.props.default,
+            defaultValue: this.props.default === undefined ? undefined : `${this.props.default}`,
         });
         this.commit = commit;
         this.preview = preview;
@@ -42,6 +43,7 @@ export class BuilderNumberInput extends Component {
 
     // TODO: use this.preview or this.commit?
     handleKeydown(event) {
+        // TODO apply on each part of the value
         if (event.key === "ArrowUp") {
             event.target.value = parseFloat(event.target.value) + (this.props.step || 1);
         } else if (event.key === "ArrowDown") {
