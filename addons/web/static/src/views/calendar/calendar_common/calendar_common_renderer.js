@@ -121,6 +121,7 @@ export class CalendarCommonRenderer extends Component {
             eventDisplay: "block", // Restore old render in daygrid view for single-day timed events
             viewDidMount: this.viewDidMount,
             moreLinkDidMount: this.wrapMoreLink,
+            fixedWeekCount: false,
         };
     }
 
