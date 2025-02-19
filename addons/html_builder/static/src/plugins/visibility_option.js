@@ -181,7 +181,6 @@ class VisibilityOptionPlugin extends Plugin {
             delete target.dataset.visibilityId;
             return;
         }
-        // TODO Open collapse.
         // There are 2 data attributes per option:
         // - One that stores the current records selected
         // - Another that stores the value of the rule "Hide for / Visible for"
