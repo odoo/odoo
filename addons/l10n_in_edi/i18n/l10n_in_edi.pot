@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 09:14+0000\n"
-"PO-Revision-Date: 2024-02-26 09:14+0000\n"
+"POT-Creation-Date: 2025-02-20 11:59+0000\n"
+"PO-Revision-Date: 2025-02-20 11:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -54,12 +54,12 @@ msgstr ""
 #. module: l10n_in_edi
 #. odoo-python
 #: code:addons/l10n_in_edi/models/account_edi_format.py:0
-msgid "- Zip code required 6 digits"
+msgid "- ZIP code required 6 digits ranging from 100000 to 999999"
 msgstr ""
 
 #. module: l10n_in_edi
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi.l10n_in_einvoice_report_invoice_document_inherit
-msgid "<strong>Acknowledgement:</strong>"
+msgid "<strong>Acknowledgement</strong>"
 msgstr ""
 
 #. module: l10n_in_edi
@@ -80,27 +80,15 @@ msgid "Buy Credits"
 msgstr ""
 
 #. module: l10n_in_edi
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi.res_config_settings_view_form_inherit_l10n_in_edi
-msgid "Buy credits"
-msgstr ""
-
-#. module: l10n_in_edi
 #: model:ir.model.fields,field_description:l10n_in_edi.field_account_bank_statement_line__l10n_in_edi_cancel_reason
 #: model:ir.model.fields,field_description:l10n_in_edi.field_account_move__l10n_in_edi_cancel_reason
-#: model:ir.model.fields,field_description:l10n_in_edi.field_account_payment__l10n_in_edi_cancel_reason
 msgid "Cancel reason"
 msgstr ""
 
 #. module: l10n_in_edi
 #: model:ir.model.fields,field_description:l10n_in_edi.field_account_bank_statement_line__l10n_in_edi_cancel_remarks
 #: model:ir.model.fields,field_description:l10n_in_edi.field_account_move__l10n_in_edi_cancel_remarks
-#: model:ir.model.fields,field_description:l10n_in_edi.field_account_payment__l10n_in_edi_cancel_remarks
 msgid "Cancel remarks"
-msgstr ""
-
-#. module: l10n_in_edi
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi.res_config_settings_view_form_inherit_l10n_in_edi
-msgid "Check the documentation to get credentials"
 msgstr ""
 
 #. module: l10n_in_edi
@@ -114,13 +102,6 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: l10n_in_edi
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi.res_config_settings_view_form_inherit_l10n_in_edi
-msgid ""
-"Costs 1 credit per transaction. Free 200 credits will be available for the "
-"first time."
-msgstr ""
-
-#. module: l10n_in_edi
 #: model:ir.model.fields.selection,name:l10n_in_edi.selection__account_move__l10n_in_edi_cancel_reason__2
 msgid "Data Entry Mistake"
 msgstr ""
@@ -128,11 +109,6 @@ msgstr ""
 #. module: l10n_in_edi
 #: model:ir.model.fields.selection,name:l10n_in_edi.selection__account_move__l10n_in_edi_cancel_reason__1
 msgid "Duplicate"
-msgstr ""
-
-#. module: l10n_in_edi
-#: model:ir.model.fields,field_description:l10n_in_edi.field_res_company__l10n_in_edi_production_env
-msgid "E-invoice (IN) Is production OSE environment"
 msgstr ""
 
 #. module: l10n_in_edi
@@ -158,19 +134,12 @@ msgstr ""
 #. module: l10n_in_edi
 #: model:ir.model.fields,field_description:l10n_in_edi.field_account_bank_statement_line__l10n_in_edi_show_cancel
 #: model:ir.model.fields,field_description:l10n_in_edi.field_account_move__l10n_in_edi_show_cancel
-#: model:ir.model.fields,field_description:l10n_in_edi.field_account_payment__l10n_in_edi_show_cancel
 msgid "E-invoice(IN) is sent?"
 msgstr ""
 
 #. module: l10n_in_edi
 #: model:ir.model,name:l10n_in_edi.model_account_edi_format
 msgid "EDI format"
-msgstr ""
-
-#. module: l10n_in_edi
-#: model:ir.model.fields,help:l10n_in_edi.field_res_company__l10n_in_edi_production_env
-#: model:ir.model.fields,help:l10n_in_edi.field_res_config_settings__l10n_in_edi_production_env
-msgid "Enable the use of production credentials"
 msgstr ""
 
 #. module: l10n_in_edi
@@ -188,7 +157,7 @@ msgstr ""
 #. module: l10n_in_edi
 #. odoo-python
 #: code:addons/l10n_in_edi/models/account_edi_format.py:0
-msgid "HSN code is not set in product %s"
+msgid "HSN code is not set in product line %s"
 msgstr ""
 
 #. module: l10n_in_edi
@@ -196,11 +165,6 @@ msgstr ""
 #: code:addons/l10n_in_edi/models/res_config_settings.py:0
 msgid ""
 "Incorrect username or password, or the GST number on company does not match."
-msgstr ""
-
-#. module: l10n_in_edi
-#: model:ir.model.fields,field_description:l10n_in_edi.field_res_config_settings__l10n_in_edi_production_env
-msgid "Indian EDI Testing Environment"
 msgstr ""
 
 #. module: l10n_in_edi
@@ -216,7 +180,7 @@ msgstr ""
 #. module: l10n_in_edi
 #. odoo-python
 #: code:addons/l10n_in_edi/models/account_edi_format.py:0
-msgid "Invalid HSN Code (%s) in product %s"
+msgid "Invalid HSN Code (%(hsn_code)s) in product line %(product_line)s"
 msgstr ""
 
 #. module: l10n_in_edi
@@ -272,21 +236,11 @@ msgid "Please enter a GST number in company."
 msgstr ""
 
 #. module: l10n_in_edi
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi.res_config_settings_view_form_inherit_l10n_in_edi
-msgid "Production Environment"
-msgstr ""
-
-#. module: l10n_in_edi
 #. odoo-python
 #: code:addons/l10n_in_edi/models/account_edi_format.py:0
 msgid ""
 "Set an appropriate GST tax on line \"%s\" (if it's zero rated or nil rated "
 "then select it also)"
-msgstr ""
-
-#. module: l10n_in_edi
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi.res_config_settings_view_form_inherit_l10n_in_edi
-msgid "Setup E-invoice"
 msgstr ""
 
 #. module: l10n_in_edi
@@ -338,16 +292,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in_edi/models/account_edi_format.py:0
 msgid "You have insufficient credits to send this document!"
-msgstr ""
-
-#. module: l10n_in_edi
-#. odoo-python
-#: code:addons/l10n_in_edi/models/res_config_settings.py:0
-msgid "You must enable production environment to buy credits"
-msgstr ""
-
-#. module: l10n_in_edi
-#. odoo-python
-#: code:addons/l10n_in_edi/models/account_edi_format.py:0
-msgid "product is required to get HSN code"
 msgstr ""
