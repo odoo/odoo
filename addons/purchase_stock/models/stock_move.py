@@ -159,13 +159,13 @@ class StockMove(models.Model):
             }
         return rslt
 
-    def _account_entry_move(self, qty, description, svl_id, cost):
+    def _account_entry_move(self, qty, description, svl_id, cost, move_directions = False):
         """
         In case of a PO return, if the value of the returned product is
         different from the purchased one, we need to empty the stock_in account
         with the difference
         """
-        am_vals_list = super()._account_entry_move(qty, description, svl_id, cost)
+        am_vals_list = super()._account_entry_move(qty, description, svl_id, cost, move_directions)
         returned_move = self.origin_returned_move_id
         move = (self | returned_move).with_prefetch(self._prefetch_ids)
         pdiff_exists = bool(move.stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
@@ -175,7 +175,7 @@ class StockMove(models.Model):
 
         layer = self.env['stock.valuation.layer'].browse(svl_id)
 
-        if returned_move and self._is_out() and self._is_returned(valued_type='out'):
+        if returned_move and 'out' in move_directions and self._is_returned(valued_type='out'):
             returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
             returned_unit_cost = returned_layer.value / returned_layer.quantity
             layer_unit_cost = layer.value / layer.quantity
