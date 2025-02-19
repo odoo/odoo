@@ -29,11 +29,9 @@ function isInViewWithinScrollableY(target) {
     const element = queryFirst(target);
     let container = element.parentElement;
     while (
-        container
-        && (
-            container.scrollHeight <= container.clientHeight
-            || !["auto", "scroll"].includes(getComputedStyle(container).overflowY)
-        )
+        container &&
+        (container.scrollHeight <= container.clientHeight ||
+            !["auto", "scroll"].includes(getComputedStyle(container).overflowY))
     ) {
         container = container.parentElement;
     }
@@ -793,17 +791,59 @@ test("autocomplete scrolls when moving with arrows", async () => {
     expect(".o-autocomplete--dropdown-item:first-child a").toHaveClass("ui-state-active");
     expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
     // Navigate with the arrow keys. Go to the last item.
-    expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:contains('Up')")).toBe(false, { message: "'Up' " + msgNotInView });
+    expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:contains('Up')")).toBe(false, {
+        message: "'Up' " + msgNotInView,
+    });
     await contains(".o-autocomplete--input").press("ArrowUp");
     await contains(".o-autocomplete--input").press("ArrowUp");
     expect(activeItemSelector).toHaveText("Up");
     expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
     // Navigate to an item that is not currently visible.
-    expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:contains('Never')")).toBe(false, { message: "'Never' " + msgNotInView });
-    for (let i=0; i < 4; i++) {
+    expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:contains('Never')")).toBe(
+        false,
+        { message: "'Never' " + msgNotInView }
+    );
+    for (let i = 0; i < 4; i++) {
         await contains(".o-autocomplete--input").press("ArrowUp");
     }
     expect(activeItemSelector).toHaveText("Never");
     expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
-    expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:last")).toBe(false, { message: "last " + msgNotInView });
+    expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:last")).toBe(false, {
+        message: "last " + msgNotInView,
+    });
+});
+
+test("source with option slot", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <AutoComplete value="''" sources="sources" onSelect="() => {}">
+                <t t-set-slot="use_this_slot" t-slot-scope="scope">
+                    <div class="slot_item">
+                        <t t-esc="scope.option.id"/>: <t t-esc="scope.option.label"/>
+                    </div>
+                </t>
+            </AutoComplete>
+        `;
+        static props = ["*"];
+        static components = { AutoComplete };
+
+        get sources() {
+            return [
+                {
+                    options: [
+                        { label: "Hello", id: 1 },
+                        { label: "World", id: 2 },
+                    ],
+                    optionSlot: "use_this_slot",
+                },
+            ];
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    await contains(`.o-autocomplete input`).click();
+    expect(queryAllTexts(`.o-autocomplete--dropdown-item .slot_item`)).toEqual([
+        "1: Hello",
+        "2: World",
+    ]);
 });
