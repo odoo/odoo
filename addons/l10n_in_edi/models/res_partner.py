@@ -24,8 +24,8 @@ class ResPartner(models.Model):
             message.append(_("- City required min 3 and max 100 characters"))
         if self.country_id.code == "IN" and not re.match("^.{3,50}$", self.state_id.name or ""):
             message.append(_("- State required min 3 and max 50 characters"))
-        if self.country_id.code == "IN" and not re.match("^[0-9]{6,}$", self.zip or ""):
-            message.append(_("- Zip code required 6 digits"))
+        if self.country_id.code == "IN" and not re.match("^([1-9][0-9]{5})$", self.zip or ""):
+            message.append(_("- ZIP code required 6 digits ranging from 100000 to 999999"))
         if self.phone and not re.match("^[0-9]{10,12}$",
             self.env['account.move']._l10n_in_extract_digits(self.phone)
         ):
