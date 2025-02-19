@@ -424,7 +424,7 @@ class Website(Home):
                 ['|', ('filter_id.model_id', '=', model_name), ('action_server_id.model_id.model', '=', model_name)]
             ])
         dynamic_filter = request.env['website.snippet.filter'].sudo().search_read(
-            domain, ['id', 'name', 'limit', 'model_name'], order='id asc'
+            domain, ['id', 'name', 'limit', 'model_name', 'help'], order='id asc'
         )
         return dynamic_filter
 
