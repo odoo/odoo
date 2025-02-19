@@ -308,10 +308,13 @@ class Website(models.Model):
         SaleOrder = self.env['sale.order'].sudo()
 
         sale_order_id = request.session.get('sale_order_id')
-
+        sale_order_sudo = SaleOrder
         if sale_order_id:
             sale_order_sudo = SaleOrder.browse(sale_order_id).exists()
-        elif self.env.user and not self.env.user._is_public():
+        if sale_order_sudo and sale_order_sudo.state != 'draft':
+            sale_order_sudo = SaleOrder
+            sale_order_id = None
+        if not sale_order_sudo and self.env.user and not self.env.user._is_public():
             sale_order_sudo = self.env.user.partner_id.last_website_so_id
             if sale_order_sudo:
                 available_pricelists = self.get_pricelist_available()
@@ -330,8 +333,6 @@ class Website(models.Model):
                     )
                     if fpos.id != sale_order_sudo.fiscal_position_id.id:
                         sale_order_sudo = SaleOrder
-        else:
-            sale_order_sudo = SaleOrder
 
         # Ignore the current order if a payment has been initiated. We don't want to retrieve the
         # cart and allow the user to update it when the payment is about to confirm it.
