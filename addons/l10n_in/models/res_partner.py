@@ -97,6 +97,7 @@ class ResPartner(models.Model):
         is_production = self.env.company.sudo().l10n_in_edi_production_env
         params = {
             "gstin_to_search": self.vat,
+            "gstin": self.env.company.vat,
         }
         try:
             response = self.env['iap.account']._l10n_in_connect_to_server(
