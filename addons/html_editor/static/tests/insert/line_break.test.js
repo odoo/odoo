@@ -191,9 +191,10 @@ describe("Selection collapsed", () => {
                 contentBefore: "<p><b>abc[]</b> def</p>",
                 stepFunction: insertLineBreak,
                 // The space is converted to a non-breaking space so
-                // it is visible (because it's after a <br>).
+                // it is visible (because it's after a \ufeff).
                 // Visually, the caret does show _after_ the line
                 // break.
+                contentAfterEdit: "<p><b>abc<br>[]\ufeff</b>&nbsp;def</p>",
                 // JW cAfter: '<p><b>abc[]<br></b>&nbsp;def</p>',
                 contentAfter: "<p><b>abc<br>[]</b>&nbsp;def</p>",
             });
@@ -210,8 +211,7 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p>[]<b>abc</b></p>",
                 stepFunction: insertLineBreak,
-                // JW cAfter: '<p><b><br>[]abc</b></p>',
-                contentAfter: "<p><br><b>[]abc</b></p>",
+                contentAfter: "<p><b><br>[]abc</b></p>",
             });
             await testEditor({
                 // That selection is equivalent to []<b>
@@ -249,14 +249,22 @@ describe("Selection collapsed", () => {
             });
         });
 
+        test("should insert \uFEFF at the end of format node", async () => {
+            await testEditor({
+                contentBefore: "<p><b>abc[]</b><br><br></p>",
+                stepFunction: insertLineBreak,
+                contentAfterEdit: `<p><b>abc<br>[]\uFEFF</b><br><br></p>`,
+                contentAfter: "<p><b>abc<br>[]</b><br><br></p>",
+            });
+        });
+
         test("should insert a line break (2 <br>) at the end of a format node", async () => {
             await testEditor({
                 contentBefore: "<p><b>abc</b>[]</p>",
                 stepFunction: insertLineBreak,
                 // The second <br> is needed to make the first
                 // one visible.
-                // JW cAfter: '<p><b>abc<br>[]<br></b></p>',
-                contentAfter: "<p><b>abc</b><br>[]<br></p>",
+                contentAfter: "<p><b>abc<br>[]<br></b></p>",
             });
             await testEditor({
                 // That selection is equivalent to </b>[]
