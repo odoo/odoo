@@ -4,6 +4,7 @@ import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 export class ProductCatalogOrderLine extends Component {
     static template = "product.ProductCatalogOrderLine";
     static props = {
+        isSample: { type: Boolean, optional: true},
         productId: Number,
         quantity: Number,
         price: Number,
