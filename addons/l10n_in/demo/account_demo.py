@@ -23,6 +23,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'l10n_in_is_gst_registered': True,
                     'l10n_in_tcs_feature': True,
                     'l10n_in_tds_feature': True,
+                    'l10n_in_edi_production_env': False,
                 })
                 demo_data = {
                     'res.partner.category': self._get_demo_data_res_partner_category(company),
