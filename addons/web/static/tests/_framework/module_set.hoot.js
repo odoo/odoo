@@ -530,7 +530,7 @@ export function globalCachedFetch(input, init) {
             throw reason;
         });
     }
-    return globalFetchCache[key];
+    return globalFetchCache[key].then((response) => response.clone());
 }
 
 /**
