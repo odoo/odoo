@@ -6,6 +6,7 @@ from werkzeug.exceptions import BadRequest
 
 from odoo import http
 from odoo.http import request
+from odoo.exceptions import UserError
 
 
 class GoogleAuth(http.Controller):
@@ -30,7 +31,7 @@ class GoogleAuth(http.Controller):
             if service_field in request.env.user:
                 request.env.user[service_field]._set_auth_tokens(access_token, refresh_token, ttl)
             else:
-                raise Warning('No callback field for service <%s>' % service)
+                raise UserError('No callback field for service <%s>' % service)
             return request.redirect(url_return)
         elif kw.get('error'):
             return request.redirect("%s%s%s" % (url_return, "?error=", kw['error']))
