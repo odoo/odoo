@@ -74,6 +74,7 @@ class ResConfigSettings(models.TransientModel):
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_amazon = fields.Boolean("Amazon Sync")
     module_sale_commission = fields.Boolean("Commissions")
+    module_sale_gelato = fields.Boolean("Gelato")
     module_sale_loyalty = fields.Boolean("Coupons & Loyalty")
     module_sale_margin = fields.Boolean("Margins")
     module_sale_pdf_quote_builder = fields.Boolean("PDF Quote builder")
