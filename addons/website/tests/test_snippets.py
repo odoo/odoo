@@ -91,6 +91,16 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_parallax', login='admin')
 
     def test_11_snippet_popup_display_on_click(self):
+        # To make the tour reliable we need to wait a field using data-fill-with
+        # to be patched, the step however relies on the company field being
+        # filled with 'yourcompany', which is not the case without demo data.
+        admin = self.env.ref('base.user_admin')
+        admin.write({
+            'parent_id': self.env['res.partner'].create({
+                'is_company': True,
+                'name': 'yourcompany',
+            }).id
+        })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_display_on_click', login='admin')
 
     def test_12_snippet_images_wall(self):
