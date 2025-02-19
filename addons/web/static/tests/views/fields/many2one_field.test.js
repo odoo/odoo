@@ -409,10 +409,9 @@ test("many2ones in form views with show_address", async () => {
     });
 
     expect("input.o_input").toHaveValue("aaa");
-    expect(".o_field_many2one_extra").toHaveInnerHTML(
-        "<span>Street</span><br><span>City ZIP</span>",
-        { type: "html" }
-    );
+    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>Street</div><div>City ZIP</div>", {
+        type: "html",
+    });
     expect("button.o_external_button").toHaveCount(1);
 });
 
@@ -452,7 +451,7 @@ test("many2one show_address in edit", async () => {
     });
 
     expect(".o_field_widget input").toHaveValue("aaa");
-    expect(".o_field_many2one_extra").toHaveInnerHTML("<span>AAA</span><br><span>Record</span>", {
+    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>AAA</div><div>Record</div>", {
         type: "html",
     });
 
@@ -461,7 +460,7 @@ test("many2one show_address in edit", async () => {
     await contains(".dropdown-menu li").click();
 
     expect(".o_field_widget input").toHaveValue("first record");
-    expect(".o_field_many2one_extra").toHaveInnerHTML("<span>First</span><br><span>Record</span>", {
+    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>First</div><div>Record</div>", {
         type: "html",
     });
 
@@ -470,10 +469,9 @@ test("many2one show_address in edit", async () => {
     await contains(".dropdown-menu li").click();
 
     expect(".o_field_widget input").toHaveValue("second record");
-    expect(".o_field_many2one_extra").toHaveInnerHTML(
-        "<span>Second</span><br><span>Record</span>",
-        { type: "html" }
-    );
+    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>Second</div><div>Record</div>", {
+        type: "html",
+    });
 });
 
 test("show_address works in a view embedded in a view of another type", async () => {
@@ -941,7 +939,7 @@ test("empty readonly many2one field", async () => {
     });
 
     expect("div.o_field_widget[name=trululu]").toHaveCount(1);
-    expect(".o_field_widget[name=trululu]").toHaveInnerHTML("");
+    expect(".o_field_widget[name=trululu] .o_many2one").toHaveText("");
 });
 
 test("empty many2one field with node options", async () => {
@@ -1239,7 +1237,7 @@ test("many2one search with server returning multiple lines", async () => {
 
     // Initial value
     expect(".o_field_widget input").toHaveValue("aaa");
-    expect(".o_field_many2one_extra").toHaveInnerHTML("<span>AAA</span><br><span>Record</span>", {
+    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>AAA</div><div>Record</div>", {
         type: "html",
     });
 
@@ -1253,10 +1251,9 @@ test("many2one search with server returning multiple lines", async () => {
 
     expect.verifySteps([]);
     expect(".o_field_widget input").toHaveValue("fizz");
-    expect(".o_field_many2one_extra").toHaveInnerHTML(
-        "<span>buzz</span><br><span>fizzbuzz</span>",
-        { type: "html" }
-    );
+    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>buzz</div><div>fizzbuzz</div>", {
+        type: "html",
+    });
 
     await clickSave();
     expect.verifySteps(["web_save"]);
@@ -3710,7 +3707,7 @@ test("external_button performs a doAction by default", async () => {
     });
 
     await selectFieldDropdownItem("trululu", "first record");
-    expect(".o_field_widget .o_external_button.oi-arrow-right").toHaveCount(1);
+    expect(".o_field_widget .o_external_button .oi-arrow-right").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
 
     expect.verifySteps(["get_formview_action"]);
@@ -3730,7 +3727,7 @@ test("external_button opens a FormViewDialog in dialogs", async () => {
     expect(".modal").toHaveCount(1);
 
     await selectFieldDropdownItem("trululu", "first record");
-    expect(".o_field_widget .o_external_button.oi-launch").toHaveCount(1);
+    expect(".o_field_widget .o_external_button .oi-launch").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
 
     expect.verifySteps(["get_formview_id"]);
@@ -3796,7 +3793,7 @@ test("keep changes when editing related record in a dialog", async () => {
     await contains(".o_field_widget[name=foo] input").edit("some value", { confirm: false });
     await runAllTimers();
     await selectFieldDropdownItem("trululu", "first record");
-    expect(".o_field_widget .o_external_button.oi-launch").toHaveCount(1);
+    expect(".o_field_widget .o_external_button .oi-launch").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
     expect(".modal").toHaveCount(2);
 

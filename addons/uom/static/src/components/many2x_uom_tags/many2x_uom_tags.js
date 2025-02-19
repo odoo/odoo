@@ -5,10 +5,6 @@ import {
     Many2ManyTagsFieldColorEditable,
     many2ManyTagsFieldColorEditable,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import {
-    Many2OneField,
-    many2OneField,
-} from "@web/views/fields/many2one/many2one_field";
 import { UomAutoComplete } from "@uom/components/uom_autocomplete/uom_autocomplete";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { onWillUpdateProps } from "@odoo/owl";
@@ -93,29 +89,11 @@ export class Many2ManyUomTagsField extends Many2ManyTagsFieldColorEditable {
         quantityField: { type: String, optional: true },
     }
     static defaultProps = {
-        ...Many2OneField.defaultProps,
+        ...Many2ManyTagsFieldColorEditable.defaultProps,
         productField: "product_id",
         quantityField: "product_uom_qty",
     }
 }
-
-export class Many2OneUomField extends Many2OneField {
-    static template = "uom.Many2OneUomField";
-    static components = {
-        ...Many2OneField.components,
-        Many2XAutocomplete: Many2XUomTagsAutocomplete,
-    };
-    static props = {
-        ...Many2OneField.props,
-        productField: { type: String, optional: true },
-        quantityField: { type: String, optional: true },
-    }
-    static defaultProps = {
-        ...Many2OneField.defaultProps,
-        productField: "product_id",
-        quantityField: "product_uom_qty",
-    }
-}   
 
 export const many2ManyUomTagsField = {
     ...many2ManyTagsFieldColorEditable,
@@ -144,32 +122,4 @@ export const many2ManyUomTagsField = {
     },
 };
 
-export const many2OneUomField = {
-    ...many2OneField,
-    component: Many2OneUomField,
-    additionalClasses: ['o_field_many2one'],
-    supportedOptions: [
-        ...(many2OneField.supportedOptions || []),
-        {
-            label: _t("Product Field Name"),
-            name: "product_field",
-            type: "field",
-            availableTypes: ["many2one"]
-        },
-        {
-            label: _t("Quantity Field Name"),
-            name: "quantity_field",
-            type: "field",
-            availableTypes: ["many2one"]
-        }
-    ],
-    extractProps({ options }) {
-        const props = many2OneField.extractProps(...arguments);
-        props.productField = options.product_field;
-        props.quantityField = options.quantity_field;
-        return props;
-    },
-};
-
 registry.category("fields").add("many2many_uom_tags", many2ManyUomTagsField);
-registry.category("fields").add("many2one_uom", many2OneUomField);
