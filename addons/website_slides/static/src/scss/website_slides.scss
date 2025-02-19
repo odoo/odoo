@@ -421,7 +421,7 @@ $line-height-truncate: 1.25em;
 
         .o_wslides_lesson_nav {
             .navbar {
-                @if ( not has-enough-contrast($body-bg, $dark) ) {
+                @if ( lightness($body-bg) < 50% ) {
                     .nav-link, .navbar-brand{
                         color: $navbar-dark-color;
                     }
