@@ -1,8 +1,8 @@
 import { expect, test } from "@odoo/hoot";
-import { click, press, queryOne, waitFor, waitUntil, dblclick } from "@odoo/hoot-dom";
+import { click, dblclick, press, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { setupEditor } from "./_helpers/editor";
 import { contains } from "@web/../tests/web_test_helpers";
+import { setupEditor } from "./_helpers/editor";
 import { getContent, setContent } from "./_helpers/selection";
 import { undo } from "./_helpers/user_actions";
 
@@ -299,7 +299,7 @@ test("Image transformation dissapear when selection change", async () => {
         `<img class="img-fluid test-image" src="/web/static/img/logo.png">
         <p> [Hello] world </p> `
     );
-    await waitUntil(() => !document.querySelector(".transfo-container"));
+    await waitForNone(".transfo-container");
     transfoContainers = document.querySelectorAll(".transfo-container");
     expect(transfoContainers).toHaveCount(0);
     // Remove the transfoContainer element if not destroyed by the selection change

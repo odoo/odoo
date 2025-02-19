@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
     mountWithCleanup,
@@ -12,6 +12,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { MobileSwitchCompanyMenu } from "@web/webclient/burger_menu/mobile_switch_company_menu/mobile_switch_company_menu";
 import { user } from "@web/core/user";
 
+<<<<<<< saas-18.2
 const ORIGINAL_TOGGLE_DELAY = MobileSwitchCompanyMenu.toggleDelay;
 
 async function createSwitchCompanyMenu(options = { toggleDelay: 0 }) {
@@ -26,15 +27,46 @@ function patchUserActiveCompanies(cids) {
     );
 }
 
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+const ORIGINAL_TOGGLE_DELAY = MobileSwitchCompanyMenu.toggleDelay;
+
+async function createSwitchCompanyMenu(options = { toggleDelay: 0 }) {
+    patchWithCleanup(MobileSwitchCompanyMenu, { toggleDelay: options.toggleDelay });
+    if (options.onSetCookie) {
+        const set = cookie.set;
+        patchWithCleanup(cookie, {
+            set(key, value) {
+                set.apply(cookie, [key, value]);
+                if (options.onSetCookie) {
+                    options.onSetCookie(key, value);
+                }
+            },
+        });
+    }
+    await mountWithCleanup(MobileSwitchCompanyMenu);
+}
+
+=======
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
 describe.current.tags("mobile");
 
-async function toggle(index) {
-    await contains(`[data-company-id] [role=menuitemcheckbox]:eq(${index})`).click();
-}
+const clickConfirm = () => contains(".o_switch_company_menu_buttons button:first").click();
 
-async function confirm() {
-    await contains(".o_switch_company_menu_buttons button:first").click();
-}
+const stepOnCookieChange = () =>
+    patchWithCleanup(cookie, {
+        set(key, value) {
+            if (key === "cids") {
+                expect.step(value);
+            }
+            return super.set(key, value);
+        },
+    });
+
+/**
+ * @param {number} index
+ */
+const toggleCompany = async (index) =>
+    contains(`[data-company-id] [role=menuitemcheckbox]:eq(${index})`).click();
 
 beforeEach(() => {
     serverState.companies = [
@@ -45,7 +77,7 @@ beforeEach(() => {
 });
 
 test("basic rendering", async () => {
-    await createSwitchCompanyMenu();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
 
     expect(".o_burger_menu_companies").toHaveProperty("tagName", "DIV");
     expect(".o_burger_menu_companies").toHaveClass("o_burger_menu_companies");
@@ -67,7 +99,22 @@ test("basic rendering", async () => {
 });
 
 test("companies can be toggled: toggle a second company", async () => {
+<<<<<<< saas-18.2
     await createSwitchCompanyMenu();
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
+    }
+    await createSwitchCompanyMenu({ onSetCookie });
+    expect.verifySteps(["1"]);
+=======
+    stepOnCookieChange();
+
+    await mountWithCleanup(MobileSwitchCompanyMenu);
+    expect.verifySteps(["1"]);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
 
     /**
      *   [x] **Company 1**
@@ -85,15 +132,37 @@ test("companies can be toggled: toggle a second company", async () => {
      *   [x] Company 2      -> toggle
      *   [ ] Company 3
      */
-    await toggle(1);
+    await toggleCompany(1);
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
     expect("[data-company-id] .fa-square-o").toHaveCount(1);
+<<<<<<< saas-18.2
     await confirm();
     expect(cookie.get("cids")).toEqual("1-2");
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    await confirm();
+    expect.verifySteps(["1-2"]);
+=======
+    await clickConfirm();
+    expect.verifySteps(["1-2"]);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
 });
 
 test("can toggle multiple companies at once", async () => {
+<<<<<<< saas-18.2
     await createSwitchCompanyMenu({ toggleDelay: ORIGINAL_TOGGLE_DELAY });
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
+    }
+    await createSwitchCompanyMenu({ onSetCookie, toggleDelay: ORIGINAL_TOGGLE_DELAY });
+    expect.verifySteps(["1"]);
+=======
+    stepOnCookieChange();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
+    expect.verifySteps(["1"]);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
     /**
      *   [x] **Company 1**
      *   [ ] Company 2
@@ -110,19 +179,41 @@ test("can toggle multiple companies at once", async () => {
      *   [x] Company 2      -> toggle all
      *   [x] Company 3      -> toggle all
      */
-    await toggle(0);
-    await toggle(1);
-    await toggle(2);
+    await toggleCompany(0);
+    await toggleCompany(1);
+    await toggleCompany(2);
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
     expect("[data-company-id] .fa-square-o").toHaveCount(1);
 
     expect.verifySteps([]);
+<<<<<<< saas-18.2
     await confirm();
     expect(cookie.get("cids")).toEqual("2-3");
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    await confirm();
+    expect.verifySteps(["2-3"]);
+=======
+    await clickConfirm();
+    expect.verifySteps(["2-3"]);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
 });
 
 test("single company selected: toggling it off will keep it", async () => {
+<<<<<<< saas-18.2
     await createSwitchCompanyMenu();
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
+    }
+    await createSwitchCompanyMenu({ onSetCookie });
+    expect.verifySteps(["1"]);
+=======
+    stepOnCookieChange();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
+    expect.verifySteps(["1"]);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
 
     /**
      *   [x] **Company 1**
@@ -142,17 +233,45 @@ test("single company selected: toggling it off will keep it", async () => {
      *   [ ] Company 2
      *   [ ] Company 3
      */
+<<<<<<< saas-18.2
     await toggle(0);
     await confirm();
     expect(cookie.get("cids")).toEqual("1");
     expect(user.activeCompanies.map((c) => c.id)).toEqual([1]);
     expect(user.activeCompany.id).toBe(1);
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    await toggle(0);
+    await confirm();
+    expect.verifySteps(["1"]);
+    expect(getService("company").activeCompanyIds).toEqual([1]);
+    expect(getService("company").currentCompany.id).toBe(1);
+=======
+    await toggleCompany(0);
+    await clickConfirm();
+    expect.verifySteps(["1"]);
+    expect(getService("company").activeCompanyIds).toEqual([1]);
+    expect(getService("company").currentCompany.id).toBe(1);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
     expect("[data-company-id] .fa-check-squarqe").toHaveCount(0);
     expect("[data-company-id] .fa-square-o").toHaveCount(3);
 });
 
 test("single company mode: companies can be logged in", async () => {
+<<<<<<< saas-18.2
     await createSwitchCompanyMenu();
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
+    }
+    await createSwitchCompanyMenu({ onSetCookie });
+    expect.verifySteps(["1"]);
+=======
+    stepOnCookieChange();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
+    expect.verifySteps(["1"]);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
 
     /**
      *   [x] **Company 1**
@@ -175,8 +294,24 @@ test("single company mode: companies can be logged in", async () => {
 });
 
 test("multi company mode: log into a non selected company", async () => {
+<<<<<<< saas-18.2
     patchUserActiveCompanies([3, 1]);
     await createSwitchCompanyMenu();
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
+    }
+    cookie.set("cids", "3-1");
+    await createSwitchCompanyMenu({ onSetCookie });
+    expect.verifySteps(["3-1"]);
+=======
+    cookie.set("cids", "3-1");
+    stepOnCookieChange();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
+    expect.verifySteps(["3-1"]);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
 
     /**
      *   [x] Company 1
@@ -199,8 +334,24 @@ test("multi company mode: log into a non selected company", async () => {
 });
 
 test("multi company mode: log into an already selected company", async () => {
+<<<<<<< saas-18.2
     patchUserActiveCompanies([2, 3]);
     await createSwitchCompanyMenu();
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
+    }
+    cookie.set("cids", "2-3");
+    await createSwitchCompanyMenu({ onSetCookie });
+    expect.verifySteps(["2-3"]);
+=======
+    cookie.set("cids", "2-3");
+    stepOnCookieChange();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
+    expect.verifySteps(["2-3"]);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
 
     /**
      *   [ ] Company 1
@@ -223,7 +374,21 @@ test("multi company mode: log into an already selected company", async () => {
 });
 
 test("companies can be logged in even if some toggled within delay", async () => {
+<<<<<<< saas-18.2
     await createSwitchCompanyMenu({ toggleDelay: ORIGINAL_TOGGLE_DELAY });
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
+    }
+    await createSwitchCompanyMenu({ onSetCookie, toggleDelay: ORIGINAL_TOGGLE_DELAY });
+    expect.verifySteps(["1"]);
+=======
+    stepOnCookieChange();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
+    expect.verifySteps(["1"]);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
 
     /**
      *   [x] **Company 1**
@@ -248,16 +413,16 @@ test("companies can be logged in even if some toggled within delay", async () =>
 });
 
 test("show confirm and reset buttons only when selection has changed", async () => {
-    await createSwitchCompanyMenu();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
     expect(".o_switch_company_menu_buttons").toHaveCount(0);
-    await toggle(1);
+    await toggleCompany(1);
     expect(".o_switch_company_menu_buttons button").toHaveCount(2);
-    await toggle(1);
+    await toggleCompany(1);
     expect(".o_switch_company_menu_buttons").toHaveCount(0);
 });
 
 test("No collapse and no search input when less that 10 companies", async () => {
-    await createSwitchCompanyMenu();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
     expect(".o_burger_menu_companies .fa-caret-right").toHaveCount(0);
     expect(".o_burger_menu_companies .visually-hidden input").toHaveCount(1);
 });
@@ -275,7 +440,54 @@ test("Show search input when more that 10 companies & search filters items but i
         { id: 9, name: "Random d", sequence: 9, parent_id: false, child_ids: [] },
         { id: 10, name: "Random e", sequence: 10, parent_id: false, child_ids: [] },
     ];
+<<<<<<< saas-18.2
     await createSwitchCompanyMenu();
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    patchWithCleanup(session.user_companies, {
+        allowed_companies: {
+            3: { id: 3, name: "Hermit", sequence: 1, parent_id: false, child_ids: [] },
+            2: { id: 2, name: "Herman's", sequence: 2, parent_id: false, child_ids: [] },
+            1: {
+                id: 1,
+                name: "Heroes TM",
+                sequence: 3,
+                parent_id: false,
+                child_ids: [4, 5],
+            },
+            4: { id: 4, name: "Hercules", sequence: 4, parent_id: 1, child_ids: [] },
+            5: { id: 5, name: "Hulk", sequence: 5, parent_id: 1, child_ids: [] },
+            6: {
+                id: 6,
+                name: "Random Company a",
+                sequence: 6,
+                parent_id: false,
+                child_ids: [7, 8],
+            },
+            7: {
+                id: 7,
+                name: "Random Company aa",
+                sequence: 7,
+                parent_id: 6,
+                child_ids: [],
+            },
+            8: {
+                id: 8,
+                name: "Random Company ab",
+                sequence: 8,
+                parent_id: 6,
+                child_ids: [],
+            },
+            9: { id: 9, name: "Random d", sequence: 9, parent_id: false, child_ids: [] },
+            10: { id: 10, name: "Random e", sequence: 10, parent_id: false, child_ids: [] },
+        },
+        disallowed_ancestor_companies: {},
+        current_company: 3,
+    });
+    await createSwitchCompanyMenu();
+=======
+
+    await mountWithCleanup(MobileSwitchCompanyMenu);
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
     await contains(".o_burger_menu_companies > div").click();
     expect(".o_burger_menu_companies input").toHaveCount(1);
     expect(".o_burger_menu_companies input").not.toBeFocused();

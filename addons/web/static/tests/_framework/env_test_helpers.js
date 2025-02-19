@@ -157,8 +157,20 @@ export function mockService(name, serviceFactory) {
                 if (typeof serviceFactory === "function") {
                     return serviceFactory(env, dependencies);
                 } else {
+<<<<<<< saas-18.2
                     const service = await originalService.start(env, dependencies);
                     patch(service, serviceFactory);
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+                    const service = originalService.start(env, dependencies);
+                    patch(service, serviceFactory);
+=======
+                    const service = originalService.start(env, dependencies);
+                    if (service instanceof Promise) {
+                        service.then((value) => patch(value, serviceFactory));
+                    } else {
+                        patch(service, serviceFactory);
+                    }
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
                     return service;
                 }
             },
