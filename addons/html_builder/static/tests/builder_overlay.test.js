@@ -116,7 +116,7 @@ test("Resize horizontally (sizingX)", async () => {
 });
 
 // TODO to fix issue hoot (after rebase)?
-test.todo("Resize in grid mode (sizingGrid)", async () => {
+test("Resize in grid mode (sizingGrid)", async () => {
     await setupWebsiteBuilder(
         `
         <section style="width: 600px;">
