@@ -49,7 +49,7 @@
             <div class="p-1">
                 <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut">
                     <t t-foreach="this.usedCustomColors" t-as="color" t-key="color_index">
-                        <button t-if="color !== this.state.currentCustomColor.toLowerCase()" class="o_color_button btn" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
+                        <button t-if="color !== this.state.currentCustomColor?.toLowerCase()" class="o_color_button btn" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                     </t>
                     <button class="o_color_button btn selected" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
                 </div>
