@@ -295,11 +295,7 @@ export class Many2XAutocomplete extends Component {
         if (option.action) {
             return option.action(params);
         }
-        const record = {
-            id: option.value,
-            display_name: option.displayName,
-        };
-        this.props.update([record], params);
+        this.props.update([option.record], params);
     }
 
     abortableSearch(name) {
@@ -310,20 +306,24 @@ export class Many2XAutocomplete extends Component {
         };
     }
     search(name) {
-        return this.orm.call(this.props.resModel, "name_search", [], {
+        return this.orm.call(this.props.resModel, "web_name_search", [], {
             name: name,
             operator: "ilike",
             domain: this.props.getDomain(),
             limit: this.props.searchLimit + 1,
             context: this.props.context,
+            specification: {
+                display_name: {},
+                ...this.props.specification,
+            },
         });
     }
-    mapRecordToOption(result) {
+    mapRecordToOption(record) {
         return {
-            value: result[0],
-            label: result[1] ? result[1].split("\n")[0] : _t("Unnamed"),
-            displayName: result[1],
-            classList: this.props.getOptionClassnames({ id: result[0], display_name: result[1] }),
+            value: record.id,
+            label: record.display_name ? record.display_name.split("\n")[0] : _t("Unnamed"),
+            classList: this.props.getOptionClassnames(record),
+            record,
         };
     }
     async loadOptionsSource(request) {
@@ -333,7 +333,7 @@ export class Many2XAutocomplete extends Component {
         this.lastProm = this.abortableSearch(request);
         const records = await this.lastProm.promise;
 
-        const options = records.map((result) => this.mapRecordToOption(result));
+        const options = records.map((record) => this.mapRecordToOption(record));
 
         if (this.props.quickCreate && request.length) {
             options.push({
