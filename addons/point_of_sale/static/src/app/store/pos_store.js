@@ -14,6 +14,7 @@ import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+<<<<<<< saas-17.4
 import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 import { ProductConfiguratorPopup } from "./product_configurator_popup/product_configurator_popup";
 import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configurator_popup";
@@ -31,6 +32,12 @@ import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ReceiptScreen } from "../screens/receipt_screen/receipt_screen";
 import { PaymentScreen } from "../screens/payment_screen/payment_screen";
+||||||| f1fb0527f1b29e4b464e13718d6d0edb3b32a114
+import { EditListPopup } from "./select_lot_popup/select_lot_popup";
+=======
+import { EditListPopup } from "./select_lot_popup/select_lot_popup";
+import { unique } from "@web/core/utils/arrays";
+>>>>>>> 10dd6f87ad80050c754e546b5f8ae19fc7cbfa16
 
 const { DateTime } = luxon;
 
@@ -1134,6 +1141,82 @@ export class PosStore extends Reactive {
             for (const order of orders) {
                 order.recomputeOrderData();
             }
+<<<<<<< saas-17.4
+||||||| f1fb0527f1b29e4b464e13718d6d0edb3b32a114
+        }
+        this.loadingOrderState = false;
+    }
+    load_server_orders() {
+        if (!this.open_orders_json) {
+            return;
+        }
+        this.loadOpenOrders(this.open_orders_json);
+    }
+    async _loadMissingProducts(orders) {
+        const missingProductIds = new Set([]);
+        for (const order of orders) {
+            for (const line of order.lines) {
+                const productId = line[2].product_id;
+                if (missingProductIds.has(productId)) {
+                    continue;
+                }
+                if (!this.db.get_product_by_id(productId)) {
+                    missingProductIds.add(productId);
+                }
+            }
+        }
+        if (!missingProductIds.size) {
+            return;
+        }
+        const products = await this.orm.call(
+            "pos.session",
+            "get_pos_ui_product_product_by_params",
+            [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }]
+        );
+        await this._loadMissingPricelistItems(products);
+        this._loadProductProduct(products);
+    }
+    async _loadMissingPricelistItems(products) {
+        if (!products.length) {
+            return;
+        }
+        const product_tmpl_ids = products.map((product) => product.product_tmpl_id[0]);
+        const product_ids = products.map((product) => product.id);
+=======
+        }
+        this.loadingOrderState = false;
+    }
+    load_server_orders() {
+        if (!this.open_orders_json) {
+            return;
+        }
+        this.loadOpenOrders(this.open_orders_json);
+    }
+    async _loadMissingProducts(orders) {
+        const missingProductIds = new Set([]);
+        for (const order of orders) {
+            for (const line of order.lines) {
+                const productId = line[2].product_id;
+                if (missingProductIds.has(productId)) {
+                    continue;
+                }
+                if (!this.db.get_product_by_id(productId)) {
+                    missingProductIds.add(productId);
+                }
+            }
+        }
+        if (!missingProductIds.size) {
+            return;
+        }
+        this._addProducts([...missingProductIds], false);
+    }
+    async _loadMissingPricelistItems(products) {
+        if (!products.length) {
+            return;
+        }
+        const product_tmpl_ids = products.map((product) => product.product_tmpl_id[0]);
+        const product_ids = products.map((product) => product.id);
+>>>>>>> 10dd6f87ad80050c754e546b5f8ae19fc7cbfa16
 
             const serializedOrder = orders.map((order) =>
                 order.serialize({ orm: true, clear: true })
@@ -1410,6 +1493,95 @@ export class PosStore extends Reactive {
     getCurrencySymbol() {
         return this.currency ? this.currency.symbol : "$";
     }
+<<<<<<< saas-17.4
+||||||| f1fb0527f1b29e4b464e13718d6d0edb3b32a114
+    /**
+     * Make the products corresponding to the given ids to be available_in_pos and
+     * fetch them to be added on the loaded products.
+     */
+    async _addProducts(ids, setAvailable = true) {
+        if (setAvailable) {
+            try {
+                await this.orm.write("product.product", ids, { available_in_pos: true });
+            } catch (error) {
+                const ignoreError =
+                    error instanceof RPCError &&
+                    error.exceptionName === "odoo.exceptions.AccessError";
+                if (!ignoreError) {
+                    throw error;
+                }
+            }
+        }
+        const product = await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
+            odoo.pos_session_id,
+            { domain: [["id", "in", ids]] },
+        ]);
+        await this._loadMissingPricelistItems(product);
+        this._loadProductProduct(product);
+    }
+=======
+    /**
+     * Make the products corresponding to the given ids to be available_in_pos and
+     * fetch them to be added on the loaded products.
+     */
+    async _addProducts(ids, setAvailable = true) {
+        if (setAvailable) {
+            try {
+                await this.orm.write("product.product", ids, { available_in_pos: true });
+            } catch (error) {
+                const ignoreError =
+                    error instanceof RPCError &&
+                    error.exceptionName === "odoo.exceptions.AccessError";
+                if (!ignoreError) {
+                    throw error;
+                }
+            }
+        }
+        const products = await this._loadProductByIds(ids);
+        const missingProductIds = await this._loadMissingPosCombos(products);
+        if (missingProductIds && missingProductIds.length) {
+            products.push(...(await this._loadProductByIds(missingProductIds)));
+        }
+        await this._loadMissingPricelistItems(products);
+        this._loadProductProduct(products);
+    }
+    async _loadProductByIds(productIds) {
+        return await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
+            odoo.pos_session_id,
+            { domain: [["id", "in", productIds]] },
+        ]);
+    }
+    async _loadMissingPosCombos(products) {
+        const missingComboIds = unique(
+            products
+                .flatMap((product) => product.combo_ids)
+                .filter((id) => !this.db.combo_by_id[id]),
+        );
+        if (!missingComboIds.length) {
+            return;
+        }
+        const combos = await this.orm.call("pos.combo", "search_read", [], {
+            fields: ["id", "name", "combo_line_ids", "base_price"],
+            domain: [["id", "in", missingComboIds]],
+        });
+        this.db.add_combos(combos);
+        const comboLines = await this.orm.call("pos.combo.line", "search_read", [], {
+            fields: ["id", "product_id", "combo_price", "combo_id"],
+            domain: [["combo_id", "in", missingComboIds]],
+        });
+        this.db.add_combo_lines(comboLines);
+        const missingProductIds = unique(
+            comboLines
+                .map((comboLine) => comboLine.product_id[0])
+                .filter(
+                    (id) =>
+                        !this.db.get_product_by_id(id) &&
+                        !products.map((product) => product.id).includes(id),
+                ),
+        );
+        return missingProductIds;
+    }
+>>>>>>> 10dd6f87ad80050c754e546b5f8ae19fc7cbfa16
     isOpenOrderShareable() {
         return this.config.raw.trusted_config_ids.length > 0;
     }
