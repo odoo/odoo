@@ -12,7 +12,7 @@ class ShadowOptionPlugin extends Plugin {
     getActions() {
         return {
             setShadowMode: {
-                isApplied: ({ editingElement, param: shadowMode }) => {
+                isApplied: ({ editingElement, param: { mainParam: shadowMode } }) => {
                     const currentBoxShadow = editingElement.style["box-shadow"];
                     if (shadowMode === "none") {
                         return currentBoxShadow === "";
@@ -24,7 +24,7 @@ class ShadowOptionPlugin extends Plugin {
                         return !currentBoxShadow.includes("inset") && currentBoxShadow !== "";
                     }
                 },
-                apply: ({ editingElement, param: shadowMode }) => {
+                apply: ({ editingElement, param: { mainParam: shadowMode } }) => {
                     if (shadowMode === "none") {
                         editingElement.classList.remove(shadowClass);
                         setBoxShadow(editingElement, "");
@@ -48,12 +48,13 @@ class ShadowOptionPlugin extends Plugin {
                 },
             },
             setShadow: {
-                apply: ({ editingElement, param, value }) => {
+                apply: ({ editingElement, param: { mainParam: attributeName }, value }) => {
                     const shadow = getCurrentShadow(editingElement);
-                    shadow[param] = value;
+                    shadow[attributeName] = value;
                     setBoxShadow(editingElement, shadowToString(shadow));
                 },
-                getValue: ({ editingElement, param }) => getCurrentShadow(editingElement)[param],
+                getValue: ({ editingElement, param: { mainParam: attributeName } }) =>
+                    getCurrentShadow(editingElement)[attributeName],
             },
         };
     }

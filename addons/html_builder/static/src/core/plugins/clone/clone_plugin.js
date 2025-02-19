@@ -29,7 +29,11 @@ export class ClonePlugin extends Plugin {
         return {
             // TODO maybe rename to cloneItem ?
             addItem: {
-                apply: ({ editingElement, param: itemSelector, value: position }) => {
+                apply: ({
+                    editingElement,
+                    param: { mainParam: itemSelector },
+                    value: position,
+                }) => {
                     const itemEl = editingElement.querySelector(itemSelector);
                     this.cloneElement(itemEl, { position, scrollToClone: true });
                     this.dependencies.history.addStep();

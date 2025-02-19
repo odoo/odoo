@@ -15,8 +15,8 @@ defineWebsiteModels();
 test("call a specific action with some params and value (BuilderSelectItem)", async () => {
     addActionOption({
         customAction: {
-            apply: ({ param, value }) => {
-                expect.step(`customAction ${param} ${value}`);
+            apply: ({ param: { mainParam: testParam }, value }) => {
+                expect.step(`customAction ${testParam} ${value}`);
             },
         },
     });
@@ -201,7 +201,7 @@ test("use BuilderSelect with styleAction", async () => {
 
     await contains(".o-dropdown--menu div:contains(dotted)").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target" style="border-style: dotted !important;">b</div>`
+        `<div class="parent-target" style="border-style: dotted;">b</div>`
     );
     expect(".we-bg-options-container .dropdown").toHaveText("dotted");
 });

@@ -1,11 +1,17 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { applyNeededCss } from "@html_builder/utils/utils_css";
+import { withSequence } from "@html_editor/utils/resource";
 
 class ColorStylePlugin extends Plugin {
     static id = "colorStyle";
     static dependencies = ["color"];
     resources = {
         builder_style_actions: this.getStyleActions(),
+        apply_color_style: withSequence(5, (element, mode, color) => {
+            applyNeededCss(element, mode === "backgroundColor" ? "background-color" : mode, color);
+            return true;
+        }),
     };
 
     getStyleActions() {

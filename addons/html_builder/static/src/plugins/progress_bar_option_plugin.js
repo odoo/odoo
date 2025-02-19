@@ -29,7 +29,7 @@ class ProgressBarOptionPlugin extends Plugin {
     getActions() {
         return {
             display: {
-                apply: ({ editingElement, param }) => {
+                apply: ({ editingElement, param: { mainParam: position } }) => {
                     // retro-compatibility
                     if (editingElement.classList.contains("progress")) {
                         editingElement.classList.remove("progress");
@@ -49,21 +49,21 @@ class ProgressBarOptionPlugin extends Plugin {
                     const progressValue = progress.getAttribute("aria-valuenow");
                     let progressLabel = editingElement.querySelector(".s_progress_bar_text");
 
-                    if (!progressLabel && param !== "none") {
+                    if (!progressLabel && position !== "none") {
                         progressLabel = document.createElement("span");
                         progressLabel.classList.add("s_progress_bar_text", "small");
                         progressLabel.textContent = progressValue + "%";
                     }
 
-                    if (param === "inline") {
+                    if (position === "inline") {
                         editingElement.querySelector(".progress-bar").appendChild(progressLabel);
-                    } else if (["below", "after"].includes(param)) {
+                    } else if (["below", "after"].includes(position)) {
                         progress.insertAdjacentElement("afterend", progressLabel);
                     }
 
                     // Temporary hide the label. It's effectively removed in cleanForSave
                     // if the option is confirmed
-                    progressLabel.classList.toggle("d-none", param === "none");
+                    progressLabel.classList.toggle("d-none", position === "none");
                 },
             },
             progressBarValue: {

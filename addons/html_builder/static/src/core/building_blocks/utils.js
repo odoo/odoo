@@ -371,14 +371,12 @@ export function useClickableBuilderComponent() {
         getActions: getAllActions,
     };
 }
-export function useInputBuilderComponent(
-    {
-        id,
-        defaultValue,
-        formatRawValue = (rawValue) => rawValue,
-        parseDisplayValue = (displayValue) => displayValue,
-    } = {},
-) {
+export function useInputBuilderComponent({
+    id,
+    defaultValue,
+    formatRawValue = (rawValue) => rawValue,
+    parseDisplayValue = (displayValue) => displayValue,
+} = {}) {
     const comp = useComponent();
     // TODO: replace saveUnit and unit by formatRawValue and parseDisplayValue?
     if (comp.props.saveUnit && !comp.props.unit) {
@@ -389,22 +387,30 @@ export function useInputBuilderComponent(
     const state = useDomState(getState);
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation((applySpecs) => {
         for (const applySpec of applySpecs) {
-            let actionValue = applySpec.actionValue;
-            if (comp.props.unit && comp.props.saveUnit) {
-                // Convert value from unit to saveUnit
-                actionValue = convertNumericToUnit(
-                    actionValue,
-                    comp.props.unit,
-                    comp.props.saveUnit
-                );
-            }
-            if (comp.props.unit) {
-                if (comp.props.saveUnit || comp.props.saveUnit === "") {
-                    actionValue = actionValue + comp.props.saveUnit;
-                } else {
-                    actionValue = actionValue + comp.props.unit;
-                }
-            }
+            const actionValue =
+                applySpec.actionValue === undefined
+                    ? undefined
+                    : applySpec.actionValue
+                          .split(/\s+/g)
+                          .map((singleValue) => {
+                              if (comp.props.unit && comp.props.saveUnit) {
+                                  // Convert value from unit to saveUnit
+                                  singleValue = convertNumericToUnit(
+                                      singleValue,
+                                      comp.props.unit,
+                                      comp.props.saveUnit
+                                  );
+                              }
+                              if (comp.props.unit) {
+                                  if (comp.props.saveUnit || comp.props.saveUnit === "") {
+                                      singleValue = singleValue + comp.props.saveUnit;
+                                  } else {
+                                      singleValue = singleValue + comp.props.unit;
+                                  }
+                              }
+                              return singleValue;
+                          })
+                          .join(" ");
             applySpec.apply({
                 editingElement: applySpec.editingElement,
                 param: applySpec.actionParam,
@@ -424,17 +430,23 @@ export function useInputBuilderComponent(
         );
         const { actionId, actionParam } = actionWithGetValue;
         let actionValue = getAction(actionId).getValue({ editingElement, param: actionParam });
-        if (comp.props.unit) {
-            // Remove the unit
-            actionValue = actionValue && actionValue.match(/\d+/g)[0];
-            if (comp.props.saveUnit) {
-                // Convert value from saveUnit to unit
-                actionValue = convertNumericToUnit(
-                    actionValue,
-                    comp.props.saveUnit,
-                    comp.props.unit
-                );
-            }
+        if (comp.props.unit && actionValue) {
+            actionValue = actionValue
+                .split(/\s+/g)
+                .map((singleValue) => {
+                    // Remove the unit
+                    singleValue = singleValue.match(/\d+/g)[0];
+                    if (comp.props.saveUnit) {
+                        // Convert value from saveUnit to unit
+                        singleValue = convertNumericToUnit(
+                            singleValue,
+                            comp.props.saveUnit,
+                            comp.props.unit
+                        );
+                    }
+                    return singleValue;
+                })
+                .join(" ");
         }
         return {
             value: actionValue,
@@ -453,7 +465,8 @@ export function useInputBuilderComponent(
         return rawValue !== undefined ? formatRawValue(rawValue) : "";
     }
 
-    const shouldPreview = comp.props.preview !== false &&
+    const shouldPreview =
+        comp.props.preview !== false &&
         (comp.props.preview === true || comp.env.weContext.preview !== false);
     function preview(userInputValue) {
         if (shouldPreview) {
@@ -530,10 +543,10 @@ export const basicContainerBuilderComponentProps = {
     actionParam: { validate: () => true, optional: true },
 
     // Shorthand actions.
-    classAction: { type: String, optional: true },
-    attributeAction: { type: String, optional: true },
-    dataAttributeAction: { type: String, optional: true },
-    styleAction: { type: String, optional: true },
+    classAction: { validate: () => true, optional: true },
+    attributeAction: { validate: () => true, optional: true },
+    dataAttributeAction: { validate: () => true, optional: true },
+    styleAction: { validate: () => true, optional: true },
 };
 const validateIsNull = { validate: (value) => value === null };
 
@@ -581,6 +594,20 @@ export function getAllActionsAndOperations(comp) {
         }
         return specs;
     }
+    function convertParamToObject(param) {
+        if (param === undefined) {
+            param = {};
+        } else if (
+            param instanceof Array ||
+            param instanceof Function ||
+            !(param instanceof Object)
+        ) {
+            param = {
+                ["mainParam"]: param,
+            };
+        }
+        return param;
+    }
     function getShorthandActions() {
         const actions = [];
         const shorthands = [
@@ -592,19 +619,24 @@ export function getAllActionsAndOperations(comp) {
         for (const [actionId, actionValue] of shorthands) {
             const actionParam = comp.env.weContext[actionId] || comp.props[actionId];
             if (actionParam !== undefined) {
-                actions.push({ actionId, actionParam, actionValue: comp.props[actionValue] });
+                actions.push({
+                    actionId,
+                    actionParam: convertParamToObject(actionParam),
+                    actionValue: comp.props[actionValue],
+                });
             }
         }
         return actions;
     }
     function getCustomAction() {
-        const action = {
-            actionId: comp.env.weContext.action || comp.props.action,
-            actionParam: comp.env.weContext.actionParam || comp.props.actionParam,
-            actionValue: comp.props.actionValue,
-        };
-        if (action.actionId) {
-            return action;
+        const actionId = comp.props.action || comp.env.weContext.action;
+        if (actionId) {
+            const actionParam = comp.props.actionParam ?? comp.env.weContext.actionParam;
+            return {
+                actionId: actionId,
+                actionParam: convertParamToObject(actionParam),
+                actionValue: comp.props.actionValue,
+            };
         }
     }
     function getAllActions() {

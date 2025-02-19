@@ -9,9 +9,11 @@ export class BorderConfigurator extends Component {
         label: { type: String },
         direction: { type: String, optional: true },
         withRoundCorner: { type: Boolean, optional: true },
+        withBSClass: { type: Boolean, optional: true },
     };
     static defaultProps = {
         withRoundCorner: true,
+        withBSClass: true, // TODO remove, and actually configure propertly in caller
     };
 
     setup() {
@@ -29,7 +31,9 @@ export class BorderConfigurator extends Component {
         const getAction = this.env.editor.shared.builderActions.getAction;
         const styleActionValue = getAction("styleAction").getValue({
             editingElement,
-            param: this.getStyleActionParam("width"),
+            param: {
+                mainParam: this.getStyleActionParam("width"),
+            },
         });
         return parseInt(styleActionValue.match(/\d+/g)[0]) > 0;
     }

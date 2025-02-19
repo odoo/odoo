@@ -4,7 +4,7 @@ import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { BackgroundPositionOverlay } from "./background_position_overlay";
 
-const getBgSizeValue = function ({ editingElement, param: styleName }) {
+const getBgSizeValue = function ({ editingElement, param: { mainParam: styleName } }) {
     const backgroundSize = editingElement.style.backgroundSize;
     const bgWidthAndHeight = backgroundSize.split(/\s+/g);
     const value = styleName === "width" ? bgWidthAndHeight[0] : bgWidthAndHeight[1] || "";
@@ -39,11 +39,11 @@ class BackgroundPositionOptionPlugin extends Plugin {
             },
             setBackgroundSize: {
                 getValue: getBgSizeValue,
-                apply: ({ editingElement, param: styleName, value }) => {
+                apply: ({ editingElement, param: { mainParam: styleName }, value }) => {
                     const otherParam = styleName === "width" ? "height" : "width";
                     let otherBgSize = getBgSizeValue({
                         editingElement: editingElement,
-                        param: otherParam,
+                        param: { mainParam: otherParam },
                     });
                     let bgSize;
                     if (styleName === "width") {

@@ -24,7 +24,10 @@ class CardOptionPlugin extends Plugin {
             setCardAlignment: {
                 ...classAction,
                 isApplied: (...args) => {
-                    const { editingElement: el, param: classNames } = args[0];
+                    const {
+                        editingElement: el,
+                        param: { mainParam: classNames },
+                    } = args[0];
                     // Align-left button is active by default
                     if (classNames === "me-auto") {
                         return !["mx-auto", "ms-auto"].some((cls) => el.classList.contains(cls));
