@@ -195,4 +195,15 @@ export class DynamicSnippetOption extends Component {
             dynamicFilter.defaultTemplate = defaultTemplatePerModel[dynamicFilter.model_name];
         }
     }
+    getFilteredTemplates() {
+        const namePattern =
+            "_" +
+            this.state.dynamicFilters[
+                this.domState.filterId || this.state.defaultFilterId
+            ].model_name.replaceAll(".", "_") +
+            "_";
+        return this.state.dynamicFilterTemplates.filter((template) =>
+            template.key.includes(namePattern)
+        );
+    }
 }
