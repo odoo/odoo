@@ -65,11 +65,13 @@
                                         t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
                                         t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
                                     >
-                                        <t t-if="source.optionTemplate">
-                                            <t t-call="{{ source.optionTemplate }}" />
-                                        </t>
-                                        <t t-else="">
-                                            <t t-esc="option.label" />
+                                        <t t-slot="{{ source.optionSlot }}" option="Object.getPrototypeOf(option)">
+                                            <t t-if="source.optionTemplate">
+                                                <t t-call="{{ source.optionTemplate }}"/>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-esc="option.label"/>
+                                            </t>
                                         </t>
                                     </a>
                                 </li>
