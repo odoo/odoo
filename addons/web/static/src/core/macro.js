@@ -29,25 +29,6 @@ const macroSchema = {
     onError: { type: Function, optional: true },
 };
 
-export const ACTION_HELPERS = {
-    click(el, _step) {
-        el.dispatchEvent(new MouseEvent("mouseover"));
-        el.dispatchEvent(new MouseEvent("mouseenter"));
-        el.dispatchEvent(new MouseEvent("mousedown"));
-        el.dispatchEvent(new MouseEvent("mouseup"));
-        el.click();
-        el.dispatchEvent(new MouseEvent("mouseout"));
-        el.dispatchEvent(new MouseEvent("mouseleave"));
-    },
-    text(el, step) {
-        // simulate an input (probably need to add keydown/keyup events)
-        this.click(el, step);
-        el.value = step.value;
-        el.dispatchEvent(new InputEvent("input", { bubbles: true }));
-        el.dispatchEvent(new InputEvent("change", { bubbles: true }));
-    },
-};
-
 const mutex = new Mutex();
 
 class MacroError extends Error {
@@ -116,7 +97,7 @@ export class Macro {
         if (proceedToAction) {
             this.onStep(this.currentElement, this.currentStep, this.currentIndex);
             this.clearTimer();
-            const actionResult = await this.performAction();
+            const actionResult = await this.stepAction(this.currentElement);
             if (!actionResult) {
                 // If falsy action result, it means the action worked properly.
                 // So we can proceed to the next step.
@@ -158,17 +139,15 @@ export class Macro {
     }
 
     /**
-     * Calls the `step.action` expecting no return to be successful.
+     * Must not return anything for macro to continue.
      */
-    async performAction() {
-        let actionResult;
+    async stepAction(element) {
+        const { action } = this.currentStep;
+        if (this.isComplete || !action) {
+            return;
+        }
         try {
-            const action = this.currentStep.action;
-            if (action in ACTION_HELPERS) {
-                actionResult = ACTION_HELPERS[action](this.currentElement, this.currentStep);
-            } else if (typeof action === "function") {
-                actionResult = await action(this.currentElement);
-            }
+            return await action(element);
         } catch (error) {
             this.stop(
                 new MacroError("Action", `ERROR during perform action:\n${error.message}`, {
@@ -176,7 +155,6 @@ export class Macro {
                 })
             );
         }
-        return actionResult;
     }
 
     get currentStep() {
