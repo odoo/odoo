@@ -1,17 +1,19 @@
 import { Builder } from "@html_builder/builder";
 import { DropZonePlugin } from "@html_builder/core/plugins/drop_zone_plugin";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
+import { Plugin } from "@html_editor/plugin";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { animationFrame } from "@odoo/hoot-dom";
 import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
 import {
-    mountWithCleanup,
-    patchWithCleanup,
     defineModels,
     models,
+    mountWithCleanup,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { getWebsiteSnippets } from "./snippets_getter.hoot";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { uniqueId } from "@web/core/utils/functions";
+import { getWebsiteSnippets } from "./snippets_getter.hoot";
 
 function getSnippetView(snippets) {
     const { snippet_groups, snippet_custom, snippet_structure, snippet_content } = snippets;
@@ -59,7 +61,7 @@ class BuilderContainer extends Component {
             </div>
         </div>`;
     static components = { Builder, LocalOverlayContainer };
-    static props = { content: String };
+    static props = { content: String, Plugins: Array };
 
     setup() {
         this.state = useState({ isMobile: false, isEditing: false });
@@ -98,29 +100,55 @@ class BuilderContainer extends Component {
             isTranslation: false,
             iframeLoaded: this.iframeLoaded,
             isMobile: this.state.isMobile,
+            Plugins: this.props.Plugins,
         };
     }
 }
 
-export async function setupHTMLBuilder(content = "") {
+export async function setupHTMLBuilder(content = "", { snippetContent, dropzoneSelectors } = {}) {
     defineMailModels(); // fuck this shit
     defineModels([IrUiView]);
 
-    const snippetContent = `<section class="s_test" data-snippet="s_test" data-name="Test">
-            <div class="test_a"></div>
-        </section>`;
-    const snippetsDescription = () => [{ name: "Test", groupName: "a", content: snippetContent }];
-    const snippetsDescr = {
+    // const snippetsDescription = { name: "Test", groupName: "a", content: snippetContentStr };
+    // [{ name: "Test", groupName: "a", content: snippetContentStr }];
+
+    const snippets = {
         snippet_groups: [
             '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
         ],
-        snippet_structure: snippetsDescription().map((snippetDesc) =>
-            getSnippetStructure(snippetDesc)
-        ),
+        snippet_structure: [
+            getSnippetStructure({
+                name: "Test",
+                groupName: "a",
+                content: `<section class="s_test" data-snippet="s_test" data-name="Test">
+            <div class="test_a"></div>
+            </section>`,
+            }),
+        ],
+        snippet_content: snippetContent || [
+            `<section class="s_test" data-snippet="s_test" data-name="Test">
+            <div class="test_a"></div>
+            </section>`,
+        ],
     };
+
     patchWithCleanup(IrUiView.prototype, {
-        render_public_asset: () => getSnippetView(snippetsDescr),
+        render_public_asset: () => getSnippetView(snippets),
     });
+
+    const Plugins = [];
+    if (dropzoneSelectors) {
+        const pluginId = uniqueId("test-dropzone-selector");
+
+        class P extends Plugin {
+            static id = pluginId;
+            resources = {
+                dropzone_selector: dropzoneSelectors,
+            };
+        }
+        Plugins.push(P);
+    }
+
     let _resolve;
     const prom = new Promise((resolve) => {
         _resolve = resolve;
@@ -133,13 +161,14 @@ export async function setupHTMLBuilder(content = "") {
             _resolve();
         },
     });
-    const comp = await mountWithCleanup(BuilderContainer, { props: { content } });
+    const comp = await mountWithCleanup(BuilderContainer, { props: { content, Plugins } });
     await comp.iframeLoaded;
     comp.state.isEditing = true;
     await prom;
     await animationFrame();
     return {
         contentEl: comp.iframeRef.el.contentDocument.body.firstChild.firstChild,
-        snippetContent,
+        builderEl: comp.env.builderRef.el.querySelector(".o-website-builder_sidebar"),
+        snippetContent: snippets.snippet_content.join(""),
     };
 }
