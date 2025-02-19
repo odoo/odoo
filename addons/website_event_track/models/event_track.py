@@ -474,20 +474,15 @@ class EventTrack(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
-    def _message_get_default_recipients(self, with_cc=False):
-        recipients = super()._message_get_default_recipients(with_cc=with_cc)
+    def _message_get_default_recipients(self, with_cc=False, all_tos=False):
+        recipients = super()._message_get_default_recipients(with_cc=with_cc, all_tos=all_tos)
         for track in self.filtered(lambda t: not t.partner_id.email_normalized and not email_normalize(t.contact_email) and t.partner_email):
             info = recipients[track.id]
-            info['email_to'] = ','.join(tools.email_normalize_all(track.partner_email)) or track.partner_email
-            info['partner_ids'] = []
+            info['email_to'] = ','.join(tools.mail.email_split_and_format_normalize(track.partner_email)) or track.partner_email
+            # default only: email is sufficient, otherwise propose even "wrong" partners
+            if not all_tos:
+                info['partner_ids'] = []
         return recipients
-
-    def _message_add_suggested_recipients(self, primary_email=False):
-        email_to_lst, partners = super()._message_add_suggested_recipients(primary_email)
-        #  Priority: contact information then speaker information
-        if not self.partner_id.email_normalized and not email_normalize(self.contact_email) and self.partner_email:
-            email_to_lst.append(self.partner_email)
-        return email_to_lst, partners
 
     def _message_post_after_hook(self, message, msg_vals):
         #  OVERRIDE

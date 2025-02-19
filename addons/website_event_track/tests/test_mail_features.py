@@ -73,7 +73,7 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCommon):
             },
             # wrong email -> fallback on valid speaker email
             self.tracks[4].id: {
-                'email_cc': '', 'email_to': 'speaker@test.example.com',
+                'email_cc': '', 'email_to': '"Speaker" <speaker@test.example.com>',
                 'partner_ids': [],
             },
             # no partner: contact then speaker
@@ -131,6 +131,11 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCommon):
                     'email': self.event_customer.email_normalized,
                     'name': self.event_customer.name,
                     'partner_id': self.event_customer.id,
+                }, {
+                    'create_values': {},
+                    'email': 'speaker@test.example.com',
+                    'name': 'Speaker',
+                    'partner_id': False,
                 },
             ],
             # partner with wrong email: add speaker as fallback

@@ -73,11 +73,6 @@ class ResPartner(models.Model):
     def _mail_get_partners(self, introspect_fields=False):
         return dict((partner.id, partner) for partner in self)
 
-    def _message_add_suggested_recipients(self, primary_email=False):
-        email_to_lst, partners = super()._message_add_suggested_recipients(primary_email)
-        partners += self
-        return email_to_lst, partners
-
     # ------------------------------------------------------------
     # ORM
     # ------------------------------------------------------------
