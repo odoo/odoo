@@ -135,3 +135,10 @@ export function waitRequest() {
         },
     ];
 }
+
+export function isSynced() {
+    return {
+        content: "Check if the request is proceeded",
+        trigger: negate(".fa-spin", ".status-buttons"),
+    };
+}
