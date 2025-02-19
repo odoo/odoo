@@ -399,10 +399,13 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                     if (!printed.innerHTML.includes("Product Test (Value 1)")) {
                         throw new Error("Product Test (Value 1) not found in printed receipt");
                     }
+                    const receiptHeader = printed.querySelector(".receipt-header");
+                    if (!receiptHeader.innerHTML.includes("14:20")) {
+                        throw new Error(
+                            "Expected timestamp '14:20' not found in the printed receipt header"
+                        );
+                    }
                 },
-            },
-            {
-                trigger: ".pos-receipt .receipt-header:contains('14:20')",
             },
         ].flat(),
 });
