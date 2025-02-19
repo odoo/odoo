@@ -738,3 +738,24 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
         self.assertEqual(payment.payment_method_line_id.journal_id, payment.journal_id)
         self.assertEqual(payment.journal_id, journal_bank)
+
+    def test_empty_string_payment_method(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice.action_post()
+
+        journal = self.company_data['default_journal_bank']
+        payment_method_line = journal.inbound_payment_method_line_ids.filtered(lambda pm: pm.code == "manual")
+        payment_method_line.write({
+            'name': False,
+            'payment_account_id': self.payment_debit_account_id.id,
+        })
+
+        self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_method_line_id': payment_method_line.id})\
+            ._create_payments()
+        self.assertEqual(invoice.state, "posted")
