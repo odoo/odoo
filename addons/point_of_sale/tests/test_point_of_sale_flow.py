@@ -11,6 +11,7 @@ from odoo.fields import Command
 from odoo.tools import float_compare, mute_logger, test_reports
 from odoo.tests import Form
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
+from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -2086,6 +2087,22 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         purchase_order = self.env['purchase.order'].search([], limit=1)
         self.assertEqual(purchase_order.order_line.product_id.id, product.id)
         self.assertEqual(purchase_order.order_line.product_qty, 2)
+
+    def test_product_combo_creation(self):
+        setup_pos_combo_items(self)
+        """We check that combo products are created without taxes."""
+        # Test product combo creation
+        product_form = Form(self.env['product.product'])
+        product_form.name = "Test Combo Product"
+        product_form.lst_price = 100
+        product_form.type = "combo"
+        product_form.combo_ids = self.desk_accessories_combo
+        product = product_form.save()
+        self.assertTrue(product.combo_ids)
+
+        product_form.type = "consu"
+        product = product_form.save()
+        self.assertFalse(product.combo_ids)
 
     def test_change_is_deducted_from_cash(self):
         self.pos_config.open_ui()
