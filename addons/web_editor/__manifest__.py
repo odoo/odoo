@@ -109,6 +109,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/wysiwyg_iframe.scss',
             'web_editor/static/src/scss/wysiwyg_snippets.scss',
 
+            'web_editor/static/src/xml/column_layout.xml',
             'web_editor/static/src/xml/editor.xml',
             'web_editor/static/src/xml/grid_layout.xml',
             'web_editor/static/src/xml/snippets.xml',
@@ -194,6 +195,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js',
 
             'web_editor/static/src/xml/add_snippet_dialog.xml',
+            'web_editor/static/src/xml/column_layout.xml',
             'web_editor/static/src/xml/editor.xml',
             'web_editor/static/src/xml/grid_layout.xml',
             'web_editor/static/src/xml/snippets.xml',
