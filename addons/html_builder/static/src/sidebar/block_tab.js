@@ -93,7 +93,9 @@ export class BlockTab extends Component {
         }
         this.snippetModel.select(snippet, {
             onSelect: (snippet) => {
-                addElement(snippet.content.cloneNode(true));
+                const newSnippet = snippet.content.cloneNode(true);
+                addElement(newSnippet);
+                return newSnippet;
             },
             onClose: () => this.dropzonePlugin.clearDropZone(),
         });

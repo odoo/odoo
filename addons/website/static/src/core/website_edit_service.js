@@ -70,21 +70,26 @@ registry.category("services").add("website_edit", {
             }
         };
 
+        const stop = (target) => {
+            publicInteractions.stopInteractions(target);
+        }
+
         const isEditingTranslations = () => {
             return !!publicInteractions.el.closest("html").dataset.edit_translations;
         };
 
-        const websiteEditService = { isEditingTranslations, update };
+        const websiteEditService = { isEditingTranslations, update, stop };
 
-        // Notify the WebsiteBuilder that the iframe website_edit service in iframe
-        // is ready to listen
-        window.parent.document.dispatchEvent(
-            new CustomEvent("website_edit_loaded", {
-                detail: {
-                    websiteEditService,
-                },
-            })
-        );
+        // Transfer the iframe website_edit service to the EditInteractionPlugin
+        window.parent.document.addEventListener("edit_interaction_plugin_loaded", (ev) => {
+            ev.currentTarget.dispatchEvent(
+                new CustomEvent("transfer_website_edit_service", {
+                    detail: {
+                        websiteEditService,
+                    },
+                })
+            );
+        });
 
         return websiteEditService;
     },

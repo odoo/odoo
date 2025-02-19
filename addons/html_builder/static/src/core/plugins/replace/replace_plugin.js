@@ -43,11 +43,13 @@ export class ReplacePlugin extends Plugin {
         const newSnippet = await this.config.replaceSnippet(this.overlayTarget);
         if (newSnippet) {
             this.overlayTarget = null;
+            newSnippet.querySelectorAll(".s_dialog_preview").forEach((el) => el.remove());
             // TODO find a way to wait for the images to load before updating or
             // to trigger a refresh once the images are loaded afterwards.
             // If not possible, call updateContainers with nothing.
             this.dependencies["builder-options"].updateContainers(newSnippet);
             // TODO post snippet drop (onBuild,...)
+            this.dispatchTo("update_interactions", newSnippet);
         }
     }
 }

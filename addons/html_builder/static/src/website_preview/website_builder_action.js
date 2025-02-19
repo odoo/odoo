@@ -6,7 +6,6 @@ import {
     useRef,
     useState,
     useSubEnv,
-    status,
 } from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
@@ -112,23 +111,12 @@ export class WebsiteBuilder extends Component {
 
     onEditPage() {
         document.querySelector(".o_main_navbar").setAttribute("style", "margin-top: -100%;");
-        this.setupEditInteraction();
+        this.loadAssetsEditBundle();
 
         setTimeout(() => {
             this.state.isEditing = true;
             registry.category("systray").remove("website.WebsiteSystrayItem");
         }, 200);
-    }
-
-    setupEditInteraction() {
-        this.updateEditInteraction = ({ detail: { websiteEditService } }) => {
-            if (status(this) !== "destroyed") {
-                const targetEl = this.websiteContent.el.contentDocument.querySelector("#wrapwrap");
-                websiteEditService.update(targetEl, true);
-            }
-        };
-        window.parent.document.addEventListener("website_edit_loaded", this.updateEditInteraction);
-        this.loadAssetsEditBundle();
     }
 
     loadAssetsEditBundle() {

@@ -28,23 +28,3 @@ test("top window url in action context parameter", async () => {
     await setupWebsiteBuilder(`<h1> Homepage </h1>`);
     expect(websiteBuilder.initialUrl).toBe("/website/force/1?path=%2F");
 });
-
-test("interaction mode is toggled when editing", async () => {
-    await setupWebsiteBuilder(`<p class="test">x</p>`, {
-        loadIframeBundles: true,
-    });
-
-    // This is normally triggered by the website_edit service
-    window.parent.document.dispatchEvent(
-        new CustomEvent("website_edit_loaded", {
-            detail: {
-                websiteEditService: {
-                    update: () => expect.step("update"),
-                },
-            },
-        })
-    );
-
-    // Check that the WebsiteBuilder calls the update method of the website_edit service
-    expect.verifySteps(["update"]);
-});

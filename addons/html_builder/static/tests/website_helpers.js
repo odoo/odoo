@@ -1,5 +1,6 @@
 import { Builder } from "@html_builder/builder";
 import { DropZonePlugin } from "@html_builder/core/plugins/drop_zone_plugin";
+import { EditInteractionPlugin } from "@html_builder/website_builder/plugins/edit_interaction_plugin";
 import { WebsiteSessionPlugin } from "@html_builder/website_builder/plugins/website_session_plugin";
 import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
@@ -8,8 +9,9 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
 import { after, describe } from "@odoo/hoot";
-import { advanceTime, animationFrame, click, queryOne } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, click, queryOne, waitFor } from "@odoo/hoot-dom";
 import {
+    contains,
     defineModels,
     getService,
     models,
@@ -106,7 +108,7 @@ export async function setupWebsiteBuilder(
             return props;
         },
         loadAssetsEditBundle() {
-            // To instanciate interactions in the iframe test we need to
+            // To instantiate interactions in the iframe test we need to
             // load the edit and frontend bundle in it. The problem is that
             // Hoot does not have control of this iframe and therefore
             // does not mock anything in it (location, rpc, ...).
@@ -116,6 +118,17 @@ export async function setupWebsiteBuilder(
         name: "Website Builder",
         tag: "egg_website_preview",
         type: "ir.actions.client",
+    });
+
+    patchWithCleanup(EditInteractionPlugin.prototype, {
+        setup() {
+            super.setup();
+            // See loadAssetsEditBundle override in WebsiteBuilder patch.
+            this.websiteEditService = {
+                update: () => {},
+                stop: () => {},
+            };
+        },
     });
 
     patchWithCleanup(Builder.prototype, {
@@ -349,4 +362,14 @@ export async function setupWebsiteBuilderWithDummySnippet(content) {
     const snippetContent = getSnippetEl(true);
 
     return { getEditor, getEditableContent, snippetContent };
+}
+
+export async function confirmAddSnippet(snippetName) {
+    let previewSelector = `.o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap`;
+    if (snippetName) {
+        previewSelector += " [data-snippet='" + snippetName + "']";
+    }
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
+    await contains(previewSelector).click();
+    await animationFrame();
 }

@@ -121,7 +121,10 @@ export class SnippetModel extends Reactive {
             {
                 selectedSnippet: snippet,
                 snippetModel: this,
-                selectSnippet: onSelect,
+                selectSnippet: (...args) => {
+                    const newSnippet = onSelect(...args);
+                    this.cleanPreviewSnippet(newSnippet);
+                },
             },
             { onClose }
         );
@@ -297,12 +300,17 @@ export class SnippetModel extends Reactive {
                     selectSnippet: (selectedSnippet) => {
                         newSnippet = selectedSnippet.content.cloneNode(true);
                         snippetToReplace.replaceWith(newSnippet);
+                        this.cleanPreviewSnippet(newSnippet);
                     },
                 },
                 { onClose: () => resolve() }
             );
         });
         return newSnippet;
+    }
+
+    cleanPreviewSnippet(snippetEl) {
+        snippetEl.querySelectorAll(".s_dialog_preview").forEach((el) => el.remove());
     }
 
     saveSnippet(snippetEl, cleanForSaveHandlers) {

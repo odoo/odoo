@@ -236,6 +236,7 @@ export class DropZonePlugin extends Plugin {
             target[insertMethod](elementToAdd);
             scrollToWindow(elementToAdd, { behavior: "smooth", offset: 50 });
             this.dependencies.history.addStep();
+            this.dispatchTo("update_interactions", elementToAdd);
         };
     }
 }

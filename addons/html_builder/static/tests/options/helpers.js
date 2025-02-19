@@ -1,18 +1,11 @@
+import { getWebsiteSnippets } from "../snippets_getter.hoot";
 import { setupWebsiteBuilder } from "../website_helpers";
-import { SnippetModel } from "@html_builder/snippets/snippet_service";
-import { getMockEnv, makeMockEnv, mockService } from "@web/../tests/web_test_helpers";
+import { mockService } from "@web/../tests/web_test_helpers";
 
 export async function getStructureSnippet(snippetName) {
-    const mockEnv = getMockEnv() || (await makeMockEnv());
-    const snippetModel = new SnippetModel(mockEnv.services, {
-        snippetsName: "website.snippets",
-        installSnippetModule: () => {},
-    });
-    await snippetModel.load();
-    const snippet = snippetModel.snippetsByCategory.snippet_structure.find(
-        (snippet) => snippet.name === snippetName
-    );
-    return snippet.content.cloneNode(true);
+    const html = await getWebsiteSnippets();
+    const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
+    return snippetsDocument.querySelector(`[data-snippet=${snippetName}]`).cloneNode(true);
 }
 
 export async function insertStructureSnippet(editor, snippetName) {
@@ -22,7 +15,7 @@ export async function insertStructureSnippet(editor, snippetName) {
     editor.shared.history.addStep();
 }
 
-export async function setupWebsiteBuilderWithSnippet(snippetName) {
+export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) {
     mockService("website", {
         get currentWebsite() {
             return {
@@ -35,6 +28,7 @@ export async function setupWebsiteBuilderWithSnippet(snippetName) {
     });
     const snippetEl = await getStructureSnippet(snippetName);
     return setupWebsiteBuilder(snippetEl.outerHTML, {
+        ...options,
         hasToCreateWebsite: false,
     });
 }

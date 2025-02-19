@@ -1,7 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupHTMLBuilder } from "./helpers";
+import { confirmAddSnippet } from "./website_helpers";
 
 describe.current.tags("desktop");
 
@@ -9,16 +10,6 @@ const initialDropZone = (hovered = false) => `
     <div class="oe_drop_zone oe_insert${
         hovered ? " o_dropzone_highlighted" : ""
     }" data-editor-message="DRAG BUILDING BLOCKS HERE"></div>`;
-
-async function confirmSnippet() {
-    expect(".o_add_snippet_dialog").toHaveCount(1);
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
-    const previewSelector =
-        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
-    await waitFor(previewSelector);
-    await click(previewSelector);
-    await animationFrame();
-}
 
 test("initial dropzone is visible after opening edit sidebar", async () => {
     const { contentEl } = await setupHTMLBuilder("");
@@ -35,7 +26,7 @@ test("drop beside dropzone inserts the snippet", async () => {
     // The dropzone is not hovered, so not highlighted.
     expect(contentEl).toHaveInnerHTML(initialDropZone());
     await drop();
-    await confirmSnippet();
+    await confirmAddSnippet();
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(contentEl).toHaveInnerHTML(snippetContent);
 });
@@ -50,7 +41,7 @@ test("initial dropzone appears after undo", async () => {
     await moveTo(contentEl);
     expect(contentEl).toHaveInnerHTML(initialDropZone(true));
     await drop();
-    await confirmSnippet();
+    await confirmAddSnippet();
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(contentEl).toHaveInnerHTML(snippetContent);
 
