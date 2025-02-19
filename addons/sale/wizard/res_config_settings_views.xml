@@ -165,6 +165,18 @@
                             <field name="module_sale_amazon" widget="upgrade_boolean"/>
                             <div class="content-group" name="amazon_connector" invisible="not module_sale_amazon"/>
                         </setting>
+                        <setting
+                            id="gelato"
+                            documentation="/applications/sales/sales/gelato.html"
+                            help="Place orders through Gelato's print-on-demand service"
+                        >
+                            <field name="module_sale_gelato" widget="upgrade_boolean"/>
+                            <div
+                                class="content-group"
+                                name="gelato_credentials"
+                                invisible="not module_sale_gelato"
+                            />
+                        </setting>
                         <setting id="shopee_connector" help="Import Shopee orders and sync deliveries">
                             <field name="module_sale_shopee" widget="upgrade_boolean"/>
                         </setting>
