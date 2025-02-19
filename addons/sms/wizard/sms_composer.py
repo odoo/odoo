@@ -239,10 +239,13 @@ class SmsComposer(models.TransientModel):
         records = records if records is not None else self._get_records()
 
         sms_record_values = self._prepare_mass_sms_values(records)
-        sms_all = self._prepare_mass_sms(records, sms_record_values)
-        if sms_all and self.mass_keep_log and records and isinstance(records, self.pool['mail.thread']):
+        records = records.filtered(lambda r: r.id in sms_record_values)
+        if self.mass_keep_log and sms_record_values and isinstance(records, self.pool['mail.thread']):
             log_values = self._prepare_mass_log_values(records, sms_record_values)
-            records._message_log_batch(**log_values)
+            mail_messages = records._message_log_batch(**log_values)
+            for idx, record in enumerate(records):
+                sms_record_values[record.id]['mail_message_id'] = mail_messages[idx].id
+        sms_all = self._prepare_mass_sms(records, sms_record_values)
 
         if sms_all and self.mass_force_send:
             sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
@@ -290,6 +293,12 @@ class SmsComposer(models.TransientModel):
         return all_bodies
 
     def _prepare_mass_sms_values(self, records):
+        """ Prepare sms values for the given records.
+
+        :returns dict: prepared sms value by record id
+        ! Some records can be omitted in the returned dict.
+        These omitted records should no longer be considered for sending.
+        """
         all_bodies = self._prepare_body_values(records)
         all_recipients = self._prepare_recipient_values(records)
         blacklist_ids = self._get_blacklist_record_ids(records, all_recipients)
