@@ -90,14 +90,12 @@ class PrinterDriver(Driver):
 
         if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.device_subtype = "receipt_printer"
-            if self.connected_by_usb:
-                self.print_status_receipt()
         elif any(cmd in device['device-id'] for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']):
             self.device_subtype = "label_printer"
-            if self.connected_by_usb:
-                self.print_status_zpl()
         else:
             self.device_subtype = "office_printer"
+
+        self.print_status()
 
     @classmethod
     def supported(cls, device):
@@ -366,6 +364,14 @@ class PrinterDriver(Driver):
 
         return { "mac": mac, "pairing_code": pairing_code, "ssid": ssid, "ips": ips }
 
+    def print_status(self):
+        if not self.connected_by_usb:
+            return
+        if self.device_subtype == "receipt_printer":
+            self.print_status_receipt()
+        if self.device_subtype == "label_printer":
+            self.print_status_zpl()
+
     def print_status_receipt(self):
         """Prints the status ticket of the IoTBox on the current printer."""
         wlan = ''
@@ -375,7 +381,9 @@ class PrinterDriver(Driver):
         pairing_code = ''
 
         iot_status = self._get_iot_status()
-        wlan = '\nWireless network:\n%s\n\n' % iot_status["ssid"]
+
+        if iot_status['ssid']:
+            wlan = '\nWireless network:\n%s\n\n' % iot_status["ssid"]
 
         ips = iot_status["ips"]
         if len(ips) == 0:
