@@ -24,6 +24,7 @@ class ResCompany(models.Model):
         string="Indian Production Environment",
         help="Enable the use of production credentials",
         groups="base.group_system",
+        default=True,
     )
     l10n_in_pan = fields.Char(
         string="PAN",
