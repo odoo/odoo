@@ -4,6 +4,11 @@
 DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
+    # Brand payment methods.
+    'amex',
+    'discover',
+    'mastercard',
+    'visa',
 }
 
 # Mapping of payment method codes to Worldline codes.
