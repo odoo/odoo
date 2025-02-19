@@ -7,15 +7,21 @@
     > .modal-body {
         padding: 0;
     }
+
+    button.oi-close {
+        aspect-ratio: 1;
+    }
 }
 
 .o-mail-MessageReactionMenu-persona:not(.o-isDeviceSmall) {
-    &:not(:hover) button.fa-trash {
+    &:not(:hover) button.oi-close {
         opacity: 0;
     }
-    &:hover button.fa-trash {
-        opacity: 100;
+    &:hover button.oi-close {
+        opacity: 50%;
+
         &:hover {
+            opacity: 100%;
             background-color: $gray-100;
         }
     }
