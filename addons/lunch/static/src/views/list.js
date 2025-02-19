@@ -8,6 +8,7 @@ import { LunchDashboard } from '../components/lunch_dashboard';
 import { LunchRendererMixin } from '../mixins/lunch_renderer_mixin';
 
 import { LunchSearchModel } from './search_model';
+import { LunchSearchPanel } from './search_panel';
 
 
 export class LunchListRenderer extends LunchRendererMixin(ListRenderer) {
@@ -44,4 +45,5 @@ registry.category('views').add('lunch_list', {
     Controller: LunchListController,
     Renderer: LunchListRenderer,
     SearchModel: LunchSearchModel,
+    SearchPanel: LunchSearchPanel,
 });

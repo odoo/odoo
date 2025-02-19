@@ -9,7 +9,7 @@ import { LunchDashboard } from '../components/lunch_dashboard';
 import { LunchRendererMixin } from '../mixins/lunch_renderer_mixin';
 
 import { LunchSearchModel } from './search_model';
-
+import { LunchSearchPanel } from './search_panel';
 
 export class LunchKanbanRecord extends KanbanRecord {
     onGlobalClick(ev) {
@@ -49,4 +49,5 @@ registry.category('views').add('lunch_kanban', {
     Controller: LunchKanbanController,
     Renderer: LunchKanbanRenderer,
     SearchModel: LunchSearchModel,
+    SearchPanel: LunchSearchPanel,
 });
