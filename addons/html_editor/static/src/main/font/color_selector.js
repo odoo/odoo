@@ -21,6 +21,7 @@ export class ColorSelector extends Component {
         applyColorResetPreview: Function,
         getUsedCustomColors: Function,
         colorPrefix: { type: String },
+        onClose: Function,
     };
 
     setup() {
@@ -54,7 +55,12 @@ export class ColorSelector extends Component {
                 getUsedCustomColors: this.props.getUsedCustomColors,
                 colorPrefix: this.props.colorPrefix,
             },
-            { onClose: () => this.props.applyColorResetPreview() }
+            {
+                onClose: () => {
+                    this.props.applyColorResetPreview();
+                    this.props.onClose();
+                },
+            }
         );
     }
 

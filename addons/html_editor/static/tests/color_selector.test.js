@@ -150,12 +150,43 @@ test("select hex color and apply it", async () => {
     await animationFrame();
     expect("button[data-color='#017E84']").toHaveCount(1);
     expect(queryOne("button[data-color='#017E84']").style.backgroundColor).toBe("rgb(1, 126, 132)");
-    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">test</font></p>`);
 
     await click(".odoo-editor-editable");
     await animationFrame();
     expect(".o_font_color_selector").toHaveCount(0);
     expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+});
+
+test("should be able to apply hex color with opacity component", async () => {
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    await click(".o_hex_input");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await edit("#017E8480"); // === rgba(1, 126, 132, 0.5)
+    await animationFrame();
+    expect("button[data-color='#017E8480']").toHaveCount(1);
+    expect(queryOne("button[data-color='#017E8480']").style.backgroundColor).toBe(
+        "rgba(1, 126, 132, 0.5)"
+    );
+    expect(getContent(el)).toBe(`<p><font style="color: rgba(1, 126, 132, 0.5);">test</font></p>`);
+
+    await click(".odoo-editor-editable");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(0);
+    expect(getContent(el)).toBe(
+        `<p><font style="color: rgba(1, 126, 132, 0.5);">[test]</font></p>`
+    );
 });
 
 test("custom color tab should be opened by default if selected color is a custom color", async () => {
