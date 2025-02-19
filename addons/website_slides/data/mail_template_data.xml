@@ -22,7 +22,7 @@
                         </t>
                         <div style="padding: 16px 8px 16px 8px; text-align: center;">
                             <a t-att-href="object.website_share_url"
-                                style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View content</a>
+                                t-attf-style="background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;">View content</a>
                         </div>
                         Enjoy this exclusive content!
                         <t t-if="user.signature">
@@ -55,7 +55,7 @@
                         </div>
                         <div style="padding: 16px 8px 16px 8px; text-align: center;">
                             <a t-att-href="(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url"
-                                style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View <strong t-out="object.name or ''">Trees</strong></a>
+                                t-attf-style="background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;">View <strong t-out="object.name or ''">Trees</strong></a>
                         </div>
                         <t t-if="user.signature">
                             <br />
@@ -85,7 +85,7 @@
                         <p>Check out the other available courses.</p><br/>
 
                         <div style="padding: 16px 8px 16px 8px; text-align: center;">
-                            <a href="/slides/all" style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
+                            <a href="/slides/all" t-attf-style="background-color: {{object.channel_id.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.channel_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;">
                                 Explore courses
                             </a>
                         </div>
@@ -121,8 +121,8 @@
                         </div>
                         <div style="padding: 16px 8px 16px 8px; text-align: center;">
                             <a t-att-href="object.website_absolute_url"
-                                style="background-color: #875a7b; padding: 8px 16px 8px 16px;
-                                text-decoration: none; color: #fff; border-radius: 5px;">
+                                t-attf-style="background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px;
+                                text-decoration: none; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;">
                                 View <strong t-out="object.name or ''">Document</strong></a>
                         </div>
                         <t t-if="user.signature">
