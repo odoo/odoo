@@ -160,3 +160,8 @@ test(`Week: automatically scroll to 6am`, async () => {
     const dayStartDimensions = queryRect(`.fc-timegrid-slot[data-time="06:00:00"]:eq(0)`);
     expect(Math.abs(dayStartDimensions.y - containerDimensions.y)).toBeLessThan(2);
 });
+
+test("Month: remove row when no day of current month", async () => {
+    await start({ model: { ...FAKE_MODEL, scale: "month" } });
+    expect(".fc-day-other, .fc-day-disabled").toHaveCount(4);
+});
