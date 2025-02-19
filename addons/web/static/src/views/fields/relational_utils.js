@@ -184,38 +184,45 @@ export class Many2XAutocomplete extends Component {
     static template = "web.Many2XAutocomplete";
     static components = { AutoComplete };
     static props = {
-        value: { type: String, optional: true },
         activeActions: Object,
-        context: { type: Object, optional: true },
-        nameCreateField: { type: String, optional: true },
-        setInputFloats: { type: Function, optional: true },
-        update: Function,
-        resModel: String,
-        getDomain: Function,
-        searchLimit: { type: Number, optional: true },
-        quickCreate: { type: [Function, { value: null }], optional: true },
-        noSearchMore: { type: Boolean, optional: true },
-        searchMoreLimit: { type: Number, optional: true },
-        fieldString: String,
-        id: { type: String, optional: true },
-        placeholder: { type: String, optional: true },
         autoSelect: { type: Boolean, optional: true },
-        isToMany: { type: Boolean, optional: true },
         autocomplete_container: { type: Function, optional: true },
-        dropdown: { type: Boolean, optional: true },
         autofocus: { type: Boolean, optional: true },
+        context: { type: Object, optional: true },
+        createAction: { type: Function, optional: true },
+        dropdown: { type: Boolean, optional: true },
+        fieldString: String,
+        getDomain: Function,
         getOptionClassnames: { type: Function, optional: true },
+        id: { type: String, optional: true },
+        isToMany: { type: Boolean, optional: true },
+        nameCreateField: { type: String, optional: true },
+        noSearchMore: { type: Boolean, optional: true },
+        otherSources: { type: Array, optional: true },
+        placeholder: { type: String, optional: true },
+        quickCreate: { type: [Function, { value: null }], optional: true },
+        resModel: String,
+        searchLimit: { type: Number, optional: true },
+        searchMoreLabel: { type: String, optional: true },
+        searchMoreLimit: { type: Number, optional: true },
+        setInputFloats: { type: Function, optional: true },
+        slots: { optional: true },
+        specification: { type: Object, optional: true },
+        update: Function,
+        value: { type: String, optional: true },
     };
     static defaultProps = {
-        searchLimit: 7,
-        searchMoreLimit: 320,
-        nameCreateField: "name",
-        value: "",
-        setInputFloats: () => {},
-        quickCreate: null,
         context: {},
         dropdown: true,
         getOptionClassnames: () => "",
+        nameCreateField: "name",
+        otherSources: [],
+        quickCreate: null,
+        searchLimit: 7,
+        searchMoreLimit: 320,
+        setInputFloats: () => {},
+        specification: {},
+        value: "",
     };
     setup() {
         this.orm = useService("orm");
@@ -223,31 +230,33 @@ export class Many2XAutocomplete extends Component {
         this.autoCompleteContainer = useForwardRefToParent("autocomplete_container");
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
 
-        this.openMany2X = useOpenMany2XRecord({
-            resModel,
-            activeActions,
-            isToMany,
-            onRecordSaved: (record) => update([{ ...record.data, id: record.resId }]),
-            onRecordDiscarded: () => {
-                if (!isToMany) {
-                    this.props.update(false);
-                }
-            },
-            fieldString,
-            onClose: () => {
-                const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
+        this.openMany2X =
+            this.props.createAction ??
+            useOpenMany2XRecord({
+                resModel,
+                activeActions,
+                isToMany,
+                onRecordSaved: (record) => update([{ ...record.data, id: record.resId }]),
+                onRecordDiscarded: () => {
+                    if (!isToMany) {
+                        this.props.update(false);
+                    }
+                },
+                fieldString,
+                onClose: () => {
+                    const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
 
-                // There are two cases:
-                // 1. Value is the same as the input: it means the autocomplete has re-rendered with the right value
-                //    This is in case we saved the record, triggering all the interface to update.
-                // 2. Value is different from the input: it means the input has a manually entered value and nothing
-                //    happened, that is, we discarded the changes
-                if (this.props.value !== autoCompleteInput.value) {
-                    autoCompleteInput.value = "";
-                }
-                autoCompleteInput.focus();
-            },
-        });
+                    // There are two cases:
+                    // 1. Value is the same as the input: it means the autocomplete has re-rendered with the right value
+                    //    This is in case we saved the record, triggering all the interface to update.
+                    // 2. Value is different from the input: it means the input has a manually entered value and nothing
+                    //    happened, that is, we discarded the changes
+                    if (this.props.value !== autoCompleteInput.value) {
+                        autoCompleteInput.value = "";
+                    }
+                    autoCompleteInput.focus();
+                },
+            });
 
         this.selectCreate = useSelectCreate({
             resModel,
@@ -262,13 +271,33 @@ export class Many2XAutocomplete extends Component {
         });
     }
 
+    get autoCompleteProps() {
+        return {
+            autocomplete: "off",
+            autoSelect: this.props.autoSelect,
+            autofocus: this.props.autofocus,
+            dropdown: this.props.dropdown,
+            id: this.props.id,
+            onCancel: this.onCancel.bind(this),
+            onChange: this.onChange.bind(this),
+            onInput: this.onInput.bind(this),
+            onSelect: this.onSelect.bind(this),
+            placeholder: this.props.placeholder,
+            resetOnSelect: this.props.value === "",
+            sources: this.sources,
+            slots: this.props.slots,
+            value: this.props.value,
+        };
+    }
+
     get sources() {
-        return [this.optionsSource];
+        return [this.optionsSource, ...this.props.otherSources];
     }
     get optionsSource() {
         return {
             placeholder: _t("Loading..."),
             options: this.loadOptionsSource.bind(this),
+            optionSlot: this.props.slots?.recordItem ? "option" : undefined,
         };
     }
 
@@ -293,7 +322,9 @@ export class Many2XAutocomplete extends Component {
 
     onSelect(option, params = {}) {
         if (option.action) {
-            return option.action(params);
+            return option.action(option, params, {
+                openRecord: (openParams) => this.openMany2X(openParams),
+            });
         }
         this.props.update([option.record], params);
     }
@@ -402,7 +433,7 @@ export class Many2XAutocomplete extends Component {
     }
 
     get SearchMoreButtonLabel() {
-        return _t("Search More...");
+        return this.props.searchMoreLabel ?? _t("Search More...");
     }
 
     async onBarcodeSearch() {
