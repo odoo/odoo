@@ -38,6 +38,7 @@ import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
+import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
 
 const { DateTime } = luxon;
 
@@ -547,6 +548,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         await this.deviceSync.readDataFromServer();
         this.markReady();
+        openCustomerDisplay(this.getDisplayDeviceIP(), this.config.access_token, this.config.id);
         this.showScreen(this.firstScreen);
     }
 

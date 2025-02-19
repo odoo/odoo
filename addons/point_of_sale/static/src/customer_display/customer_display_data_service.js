@@ -21,7 +21,7 @@ export const CustomerDisplayDataService = {
                 }
             );
         }
-        if (session.type === "proxy") {
+        if (session.iface_display_id) {
             const intervalId = setInterval(async () => {
                 try {
                     const response = await fetch(

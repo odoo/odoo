@@ -29,7 +29,7 @@ export class CustomerDisplayPosAdapter {
             ]);
         }
 
-        if (pos.config.customer_display_type === "proxy") {
+        if (pos.config.iface_display_id) {
             const proxyIP = pos.getDisplayDeviceIP();
             fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
                 method: "POST",
