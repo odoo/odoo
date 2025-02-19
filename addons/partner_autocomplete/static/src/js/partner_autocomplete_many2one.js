@@ -8,7 +8,7 @@ import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocom
 export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
     setup() {
         super.setup();
-        this.partner_autocomplete = usePartnerAutocomplete();
+        this.partnerAutocomplete = usePartnerAutocomplete();
     }
 
     validateSearchTerm(request) {
@@ -24,7 +24,7 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
             {
                 options: async (request) => {
                     if (this.validateSearchTerm(request)) {
-                        const suggestions = await this.partner_autocomplete.autocomplete(request);
+                        const suggestions = await this.partnerAutocomplete.autocomplete(request);
                         suggestions.forEach((suggestion) => {
                             suggestion.classList = "partner_autocomplete_dropdown_many2one";
                             suggestion.isFromPartnerAutocomplete = true;
@@ -43,7 +43,10 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
 
     async onSelect(option, params) {
         if (option.isFromPartnerAutocomplete) {  // Checks that it is a partner autocomplete option
-            const data = await this.partner_autocomplete.getCreateData(Object.getPrototypeOf(option));
+            const data = await this.partnerAutocomplete.getCreateData(Object.getPrototypeOf(option));
+            if (!data?.company) {
+                return;
+            }
             let context = {
                 'default_is_company': true
             };
