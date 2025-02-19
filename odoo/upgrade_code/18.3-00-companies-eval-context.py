@@ -24,6 +24,7 @@ def upgrade(file_manager):
     reg_attr_allowed = re.compile(r"""(<(button|group|label|div|field|separator|footer|page|widget|xpath)([^>]+?\s*)(readonly|required|invisible|column_invisible)="([^<>"]+)?\s*)(?<!context.get\(.)allowed_company_ids(\s*([^<>]+)?")""")
     reg_attr_current = re.compile(r"""(<(button|group|label|div|field|separator|footer|page|widget|xpath)([^>]+?\s*)(readonly|required|invisible|column_invisible)="([^<>"]+)?\s*)current_company_id(\s*([^<>]+)?")""")
 
+
     # companies.active_ids[0] -> companies.active_id
     reg_active_ids_0 = re.compile(r'companies\.active_ids\[0\]')
 
