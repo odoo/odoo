@@ -166,7 +166,7 @@ class IotBoxOwlHomePage(http.Controller):
             'devices': grouped_devices,
             'server_status': odoo_server_url or 'Not Configured',
             'pairing_code': connection_manager.pairing_code,
-            'pairing_code_expired': not connection_manager.running and not odoo_server_url,
+            'pairing_code_expired': connection_manager.pairing_code_expired and not odoo_server_url,
             'six_terminal': six_terminal,
             'is_access_point_up': platform.system() == 'Linux' and wifi.is_access_point(),
             'network_interfaces': network_interfaces,
