@@ -24,7 +24,7 @@
     <template id="product_cart_lines" inherit_id="website_sale.cart_lines" active="True">
         <xpath expr="//div[@name='o_wsale_cart_line_button_container']" position="inside">
             <a
-                t-if="not is_combo"
+                t-if="line._is_sellable() and line.product_id.type != 'combo'"
                 href="#"
                 class="o_add_wishlist js_delete_product border-start px-2 small"
                 t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
@@ -37,7 +37,7 @@
 
         <xpath expr="//div[@name='o_wsale_cart_line_button_container_mobile']/button" position="before">
             <button
-                t-if="line.product_id.type != 'combo'"
+                t-if="line._is_sellable() and line.product_id.type != 'combo'"
                 class="o_add_wishlist js_delete_product btn btn-link d-inline-block d-md-none px-2"
                 t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
                 t-att-data-product-product-id="line.product_id.id"

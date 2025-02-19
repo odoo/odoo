@@ -1973,7 +1973,7 @@
                         -->
                         <a t-att-href="line.product_id.website_url" class="text-reset">
                             <img
-                                t-if="line._is_not_sellable_line() and line.product_id.image_128"
+                                t-if="not line._is_sellable() and line.product_id.image_128"
                                 t-att-src="image_data_uri(line.product_id.image_128)"
                                 class="o_image_64_max img border rounded"
                                 t-att-alt="line.name_short"
@@ -2039,7 +2039,7 @@
                                     <t t-set="product_price" t-value="line._get_cart_display_price()"/>
                                     <t t-call="website_sale.cart_product_price"/>
                                     <small
-                                        t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
+                                        t-if="line._is_sellable() and line.product_id.base_unit_price"
                                         class="cart_product_base_unit_price d-block text-muted"
                                         groups="website_sale.group_show_uom_price"
                                     >
@@ -2092,7 +2092,7 @@
             class="css_quantity input-group justify-content-end h-100"
             name="website_sale_cart_line_quantity"
         >
-            <t t-if="not line._is_not_sellable_line()">
+            <t t-if="line._is_sellable()">
                 <t t-if="show_qty">
                     <a href="#"
                     class="js_add_cart_json btn btn-link d-inline-block border-end-0"
@@ -2134,10 +2134,6 @@
                 </t>
             </t>
             <t t-else="">
-                <span
-                    class="align-content-center h-100 border rounded px-3 bg-100 text-muted"
-                    t-esc="int(line.product_uom_qty)"
-                />
                 <input type="hidden"
                     class="js_quantity quantity form-control"
                     t-att-data-line-id="line.id"
@@ -2746,7 +2742,7 @@
                                                         <td t-if="not line.product_id" colspan="2"/>
                                                         <t t-else="">
                                                             <td t-attf-class="td-img ps-0 #{o_cart_sum_padding_top}">
-                                                                <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
+                                                                <span t-if="not line._is_sellable() and line.product_id.image_128">
                                                                     <img t-att-src="image_data_uri(line.product_id.image_128)" class="o_image_64_max img rounded" t-att-alt="line.name_short"/>
                                                                 </span>
                                                                 <span t-else=""
