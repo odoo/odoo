@@ -780,7 +780,7 @@ class PosConfig(models.Model):
             'type': self.customer_display_type,
             'has_bg_img': bool(self.customer_display_bg_img),
             'company_id': self.company_id.id,
-            **({'proxy_ip': self._get_display_device_ip()} if self.customer_display_type == 'proxy' else {}),
+            **({'proxy_ip': self._get_display_device_ip()} if self.customer_display_type != 'none' else {}),
         }
 
     @api.model
