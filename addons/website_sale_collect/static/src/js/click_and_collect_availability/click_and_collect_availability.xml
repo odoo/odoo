@@ -4,18 +4,15 @@
     <t t-name="website_sale_collect.ClickAndCollectAvailability">
         <div name="delivery_availability">
             <div class="btn border border-1 mb-3 text-start p-3 cursor-default">
-                <div
-                    name="o_click_and_collect_availability"
-                    class="d-flex gap-3 align-items-end"
-                >
-                    <div>
-                        <h6>
-                            <i class="fa fa-fw fa-map-marker text-muted"/>
-                            <t t-if="this.state.selectedWhLocation.id">
-                                <t t-out="this.state.selectedWhLocation.name"/>
-                            </t>
-                            <t t-else="">Click and Collect</t>
-                        </h6>
+                <div name="o_click_and_collect_availability">
+                    <h6>
+                        <i class="fa fa-fw fa-map-marker text-muted"/>
+                        <t t-if="this.state.selectedWhLocation.id">
+                            <t t-out="this.state.selectedWhLocation.name"/>
+                        </t>
+                        <t t-else="">Click and Collect</t>
+                    </h6>
+                    <div class="d-flex gap-5">
                         <t t-if="this.state.inStoreStock.in_stock">
                             <div
                                 t-if="this.state.inStoreStock.show_quantity &amp;&amp; this.state.selectedWhLocation.id"
@@ -31,11 +28,11 @@
                         <div t-else="" class="text-muted">
                             <i class="fa fa-fw fa-circle text-danger"/> Not available
                         </div>
+                        <a role="button" href="#" t-on-click="openLocationSelector">
+                            <t t-if="this.state.selectedWhLocation.id">Change a store</t>
+                            <t t-elif="this.state.inStoreStock.in_stock">Select a store</t>
+                        </a>
                     </div>
-                    <span t-on-click="openLocationSelector" class="text-primary cursor-pointer">
-                        <t t-if="this.state.selectedWhLocation.id">Change a store</t>
-                        <t t-elif="this.state.inStoreStock.in_stock">Select a store</t>
-                    </span>
                 </div>
                 <hr />
                 <div t-if="this.state.deliveryStock" class="flex-row">
