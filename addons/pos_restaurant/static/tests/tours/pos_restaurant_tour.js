@@ -416,8 +416,119 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                     if (!rendered.innerHTML.includes("Value 1")) {
                         throw new Error("Value 1 not found in printed receipt");
                     }
+                    const receiptHeader = printed.querySelector(".receipt-header");
+                    if (!receiptHeader.innerHTML.includes("14:20")) {
+                        throw new Error(
+                            "Expected timestamp '14:20' not found in the printed receipt header"
+                        );
+                    }
                 },
             },
+<<<<<<< saas-18.1
+||||||| 3443fc707e9794f5fd329b1ca0cb1f95a47cda0b
+            {
+                trigger: ".pos-receipt .receipt-header:contains('14:20')",
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ComboSortedPreparationReceiptTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 5"),
+            combo.select("Combo Product 8"),
+            Dialog.confirm(),
+            {
+                content: "Check if order preparation has product correctly ordered",
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.get_order();
+                    const data = posmodel.getOrderChanges();
+                    const changes = Object.values(data.orderlines);
+                    const printed = await posmodel.getRenderedReceipt(order, "New", changes);
+                    const orderLines = [...printed.querySelectorAll(".orderline")];
+                    const orderLinesInnerText = orderLines.map((orderLine) => orderLine.innerText);
+                    const expectedOrderLines = [
+                        "Office Combo",
+                        "Combo Product 2",
+                        "Combo Product 4",
+                        "Combo Product 6",
+                        "Office Combo",
+                        "Combo Product 1",
+                        "Combo Product 5",
+                        "Combo Product 8",
+                    ];
+                    for (let i = 0; i < orderLinesInnerText.length; i++) {
+                        if (!orderLinesInnerText[i].includes(expectedOrderLines[i])) {
+                            throw new Error("Order line mismatch");
+                        }
+                    }
+                },
+            },
+            ProductScreen.totalAmountIs("95.00"),
+            ProductScreen.clickPayButton(),
+=======
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ComboSortedPreparationReceiptTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 5"),
+            combo.select("Combo Product 8"),
+            Dialog.confirm(),
+            {
+                content: "Check if order preparation has product correctly ordered",
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.get_order();
+                    const data = posmodel.getOrderChanges();
+                    const changes = Object.values(data.orderlines);
+                    const printed = await posmodel.getRenderedReceipt(order, "New", changes);
+                    const orderLines = [...printed.querySelectorAll(".orderline")];
+                    const orderLinesInnerText = orderLines.map((orderLine) => orderLine.innerText);
+                    const expectedOrderLines = [
+                        "Office Combo",
+                        "Combo Product 2",
+                        "Combo Product 4",
+                        "Combo Product 6",
+                        "Office Combo",
+                        "Combo Product 1",
+                        "Combo Product 5",
+                        "Combo Product 8",
+                    ];
+                    for (let i = 0; i < orderLinesInnerText.length; i++) {
+                        if (!orderLinesInnerText[i].includes(expectedOrderLines[i])) {
+                            throw new Error("Order line mismatch");
+                        }
+                    }
+                },
+            },
+            ProductScreen.totalAmountIs("95.00"),
+            ProductScreen.clickPayButton(),
+>>>>>>> 030edf96bde0b55e406aae3d4b627b293209170d
         ].flat(),
 });
 
