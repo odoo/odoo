@@ -82,7 +82,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
         switch (cmd.type) {
             case "ADD_GLOBAL_FILTER": {
                 const filter = { ...cmd.filter };
-                if (filter.type === "text" && filter.rangeOfAllowedValues) {
+                if (filter.rangeOfAllowedValues) {
                     filter.rangeOfAllowedValues = this.getters.getRangeFromRangeData(
                         filter.rangeOfAllowedValues
                     );
@@ -108,7 +108,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
     adaptRanges(applyChange) {
         for (const filterIndex in this.globalFilters) {
             const filter = this.globalFilters[filterIndex];
-            if (filter.type === "text" && filter.rangeOfAllowedValues) {
+            if (filter.rangeOfAllowedValues) {
                 const change = applyChange(filter.rangeOfAllowedValues);
                 switch (change.changeType) {
                     case "REMOVE": {
@@ -223,19 +223,17 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
      * @param {CmdGlobalFilter} cmdFilter
      */
     _editGlobalFilter(cmdFilter) {
-        const rangeOfAllowedValues =
-            cmdFilter.type === "text" && cmdFilter.rangeOfAllowedValues
-                ? this.getters.getRangeFromRangeData(cmdFilter.rangeOfAllowedValues)
-                : undefined;
+        const rangeOfAllowedValues = cmdFilter.rangeOfAllowedValues
+            ? this.getters.getRangeFromRangeData(cmdFilter.rangeOfAllowedValues)
+            : undefined;
         /** @type {GlobalFilter} */
-        const newFilter =
-            cmdFilter.type === "text" ? { ...cmdFilter, rangeOfAllowedValues } : { ...cmdFilter };
+        const newFilter = { ...cmdFilter, rangeOfAllowedValues };
         const id = newFilter.id;
-        const currentLabel = this.getGlobalFilter(id).label;
         const index = this.globalFilters.findIndex((filter) => filter.id === id);
         if (index === -1) {
             return;
         }
+        const currentLabel = this.getGlobalFilter(id).label;
         this.history.update("globalFilters", index, newFilter);
         const newLabel = this.getGlobalFilter(id).label;
         if (currentLabel !== newLabel) {
@@ -254,7 +252,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
      */
     import(data) {
         for (const globalFilter of data.globalFilters || []) {
-            if (globalFilter.type === "text" && globalFilter.rangeOfAllowedValues) {
+            if (globalFilter.rangeOfAllowedValues) {
                 globalFilter.rangeOfAllowedValues = this.getters.getRangeFromSheetXC(
                     // The default sheet id doesn't matter here, the exported range string
                     // is fully qualified and contains the sheet name.
@@ -274,9 +272,8 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
      */
     export(data) {
         data.globalFilters = this.globalFilters.map((filter) => {
-            /** @type {Object} */
             const filterData = { ...filter };
-            if (filter.type === "text" && filter.rangeOfAllowedValues) {
+            if (filter.rangeOfAllowedValues) {
                 filterData.rangeOfAllowedValues = this.getters.getRangeString(
                     filter.rangeOfAllowedValues,
                     "" // force the range string to be fully qualified (with the sheet name)

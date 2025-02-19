@@ -8,7 +8,6 @@
  */
 
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 import { constructDateRange, QUARTER_OPTIONS } from "@web/search/utils/dates";
@@ -21,6 +20,7 @@ import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
 import {
     checkFilterValueIsValid,
     getRelativeDateDomain,
+    isDateOperator,
 } from "@spreadsheet/global_filters/helpers";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
@@ -60,7 +60,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     ]);
     constructor(config) {
         super(config);
-        this.orm = config.custom.env?.services.orm;
+        this.nameService = config.custom.env?.services.name;
         this.odooDataProvider = config.custom.odooDataProvider;
         /**
          * Cache record display names for relation filters.
@@ -68,7 +68,6 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
          * the list of display names.
          */
         this.recordsDisplayName = {};
-        /** @type {Object.<string, string|Array<string>|Object>} */
         this.values = {};
     }
 
@@ -100,30 +99,22 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      */
     handle(cmd) {
         switch (cmd.type) {
-            case "ADD_GLOBAL_FILTER":
-                this.recordsDisplayName[cmd.filter.id] =
-                    cmd.filter.type === "relation"
-                        ? cmd.filter.defaultValueDisplayNames
-                        : undefined;
-                break;
             case "EDIT_GLOBAL_FILTER": {
                 const filter = cmd.filter;
                 const id = filter.id;
                 if (
-                    filter.type === "date" &&
+                    isDateOperator(filter.operator) &&
                     this.values[id] &&
-                    this.values[id].rangeType !== filter.rangeType
+                    this.values[id].operator !== filter.operator
                 ) {
                     delete this.values[id];
                 } else if (!checkFilterValueIsValid(filter, this.values[id]?.value)) {
                     delete this.values[id];
                 }
-                this.recordsDisplayName[id] =
-                    filter.type === "relation" ? filter.defaultValueDisplayNames : undefined;
                 break;
             }
             case "SET_GLOBAL_FILTER_VALUE":
-                this.recordsDisplayName[cmd.id] = cmd.displayNames;
+                this.recordsDisplayName[cmd.id] = undefined;
                 if (!cmd.value) {
                     this._clearGlobalFilterValue(cmd.id);
                 } else {
@@ -131,12 +122,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 }
                 break;
             case "REMOVE_GLOBAL_FILTER":
-                delete this.recordsDisplayName[cmd.id];
                 delete this.values[cmd.id];
-                break;
-            case "CLEAR_GLOBAL_FILTER_VALUE":
-                this.recordsDisplayName[cmd.id] = [];
-                this._clearGlobalFilterValue(cmd.id);
                 break;
         }
     }
@@ -157,13 +143,19 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         if (!filter) {
             return new Domain();
         }
-        switch (filter.type) {
-            case "text":
-                return this._getTextDomain(filter, fieldMatching);
-            case "date":
-                return this._getDateDomain(filter, fieldMatching);
-            case "relation":
-                return this._getRelationDomain(filter, fieldMatching);
+        const value = this.getGlobalFilterValue(filter.id);
+        if (this._isEmptyValue(filter.operator, value) || !fieldMatching.chain) {
+            return new Domain();
+        }
+        switch (filter.operator) {
+            case "from_to":
+                return this._getFromToDomain(fieldMatching, value);
+            case "relative":
+                return this._getRelativeDomain(fieldMatching, value);
+            case "fixedPeriod":
+                return this._getFixedPeriodDomain(fieldMatching, value);
+            default:
+                return new Domain([[fieldMatching.chain, filter.operator, value]]);
         }
     }
 
@@ -178,27 +170,37 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const filter = this.getters.getGlobalFilter(filterId);
 
         const value = filterId in this.values ? this.values[filterId].value : undefined;
-        const preventAutomaticValue = this.values[filterId]?.value?.preventAutomaticValue;
-        if (filter.type === "date" && filter.rangeType === "from_to") {
+        const preventDefaultValue = this.values[filterId]?.preventDefaultValue;
+        if (!value && preventDefaultValue) {
+            switch (filter.operator) {
+                case undefined: // Attribute
+                case "ilike":
+                    return "";
+                case "in":
+                case "child_of":
+                    return [];
+                case "from_to":
+                case "relative":
+                case "fixedPeriod":
+                    return undefined;
+            }
+        }
+        if (filter.operator === "from_to") {
             return value || { from: undefined, to: undefined };
         }
-        const defaultValue = (!preventAutomaticValue && filter.defaultValue) || undefined;
-        if (filter.type === "date" && preventAutomaticValue) {
-            return undefined;
-        }
-        if (filter.type === "date" && isEmpty(value) && defaultValue) {
+        if (
+            ["fixedPeriod", "relative"].includes(filter.operator) &&
+            isEmpty(value) &&
+            filter.defaultValue
+        ) {
             return this._getValueOfCurrentPeriod(filterId);
         }
-        if (filter.type === "relation" && preventAutomaticValue) {
-            return [];
+        if (["in", "child_of"].includes(filter.operator)) {
+            return (value || filter.defaultValue || []).map((id) =>
+                id === "uid" ? user.userId : id
+            );
         }
-        if (filter.type === "relation" && isEmpty(value) && defaultValue === "current_user") {
-            return [user.userId];
-        }
-        if (filter.type === "text" && preventAutomaticValue) {
-            return "";
-        }
-        return value || defaultValue;
+        return value || filter.defaultValue;
     }
 
     /**
@@ -207,23 +209,9 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      * @returns { boolean } true if the given filter is active
      */
     isGlobalFilterActive(id) {
-        const { type } = this.getters.getGlobalFilter(id);
+        const { operator } = this.getters.getGlobalFilter(id);
         const value = this.getGlobalFilterValue(id);
-        switch (type) {
-            case "text":
-                return value;
-            case "date":
-                return (
-                    value &&
-                    (typeof value === "string" ||
-                        value.yearOffset !== undefined ||
-                        value.period ||
-                        value.from ||
-                        value.to)
-                );
-            case "relation":
-                return value && value.length;
-        }
+        return !this._isEmptyValue(operator, value);
     }
 
     /**
@@ -240,32 +228,50 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     getFilterDisplayValue(filterName) {
         const filter = this.getters.getGlobalFilterLabel(filterName);
         if (!filter) {
-            throw new EvaluationError(sprintf(_t(`Filter "%s" not found`), filterName));
+            throw new EvaluationError(
+                _t(`Filter "%(filter_name)s" not found`, { filter_name: filterName })
+            );
         }
         const value = this.getGlobalFilterValue(filter.id);
-        switch (filter.type) {
-            case "text":
+        switch (filter.operator) {
+            case undefined: // Attribute
+            case "ilike":
                 return [[{ value: value || "" }]];
-            case "date": {
-                if (filter.rangeType === "from_to") {
-                    const locale = this.getters.getLocale();
-                    const from = {
-                        value: value.from ? toNumber(value.from, locale) : "",
-                        format: locale.dateFormat,
-                    };
-                    const to = {
-                        value: value.to ? toNumber(value.to, locale) : "",
-                        format: locale.dateFormat,
-                    };
-                    return [[from], [to]];
+            case "in":
+            case "child_of":
+                if (!value?.length || !this.nameService) {
+                    return [[{ value: "" }]];
                 }
-                if (value && typeof value === "string") {
-                    const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
-                    if (!type) {
-                        return [[{ value: "" }]];
-                    }
-                    return [[{ value: type.description.toString() }]];
+                if (!this.recordsDisplayName[filter.id]) {
+                    const promise = this.nameService
+                        .loadDisplayNames(filter.relation, value)
+                        .then((result) => {
+                            this.recordsDisplayName[filter.id] = Object.values(result);
+                        });
+                    this.odooDataProvider.notifyWhenPromiseResolves(promise);
+                    return [[{ value: "" }]];
                 }
+                return [[{ value: this.recordsDisplayName[filter.id].join(", ") }]];
+            case "from_to": {
+                const locale = this.getters.getLocale();
+                const from = {
+                    value: value.from ? toNumber(value.from, locale) : "",
+                    format: locale.dateFormat,
+                };
+                const to = {
+                    value: value.to ? toNumber(value.to, locale) : "",
+                    format: locale.dateFormat,
+                };
+                return [[from], [to]];
+            }
+            case "relative": {
+                const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
+                if (!type) {
+                    return [[{ value: "" }]];
+                }
+                return [[{ value: type.description.toString() }]];
+            }
+            case "fixedPeriod": {
                 if (!value || value.yearOffset === undefined) {
                     return [[{ value: "" }]];
                 }
@@ -279,33 +285,18 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 }
                 return [[{ value: periodStr ? periodStr + "/" + year : year }]];
             }
-            case "relation":
-                if (!value?.length || !this.orm) {
-                    return [[{ value: "" }]];
-                }
-                if (!this.recordsDisplayName[filter.id]) {
-                    const promise = this.orm
-                        .call(filter.modelName, "read", [value, ["display_name"]])
-                        .then((result) => {
-                            const names = result.map(({ display_name }) => display_name);
-                            this.recordsDisplayName[filter.id] = names;
-                        });
-                    this.odooDataProvider.notifyWhenPromiseResolves(promise);
-                    return [[{ value: "" }]];
-                }
-                return [[{ value: this.recordsDisplayName[filter.id].join(", ") }]];
         }
     }
 
     /**
-     * Returns the possible values a text global filter can take
+     * Returns the possible values a global filter can take
      * if the values are restricted by a range of allowed values
      * @param {string} filterId
      * @returns {{value: string, formattedValue: string}[]}
      */
     getTextFilterOptions(filterId) {
         const filter = this.getters.getGlobalFilter(filterId);
-        if (filter.type !== "text" || !filter.rangeOfAllowedValues) {
+        if (!filter.rangeOfAllowedValues) {
             return [];
         }
         const additionOptions = [
@@ -322,7 +313,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     /**
-     * Returns the possible values a text global filter can take from a range
+     * Returns the possible values a global filter can take from a range
      * or any addition raw string value. Removes duplicates and empty string values.
      * @param {object} range
      * @param {string[]} additionalOptionValues
@@ -370,14 +361,15 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     _setGlobalFilterValue(id, value) {
         const filter = this.getters.getGlobalFilter(id);
         this.values[id] = {
-            value: value,
-            rangeType: filter.type === "date" ? filter.rangeType : undefined,
+            preventDefaultValue: false,
+            value,
+            operator: filter.operator,
         };
     }
 
     /**
      * Get the filter value corresponding to the current period, depending of the type of range of the filter.
-     * For example if rangeType === "month", the value will be the current month of the current year.
+     * For example if defaultValue === "month", the value will be the current month of the current year.
      *
      * @param {string} filterId a global filter
      * @return {Object} filter value
@@ -408,21 +400,10 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      */
     _clearGlobalFilterValue(id) {
         const filter = this.getters.getGlobalFilter(id);
-        let value;
-        switch (filter.type) {
-            case "text":
-                value = { preventAutomaticValue: true };
-                break;
-            case "date":
-                value = { preventAutomaticValue: true };
-                break;
-            case "relation":
-                value = { preventAutomaticValue: true };
-                break;
-        }
         this.values[id] = {
-            value,
-            rangeType: filter.type === "date" ? filter.rangeType : undefined,
+            preventDefaultValue: true,
+            value: undefined,
+            operator: filter.operator,
         };
     }
 
@@ -430,46 +411,33 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     // Private
     // -------------------------------------------------------------------------
 
-    /**
-     * Get the domain relative to a date field
-     *
-     * @private
-     *
-     * @param {DateGlobalFilter} filter
-     * @param {FieldMatching} fieldMatching
-     *
-     * @returns {Domain}
-     */
-    _getDateDomain(filter, fieldMatching) {
-        let granularity;
-        const value = this.getGlobalFilterValue(filter.id);
-        if (!value || !fieldMatching.chain) {
-            return new Domain();
+    _getFromToDomain(fieldMatching, value) {
+        const { type, chain } = fieldMatching;
+        const serialize = type === "datetime" ? serializeDateTime : serializeDate;
+        const from = value.from && serialize(DateTime.fromISO(value.from).startOf("day"));
+        const to = value.to && serialize(DateTime.fromISO(value.to).endOf("day"));
+        if (from && to) {
+            return new Domain(["&", [chain, ">=", from], [chain, "<=", to]]);
         }
-        const field = fieldMatching.chain;
-        const type = /** @type {"date" | "datetime"} */ (fieldMatching.type);
-        const offset = fieldMatching.offset || 0;
+        if (from) {
+            return new Domain([[chain, ">=", from]]);
+        }
+        if (to) {
+            return new Domain([[chain, "<=", to]]);
+        }
+        return new Domain();
+    }
+
+    _getRelativeDomain(fieldMatching, value) {
         const now = DateTime.local();
+        const { type, chain } = fieldMatching;
+        const offset = fieldMatching.offset || 0;
+        return getRelativeDateDomain(now, offset, value, chain, type);
+    }
 
-        if (filter.rangeType === "from_to") {
-            const serialize = type === "datetime" ? serializeDateTime : serializeDate;
-            const from = value.from && serialize(DateTime.fromISO(value.from).startOf("day"));
-            const to = value.to && serialize(DateTime.fromISO(value.to).endOf("day"));
-            if (from && to) {
-                return new Domain(["&", [field, ">=", from], [field, "<=", to]]);
-            }
-            if (from) {
-                return new Domain([[field, ">=", from]]);
-            }
-            if (to) {
-                return new Domain([[field, "<=", to]]);
-            }
-            return new Domain();
-        }
-
-        if (filter.rangeType === "relative") {
-            return getRelativeDateDomain(now, offset, value, field, type);
-        }
+    _getFixedPeriodDomain(fieldMatching, value) {
+        const now = DateTime.local();
+        const { type, chain } = fieldMatching;
         const noPeriod = !value.period || value.period === "empty";
         const noYear = value.yearOffset === undefined;
         if (noPeriod && noYear) {
@@ -478,6 +446,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const setParam = { year: now.year };
         const yearOffset = value.yearOffset || 0;
         const plusParam = { years: yearOffset };
+        let granularity;
+        const offset = fieldMatching.offset || 0;
         if (noPeriod) {
             granularity = "year";
             plusParam.years += offset;
@@ -498,7 +468,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         }
         return constructDateRange({
             referenceMoment: now,
-            fieldName: field,
+            fieldName: chain,
             fieldType: type,
             granularity,
             setParam,
@@ -506,43 +476,23 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         }).domain;
     }
 
-    /**
-     * Get the domain relative to a text field
-     *
-     * @private
-     *
-     * @param {GlobalFilter} filter
-     * @param {FieldMatching} fieldMatching
-     *
-     * @returns {Domain}
-     */
-    _getTextDomain(filter, fieldMatching) {
-        const value = this.getGlobalFilterValue(filter.id);
-        if (!value || !fieldMatching.chain) {
-            return new Domain();
+    _isEmptyValue(operator, value) {
+        if (value === undefined) {
+            return true;
         }
-        const field = fieldMatching.chain;
-        return new Domain([[field, "ilike", value]]);
-    }
-
-    /**
-     * Get the domain relative to a relation field
-     *
-     * @private
-     *
-     * @param {RelationalGlobalFilter} filter
-     * @param {FieldMatching} fieldMatching
-     *
-     * @returns {Domain}
-     */
-    _getRelationDomain(filter, fieldMatching) {
-        const values = this.getGlobalFilterValue(filter.id);
-        if (!values || values.length === 0 || !fieldMatching.chain) {
-            return new Domain();
+        switch (operator) {
+            case "ilike":
+                return value === "";
+            case "in":
+            case "child_of":
+                return value.length === 0;
+            case "from_to":
+                return !value.from && !value.to;
+            case "relative":
+                return false;
+            case "fixedPeriod":
+                return !value.period && value.yearOffset === undefined;
         }
-        const field = fieldMatching.chain;
-        const operator = filter.includeChildren ? "child_of" : "in";
-        return new Domain([[field, operator, values]]);
     }
 
     /**

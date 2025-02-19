@@ -37,6 +37,10 @@ export async function addGlobalFilter(model, filter, fieldMatchings = {}) {
     return result;
 }
 
+export function addGlobalFilterWithoutReload(model, filter, fieldMatchings = {}) {
+    return model.dispatch("ADD_GLOBAL_FILTER", { filter, ...fieldMatchings });
+}
+
 /**
  * Remove a global filter and ensure the data sources are completely reloaded
  */

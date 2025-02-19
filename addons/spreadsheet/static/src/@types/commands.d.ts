@@ -125,17 +125,11 @@ declare module "@spreadsheet" {
         type: "SET_GLOBAL_FILTER_VALUE";
         id: string;
         value: any;
-        displayNames?: string[];
     }
 
     export interface SetManyGlobalFilterValueCommand {
         type: "SET_MANY_GLOBAL_FILTER_VALUE";
         filters: { filterId: string; value: any }[];
-    }
-
-    export interface ClearGlobalFilterValueCommand {
-        type: "CLEAR_GLOBAL_FILTER_VALUE";
-        id: string;
     }
 
     type OdooCoreCommand =
@@ -155,8 +149,7 @@ declare module "@spreadsheet" {
     type OdooLocalCommand =
         | RefreshAllDataSourcesCommand
         | SetGlobalFilterValueCommand
-        | SetManyGlobalFilterValueCommand
-        | ClearGlobalFilterValueCommand;
+        | SetManyGlobalFilterValueCommand;
 
     type OdooCommand = OdooCoreCommand | OdooLocalCommand;
 
