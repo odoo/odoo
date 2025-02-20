@@ -16,7 +16,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         cls.main_pos_config.write({"module_pos_hr": True})
 
         # Admin employee
-        admin = cls.env.ref("hr.employee_admin").sudo().copy({
+        cls.admin = cls.env.ref("hr.employee_admin").sudo().copy({
             "company_id": cls.env.company.id,
             "user_id": cls.pos_admin.id,
             "name": "Mitchell Admin",
@@ -43,7 +43,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
             "company_id": cls.env.company.id,
         })
         emp2.write({"name": "Pos Employee2", "pin": "1234"})
-        (admin + emp1 + emp2).company_id = cls.env.company
+        (cls.admin + emp1 + emp2).company_id = cls.env.company
 
         emp3 = cls.env['hr.employee'].create({
             'name': 'Test Employee 3',
@@ -64,6 +64,7 @@ class TestUi(TestPosHrHttpCommon):
                 (4, self.env.ref('account.group_account_invoice').id)
             ]
         })
+        self.main_pos_config.advanced_employee_ids = self.admin.ids
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour("PosHrTour", login="pos_admin")
 
