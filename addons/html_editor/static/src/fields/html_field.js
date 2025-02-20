@@ -155,7 +155,7 @@ export class HtmlField extends Component {
     }
 
     async getEditorContent() {
-        await this.editor.shared.media.savePendingImages();
+        await this.editor.shared.media?.savePendingImages();
         return this.editor.getElContent();
     }
 
