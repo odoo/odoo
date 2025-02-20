@@ -3,6 +3,9 @@ import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { insertText, splitBlock } from "../_helpers/user_actions";
 
+const base64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
 describe("Selection collapsed", () => {
     describe("Ordered", () => {
         describe("Basic", () => {
@@ -78,6 +81,33 @@ describe("Selection collapsed", () => {
                             <li><br></li>
                             <li>c</li>
                             <li>[]<br></li>
+                        </ol>`),
+                });
+            });
+
+            test("should split list item containing image", async () => {
+                await testEditor({
+                    contentBefore: unformat(`
+                        <ol>
+                            <li><img src="${base64Img}">[]</li>
+                        </ol>`),
+                    stepFunction: splitBlock,
+                    contentAfter: unformat(`
+                        <ol>
+                            <li><img src="${base64Img}"></li>
+                            <li>[]<br></li>
+                        </ol>`),
+                });
+                await testEditor({
+                    contentBefore: unformat(`
+                        <ol>
+                            <li>[]<img src="${base64Img}"></li>
+                        </ol>`),
+                    stepFunction: splitBlock,
+                    contentAfter: unformat(`
+                        <ol>
+                            <li><br></li>
+                            <li>[]<img src="${base64Img}"></li>
                         </ol>`),
                 });
             });
