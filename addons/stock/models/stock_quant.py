@@ -1261,23 +1261,8 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {})
         ctx['inventory_report_mode'] = True
         ctx.pop('group_by', None)
-        action = {
-            'name': _('Locations'),
-            'view_mode': 'list,form',
-            'res_model': 'stock.quant',
-            'type': 'ir.actions.act_window',
-            'context': ctx,
-            'domain': domain or [],
-            'help': """
-                <p class="o_view_nocontent_empty_folder">{}</p>
-                <p>{}</p>
-                """.format(_('No Stock On Hand'),
-                           _('This analysis gives you an overview of the current stock level of your products.')),
-        }
 
-        target_action = self.env.ref('stock.dashboard_open_quants', False)
-        if target_action:
-            action['id'] = target_action.id
+        action = self.env['ir.actions.act_window']._for_xml_id('stock.stock_quant_action')
 
         form_view = self.env.ref('stock.view_stock_quant_form_editable').id
         if self.env.context.get('inventory_mode') and self.env.user.has_group('stock.group_stock_manager'):
@@ -1300,6 +1285,8 @@ class StockQuant(models.Model):
                     (self.env.ref('stock.stock_quant_view_graph').id, 'graph'),
                 ],
             })
+        # It's mainly define in the server action in order to call _get_quants_action when using the url
+        action['path'] = "stock-locations"
         return action
 
     def _get_gs1_barcode(self, gs1_quantity_rules_ai_by_uom=False):
