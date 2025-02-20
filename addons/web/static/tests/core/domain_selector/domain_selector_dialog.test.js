@@ -63,22 +63,6 @@ test("a domain with a user context dynamic part is valid", async () => {
     expect.verifySteps(["validation", "confirmed"]);
 });
 
-test("a domain with a company eval context is valid", async () => {
-    await makeDomainSelectorDialog({
-        domain: "[('foo', '=', companies.active_id)]",
-        onConfirm(domain) {
-            expect(domain).toBe("[('foo', '=', companies.active_id)]");
-            expect.step("confirmed");
-        },
-    });
-    onRpc("/web/domain/validate", () => {
-        expect.step("validation");
-        return true;
-    });
-    await contains(".o_dialog footer button").click();
-    expect.verifySteps(["validation", "confirmed"]);
-});
-
 test("can extend eval context", async () => {
     await makeDomainSelectorDialog({
         domain: "['&', ('foo', '=', uid), ('bar', '=', var)]",

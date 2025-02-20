@@ -80,7 +80,7 @@ export class DomainSelectorDialog extends Component {
         let domain;
         let isValid;
         try {
-            const evalContext = { ...user.evalContext, ...this.props.context };
+            const evalContext = { ...user.context, ...this.props.context };
             domain = new Domain(this.state.domain).toList(evalContext);
         } catch {
             isValid = false;
