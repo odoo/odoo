@@ -19,10 +19,9 @@ class StockMoveLine(models.Model):
     def _compute_picking_type_id(self):
         line_to_remove = self.env['stock.move.line']
         for line in self:
-            if not line.production_id:
-                continue
-            line.picking_type_id = line.production_id.picking_type_id
-            line_to_remove |= line
+            if production_id := line.production_id or line.move_id.production_id:
+                line.picking_type_id = production_id.picking_type_id
+                line_to_remove |= line
         return super(StockMoveLine, self - line_to_remove)._compute_picking_type_id()
 
     def _search_picking_type_id(self, operator, value):
