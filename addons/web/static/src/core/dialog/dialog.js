@@ -40,7 +40,7 @@ export class Dialog extends Component {
         design: {
             type: String,
             optional: true,
-            validate: (s) => ["minimal", "default"].includes(s),
+            validate: (s) => ["minimal", "default", "clean"].includes(s),
         },
         size: {
             type: String,
@@ -129,7 +129,7 @@ export class Dialog extends Component {
     }
 
     get isFullscreen() {
-        return this.props.fullscreen || this.env.isSmall && this.computeDesign() != "minimal";
+        return this.props.fullscreen || this.env.isSmall && this.computeDesign() == "default";
     }
 
     get getDesign() {

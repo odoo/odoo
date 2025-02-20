@@ -167,6 +167,13 @@
             }
         }
     }
+
+    &.o_modal_design_clean {
+        --modal-bg: transparent;
+        --modal-border-width: 0;
+        --modal-header-border-width: 0;
+        --modal-footer-border-width: 0;
+    }
 }
 
 .modal.o_inactive_modal {
@@ -194,11 +201,11 @@
         max-width: none;
     }
 
-    :where(.o_dialog:nth-of-type(2) .modal-content) {
+    :where(.o-overlay-item:nth-of-type(2)) .modal-content {
         transform: translate(.5rem, .5rem);
     }
 
-    :where(.o_dialog:nth-of-type(3) .modal-content) {
+    :where(.o-overlay-item:nth-of-type(3)) .modal-content {
         transform: translate(1rem, 1rem);
     }
 }
