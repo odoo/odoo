@@ -240,7 +240,7 @@ patch(PaymentScreen.prototype, {
             }
         }
 
-        await this.postPushOrderResolve([this.currentOrder.server_id]);
+        await this.postPushOrderResolve([this.currentOrder.id]);
 
         this.afterOrderValidation(true);
     },
