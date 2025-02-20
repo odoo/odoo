@@ -16,10 +16,11 @@ to minimise the code to maintain
 import logging
 import sys
 from datetime import datetime, timezone
-from contextlib import ExitStack
+from contextlib import ExitStack, closing
 import itertools
 from typing import Tuple, Any, Type, Dict, List
 from collections import defaultdict
+import time
 
 from . import case
 from .common import HttpCase, get_db_name, TransactionCase, BaseCase, RegistrySavepoint
@@ -379,6 +380,15 @@ class OdooSuite(TestSuite):
         if requires_sorting:
             self._tests.sort(key=lambda t: getattr(t, 'test_sequence', 0))
 
+    def _export_snapshot(self, class_name):
+        if not self.cr:
+            return
+        with closing(self.cr.savepoint()):
+            self.cr.execute('select pg_export_snapshot();')
+            export_name = self.cr.fetchone()[0]
+            _logger.runbot('Exported snapshot after %s, %s', class_name, export_name)
+            time.sleep(3)
+
     def _setup_common_data(self, previous_class, test_class, result):
         """
         Prepares common data for the given class, data from previous_class is uninstalled in reverse order
@@ -388,6 +398,7 @@ class OdooSuite(TestSuite):
         """
         test_class._commonDataFailed = False
         _logger.debug('Prepping %s', test_class.__name__)
+        _logger.runbot('Prepping %s', test_class.__name__)
         previous_key = self._get_test_order_key(previous_class) if previous_class else tuple()
         new_key = self._get_test_order_key(test_class)
         if previous_key == new_key and (not previous_class or not getattr(previous_class, '_commonDataFailed', False)):
@@ -489,6 +500,7 @@ class OdooSuite(TestSuite):
             # Cleanup self.cr between tests
             # The registry itself is cleaned up by TransactionCase
             if is_new_class and self.cr:
+                self._export_snapshot(previous_test_class.__name__)
                 self.cr.clear()
                 self.cr.cache = {}
                 if self.cr.transaction:

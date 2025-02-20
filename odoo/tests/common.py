@@ -59,7 +59,7 @@ from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.service import security
-from odoo.sql_db import BaseCursor, Cursor
+from odoo.sql_db import BaseCursor, Cursor, Savepoint
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
@@ -1003,9 +1003,8 @@ class TransactionCase(BaseCase):
         # flush everything in setUpClass before introducing a savepoint
         self.env.flush_all()
 
-        self._savepoint_id = next(savepoint_seq)
-        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
-        self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+        self._savepoint = Savepoint(self.cr)
+        self.addCleanup(self._savepoint.close)
 
     @contextmanager
     def enter_registry_test_mode(self):
@@ -2310,11 +2309,11 @@ def warmup(func, *args, **kwargs):
     self.env.invalidate_all()
     # run once to warm up the caches
     self.warm = False
-    self.cr.execute('SAVEPOINT test_warmup')
+    savepoint = Savepoint(self.cr)
     func(*args, **kwargs)
     self.env.flush_all()
     # run once for real
-    self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
+    savepoint.close()
     self.env.invalidate_all()
     self.warm = True
     func(*args, **kwargs)
