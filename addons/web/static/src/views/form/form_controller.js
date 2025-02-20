@@ -29,7 +29,6 @@ import { ButtonBox } from "./button_box/button_box";
 import { FormCompiler } from "./form_compiler";
 import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
-import { StatusBarDropdownItems } from "./status_bar_dropdown_items/status_bar_dropdown_items";
 import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 
 import {
@@ -131,7 +130,6 @@ export class FormController extends Component {
         ViewButton,
         Field,
         CogMenu: FormCogMenu,
-        StatusBarDropdownItems,
         Widget,
     };
 
@@ -252,16 +250,6 @@ export class FormController extends Component {
                 { isSubView: true }
             );
             this.buttonBoxTemplate = buttonBoxTemplates.ButtonBox;
-        }
-
-        const xmlDocHeader = this.archInfo.xmlDoc.querySelector("header");
-        if (xmlDocHeader) {
-            const { StatusBarDropdownItems } = useViewCompiler(
-                this.props.Compiler || FormCompiler,
-                { StatusBarDropdownItems: xmlDocHeader },
-                { isSubView: true, asDropdownItems: true }
-            );
-            this.statusBarDropdownItemsTemplate = StatusBarDropdownItems;
         }
 
         this.rootRef = useRef("root");
