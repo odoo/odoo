@@ -10,7 +10,7 @@ from collections import defaultdict
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, groupby, SQL
@@ -413,12 +413,6 @@ class StockPickingType(models.Model):
                         "to avoid issues and/or repeated reference values or assign the existing reference sequence to this operation type.")
                 }
             }
-
-    @api.constrains('default_location_dest_id')
-    def _check_default_location(self):
-        for record in self:
-            if record.code == 'mrp_operation' and record.default_location_dest_id.scrap_location:
-                raise ValidationError(_("You cannot set a scrap location as the destination location for a manufacturing type operation."))
 
     @api.model
     def action_redirect_to_barcode_installation(self):
