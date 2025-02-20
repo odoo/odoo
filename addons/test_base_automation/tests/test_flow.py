@@ -1248,18 +1248,20 @@ class TestCompute(common.TransactionCase):
         self.assertEqual(automation.on_change_field_ids.ids, [])
 
         # Change the trigger fields will not change the domain
-        automation_form.trigger_field_ids.set(
+        automation_form.trigger_field_ids.add(
             self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids')
         )
         automation = automation_form.save()
         self.assertEqual(automation.filter_pre_domain, False)
         self.assertEqual(automation.filter_domain, repr([('priority', '=', True), ('employee', '=', False)]))
-        self.assertEqual(automation.trigger_field_ids.ids, [
+        self.assertItemsEqual(automation.trigger_field_ids.ids, [
+            self.env.ref('test_base_automation.field_base_automation_lead_test__priority').id,
+            self.env.ref('test_base_automation.field_base_automation_lead_test__employee').id,
             self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids').id
         ])
         self.assertEqual(automation.on_change_field_ids.ids, [])
 
-        # Erase the domain will not change the trigger fields
+        # Erase the domain will remove corresponding fields from the trigger fields
         automation_form.filter_domain = False
         automation = automation_form.save()
         self.assertEqual(automation.filter_pre_domain, False)
