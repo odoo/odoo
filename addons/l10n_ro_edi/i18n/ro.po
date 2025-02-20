@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-13 11:04+0000\n"
-"PO-Revision-Date: 2024-12-13 11:04+0000\n"
+"POT-Creation-Date: 2025-02-24 10:15+0000\n"
+"PO-Revision-Date: 2025-02-24 10:15+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,7 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model:ir.model.fields,help:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
 #: model:ir.model.fields,help:l10n_ro_edi.field_account_move__l10n_ro_edi_state
+#: model:ir.model.fields,help:l10n_ro_edi.field_account_payment__l10n_ro_edi_state
 msgid ""
 "- Sent: Successfully sent to the SPV, waiting for validation\n"
 "                - Validated: Sent & validated by the SPV\n"
@@ -67,9 +68,15 @@ msgid "Access token is forbidden."
 msgstr ""
 
 #. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/ciusro_document.py:0
+msgid "Access token is unauthorized."
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Cont Mutare Trimitere"
 
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_account_move_send_wizard
@@ -140,7 +147,7 @@ msgstr "Setări de configurare"
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contactați"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
@@ -280,6 +287,24 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "Error when trying to download the E-Factura answer from the SPV: %s"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "Error when trying to fetch the E-Factura from the SPV: %s"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "Error when trying to send the E-Factura to the SPV: %s"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model:ir.actions.server,name:l10n_ro_edi.l10n_ro_edi_action_fetch_ciusro_status
 msgid "Fetch E-Factura Status"
 msgstr ""
@@ -347,7 +372,7 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_account_move
 msgid "Journal Entry"
-msgstr "Notă contabilă"
+msgstr "Înregistrare jurnal"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_certificate
