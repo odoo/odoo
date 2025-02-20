@@ -198,3 +198,33 @@ class AccountAnalyticLine(models.Model):
         [('other', 'Other')],
         default='other',
     )
+
+    @api.model
+    def _sync_journal_item_distribution(self, move_line):
+        if not move_line:
+            return
+        
+        analytic_lines = self.search([('move_line_id', '=', move_line.id)])
+
+        analytic_distribution = {}
+        for line in analytic_lines:
+            if line.account_id:
+                analytic_distribution[line.account_id.id] = analytic_distribution.get(line.account_id.id, 0) + line.amount
+
+        move_line.analytic_distribution = analytic_distribution
+
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'amount' in vals or 'account_id' in vals:
+            for line in self:
+                move_line = self.env['account.move.line'].browse(line.move_line_id)
+                move_line._compute_analytic_distribution()
+        return res
+    
+    def unlink(self):
+        move_lines = self.mapped('move_line_id')
+        res = super().unlink()
+        for move_line in move_lines:
+            move_line._compute_analytic_distribution()
+        return res
