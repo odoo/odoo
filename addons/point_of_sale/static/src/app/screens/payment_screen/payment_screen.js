@@ -67,7 +67,7 @@ export class PaymentScreen extends Component {
 
         //Activate the invoice option for refund orders if the original order was invoiced.
         if (
-            this.currentOrder._isRefundOrder() &&
+            this.currentOrder.isRefund &&
             this.currentOrder.lines[0].refunded_orderline_id?.order_id?.isToInvoice()
         ) {
             this.currentOrder.setToInvoice(true);
@@ -112,7 +112,7 @@ export class PaymentScreen extends Component {
         return this.pos.models["pos.order"].getBy("uuid", this.props.orderUuid);
     }
     get isRefundOrder() {
-        return this.currentOrder._isRefundOrder();
+        return this.currentOrder.isRefund;
     }
     get paymentLines() {
         return this.currentOrder.payment_ids;
