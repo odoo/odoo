@@ -17,7 +17,7 @@ import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
 import { Component, onWillStart, useEffect, onWillUnmount } from "@odoo/owl";
 import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dialog";
-import { router } from "@web/core/browser/router";
+import { router, routerBus } from "@web/core/browser/router";
 import { OptimizeSEODialog } from "@website/components/dialog/seo";
 
 /**
@@ -158,12 +158,17 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                         history.pushState({ skipRouteChange: true }, '');
                         hasFakeState = true;
                     },
-                    onLeave: () => history.back(),
-                    reloadIframe: false
+                    onLeave: () => {},
+                    reloadIframe: true,
                 });
             };
+            const skipLoadOnBeforeRouteChange = () => {
+                router.skipLoad = true;
+            };
+            routerBus.addEventListener("BEFORE_ROUTE_CHANGE", skipLoadOnBeforeRouteChange);
             window.addEventListener('popstate', leaveOnBackNavigation);
             return () => {
+                routerBus.removeEventListener("BEFORE_ROUTE_CHANGE", skipLoadOnBeforeRouteChange);
                 window.removeEventListener('popstate', leaveOnBackNavigation);
                 if (hasFakeState) {
                     // prevent router from reloading state from scratch
