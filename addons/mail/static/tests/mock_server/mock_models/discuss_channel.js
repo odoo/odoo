@@ -1,4 +1,7 @@
+import { convertBrToLineBreak } from "@mail/utils/common/format";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
+import { markup } from "@odoo/owl";
 
 import {
     Command,
@@ -12,7 +15,6 @@ import { serializeDateTime, today } from "@web/core/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
-import { convertBrToLineBreak } from "@mail/utils/common/format";
 
 const { DateTime } = luxon;
 
@@ -595,7 +597,7 @@ export class DiscussChannel extends models.ServerModel {
                 group_public_id: self.group_public_id,
                 from_message_id: message?.id,
                 name: message
-                    ? convertBrToLineBreak(message.body).substring(0, 30)
+                    ? convertBrToLineBreak(markup(message.body)).substring(0, 30)
                     : name || "New Thread",
                 parent_channel_id: self.id,
             })
