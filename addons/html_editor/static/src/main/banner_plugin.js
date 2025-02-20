@@ -101,11 +101,12 @@ export class BannerPlugin extends Plugin {
         ).childNodes[0];
         this.dependencies.dom.insert(bannerElement);
         // If the first child of editable is contenteditable false element
-        // a chromium bug prevents selecting the container. Prepend a
-        // zero-width space so it's no longer the first child.
+        // a chromium bug prevents selecting the container.
+        // Add a paragraph above it so it's no longer the first child.
         if (this.editable.firstChild === bannerElement) {
-            const zws = document.createTextNode("\u200B");
-            bannerElement.before(zws);
+            const p = this.document.createElement("p");
+            p.append(this.document.createElement("br"));
+            bannerElement.before(p);
         }
         const baseContainerName = this.dependencies.baseContainer.getDefaultNodeName();
         this.dependencies.selection.setCursorStart(
