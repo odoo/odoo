@@ -1681,12 +1681,13 @@ export class PosStore extends WithLazyGetterTrap {
                     !orderChange.noteUpdate.length &&
                     !orderChange.internal_note &&
                     !orderChange.general_customer_note &&
-                    order.uiState.lastPrint
+                    order.uiState.lastPrints
                 ) {
-                    orderChange = order.uiState.lastPrint;
+                    orderChange = [order.uiState.lastPrints.at(-1)];
                     reprint = true;
                 } else {
-                    order.uiState.lastPrint = orderChange;
+                    order.uiState.lastPrints.push(orderChange);
+                    orderChange = [orderChange];
                 }
 
                 if (reprint && opts.orderDone) {
@@ -1802,25 +1803,27 @@ export class PosStore extends WithLazyGetterTrap {
         const retryPrinters = new Set();
 
         for (const printer of printers) {
-            const { orderData, changes } = this.generateOrderChange(
-                order,
-                orderChange,
-                printer.config.product_categories_ids,
-                reprint
-            );
-            const receiptsData = await this.generateReceiptsDataToPrint(
-                orderData,
-                changes,
-                orderChange
-            );
-            let result = {};
-            for (const data of receiptsData) {
-                result = await this.printOrderChanges(data, printer);
-                if (!result.successful) {
-                    retryPrinters.add(printer);
-                    unsuccessfulPrints.push(printer.config.name + ": " + result.message.body);
-                } else if (result.warningCode) {
-                    this.displayPrinterWarning(result, printer.config.name);
+            for (const change of orderChange) {
+                const { orderData, changes } = this.generateOrderChange(
+                    order,
+                    change,
+                    printer.config.product_categories_ids,
+                    reprint
+                );
+                const receiptsData = await this.generateReceiptsDataToPrint(
+                    orderData,
+                    changes,
+                    change
+                );
+                let result = {};
+                for (const data of receiptsData) {
+                    result = await this.printOrderChanges(data, printer);
+                    if (!result.successful) {
+                        retryPrinters.add(printer);
+                        unsuccessfulPrints.push(printer.config.name + ": " + result.message.body);
+                    } else if (result.warningCode) {
+                        this.displayPrinterWarning(result, printer.config.name);
+                    }
                 }
             }
         }

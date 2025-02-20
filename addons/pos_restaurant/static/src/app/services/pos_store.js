@@ -869,8 +869,8 @@ patch(PosStore.prototype, {
                 noteUpdateTitle: _t("Course %s fired", "" + course.index),
                 printNoteUpdateData: false,
             };
-            this.getOrder().uiState.lastPrint = changes;
-            await this.printChanges(this.getOrder(), changes, false);
+            this.getOrder().uiState.lastPrints.push(changes);
+            await this.printChanges(this.getOrder(), [changes], false);
         } catch (e) {
             console.error("Unable to print course", e);
         }
