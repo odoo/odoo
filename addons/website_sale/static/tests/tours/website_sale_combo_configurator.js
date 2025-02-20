@@ -35,9 +35,9 @@ registry
             },
             {
                 content: "Verify the combo product's quantity",
-                trigger: '.o_wsale_cart_line_qty_desktop input.quantity',
+                trigger: 'div[name="o_wsale_cart_line_qty_desktop"] input.quantity',
                 run: async () => await waitUntil(
-                    () => queryValue('.o_wsale_cart_line_qty_desktop input.quantity') === '3', { timeout: 1000 }
+                    () => queryValue('div[name="o_wsale_cart_line_qty_desktop"] input.quantity') === '3', { timeout: 1000 }
                 ),
             },
             {
@@ -51,7 +51,7 @@ registry
             // Assert that the combo quantity can be updated in the cart.
             {
                 content: "Edit the combo quantity",
-                trigger: '.o_wsale_cart_line_qty_desktop input.quantity',
+                trigger: 'div[name="o_wsale_cart_line_qty_desktop"] input.quantity',
                 run: 'edit 2 && click body',
             },
             wsTourUtils.assertCartContains({ productName: "2 x Product A1" }),

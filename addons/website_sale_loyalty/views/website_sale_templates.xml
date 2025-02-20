@@ -128,7 +128,7 @@
         <xpath expr="//del" position="attributes">
             <attribute name="t-if">not line.is_reward_line</attribute>
         </xpath>
-        <xpath expr="//div[@t-elif='line.product_id.image_128']" position="before">
+        <xpath expr="//div[hasclass('o_cart_product_image')]//div[@t-else]" position="before">
             <div
                 t-elif="line.is_reward_line"
                 class="o_image_64_max align-content-center w-100 h-100 border rounded bg-100 text-center text-500"
@@ -184,7 +184,7 @@
     </template>
 
     <template id="cart_line_product_no_link" inherit_id="website_sale.cart_lines">
-        <xpath expr="//a[hasclass('o_cart_line_product_link')]" position="replace">
+        <xpath expr="//a[@name='o_cart_line_product_link']" position="replace">
             <t t-if="line.is_reward_line">
                 <strong t-field="line.name"/>
                 <t t-call="sale_loyalty.used_gift_card"/>
