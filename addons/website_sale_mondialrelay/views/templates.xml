@@ -17,12 +17,12 @@
         </div>
     </template>
 
-    <template id="website_sale_mondialrelay_address_on_payment" inherit_id="website_sale.address_on_payment">
-        <xpath expr="//span[@t-out='order.partner_shipping_id']" position="before">
+    <template id="address_on_checkout" inherit_id="website_sale.address_on_checkout">
+        <t t-out="order.partner_shipping_id" position="before">
             <t t-if="order.partner_shipping_id.is_mondialrelay" >
                 <img src="/delivery_mondialrelay/static/src/img/logo.png" title="Mondial Relay" height="20px"/>
             </t>
-        </xpath>
+        </t>
     </template>
 
 </odoo>

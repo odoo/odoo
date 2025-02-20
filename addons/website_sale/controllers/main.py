@@ -1158,6 +1158,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return json.dumps(feedback_dict)
 
+    def _needs_address(self):
+        if cart := request.cart:
+            return cart._needs_customer_address()
+        return super()._needs_address()
+
     def _prepare_address_update(self, order_sudo, partner_id=None, address_type=None):
         """ Find the partner whose address to update and return it along with its address type.
 

@@ -4,7 +4,7 @@
 <!-- Add a shortcut to favorites / tracks after registration -->
 <template id="registration_complete" inherit_id="website_event.registration_complete">
     <xpath expr="//div[hasclass('container')]/div[last()]" position="after">
-        <div t-if="event.website_track" class="row mt-5 mb256">
+        <div t-if="event.website_track and event._has_published_track()" class="row mt-5 mb256">
             <div class="col-12">
                 <h3>Book your seats to the best talks</h3>
                 <p>Get prepared and
@@ -17,10 +17,9 @@
 
 <template id="event_confirmation_end_page_hook" inherit_id="website_event.event_confirmation_end_page_hook">
     <xpath expr="//div[hasclass('o_wevent_confirmation_end_page_hook')]" position="inside">
-        <div t-if="event.website_track" class="row mt-5 mb-3">
+        <div t-if="event.website_track and event._has_published_track()" class="row mt-4">
             <div class="col-12">
-                <h3>Book your seats to the best talks</h3>
-                <p>Get prepared and
+                <p class="mb-0">Get prepared and
                     <a class="o_translate_inline" t-att-href="'/event/%s/track' % (slug(event))">register to your favorites talks now.</a>
                 </p>
             </div>

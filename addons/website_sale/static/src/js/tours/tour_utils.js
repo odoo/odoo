@@ -142,7 +142,7 @@ export function payWithDemo() {
     pay(),
     {
         content: 'eCommerce: check that the payment is successful',
-        trigger: '.oe_website_sale_tx_status:contains("Your payment has been successfully processed.")',
+        trigger: '.oe_website_sale_tx_status:contains("Your payment has been processed.")',
     }]
 }
 
