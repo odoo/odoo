@@ -139,6 +139,10 @@ export class PosOrder extends Base {
         );
     }
 
+    get isRefund() {
+        return this.is_refund === true;
+    }
+
     getEmailItems() {
         return [_t("the receipt")].concat(this.isToInvoice() ? [_t("the invoice")] : []);
     }
@@ -167,11 +171,7 @@ export class PosOrder extends Base {
         // If each line is negative, we assume it's a refund order.
         // It's a normal order if it doesn't contain a line (useful for pos_settle_due).
         // TODO: Properly differentiate refund orders from normal ones.
-        const documentSign =
-            lines.length === 0 || !lines.every((l) => l.product_id.uom_id.isNegative(l.qty))
-                ? 1
-                : -1;
-
+        const documentSign = this.isRefund ? -1 : 1;
         const baseLines = lines.map((line) =>
             accountTaxHelpers.prepare_base_line_for_taxes_computation(
                 line,
@@ -458,15 +458,8 @@ export class PosOrder extends Base {
         return true;
     }
 
-    _isRefundOrder() {
-        if (this.lines.length > 0 && this.lines[0].refunded_orderline_id) {
-            return true;
-        }
-        return false;
-    }
-
-    _isRefundAndSalesNotAllowed(values, options) {
-        return this._isRefundOrder() && (!values.qty || values.qty > 0);
+    isSaleDisallowed(values, options) {
+        return this.isRefund && (!values.qty || values.qty > 0);
     }
 
     getSelectedOrderline() {
@@ -508,7 +501,7 @@ export class PosOrder extends Base {
             newPaymentLine.setAmount(totalAmountDue);
 
             if (
-                (payment_method.payment_terminal && !this._isRefundOrder()) ||
+                (payment_method.payment_terminal && !this.isRefund) ||
                 payment_method.payment_method_type === "qr_code"
             ) {
                 newPaymentLine.setPaymentStatus("pending");
@@ -746,7 +739,7 @@ export class PosOrder extends Base {
 
     isRefundInProcess() {
         return (
-            this._isRefundOrder() &&
+            this.isRefund &&
             this.payment_ids.some(
                 (pl) => pl.payment_method_id.use_payment_terminal && pl.payment_status !== "done"
             )
