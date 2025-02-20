@@ -2202,11 +2202,10 @@ def warmup(func, *args, **kwargs):
     self.env.invalidate_all()
     # run once to warm up the caches
     self.warm = False
-    self.cr.execute('SAVEPOINT test_warmup')
-    func(*args, **kwargs)
-    self.env.flush_all()
+    with contextlib.closing(self.cr.savepoint(flush=False)):
+        func(*args, **kwargs)
+        self.env.flush_all()
     # run once for real
-    self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
     self.env.invalidate_all()
     self.warm = True
     func(*args, **kwargs)
