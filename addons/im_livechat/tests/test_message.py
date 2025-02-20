@@ -6,13 +6,14 @@ from markupsafe import Markup
 from odoo import Command, fields
 from odoo.exceptions import AccessError
 from odoo.tools.misc import limited_field_access_token
-from odoo.tests.common import users, tagged, HttpCase
+from odoo.tests.common import users, tagged
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
 
 
 @tagged('post_install', '-at_install')
-class TestImLivechatMessage(HttpCase, MailCommon):
+class TestImLivechatMessage(ChatbotCase, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -26,6 +27,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                 'email': 'e.e@example.com',
                 'groups_id': [Command.link(self.env.ref('base.group_user').id)],
                 'login': 'emp',
+                'password': self.password,
                 'name': 'Ernest Employee',
                 'notification_type': 'inbox',
                 'odoobot_state': 'disabled',
@@ -54,6 +56,73 @@ class TestImLivechatMessage(HttpCase, MailCommon):
             self.env['res.users'].with_user(user).check_access('write')
         user.with_user(user).livechat_username = 'New username'
         self.assertEqual(user.livechat_username, 'New username')
+
+    def test_chatbot_message_format(self):
+        session = self.authenticate(self.users[0].login, self.password)
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Visitor",
+                "channel_id": self.livechat_channel.id,
+                "chatbot_script_id": self.chatbot_script.id,
+                "persisted": True,
+            },
+            headers={
+                "Cookie": f"session_id={session.sid};",
+            },
+        )
+        discuss_channel = self.env['discuss.channel'].browse(data["discuss.channel"][0]["id"])
+        self._post_answer_and_trigger_next_step(
+            discuss_channel,
+            self.step_dispatch_buy_software.name,
+            chatbot_script_answer=self.step_dispatch_buy_software
+        )
+        chatbot_message = discuss_channel.chatbot_message_ids.mail_message_id[:1]
+        self.assertEqual(
+            Store(chatbot_message, for_current_user=True).get_result()["mail.message"],
+            [
+                {
+                    "attachment_ids": [],
+                    "author": {
+                        "id": self.chatbot_script.operator_partner_id.id,
+                        "type": "partner",
+                    },
+                    "body": Markup("<p>Can you give us your email please?</p>"),
+                    "chatbotStep": {
+                        "message": chatbot_message.id,
+                        "scriptStep": self.step_email.id,
+                    },
+                    "create_date": fields.Datetime.to_string(chatbot_message.create_date),
+                    "date": fields.Datetime.to_string(chatbot_message.date),
+                    "default_subject": "Testing Bot",
+                    "id": chatbot_message.id,
+                    "is_discussion": True,
+                    "is_note": False,
+                    "link_preview_ids": [],
+                    "message_type": "comment",
+                    "model": "discuss.channel",
+                    "needaction": False,
+                    "notification_ids": [],
+                    "parentMessage": False,
+                    "pinned_at": False,
+                    "rating_id": False,
+                    "reactions": [],
+                    "recipients": [],
+                    "record_name": "Testing Bot",
+                    "res_id": discuss_channel.id,
+                    "scheduledDatetime": False,
+                    "starred": False,
+                    "thread": {
+                        "id": discuss_channel.id,
+                        "model": "discuss.channel",
+                    },
+                    "subject": False,
+                    "subtype_description": False,
+                    "trackingValues": [],
+                    "write_date": fields.Datetime.to_string(chatbot_message.write_date),
+                }
+            ],
+        )
 
     @users('emp')
     def test_message_to_store(self):
