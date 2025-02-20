@@ -36,7 +36,6 @@ class IrUiMenu(models.Model):
                     "webIcon": None,
                     "webIconData": None,
                     "webIconDataMimetype": None,
-                    "webInvisible": False,
                     "backgroundImage": menu.get('backgroundImage'),
                 }
             else:
@@ -83,7 +82,6 @@ class IrUiMenu(models.Model):
                     "webIcon": web_icon,
                     "webIconData": web_icon_data,
                     "webIconDataMimetype": menu['web_icon_data_mimetype'],
-                    "webInvisible": menu['web_invisible'],
                 }
 
         return web_menus

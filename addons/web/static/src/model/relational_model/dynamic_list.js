@@ -8,7 +8,6 @@ import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
 import { Record } from "./record";
 import { resequence } from "./utils";
-import { user } from "@web/core/user";
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 
@@ -25,7 +24,7 @@ export class DynamicList extends DataPoint {
             this.handleField = DEFAULT_HANDLE_FIELD;
         }
         this.isDomainSelected = false;
-        this.evalContext = { ...this.context, ...user.evalContext };
+        this.evalContext = this.context;
     }
 
     // -------------------------------------------------------------------------

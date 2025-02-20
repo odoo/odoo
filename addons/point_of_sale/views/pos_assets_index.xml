@@ -29,7 +29,7 @@
             })"/>;
             // Prevent the menu_service to load anything. In an ideal world, POS assets would only contain
             // what is genuinely necessary, and not the whole backend.
-            odoo.loadMenusPromise = Promise.resolve({});
+            odoo.loadMenusPromise = Promise.resolve();
         </script>
 
         <t t-call="web.conditional_assets_tests">

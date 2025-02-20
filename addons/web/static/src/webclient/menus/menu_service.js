@@ -1,8 +1,6 @@
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 import { session } from "@web/session";
-import { user } from "@web/core/user";
 
 const loadMenusUrl = `/web/webclient/load_menus`;
 
@@ -25,13 +23,6 @@ function makeFetchLoadMenus() {
 
 function makeMenus(env, menusData, fetchLoadMenus) {
     let currentAppId;
-    function evaluateInvisible() {
-        Object.values(menusData).forEach((menu) => {
-            menu.invisible = evaluateBooleanExpr(menu.webInvisible, user.evalContext);
-            delete menu.webInvisible;
-        });
-    }
-    evaluateInvisible();
     function _getMenu(menuId) {
         return menusData[menuId];
     }
@@ -49,9 +40,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
             return Object.values(menusData);
         },
         getApps() {
-            return this.getMenu("root")
-                .children.filter((mID) => !menusData[mID].invisible)
-                .map((mid) => this.getMenu(mid));
+            return this.getMenu("root").children.map((mid) => this.getMenu(mid));
         },
         getMenu: _getMenu,
         getCurrentApp() {
@@ -63,9 +52,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
         getMenuAsTree(menuID) {
             const menu = this.getMenu(menuID);
             if (!menu.childrenTree) {
-                menu.childrenTree = menu.children
-                    .filter((mID) => !menusData[mID].invisible)
-                    .map((mid) => this.getMenuAsTree(mid));
+                menu.childrenTree = menu.children.map((mid) => this.getMenuAsTree(mid));
             }
             return menu;
         },
@@ -85,7 +72,6 @@ function makeMenus(env, menusData, fetchLoadMenus) {
         async reload() {
             if (fetchLoadMenus) {
                 menusData = await fetchLoadMenus(true);
-                evaluateInvisible();
                 env.bus.trigger("MENUS:APP-CHANGED");
             }
         },

@@ -400,7 +400,7 @@ export function makeActionManager(env, router = _router) {
         const domain = action.domain || [];
         action.domain =
             typeof domain === "string"
-                ? evaluateExpr(domain, Object.assign({}, user.evalContext, action.context))
+                ? evaluateExpr(domain, Object.assign({}, user.context, action.context))
                 : domain;
         if (action.help) {
             if (isHtmlEmpty(action.help)) {
