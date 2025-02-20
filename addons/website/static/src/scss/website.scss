@@ -1260,7 +1260,6 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     }
 }
 
-
 .carousel .container {
     .carousel-img img {
         max-height: 95%;
@@ -1325,6 +1324,52 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         }
         > .carousel-image {
             display: none !important;
+        }
+    }
+}
+
+// Multiple visible items configuration for carousels
+.carousel.o_carousel_multi_items {
+    --o-carousel-item-width-percentage: 25%;
+
+    @include media-breakpoint-up(md) {
+        .carousel-inner {
+            // Display the carousel items in a row
+            display: flex;
+            flex-wrap: nowrap;
+
+            // Slide right animation
+            .carousel-item.active,
+            .carousel-item-end:not(.active),
+            .carousel-item-prev:not(.active) {
+                &, ~ .carousel-item {
+                    display: block;
+                    flex: 0 0 var(--o-carousel-item-width-percentage);
+                    margin-right: 0;
+                }
+            }
+            .active.carousel-item-end + .carousel-item-prev.carousel-item-end,
+            .carousel-item-prev.carousel-item-end ~ .carousel-item {
+                right: var(--o-carousel-item-width-percentage);
+                transform: translateX(100%);
+                display: block;
+                margin-right: 0;
+            }
+
+            // Slide left animation
+            .carousel-item-start.active,
+            .carousel-item-start:not(.active),
+            .carousel-item-start:not(.active) ~ .carousel-item {
+                transform: translateX(-100%);
+            }
+            .carousel-item.active:not(.carousel-item-start):not(.carousel-item-end),
+            .carousel-item.active:not(.carousel-item-start):not(.carousel-item-end) ~ .carousel-item {
+                transition: none;
+                margin-right: initial;
+            }
+            .carousel-item-next:not(.carousel-item-start) {
+                transform: translateX(0%);
+            }
         }
     }
 }
