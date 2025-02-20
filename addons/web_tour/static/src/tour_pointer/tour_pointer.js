@@ -94,8 +94,8 @@ export class TourPointer extends Component {
                 // Check is the pointed element is a zone
                 if (this.props.pointerState.isZone) {
                     const { anchor } = this.props.pointerState;
-                    let offsetLeft,
-                        offsetTop = 0;
+                    let offsetLeft = 0;
+                    let offsetTop = 0;
                     if (document !== anchor.ownerDocument) {
                         const iframe = [...document.querySelectorAll("iframe")].filter(
                             (e) => e.contentDocument === anchor.ownerDocument
