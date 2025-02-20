@@ -205,6 +205,15 @@ class ResConfigSettings(models.TransientModel):
             'context': {'pos_config_open_modal': True, 'pos_config_create_mode': True},
         }
 
+    def action_pos_printer_dialog(self):
+        return {
+            'view_mode': 'form',
+            'res_model': 'pos.printer',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_id': False,
+        }
+
     def pos_open_ui(self):
         if self._context.get('pos_config_id'):
             pos_config_id = self._context['pos_config_id']

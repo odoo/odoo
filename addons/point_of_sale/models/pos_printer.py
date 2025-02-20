@@ -16,6 +16,7 @@ class PosPrinter(models.Model):
     proxy_ip = fields.Char('Proxy IP Address', help="The IP Address or hostname of the Printer's hardware proxy")
     product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
+    pos_config_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'printer_id', 'config_id')
 
     @api.model
     def _load_pos_data_domain(self, data):

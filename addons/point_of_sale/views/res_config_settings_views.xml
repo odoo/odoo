@@ -418,7 +418,12 @@
                                         <field name="pos_printer_ids" widget="many2many_tags"/>
                                     </div>
                                     <div>
-                                        <field name="pos_printer_ids" class="mb-0" widget="many2many_create_button_field" string="Add Printer"/>
+                                        <button name="action_pos_printer_dialog"
+                                            context="{'default_pos_config_ids': [pos_config_id]}"
+                                            icon="oi-arrow-right"
+                                            type="object"
+                                            string="Add Printer"
+                                            class="btn-link"/>
                                     </div>
                                     <div>
                                         <button name="%(point_of_sale.action_pos_printer_form)d" icon="oi-arrow-right" type="action" string="Manage Printers" class="btn-link"/>
