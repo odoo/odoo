@@ -315,7 +315,7 @@ class TestInventory(TransactionCase):
 
     def test_inventory_request_count_quantity(self):
         """ Ensures when a request to count a quant for tracked product is done, other quants for
-        the same product in the same location are also marked as to count."""
+        the same product in the same location are not marked as to count."""
         # Config: enable tracking and multilocations.
         self.env.user.group_ids = [
             Command.link(self.env.ref('stock.group_production_lot').id),
@@ -361,19 +361,19 @@ class TestInventory(TransactionCase):
                 'inventory_quantity': 1,
             }
         ])
-        # Request count for 1 quant => The other quant in the same location
-        # should also be updated, other quants shouldn't
+        # Request count for first and second quant => The other quant in the same location
+        # shouldn't be updated, also other quants shouldn't
         request_wizard = self.env['stock.request.count'].create({
-            'quant_ids': quants[1].ids,
+            'quant_ids': [quants[1].id, quants[3].id],
             'set_count': 'empty',
             'user_id': self.env.user.id,
         })
         request_wizard.action_request_count()
         self.assertRecordValues(quants, [
-            {'lot_id': serial_numbers[0].id, 'user_id': self.env.user.id, 'location_id': self.stock_location.id},
+            {'lot_id': serial_numbers[0].id, 'user_id': False, 'location_id': self.stock_location.id},
             {'lot_id': serial_numbers[1].id, 'user_id': self.env.user.id, 'location_id': self.stock_location.id},
             {'lot_id': serial_numbers[2].id, 'user_id': False, 'location_id': sub_location.id},
-            {'lot_id': serial_numbers[3].id, 'user_id': False, 'location_id': stock_location_2.id},
+            {'lot_id': serial_numbers[3].id, 'user_id': self.env.user.id, 'location_id': stock_location_2.id},
         ])
 
     def test_inventory_outdate_1(self):
