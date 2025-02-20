@@ -6,22 +6,28 @@ export const textInputBasePassthroughProps = {
     title: { type: String, optional: true },
 };
 
+// TODO: rename BuilderInputBase if compatible with type=range
 export class BuilderTextInputBase extends Component {
     static template = "html_builder.BuilderTextInputBase";
     static props = {
         ...textInputBasePassthroughProps,
-        onChange: { type: Function, optional: true },
-        onInput: { type: Function, optional: true },
+        commit: { type: Function },
+        preview: { type: Function },
         onFocus: { type: Function, optional: true },
         value: { type: [String, { value: null }], optional: true },
-        inputRefCallback: { type: Function, optional: true },
     };
 
     setup() {
         this.inputRef = useRef("input");
-        if (this.props.inputRefCallback) {
-            this.props.inputRefCallback(this.inputRef);
-        }
+    }
+
+    onChange() {
+        const normalizedDisplayValue = this.props.commit(this.inputRef.el.value);
+        this.inputRef.el.value = normalizedDisplayValue;
+    }
+
+    onInput() {
+        this.props.preview(this.inputRef.el.value);
     }
 
     onFocus() {

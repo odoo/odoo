@@ -373,6 +373,7 @@ export function useClickableBuilderComponent() {
 }
 export function useInputBuilderComponent(
     {
+        id,
         defaultValue,
         formatRawValue = (rawValue) => rawValue,
         parseDisplayValue = (displayValue) => displayValue,
@@ -440,40 +441,34 @@ export function useInputBuilderComponent(
         };
     }
 
-    function onChange(e) {
+    function commit(userInputValue) {
         if (defaultValue !== undefined) {
-            e.target.value ||= formatRawValue(defaultValue);
+            userInputValue ||= formatRawValue(defaultValue);
         }
-        const userInputValue = e.target.value;
         const rawValue = parseDisplayValue(userInputValue);
+        callOperation(applyOperation.commit, { userInputValue: rawValue });
         // If the parsed value is not equivalent to the user input, we want to
         // normalize the displayed value. It is useful in cases of invalid
         // input and allows to fall back to the output of parseDisplayValue.
-        e.target.value = rawValue !== undefined ? formatRawValue(rawValue) : "";
-        callOperation(applyOperation.commit, { userInputValue: rawValue });
-    }
-    let onInput = (e) => {
-        const userInputValue = e.target.value;
-        callOperation(applyOperation.preview, {
-            userInputValue: parseDisplayValue(userInputValue),
-            operationParams: {
-                cancellable: true,
-                cancelPrevious: () => applyOperation.revert(),
-            },
-        });
-    };
-    if (
-        comp.props.preview === false ||
-        (comp.env.weContext.preview === false && comp.props.preview !== true)
-    ) {
-        onInput = () => {};
+        return rawValue !== undefined ? formatRawValue(rawValue) : "";
     }
 
-    // TODO: turn this into a parameter instead of implicitly
-    //  turning all id props of the components into this?
-    //  this would avoid breaking encapsulation/data ownership
-    if (comp.props.id) {
-        useDependencyDefinition(comp.props.id, {
+    const shouldPreview = comp.props.preview !== false &&
+        (comp.props.preview === true || comp.env.weContext.preview !== false);
+    function preview(userInputValue) {
+        if (shouldPreview) {
+            callOperation(applyOperation.preview, {
+                userInputValue: parseDisplayValue(userInputValue),
+                operationParams: {
+                    cancellable: true,
+                    cancelPrevious: () => applyOperation.revert(),
+                },
+            });
+        }
+    }
+
+    if (id) {
+        useDependencyDefinition(id, {
             type: "input",
             getValue: () => state.value,
         });
@@ -481,8 +476,8 @@ export function useInputBuilderComponent(
 
     return {
         state,
-        onChange,
-        onInput,
+        commit,
+        preview,
     };
 }
 

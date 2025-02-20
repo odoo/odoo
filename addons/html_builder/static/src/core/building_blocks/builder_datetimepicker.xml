@@ -5,10 +5,9 @@
     <BuilderComponent>
         <div t-ref="root">
             <BuilderTextInputBase
-                    inputRefCallback.bind="setInputRef"
                     t-props="textInputBaseProps"
-                    onChange="onChange"
-                    onInput="onInput"
+                    commit="commit"
+                    preview="preview"
                     onFocus.bind="onFocus"
                     value="displayValue"
             />

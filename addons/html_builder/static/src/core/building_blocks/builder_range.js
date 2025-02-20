@@ -6,6 +6,7 @@ import {
 } from "./utils";
 import { BuilderComponent } from "./builder_component";
 
+// TODO: adapt and use BuilderTextInputBase?
 export class BuilderRange extends Component {
     static template = "html_builder.BuilderRange";
     static props = {
@@ -27,15 +28,22 @@ export class BuilderRange extends Component {
 
     setup() {
         useBuilderComponent();
-        const { state, onChange, onInput } = useInputBuilderComponent();
+        const { state, commit, preview } = useInputBuilderComponent();
 
-        this.onChange = onChange;
-        this.onInput = (e) => {
-            this.state.value = e.target.value;
-            onInput(e);
-        };
+        this.commit = commit;
+        this.preview = preview;
         this.state = state;
     }
+
+    onChange(e) {
+        const normalizedDisplayValue = this.commit(e.target.value);
+        e.target.value = normalizedDisplayValue;
+    }
+
+    onInput(e) {
+        this.preview(e.target.value);
+    }
+
     getOutput(value) {
         // TODO: adapt when agau's PR that adapts `useInputBuilderComponent` is
         // merged.

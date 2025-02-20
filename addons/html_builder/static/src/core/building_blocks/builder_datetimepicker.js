@@ -8,14 +8,13 @@ import { basicContainerBuilderComponentProps, useBuilderComponent, useInputBuild
 
 const { DateTime } = luxon;
 
-// TODO: refactor useInputBuilderComponent api to avoid hacking with events
 export class BuilderDateTimePicker extends Component {
     static template = "html_builder.BuilderDateTimePicker";
     static props = {
         ...basicContainerBuilderComponentProps,
         ...textInputBasePassthroughProps,
-        default: { type: String, optional: true },
         id: { type: String, optional: true },
+        default: { type: String, optional: true },
         type: { type: [{ value: "date" }, { value: "datetime" }], optional: true },
         format: { type: String, optional: true },
     };
@@ -29,13 +28,14 @@ export class BuilderDateTimePicker extends Component {
 
     setup() {
         useBuilderComponent();
-        const { state, onChange, onInput } = useInputBuilderComponent({
+        const { state, commit, preview } = useInputBuilderComponent({
+            id: this.props.id,
             defaultValue: this.props.default,
             formatRawValue: this.formatRawValue.bind(this),
             parseDisplayValue: this.parseDisplayValue.bind(this),
         });
-        this.onChange = onChange;
-        this.onInput = onInput;
+        this.commit = commit;
+        this.preview = preview;
         this.state = state;
 
         const getPickerProps = () => ({
@@ -53,12 +53,10 @@ export class BuilderDateTimePicker extends Component {
                 return getPickerProps();
             },
             onApply: (value) => {
-                this.inputRef.el.value = formatDateTime(value);
-                this.inputRef.el.dispatchEvent(new Event("change"));
+                this.commit(formatDateTime(value));
             },
             onChange: (value) => {
-                this.inputRef.el.value = formatDateTime(value);
-                this.inputRef.el.dispatchEvent(new Event("input"));
+                this.preview(formatDateTime(value));
             },
         });
     }
@@ -109,10 +107,6 @@ export class BuilderDateTimePicker extends Component {
 
     get textInputBaseProps() {
         return pick(this.props, ...Object.keys(textInputBasePassthroughProps));
-    }
-
-    setInputRef(ref) {
-        this.inputRef = ref;
     }
 
     onFocus() {

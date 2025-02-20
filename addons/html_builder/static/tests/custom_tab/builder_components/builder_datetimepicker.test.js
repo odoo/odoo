@@ -70,18 +70,17 @@ test("defaults to default when invalid date provided", async () => {
     expect(".we-bg-options-container input").toHaveValue(formatDateTime(expectedDateTime));
 });
 
-test("defaults to default when no date is selected", async () => {
+test("defaults to empty (even with default) when no date is selected", async () => {
     addOption({
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" default="'now'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    const expectedDateTime = DateTime.now();
 
     await contains(".we-bg-options-container input").click();
     await contains(".options-container").click();
-    expect(".we-bg-options-container input").toHaveValue(formatDateTime(expectedDateTime));
+    expect(".we-bg-options-container input").toHaveValue("");
 });
 
 test("selects a date and properly applies it", async () => {

@@ -13,8 +13,8 @@ export class BuilderTextInput extends Component {
     static props = {
         ...basicContainerBuilderComponentProps,
         ...textInputBasePassthroughProps,
-        default: { type: String, optional: true },
         id: { type: String, optional: true },
+        default: { type: String, optional: true },
     };
     static components = {
         BuilderComponent,
@@ -23,11 +23,12 @@ export class BuilderTextInput extends Component {
 
     setup() {
         useBuilderComponent();
-        const { state, onChange, onInput } = useInputBuilderComponent({
+        const { state, commit, preview } = useInputBuilderComponent({
+            id: this.props.id,
             defaultValue: this.props.default,
         });
-        this.onChange = onChange;
-        this.onInput = onInput;
+        this.commit = commit;
+        this.preview = preview;
         this.state = state;
     }
 
