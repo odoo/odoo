@@ -9,6 +9,7 @@ import {
     makeServerError,
     onRpc,
     patchTranslations,
+    patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -32,6 +33,7 @@ import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot"
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { user } from "@web/core/user";
+import { localization } from "@web/core/l10n/localization";
 
 import { Model } from "@odoo/o-spreadsheet";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
@@ -1100,6 +1102,84 @@ test("PIVOT day are correctly formatted at evaluation", async function () {
     expect(getEvaluatedCell(model, "B3").format).toBe("#,##0.00");
     expect(getEvaluatedCell(model, "B3").value).toBe(10);
     expect(getEvaluatedCell(model, "B3").formattedValue).toBe("10.00");
+});
+
+test("PIVOT day_of_week with same user and spreadsheet week start", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+            <pivot>
+                <field name="date" interval="day" type="row"/>
+                <field name="probability" type="measure"/>
+            </pivot>`,
+        mockRPC: function (route, { method, kwargs }) {
+            if (method === "read_group" && kwargs.groupby?.includes("date:day_of_week")) {
+                return [
+                    {
+                        "date:day_of_week": 2, // 2 days after the user week start (Monday + 2 = Wednesday)
+                        __domain: [["date.day_of_week", "=", 2]],
+                        __count: 1,
+                        probability_avg_id: 11,
+                    },
+                ];
+            }
+        },
+    });
+    patchWithCleanup(localization, {
+        weekStart: 1, // Monday
+    });
+    model.dispatch("UPDATE_LOCALE", {
+        locale: {
+            ...model.getters.getLocale(),
+            weekStart: 1, // Monday
+        },
+    });
+    updatePivot(model, pivotId, {
+        rows: [{ fieldName: "date", granularity: "day_of_week" }],
+    });
+    setCellContent(model, "B1", '=PIVOT.HEADER(1, "date:day_of_week", 3)');
+    setCellContent(model, "B2", '=PIVOT.VALUE(1, "probability:avg", "date:day_of_week", 3)');
+    await animationFrame();
+    expect(getEvaluatedCell(model, "B1").value).toBe("Wednesday");
+    expect(getEvaluatedCell(model, "B2").value).toBe(11);
+});
+
+test("PIVOT day_of_week with user week start and spreadsheet week start different", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+            <pivot>
+                <field name="date" interval="day" type="row"/>
+                <field name="probability" type="measure"/>
+            </pivot>`,
+        mockRPC: function (route, { method, kwargs }) {
+            if (method === "read_group" && kwargs.groupby?.includes("date:day_of_week")) {
+                return [
+                    {
+                        "date:day_of_week": 1, // 2 days after the user week start (Tuesday + 1 = Wednesday)
+                        __domain: [["date.day_of_week", "=", 1]],
+                        __count: 1,
+                        probability_avg_id: 11,
+                    },
+                ];
+            }
+        },
+    });
+    patchWithCleanup(localization, {
+        weekStart: 2, // Tuesday
+    });
+    model.dispatch("UPDATE_LOCALE", {
+        locale: {
+            ...model.getters.getLocale(),
+            weekStart: 6, // Saturday
+        },
+    });
+    updatePivot(model, pivotId, {
+        rows: [{ fieldName: "date", granularity: "day_of_week" }],
+    });
+    setCellContent(model, "B1", '=PIVOT.HEADER(1, "date:day_of_week", 5)');
+    setCellContent(model, "B2", '=PIVOT.VALUE(1, "probability:avg", "date:day_of_week", 5)');
+    await animationFrame();
+    expect(getEvaluatedCell(model, "B1").value).toBe("Wednesday");
+    expect(getEvaluatedCell(model, "B2").value).toBe(11);
 });
 
 test("PIVOT iso_week_number are correctly formatted at evaluation", async function () {
