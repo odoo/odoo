@@ -115,3 +115,11 @@ export function scrollToWindow(element, { behavior, offset } = {}) {
     window.scrollTo({ top, behavior });
     return prom;
 }
+
+export function getValueFromVar(value) {
+    const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);
+    if (match) {
+        return match[1];
+    }
+    return value;
+}

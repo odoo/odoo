@@ -1,5 +1,6 @@
 import { useIsActiveItem } from "@html_builder/core/building_blocks/utils";
 import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { getValueFromVar } from "@html_builder/utils/utils";
 import {
     backgroundImageCssToParts,
     backgroundImagePartsToCss,
@@ -13,9 +14,13 @@ import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
 
 const getBackgroundImageColor = function (editingEl, colorName) {
-    return new URL(getBgImageURLFromEl(editingEl), window.location.origin).searchParams.get(
-        colorName
-    );
+    const backgroundImageColor = new URL(
+        getBgImageURLFromEl(editingEl),
+        window.location.origin
+    ).searchParams.get(colorName);
+    if (backgroundImageColor) {
+        return normalizeColor(backgroundImageColor);
+    }
 };
 
 // TODO: support the setTarget
@@ -88,12 +93,12 @@ class BackgroundImagePlugin extends Plugin {
             },
             dynamicColor: {
                 getValue: ({ editingElement, param: colorName }) =>
-                    // TODO: make sure it works when the colorpicker will be fixed
                     getBackgroundImageColor(editingElement, colorName),
                 apply: ({ editingElement, param: colorName, value }) => {
+                    value = getValueFromVar(value);
                     const currentSrc = getBgImageURLFromEl(editingElement);
                     const newURL = new URL(currentSrc, window.location.origin);
-                    newURL.searchParams.set(colorName, normalizeColor(value));
+                    newURL.searchParams.set(colorName, value);
                     const src = newURL.pathname + newURL.search;
                     this.setImageBackground(editingElement, src);
                 },
@@ -102,15 +107,19 @@ class BackgroundImagePlugin extends Plugin {
     }
     loadReplaceBackgroundImage() {
         return new Promise((resolve) => {
-            this.dependencies.media.openMediaDialog({
+            const onClose = this.dependencies.media.openMediaDialog({
                 onlyImages: true,
                 save: (imageEl) => {
                     resolve(imageEl.getAttribute("src"));
                 },
             });
+            onClose.then(resolve);
         });
     }
     applyReplaceBackgroundImage({ editingElement, loadResult: imageSrc }) {
+        if (!imageSrc) {
+            return;
+        }
         this.setImageBackground(editingElement, imageSrc);
         for (const attr of removeOnImageChangeAttrs) {
             delete editingElement.dataset[attr];
@@ -145,7 +154,6 @@ class BackgroundImagePlugin extends Plugin {
             param: "background-image",
             value: combined,
         });
-        this.editable.focus();
     }
     getLastPreFilterLayerElement() {
         return null;

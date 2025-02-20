@@ -57,9 +57,6 @@ export class CoreBuilderActionPlugin extends Plugin {
                 if (customStyle) {
                     customStyle?.apply(editingElement, value);
                 } else {
-                    if (value.startsWith("color-prefix-")) {
-                        value = `var(${value.replace("color-prefix-", "--")})`;
-                    }
                     const styles = window.getComputedStyle(editingElement);
                     if (!areCssValuesEqual(styles.getPropertyValue(styleName), value, styleName)) {
                         editingElement.style.setProperty(styleName, value, "important");

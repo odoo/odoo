@@ -41,9 +41,16 @@ class RatingOptionPlugin extends Plugin {
                                 resolve(icon);
                             },
                         };
-                        this.dependencies.media.openMediaDialog(mediaDialogParams, this.editable);
+                        const onClose = this.dependencies.media.openMediaDialog(
+                            mediaDialogParams,
+                            this.editable
+                        );
+                        onClose.then(resolve);
                     }),
                 apply: ({ editingElement, loadResult: savedIconEl, param: customParam }) => {
+                    if (!savedIconEl) {
+                        return;
+                    }
                     const isCustomActive = customParam === "customActiveIcon";
                     const customClass = savedIconEl.className;
                     const activeIconEls = getActiveIcons(editingElement);

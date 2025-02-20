@@ -1,6 +1,6 @@
 import { useIsActiveItem } from "@html_builder/core/building_blocks/utils";
 import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
-import { isMobileView } from "@html_builder/utils/utils";
+import { getValueFromVar, isMobileView } from "@html_builder/utils/utils";
 import {
     getBgImageURLFromEl,
     getBgImageURLFromURL,
@@ -175,13 +175,13 @@ class BackgroundShapePlugin extends Plugin {
                     const { shape, colors: customColors } = this.getShapeData(editingElement);
                     const colors = Object.assign(getDefaultColors(editingElement), customColors);
                     const color = shape && colors[colorName];
-                    return color || "";
+                    return (color && normalizeColor(color)) || "";
                 },
                 apply: ({ editingElement, param: colorName, value }) => {
                     this.applyShape(editingElement, () => {
+                        value = getValueFromVar(value);
                         const { colors: previousColors } = this.getShapeData(editingElement);
-                        const newColor =
-                            normalizeColor(value) || getDefaultColors(editingElement)[colorName];
+                        const newColor = value || getDefaultColors(editingElement)[colorName];
                         const newColors = Object.assign(previousColors, { [colorName]: newColor });
                         return { colors: newColors };
                     });

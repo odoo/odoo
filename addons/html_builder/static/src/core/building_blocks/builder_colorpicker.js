@@ -18,7 +18,10 @@ export function useColorPickerBuilderComponent() {
     const state = useDomState(getState);
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation((applySpecs) => {
         for (const applySpec of applySpecs) {
-            const actionValue = applySpec.actionValue;
+            let actionValue = applySpec.actionValue;
+            if (actionValue.startsWith("color-prefix-")) {
+                actionValue = `var(${actionValue.replace("color-prefix-", "--")})`;
+            }
             applySpec.apply({
                 editingElement: applySpec.editingElement,
                 param: applySpec.actionParam,

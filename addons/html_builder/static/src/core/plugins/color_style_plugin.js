@@ -14,8 +14,9 @@ class ColorStylePlugin extends Plugin {
                 getValue: (editingElement) =>
                     this.dependencies.color.getElementColors(editingElement)["backgroundColor"],
                 apply: (editingElement, value) => {
-                    if (value.startsWith("color-prefix-")) {
-                        value = value.replace("color-prefix-", "bg-");
+                    const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);
+                    if (match) {
+                        value = `bg-${match[1]}`;
                     }
                     this.dependencies.color.colorElement(editingElement, value, "backgroundColor");
                 },
@@ -24,8 +25,9 @@ class ColorStylePlugin extends Plugin {
                 getValue: (editingElement) =>
                     this.dependencies.color.getElementColors(editingElement)["color"],
                 apply: (editingElement, value) => {
-                    if (value.startsWith("color-prefix-")) {
-                        value = value.replace("color-prefix-", "text-");
+                    const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);
+                    if (match) {
+                        value = `text-${match[1]}`;
                     }
                     this.dependencies.color.colorElement(editingElement, value, "color");
                 },
