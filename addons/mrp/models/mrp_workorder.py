@@ -670,7 +670,7 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             if workorder.state in ('done', 'cancel'):
                 continue
-            moves = (self.move_raw_ids + self.production_id.move_byproduct_ids.filtered(lambda m: m.operation_id == self.operation_id))
+            moves = (self.move_raw_ids + self.production_id.move_byproduct_ids).filtered(lambda m: m.operation_id == self.operation_id)
             for move in moves:
                 if not move.picked:
                     if float_is_zero(workorder.production_id.qty_producing, precision_rounding=workorder.production_id.product_uom_id.rounding):

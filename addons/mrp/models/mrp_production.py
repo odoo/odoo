@@ -2021,9 +2021,10 @@ class MrpProduction(models.Model):
         self.workorder_ids._action_confirm()
 
     def button_mark_done(self):
-        res = self.pre_button_mark_done()
-        if res is not True:
-            return res
+        if self.env.context.get('close_production', True):
+            res = self.pre_button_mark_done()
+            if res is not True:
+                return res
 
         if self.env.context.get('mo_ids_to_backorder'):
             productions_to_backorder = self.browse(self.env.context['mo_ids_to_backorder'])
@@ -2032,32 +2033,39 @@ class MrpProduction(models.Model):
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
         productions_not_to_backorder = productions_not_to_backorder.with_context(no_procurement=True)
-        self.workorder_ids.button_finish()
 
         backorders = productions_to_backorder and productions_to_backorder._split_productions()
         backorders = backorders - productions_to_backorder
+        if self.env.context.get('close_production', True):
+            self.workorder_ids.button_finish()
 
-        productions_not_to_backorder._post_inventory(cancel_backorder=True)
-        productions_to_backorder._post_inventory(cancel_backorder=True)
+            productions_not_to_backorder._post_inventory(cancel_backorder=True)
+            productions_to_backorder._post_inventory(cancel_backorder=True)
 
-        # if completed products make other confirmed/partially_available moves available, assign them
-        done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')
-        done_move_finished_ids._trigger_assign()
+            # if completed products make other confirmed/partially_available moves available, assign them
+            done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')
+            done_move_finished_ids._trigger_assign()
 
-        # Moves without quantity done are not posted => set them as done instead of canceling. In
-        # case the user edits the MO later on and sets some consumed quantity on those, we do not
-        # want the move lines to be canceled.
-        (productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
-            'state': 'done',
-            'product_uom_qty': 0.0,
-        })
-        for production in self:
-            production.write({
-                'date_finished': fields.Datetime.now(),
-                'priority': '0',
-                'is_locked': True,
+            # Moves without quantity done are not posted => set them as done instead of canceling. In
+            # case the user edits the MO later on and sets some consumed quantity on those, we do not
+            # want the move lines to be canceled.
+            (productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
                 'state': 'done',
+                'product_uom_qty': 0.0,
             })
+            for production in self:
+                production.write({
+                    'date_finished': fields.Datetime.now(),
+                    'priority': '0',
+                    'is_locked': True,
+                    'state': 'done',
+                })
+        else:
+            for production in productions_not_to_backorder:
+                for move in (production.move_raw_ids | production.move_finished_ids):
+                    move.product_uom_qty = production.qty_producing * move.unit_factor
+                production.product_qty = production.qty_producing
+                production.action_assign()
 
         # It is prudent to reserve any quantity that has become available to the backorder
         # production's move_raw_ids after the production which spawned them has been marked done.
@@ -2067,6 +2075,9 @@ class MrpProduction(models.Model):
         )
         for backorder in backorders_to_assign:
             backorder.action_assign()
+
+        if not self.env.context.get('close_production', True):
+            return True
 
         report_actions = self._get_autoprint_done_report_actions()
         if self.env.context.get('skip_redirection'):
