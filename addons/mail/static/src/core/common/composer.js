@@ -94,13 +94,11 @@ export class Composer extends Component {
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.composerActions = useComposerActions();
-        this.OR_PRESS_SEND_KEYBIND = markup(
-            _t("or press %(send_keybind)s", {
-                send_keybind: this.sendKeybinds
-                    .map((key) => `<samp>${escape(key)}</samp>`)
-                    .join(" + "),
-            })
-        );
+        this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
+            send_keybind: markup(
+                this.sendKeybinds.map((key) => `<samp>${escape(key)}</samp>`).join(" + ")
+            ),
+        });
         this.store = useService("mail.store");
         this.attachmentUploader = useAttachmentUploader(
             this.thread ?? this.props.composer.message.thread,
@@ -287,7 +285,7 @@ export class Composer extends Component {
                 ),
                 close_save: markup("</a>"),
             };
-            return this.props.mode === "extended"
+            return this.env.inChatter
                 ? _t(
                       "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
                       tags
@@ -307,7 +305,7 @@ export class Composer extends Component {
     }
 
     get sendKeybinds() {
-        return this.props.mode === "extended" ? [_t("CTRL"), _t("Enter")] : [_t("Enter")];
+        return this.env.inChatter ? [_t("CTRL"), _t("Enter")] : [_t("Enter")];
     }
 
     get showComposerAvatar() {
@@ -478,7 +476,7 @@ export class Composer extends Component {
                     ev.preventDefault();
                     return;
                 }
-                const shouldPost = this.props.mode === "extended" ? ev.ctrlKey : !ev.shiftKey;
+                const shouldPost = this.env.inChatter ? ev.ctrlKey : !ev.shiftKey;
                 if (!shouldPost) {
                     return;
                 }
