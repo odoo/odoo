@@ -265,6 +265,33 @@ export class OdooPivot {
      * @param {import("@odoo/o-spreadsheet").Maybe<FunctionResultObject>[]} args
      * @returns {boolean}
      */
+    canBeSorted(args) {
+        const { rows } = this.definition;
+        for (let i = 2; i < args.length; i += 2) {
+            const nameWithGranularity = args[i].value;
+            let dimensionWithGranularity;
+            let isPositional;
+            try {
+                ({ dimensionWithGranularity, isPositional } = this.parseGroupField(
+                    toString(nameWithGranularity)
+                ));
+            } catch {
+                return false;
+            }
+            if (
+                isPositional &&
+                rows.some((r) => r.nameWithGranularity === dimensionWithGranularity)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param {import("@odoo/o-spreadsheet").Maybe<FunctionResultObject>[]} args
+     * @returns {boolean}
+     */
     areDomainArgsFieldsValid(args) {
         let dimensions = args
             .filter((_, index) => index % 2 === 0)
