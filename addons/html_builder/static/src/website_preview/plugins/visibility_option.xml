@@ -32,12 +32,9 @@
 </t>
 
 <t t-name="html_builder.VisibilityOption">
-    <!-- TODO -->
     <t t-set="language_ids" t-value="env.services.website.currentWebsite.language_ids || []"/>
-    <!-- <t t-set="iframe_session" t-value="env.editor.document.defaultView.odoo.loader.modules.get('@web/session').session"/> -->
-    <t t-set="iframe_session" t-value="{}"/>
 
-    <t t-set="geoip_country_code" t-value="iframe_session.geoip_country_code"/>
+    <t t-set="geoip_country_code" t-value="this.props.websiteSession.geoip_country_code"/>
     <BuilderRow label.translate="Visibility" expand="true">
         <t t-call="html_builder.DeviceVisibility"></t>
         <BuilderSelect dataAttributeAction="'visibility'" action="'forceVisible'">

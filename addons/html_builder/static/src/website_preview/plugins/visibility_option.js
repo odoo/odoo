@@ -3,19 +3,25 @@ import { Plugin } from "@html_editor/plugin";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { pyToJsLocale } from "@web/core/l10n/utils";
+import { Component } from "@odoo/owl";
+import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { useIsActiveItem } from "@html_builder/core/building_blocks/utils";
 
 export const device_visibility_option_selector = "section .row > div";
 
 class VisibilityOptionPlugin extends Plugin {
     static id = "VisibilityOption";
-    static dependencies = ["builder-options", "visibility"];
+    static dependencies = ["builder-options", "visibility", "websiteSession"];
     websiteService = this.services.website;
     visibilityOptionSelector = "section, .s_hr";
     deviceSelector = "section .row > div";
     resources = {
         builder_options: [
             {
-                template: "html_builder.VisibilityOption",
+                OptionComponent: VisibilityOption,
+                props: {
+                    websiteSession: this.dependencies.websiteSession.getSession(),
+                },
                 selector: this.visibilityOptionSelector,
                 cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
             },
@@ -247,6 +253,18 @@ class VisibilityOptionPlugin extends Plugin {
         } else {
             delete target.dataset.visibilityId;
         }
+    }
+}
+
+class VisibilityOption extends Component {
+    static template = "html_builder.VisibilityOption";
+    static props = {
+        websiteSession: true,
+    };
+    static components = { ...defaultBuilderComponents };
+
+    setup() {
+        this.isActiveItem = useIsActiveItem();
     }
 }
 

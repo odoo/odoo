@@ -1,5 +1,6 @@
 import { Builder } from "@html_builder/builder";
 import { DropZonePlugin } from "@html_builder/core/plugins/drop_zone_plugin";
+import { WebsiteSessionPlugin } from "@html_builder/website_preview/plugins/website_session_plugin";
 import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
@@ -128,6 +129,12 @@ export async function setupWebsiteBuilder(
         setup() {
             super.setup();
             editableContent = this.editableContentEls[0];
+        },
+    });
+
+    patchWithCleanup(WebsiteSessionPlugin.prototype, {
+        getSession() {
+            return {};
         },
     });
 
