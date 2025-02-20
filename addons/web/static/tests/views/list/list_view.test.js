@@ -76,7 +76,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
-import { cookie } from "@web/core/browser/cookie";
 import { currencies } from "@web/core/currency";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
@@ -1429,50 +1428,6 @@ test(`invisible column based on the context are correctly displayed`, async () =
             invisible: true,
             notInvisible: false,
         },
-    });
-
-    expect(`th:not(.o_list_record_selector)`).toHaveCount(1, {
-        message: "should have 1 th for checkbox, 1 th for foo",
-    });
-    expect(`th:not(.o_list_record_selector)`).toHaveAttribute("data-name", "foo");
-});
-
-test(`invisible column based on the company evalContext are correctly displayed`, async () => {
-    cookie.set("cids", "3-1");
-    serverState.companies = [
-        {
-            id: 1,
-            name: "Company 1",
-            sequence: 1,
-            parent_id: false,
-            child_ids: [],
-            country_code: "BE",
-        },
-        {
-            id: 2,
-            name: "Company 2",
-            sequence: 2,
-            parent_id: false,
-            child_ids: [],
-            country_code: "PE",
-        },
-        {
-            id: 3,
-            name: "Company 3",
-            sequence: 3,
-            parent_id: false,
-            child_ids: [],
-            country_code: "AR",
-        },
-    ];
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<list>
-                    <field name="date" column_invisible="not companies.has(companies.active_ids, 'country_code', 'PE')"/>
-                    <field name="foo" column_invisible="companies.has(companies.active_ids, 'country_code', 'PE')"/>
-                    <field name="bar" column_invisible="not companies.has(companies.active_ids, 'country_code', 'PE')"/>
-                </list>`,
     });
 
     expect(`th:not(.o_list_record_selector)`).toHaveCount(1, {

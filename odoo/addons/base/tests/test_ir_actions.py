@@ -422,7 +422,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.env.user.write({'group_ids': [Command.link(group0.id)]})
 
         bindings = Actions.get_bindings('res.country')
-        self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types', 'binding_invisible']))
+        self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types']))
 
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')

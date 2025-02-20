@@ -1609,30 +1609,11 @@ export class Model extends Array {
         /** @type {typeof this.views} */
         const result = {};
 
-        const binding_actions = MockServer.current.actions.filter(
-            // In hoot, the actions are a list of objects, not real models.
-            // We can't use a "normal" reference. So in this case we do the reference by the name of the model.
-            (action) => action.binding_model_id === this._name
-        );
-
         // Determine all the models/fields used in the views
         // modelFields = {modelName: {fields: Set([...fieldNames])}}
         const modelFields = {};
         views.forEach(([viewId, viewType]) => {
             result[viewType] = getView(this, [viewId, viewType], kwargs);
-            if (options.toolbar) {
-                const toolbarAction = binding_actions.filter((action) =>
-                    action.binding_view_types.split(",").includes(viewType)
-                );
-                if (toolbarAction.length) {
-                    result[viewType].toolbar.action = toolbarAction.map((action) => ({
-                        id: action.id,
-                        name: action.name,
-                        binding_view_types: action.binding_view_types,
-                        binding_invisible: action.binding_invisible,
-                    }));
-                }
-            }
             for (const [modelName, fields] of Object.entries(result[viewType].models)) {
                 modelFields[modelName] ||= { fields: new Set() };
                 for (const field of fields) {

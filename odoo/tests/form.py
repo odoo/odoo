@@ -402,7 +402,6 @@ class Form:
             'active_ids': self._record.ids,
             'active_model': self._record._name,
             'current_date': date.today().strftime("%Y-%m-%d"),
-            'companies': Companies(self._env),
             **self._env.context,
         }
         if values is None:
@@ -1036,53 +1035,3 @@ class Dotter:
         val = self.__values[key]
         return Dotter(val) if isinstance(val, dict) else val
 
-
-class Companies:
-    """ Simple object that simulates the corresponding "companies" object in
-    client-side Python expressions.  It provides access to the currently active
-    companies, and is also used to test some company "properties".
-    """
-    def __init__(self, env):
-        self.__env = env
-
-    @property
-    def active_id(self) -> int:
-        """ The ID of the main company selected.
-        (the one highlighted in the company switcher dropdown and displayed in the navbar of the webclient)
-        """
-        return self.__env.company.id
-
-    @property
-    def active_ids(self) -> list[int]:
-        """ The list of company IDs the user is connected to (selected in the company switcher dropdown). """
-        # actually equal to context['allowed_company_ids']
-        return self.__env.companies.ids
-
-    @property
-    def allowed_ids(self) -> list[int]:
-        """ The list of company IDs the user is allowed to connect to. """
-        return self.__env.user._get_company_ids()
-
-    @property
-    def multi_company(self) -> bool:
-        """ A boolean indicating whether the user has access to multiple companies. """
-        return len(self.__env.companies) > 1
-
-    def has(self, ids: int|list[int], field_name: str, value) -> bool:
-        """ Return a boolean indicating whether there is a company with id in
-        `ids` for which `field_name` matches the given `value`.
-        """
-        ids = [ids] if isinstance(ids, int) else ids
-        user_companies = self.__env['res.company'].sudo().browse(self.allowed_ids)
-        all_companies = user_companies | user_companies.parent_ids
-        company_info = {
-            company.id: company._get_session_info(user_companies)
-            for company in user_companies
-        } | {
-            company.id: company._get_session_info(all_companies)
-            for company in all_companies - user_companies
-        }
-        return any(
-            company_info[id_].get(field_name) == value
-            for id_ in ids if id_ in company_info
-        )
