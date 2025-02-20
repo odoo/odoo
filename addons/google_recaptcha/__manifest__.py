@@ -16,6 +16,7 @@
         'web.assets_frontend': [
             'google_recaptcha/static/src/scss/recaptcha.scss',
             'google_recaptcha/static/src/js/recaptcha.js',
+            'google_recaptcha/static/src/js/signup.js',
             # TODO remove next line in master, it was kept here as part of a
             # stable fix in stable but is unused in the current codebase.
             'google_recaptcha/static/src/xml/recaptcha.xml',
