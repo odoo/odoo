@@ -57,6 +57,18 @@ class ResConfigSettings(models.TransientModel):
     prepayment_percent = fields.Float(
         related='company_id.prepayment_percent',
         readonly=False)
+    is_stripe_supported_country = fields.Boolean(
+        related='company_id.country_id.is_stripe_supported_country')
+    providers_state = fields.Selection(
+        selection=[
+            ('none', 'None'),
+            ('main_provider', 'Main Provider'),
+            ('other', 'Other Provider')
+        ],
+        compute='_compute_providers_state')
+    first_provider_label = fields.Char(
+        compute='_compute_providers_state')
+    is_inr_currency = fields.Boolean(compute='_compute_is_inr_currency')
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")
@@ -126,3 +138,58 @@ class ResConfigSettings(models.TransientModel):
         send_invoice_cron = self.env.ref('sale.send_invoice_cron', raise_if_not_found=False)
         if send_invoice_cron and send_invoice_cron.active != self.automatic_invoice:
             send_invoice_cron.active = self.automatic_invoice
+
+    @api.depends('company_id.currency_id')
+    def _compute_is_inr_currency(self):
+        for config in self:
+            config.is_inr_currency = config.company_id.currency_id.name == 'INR'
+
+    def _get_activated_providers(self):
+        self.ensure_one()
+        return self.env['payment.provider'].search([
+            ('state', '!=', 'disabled'),
+            ('code', 'not in', ['custom', 'demo']),
+        ])
+
+    def _compute_providers_state(self):
+        stripe = self.env.ref('payment.payment_provider_stripe', raise_if_not_found=False)
+        razorpay = self.env.ref('payment.payment_provider_razorpay', raise_if_not_found=False)
+        for config in self:
+            providers = config._get_activated_providers()
+            main_provider = (
+                razorpay if config.is_inr_currency and razorpay in providers
+                else stripe if stripe in providers
+                else None
+            )
+
+            config.providers_state = (
+                'main_provider' if main_provider else 'other' if providers else 'none'
+            )
+            config.first_provider_label = (
+                _('Configure %s', main_provider.name) if main_provider else ''
+            )
+
+    def action_activate_payment_provider(self):
+        self.ensure_one()
+        if not (self.is_stripe_supported_country or self.is_inr_currency):
+            return False
+        menu = self.env.ref('sale.menu_sale_general_settings', raise_if_not_found=False)
+        menu_id = menu and menu.id
+        return self.env.company._run_payment_onboarding_step(menu_id=menu_id)
+
+    def action_configure_first_provider(self):
+        self.ensure_one()
+        provider_code = 'razorpay' if self.is_inr_currency else 'stripe'
+        provider = self.env['payment.provider'].search([
+            *self.env['payment.provider']._check_company_domain(self.env.company),
+            ('code', '=', provider_code)
+        ], limit=1)
+        providers = self._get_activated_providers()
+        return {
+            'name': self.first_provider_label,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'payment.provider',
+            'views': [[False, 'form']],
+            'res_id': provider.id if provider in providers else False,
+        }
