@@ -131,6 +131,15 @@ class Base(models.AbstractModel):
             return primary_email
         return None
 
+    def _mail_get_primary_email(self):
+        """ Based on "_primary_email", fetch primary email. Helper to override
+        when there is no easy field access. """
+        primary_email = getattr(self, '_primary_email', None)
+        fname = primary_email if primary_email and primary_email in self._fields else None
+        return {
+            record.id: record[fname] if fname else False for record in self
+        }
+
     @api.model
     def mail_allowed_qweb_expressions(self):
         # QWeb expressions allowed if we are not template editor
@@ -236,27 +245,28 @@ class Base(models.AbstractModel):
         res = {}
         customers = self._mail_get_partners()
         prioritize_email = getattr(self, '_mail_defaults_to_email', False)
-        primary_email_fn = self._mail_get_primary_email_field()
+        primary_emails = self._mail_get_primary_email()
         for record in self:
             email_cc_lst, email_to_lst = [], []
             # main recipients (res.partner)
             recipients_all = customers.get(record.id).filtered(lambda p: not p.is_public)
             recipients = recipients_all.filtered(lambda p: p.email_normalized)
             # to computation
-            to_fn = next(
-                (
-                    fname for fname in [
-                        primary_email_fn,
-                        'email_from', 'x_email_from',
-                        'email', 'x_email',
-                        'partner_email',
-                        'email_normalized',
-                    ] if fname and fname in record and record[fname]
-                ), False
-            )
-            if to_fn:
+            email_to = primary_emails[record.id]
+            if not email_to:
+                email_to = next(
+                    (
+                        record[fname] for fname in [
+                            'email_from', 'x_email_from',
+                            'email', 'x_email',
+                            'partner_email',
+                            'email_normalized',
+                        ] if fname and fname in record and record[fname]
+                    ), False
+                )
+            if email_to:
                 # keep value to ease debug / trace update if cannot normalize
-                email_to_lst = tools.mail.email_split_and_format_normalize(record[to_fn]) or [record[to_fn]]
+                email_to_lst = tools.mail.email_split_and_format_normalize(email_to) or [email_to]
             # cc computation
             cc_fn = next(
                 (
