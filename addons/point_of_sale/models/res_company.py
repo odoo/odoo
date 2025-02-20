@@ -17,7 +17,7 @@ class ResCompany(models.Model):
     point_of_sale_use_ticket_qr_code = fields.Boolean(
         string='Self-service invoicing',
         default=True,
-        help="Print information on the receipt to allow the costumer to easily request the invoice anytime, from Odoo's portal")
+        help="Print information on the receipt to allow the customer to easily access the invoice anytime, from Odoo's portal.")
     point_of_sale_ticket_unique_code = fields.Boolean(
         string='Generate a code on ticket',
         help="Add a 5-digit code on the receipt to allow the user to request the invoice for an order on the portal.")
