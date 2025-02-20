@@ -55,8 +55,7 @@ test("compile notebook with modifiers", async () => {
     expect(queryAllTexts`.o_notebook_headers .nav-item`).toEqual(["p1", "p2"]);
 });
 
-test.tags("desktop");
-test("compile header and buttons on desktop", async () => {
+test("compile header and buttons", async () => {
     Partner._views = {
         form: /*xml*/ `
             <form>
@@ -73,29 +72,6 @@ test("compile header and buttons on desktop", async () => {
         resId: 1,
     });
     expect(`.o_statusbar_buttons button[name=action_button]:contains(ActionButton)`).toHaveCount(1);
-});
-
-test.tags("mobile");
-test("compile header and buttons on mobile", async () => {
-    Partner._views = {
-        form: /*xml*/ `
-            <form>
-                <header>
-                    <button string="ActionButton" class="oe_highlight" name="action_button" type="object"/>
-                </header>
-            </form>
-        `,
-    };
-
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        resId: 1,
-    });
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    expect(
-        `.o-dropdown-item-unstyled-button button[name=action_button]:contains(ActionButton)`
-    ).toHaveCount(1);
 });
 
 test("render field with placeholder", async () => {
@@ -186,7 +162,7 @@ test("compile a button with disabled", async () => {
         type: "form",
         resId: 1,
     });
-    expect(`button[id=action_button]`).toHaveAttribute("disabled")
+    expect(`button[id=action_button]`).toHaveAttribute("disabled");
 });
 
 test.tags("desktop");

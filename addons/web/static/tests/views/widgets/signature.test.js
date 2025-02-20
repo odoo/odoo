@@ -9,7 +9,6 @@ import {
     onRpc,
     patchWithCleanup,
     contains,
-    toggleActionMenu,
     clickModalButton,
 } from "@web/../tests/web_test_helpers";
 import { beforeEach, test, expect } from "@odoo/hoot";
@@ -44,9 +43,7 @@ class Product extends models.Model {
 defineModels([Partner, Product]);
 
 beforeEach(async () => {
-    onRpc("/web/sign/get_fonts/", () => {
-        return {};
-    });
+    onRpc("/web/sign/get_fonts/", () => ({}));
 });
 
 test.tags("desktop");
@@ -263,7 +260,7 @@ test("Signature widget works inside of a dropdown", async () => {
     await contains(".o_field_widget[name=display_name] input").edit("test");
 
     // open the signature dialog
-    await toggleActionMenu();
+    await contains(".o_statusbar_buttons button:has(.fa-ellipsis-v").click();
     await contains(".o_widget_signature button.o_sign_button").click();
     await waitFor(".modal .modal-body");
 

@@ -458,14 +458,7 @@ export class FormCompiler extends ViewCompiler {
             }
         }
         let slotId = 0;
-        let statusBarButtons;
-        if (params.asDropdownItems) {
-            statusBarButtons = createElement("StatusBarDropdownItems");
-        } else {
-            statusBarButtons = createElement("StatusBarButtons", {
-                "t-if": "!__comp__.env.isSmall or __comp__.env.inDialog",
-            });
-        }
+        const statusBarButtons = createElement("StatusBarButtons");
         for (const button of buttons) {
             const slot = createElement("t", {
                 "t-set-slot": `button_${slotId++}`,
@@ -473,9 +466,6 @@ export class FormCompiler extends ViewCompiler {
             });
             append(slot, button);
             append(statusBarButtons, slot);
-        }
-        if (params.asDropdownItems) {
-            return statusBarButtons;
         }
         append(statusBar, statusBarButtons);
         append(statusBar, others);
