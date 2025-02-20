@@ -78,6 +78,7 @@ describe("number properties", () => {
         expect(evaluateExpr("42 % 5")).toBe(2);
         expect(evaluateExpr("2 ** 3")).toBe(8);
         expect(evaluateExpr("a + b", { a: 1, b: 41 })).toBe(42);
+        expect(evaluateExpr("3 | 2 + 2")).toBe(7);
     });
 
     test("// operator", () => {
@@ -100,6 +101,8 @@ describe("boolean properties", () => {
         expect(evaluateExpr("not []")).toBe(true);
         expect(evaluateExpr("True == False or True == True")).toBe(true);
         expect(evaluateExpr("False == True and False")).toBe(false);
+        expect(evaluateExpr("False | False")).toBe(false);
+        expect(evaluateExpr("True | False and True")).toBe(true);
     });
 
     test("get value from context", () => {
@@ -309,6 +312,12 @@ describe("dicts", () => {
     test("lookup and definition", () => {
         expect(evaluateExpr("{'a': 1}['a']")).toBe(1);
         expect(evaluateExpr("{1: 2}[1]")).toBe(2);
+    });
+
+    test("dict union", () => {
+        expect(evaluateExpr("{'a': 1} | {'b': 2}")).toEqual({ a: 1, b: 2});
+        expect(evaluateExpr("{'a': 1} | {'a': 2}")).toEqual({ a: 2});
+        expect(evaluateExpr("{'a': 1, 'b': 2} | {'a': 3, 'c': 4}")).toEqual({ a: 3, b: 2, c: 4});
     });
 
     test("can get values with get method", () => {

@@ -242,6 +242,11 @@ function applyBinaryOp(ast, context) {
             return isIn(left, right);
         case "not in":
             return !isIn(left, right);
+        case "|":
+            if (pytypeIndex(left) === 3 && pytypeIndex(right) === 3) { // both dicts
+                return {...left, ...right};
+            }
+            return left | right;
     }
     throw new EvaluationError(`Unknown binary operator: ${ast.op}`);
 }
