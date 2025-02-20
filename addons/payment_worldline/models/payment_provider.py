@@ -81,7 +81,8 @@ class PaymentProvider(models.Model):
         try:
             response = requests.request(method, url, json=payload, headers=headers, timeout=10)
             try:
-                response.raise_for_status()
+                if response.status_code not in const.VALID_RESPONSE_CODES:
+                    response.raise_for_status()
             except requests.exceptions.HTTPError:
                 _logger.exception(
                     "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload)
