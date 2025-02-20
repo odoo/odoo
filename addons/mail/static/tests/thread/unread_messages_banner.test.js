@@ -249,3 +249,55 @@ test("mobile: mark as read when opening chat", async () => {
     await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
     await contains(".o-mail-NotificationItem:has(.badge:contains(1))", { text: "bob", count: 0 });
 });
+
+test("no unread message banner after message is deleted", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+    });
+    let lastMessageId;
+    for (let i = 0; i < 20; ++i) {
+        lastMessageId = pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await contains(".o-mail-Message", { text: "message 0" });
+    await click("span", {
+        text: "Mark as Read",
+        parent: ["span", { text: "20 new messagesMark as Read" }],
+    });
+    await contains(".o-mail-Message", { text: "message 0" });
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "regrettable message",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Thread-banner", { text: "1 new message" });
+    // Simulate deletion of message
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/update_content", {
+            message_id: lastMessageId + 1,
+            body: "",
+            attachment_ids: [],
+        })
+    );
+    await contains(".o-mail-Thread-banner", { count: 0 });
+});
