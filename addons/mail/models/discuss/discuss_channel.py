@@ -1261,11 +1261,7 @@ class DiscussChannel(models.Model):
         """ Return 'limit'-first channels' id, name, channel_type and authorizedGroupFullName fields such that the
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
-        domain = expression.AND([
-                        [('name', 'ilike', search)],
-                        [('channel_type', '=', 'channel')],
-                        [('channel_partner_ids', 'in', [self.env.user.partner_id.id])]
-                    ])
+        domain = [("name", "ilike", search), ("channel_type", "=", "channel")]
         channels = self.search(domain, limit=limit)
         return [{
             'authorizedGroupFullName': channel.group_public_id.full_name,
