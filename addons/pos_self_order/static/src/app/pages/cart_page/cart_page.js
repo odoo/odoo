@@ -105,11 +105,13 @@ export class CartPage extends Component {
     getPrice(line) {
         const childLines = line.combo_line_ids;
         if (childLines.length == 0) {
-            return line.getDisplayPrice();
+            const qty = this.getLineChangeQty(line) || line.qty;
+            return line.getDisplayPriceWithQty(qty);
         } else {
             let price = 0;
             for (const child of childLines) {
-                price += child.getDisplayPrice();
+                const qty = this.getLineChangeQty(child) || child.qty;
+                price += child.getDisplayPriceWithQty(qty);
             }
             return price;
         }

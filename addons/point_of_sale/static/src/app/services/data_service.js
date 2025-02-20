@@ -187,23 +187,6 @@ export class PosData extends Reactive {
             }
         }
 
-        if (results && results["pos.order"]) {
-            const ids = results["pos.order"]
-                .map((o) => o.id)
-                .filter((id) => typeof id === "number");
-
-            if (ids.length) {
-                const result = await this.read("pos.order", ids);
-                const serverIds = result.map((r) => r.id);
-
-                for (const id of ids) {
-                    if (!serverIds.includes(id)) {
-                        this.localDeleteCascade(this.models["pos.order"].get(id));
-                    }
-                }
-            }
-        }
-
         return results;
     }
 
