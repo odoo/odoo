@@ -533,7 +533,8 @@
                             id="products_grid_before"
                             class="d-none d-lg-block position-sticky align-self-start col clearfix"
                         >
-                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 pt-2 px-lg-2 pb-lg-5 ps-2 overflow-y-scroll">
+                            <t t-call="website_sale.sidebar_dropzone_at_top"/>
+                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 pt-2 px-lg-2 ps-2 overflow-y-scroll">
                                 <t
                                     t-set="is_sidebar_collapsible"
                                     t-value="is_view_active('website_sale.products_categories_list_collapsible')"
@@ -577,6 +578,7 @@
                                     />
                                 </t>
                             </div>
+                            <t t-call="website_sale.sidebar_dropzone_at_bottom"/>
                         </aside>
                         <div id="products_grid" t-attf-class="col">
                             <t
@@ -826,6 +828,30 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="website_sale.sidebar_dropzone_at_top">
+        <div id="oe_structure_website_sale_sidebar_top" class="oe_structure">
+            <section
+                class="s_text_block oe_unmovable oe_unremovable"
+                data-snippet="s_text_block"
+                data-name="Text"
+            >
+                <p/>
+            </section>
+        </div>
+    </template>
+
+    <template id="website_sale.sidebar_dropzone_at_bottom">
+        <div id="oe_structure_website_sale_sidebar_bottom" class="oe_structure">
+            <section
+                class="s_text_block oe_unmovable oe_unremovable"
+                data-snippet="s_text_block"
+                data-name="Text"
+            >
+                <p/>
+            </section>
+        </div>
     </template>
 
     <!-- (Option) Mobile: Show 1 product for row -->
