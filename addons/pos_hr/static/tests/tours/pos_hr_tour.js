@@ -127,7 +127,13 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
             Dialog.confirm("Open Register"),
             Chrome.clickMenuButton(),
             {
-                trigger: negate(".close-button"),
+                trigger: negate(`span.dropdown-item:contains("Close Register")`),
+            },
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Chrome.clickMenuButton(),
+            {
+                trigger: negate(`span.dropdown-item:contains("Close Register")`),
             },
         ].flat(),
 });
