@@ -4597,7 +4597,13 @@ export class OdooEditor extends EventTarget {
             return;
         }
         this._wasTableSelected = hasTableSelection(this.editable);
-        this.deselectTable();
+        const startTd = closestElement(selection.anchorNode, '.o_selected_td');
+        const endTd = closestElement(selection.focusNode, '.o_selected_td');
+        if (!(startTd && startTd === endTd) || currentKeyPress) {
+            // Prevent deselecting single cell unless selection changes
+            // through keyboard.
+            this.deselectTable();
+        }
         const anchorNode = selection.anchorNode;
         // Correct cursor if at editable root.
         if (
@@ -4609,12 +4615,11 @@ export class OdooEditor extends EventTarget {
             // The _onSelectionChange handler is going to be triggered again.
             return;
         }
-        let appliedCustomSelection = false;
         if (selection.rangeCount && selection.getRangeAt(0)) {
-            appliedCustomSelection = this._handleSelectionInTable();
+            this._handleSelectionInTable();
         }
         const isSelectionInEditable = this.isSelectionInEditable(selection);
-        if (!appliedCustomSelection) {
+        if (!hasTableSelection(this.editable)) {
             this._updateToolbar(!selection.isCollapsed && isSelectionInEditable);
         }
         if (!isSelectionInEditable) {
