@@ -7819,7 +7819,7 @@ X[]
                     stepFunction: async (editor) => {
                         // Table selection happens on selectionchange
                         // event which is fired in the next tick.
-                        await tick();
+                        await nextTick();
                     },
                     contentAfterEdit: unformat(`
                     <div data-oe-protected="true">
