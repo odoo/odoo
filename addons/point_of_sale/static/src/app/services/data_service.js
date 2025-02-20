@@ -71,7 +71,7 @@ export class PosData extends Reactive {
             const channel = channels.pop();
             this.connectWebSocket(channel.channel, channel.method);
 
-            console.warn("Reconnecting to channel", channel.channel);
+            console.debug("Reconnecting to channel", channel.channel);
         }
     }
 
@@ -190,7 +190,6 @@ export class PosData extends Reactive {
         }
 
         await this.checkAndDeleteMissingOrders(results);
-
         return results;
     }
 
