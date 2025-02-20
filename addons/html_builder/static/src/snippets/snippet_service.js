@@ -18,6 +18,7 @@ export class SnippetModel extends Reactive {
         this.snippetsName = snippetsName;
         this.websiteService = services.website;
         this.context = context;
+        this.loadProm = null;
 
         this.snippetsByCategory = {
             snippet_groups: [],
@@ -130,21 +131,25 @@ export class SnippetModel extends Reactive {
         );
     }
 
-    async load() {
-        const context = { ...this.context, rendering_bundle: true };
-        if (context.user_lang) {
-            context.lang = this.context.user_lang;
-            context.snippet_lang = this.context.lang;
+    load() {
+        if (!this.loadProm) {
+            this.loadProm = new Promise((resolve) => {
+                const context = { ...this.context, rendering_bundle: true };
+                if (context.user_lang) {
+                    context.lang = this.context.user_lang;
+                    context.snippet_lang = this.context.lang;
+                }
+                this.orm.silent
+                    .call("ir.ui.view", "render_public_asset", [this.snippetsName, {}], { context })
+                    .then((html) => {
+                        const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
+                        this.computeSnippetTemplates(snippetsDocument);
+                        this.setSnippetName(snippetsDocument);
+                        resolve();
+                    });
+            });
         }
-        const html = await this.orm.silent.call(
-            "ir.ui.view",
-            "render_public_asset",
-            [this.snippetsName, {}],
-            { context }
-        );
-        const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
-        this.computeSnippetTemplates(snippetsDocument);
-        this.setSnippetName(snippetsDocument);
+        return this.loadProm;
     }
 
     computeSnippetTemplates(snippetsDocument) {
@@ -367,6 +372,7 @@ export class SnippetModel extends Reactive {
                             context,
                         });
 
+                        this.loadProm = null;
                         // Reload the snippets so the sidebar is up to date.
                         await this.load();
                         resolve(savedName);
