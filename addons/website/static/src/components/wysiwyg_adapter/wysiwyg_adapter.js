@@ -159,7 +159,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                         hasFakeState = true;
                     },
                     onLeave: () => history.back(),
-                    reloadIframe: false
+                    reloadIframe: true
                 });
             };
             window.addEventListener('popstate', leaveOnBackNavigation);

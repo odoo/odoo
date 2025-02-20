@@ -270,6 +270,10 @@ browser.addEventListener("popstate", (ev) => {
         browser.history.replaceState({ nextState: state }, "", browser.location.href);
         return;
     }
+    const action = ev.state?.action ?? ev.state?.nextState?.actionStack?.[0]?.action;
+    if (action === "website" && document.querySelector(".editor_enable")) {
+        router.skipLoad = true;
+    }
     state = ev.state?.nextState || router.urlToState(new URL(browser.location));
     // Some client actions want to handle loading their own state. This is a ugly hack to allow not
     // reloading the webclient's state when they manipulate history.
