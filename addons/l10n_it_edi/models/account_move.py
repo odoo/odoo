@@ -524,7 +524,7 @@ class AccountMove(models.Model):
             base_lines.remove(downpayment_line)
 
         dispatched_results = self.env['account.tax']._dispatch_negative_lines(base_lines)
-        base_lines = dispatched_results['result_lines'] + dispatched_results['orphan_negative_lines'] + downpayment_lines
+        base_lines = dispatched_results['result_lines'] + dispatched_results['nulled_candidate_lines'] + dispatched_results['orphan_negative_lines'] + downpayment_lines
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, self._l10n_it_edi_grouping_function_base_lines)
         self._l10n_it_edi_add_base_lines_xml_values(base_lines_aggregated_values, is_downpayment)
