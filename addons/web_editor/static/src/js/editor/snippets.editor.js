@@ -33,7 +33,7 @@ import {
 } from "@web/core/utils/ui";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-import { RPCError } from "@web/core/network/rpc";
+import { rpc, RPCError } from "@web/core/network/rpc";
 import { ColumnLayoutMixin } from "@web_editor/js/common/column_layout_mixin";
 import { Tooltip as OdooTooltip } from "@web/core/tooltip/tooltip";
 import { AddSnippetDialog } from "@web_editor/js/editor/add_snippet_dialog";
@@ -2357,12 +2357,18 @@ class SnippetsMenu extends Component {
             context.lang = this.options.context.user_lang;
             context.snippet_lang = this.options.context.lang;
         }
-        this._defLoadSnippets = this.orm.silent.call(
-            "ir.ui.view",
-            "render_public_asset",
-            [this.options.snippets, {}],
-            { context }
-        );
+        // TODO: MSH: Call this method with controller to make our solution work
+        this._defLoadSnippets = rpc("/web_editor/render_public_asset", {
+            template: this.options.snippets,
+            values: {},
+            context: context,
+        });
+        // this._defLoadSnippets = this.orm.silent.call(
+        //     "ir.ui.view",
+        //     "render_public_asset",
+        //     [this.options.snippets, {}],
+        //     { context }
+        // );
         cacheSnippetTemplate[this.options.snippets] = this._defLoadSnippets;
         if (this.invalidateSnippetCache) {
             this.invalidateSnippetCache = false;
@@ -5103,6 +5109,9 @@ class SnippetsMenu extends Component {
             }
 
             await new Promise(resolve => {
+                // TODO: MSH: Maybe here we can add some logic
+                // Keep blank template for all the dynamic templates with resepctive xml ID in template as data attribute
+                // Here we can add the logic here or in AddSnippetDialog to get the template from the server and replace the placeholder added in xml view
                 this.dialog.add(AddSnippetDialog, {
                     snippets: this.snippets,
                     groupSelected: groupSelected,

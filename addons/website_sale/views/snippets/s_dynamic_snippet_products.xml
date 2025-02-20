@@ -17,7 +17,10 @@
             -->
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
             <t t-set="snippet_template_key" t-value="'website_sale.dynamic_filter_template_product_product_borderless_1'"/>
-            <t t-call="website_sale.s_dynamic_filter_template_product_product_borderless_1_preview_data"/>
+            <!-- <t t-call="website_sale.s_dynamic_filter_template_product_product_borderless_1_preview_data"/> -->
+            <t t-call="website_sale.s_dynamic_snippet_products_preview_data2">
+                <t t-set="snippet_preview_template" t-value="'website_sale.dynamic_filter_template_product_product_borderless_1'"/>
+            </t>
         </t>
     </template>
 

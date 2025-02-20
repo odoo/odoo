@@ -160,6 +160,10 @@ class Web_Editor(http.Controller):
 
         return response
 
+    @http.route('/web_editor/render_public_asset', type='jsonrpc', auth='user')
+    def render_public_asset(self, **kwargs):
+        return request.env["ir.ui.view"].with_context(kwargs.get("context")).render_public_asset(kwargs.get("template"), values=kwargs.get("values"))
+
     #------------------------------------------------------
     # Update a checklist in the editor on check/uncheck
     #------------------------------------------------------
