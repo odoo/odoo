@@ -9,6 +9,10 @@ class EventEvent(models.Model):
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     track_count = fields.Integer('Track Count', compute='_compute_track_count')
+    published_track_count = fields.Integer(
+        string="Published Track Count",
+        compute='_compute_published_track_count',
+    )
     website_track = fields.Boolean(
         'Tracks on Website', compute='_compute_website_track',
         readonly=False, store=True)
@@ -23,10 +27,14 @@ class EventEvent(models.Model):
         compute='_compute_tracks_tag_ids', store=True)
 
     def _compute_track_count(self):
-        data = self.env['event.track']._read_group([('stage_id.is_cancel', '!=', True)], ['event_id'], ['__count'])
-        result = {event.id: count for event, count in data}
+        track_count_per_event = self._get_track_count_per_event()
         for event in self:
-            event.track_count = result.get(event.id, 0)
+            event.track_count = track_count_per_event.get(event.id, 0)
+
+    def _compute_published_track_count(self):
+        published_track_count_per_event = self._get_track_count_per_event(is_published=True)
+        for event in self:
+            event.published_track_count = published_track_count_per_event.get(event.id, 0)
 
     @api.depends('event_type_id', 'website_menu')
     def _compute_website_track(self):
@@ -54,6 +62,23 @@ class EventEvent(models.Model):
     def _compute_tracks_tag_ids(self):
         for event in self:
             event.tracks_tag_ids = event.track_ids.mapped('tag_ids').filtered(lambda tag: tag.color != 0).ids
+
+    # ------------------------------------------------------------
+    # BUSINESS METHODS
+    # ------------------------------------------------------------
+
+    def _get_track_count_per_event(self, is_published=False):
+        domain = [('event_id', 'in', self.ids), ('stage_id.is_cancel', '!=', True)]
+        if is_published:
+            domain.append(('is_published', '=', True))
+        return {
+                event.id: count
+                for event, count in self.env['event.track']._read_group(
+                    domain=domain,
+                    groupby=['event_id'],
+                    aggregates=['__count'],
+                )
+            }
 
     # ------------------------------------------------------------
     # WEBSITE MENU MANAGEMENT

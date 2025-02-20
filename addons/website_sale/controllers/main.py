@@ -887,7 +887,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order_sudo = request.cart
         request.session['sale_last_order_id'] = order_sudo.id
 
-        if redirection := self._check_cart_and_addresses(order_sudo):
+        if redirection := self._check_cart_and_addresses(order_sudo, try_skip_step=try_skip_step):
             return redirection
 
         checkout_page_values = self._prepare_checkout_page_values(order_sudo, **query_params)
@@ -1081,19 +1081,25 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             callback = callback or '/shop/checkout'
 
+        is_anonymous_cart = order_sudo._is_anonymous_cart()
         partner_sudo, feedback_dict = self._create_or_update_address(
             partner_sudo,
             address_type=address_type,
             use_delivery_as_billing=use_delivery_as_billing,
             callback=callback,
             order_sudo=order_sudo,
+            # Skip required fields check for customers' main address when order only contains
+            # service type products
+            skip_address_required_fields=(
+                order_sudo.only_services
+                and (partner_sudo == order_sudo.partner_id or is_anonymous_cart)
+            ),
             **form_data
         )
 
         if feedback_dict.get('invalid_fields'):
             return json.dumps(feedback_dict) # Return if error when creating/updating partner.
 
-        is_anonymous_cart = order_sudo._is_anonymous_cart()
         is_main_address = is_anonymous_cart or order_sudo.partner_id.id == partner_sudo.id
         partner_fnames = set()
         if is_main_address:  # Main customer address updated.
@@ -1564,7 +1570,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     # === CHECK METHODS === #
 
-    def _check_cart_and_addresses(self, order_sudo):
+    def _check_cart_and_addresses(self, order_sudo, try_skip_step=True):
         """ Check whether the cart and its addresses are valid, and redirect to the appropriate page
         if not.
 
@@ -1575,7 +1581,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if redirection := self._check_cart(order_sudo):
             return redirection
 
-        if redirection := self._check_addresses(order_sudo):
+        if redirection := self._check_addresses(order_sudo, try_skip_step=try_skip_step):
             return redirection
 
     def _check_cart(self, order_sudo):
@@ -1604,7 +1610,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if request.env.user._is_public() and request.website.account_on_checkout == 'mandatory':
             return request.redirect('/web/login?redirect=/shop/checkout')
 
-    def _check_addresses(self, order_sudo):
+    def _check_addresses(self, order_sudo, try_skip_step=False):
         """ Check whether the cart's addresses are complete and valid.
 
         The addresses are complete and valid if:
@@ -1635,7 +1641,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Check that the billing address is complete.
         invoice_partner_sudo = order_sudo.partner_invoice_id
         if (
-            not self._check_billing_address(invoice_partner_sudo)
+            not try_skip_step
+            and not self._check_billing_address(invoice_partner_sudo)
             and invoice_partner_sudo._can_be_edited_by_current_customer(order_sudo=order_sudo)
         ):
             return request.redirect(
