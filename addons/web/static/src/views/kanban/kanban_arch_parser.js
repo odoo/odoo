@@ -51,7 +51,7 @@ export class KanbanArchParser {
                 headerButtons = [...node.children]
                     .filter((node) => node.tagName === "button")
                     .map((node) => ({
-                        ...processButton(node),
+                        ...this.processButton(node),
                         type: "button",
                         id: button_id++,
                     }))
@@ -180,5 +180,9 @@ export class KanbanArchParser {
             sumField: fields[attrs.sum_field] || false,
             help: attrs.help,
         };
+    }
+
+    processButton(node) {
+        return processButton(node);
     }
 }
