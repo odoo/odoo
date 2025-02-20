@@ -712,8 +712,49 @@ export class PosStore extends Reactive {
             "get_pos_ui_product_product_by_params",
             [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }]
         );
+        await this._loadMissingPosCombos(products);
         await this._loadMissingPricelistItems(products);
         this._loadProductProduct(products);
+    }
+    async _loadMissingPosCombos(products) {
+        const missingComboIds = new Set(
+            products
+                .filter((product) => product.combo_ids.length)
+                .map((product) => product.combo_ids)
+                .flat()
+                .filter((id) => !this.db.combo_by_id[id]),
+        );
+        if (!missingComboIds.size) {
+            return;
+        }
+        const combos = await this.orm.call("pos.combo", "search_read", [], {
+            fields: ["id", "name", "combo_line_ids", "base_price"],
+            domain: [["id", "in", [...missingComboIds]]],
+        });
+        this.db.add_combos(combos);
+        const comboLines = await this.orm.call("pos.combo.line", "search_read", [], {
+            fields: ["id", "product_id", "combo_price", "combo_id"],
+            domain: [["combo_id", "in", [...missingComboIds]]],
+        });
+        this.db.add_combo_lines(comboLines);
+        const missingProductIds = new Set(
+            comboLines
+                .map((comboLine) => comboLine.product_id[0])
+                .filter(
+                    (id) =>
+                        !this.db.get_product_by_id(id) &&
+                        !products.map((product) => product.id).includes(id),
+                ),
+        );
+        if (!missingProductIds.size) {
+            return;
+        }
+        products.push(
+            ...(await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
+                odoo.pos_session_id,
+                { domain: [["id", "in", [...missingProductIds]]] },
+            ])),
+        );
     }
     async _loadMissingPricelistItems(products) {
         if (!products.length) {
@@ -1812,6 +1853,7 @@ export class PosStore extends Reactive {
             odoo.pos_session_id,
             { domain: [["id", "in", ids]] },
         ]);
+        await this._loadMissingPosCombos(product);
         await this._loadMissingPricelistItems(product);
         this._loadProductProduct(product);
     }
