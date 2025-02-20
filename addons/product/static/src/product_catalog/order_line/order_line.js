@@ -8,6 +8,7 @@ export class ProductCatalogOrderLine extends Component {
         quantity: Number,
         price: Number,
         productType: String,
+        uom: { type:Object, optional: true },
         readOnly: { type: Boolean, optional: true },
         warning: { type: String, optional: true},
     };
