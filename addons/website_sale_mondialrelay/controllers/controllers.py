@@ -35,7 +35,7 @@ class MondialRelay(http.Controller):
             order_sudo.partner_shipping_id = partner_shipping
 
         return {
-            'address': request.env['ir.qweb']._render('website_sale.address_on_payment', {
+            'address': request.env['ir.qweb']._render('website_sale.address_on_checkout', {
                 'order': order_sudo,
                 'only_services': order_sudo.only_services,
             }),

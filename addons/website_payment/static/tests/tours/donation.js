@@ -80,7 +80,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ":iframe body:contains(Your payment has been successfully processed.)",
+            trigger: ":iframe body:contains(Your payment has been processed.)",
         },
         {
             content: "Verify that the amount displayed is 67",
