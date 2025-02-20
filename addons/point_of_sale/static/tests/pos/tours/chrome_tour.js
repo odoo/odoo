@@ -32,6 +32,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
             TicketScreen.checkStatus("002", "Payment"),
 
             // Order 3 is at Receipt Screen
@@ -43,6 +44,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
             Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
             TicketScreen.checkStatus("003", "Receipt"),
 
             // Select order 1, should be at Product Screen
@@ -56,6 +58,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
 
             // Select order 2, should be at Payment Screen
             Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
             TicketScreen.selectOrder("002"),
             TicketScreen.loadSelectedOrder(),
             PaymentScreen.emptyPaymentlines("12.0"),
@@ -63,12 +66,14 @@ registry.category("web_tour.tours").add("ChromeTour", {
 
             // Select order 3, should be at Receipt Screen
             Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
             TicketScreen.selectOrder("003"),
             TicketScreen.loadSelectedOrder(),
             ReceiptScreen.totalAmountContains("30.0"),
 
             // Pay order 1, with change
             Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
             TicketScreen.selectOrder("001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
@@ -81,6 +86,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
 
             // Order 1 now should have Receipt status
             Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
             TicketScreen.checkStatus("001", "Receipt"),
 
             // Select order 3, should still be at Receipt Screen
@@ -94,6 +100,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ReceiptScreen.clickNextOrder(),
             ProductScreen.orderIsEmpty(),
             Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
             TicketScreen.deleteOrder("004"),
 
             // After deleting order 1 above, order 2 became

@@ -49,7 +49,7 @@
                 <button
                     class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                     t-on-click="() => this.submitOrder()"
-                    t-elif="this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrint">
+                    t-elif="this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrints.length">
                     <i class="fa fa-cutlery" aria-hidden="true"></i>
                 </button>
                 <button
