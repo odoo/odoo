@@ -257,11 +257,11 @@
                     <attribute name="readonly">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='project_id']" position="attributes">
-                    <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
+                    <attribute name="options" add="{'no_open': True}" separator="|"/>
                     <attribute name="readonly">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='task_id']" position="attributes">
-                    <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
+                    <attribute name="options" add="{'no_open': True}" separator="|"/>
                     <attribute name="readonly">1</attribute>
                 </xpath>
             </field>
