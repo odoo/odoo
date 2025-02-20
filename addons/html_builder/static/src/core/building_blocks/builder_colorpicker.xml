@@ -3,19 +3,7 @@
 
 <t t-name="html_builder.BuilderColorPicker">
     <BuilderComponent>
-        <div t-att-title="props.title">
-            <ColorSelector
-                type="this.colorType"
-                getSelectedColors='() => this.currentColors'
-                getUsedCustomColors='() => []'
-                applyColor="onCommit"
-                applyColorPreview="onPreview"
-                applyColorResetPreview="onRevert"
-                noTransparency="props.noTransparency"
-                focusEditable='() => this.env.editor.shared.selection.focusEditable()'>
-                <div class="o_we_color_preview" t-ref="colorButton" />
-            </ColorSelector>
-        </div>
+        <div t-att-title="props.title" class="o_we_color_preview" t-ref="colorButton" t-att-style="this.getSelectedColorStyle()" />
     </BuilderComponent>
 </t>
 

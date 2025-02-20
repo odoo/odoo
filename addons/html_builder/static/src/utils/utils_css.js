@@ -1,5 +1,5 @@
 import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_service";
-import { normalizeCSSColor, isCSSColor } from "@web/core/utils/colors";
+import { normalizeCSSColor, isCSSColor, isColorGradient } from "@web/core/utils/colors";
 
 let editableWindow = window;
 export const setEditableWindow = (ew) => (editableWindow = ew);
@@ -427,14 +427,6 @@ export function backgroundImagePartsToCss(parts) {
         css += (css ? ", " : "") + parts.gradient;
     }
     return css || "none";
-}
-/**
- * @param {string} [value]
- * @returns {boolean}
- */
-export function isColorGradient(value) {
-    // FIXME duplicated in odoo-editor/utils.js
-    return value && value.includes("-gradient(");
 }
 /**
  * Generates a string ID.

@@ -14,12 +14,12 @@ defineWebsiteModels();
 test("should apply backgroundColor to the editing element", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderColorPicker styleAction="'backgroundColor'"/>`,
+        template: xml`<BuilderColorPicker styleAction="'background-color'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
-    await contains(".we-bg-options-container .dropdown").click();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
     await click(".o-overlay-item [data-color='o-color-1']");
     expect(":iframe .test-options-target").toHaveClass("test-options-target bg-o-color-1");
 });
@@ -32,7 +32,7 @@ test("should apply color to the editing element", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
-    await contains(".we-bg-options-container .dropdown").click();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
     await click(".o-overlay-item [data-color='o-color-1']");
     expect(":iframe .test-options-target").toHaveClass("test-options-target text-o-color-1");
 });
@@ -44,7 +44,7 @@ test("hide/display base on applyTo", async () => {
     });
     addOption({
         selector: ".parent-target",
-        template: xml`<BuilderColorPicker applyTo="'.my-custom-class'" styleAction="'backgroundColor'"/>`,
+        template: xml`<BuilderColorPicker applyTo="'.my-custom-class'" styleAction="'background-color'"/>`,
     });
     const { getEditableContent } = await setupWebsiteBuilder(
         `<div class="parent-target"><div class="child-target b">b</div></div>`
@@ -73,12 +73,12 @@ test("apply color to a different style than color or backgroundColor", async () 
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
-    await contains(".we-bg-options-container .dropdown").click();
-    await click(".o-overlay-item [data-color='#FF0000']");
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o-overlay-item [data-color='#FF0000']").click();
     expect(":iframe .test-options-target").toHaveStyle({
         borderTopColor: "rgb(255, 0, 0)",
     });
-    expect(".we-bg-options-container .dropdown").toHaveStyle({
+    expect(".we-bg-options-container .o_we_color_preview").toHaveStyle({
         "background-color": "rgb(255, 0, 0)",
     });
 });
@@ -103,7 +103,7 @@ test("apply custom action", async () => {
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container .dropdown").click();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
     await contains(".o-overlay-item [data-color='#FF0000']").click();
     expect.verifySteps(["load", "apply rgb(255, 0, 0)", "load", "apply rgb(255, 0, 0)"]);
 });

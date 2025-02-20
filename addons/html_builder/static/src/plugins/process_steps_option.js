@@ -1,5 +1,5 @@
 import { defaultBuilderComponents } from "../core/default_builder_components";
-import { coreBuilderActions } from "@html_builder/core/plugins/core_builder_action_plugin";
+import { classAction } from "@html_builder/core/plugins/core_builder_action_plugin";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 import { Plugin } from "@html_editor/plugin";
 import { Component } from "@odoo/owl";
@@ -21,9 +21,9 @@ class ProcessStepsOptionPlugin extends Plugin {
     getActions() {
         return {
             changeConnector: {
-                ...coreBuilderActions.classAction,
+                ...classAction,
                 apply: ({ editingElement, param: className }) => {
-                    coreBuilderActions.classAction.apply({
+                    classAction.apply({
                         editingElement: editingElement,
                         param: className,
                     });

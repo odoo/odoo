@@ -1,12 +1,73 @@
 import { ColorSelector } from "@html_editor/main/font/color_selector";
-import { Component, onMounted, useRef } from "@odoo/owl";
+import { Component, useComponent, useRef } from "@odoo/owl";
+import { useColorPicker } from "@web/core/color_picker/color_picker";
+import { BuilderComponent } from "./builder_component";
 import {
     basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
-    useDomState,
     useBuilderComponent,
+    useDomState,
 } from "./utils";
-import { BuilderComponent } from "./builder_component";
+import { isColorGradient } from "@web/core/utils/colors";
+
+// TODO replace by useInputBuilderComponent after extract unit by AGAU
+export function useColorPickerBuilderComponent() {
+    const comp = useComponent();
+    const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
+    const getAction = comp.env.editor.shared.builderActions.getAction;
+    const state = useDomState(getState);
+    const applyOperation = comp.env.editor.shared.history.makePreviewableOperation((applySpecs) => {
+        for (const applySpec of applySpecs) {
+            const actionValue = applySpec.actionValue;
+            applySpec.apply({
+                editingElement: applySpec.editingElement,
+                param: applySpec.actionParam,
+                value: actionValue,
+                loadResult: applySpec.loadResult,
+                dependencyManager: comp.env.dependencyManager,
+            });
+        }
+    });
+    function getState(editingElement) {
+        if (!editingElement || !editingElement.isConnected) {
+            // TODO try to remove it. We need to move hook in BuilderComponent
+            return {};
+        }
+        const actionWithGetValue = getAllActions().find(
+            ({ actionId }) => getAction(actionId).getValue
+        );
+        const { actionId, actionParam } = actionWithGetValue;
+        const actionValue = getAction(actionId).getValue({ editingElement, param: actionParam });
+        return {
+            selectedColor: actionValue,
+        };
+    }
+
+    function onApply(colorValue) {
+        callOperation(applyOperation.commit, { userValueInput: colorValue });
+    }
+    let onPreview = (colorValue) => {
+        callOperation(applyOperation.preview, {
+            userValueInput: colorValue,
+            operationParams: {
+                cancellable: true,
+                cancelPrevious: () => applyOperation.revert(),
+            },
+        });
+    };
+    if (
+        comp.props.preview === false ||
+        (comp.env.weContext.preview === false && comp.props.preview !== true)
+    ) {
+        onPreview = () => {};
+    }
+    return {
+        state,
+        onApply,
+        onPreview,
+        onPreviewRevert: () => applyOperation.revert(),
+    };
+}
 
 export class BuilderColorPicker extends Component {
     static template = "html_builder.BuilderColorPicker";
@@ -17,89 +78,30 @@ export class BuilderColorPicker extends Component {
         title: { type: String, optional: true },
     };
     static components = {
-        ColorSelector,
+        ColorSelector: ColorSelector,
         BuilderComponent,
     };
 
     setup() {
         useBuilderComponent();
-        const { callOperation } = getAllActionsAndOperations(this);
-        this.currentColors = useDomState((editingElement) => ({
-            [this.props.styleAction]: editingElement
-                ? getComputedStyle(editingElement)[this.props.styleAction]
-                : undefined,
-        }));
+        const { state, onApply, onPreview, onPreviewRevert } = useColorPickerBuilderComponent();
         this.colorButton = useRef("colorButton");
-        onMounted(this.updateColorButton.bind(this));
-        const applyOperation = this.env.editor.shared.history.makePreviewableOperation(
-            (applySpecs) => {
-                for (const applySpec of applySpecs) {
-                    if (applySpec.actionId === "styleAction") {
-                        const styleAction = this.props.styleAction;
-                        const applyColor =
-                            styleAction === "color" || styleAction === "backgroundColor"
-                                ? (element) => {
-                                      this.env.editor.shared.color.colorElement(
-                                          element,
-                                          applySpec.actionValue,
-                                          styleAction
-                                      );
-                                  }
-                                : (element) => {
-                                      // TODO should support prefix (border- etc )
-                                      element.style.setProperty(
-                                          styleAction,
-                                          applySpec.actionValue,
-                                          "important"
-                                      );
-                                  };
-                        applyColor(applySpec.editingElement);
-                        this.updateColorButton();
-                    } else {
-                        applySpec.apply({
-                            editingElement: applySpec.editingElement,
-                            param: applySpec.actionParam,
-                            value: applySpec.actionValue,
-                            loadResult: applySpec.loadResult,
-                            dependencyManager: this.env.dependencyManager,
-                        });
-                    }
-                }
-            }
-        );
-        this.onCommit = ({ color }) => {
-            callOperation(applyOperation.commit, { userValueInput: color });
-        };
-        this.onPreview = ({ color }) => {
-            callOperation(applyOperation.preview, {
-                userValueInput: color,
-                operationParams: {
-                    cancellable: true,
-                    cancelPrevious: () => applyOperation.revert(),
-                },
-            });
-        };
-        this.onRevert = () => {
-            // The `next` will cancel the previous operation, which will revert
-            // the operation in case of a preview.
-            this.env.editor.shared.operation.next();
-        };
+        this.state = state;
+        useColorPicker("colorButton", {
+            state,
+            applyColor: onApply,
+            applyColorPreview: onPreview,
+            applyColorResetPreview: onPreviewRevert,
+            getUsedCustomColors: () => [],
+            colorPrefix: "color-prefix-",
+            noTransparency: this.props.noTransparency,
+        });
     }
 
-    get colorType() {
-        // TODO need to ref colorSelector to make it more generic
-        return this.props.styleAction === "color" ? "foreground" : "background";
-    }
-
-    updateColorButton() {
-        const editingElement = this.env.getEditingElement();
-        if (!this.colorButton.el || !editingElement) {
-            return;
+    getSelectedColorStyle() {
+        if (isColorGradient(this.state.selectedColor)) {
+            return `background-image: ${this.state.selectedColor}`;
         }
-        const color =
-            this.env.editor.shared.color.getElementColors(editingElement)[this.props.styleAction] ||
-            editingElement.style[this.props.styleAction] ||
-            "";
-        this.env.editor.shared.color.colorElement(this.colorButton.el, color, "backgroundColor");
+        return `background-color: ${this.state.selectedColor}`;
     }
 }

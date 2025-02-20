@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { coreBuilderActions } from "../core/plugins/core_builder_action_plugin";
+import { classAction } from "../core/plugins/core_builder_action_plugin";
 
 class AlignmentOptionPlugin extends Plugin {
     static id = "AlignmentOption";
@@ -15,7 +15,6 @@ class AlignmentOptionPlugin extends Plugin {
     };
 
     getActions() {
-        const classAction = coreBuilderActions.classAction;
         return {
             setVerticalAlignment: {
                 ...classAction,

@@ -5,7 +5,7 @@
     <!-- BackgroundToggler -->
     <BuilderRow label.translate="Background" t-if="props.withColor or props.withImages">
     <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
-        <BuilderColorPicker title.translate="Color" styleAction="'backgroundColor'" t-if="props.withColors"/>
+        <BuilderColorPicker title.translate="Color" styleAction="'background-color'" t-if="props.withColors"/>
         <t t-if="props.withImages">
             <BuilderButton
                 action="'toggleBgImage'"
