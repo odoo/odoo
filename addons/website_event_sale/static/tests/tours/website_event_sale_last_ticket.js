@@ -55,14 +55,6 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         trigger: ".modal:contains(Attendees) button[type=submit]:contains(Go to Payment)",
         run: "click",
     },
-    ...wsTourUtils.fillAdressForm({
-        name: "test1",
-        phone: "111 111",
-        email: "test@example.com",
-        street: "street test 1",
-        city: "testCity",
-        zip: "123",
-    }),
     ...wsTourUtils.payWithTransfer(true),
     ],
 });
