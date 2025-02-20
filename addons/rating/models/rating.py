@@ -52,6 +52,7 @@ class RatingRating(models.Model):
     is_internal = fields.Boolean('Visible Internally Only', readonly=False, related='message_id.is_internal', store=True)
     access_token = fields.Char('Security Token', default=_default_access_token)
     consumed = fields.Boolean(string="Filled Rating")
+    rated_on = fields.Datetime(string="Rated On")
 
     _rating_range = models.Constraint(
         'check(rating >= 0 and rating <= 5)',
@@ -123,11 +124,15 @@ class RatingRating(models.Model):
         for values in vals_list:
             if values.get('res_model_id') and values.get('res_id'):
                 values.update(self._find_parent_data(values))
+            if 'rating' in values or 'feedback' in values:
+                values['rated_on'] = fields.Datetime.now()
         return super().create(vals_list)
 
     def write(self, values):
         if values.get('res_model_id') and values.get('res_id'):
             values.update(self._find_parent_data(values))
+        if 'rating' in values or 'feedback' in values:
+            values['rated_on'] = fields.Datetime.now()
         return super().write(values)
 
     def unlink(self):
