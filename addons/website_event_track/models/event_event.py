@@ -56,6 +56,14 @@ class EventEvent(models.Model):
             event.tracks_tag_ids = event.track_ids.mapped('tag_ids').filtered(lambda tag: tag.color != 0).ids
 
     # ------------------------------------------------------------
+    # BUSINESS METHODS
+    # ------------------------------------------------------------
+
+    def _has_published_track(self):
+        self.ensure_one()
+        return bool(self.track_ids.filtered('is_published'))
+
+    # ------------------------------------------------------------
     # WEBSITE MENU MANAGEMENT
     # ------------------------------------------------------------
 

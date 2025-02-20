@@ -67,7 +67,7 @@
                 <!-- === Payment tokens === -->
                 <div t-if="tokens_sudo">
                     <!-- === Header === -->
-                    <h4 id="o_payment_tokens_heading" class="fs-6 small text-uppercase fw-bolder">
+                    <h4 id="o_payment_tokens_heading">
                         Your payment methods
                     </h4>
                     <!-- === Body === -->
@@ -92,11 +92,11 @@
                      t-att-class="'collapse' if collapse_payment_methods else ''"
                 >
                     <!-- === Header === -->
-                    <h4 class="fs-6 small fw-bolder">
-                        <t t-if="not collapse_payment_methods">Choose a payment method</t>
+                    <p t-attf-class="mb-3 {{collapse_payment_methods and 'h5' or 'h4'}}">
+                        <t t-if="not collapse_payment_methods">Payment method</t>
                         <t t-else="">Other payment methods</t>
                         <t t-call="payment.availability_report_button"/>
-                    </h4>
+                    </p>
                     <!-- === Body === -->
                     <ul class="list-group">
                         <t t-foreach="payment_methods_sudo" t-as="pm_sudo">
@@ -482,15 +482,15 @@
             id="payment_availability_report"
             class="collapse"
         >
-            <h4 class="fs-6 text-uppercase fw-bolder"> Availability report </h4>
-                <h6 class="mt-3 text-uppercase fw-normal fs-6"> Payment providers </h6>
-                <t t-call="payment.availability_report_records">
-                    <t t-set="records" t-value="availability_report.get('providers')"/>
-                </t>
-                <h6 class="mt-3 text-uppercase fw-normal fs-6"> Payment methods </h6>
-                <t t-call="payment.availability_report_records">
-                    <t t-set="records" t-value="availability_report.get('payment_methods')"/>
-                </t>
+            <h5> Availability report </h5>
+            <h6 class="mt-3"> Payment providers </h6>
+            <t t-call="payment.availability_report_records">
+                <t t-set="records" t-value="availability_report.get('providers')"/>
+            </t>
+            <h6 class="mt-3"> Payment methods </h6>
+            <t t-call="payment.availability_report_records">
+                <t t-set="records" t-value="availability_report.get('payment_methods')"/>
+            </t>
         </div>
     </template>
 

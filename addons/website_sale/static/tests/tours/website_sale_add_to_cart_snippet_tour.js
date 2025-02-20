@@ -64,7 +64,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         {
             // wait for the page to load, as the next check was sometimes too fast
             content: "Wait for the redirection to the cart page",
-            trigger: ":iframe h3:contains(order overview)",
+            trigger: ":iframe h4:contains(order summary)",
         },
         assertCartContains({productName: 'Product No Variant', backend: true}),
         assertCartContains({productName: 'Product Yes Variant 1 (Red)', backend: true}),

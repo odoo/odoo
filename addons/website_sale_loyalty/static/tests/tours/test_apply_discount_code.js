@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
         },
         tourUtils.goToCart(),
         {
-            trigger: "h3:contains(order overview)",
+            trigger: "h4:contains(order summary)",
         },
         {
             trigger: 'form[name="coupon_code"]',

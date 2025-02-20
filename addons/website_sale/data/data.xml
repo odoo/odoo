@@ -66,18 +66,18 @@
 
         <!-- Generic steps used to generate new specific steps -->
         <record id="website_sale.checkout_step_cart" model="website.checkout.step">
-            <field name="name">Review Order</field>
+            <field name="name">Order</field>
             <field name="sequence">0</field>
             <field name="step_href">/shop/cart</field>
             <field name="back_button_label">Back to cart</field>
         </record>
 
         <record id="website_sale.checkout_step_delivery" model="website.checkout.step">
-            <field name="name">Delivery</field>
+            <field name="name">Address</field>
             <field name="sequence">250</field>
             <field name="step_href">/shop/checkout</field>
             <field name="main_button_label">Checkout</field>
-            <field name="back_button_label">Back to delivery</field>
+            <field name="back_button_label">Back to address</field>
         </record>
 
         <record id="website_sale.checkout_step_extra" model="website.checkout.step">
