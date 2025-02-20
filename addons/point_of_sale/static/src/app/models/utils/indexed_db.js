@@ -47,7 +47,25 @@ export default class IndexedDB {
             return false;
         }
 
+        // function getCircularReplacer() {
+        //     const ancestors = [];
+        //     return function (key, value) {
+        //         if (typeof value !== "object" || value === null) {
+        //             return value;
+        //         }
+        //         while (ancestors.length > 0 && ancestors.at(-1) !== this) {
+        //             ancestors.pop();
+        //         }
+        //         if (ancestors.includes(value)) {
+        //             return "[Circular]";
+        //         }
+        //         ancestors.push(value);
+        //         return value;
+        //     };
+        // }
+
         const promises = arrData.map((data) => {
+            // data = JSON.parse(JSON.stringify(data, getCircularReplacer()));
             data = JSON.parse(JSON.stringify(data));
             return new Promise((resolve, reject) => {
                 const request = transaction.objectStore(storeName)[method](data);

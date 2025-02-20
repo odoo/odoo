@@ -27,6 +27,13 @@ const getModels = () =>
                     type: "float",
                 },
 
+                // circular_ref: {
+                //     name: "circular_ref",
+                //     model: "pos.order",
+                //     relation: "pos.order",
+                //     type: "many2one",
+                // },
+
                 uuid: { type: "char" },
             },
             "pos.order.line": {
@@ -463,3 +470,32 @@ test("grouped lines and nested lines", () => {
         expect(relations_uuid_mapping["pos.order.line"][line3.uuid]["group_id"]).toBe(group2.uuid);
     }
 });
+
+// test("Circular reference handling", () => {
+//     const models = getModels();
+
+//     const order = models["pos.order"].create({ uuid: uuidv4() });
+//     const line1 = models["pos.order.line"].create({ order_id: order, uuid: uuidv4(), quantity: 1 });
+
+//     // const line = models["pos.order.line"].create({ order_id: order, uuid: uuidv4() });
+//     // Creating a circular reference
+//     order.update({ circular_ref: order });
+
+//     const result = order.serialize({ orm: true });
+
+//     debugger;
+
+//     // Ensuring circular references are handled properly
+//     // expect(result.circular_ref).toBe("[Circular]");
+//     // expect(result.lines[0].circular_ref).toBe("[Circular]");
+//     expect(getObjectDepth(result)).toBe(1); // Checking depth constraint
+// });
+
+// function getObjectDepth(obj, depth = 0, seen = new WeakSet()) {
+//     if (obj === null || typeof obj !== "object" || seen.has(obj)) {
+//         return depth;
+//     }
+//     seen.add(obj);
+//     const depths = Object.values(obj).map((value) => getObjectDepth(value, depth + 1, seen));
+//     return Math.max(depth, ...depths);
+// }
