@@ -1082,9 +1082,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return
 
         try:
-            if partner_id.mobile:
-                partner_id.mobile = partner_id._phone_format(fname='mobile', country=partner_id.country_id, force_format='INTERNATIONAL') or partner_id.mobile
-
             if partner_id.phone:
                 partner_id.phone = partner_id._phone_format(fname='phone', country=partner_id.country_id, force_format='INTERNATIONAL') or partner_id.phone
         except Exception:
