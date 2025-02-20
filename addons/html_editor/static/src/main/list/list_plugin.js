@@ -800,7 +800,7 @@ export class ListPlugin extends Plugin {
         if (!closestLI || isBlockUnsplittable) {
             return;
         }
-        if (!closestLI.textContent) {
+        if (isEmptyBlock(closestLI)) {
             this.outdentLI(closestLI);
             return true;
         }
