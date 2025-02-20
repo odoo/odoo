@@ -5152,7 +5152,8 @@ test(`Domain: allow empty domain on fieldInfo`, async () => {
     expect.verifySteps(["search_read"]);
 });
 
-test(`discard form with specialdata`, async () => {
+test.tags("desktop");
+test(`discard form with specialdata on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5179,6 +5180,35 @@ test(`discard form with specialdata`, async () => {
     await contains(`.o_form_button_cancel`).click();
     expect(`.o_statusbar_status button:not(.d-none)`).toHaveCount(1);
     expect(`.o_statusbar_status button:not(.d-none)`).toHaveText("xphone");
+});
+
+test.tags("mobile");
+test(`discard form with specialdata on mobile`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <header>
+                    <field name="product_id" domain="[('name', '=', name)]" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"></field>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`.o_statusbar_status .dropdown-toggle:visible`).toHaveCount(1);
+
+    await contains(`.o_field_widget[name=name] input`).edit("xpad");
+    expect(`.o_statusbar_status .dropdown-toggle:visible`).toHaveCount(1);
+
+    await contains(`.o_form_button_cancel`).click();
+    expect(`.o_statusbar_status .dropdown-toggle:visible`).toHaveCount(1);
+    expect(`.o_statusbar_status .dropdown-toggle:visible`).toHaveText("xphone");
 });
 
 test(`switching to another record from a dirty one`, async () => {
