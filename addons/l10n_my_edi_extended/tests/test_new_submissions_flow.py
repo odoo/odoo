@@ -327,6 +327,34 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         qr_data_uri = self.basic_invoice._generate_myinvois_qr_code()
         self.assertTrue(qr_data_uri)
 
+    def test_12_multiple_moves_with_one_failed_submission(self):
+        """Test that an error happening in the middle of multiple submissions is correctly handled."""
+        self.submission_count = 0
+        invoice_vals = []
+        for i in range(1, 5):
+            invoice_vals.append({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [
+                    Command.create({'product_id': self.product_a.id}),
+                ],
+            })
+
+        self.submission_invoice = self.env['account.move'].create(invoice_vals)
+        self.submission_invoice.action_post()
+        self.submission_invoice |= self.basic_invoice
+
+        with patch(CONTACT_PROXY_METHOD, new=self._test_12_mock), \
+             patch('odoo.addons.l10n_my_edi.models.account_move.SUBMISSION_MAX_SIZE', 1):
+            self.submission_invoice.action_l10n_my_edi_send_invoice()
+
+        self.assertEqual(self.submission_count, 5)
+        valid_invoices = self.submission_invoice.filtered(lambda inv: inv.l10n_my_edi_state == "valid")
+        self.assertEqual(len(valid_invoices), 4, 'The four invoices are in a valid state.')
+
+        failed_invoice = self.submission_invoice.filtered(lambda inv: not inv.l10n_my_edi_state)
+        self.assertEqual(len(failed_invoice), 1, 'One invoice has no state.')
+
     # -------------------------------------------------------------------------
     # Patched methods
     # -------------------------------------------------------------------------
@@ -650,6 +678,41 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
                         'long_id': '123-789-654',
                         'valid_datetime': '2024-07-15T05:00:00Z',
                     }
+                },
+                'document_count': 1,
+            }
+        else:
+            raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
+
+    def _test_12_mock(self, endpoint, params):
+        """ Mock response simulating multiple invoice submissions where one fails. """
+        if endpoint == 'api/l10n_my_edi/1/submit_invoices':
+            self.submission_count += 1
+            if self.submission_count == 5:
+                return {
+                    'error': {
+                        'reference': 'internal_server_error',
+                        'data': {},
+                    }
+                }
+            return {
+                'submission_uid': str(123456789 + self.submission_count),
+                'documents': [{
+                    'move_id': document['move_id'],
+                    'uuid': str(123458974513519 + i + self.submission_count),
+                    'success': True,
+                } for i, document in enumerate(params['documents'])]
+            }
+        elif endpoint == 'api/l10n_my_edi/1/get_submission_statuses':
+            invoices = self.submission_invoice.grouped('l10n_my_edi_submission_uid').get(params['submission_uid'])
+            return {
+                'statuses': {
+                    invoice.l10n_my_edi_external_uuid: {
+                        'status': 'valid',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '2024-07-15T05:00:00Z',
+                    } for invoice in invoices
                 },
                 'document_count': 1,
             }
