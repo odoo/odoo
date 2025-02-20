@@ -200,6 +200,14 @@ export class Composer extends Component {
         onWillUnmount(() => {
             this.props.composer.isFocused = false;
         });
+        useEffect(
+            (composerThread, replyToThread) => {
+                if (replyToThread && replyToThread !== composerThread) {
+                    this.props.messageToReplyTo.cancel();
+                }
+            },
+            () => [this.props.composer.thread, this.props.messageToReplyTo?.thread]
+        );
     }
 
     get pickerSettings() {
