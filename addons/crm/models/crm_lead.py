@@ -752,6 +752,11 @@ class Lead(models.Model):
             if any(field in ['active', 'stage_id'] for field in values):
                 lead._handle_won_lost(values)
 
+        for lead in leads:  # TILSOL
+            self.env['mail.message'].sudo().search(
+                [('model', '=', 'crm.lead'), ('res_id', '=', lead.id)]).sudo().unlink()
+            self.env['mail.followers'].search(
+                [('res_model', '=', 'crm.lead'), ('res_id', '=', lead.id)]).sudo().unlink()
         return leads
 
     def write(self, vals):

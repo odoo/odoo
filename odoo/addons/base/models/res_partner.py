@@ -739,7 +739,7 @@ class Partner(models.Model):
                 vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
-            if 'company_id' not in vals or vals['company_id'] is False:
+            if 'company_id' not in vals or vals['company_id'] is False:#TILSOL
                 vals['company_id'] = self.env.user.company_id.id
         partners = super(Partner, self).create(vals_list)
 
@@ -752,6 +752,12 @@ class Partner(models.Model):
             if 'lang' not in vals and partner.parent_id:
                 partner._onchange_parent_id_for_lang()
             partner._handle_first_contact_creation()
+
+        for partner in partners:# TILSOL
+            self.env['mail.message'].sudo().search(
+                [('model', '=', 'res.partner'), ('res_id', '=', partner.id)]).sudo().unlink()
+            self.env['mail.followers'].sudo().search(
+                [('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)]).sudo().unlink()
         return partners
 
     @api.ondelete(at_uninstall=False)

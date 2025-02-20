@@ -17,7 +17,7 @@
             and make some users unselectable in relational fields. This means that partners
             of internal users are always visible, not matter the company setting. -->
             <!-- <field name="domain_force">['|', '|', ('partner_share', '=', False), ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field> -->
-            <field name="domain_force">['|', ('company_id', 'child_of', company_ids), ('company_id', '=', False)]</field>
+            <field name="domain_force">['|','|', ('company_id', 'child_of', company_ids), ('company_id', '=', False), ('id', '=', 2)]</field>
         </record>
 
         <record model="ir.rule" id="res_partner_portal_public_rule">
