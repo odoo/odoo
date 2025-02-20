@@ -71,7 +71,7 @@ class WebsiteEventSaleController(WebsiteEventController):
         if any(info['event_ticket_id'] for info in registrations):
             if order_sudo.amount_total:
                 request.session['sale_last_order_id'] = order_sudo.id
-                return request.redirect("/shop/checkout")
+                return request.redirect("/shop/checkout?try_skip_step=true")
             else:
                 # Free order -> auto confirmation without checkout
                 order_sudo.action_confirm()  # tde notsure: email sending ?

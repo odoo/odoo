@@ -2439,7 +2439,10 @@
             <div class="o_customer_address_fill">
                 <div>
                     <t t-if="not is_anonymous_cart">
-                        <t t-if="use_delivery_as_billing">
+                        <t t-if="only_services">
+                            <h3 class="mb-3">Contact Details</h3>
+                        </t>
+                        <t t-elif="use_delivery_as_billing">
                             <h3 class="mb-3">Your address</h3>
                         </t>
                         <t t-elif="address_type == 'delivery'">
@@ -2765,7 +2768,7 @@
             <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
             <div t-if="tx_sudo.state in ['pending', 'done']" class="d-flex justify-content-between align-items-center">
                 <h3>Thank you for your order.</h3>
-                <a role="button" class="d-none d-md-inline-block btn btn-primary ms-auto" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print me-2"></i>Print</a>
+                <a role="button" class="d-none d-md-inline-block btn btn-secondary ms-auto" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print me-2"></i>Print</a>
             </div>
             <div class="mb-4">
                 <h5>
