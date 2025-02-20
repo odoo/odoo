@@ -7,7 +7,7 @@ from random import randint
 
 from odoo import api, fields, models, tools
 from odoo.osv import expression
-from odoo.tools.mail import is_html_empty
+from odoo.tools.mail import email_normalize, is_html_empty
 from odoo.tools.translate import _, html_translate
 
 
@@ -22,6 +22,7 @@ class EventTrack(models.Model):
         'website.published.mixin',
         'website.searchable.mixin'
     ]
+    _primary_email = 'contact_email'
 
     @api.model
     def _get_default_stage_id(self):
@@ -473,23 +474,19 @@ class EventTrack(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
-    def _message_get_default_recipients(self):
-        return {
-            track.id: {
-                'partner_ids': [],
-                'email_to': ','.join(tools.email_normalize_all(track.contact_email or track.partner_email)) or track.contact_email or track.partner_email,
-                'email_cc': False
-            } for track in self
-        }
+    def _message_get_default_recipients(self, with_cc=False):
+        recipients = super()._message_get_default_recipients(with_cc=with_cc)
+        for track in self.filtered(lambda t: not t.partner_id.email_normalized and not email_normalize(t.contact_email) and t.partner_email):
+            info = recipients[track.id]
+            info['email_to'] = ','.join(tools.email_normalize_all(track.partner_email)) or track.partner_email
+            info['partner_ids'] = []
+        return recipients
 
     def _message_add_suggested_recipients(self, primary_email=False):
         email_to_lst, partners = super()._message_add_suggested_recipients(primary_email)
-        if not self.partner_id:
-            #  Priority: contact information then speaker information
-            if self.contact_email:
-                email_to_lst.append(self.contact_email)
-            elif self.partner_email:
-                email_to_lst.append(self.partner_email)
+        #  Priority: contact information then speaker information
+        if not self.partner_id.email_normalized and not email_normalize(self.contact_email) and self.partner_email:
+            email_to_lst.append(self.partner_email)
         return email_to_lst, partners
 
     def _message_post_after_hook(self, message, msg_vals):

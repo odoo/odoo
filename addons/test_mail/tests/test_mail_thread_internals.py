@@ -348,8 +348,8 @@ class TestAPI(MailCommon, TestRecipients):
         # test default computation of recipients
         self.env.invalidate_all()
         with self.assertQueryCount(20):
-            defaults_withcc = test_records.with_context(mail_recipients_include_cc=True)._message_get_default_recipients()
-            defaults_withoutcc = test_records.with_context(mail_recipients_include_cc=False)._message_get_default_recipients()
+            defaults_withcc = test_records.with_context()._message_get_default_recipients(with_cc=True)
+            defaults_withoutcc = test_records.with_context()._message_get_default_recipients()
         for record, expected in zip(test_records, [
             {
                 # customer_id first for partner_ids; partner > email
@@ -427,7 +427,7 @@ class TestAPI(MailCommon, TestRecipients):
         })
         for ticket in ticket_partner_email + ticket_partner:
             with self.subTest(ticket=ticket.name):
-                suggestions = ticket_partner_email._message_get_suggested_recipients(no_create=True)
+                suggestions = ticket._message_get_suggested_recipients(no_create=True)
                 self.assertEqual(len(suggestions), 1)
                 self.assertDictEqual(
                     suggestions[0],
