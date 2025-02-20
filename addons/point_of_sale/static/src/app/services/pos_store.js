@@ -706,7 +706,7 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         // Handle refund constraints
-        if (order._isRefundAndSalesNotAllowed(values, options)) {
+        if (order.isSaleDisallowed(values, options)) {
             this.dialog.add(AlertDialog, {
                 title: _t("Oops.."),
                 body: _t("Ensure you validate the refund before taking another order."),
