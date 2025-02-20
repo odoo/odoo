@@ -31,6 +31,9 @@ class Speedscope:
                 query = entry['query']
                 full_query = entry['full_query']
                 entry['stack'].append((f'sql({shorten(query)})', full_query, None))
+                explain = entry.get('explain')
+                if explain:
+                    entry['stack'].append((f'explain({shorten(explain)})', explain, None))
         self.profiles_raw[key] = profile
 
     def convert_stack(self, stack):

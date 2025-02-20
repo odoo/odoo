@@ -1,0 +1,22 @@
+.sql-profile {
+    white-space: pre;
+    position: fixed;
+    left: 10vw;
+    width: 80vw;
+    .modal-body {
+        font-family: monospace;
+    }
+}
+
+.profiling-line {
+    .query {
+        font-family: monospace;
+        display: inline-block;
+        max-height: 100px;
+        overflow: hidden;
+        border: 0;
+    }
+    &.active .query {
+        display: table-cell;
+    }
+}
