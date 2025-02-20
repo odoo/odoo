@@ -1,5 +1,5 @@
 import { toRaw } from "@odoo/owl";
-import { uuidv4 } from "@point_of_sale/utils";
+import { uuidv4, getAllClassGetters } from "@point_of_sale/utils";
 import { TrapDisabler } from "@point_of_sale/proxy_trap";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -32,11 +32,13 @@ const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
 const AVAILABLE_EVENT = ["create", "update", "delete"];
 
-function processModelDefs(modelDefs) {
+function processModelDefs(modelDefs, modelClasses) {
     modelDefs = clone(modelDefs);
     const inverseMap = new Map();
     const many2oneFields = [];
     for (const model in modelDefs) {
+        const Model = modelClasses[model];
+        const getters = getAllClassGetters(Model);
         const fields = modelDefs[model];
         for (const fieldName in fields) {
             const field = fields[fieldName];
@@ -49,6 +51,7 @@ function processModelDefs(modelDefs) {
             } else {
                 field.name = fieldName;
             }
+            field.isGetter = getters.has(fieldName);
 
             if (!RELATION_TYPES.has(field.type)) {
                 continue;
@@ -220,7 +223,7 @@ export class Base extends WithLazyGetterTrap {
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     const indexes = opts.databaseIndex || {};
     const database = opts.databaseTable || {};
-    const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
+    const [inverseMap, processedModelDefs] = processModelDefs(modelDefs, modelClasses);
     const records = mapObj(processedModelDefs, () => new Map());
     const callbacks = mapObj(processedModelDefs, () => []);
     const commands = mapObj(processedModelDefs, () => ({
@@ -677,7 +680,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     }
                 } else if (DATE_TIME_TYPE.has(field.type)) {
                     record[name] = handleDatetime(this, vals[name], name);
-                } else {
+                } else if (!field.isGetter) {
                     record[name] = vals[name];
                 }
             }
@@ -776,6 +779,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         const linkedRec = record[name];
                         disconnect(field, record, linkedRec);
                     }
+                } else if (field.isGetter) {
+                    console.warn(
+                        `You are attempting to set a read-only field "${this.name}.${field.name}". ` +
+                            `This field is a getter and cannot be modified.`
+                    );
                 } else if (DATE_TIME_TYPE.has(field.type)) {
                     record[name] = handleDatetime(this, vals[name], name);
                 } else {

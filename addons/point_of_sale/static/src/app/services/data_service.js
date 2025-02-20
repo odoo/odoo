@@ -355,10 +355,9 @@ export class PosData extends Reactive {
     }
 
     initListeners() {
-        this.models["pos.order"].addEventListener(
-            "update",
-            batched(this.synchronizeLocalDataInIndexedDB.bind(this))
-        );
+        const batchedSyncLocalData = batched(this.synchronizeLocalDataInIndexedDB.bind(this));
+        this.models["pos.order"].addEventListener("update", batchedSyncLocalData);
+        this.models["pos.order.line"].addEventListener("update", batchedSyncLocalData);
 
         const ignore = Object.keys(this.opts.databaseTable);
         for (const model of Object.keys(this.relations)) {

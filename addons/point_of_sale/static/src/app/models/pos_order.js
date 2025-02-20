@@ -235,14 +235,21 @@ export class PosOrder extends Base {
     canPay() {
         return this.lines.length;
     }
-    recomputeOrderData() {
-        this.amount_paid = this.getTotalPaid();
-        this.amount_tax = this.getTotalTax();
-        this.amount_total = this.getTotalWithTax();
-        this.amount_return = this.getChange();
-        this.lines.forEach((line) => {
-            line.setLinePrice();
-        });
+
+    get amount_paid() {
+        return this.getTotalPaid();
+    }
+
+    get amount_tax() {
+        return this.getTotalTax();
+    }
+
+    get amount_total() {
+        return this.getTotalWithTax();
+    }
+
+    get amount_return() {
+        return this.getChange();
     }
 
     get isBooked() {

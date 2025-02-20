@@ -921,11 +921,6 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.numberBuffer.reset();
 
-        // FIXME: Put this in an effect so that we don't have to call it manually.
-        order.recomputeOrderData();
-
-        this.numberBuffer.reset();
-
         this.hasJustAddedProduct = true;
         clearTimeout(this.productReminderTimeout);
         this.productReminderTimeout = setTimeout(() => {
@@ -1032,8 +1027,6 @@ export class PosStore extends WithLazyGetterTrap {
         if (this.config.use_presets) {
             this.selectPreset(this.config.default_preset_id, order);
         }
-
-        order.recomputeOrderData();
 
         return order;
     }
@@ -1202,11 +1195,6 @@ export class PosStore extends WithLazyGetterTrap {
 
             // Add order IDs to the syncing set
             orders.forEach((order) => this.syncingOrders.add(order.id));
-
-            // Re-compute all taxes, prices and other information needed for the backend
-            for (const order of orders) {
-                order.recomputeOrderData();
-            }
 
             const serializedOrder = orders.map((order) =>
                 order.serialize({ orm: true, clear: true })

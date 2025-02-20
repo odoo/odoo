@@ -96,6 +96,30 @@ export function getOnNotified(bus, channel) {
 }
 
 /**
+ * Returns all getter methods from a given class, including those inherited from its prototype chain.
+ * @param {Function} Class The class from which to extract getter methods.
+ * @returns {Map<string, Function>} A map where keys are the names of getter
+ *                                  and values are their corresponding getter functions.
+ */
+export function getAllClassGetters(Class) {
+    const getters = new Map();
+    if (!Class) {
+        return getters;
+    }
+    let proto = Class.prototype;
+    while (proto !== null) {
+        const descriptors = Object.getOwnPropertyDescriptors(proto);
+        for (const [name, descriptor] of Object.entries(descriptors)) {
+            if (descriptor.get && typeof descriptor.get === "function" && !getters.has(name)) {
+                getters.set(name, descriptor.get);
+            }
+        }
+        proto = Object.getPrototypeOf(proto);
+    }
+    return getters;
+}
+
+/**
  * Loading image is converted to a Promise to allow await when
  * loading an image. It resolves to the loaded image if successful,
  * else, resolves to false.
