@@ -276,6 +276,16 @@ browser.addEventListener("popstate", (ev) => {
         return;
     }
     state = ev.state?.nextState || router.urlToState(new URL(browser.location));
+    // The `popstate` event is bound on window from here as well as from
+    // wysiwyg_adapter. In Edit mode, clicking the browser's back button
+    // triggers this event first, followed by the `wysiwyg_adapter` event. This
+    // sequence causes a traceback, leading to a force exit from Edit mode. To
+    // prevent this issue, we add a trigger to invoke the `BEFORE_ROUTE_CHANGE`
+    // event which listened by `wysiwyg_adapter` so that when popstate event is
+    // trigerred here we notify the `wysiwyg_adapter` using
+    // `BEFORE_ROUTE_CHANGE`. In handler of `BEFORE_ROUTE_CHANGE` we tweak the
+    // code so that the dialog closes properly and prevents the traceback.
+    routerBus.trigger("BEFORE_ROUTE_CHANGE");
     // Some client actions want to handle loading their own state. This is a ugly hack to allow not
     // reloading the webclient's state when they manipulate history.
     if (!ev.state?.skipRouteChange && !router.skipLoad) {
