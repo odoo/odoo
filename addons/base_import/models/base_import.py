@@ -5,6 +5,7 @@ import base64
 import codecs
 import collections
 import csv
+import contextlib
 import difflib
 import unicodedata
 
@@ -1452,21 +1453,14 @@ class Base_ImportImport(models.TransientModel):
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise
         # an InternalError (ROLLBACK should work, maybe). Ignore that.
-        # TODO: to handle multiple errors, create savepoint around
-        #       write and release it in case of write error (after
-        #       adding error to errors array) => can keep on trying to
-        #       import stuff, and rollback at the end if there is any
-        #       error in the results.
-        try:
+        with contextlib.suppress(psycopg2.InternalError):
             import_savepoint.close(rollback=dryrun)
-            if dryrun:
-                # cancel all changes done to the registry/ormcache
-                # we need to clear the cache in case any created id was added to an ormcache and would be missing afterward
-                self.pool.clear_all_caches()
-                # don't propagate to other workers since it was rollbacked
-                self.pool.reset_changes()
-        except psycopg2.InternalError:
-            pass
+        if dryrun:
+            # cancel all changes done to the registry/ormcache
+            # we need to clear the cache in case any created id was added to an ormcache and would be missing afterward
+            self.pool.clear_all_caches()
+            # don't propagate to other workers since it was rollbacked
+            self.pool.reset_changes()
 
         # Insert/Update mapping columns when import complete successfully
         if import_result['ids'] and options.get('has_headers'):
