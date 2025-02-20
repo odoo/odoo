@@ -37,12 +37,13 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
      * @override
      */
      _computeWidgetVisibility(widgetName, params) {
-        if (
-            (this.isAlternativeProductSnippet &&
-                alternativeSnippetRemovedOptions.includes(widgetName)) ||
-            (this.$target[0].classList.contains("s_dynamic_snippet_products") &&
-                widgetName === "template_opt")
-        ) {
+        // if (
+        //     (this.isAlternativeProductSnippet &&
+        //         alternativeSnippetRemovedOptions.includes(widgetName)) ||
+        //     (this.$target[0].classList.contains("s_dynamic_snippet_products") &&
+        //         widgetName === "template_opt")
+        // ) {
+        if (this.isAlternativeProductSnippet && alternativeSnippetRemovedOptions.includes(widgetName)) {
             return false;
         }
         return this._super(...arguments);
