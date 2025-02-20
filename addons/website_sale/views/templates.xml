@@ -383,7 +383,23 @@
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
-                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2 p-lg-2 pb-lg-5 ps-2 overflow-y-scroll">
+                            <div
+                                id="oe_structure_website_sale_sidebar_top"
+                                class="oe_structure oe_empty oe_structure_not_nearest"
+                            />
+                            <div class="oe_structure oe_structure_solo">
+                                <section
+                                    class="s_text_block oe_unmovable oe_unremovable"
+                                    data-snippet="s_text_block"
+                                    data-name="Text"
+                                >
+                                    <p/>
+                                </section>
+                            </div>
+                            <div
+                                class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2
+                                    p-lg-2 ps-2 overflow-y-scroll"
+                            >
                                 <t
                                     t-set="is_sidebar_collapsible"
                                     t-value="is_view_active('website_sale.products_categories_list_collapsible')"
@@ -408,6 +424,19 @@
                                     />
                                 </t>
                             </div>
+                            <div class="oe_structure oe_structure_solo">
+                                <section
+                                    class="s_text_block oe_unmovable oe_unremovable"
+                                    data-snippet="s_text_block"
+                                    data-name="Text"
+                                >
+                                    <p/>
+                                </section>
+                            </div>
+                            <div
+                                id="oe_structure_website_sale_sidebar_bottom"
+                                class="oe_structure oe_empty oe_structure_not_nearest"
+                            />
                         </aside>
                         <div id="products_grid"
                              t-attf-class="#{'o_wsale_layout_list' if layout_mode == 'list' else ''} {{'col-lg-9' if hasLeftColumn else 'col-12'}}">
