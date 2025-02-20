@@ -1957,7 +1957,8 @@ class MailThread(models.AbstractModel):
     # RECIPIENTS MANAGEMENT TOOLS
     # ------------------------------------------------------
 
-    def _partner_find_from_emails_single(self, emails, avoid_alias=True, filter_found=None, additional_values=None, no_create=False):
+    def _partner_find_from_emails_single(self, emails, avoid_alias=True, ban_emails=None,
+                                         filter_found=None, additional_values=None, no_create=False):
         """ Shortcut version of '_partner_find_from_emails', two usages.
 
         Either 'record._partner_find_from_emails_single([..])' on a singleton
@@ -1970,7 +1971,8 @@ class MailThread(models.AbstractModel):
             {self: emails}, avoid_alias=avoid_alias, filter_found=filter_found, additional_values=additional_values, no_create=no_create
         )[self.id]
 
-    def _partner_find_from_emails(self, records_emails, avoid_alias=True, filter_found=None, additional_values=None, no_create=False):
+    def _partner_find_from_emails(self, records_emails, avoid_alias=True, ban_emails=None,
+                                  filter_found=None, additional_values=None, no_create=False):
         """ Find or create partners based on emails. Result is contextualized
         based on records, calling 'Model._get_customer_information()' to populate
         new partners data. It relies on 'ResPartner._find_or_create_from_emails()'
@@ -1980,6 +1982,8 @@ class MailThread(models.AbstractModel):
           to this record e.g. {<crm.lead, 4>: ['"Customer" <customer@test.example.com>']};
         :param bool avoid_alias: skip link for any email matching existing aliases
           notably to avoid creating contacts that could mess with mailgateway;
+        :param list ban_emails: optional list of banished emails e.g. because
+          it may interfere with master data like aliases;
         :param callable filter_found: if given, filters found partners based on emails;
         :param dict additional_values: optional email-key based dict, giving
           values to populate new partners. Added to default values coming from
@@ -2030,11 +2034,11 @@ class MailThread(models.AbstractModel):
 
         # fetch information used to find existing partners, beware portal/public who
         # cannot read followers
-        followers = self.sudo().message_partner_ids
+        followers = self.sudo().message_partner_ids if 'message_partner_ids' in self else self.env['res.partner']
         aliases = self.env['mail.alias'].sudo().search(
             [('alias_full_name', 'in', emails_key_all)]
         ) if avoid_alias else self.env['mail.alias'].sudo()
-        emails_ban = aliases.mapped('alias_full_name')
+        ban_emails = (ban_emails or []) + aliases.mapped('alias_full_name')
 
         # inspired notably from odoo/odoo@80a0b45df806ffecfb068b5ef05ae1931d655810; final
         # ordering is search order defined in '_find_or_create_from_emails', which is id ASC
@@ -2058,7 +2062,7 @@ class MailThread(models.AbstractModel):
                     **emails_normalized_info.get(mail_key, {}),
                 } for mail_key in emails_key_all
             },
-            ban_emails=emails_ban,
+            ban_emails=ban_emails,
             filter_found=filter_found,
             no_create=no_create,
             sort_key=sort_key,

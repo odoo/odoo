@@ -315,31 +315,35 @@ class Base(models.AbstractModel):
             }
         return res
 
-    def _message_add_suggested_recipients(self, primary_email=False):
-        self.ensure_one()
-        email_to_lst, partners = [], self.env['res.partner']
-
+    def _message_add_suggested_recipients(self, force_primary_email=False):
+        suggested = {
+            record.id: {'email_to_lst': [], 'partners': self.env['res.partner']}
+            for record in self
+        }
         defaults = self._message_get_default_recipients(with_cc=False, all_tos=True)
 
         # add responsible
         user_field = self._fields.get('user_id')
         if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
             # SUPERUSER because of a read on res.users that would crash otherwise
-            partners += self.sudo().user_id.partner_id
+            for record_su in self.sudo():
+                suggested[record_su.id]['partners'] += record_su.user_id.partner_id
 
         # add customers
-        partners += self.env['res.partner'].browse(defaults[self.id]['partner_ids'])
+        for record_id, values in defaults.items():
+            suggested[record_id]['partners'] += self.env['res.partner'].browse(values['partner_ids'])
 
         # add email
-        if not primary_email:
-            email_to_lst.append(defaults[self.id]['email_to'])
-        else:
-            email_to_lst.append(primary_email)
+        for record in self:
+            if force_primary_email:
+                suggested[record.id]['email_to_lst'].append(force_primary_email)
+            else:
+                suggested[record.id]['email_to_lst'].append(defaults[record.id]['email_to'])
 
-        return email_to_lst, partners
+        return suggested
 
-    def _message_get_suggested_recipients(self, reply_discussion=False, reply_message=None,
-                                          no_create=True, primary_email=False, additional_partners=None):
+    def _message_get_suggested_recipients_batch(self, reply_discussion=False, reply_message=None,
+                                                no_create=True, primary_email=False, additional_partners=None):
         """ Get suggested recipients, contextualized depending on discussion.
 
         :param bool reply_discussion: consider user replies to the discussion.
@@ -360,12 +364,14 @@ class Base(models.AbstractModel):
         """
         def email_key(email):
             return email_normalize(email, strict=False) or email.strip()
-
-        self.ensure_one()
-        email_to_lst, partners = self._message_add_suggested_recipients(primary_email)
-        partners += additional_partners or self.env['res.partner']
+        is_mail_thread = 'message_partner_ids' in self
+        suggested = self._message_add_suggested_recipients(force_primary_email=primary_email)
+        if additional_partners:
+            for record in self:
+                suggested[record.id]['partners'] += additional_partners
 
         # find last relevant message
+        messages = self.env['mail.message']
         if reply_discussion and 'message_ids' in self:
             messages = self.message_ids.sorted(
                 lambda msg: (
@@ -374,66 +380,88 @@ class Base(models.AbstractModel):
                     msg.date, msg.id,                         # newer first
                 ), reverse=True,
             )
-            reply_message = next(
-                (msg for msg in messages if msg.message_type in ('comment', 'email')),
-                self.env['mail.message']
-            )
         # fetch answer-based recipients as well as author
-        if reply_message:
-            # direct recipients, and author if not archived / root
-            partners += (reply_message.partner_ids | reply_message.author_id).filtered(lambda p: p.active)
-            # To and Cc emails (mainly for incoming email), and email_from if not linked to hereabove author
-            email_to_lst += [reply_message.incoming_email_to or '', reply_message.incoming_email_cc or '', reply_message.email_from or '']
-            from_normalized = email_normalize(reply_message.email_from)
-            if from_normalized and from_normalized != reply_message.author_id.email_normalized:
-                email_to_lst.append(reply_message.email_from)
-        # flatten emails, as some inputs are stringified list of emails (e.g. Cc, To)
-        email_to_lst = [
-            e for email_input in email_to_lst
-            for e in email_split_and_format(email_input)
-            if e and e.strip()
-        ]
+        if reply_message or messages:
+            for record in self:
+                record_msg = reply_message or next(
+                    (msg for msg in messages if msg.res_id == record.id and msg.message_type in ('comment', 'email')),
+                    self.env['mail.message']
+                )
+                if not record_msg:
+                    continue
+                # direct recipients, and author if not archived / root
+                suggested[record.id]['partners'] += (record_msg.partner_ids | record_msg.author_id).filtered(lambda p: p.active)
+                # To and Cc emails (mainly for incoming email), and email_from if not linked to hereabove author
+                suggested[record.id]['email_to_lst'] += [record_msg.incoming_email_to or '', record_msg.incoming_email_cc or '', record_msg.email_from or '']
+                from_normalized = email_normalize(record_msg.email_from)
+                if from_normalized and from_normalized != record_msg.author_id.email_normalized:
+                    suggested[record.id]['email_to_lst'].append(record_msg.email_from)
 
-        # organize and deduplicate partners, exclude followers, keep ordering
-        followers = self.message_partner_ids if 'message_partner_ids' in self else self.env['res.partner']
-        # sanitize email inputs, exclude followers and aliases, add some banned emails, keep ordering, then link to partners
-        skip_emails_normalized = (followers | partners).mapped('email_normalized') + (followers | partners).mapped('email')
-        skip_emails_normalized += [self.env.ref('base.partner_root').email_normalized]  # never propose odoobot
-        if email_to_lst:
-            skip_emails_normalized.extend(
-                self.env['mail.alias'].sudo().search(
-                    [('alias_full_name', 'in', [email_key(e) for e in email_to_lst])]
-                ).mapped('alias_full_name')
-            )
-        email_to_lst = [e for e in email_to_lst if email_key(e) not in skip_emails_normalized]
-        partners += self._partner_find_from_emails_single(email_to_lst, no_create=no_create)
+        # make a record-based list of emails to give to '_partner_find_from_emails'
+        records_emails = {}
+        for record in self:
+            email_to_lst, partners = suggested[record.id]['email_to_lst'], suggested[record.id]['partners']
+            # organize and deduplicate partners, exclude followers, keep ordering
+            followers = record.message_partner_ids if is_mail_thread else record.env['res.partner']
+            # sanitize email inputs, exclude followers and aliases, add some banned emails, keep ordering, then link to partners
+            skip_emails_normalized = (followers | partners).mapped('email_normalized') + (followers | partners).mapped('email')
+            records_emails[record] = [
+                e for email_input in email_to_lst for e in email_split_and_format(email_input)
+                if e and e.strip() and email_key(e) not in skip_emails_normalized
+            ]
+        # ban emails: never propose odoobot nor aliases
+        ban_emails = [self.env.ref('base.partner_root').email_normalized] + self.env['mail.alias'].sudo().search(
+            [('alias_full_name', 'in', [email_key(e) for values in records_emails.values() for e in values])]
+        ).mapped('alias_full_name')
+        thread_recs = self if is_mail_thread else self.env['mail.thread']
+        records_partners = thread_recs._partner_find_from_emails(
+            records_emails,
+            # already computed in ban_emails, no need to re-check aliases
+            avoid_alias=False, ban_emails=ban_emails,
+            no_create=no_create,
+        )
 
-        # final filtering
-        partners = self.env['res.partner'].browse(tools.misc.unique(
-            p.id for p in partners if p not in followers
-        ))
-        email_to_lst = list(tools.misc.unique(
-            e for e in email_to_lst
-            if email_key(e) not in (partners.mapped('email_normalized') + partners.mapped('email'))
-        ))
-        # fetch model-related additional information
-        emails_normalized_info = self._get_customer_information() if email_to_lst else {}
+        # final filtering, and fetch model-related additional information for create values
+        emails_normalized_info = self._get_customer_information() if is_mail_thread else {}
+        suggested_recipients = {}
+        for record in self:
+            followers = record.message_partner_ids if is_mail_thread else record.env['res.partner']
+            partners = self.env['res.partner'].browse(tools.misc.unique(
+                p.id for p in (suggested[record.id]['partners'] + records_partners[record.id]) if p not in followers
+            ))
+            email_to_lst = list(tools.misc.unique(
+                e for email_input in suggested[record.id]['email_to_lst'] for e in email_split_and_format(email_input)
+                if (
+                    e and e.strip() and
+                    email_key(e) not in ban_emails and
+                    email_key(e) not in ((followers | partners).mapped('email_normalized') + (followers | partners).mapped('email'))
+                )
+            ))
 
-        recipients = [{
-            'email': partner.email_normalized,
-            'name': partner.name,
-            'partner_id': partner.id,
-            'create_values': {},
-        } for partner in partners]
-        for email_input in email_to_lst:
-            name, email_normalized = parse_contact_from_email(email_input)
-            recipients.append({
-                'email': email_normalized,
-                'name': emails_normalized_info.get(email_normalized, {}).pop('name', False) or name,
-                'partner_id': False,
-                'create_values': emails_normalized_info.get(email_normalized, {}),
-            })
-        return recipients
+            recipients = [{
+                'email': partner.email_normalized,
+                'name': partner.name,
+                'partner_id': partner.id,
+                'create_values': {},
+            } for partner in partners]
+            for email_input in email_to_lst:
+                name, email_normalized = parse_contact_from_email(email_input)
+                recipients.append({
+                    'email': email_normalized,
+                    'name': emails_normalized_info.get(email_normalized, {}).pop('name', False) or name,
+                    'partner_id': False,
+                    'create_values': emails_normalized_info.get(email_normalized, {}),
+                })
+            suggested_recipients[record.id] = recipients
+        return suggested_recipients
+
+    def _message_get_suggested_recipients(self, reply_discussion=False, reply_message=None,
+                                            no_create=True, primary_email=False, additional_partners=None):
+        self.ensure_one()
+        return self._message_get_suggested_recipients_batch(
+            reply_discussion=reply_discussion, reply_message=reply_message,
+            no_create=no_create, primary_email=primary_email, additional_partners=additional_partners,
+        )[self.id]
 
     def _notify_get_reply_to(self, default=None, author_id=False):
         """ Returns the preferred reply-to email address when replying to a thread
