@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <template id="s_dynamic_snippet_products_preview_data2" name="Products Preview Data">
+        <div class="carousel slide s_dialog_preview">
+            <div class="carousel-inner row w-100 mx-auto">
+                <div role="option" class="carousel-item active" style="min-height: 357.875px;">
+                    <div class="row">
+                        <div class="s_dynamic_snippet_row row g3">
+                            <div class="col-3">
+                                <!-- website_sale.dynamic_filter_newest_products -->
+                                <t t-set="templateData" t-value="request.env['website.snippet.filter'].get_dummy_product_records(snippet_preview_template)"/>
+                                <t t-foreach="templateData" t-as="data">
+                                    <t t-out="data"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+
     <template id="s_dynamic_snippet_products_preview_data" name="Products Preview Data">
         <div class="carousel slide s_dialog_preview">
             <div class="carousel-inner row w-100 mx-auto">
