@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.1\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:32+0000\n"
-"PO-Revision-Date: 2024-12-24 15:32+0000\n"
+"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"PO-Revision-Date: 2025-02-20 10:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -91,14 +91,14 @@ msgid ""
 msgstr ""
 
 #. module: auth_totp_mail
-#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
-msgid "<span>Consider</span>"
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
+msgid "<span>Consider also</span>"
 msgstr ""
 
 #. module: auth_totp_mail
 #. odoo-python
-#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
-msgid "A trusted device has just been added to your account: %(device_name)s"
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "A new device was used to sign in to your account."
 msgstr ""
 
 #. module: auth_totp_mail
@@ -238,6 +238,12 @@ msgid "Name"
 msgstr ""
 
 #. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "New Connection to your Account"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
 msgstr ""
@@ -262,12 +268,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Deactivated"
-msgstr ""
-
-#. module: auth_totp_mail
-#. odoo-python
-#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
-msgid "Security Update: Device Added"
 msgstr ""
 
 #. module: auth_totp_mail
@@ -350,6 +350,6 @@ msgid "Your two-factor authentication code"
 msgstr ""
 
 #. module: auth_totp_mail
-#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
 msgid "activating Two-factor Authentication"
 msgstr ""
