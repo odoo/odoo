@@ -74,7 +74,7 @@ describe('insert HTML', () => {
                 },
                 // Inserts zws to avoid a Chromium bug preventing selection of
                 // contenteditable false element as first child.
-                contentAfter: '\u200b<div><p>content</p></div><p>[]<br></p>',
+                contentAfter: '<p><br></p><div><p>content</p></div><p>[]<br></p>',
             });
         });
         it('should not split a pre to insert another pre but just insert the text', async () => {
