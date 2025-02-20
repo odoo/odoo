@@ -68,11 +68,14 @@
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="false"/>
                                         <t t-else="">
                                             <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block rounded-bottom-3" t-att-class="{ 'w-100': state.isEditing }">
-                                                <div t-if="message.bubbleColor" class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
+                                                <div t-if="message.bubbleColor" class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                                     'o-blue': message.bubbleColor === 'blue',
                                                     'o-green': message.bubbleColor === 'green',
                                                     'o-orange': message.bubbleColor === 'orange',
-                                                    }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
+                                                    }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"
+                                                >
+                                                    <div class="o-mail-Message-bubbleIn o-rounded-bottom-2_5" t-attf-class="{{ isAlignedRight ? 'o-rounded-start-2_5' : 'o-rounded-end-2_5' }}"/>
+                                                </div>
                                                 <MessageInReply t-if="message.parentMessage" message="message" onClick="props.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.is_note,

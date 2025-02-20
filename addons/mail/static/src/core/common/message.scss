@@ -1,5 +1,5 @@
 .o-mail-Message {
-    transition: background-color .2s ease-out, opacity .2s ease-out, box-shadow .2s ease-out, transform .2s ease-out, border-left-color .3s ease-out, outline .3s ease-out;
+    transition: background-color .2s ease-out, opacity .2s ease-out, box-shadow .2s ease-out, transform .2s ease-out, border-left-color .3s ease-out, outline .3s ease-out, background-image .3s ease-out;
     border-left: inset 3px transparent;
 
     &.o-card {
@@ -13,10 +13,11 @@
         background-color: rgba(lighten($o-action, 15%), .05);
         border-left-color: rgba(lighten($o-action, 15%), var(--mail-Message-highlightBorderOpacity, .5));
         box-shadow: $box-shadow-sm;
+        --border-angle: 0turn; // For animation.
 
         .o-mail-Message-bubble:not(.o-muted) {
-            outline: 1px solid rgba($o-action, .35);
-            outline-offset: -1px;
+            background-image: conic-gradient(from var(--border-angle), transparent 25%, rgba($o-action, 1));
+            animation: o-mail-Message-highlightBubbleAnimation 2s linear infinite;
         }
     }
 
@@ -26,6 +27,18 @@
         outline-offset: -1px;
     }
 }
+
+@keyframes o-mail-Message-highlightBubbleAnimation {
+    to {
+        --border-angle: 1turn;
+    }
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0turn;
+  }
 
 .o-mail-Message-date {
     opacity: 50%;
@@ -97,29 +110,44 @@
 
 .o-mail-Message-bubble {
     &.o-blue {
-        background-color: mix($o-view-background-color, $info, 87.5%) !important;
-        border-color: darken(mix($o-view-background-color, $info, 87.5%), 10%) !important;
+        background-color: darken(mix($o-view-background-color, $info, 87.5%), 10%) !important;
 
-        &.o-muted {
+        > .o-mail-Message-bubbleIn {
+            background-color: mix($o-view-background-color, $info, 87.5%) !important;
+        }
+
+        &.o-muted > .o-mail-Message-bubbleIn {
             background-color: mix($white, mix($o-view-background-color, $info, 87.5%)) !important;
         }
     }
     &.o-green {
-        background-color: mix($o-view-background-color, $success, 87.5%) !important;
-        border-color: darken(mix($o-view-background-color, $success, 87.5%), 10%) !important;
+        background-color: darken(mix($o-view-background-color, $success, 87.5%), 10%) !important;
+        
+        > .o-mail-Message-bubbleIn {
+            background-color: mix($o-view-background-color, $success, 87.5%) !important;
+        }
 
-        &.o-muted {
+        &.o-muted > .o-mail-Message-bubbleIn {
             background-color: mix($white, mix($o-view-background-color, $success, 87.5%)) !important;
         }
     }
     &.o-orange {
-        background-color: mix($o-view-background-color, $warning, 75%) !important;
-        border-color: darken(mix($o-view-background-color, $warning, 75%), 10%) !important;
+        background-color: darken(mix($o-view-background-color, $warning, 75%), 10%) !important;
+        
+        > .o-mail-Message-bubbleIn {
+            background-color: mix($o-view-background-color, $warning, 75%) !important;
+        }
 
-        &.o-muted {
+        &.o-muted > .o-mail-Message-bubbleIn {
             background-color: mix($white, mix($o-view-background-color, $warning, 75%), 85%) !important;
         }
     }
+}
+
+.o-mail-Message-bubbleIn {
+    margin: 1px;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
 }
 
 .o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
