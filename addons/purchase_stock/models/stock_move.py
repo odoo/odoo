@@ -278,3 +278,12 @@ class StockMove(models.Model):
                 [move for move in current_move.move_orig_ids if move not in moves_to_check and move not in seen_moves]
             )
         return None, None
+
+    def _is_qty_incoming(self):
+        self.ensure_one()
+        return (super()._is_qty_incoming() or (
+            self.purchase_line_id and (
+                self.location_id.usage == 'supplier' or (
+                self.location_id.usage == 'transit' and not self.location_id.company_id)
+            ))
+        )
