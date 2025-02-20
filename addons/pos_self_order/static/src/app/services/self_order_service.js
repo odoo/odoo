@@ -13,12 +13,14 @@ import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
-import { getOnNotified, constructFullProductName, deduceUrl } from "@point_of_sale/utils";
+import { constructFullProductName, deduceUrl } from "@point_of_sale/utils";
 import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
 import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
 } from "@point_of_sale/app/models/utils/tax_utils";
+
+const { DateTime } = luxon;
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -59,7 +61,6 @@ export class SelfOrder extends Reactive {
         this.selectedOrderUuid = null;
         this.ordering = false;
         this.orderTakeAwayState = {};
-        this.orderSubscribtion = new Set();
         this.kitchenPrinters = [];
         this.productCategories = [];
         this.currentCategory = null;
@@ -74,12 +75,12 @@ export class SelfOrder extends Reactive {
             await this.initMobileData();
         }
 
-        this.onNotified = getOnNotified(this.bus, this.access_token);
-        this.onNotified("PRODUCT_CHANGED", (payload) => {
+        this.data.connectWebSocket("ORDER_STATE_CHANGED", () => this.getUserDataFromServer());
+        this.data.connectWebSocket("PRODUCT_CHANGED", (payload) => {
             this.models.loadData(this.models, payload);
         });
         if (this.config.self_ordering_mode === "kiosk") {
-            this.onNotified("STATUS", ({ status }) => {
+            this.data.connectWebSocket("STATUS", ({ status }) => {
                 if (status === "closed") {
                     this.pos_session = [];
                     this.ordering = false;
@@ -89,7 +90,7 @@ export class SelfOrder extends Reactive {
                     window.location.reload();
                 }
             });
-            this.onNotified("PAYMENT_STATUS", ({ payment_result, data }) => {
+            this.data.connectWebSocket("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
                     this.models.loadData(this.models, data);
                     const order = this.models["pos.order"].find(
@@ -147,44 +148,6 @@ export class SelfOrder extends Reactive {
         return this.config.use_presets && presets.length > 0
             ? this.currentOrder?.preset_id?.service_at
             : this.config.self_ordering_service_mode;
-    }
-
-    subscribeToOrderChannel(order) {
-        if (!order.access_token || this.orderSubscribtion.has(order.access_token)) {
-            return;
-        }
-
-        const handleMessage = (data) => {
-            let message = "";
-            this.models.loadData(this.models, data);
-            const oUpdated = data["pos.order"].find((o) => o.uuid === this.selectedOrderUuid);
-
-            if (["paid", "invoiced", "done"].includes(oUpdated?.state)) {
-                message = _t("Your order has been paid");
-            } else if (oUpdated?.state === "cancel") {
-                message = _t("Your order has been cancelled");
-            }
-
-            if (message) {
-                this.notification.add(message, {
-                    type: "success",
-                });
-            }
-
-            if (["paid", "invoiced", "done"].includes(oUpdated?.state)) {
-                this.selectedOrderUuid = null;
-                this.router.navigate("default");
-            }
-        };
-
-        this.orderSubscribtion.add(order.access_token);
-        const onNotified = getOnNotified(this.bus, order.access_token);
-        onNotified("ORDER_STATE_CHANGED", (data) => {
-            handleMessage(data);
-        });
-        onNotified("ORDER_CHANGED", (data) => {
-            handleMessage(data);
-        });
     }
 
     computeAvailableCategories() {
@@ -399,7 +362,6 @@ export class SelfOrder extends Reactive {
         }
 
         order = await this.sendDraftOrderToServer(paymentMethods.length > 0);
-
         if (!order) {
             return;
         }
@@ -669,7 +631,7 @@ export class SelfOrder extends Reactive {
         }
 
         try {
-            const uuid = this.currentOrder.uuid;
+            let uuid = this.selectedOrderUuid;
             this.currentOrder.recomputeOrderData();
             const data = await rpc(
                 `/pos-self-order/process-order-args/${this.config.self_ordering_mode}`,
@@ -682,16 +644,16 @@ export class SelfOrder extends Reactive {
                     },
                 }
             );
-            this.models.loadData(this.models, data);
+            const result = this.models.loadData(this.models, data);
+            if (result["pos.order"][0].uuid !== this.selectedOrderUuid) {
+                this.orderTakeAwayState[result["pos.order"][0].uuid] =
+                    this.orderTakeAwayState[this.selectedOrderUuid];
+                delete this.orderTakeAwayState[this.selectedOrderUuid];
+                this.currentOrder.delete();
+                uuid = result["pos.order"][0].uuid;
+            }
+
             this.data.synchronizeLocalDataInIndexedDB();
-            for (const order of data["pos.order"]) {
-                this.subscribeToOrderChannel(order);
-            }
-
-            if (this.config.self_ordering_pay_after === "each") {
-                this.selectedOrderUuid = null;
-            }
-
             this.currentOrder.recomputeChanges();
             return this.models["pos.order"].getBy("uuid", uuid);
         } catch (error) {
@@ -701,12 +663,31 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    async getUserDataFromServer() {
-        const accessTokens = this.models["pos.order"]
-            .map((order) => order.access_token)
-            .filter(Boolean);
+    async getUserDataFromServer(tokens = []) {
+        const tableIdentifier = this.router.getTableIdentifier([]);
+        const dbAccessToken = this.models["pos.order"]
+            .filter((o) => o.state === "draft" && typeof o.id === "number")
+            .map((order) => {
+                const dateTime = DateTime.fromSQL(order.write_date).toUTC();
+                const newDateTime = dateTime.plus({ seconds: 1 });
+                return {
+                    access_token: order.access_token,
+                    write_date: newDateTime.toFormat("yyyy-MM-dd HH:mm:ss", {
+                        numberingSystem: "latn",
+                    }),
+                };
+            })
+            .filter((order) => order.access_token);
 
-        if (accessTokens.length === 0) {
+        // Token given in argument are probably not in the local database
+        // so write_date is set to 1970-01-01 00:00:00
+        const argTokens = tokens.map((token) => ({
+            access_token: token,
+            write_date: "1970-01-01 00:00:00",
+        }));
+
+        const accessTokens = [...dbAccessToken, ...argTokens];
+        if (Object.keys(accessTokens).length === 0 && !tableIdentifier) {
             return;
         }
 
@@ -714,9 +695,27 @@ export class SelfOrder extends Reactive {
             const data = await rpc(`/pos-self-order/get-user-data/`, {
                 access_token: this.access_token,
                 order_access_tokens: accessTokens,
+                table_identifier: tableIdentifier,
             });
-            this.models.loadData(this.models, data);
-            this.selectedOrderUuid = null;
+            const result = this.models.loadData(this.models, data);
+            const openOrder = result["pos.order"]?.find((o) => o.state === "draft");
+            if (openOrder) {
+                this.selectedOrderUuid = openOrder.uuid;
+
+                // Remove all other open orders in draft and add orderline in the current order
+                const lineCmd = [];
+                for (const order of this.models["pos.order"].filter((o) => o.state === "draft")) {
+                    if (order.uuid !== openOrder.uuid) {
+                        lineCmd.push(...order.lines);
+                        order.delete();
+                    }
+                }
+
+                openOrder.update({
+                    lines: [["link", lineCmd]],
+                });
+                openOrder.recomputeChanges();
+            }
         } catch (error) {
             this.handleErrorNotification(
                 error,
