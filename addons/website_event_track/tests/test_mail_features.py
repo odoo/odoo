@@ -163,7 +163,8 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCommon):
             ],
         ]
 
+        suggested_all = tracks._message_get_suggested_recipients_batch()
         for track, expected in zip(tracks, expected_all, strict=True):
-            suggested = track._message_get_suggested_recipients()
+            suggested = suggested_all[track.id]
             with self.subTest(track_name=track.name):
                 self.assertEqual(suggested, expected)
