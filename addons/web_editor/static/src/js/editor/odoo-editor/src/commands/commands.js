@@ -376,8 +376,8 @@ export const editorCommands = {
                 currentNode.remove();
             }
             // If the first child of editable is contenteditable false element
-            // a chromium bug prevents selecting the container. Prepend a
-            // zero-width space so it's no longer the first child.
+            // a chromium bug prevents selecting the container.
+            // Add a paragraph above it so it's no longer the first child.
             if (
                 !isNodeToInsertContentEditable &&
                 editor.editable.firstChild === nodeToInsert &&
@@ -385,8 +385,9 @@ export const editorCommands = {
                 (nodeToInsert.classList.contains("o_knowledge_behavior_type_template") ||
                     nodeToInsert.classList.contains("o_editor_banner"))
             ) {
-                const zws = document.createTextNode("\u200B");
-                nodeToInsert.before(zws);
+                const p = document.createElement("p");
+                p.append(document.createElement("br"));
+                nodeToInsert.before(p);
             }
             currentNode = convertedList || nodeToInsert;
         }
