@@ -18,6 +18,9 @@ odoo.define("auth_signup.reset_password", function (require) {
          */
         _onSubmit: function () {
             var $btn = this.$('.oe_login_buttons > button[type="submit"]');
+            if ($btn.prop("disabled")) {
+                return;
+            }
             $btn.attr("disabled", "disabled");
             $btn.prepend('<i class="fa fa-refresh fa-spin"/> ');
         },
