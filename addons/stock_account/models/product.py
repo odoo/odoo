@@ -965,8 +965,8 @@ class ProductCategory(models.Model):
     property_valuation = fields.Selection(
         string="Inventory Valuation",
         selection=[
-            ('manual_periodic', "Manual"),
-            ('real_time', "Automated"),
+            ('manual_periodic', "Periodic (Manual)"),
+            ('real_time', "Perpetual (Automated)"),
         ],
         company_dependent=True, copy=True,
         help="""Manual: The accounting entries to value the inventory are not posted automatically.
