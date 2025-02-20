@@ -98,19 +98,34 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         # these are optional, and since we can't have the correct one at the time of generating, we avoid adding them.
         vals['vals'].pop('payment_means_vals_list', None)
 
+        other_party = opposite_generic_tin = expected_generic_tin = None
         # We add the company industrial classification to the supplier vals.
-        if vals['vals']['document_type_code'] in ('01', '02', '03'):  # Regular invoices
+        if vals['vals']['document_type_code'] in ('01', '02', '03', '04'):  # Regular invoices
             vals['vals']['accounting_supplier_party_vals']['party_vals'].update({
                 'industry_classification_code_attrs': {'name': invoice.company_id.l10n_my_edi_industrial_classification.name},
                 'industry_classification_code': invoice.company_id.l10n_my_edi_industrial_classification.code,
             })
-        elif vals['vals']['document_type_code'] in ('11', '12', '13'):  # Self billed.
+
+            other_party = vals["vals"]["accounting_customer_party_vals"]["party_vals"]
+            opposite_generic_tin = 'EI00000000030'
+            expected_generic_tin = 'EI00000000020'
+        elif vals['vals']['document_type_code'] in ('11', '12', '13', '14'):  # Self billed.
             vals['vals']['accounting_supplier_party_vals']['party_vals'] = self._get_partner_party_vals(invoice.partner_id, role='supplier')
             vals['vals']['accounting_customer_party_vals']['party_vals'] = self._get_partner_party_vals(invoice.company_id.partner_id, role='customer')
             vals['vals']['accounting_supplier_party_vals']['party_vals'].update({
                 'industry_classification_code_attrs': {'name': invoice.partner_id.commercial_partner_id.l10n_my_edi_industrial_classification.name},
                 'industry_classification_code': invoice.partner_id.commercial_partner_id.l10n_my_edi_industrial_classification.code,
             })
+
+            other_party = vals["vals"]["accounting_supplier_party_vals"]["party_vals"]
+            opposite_generic_tin = 'EI00000000020'
+            expected_generic_tin = 'EI00000000030'
+
+        # Switch the generic tin to the correct one when it makes sense (For example when a supplier has the buyer generic tin set)
+        if other_party:
+            for identification_val in other_party['party_identification_vals']:
+                if identification_val.get('id_attrs', {}).get('schemeID') == 'TIN' and identification_val.get('id') == opposite_generic_tin:
+                    identification_val['id'] = expected_generic_tin
 
         # We ensure that the customer does not have their ttx set (it could be on the record if they're also supplier)
         customer_identification_vals = [
@@ -416,8 +431,18 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id:
             code = '03' if invoice.move_type == 'out_invoice' else '13'
             return code, invoice.debit_origin_id
-        elif invoice.move_type == 'out_refund':
-            code = '02' if invoice.move_type == 'out_refund' else '12'
+        elif invoice.move_type in ('out_refund', 'in_refund'):
+            # We consider a credit note a refund if it is paid and fully reconciled with a payment or bank transaction.
+            payment_terms = invoice.line_ids.filtered(lambda aml: aml.display_type == 'payment_term')
+            counterpart_amls = payment_terms.matched_debit_ids.debit_move_id + payment_terms.matched_credit_ids.credit_move_id
+            counterpart_move_type = 'out_invoice' if invoice.move_type == 'out_refund' else 'out_refund'
+            has_payments = bool(counterpart_amls.move_id.filtered(lambda move: move.move_type != counterpart_move_type))
+            is_paid = invoice.payment_state in ('in_payment', 'paid')
+            if is_paid and has_payments:
+                code = '04' if invoice.move_type == 'out_refund' else '14'
+            else:
+                code = '02' if invoice.move_type == 'out_refund' else '12'
+
             return code, invoice.reversed_entry_id
         else:
             code = '01' if invoice.move_type == 'out_invoice' else '11'
