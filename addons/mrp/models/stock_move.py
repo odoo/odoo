@@ -684,7 +684,9 @@ class StockMove(models.Model):
                 # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
                 # to avoid a division by zero.
                 continue
-            bom_line_moves = self.filtered(lambda m: m.bom_line_id == bom_line)
+            bom_line_moves = self.filtered(lambda m: m.bom_line_id == bom_line or (
+                m.location_id.usage == 'transit' and not m.location_id.company_id)
+            )
             if bom_line_moves:
                 # We compute the quantities needed of each components to make one kit.
                 # Then, we collect every relevant moves related to a specific component
