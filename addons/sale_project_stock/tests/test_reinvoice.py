@@ -59,8 +59,8 @@ class TestReInvoice(TestStockCommon):
                 'product_uom_qty': 5,
             },
         ])
-        self.picking_out.action_confirm()
-        self.picking_out.button_validate()
+        self.picking_out.with_user(self.user_stock_user).action_confirm()
+        self.picking_out.with_user(self.user_stock_user).button_validate()
 
         self.assertEqual(len(self.sale_order.order_line), 2, 'There should be 2 lines on the SO')
         new_sale_order_line1 = self.sale_order.order_line.filtered(lambda sol: sol.product_id == self.reinvoicable_product_at_cost)
