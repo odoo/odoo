@@ -5,7 +5,7 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # Tony Ng, 2025
 # 
 msgid ""
@@ -73,6 +73,13 @@ msgstr "已完成"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -1367,7 +1374,7 @@ msgstr "撰寫電郵"
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "Computing score requires a question in arguments."
-msgstr "計算分數需要在參數中提出問題。"
+msgstr "計算分數需要在引數中提出問題。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_conditional
@@ -3434,6 +3441,11 @@ msgid "Products"
 msgstr "產品"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Public share URL"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_search
@@ -4740,6 +4752,11 @@ msgstr "利用生動有趣的視覺協助，例如即場演示簡報"
 #, python-format
 msgid "Use humor and make jokes"
 msgstr "運用幽默感及開玩笑"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "使用範本"
 
 #. module: survey
 #. odoo-javascript

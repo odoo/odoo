@@ -14,24 +14,24 @@
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
 # Martin Trigaux, 2022
-# Milan Tribuson <one.mile.code@gmail.com>, 2022
-# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2022
-# Tina Milas, 2022
-# 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2022
 # Matej Mijoč, 2022
 # Vladimir Vrgoč, 2024
 # Gordana Bilas, 2024
-# Kristina Palaš, 2024
 # Servisi RAM d.o.o. <support@servisiram.hr>, 2024
-# Bole <bole@dajmi5.com>, 2024
+# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2025
+# Milan Tribuson <one.mile.code@gmail.com>, 2025
+# Tina Milas, 2025
+# Kristina Palaš, 2025
+# 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2025
+# Bole <bole@dajmi5.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +100,7 @@ msgstr "1 telefonski poziv"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
-msgstr "12 dana / godina, uključujući<br>6 po vašem izboru."
+msgstr "12 dana / godišnje, uključujući <br> 6 po vašem izboru."
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -122,7 +122,7 @@ msgstr "2 radna dana"
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "4 Days after Interview"
-msgstr "4 dana nakon intervjua"
+msgstr "4 dana nakon razgovora"
 
 #. module: hr
 #. odoo-python
@@ -343,7 +343,7 @@ msgstr "<span class=\"text-muted small\">Postupak</span>"
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "<span class=\"text-muted small\">Time to Answer</span>"
-msgstr "<span class=\"text-muted small\">Vrijeme za odgovor</span>"
+msgstr "<span class=\"text-muted small\">Vrijeme do odgovora</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -606,8 +606,8 @@ msgid ""
 "                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
-"Kao zaposlenik u našoj kompaniji <b>surađivat ćete sa svim odjelima kako bi ste stvorili i implementirali\n"
-"                                disruptivne artikle.</b> Dođite raditi za rastuću kompaniju koja nudi velike benefite s mogućnošću\n"
+"Kao djelatnik u našoj kompaniji <b>surađivat ćete sa svim odjelima kako bi ste stvorili i implementirali\n"
+"                                disruptivne proizvode.</b> Dođite raditi za rastuću kompaniju koja nudi velike benefite s mogućnošću\n"
 "                                napretka i učenja uz ostvarene vođe. Tražimo iskusne i izvanredne članove osoblja.\n"
 "                                <br><br>\n"
 "                                Ova pozicija je istovremeno <b>kreativna i rigorozna</b> te ćete morati moći razmišljati izvan okvira.\n"
@@ -723,6 +723,11 @@ msgstr "ID značke"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
 msgstr "Broj bankovnog računa"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Bankovni računi"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -2108,12 +2113,12 @@ msgstr "Državljanstvo"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Negotiate and contract"
-msgstr "Pregovarati i ugovoriti"
+msgstr "Pregovaraj i ugovori"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Događaj sljedećeg kalendara aktivnosti"
+msgstr "Kaldendarski događaj slijedeće aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
@@ -2632,15 +2637,11 @@ msgid "Register Departure"
 msgstr "Registrirajte odlazak"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
-msgid "Related Contact"
-msgstr "Povezani kontakt"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Related Contacts"
 msgstr "Povezani kontakti"

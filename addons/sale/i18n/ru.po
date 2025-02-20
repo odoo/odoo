@@ -27,17 +27,18 @@
 # Alena Vlasova, 2023
 # Алексей Хомяков <alexey.homyakov@gmail.com>, 2023
 # alenafairy, 2023
-# Wil Odoo, 2024
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
 # Смородин Даниил, 2024
+# Nadia Martynova, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Смородин Даниил, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1642,7 +1643,7 @@ msgstr "Продукт для авансового платежа"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s (Draft)"
-msgstr ""
+msgstr "Первоначальный взнос: %s (Черновик)"
 
 #. module: sale
 #. odoo-python
@@ -3923,6 +3924,11 @@ msgid "Tags"
 msgstr "Теги"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Налог 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "Страна налогооблажения"
@@ -4075,12 +4081,12 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Эти продукты не могут быть привязаны к компании %s, поскольку они уже были использованы в коммерческих предложениях или продажах в другой компании:\n"
-"%s\n"
+"Эти продукты не могут быть привязаны к компании %(company)s, поскольку они уже были использованы в коммерческих предложениях или продажах в другой компании:\n"
+"%(used_products)s\n"
 "Мы можете архивировать эти продукты и создать их заново для нужной компании или пометьте их как общие."
 
 #. module: sale

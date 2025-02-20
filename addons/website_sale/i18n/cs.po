@@ -15,20 +15,20 @@
 # Jiří Podhorecký <jirka.p@volny.cz>, 2022
 # Ivana Bartonkova, 2023
 # Jakub Krkoška, 2023
-# Wil Odoo, 2024
 # Katerina Horylova, 2024
 # Jakub Smolka, 2024
 # Vojtech Smolka, 2024
 # Tereza Mokrá, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +63,11 @@ msgstr "%s kontrol"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; Doprava"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1045,13 +1050,6 @@ msgstr "Image 1024 lze přibližovat"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "Může publikovat"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "You can't use a video as the product's main image."
-msgstr "Jako hlavní obrázek produktu nelze použít video."
 
 #. module: website_sale
 #. odoo-javascript
@@ -4329,6 +4327,13 @@ msgid ""
 msgstr ""
 "Upravujete současně svou <b>fakturační a dodací</b> adresu!<br/>\n"
 "Chcete-li upravit dodací adresu, vytvořte"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "Jako hlavní obrázek produktu nelze použít video."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts

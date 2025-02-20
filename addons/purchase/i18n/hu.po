@@ -5,24 +5,24 @@
 # Translators:
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2022
 # Tamás Dombos, 2022
-# A . <tiboreu@protonmail.com>, 2022
+# A . <tibor@inventati.org>, 2022
 # f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2022
 # Zsolt Godó <zsolttokio@gmail.com>, 2022
 # Martin Trigaux, 2022
-# krnkris, 2022
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
 # 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # gezza <geza.nagy@oregional.hu>, 2024
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2024
+# krnkris, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2024\n"
+"Last-Translator: krnkris, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +63,7 @@ msgstr "%(amount)s esedékes %(date)s"
 #, python-format
 msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
 msgstr ""
+"%(product)s ettől %(original_receipt_date)s eddig %(new_receipt_date)s"
 
 #. module: purchase
 #. odoo-python
@@ -2685,6 +2686,11 @@ msgstr "Beszállító árlista"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax
 msgid "Tax"
 msgstr "Adó"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Tax 15%"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id

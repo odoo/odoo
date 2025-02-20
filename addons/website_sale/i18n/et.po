@@ -17,20 +17,20 @@
 # Algo Kärp <algokarp@gmail.com>, 2022
 # JanaAvalah, 2023
 # Leaanika Randmets, 2023
-# Katrin Kampura, 2023
 # Arma Gedonsky <armagedonsky@hot.ee>, 2023
 # Martin Aavastik <martin@avalah.ee>, 2023
 # Eneli Õigus <enelioigus@gmail.com>, 2024
 # Stevin Lilla, 2024
 # Anna, 2024
+# Katrin Kampura, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Katrin Kampura, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,6 +67,11 @@ msgstr "%s ülevaade"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; tarne"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1042,13 +1047,6 @@ msgstr "Kas pilti 1024 saab sisse suumida"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "Võib avalikustada"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "You can't use a video as the product's main image."
-msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -4341,6 +4339,13 @@ msgid ""
 msgstr ""
 "Sa muudad oma <b>arve- ja tarne</b>aadressi samaaegselt!<br/>\n"
 "                                            Kui sa tahad muuta oma tarneaadressi, siis loo "
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts

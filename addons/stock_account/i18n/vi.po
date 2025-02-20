@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -184,7 +184,7 @@ msgid ""
 " the product category, or on the location, before processing this operation."
 msgstr ""
 "Không tìm thấy tài khoản nhập tồn kho cho sản phẩm %s. Bạn phải xác định một"
-" tài khoản ở danh mục sản phẩm hoặc ở địa điểm lưu kho trước khi xử lý hoạt "
+" tài khoản ở danh mục sản phẩm hoặc ở vị trí lưu kho trước khi xử lý hoạt "
 "động này."
 
 #. module: stock_account
@@ -197,7 +197,7 @@ msgid ""
 "operation."
 msgstr ""
 "Không tìm thấy tài khoản xuất tồn kho cho sản phẩm %s. Bạn phải xác định một"
-" tài khoản ở danh mục sản phẩm hoặc ở địa điểm lưu kho trước khi xử lý hoạt "
+" tài khoản ở danh mục sản phẩm hoặc ở vị trí lưu kho trước khi xử lý hoạt "
 "động này."
 
 #. module: stock_account
@@ -266,7 +266,7 @@ msgid ""
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
 "Các bút toán đối ứng cho tất cả dịch chuyển nhập hàng sẽ được ghi vào tài khoản này, trừ khi có một tài khoản định giá cụ thể\n"
-"                được thiết lập trong địa điểm nguồn. Đây là giá trị mặc định cho tất cả sản phẩm trong danh mục này. Nó cũng có thể được thiết lập trực tiếp trên từng sản phẩm."
+"                được thiết lập trong vị trí nguồn. Đây là giá trị mặc định cho tất cả sản phẩm trong danh mục này. Nó cũng có thể được thiết lập trực tiếp trên từng sản phẩm."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -391,7 +391,7 @@ msgstr "Nhập về"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "Địa điểm kiểm kho"
+msgstr "Vị trí kiểm kho"
 
 #. module: stock_account
 #. odoo-python
@@ -804,7 +804,7 @@ msgid ""
 "transit location."
 msgstr ""
 "Chi tiết di chuyển không nhất quán: chúng đang thực hiện một tác vụ liên "
-"công ty trong một bước duy nhất trong khi chúng phải đi qua địa điểm trung "
+"công ty trong một bước duy nhất trong khi chúng phải đi qua vị trí trung "
 "chuyển liên công ty."
 
 #. module: stock_account
@@ -903,10 +903,10 @@ msgid ""
 "internal locations."
 msgstr ""
 "Được sử dụng cho định giá tồn kho theo thời gian thực. Khi được thiết lập "
-"trên một địa điểm ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng"
-" để giữ giá trị của những sản phẩm được di chuyển từ một địa điểm nội bộ "
-"sang địa điểm này, thay cho Tài khoản xuất kho được thiết lập trên sản phẩm."
-" Việc này không ảnh hưởng tới địa điểm nội bộ."
+"trên một vị trí ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng "
+"để giữ giá trị của những sản phẩm được di chuyển từ một vị trí nội bộ sang "
+"vị trí này, thay cho Tài khoản xuất kho được thiết lập trên sản phẩm. Việc "
+"này không ảnh hưởng tới vị trí nội bộ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -918,10 +918,10 @@ msgid ""
 "internal locations."
 msgstr ""
 "Được sử dụng cho định giá tồn kho theo thời gian thực. Khi được thiết lập "
-"trên một địa điểm ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng"
-" để giữ giá trị của những sản phẩm được di chuyển ra khỏi địa điểm này và "
-"vào một địa điểm nội bộ, thay cho Tài khoản xuất kho được thiết lập trên sản"
-" phẩm. Việc này không ảnh hưởng tới địa điểm nội bộ."
+"trên một vị trí ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng "
+"để giữ giá trị của những sản phẩm được di chuyển ra khỏi vị trí này và vào "
+"một vị trí nội bộ, thay cho Tài khoản xuất kho được thiết lập trên sản phẩm."
+" Việc này không ảnh hưởng tới vị trí nội bộ."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -999,7 +999,7 @@ msgid ""
 "                It can also directly be set on each product."
 msgstr ""
 "Khi thực hiện định giá tồn kho tự động, các hạng mục bút toán đối ứng cho tất cả dịch chuyển tồn kho xuất đi sẽ được ghi sổ trong tài khoản này,\n"
-"                trừ khi có một tài khoản định giá cụ thể được thiết lập trên địa điểm đích. Đây là giá trị mặc định cho tất cả sản phẩm trong danh mục này.\n"
+"                trừ khi có một tài khoản định giá cụ thể được thiết lập trên vị trí đích. Đây là giá trị mặc định cho tất cả sản phẩm trong danh mục này.\n"
 "                Tài khoản này cũng có thể được thiết lập trực tiếp trên mỗi sản phẩm."
 
 #. module: stock_account
@@ -1059,22 +1059,22 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any stock input account defined on your product category. You"
-" must define one before processing this operation."
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
 msgstr ""
-"Bạn chưa xác định bất kỳ tài khoản nhập tồn kho nào trong danh mục sản phẩm."
-" Bạn phải xác định một tài khoản trước khi thực hiện hành động này."
+"Bạn chưa xác định bất kỳ tài khoản định giá xuất kho nào trên danh mục sản "
+"phẩm. Bạn phải xác định một tài khoản trước khi thực hiện hành động này."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any output valuation account defined on your product "
-"category. You must define one before processing this operation."
+"You don't have any stock input account defined on your product category. You"
+" must define one before processing this operation."
 msgstr ""
-"Bạn chưa xác định bất kỳ tài khoản định giá xuất kho nào trên danh mục sản "
-"phẩm. Bạn phải xác định một tài khoản trước khi thực hiện hành động này."
+"Bạn chưa xác định bất kỳ tài khoản nhập tồn kho nào trong danh mục sản phẩm."
+" Bạn phải xác định một tài khoản trước khi thực hiện hành động này."
 
 #. module: stock_account
 #. odoo-python
@@ -1121,4 +1121,4 @@ msgstr "cho"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr "các địa điểm cụ thể"
+msgstr "các vị trí cụ thể"

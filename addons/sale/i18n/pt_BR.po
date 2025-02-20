@@ -13,14 +13,15 @@
 # Adriano Prado <adrianojprado@gmail.com>, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
 # Maitê Dietze, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4118,6 +4119,11 @@ msgid "Tags"
 msgstr "Marcadores"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Imposto de 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "País de Taxação"
@@ -4269,13 +4275,13 @@ msgstr "O valor a ser faturado antecipadamente, sem impostos."
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Os produtos a seguir não podem ser restritos à empresa %s porque eles já foram utilizados em cotações ou pedidos em outra empresa:\n"
-"%s\n"
-"Você pode arquivar estes produtos e recriá-los na empresa em que deseja restringí-los se preferir, ou mantenha-os compartilhados."
+"Os produtos a seguir não podem ser restritos à empresa %(company)s porque eles já foram utilizados em cotações ou pedidos para outra empresa:\n"
+"%(used_products)s\n"
+"Você pode arquivar estes produtos e recriá-los com a restrição de empresa, ou pode mantê-los como produtos compartilhados."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice

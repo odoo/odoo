@@ -7,16 +7,16 @@
 # Chris Egal <sodaswed@web.de>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # Larissa Manderfeld, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Larissa Manderfeld, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1133,6 +1133,13 @@ msgid "Generate eWallet"
 msgstr "E-Geldbörse generieren"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "{{props.context.program_item_name}} generieren"
+
+#. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
 msgid "Gift &amp; Ewallet"
 msgstr "Geschenk &amp; E-Geldbörse"
@@ -1705,6 +1712,7 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Belohnungen"
 
@@ -1821,6 +1829,13 @@ msgstr "Der Aktionscode muss einzigartig sein."
 msgid "The required points for a reward must be strictly positive."
 msgstr ""
 "Die für eine Belohnung erforderlichen Punkte müssen unbedingt positiv sein."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "Das Feld zur Beschreibung der Belohnung darf nicht leer sein."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -1972,13 +1987,6 @@ msgstr "Mit einem Aktionscode"
 #, python-format
 msgid "You can not delete a program in an active state"
 msgstr "Sie können ein aktives Programm nicht löschen"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_reward.py:0
-#, python-format
-msgid "The reward description field cannot be empty."
-msgstr "Das Feld zur Beschreibung der Belohnung darf nicht leer sein."
 
 #. module: loyalty
 #. odoo-python
@@ -2150,3 +2158,10 @@ msgstr "Verwendungen"
 #, python-format
 msgid "your order"
 msgstr "Ihre Bestellung"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

@@ -10,6 +10,7 @@
 # Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -421,7 +422,7 @@ msgstr "製品ベンダのリストに優先順位を割り当てます。"
 msgid ""
 "At most %d quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
-msgstr ""
+msgstr "同時に表示できる数量は最大%dまでです。選択した数量を削除して他の数量を追加して下さい。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -860,7 +861,7 @@ msgstr "小数精度"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %(currency)s pricelist"
-msgstr ""
+msgstr "デフォルト%(currency)s価格表"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1745,7 +1746,7 @@ msgstr "オフィスランプ"
 msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
-msgstr ""
+msgstr "プロダクト%sでは、値%sと属性%sが一致しないため、関連付けることができません。"
 
 #. module: product
 #. odoo-python
@@ -1754,7 +1755,7 @@ msgstr ""
 msgid ""
 "On the product %s you cannot transform the attribute %s into the attribute "
 "%s."
-msgstr ""
+msgstr "プロダクト %sでは、属性 %sを属性%sに変更することはできません。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -2285,7 +2286,7 @@ msgstr "数量"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
-msgstr ""
+msgstr "既に存在する数量（%d）です。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2564,7 +2565,7 @@ msgstr "このプロダクトのタイプは詳細タイプと一致しません
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
-msgstr ""
+msgstr "この属性%sは、プロダクト%sに対して少なくとも1つの値を持っている必要があります。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -2674,7 +2675,7 @@ msgstr "販売価格はプロダクトテンプレートから管理されます
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
-msgstr ""
+msgstr "値 %s は属性%s （プロダクト %s）用に定義されていません。"
 
 #. module: product
 #. odoo-python
@@ -3099,7 +3100,7 @@ msgstr "価格リスト項目でメイン価格リストをその他価格リス
 msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
-msgstr ""
+msgstr "属性%sのバリアント作成モードは以下のプロダクトで使用されているため、変更できません：%s"
 
 #. module: product
 #. odoo-python
@@ -3115,14 +3116,14 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
-msgstr ""
+msgstr "値%s（プロダクト%sに設定されている）は変更できません。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
-msgstr ""
+msgstr "値%s（プロダクト%sに設定されている）の値は変更することはできません。"
 
 #. module: product
 #. odoo-python
@@ -3161,6 +3162,8 @@ msgid ""
 "You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"属性%sは以下のプロダクトで使用されているため削除できません：\n"
+"%s"
 
 #. module: product
 #. odoo-python
@@ -3171,6 +3174,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"値%sは以下のプロダクトで使用されているため削除できません：\n"
+"%s\n"
+"その値が過去にプロダクトに関連付けられていた場合、その値を削除することはできません。"
 
 #. module: product
 #. odoo-python
@@ -3217,7 +3223,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
-msgstr ""
+msgstr "属性 %s をプロダクト%sからプロダクト%sに移動することはできません。"
 
 #. module: product
 #. odoo-python

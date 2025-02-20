@@ -18,8 +18,9 @@
 # Björn Hayer, 2023
 # Lasse L, 2023
 # Claes-Johan Dahlin, 2024
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Larissa Manderfeld, 2025
+# Wil Odoo, 2025
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2025
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Larissa Manderfeld, 2025\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -438,6 +439,8 @@ msgid ""
 "At most %d quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Högst %d kvantiteter kan visas samtidigt. Ta bort en vald kvantitet för att "
+"lägga till andra."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -1787,6 +1790,8 @@ msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
 msgstr ""
+"På produkten %s kan du inte associera värdet %s med attributet %s eftersom "
+"de inte matchar."
 
 #. module: product
 #. odoo-python
@@ -1796,6 +1801,7 @@ msgid ""
 "On the product %s you cannot transform the attribute %s into the attribute "
 "%s."
 msgstr ""
+"På produkten %s kan du inte omvandla attributet %s till attributet %s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -2328,7 +2334,7 @@ msgstr "Antal"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
-msgstr ""
+msgstr "Kvantitet finns redan (%d)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2615,7 +2621,7 @@ msgstr "Typen av denna produkt matchar inte den detaljerade typen"
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
-msgstr ""
+msgstr "Attributet %s måste ha minst ett värde för produkten %s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -2733,7 +2739,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
-msgstr ""
+msgstr "Värdet %s är inte definierat för attributet %s på produkten %s."
 
 #. module: product
 #. odoo-python
@@ -3172,6 +3178,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Du kan inte ändra skapandeläget för varianter för attributet %s eftersom det används på följande produkter:\n"
+"%s"
 
 #. module: product
 #. odoo-python
@@ -3187,14 +3195,14 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
-msgstr ""
+msgstr "Du kan inte ändra produkten för det värde %s som anges på produkt %s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
-msgstr ""
+msgstr "Du kan inte ändra värdet på det värde %s som anges på produkt %s."
 
 #. module: product
 #. odoo-python
@@ -3235,6 +3243,8 @@ msgid ""
 "You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Du kan inte ta bort attributet %s eftersom det används på följande produkter:\n"
+"%s"
 
 #. module: product
 #. odoo-python
@@ -3245,6 +3255,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"Du kan inte ta bort värdet %s eftersom det används på följande produkter:\n"
+"%s\n"
+" Om värdet har associerats med en produkt tidigare kommer du inte att kunna ta bort det."
 
 #. module: product
 #. odoo-python
@@ -3294,7 +3307,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
-msgstr ""
+msgstr "Du kan inte flytta attributet %s från produkten %s till produkten %s."
 
 #. module: product
 #. odoo-python

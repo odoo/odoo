@@ -22,14 +22,15 @@
 # cafonso <cafonso62@gmail.com>, 2024
 # Marta Marouço, 2024
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -352,7 +353,7 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                        Olá<br><br>\n"
-"                        Há algo de novo no curso <strong t-out=\"object.channel_id.name or ''\">Árvores, Bosques e Jardins</strong> que está a seguir:<br><br>\n"
+"                        Há algo de novo no curso <strong t-out=\"object.channel_id.name or ''\">Árvores, Madeiras e Jardins</strong> que está a seguir:<br><br>\n"
 "                        <center><strong t-out=\"object.name or ''\">Árvores</strong></center>\n"
 "                        <t t-if=\"object.image_1024\">\n"
 "                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
@@ -890,19 +891,13 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-minus\"/>\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 msgstr ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=“Diminuir” aria-label=\"Zoom out\" role=\"button\">\n"
-"                                            <i j=\"1/\">\n"
-"                                        </i></span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=“Aumentar” aria-label=\"Zoom in\" role=\"button\">\n"
-"                                            <i j=\"3/\">\n"
-"                                        </i></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -3515,7 +3510,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_intermediate
 msgid "Intermediate"
-msgstr "Intermédia"
+msgstr "Intermédio"
 
 #. module: website_slides
 #. odoo-python
@@ -4412,15 +4407,16 @@ msgid "Once you're done, don't forget to <b>Publish</b> your course."
 msgstr "Tendo acabado, não se esqueça de <b>Publicar</b> o seu curso."
 
 #. module: website_slides
-#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
-msgid "Open To All"
-msgstr "Aberto A Todos"
-
-#. module: website_slides
+#. odoo-python
 #: code:addons/website_slides/controllers/mail.py:0
 #, python-format
 msgid "Only a single review can be posted per course."
 msgstr "Só pode ser publicada uma única avaliação por cada curso."
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
+msgid "Open To All"
+msgstr "Aberto A Todos"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
@@ -6092,6 +6088,11 @@ msgid "Use Course Groups to classify and organize your Courses."
 msgstr "Use os Grupos de Cursos para classificar e organizar os seus Cursos."
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "Usar modelo"
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
 msgstr "Usado para categorizar e filtrar canais/cursos exibidos"
@@ -6726,7 +6727,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
 msgid "achieved"
-msgstr "alcançado"
+msgstr "alcançou"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -6805,6 +6806,13 @@ msgstr "por exemplo, \"Introdução\""
 #, python-format
 msgid "e.g. \"Which animal cannot fly?\""
 msgstr "por exemplo, “Qual dos animais não pode voar?\""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add

@@ -11,14 +11,15 @@
 # Chloe Wang, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Raymond Yu <cl_yu@hotmail.com>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4031,6 +4032,11 @@ msgid "Tags"
 msgstr "标签"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "税率15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "税务国家"
@@ -4169,13 +4175,13 @@ msgstr "固定金额需提前结算，税额另计。"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"下列产品不限于本公司%s，因为它们已在其他公司的报价或销售订单中使用:\n"
-"%s\n"
-"你可以将这些产品存档，然后根据公司的限制重新创建它们，或者将它们作为共享产品保留。"
+"下列产品不限于本公司%(company)s，因为它们已在其他公司的报价或销售订单中使用：\n"
+"%(used_products)s\n"
+"您可以将这些产品归档，然后根据公司的限制重新建立它们，或者将它们作为共用产品保留。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice

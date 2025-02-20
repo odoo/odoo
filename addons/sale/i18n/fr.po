@@ -12,14 +12,15 @@
 # Jolien De Paepe, 2024
 # Larissa Manderfeld, 2024
 # Manon Rondou, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4132,6 +4133,11 @@ msgid "Tags"
 msgstr "Étiquettes"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Taxe 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "Pays de la taxe"
@@ -4284,12 +4290,12 @@ msgstr "Le montant fixe à facturer à l'avance, hors taxes"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Les produits suivants ne peuvent pas être limités à la société %s car ils ont déjà été utilisés dans des devis ou des commandes client dans une autre société :\n"
-"%s\n"
+"Les produits suivants ne peuvent pas être limités à la société %(company)s car ils ont déjà été utilisés dans des devis ou des commandes client dans une autre société :\n"
+"%(used_products)s\n"
 "Vous pouvez archiver ces produits et les recréer avec la restriction de votre société à la place, ou les laisser en tant que produit partagé."
 
 #. module: sale

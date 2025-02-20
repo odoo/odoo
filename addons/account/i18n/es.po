@@ -27,8 +27,8 @@
 # Lucia Pacheco, 2023
 # Carolina Fernández, 2024
 # Wil Odoo, 2025
-# Larissa Manderfeld, 2025
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2025
+# Larissa Manderfeld, 2025
 # Pilar Vargas, 2025
 # 
 msgid ""
@@ -168,6 +168,7 @@ msgstr "%s (copia)"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -1515,8 +1516,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr ""
-"Una advertencia puede ser configurada en una ficha de entidad (Cuenta)"
+msgstr "Una advertencia puede ser configurada en un contacto (cuenta)"
 
 #. module: account
 #: model:ir.model,name:account.model_res_groups
@@ -2998,7 +2998,7 @@ msgid ""
 " did not match any partner."
 msgstr ""
 "Autor del mensaje. Si no se establece, email_from puede contener una "
-"dirección de correo que no coincida con la de ningún partner."
+"dirección de correo que no coincida con la de ningún contacto."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -3088,7 +3088,7 @@ msgstr "Diario disponible"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
 msgid "Available Partner Bank"
-msgstr "Banco disponible de la empresa"
+msgstr "Banco del contacto disponible"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
@@ -9081,7 +9081,7 @@ msgid ""
 msgstr ""
 "La última vez que se conciliaron facturas y pagos de este contacto. Se "
 "configura incluso si no hay ningún débito o crédito por conciliar o si pulsa"
-" el botón \"Hecho\"."
+" el botón “Hecho”."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9370,10 +9370,10 @@ msgid ""
 "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
-"Manual: Cobra mediante cualquier método fuera de Odoo.\n"
-"Payment Providers: Cada proveedor de pago tiene su propio método de pago. Solicita una transacción en/a una tarjeta gracias a un token de pago guardado por el contacto al comprar o suscribirse en línea.\n"
-"Batch Deposit: Recoge varios cheques de clientes a la vez generando y enviando un depósito por lotes a tu banco. Es necesario el módulo account_batch_payment.\n"
-"SEPA Direct Debit: Cobra en la zona SEPA gracias a un mandato que tu contacto te habrá otorgado. Es necesario el módulo account_sepa.\n"
+"Manual: pague o cobre con cualquier método fuera de Odoo.\n"
+"Proveedores de pago: cada proveedor tiene su propio método de pago. Solicite una transacción en o a una tarjeta gracias al token de pago que el contacto guarda al comprar o suscribirse en línea.\n"
+"Depósito por lote: cobre varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Es necesario el módulo account_batch_payment.\n"
+"Domiciliación bancaria SEPA: cobre en la zona SEPA gracias a un mandato que le otorgará su contacto. Es necesario el módulo account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -9397,12 +9397,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
-"Manual: Pagar o recibir pagos mediante cualquier método fuera de Odoo.\n"
-"Proveedores de Pago: Cada proveedor de pago tiene su propio método de pago. Solicita una transacción en/a una tarjeta gracias a un token de pago guardado por el contacto al comprar o suscribirse en línea.\n"
-"Cheque: Pagar facturas mediante cheque y imprimirlo desde Odoo.\n"
-"Depósito por Lotes: Cobrar varios cheques de clientes a la vez generando y enviando un depósito por lotes a tu banco. Es necesario el módulo account_batch_payment.\n"
-"Transferencia de Crédito SEPA: Pagar en la zona SEPA enviando un archivo de Transferencia de Crédito SEPA a tu banco. Es necesario el módulo account_sepa.\n"
-"Domiciliación Bancaria SEPA: Recibir pagos en la zona SEPA gracias a un mandato que tu contacto te habrá otorgado. Es necesario el módulo account_sepa.\n"
+"Manual: pague o cobre con cualquier método fuera de Odoo.\n"
+"Proveedores de pago: cada proveedor tiene su propio método de pago. Solicite una transacción en o a una tarjeta gracias al token de pago que el contacto guarda al comprar o suscribirse en línea.\n"
+"Cheque: pague las facturas con un cheque e imprímalo desde Odoo.\n"
+"Depósito por lote: cobre varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Es necesario el módulo account_batch_payment.\n"
+"Transferencia de crédito SEPA: pague en la zona SEPA al enviar un archivo de transferencia de crédito SEPA a su banco. Es necesario el módulo account_sepa.\n"
+"Domiciliación bancaria SEPA: cobre en la zona SEPA gracias a un mandato que le otorgará su contacto. Es necesario el módulo account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -10842,7 +10842,7 @@ msgstr "Empresa"
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
 #: model:ir.model.fields,field_description:account.field_res_users__contract_ids
 msgid "Partner Contracts"
-msgstr "Contratos de contactos"
+msgstr "Contratos del contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_credit_warning
@@ -10859,7 +10859,7 @@ msgstr "La empresa está establecida"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Libro mayor de empresa"
+msgstr "Libro mayor de la empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit

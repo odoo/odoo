@@ -10,13 +10,12 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # eriiikgt, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Harcogourmet, 2022
+# Xavier, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Eugeni Chafer <eugeni@chafer.cat>, 2022
 # Arnau Ros, 2022
 # Jonatan Gk, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
-# marcescu, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # Cristian Cruz, 2022
@@ -29,14 +28,16 @@
 # Óscar Fonseca <tecnico@pyming.com>, 2023
 # Albert Parera, 2023
 # Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
+# Wil Odoo, 2025
+# marcescu, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Quim - coopdevs <quim.rebull@coopdevs.org>, 2024\n"
+"Last-Translator: marcescu, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4136,6 +4137,11 @@ msgid "Tags"
 msgstr "Etiquetes"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Impost 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "País dels impostos"
@@ -4288,12 +4294,12 @@ msgstr "L'import fix a facturar per endavant, els impostos exclosos."
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Els productes següents no es poden restringir a l'empresa %s perquè ja s'han utilitzat en quotes o comandes de vendes en una altra empresa:\n"
-"%s\n"
+"Els productes següents no es poden restringir a l'empresa %(company)s perquè ja s'han utilitzat en quotes o comandes de vendes en una altra empresa:\n"
+"%(used_products)s\n"
 "Pots arxivar aquests productes i recrear-los amb la restricció de la teva empresa, o deixar-los com a productes compartits."
 
 #. module: sale

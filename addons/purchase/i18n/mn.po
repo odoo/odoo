@@ -19,19 +19,19 @@
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2022
 # Батболд <batbold.ts@gmail.com>, 2022
 # Minj P <pminj322@gmail.com>, 2022
-# Martin Trigaux, 2022
 # hish, 2022
 # Torbat Jargalsaikhan, 2023
 # Гүррагчаа Ууганбаяр, 2024
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
+# Martin Trigaux, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025\n"
+"Last-Translator: Martin Trigaux, 2025\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +74,7 @@ msgstr "%(amount)s эцсийн огноо %(date)s"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
-msgstr ""
+msgstr "%(product)s %(original_receipt_date)s-с %(new_receipt_date)sхүртэл"
 
 #. module: purchase
 #. odoo-python
@@ -2700,6 +2700,11 @@ msgstr "Нийлүүлэлтийн үнийн хүснэгт"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax
 msgid "Tax"
 msgstr "Татвар"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Tax 15%"
+msgstr "Татвар 15%"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id

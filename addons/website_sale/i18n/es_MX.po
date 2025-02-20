@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Lucia Pacheco, 2022
-# Martin Trigaux, 2022
 # Fernando, 2023
 # Antoine Demany, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
@@ -12,13 +11,14 @@
 # Iran Villalobos López, 2023
 # Wil Odoo, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Martin Trigaux, 2025
 # Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -57,6 +57,11 @@ msgstr "%s reseñas"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; Envío"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -745,7 +750,7 @@ msgstr "Agregar un archivo multimedia"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add a customizable form during checkout (after address)"
 msgstr ""
-"Agregar un formulario personalizable durante el pago (después de la "
+"Agregue un formulario personalizable al proceso de pago (después de la "
 "dirección)"
 
 #. module: website_sale
@@ -1079,13 +1084,6 @@ msgstr "Se puede ampliar la imagen 1024"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "Puede publicar"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "You can't use a video as the product's main image."
-msgstr "No puede usar un video como la imagen principal del producto."
 
 #. module: website_sale
 #. odoo-javascript
@@ -3264,7 +3262,7 @@ msgstr "Volver a ordenar"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_enabled_portal_reorder_button
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_portal_reorder_button
 msgid "Re-order From Portal"
-msgstr "Volver a ordenar del portal"
+msgstr "Volver a ordenar desde el portal"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
@@ -4383,7 +4381,7 @@ msgstr "Sitios web"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "What should be done on \"Add to Cart\"?"
-msgstr "¿Qué se debe hacer en \"Agregar a carrito\"?"
+msgstr "¿Qué debe ocurrir después de hacer clic en \"Agregar al carrito\"?"
 
 #. module: website_sale
 #. odoo-python
@@ -4437,6 +4435,13 @@ msgid ""
 msgstr ""
 "Está editando sus direcciones de <b>facturación y de envío</b> al mismo tiempo.<br/>\n"
 "Si quiere modificar su dirección de envío, cree un"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "No puede usar un video como la imagen principal del producto."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts

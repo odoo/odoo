@@ -7,16 +7,16 @@
 # Linkup <link-up@naver.com>, 2022
 # Martin Trigaux, 2022
 # Sarah Park, 2023
-# Wil Odoo, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +51,11 @@ msgstr "%s 리뷰"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; 선적"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1054,13 +1059,6 @@ msgstr "1024 이미지로 확대 가능"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "게시 가능"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "You can't use a video as the product's main image."
-msgstr "제품의 기본 이미지로는 동영상을 사용할 수 없습니다."
 
 #. module: website_sale
 #. odoo-javascript
@@ -4322,6 +4320,13 @@ msgid ""
 msgstr ""
 "본 단계에서는 <b>청구서 발송지 및 배송지 주소</b>가 동시에 수정됩니다!<br/>\n"
 "                                         배송지 주소만 수정하려면 다음을 클릭하세요."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "제품의 기본 이미지로는 동영상을 사용할 수 없습니다."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts

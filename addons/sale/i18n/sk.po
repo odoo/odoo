@@ -8,7 +8,7 @@
 # Peter Dovicovic <dovicovic@gmail.com>, 2022
 # 192015edb78c7397bdecc2172c7447b3, 2022
 # Robert Kirschner <robertkirschner@yahoo.com>, 2022
-# rastislav Brencic <rastislav.brencic99@gmail.com>, 2022
+# Rastislav Brencic <rastislav.brencic99@gmail.com>, 2022
 # SAKodoo <sak@odoo.com>, 2022
 # Filip Matúšek <filip.matusek@26house.com>, 2022
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2022
@@ -17,19 +17,20 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
 # Jan Prokop, 2022
 # Martin Trigaux, 2023
-# Tomáš Píšek, 2024
 # Sarah Bellefroid, 2024
 # Jakub Krkoška, 2024
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2024
 # Jakub Smolka, 2024
+# Wil Odoo, 2025
+# Tomáš Píšek, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jakub Smolka, 2024\n"
+"Last-Translator: Tomáš Píšek, 2025\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -895,7 +896,7 @@ msgstr "Analytický účet"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Vyhľadanie analytickej distribúcie"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -910,12 +911,12 @@ msgstr "Analytický riadok"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Použiteľnosť analytického plánu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Analytická presnosť"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
@@ -3870,6 +3871,11 @@ msgid "Tags"
 msgstr "Tagy"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr ""
@@ -4017,12 +4023,12 @@ msgstr "Pevná suma, ktorá sa má fakturovať vopred, bez daní."
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Nasledujúce produkty nemôžu byť obmedzené na konkrétnu spoločnosť%s pretože už boli použité v ponukách alebo predajných objednávkach v inej spoločnosti:\n"
-"%s\n"
+"Nasledujúce produkty nemôžu byť obmedzené na konkrétnu spoločnosť%(company)s pretože už boli použité v ponukách alebo predajných objednávkach v inej spoločnosti:\n"
+"%(used_products)s\n"
 "Tieto produkty môžete archivovať a namiesto toho ich obnoviť v súlade s pravidlami spoločnosti alebo ich nechať ako zdieľaný produkt."
 
 #. module: sale

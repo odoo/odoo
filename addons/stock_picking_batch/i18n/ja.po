@@ -810,7 +810,7 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"以下の転送はバッチ転送に追加できません。%s即時転送でない場合は、その状態とオペレーションタイプを確認して下さい。\n"
+"以下の転送は一括転送に追加できません。%s即時転送でない場合は、その状態とオペレーションタイプを確認して下さい。\n"
 "\n"
 "互換性なし:%s"
 
@@ -913,6 +913,13 @@ msgid "Type of the exception activity on record."
 msgstr "記録上の例外アクティビティのタイプ。"
 
 #. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, python-format
+msgid "Unassigned responsible from %s"
+msgstr "未割当担当者 %s"
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Validate"
 msgstr "確認"
@@ -963,7 +970,7 @@ msgstr "確認して、バッチをドラフト状態で作成して下さい。
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
-msgstr "完了済のバッチ転送を削除することはできません。"
+msgstr "完了済の一括転送を削除することはできません。"
 
 #. module: stock_picking_batch
 #. odoo-python
