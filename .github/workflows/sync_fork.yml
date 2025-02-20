@@ -2,7 +2,7 @@ name: Sync Fork with Upstream
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs every day at midnight UTC
+    - cron: '0 0 * * *'  # Runs daily at 07:00 UTC+7
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -28,9 +28,14 @@ jobs:
       - name: Checkout 18.0 branch
         run: git checkout 18.0
 
+      - name: Pull latest changes from origin
+        run: |
+          git pull --rebase origin 18.0 || echo "No new changes to rebase"
+
       - name: Merge Upstream Changes
         run: |
           git merge upstream/18.0 --no-edit || echo "No changes to merge"
 
       - name: Push Changes to Fork
-        run: git push origin 18.0 || echo "No new changes to push"
+        run: |
+          git push origin 18.0 || echo "No new changes to push"
