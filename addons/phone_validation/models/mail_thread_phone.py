@@ -6,7 +6,7 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
-from odoo.tools import create_index
+from odoo.tools import create_index, make_identifier
 
 PHONE_REGEX_PATTERN = r'[\s\\./\(\)\-]'
 
@@ -57,14 +57,14 @@ class MailThreadPhone(models.AbstractModel):
             regex_expression = rf"regexp_replace(({fname}::text), '{PHONE_REGEX_PATTERN}'::text, ''::text, 'g'::text)"
             # The btree index covers operators '=' and '=like' with a known prefix
             create_index(self.env.cr,
-                         indexname=f'{self._table}_{fname}_partial_tgm',
+                         indexname=make_identifier(f'{self._table}_{fname}_partial_tgm'),
                          tablename=self._table,
                          expressions=[regex_expression],
                          where=f'{fname} IS NOT NULL')
             if self.env.registry.has_trigram:
                 # The trigram index covers operators 'like', 'ilike' and '=like' starting with a wildcard
                 create_index(self.env.cr,
-                             indexname=f'{self._table}_{fname}_partial_gin_idx',
+                             indexname=make_identifier(f'{self._table}_{fname}_partial_gin_idx'),
                              tablename=self._table,
                              method='gin',
                              expressions=[regex_expression + ' gin_trgm_ops'],
