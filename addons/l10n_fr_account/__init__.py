@@ -13,7 +13,7 @@ def _l10n_fr_post_init_hook(env):
     _setup_inalterability(env)
 
 def _preserve_tag_on_taxes(env):
-    preserve_existing_tags_on_taxes(env, 'l10n_fr')
+    preserve_existing_tags_on_taxes(env, 'l10n_fr_account')
 
 def _setup_inalterability(env):
     # enable ping for this module

@@ -1658,7 +1658,11 @@ export class PosStore extends Reactive {
 
     async printChanges(order, orderChange) {
         const unsuccedPrints = [];
-        orderChange.new.sort((a, b) => {
+        const isPartOfCombo = (line) =>
+            line.isCombo || this.models["product.product"].get(line.product_id).type == "combo";
+        const comboChanges = orderChange.new.filter(isPartOfCombo);
+        const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
+        normalChanges.sort((a, b) => {
             const sequenceA = a.pos_categ_sequence;
             const sequenceB = b.pos_categ_sequence;
             if (sequenceA === 0 && sequenceB === 0) {
@@ -1667,6 +1671,7 @@ export class PosStore extends Reactive {
 
             return sequenceA - sequenceB;
         });
+        orderChange.new = [...comboChanges, ...normalChanges];
 
         for (const printer of this.unwatched.printers) {
             const changes = this._getPrintingCategoriesChanges(

@@ -17,7 +17,7 @@ export class StockOrderpointSearchPanel extends SearchPanel {
     }
 
     async getVisibilityParameter() {
-        let res = await this.orm.call("ir.config_parameter", "get_param", ["stock.visibility_days", 0]);
+        let res = await this.orm.call("stock.warehouse.orderpoint", "get_visibility_days", []);
         this.globalVisibilityDays.value = Math.abs(parseInt(res)) || 0;
     }
 

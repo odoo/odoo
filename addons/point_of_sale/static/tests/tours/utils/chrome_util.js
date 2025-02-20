@@ -1,6 +1,7 @@
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import { negate } from "@point_of_sale/../tests/tours/utils/common";
 const { DateTime } = luxon;
+import { waitFor } from "@odoo/hoot-dom";
 
 export function confirmPopup() {
     return [Dialog.confirm()];
@@ -77,12 +78,20 @@ export function createFloatingOrder() {
 export function waitRequest() {
     return [
         {
-            content: "Request Start",
-            trigger: "body:has(.fa-circle-o-notch)",
-        },
-        {
-            content: "Wait for request to finish",
-            trigger: "body:not(:has(.fa-circle-o-notch))",
+            trigger: "body",
+            content: "Wait loading is finished if it is shown",
+            timeout: 15000,
+            async run() {
+                let isLoading = false;
+                try {
+                    isLoading = await waitFor("body:has(.fa-circle-o-notch)", { timeout: 2000 });
+                } catch {
+                    /* fa-circle-o-notch will certainly never appears :'( */
+                }
+                if (isLoading) {
+                    await waitFor("body:not(:has(.fa-circle-o-notch))", { timeout: 10000 });
+                }
+            },
         },
     ];
 }

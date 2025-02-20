@@ -729,7 +729,7 @@
                                 string="Print"/>
                         <button name="action_print_pdf"
                                 type="object"
-                                invisible="state == 'posted' and not is_being_sent and not invoice_pdf_report_id"
+                                invisible="state != 'posted' or (not is_being_sent and not invoice_pdf_report_id)"
                                 string="Print"/>
                         <!-- Register Payment (only invoices / receipts) -->
                         <button name="action_register_payment" id="account_invoice_payment_btn"

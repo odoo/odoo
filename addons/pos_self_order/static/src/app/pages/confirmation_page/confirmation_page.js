@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, onWillUnmount, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
@@ -60,17 +60,13 @@ export class ConfirmationPage extends Component {
             clearTimeout(this.defaultTimeout);
         });
 
-        onWillStart(() => {
-            this.initOrder();
+        onMounted(async () => {
+            await this.initOrder();
         });
     }
 
     async initOrder() {
-        const data = await rpc(`/pos-self-order/get-orders/`, {
-            access_token: this.selfOrder.access_token,
-            order_access_tokens: [this.props.orderAccessToken],
-        });
-        this.selfOrder.models.loadData(data);
+        await this.selfOrder.getOrdersFromServer([this.props.orderAccessToken]);
         const order = this.selfOrder.models["pos.order"].find(
             (o) => o.access_token === this.props.orderAccessToken
         );

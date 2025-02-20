@@ -55,7 +55,7 @@ export class TourAutomatic {
                 {
                     initialDelay: () => (this.previousStepIsJustACheck ? 0 : null),
                     trigger: step.trigger ? () => step.findTrigger() : null,
-                    timeout: (step.timeout || 10000) + stepDelay,
+                    timeout: step.timeout || this.timeout || 10000,
                     action: async () => {
                         if (delayToCheckUndeterminisms > 0) {
                             await step.checkForUndeterminisms();
@@ -108,7 +108,11 @@ export class TourAutomatic {
             checkDelay: this.checkDelay || 200,
             steps: macroSteps,
             onError: (error) => {
-                this.throwError([error]);
+                if (error.type === "Timeout") {
+                    this.throwError(...this.currentStep.describeWhyIFailed, error.message);
+                } else {
+                    this.throwError(error.message);
+                }
                 end();
             },
             onComplete: () => {
@@ -119,13 +123,6 @@ export class TourAutomatic {
                 msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
                 msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
                 browser.console.log(`\n\n${msg.join("\n")}\n`);
-                end();
-            },
-            onTimeout: (timeout) => {
-                this.throwError([
-                    ...this.currentStep.describeWhyIFailed,
-                    `TIMEOUT: The step failed to complete within ${timeout} ms.`,
-                ]);
                 end();
             },
         });
@@ -162,11 +159,11 @@ export class TourAutomatic {
     /**
      * @param {string} [error]
      */
-    throwError(errors = []) {
+    throwError(...args) {
         console.groupEnd();
         tourState.setCurrentTourOnError();
         // console.error notifies the test runner that the tour failed.
-        browser.console.error([`FAILED: ${this.currentStep.describeMe}.`, ...errors].join("\n"));
+        browser.console.error([`FAILED: ${this.currentStep.describeMe}.`, ...args].join("\n"));
         // The logged text shows the relative position of the failed step.
         // Useful for finding the failed step.
         browser.console.dir(this.describeWhereIFailed);

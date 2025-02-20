@@ -358,6 +358,8 @@ registry.category("web_tour.tours").add("SearchProducts", {
             ProductScreen.searchProduct("CHAIR"),
             ProductScreen.clickDisplayedProduct("Test chair 1"),
             ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+            ProductScreen.searchProduct("clémentine"),
+            ProductScreen.clickDisplayedProduct("clémentine"),
         ].flat(),
 });
 
@@ -446,9 +448,6 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             },
             {
                 trigger: '.category-button:eq(3) > span:contains("AAY")',
-            },
-            {
-                trigger: '.category-button:not(:contains("AAD"))',
             },
         ].flat(),
 });

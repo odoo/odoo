@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='other_info']" position="inside">
                         <group string="Factura-e"
-                               name="l10n_es_facturae_invoicing_period">
+                               name="l10n_es_facturae_invoicing_period"
+                               invisible="country_code != 'ES'">
                             <field name="l10n_es_invoicing_period_start_date"/>
                             <field name="l10n_es_invoicing_period_end_date"/>
                             <field name="l10n_es_payment_means"/>

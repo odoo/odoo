@@ -209,7 +209,13 @@ class AccountMoveLine(models.Model):
                     # the returned one, the accounting entries are already compensated, and we don't want to impact
                     # the stock valuation. So, let's fake the layer price unit with the POL one as everything is
                     # already ok
-                    layer_price_unit = po_line._get_gross_price_unit()
+                    layer_price_unit = po_line.currency_id._convert(
+                        po_line._get_gross_price_unit(),
+                        layer.currency_id,
+                        layer.company_id,
+                        layer.create_date.date(),
+                        round=False
+                    )
 
                 aml = self
 

@@ -1727,7 +1727,7 @@ class AccountTax(models.Model):
             'analytic_distribution': (
                 base_line_grouping_key['analytic_distribution']
                 if tax.analytic or not tax_rep.use_in_tax_closing
-                else {}
+                else False
             ),
             'account_id': tax_rep_data['account'].id or base_line_grouping_key['account_id'],
             'tax_ids': [Command.set(tax_rep_data['taxes'].ids)],

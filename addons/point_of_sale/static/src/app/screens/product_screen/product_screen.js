@@ -382,7 +382,7 @@ export class ProductScreen extends Component {
     }
 
     getProductsBySearchWord(searchWord) {
-        const words = searchWord.toLowerCase();
+        const words = unaccent(searchWord.toLowerCase(), false);
         const products = this.pos.selectedCategory?.id
             ? this.getProductsByCategory(this.pos.selectedCategory)
             : this.products;
