@@ -355,7 +355,7 @@ describe("Focus", () => {
         expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
             message: "p1 should have the same document as p2",
         });
-        expect(peers.p2.getValue()).toBe(`<p>[]ab</p>`, {
+        expect(peers.p2.getValue()).toBe(`<p>a[]b</p>`, {
             message: "p2 should have the same document as p1",
         });
         expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
@@ -376,7 +376,7 @@ describe("Focus", () => {
         expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
             message: "p1 should have the same document as p2",
         });
-        expect(peers.p2.getValue()).toBe(`<p>[]ab</p>`, {
+        expect(peers.p2.getValue()).toBe(`<p>a[]b</p>`, {
             message: "p2 should have the same document as p1",
         });
         expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
@@ -408,7 +408,7 @@ describe("Stale detection & recovery", () => {
             expect(peers.p2.plugins.collaborationOdoo.isDocumentStale).toBe(false, {
                 message: "p2 should not have a stale document",
             });
-            expect(peers.p2.getValue()).toBe(`<p>[]ab</p>`, {
+            expect(peers.p2.getValue()).toBe(`<p>a[]b</p>`, {
                 message: "p2 should have the same document as p1",
             });
 
@@ -477,10 +477,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p1 should have the same document as p2",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should have the same document as p1",
                 });
 
@@ -491,10 +491,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 should have the same document as p2",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]ab</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]b</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -527,10 +527,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 should have the same document as p2",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]ab</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]b</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]ab</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]b</p>`, {
                     message: "p3 should have the same document as p1",
                 });
             });
@@ -571,10 +571,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 have inserted char b",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should not have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -597,7 +597,7 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p2.getValue()).toBe(`[]<p>ab</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -669,10 +669,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 have inserted char b",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should not have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -693,7 +693,7 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p2.getValue()).toBe(`[]<p>ab</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -770,10 +770,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 have inserted char b",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should not have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -853,7 +853,7 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 have inserted char b",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should not have the same document as p1",
                 });
 
@@ -928,10 +928,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 have inserted char b",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should not have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -955,7 +955,7 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p2.getValue()).toBe(`[]<p>ab</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -1090,7 +1090,7 @@ describe("Snapshot", () => {
 
         await peers.p2.openDataChannel(peers.p3);
 
-        expect(peers.p3.getValue()).toBe(`<p>[]ab</p>`, {
+        expect(peers.p3.getValue()).toBe(`<p>a[]b</p>`, {
             message: "p3 should have the steps from the first snapshot of p2",
         });
     });
