@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 15:09+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"POT-Creation-Date: 2025-03-03 11:38+0000\n"
+"PO-Revision-Date: 2025-03-03 11:38+0000\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -19470,6 +19470,18 @@ msgid "Footer text displayed at the bottom of all reports."
 msgstr "Voettekst, weergegeven aan de onderzijde van alle rapportages."
 
 #. module: base
+#: model:ir.model.fields,help:base.field_ir_actions_server__value
+#: model:ir.model.fields,help:base.field_ir_cron__value
+msgid ""
+"For Python expressions, this field may hold a Python expression that can use the same values as for the code field on the server action,e.g. `env.user.name` to set the current user's name as the value or `record.id` to set the ID of the record on which the action is run.\n"
+"\n"
+"For Static values, the value will be used directly without evaluation, e.g.`42` or `My custom name` or the selected record."
+msgstr ""
+"Voor Python-expressies kan dit veld een Python-expressie bevatten die dezelfde waarden kan gebruiken als voor het codeveld op de serveractie, bijvoorbeeld `env.user.name` om de naam van de huidige gebruiker in te stellen als de waarde of `record.id` om de ID in te stellen van de record waarop de actie wordt uitgevoerd.\n"
+"\n"
+"Voor statische waarden wordt de waarde direct gebruikt zonder evaluatie, bijvoorbeeld `42` of `Mijn aangepaste naam` of de geselecteerde record."
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "For more details about translating Odoo in your language, please refer to the"
 msgstr "Voor meer informatie over het vertalen van Odoo in je eigen taal, verwijzen wij je naar de"
@@ -32905,8 +32917,30 @@ msgstr "Dit model wordt gebruikt om een brug te slaan tussen Taxatie en Contract
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
-msgid "This module adds the OdooBot state and notifications in the user form modified by hr."
-msgstr "Deze module voegt de OdooBot-status en notificaties toe aan het gebruikersformulier aangepast door hr."
+msgid ""
+"This module adds the OdooBot state and notifications in the user form "
+"modified by hr."
+msgstr ""
+"Deze module voegt de OdooBot-status en notificaties toe aan het "
+"gebruikersformulier aangepast door hr."
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_codabox
+msgid ""
+"This module allows connection to CodaBox and automatically imports CODA and "
+"SODA statements in Odoo."
+msgstr ""
+"Deze module maakt een verbinding met CodaBox mogelijk en importeert "
+"automatisch CODA- en SODA-overzichten in Odoo."
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_online_payment
+msgid ""
+"This module allows customers to pay their invoices online using various "
+"payment methods."
+msgstr ""
+"Met deze module kunnen klanten hun facturen online betalen met verschillende"
+" betaalmethoden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_fedex
