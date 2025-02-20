@@ -51,6 +51,15 @@ export class GenerateDialog extends Component {
             count = parseInteger(this.nextSerialCount.el?.value || '0');
             qtyToProcess = this.props.move.data.product_qty;
         }
+        let expirationTime;
+        if (this.props.move.data.use_expiration_date) {
+            expirationTime = (await this.orm.call("product.product", "read", [[this.props.move.data.product_id[0]], ["expiration_time"]]))?.[0]?.expiration_time || 0;
+        } else {
+            expirationTime = 0;
+        }
+        let expirationDate = isNaN(new Date(this.props.move.data.date)) ? new Date() : new Date(this.props.move.data.date);
+        expirationDate.setDate(expirationDate.getDate() + expirationTime);
+        const formattedExpirationDate = expirationDate.toISOString().replace(/T|Z/g, ' ').trim().substring(0, 19);
         const move_line_vals = await this.orm.call("stock.move", "action_generate_lot_line_vals", [{
                 ...this.props.move.context,
                 default_product_id: this.props.move.data.product_id[0],
@@ -58,6 +67,7 @@ export class GenerateDialog extends Component {
                 default_location_id: this.props.move.data.location_id[0],
                 default_tracking: this.props.move.data.has_tracking,
                 default_quantity: qtyToProcess,
+                default_expiration_date: formattedExpirationDate,
             },
             this.props.mode,
             this.nextSerial.el?.value,
