@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, onWillUnmount, useState, useEffect } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState, useEffect } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
@@ -25,11 +25,15 @@ export class ConfirmationPage extends Component {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {
                 this.defaultTimeout = setTimeout(() => {
                     this.router.navigate("default");
-                }, 30000);
+                }, 30000000);
             }
         });
         useEffect(
             () => {
+                if (!this.confirmedOrder) {
+                    return;
+                }
+
                 this.printOrder();
             },
             () => [this.confirmedOrder?.uiState?.receiptReady]
@@ -38,28 +42,24 @@ export class ConfirmationPage extends Component {
             clearTimeout(this.defaultTimeout);
         });
 
-        onWillStart(() => {
-            this.initOrder();
+        onMounted(async () => {
+            await this.initOrder();
         });
     }
 
     get confirmedOrder() {
-        if (this.selfOrder.selectedOrderUuid) {
-            return this.selfOrder.currentOrder;
-        }
-        return false;
+        return this.selfOrder.currentOrder;
     }
 
-    async initOrder() {
-        const data = await rpc(`/pos-self-order/get-user-data/`, {
-            access_token: this.selfOrder.access_token,
-            order_access_tokens: [this.props.orderAccessToken],
-        });
-        this.selfOrder.models.loadData(data);
+    async initOrder(retry = true) {
         const order = this.selfOrder.models["pos.order"].find(
             (o) => o.access_token === this.props.orderAccessToken
         );
-        this.selfOrder.selectedOrderUuid = order.uuid;
+
+        if (!order && retry) {
+            await this.selfOrder.getUserDataFromServer([this.props.orderAccessToken]);
+            return this.initOrder(false);
+        }
 
         const paymentMethods = this.selfOrder.filterPaymentMethods(
             this.selfOrder.models["pos.payment.method"].getAll()
@@ -76,8 +76,9 @@ export class ConfirmationPage extends Component {
             return;
         }
 
-        this.state.onReload = false;
+        this.selfOrder.selectedOrderUuid = order.uuid;
         this.confirmedOrder.uiState.receiptReady = this.beforePrintOrder();
+        this.state.onReload = false;
     }
 
     canPrintReceipt() {
