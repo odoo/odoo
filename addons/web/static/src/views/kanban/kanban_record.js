@@ -7,6 +7,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { isHtmlEmpty as _isHtmlEmpty } from "@web/core/utils/html";
 import { imageUrl } from "@web/core/utils/urls";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { Field } from "@web/views/fields/field";
@@ -147,12 +148,11 @@ function isBinSize(value) {
  * like there's one <img> tag in the content. In such case, even if it's the
  * actual content, we consider it empty.
  *
- * @param {string} innerHTML
+ * @param {string|ReturnType<import("@odoo/owl").markup>} innerHTML
  * @returns {boolean} true if no content found or if containing only formatting tags
  */
 export function isHtmlEmpty(innerHTML = "") {
-    const div = Object.assign(document.createElement("div"), { innerHTML });
-    return div.innerText.trim() === "";
+    return _isHtmlEmpty(innerHTML);
 }
 
 export class KanbanRecord extends Component {

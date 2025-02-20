@@ -33,6 +33,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
+import { setElementContent } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
 import { messageActionsRegistry, useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
@@ -144,7 +145,7 @@ export class Message extends Component {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
                 const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
                 const shadowStyle = document.createElement("style");
-                shadowStyle.innerHTML = `
+                shadowStyle.textContent = `
                     * {
                         background-color: transparent !important;
                         color: ${color} !important;
@@ -168,10 +169,13 @@ export class Message extends Component {
             () => {
                 if (this.shadowBody.el) {
                     const bodyEl = document.createElement("span");
-                    bodyEl.innerHTML = this.state.showTranslation
-                        ? this.message.translationValue
-                        : this.props.messageSearch?.highlight(this.message.body) ??
-                          this.message.body;
+                    setElementContent(
+                        bodyEl,
+                        this.state.showTranslation
+                            ? this.message.translationValue
+                            : this.props.messageSearch?.highlight(this.message.body) ??
+                                  this.message.body
+                    );
                     this.prepareMessageBody(bodyEl);
                     this.shadowRoot.appendChild(bodyEl);
                     return () => {
