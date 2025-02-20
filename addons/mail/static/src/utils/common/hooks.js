@@ -267,7 +267,7 @@ export function useVisible(refName, cb, { ready = true } = {}) {
  * @property {number|null} highlightedMessageId
  * @returns {MessageHighlight}
  */
-export function useMessageHighlight(duration = 2000) {
+export function useMessageHighlight(duration = 1500) {
     let timeout;
     const state = useState({
         clearHighlight() {

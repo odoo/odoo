@@ -204,7 +204,7 @@ export class Message extends Component {
         return {
             [this.props.className]: true,
             "o-card p-2 mt-2 border border-secondary": this.props.asCard,
-            "pt-1": !this.props.asCard,
+            "o-py-0_5": !this.props.asCard,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
             "o-selected": this.props.messageToReplyTo?.isSelected(
                 this.props.thread,
@@ -223,6 +223,7 @@ export class Message extends Component {
             ),
             "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
             "o-editing": this.state.isEditing,
+            "px-3": !this.env.inChatter && !this.props.isInChatWindow,
         };
     }
 

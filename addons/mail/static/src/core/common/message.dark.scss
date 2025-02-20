@@ -1,5 +1,9 @@
-.o-mail-Message.o-card {
-    background-color: mix($gray-100, $gray-200);
+.o-mail-Message {
+    --mail-Message-highlightBorderOpacity: 1;
+
+    &.o-card {
+        background-color: mix($gray-100, $gray-200);
+    }
 }
 
 .o-mail-Message-actions {
@@ -16,26 +20,35 @@
 
 .o-mail-Message-bubble {
     &.o-blue {
-        background-color: mix($gray-100, $info, 87.5%) !important;
-        border-color: lighten(mix($gray-100, $info, 87.5%), 5%) !important;
+        background-color: lighten(mix($gray-100, $info, 87.5%), 5%) !important;
+        
+        > .o-mail-Message-bubbleIn {
+            background-color: mix($gray-100, $info, 87.5%) !important;
+        }
 
-        &.o-muted {
+        &.o-muted > .o-mail-Message-bubbleIn {
             background-color: mix($gray-100, mix($gray-100, $info, 87.5%)) !important;
         }
     }
     &.o-green {
-        background-color: mix($gray-100, $success, 87.5%) !important;
-        border-color: lighten(mix($gray-100, $success, 87.5%), 5%) !important;
+        background-color: lighten(mix($gray-100, $success, 87.5%), 5%) !important;
+        
+        > .o-mail-Message-bubbleIn {
+            background-color: mix($gray-100, $success, 87.5%) !important;
+        }
 
-        &.o-muted {
+        &.o-muted > .o-mail-Message-bubbleIn {
             background-color: mix($gray-100, mix($gray-100, $success, 87.5%)) !important;
         }
     }
     &.o-orange {
-        background-color: mix($gray-100, $warning, 72.5%) !important;
-        border-color: lighten(mix($gray-100, $warning, 72.5%), 5%) !important;
+        background-color: lighten(mix($gray-100, $warning, 72.5%), 5%) !important;
+        
+        > .o-mail-Message-bubbleIn {
+            background-color: mix($gray-100, $warning, 72.5%) !important;
+        }
 
-        &.o-muted {
+        &.o-muted > .o-mail-Message-bubbleIn {
             background-color: mix($gray-100, mix($gray-100, $warning, 72.5%), 85%) !important;
         }
     }
