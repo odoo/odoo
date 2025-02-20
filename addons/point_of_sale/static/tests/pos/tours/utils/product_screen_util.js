@@ -699,3 +699,14 @@ export function verifyOrderlineSequence(products) {
         }) span:contains("${productName}")`,
     }));
 }
+
+export function addDiscount(discount) {
+    return [
+        Numpad.click("%"),
+        Numpad.isActive("%"),
+        discount
+            .toString()
+            .split("")
+            .flatMap((key) => Numpad.click(key)),
+    ].flat();
+}
