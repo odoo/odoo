@@ -571,3 +571,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_snippet_background_video(self):
         self.start_tour("/", "website_snippet_background_video", login="admin")
+
+    def test_popup_visibility_option(self):
+        self.start_tour("/", "website_popup_visibility_option", login="admin")
