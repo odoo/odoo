@@ -1015,7 +1015,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         is_new_address = not partner_sudo
         is_extra_step_active = request.website.viewref('website_sale.extra_info').active
         if is_extra_step_active:
-            callback = callback or 'shop/extra_info'
+            callback = callback or '/shop/extra_info'
         if is_new_address or order_sudo.only_services:
             callback = callback or '/shop/checkout?try_skip_step=true'
         else:
