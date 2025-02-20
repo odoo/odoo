@@ -34,7 +34,8 @@ class ProductTemplate(models.Model):
         ' deteriorating, without being dangerous yet. It will be computed on the lot/serial number.')
     removal_time = fields.Integer(string='Removal Date',
         help='Number of days before the Expiration Date after which the goods'
-        ' should be removed from the stock. It will be computed on the lot/serial number.')
+        ' should be removed from the stock and not be counted in the Fresh On Hand Stock anymore.'
+        'It will be computed on the lot/serial number.')
     alert_time = fields.Integer(string='Alert Date',
         help='Number of days before the Expiration Date after which an alert should be'
         ' raised on the lot/serial number. It will be computed on the lot/serial number.')
