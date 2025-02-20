@@ -190,7 +190,8 @@ onRpc("crm.lead", "get_rainbowman_message", async ({ parent }) => {
     return result;
 });
 
-test("first lead won, click on statusbar", async () => {
+test.tags("desktop")
+test("first lead won, click on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
         resId: 6,
@@ -201,7 +202,21 @@ test("first lead won, click on statusbar", async () => {
     expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
 });
 
-test("first lead won, click on statusbar in edit mode", async () => {
+test.tags("mobile")
+test("first lead won, click on statusbar on mobile", async () => {
+    await mountView({
+        ...testFormView,
+        resId: 6,
+    });
+
+    await contains(".o_statusbar_status button.dropdown-toggle").click();
+    await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
+    expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
+});
+
+test.tags("desktop")
+test("first lead won, click on statusbar in edit mode on desktop", async () => {
     await mountView({
         ...testFormView,
         resId: 6,
@@ -212,7 +227,21 @@ test("first lead won, click on statusbar in edit mode", async () => {
     expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
 });
 
-test("team record 30 days, click on statusbar", async () => {
+test.tags("mobile")
+test("first lead won, click on statusbar in edit mode on mobile", async () => {
+    await mountView({
+        ...testFormView,
+        resId: 6,
+    });
+
+    await contains(".o_statusbar_status button.dropdown-toggle").click();
+    await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
+    expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
+});
+
+test.tags("desktop")
+test("team record 30 days, click on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
         resId: 2,
@@ -223,7 +252,21 @@ test("team record 30 days, click on statusbar", async () => {
     expect.verifySteps(["Boom! Team record for the past 30 days."]);
 });
 
-test("team record 7 days, click on statusbar", async () => {
+test.tags("mobile")
+test("team record 30 days, click on statusbar on mobile", async () => {
+    await mountView({
+        ...testFormView,
+        resId: 2,
+    });
+
+    await contains(".o_statusbar_status button.dropdown-toggle").click();
+    await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
+    expect.verifySteps(["Boom! Team record for the past 30 days."]);
+});
+
+test.tags("desktop")
+test("team record 7 days, click on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
         resId: 1,
@@ -234,7 +277,21 @@ test("team record 7 days, click on statusbar", async () => {
     expect.verifySteps(["Yeah! Deal of the last 7 days for the team."]);
 });
 
-test("user record 30 days, click on statusbar", async () => {
+test.tags("mobile")
+test("team record 7 days, click on statusbar on mobile", async () => {
+    await mountView({
+        ...testFormView,
+        resId: 1,
+    });
+
+    await contains(".o_statusbar_status button.dropdown-toggle").click();
+    await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
+    expect.verifySteps(["Yeah! Deal of the last 7 days for the team."]);
+});
+
+test.tags("desktop")
+test("user record 30 days, click on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
         resId: 8,
@@ -245,7 +302,21 @@ test("user record 30 days, click on statusbar", async () => {
     expect.verifySteps(["You just beat your personal record for the past 30 days."]);
 });
 
-test("user record 7 days, click on statusbar", async () => {
+test.tags("mobile")
+test("user record 30 days, click on statusbar on mobile", async () => {
+    await mountView({
+        ...testFormView,
+        resId: 8,
+    });
+
+    await contains(".o_statusbar_status button.dropdown-toggle").click();
+    await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
+    expect.verifySteps(["You just beat your personal record for the past 30 days."]);
+});
+
+test.tags("desktop")
+test("user record 7 days, click on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
         resId: 10,
@@ -256,13 +327,40 @@ test("user record 7 days, click on statusbar", async () => {
     expect.verifySteps(["You just beat your personal record for the past 7 days."]);
 });
 
-test("click on stage (not won) on statusbar", async () => {
+test.tags("mobile")
+test("user record 7 days, click on statusbar on mobile", async () => {
+    await mountView({
+        ...testFormView,
+        resId: 10,
+    });
+
+    await contains(".o_statusbar_status button.dropdown-toggle").click();
+    await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
+    expect.verifySteps(["You just beat your personal record for the past 7 days."]);
+});
+
+test.tags("desktop")
+test("click on stage (not won) on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
         resId: 1,
     });
 
     await contains(".o_statusbar_status button[data-value='2']").click();
+    expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(0);
+    expect.verifySteps(["no rainbowman"]);
+});
+
+test.tags("mobile")
+test("click on stage (not won) on statusbar on mobile", async () => {
+    await mountView({
+        ...testFormView,
+        resId: 1,
+    });
+
+    await contains(".o_statusbar_status button.dropdown-toggle").click();
+    await contains(".o-dropdown--menu .dropdown-item:contains('Middle')").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(0);
     expect.verifySteps(["no rainbowman"]);
 });

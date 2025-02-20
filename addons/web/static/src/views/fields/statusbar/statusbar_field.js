@@ -200,6 +200,13 @@ export class StatusBarField extends Component {
         this.items.after = [...this.items.folded];
         const itemsToAssign = this.getAllItems().filter((item) => !item.isFolded);
 
+        if (this.env.isSmall && this.items.inline.length) {
+            // Small screen case: only a single dropdown
+            show(this.dropdownRef.el);
+            hide(this.beforeRef.el, this.afterRef.el, ...itemEls);
+            return;
+        }
+
         while (this.areItemsWrapping()) {
             if (itemsBefore.length) {
                 // Case 1: elements before can be hidden
