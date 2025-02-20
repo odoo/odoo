@@ -142,7 +142,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                                 modules will also be upgraded. Defaults to an empty tuple.
 
         :param new_db_demo: Whether to install demo data for the new database. If set to ``None``, the value will be
-                            determined by the ``not config['without_demo']``. Defaults to ``None``
+                            determined by the ``config['with_demo']``. Defaults to ``None``
         """
         t0 = time.time()
         registry: Registry = object.__new__(cls)
@@ -161,7 +161,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
             try:
                 if new_db_demo is None:
-                    new_db_demo = not config['without_demo']
+                    new_db_demo = config['with_demo']
                 load_modules(
                     registry,
                     update_module=update_module or bool(upgrade_modules or install_modules),
