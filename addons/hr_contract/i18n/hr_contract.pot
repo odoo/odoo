@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.1\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
-"PO-Revision-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"PO-Revision-Date: 2025-02-20 10:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,6 +52,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.resource_calendar_view_form
+msgid "<span class=\"o_stat_text\">Contracts</span>"
+msgstr ""
+
+#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid ""
 "<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
@@ -71,6 +76,13 @@ msgid ""
 "                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
 "                                        Contract\n"
 "                                    </span>"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid ""
+"<span>A contract configured without an employee will be saved as a "
+"template.</span>"
 msgstr ""
 
 #. module: hr_contract
@@ -144,6 +156,12 @@ msgstr ""
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
 msgid "Administrator"
+msgstr ""
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid "All fields have been pasted from template [%(template_name)s]."
 msgstr ""
 
 #. module: hr_contract
@@ -226,6 +244,7 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contract_ids
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
@@ -286,6 +305,16 @@ msgid "Contract Start Date"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__default_contract_id
+msgid "Contract Template"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_templates
+msgid "Contract Templates"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
 msgid "Contract Type"
@@ -324,6 +353,7 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_working_schedule
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_form_action
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_ids
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
@@ -332,7 +362,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
-#: model_terms:ir.ui.view,arch_db:hr_contract.resource_calendar_view_form
 msgid "Contracts"
 msgstr ""
 
@@ -508,14 +537,6 @@ msgstr ""
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_history__wage
 msgid "Employee's monthly gross wage."
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__resource_calendar_id
-msgid ""
-"Employee's working schedule.\n"
-"        When left empty, the employee is considered to have a fully flexible schedule, allowing them to work without any time limit, anytime of the week.\n"
-"        "
 msgstr ""
 
 #. module: hr_contract
@@ -710,6 +731,11 @@ msgid "Legal Name"
 msgstr ""
 
 #. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract_templates
+msgid "Let's create one"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_ir_ui_menu
 msgid "Menu"
 msgstr ""
@@ -766,8 +792,18 @@ msgid "No Contracts"
 msgstr ""
 
 #. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract_templates
+msgid "No Template found"
+msgstr ""
+
+#. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.hr_contract_history_view_list_action
 msgid "No data to display"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.view_resource_calendar_search_inherit_contract
+msgid "No running contracts"
 msgstr ""
 
 #. module: hr_contract
@@ -823,6 +859,12 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Open Contract"
+msgstr ""
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/resource.py:0
+msgid "Operation not supported."
 msgstr ""
 
 #. module: hr_contract
@@ -884,6 +926,11 @@ msgid "Running Contracts"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__running_contracts_count
+msgid "Running contracts count"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr ""
@@ -897,6 +944,7 @@ msgstr ""
 #: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__structure_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Salary Structure Type"
@@ -910,6 +958,13 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Search Reference Contracts"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__default_contract_id
+msgid ""
+"Select a contract template to auto-fill the contract form with predefined "
+"values. You can still edit the fields as needed after applying the template."
 msgstr ""
 
 #. module: hr_contract
@@ -958,8 +1013,13 @@ msgid "Status of the contract"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
-msgid "Structure Type"
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form_contract_templates
+msgid "Template"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.menu,name:hr_contract.menu_hr_employee_contract_templates
+msgid "Templates"
 msgstr ""
 
 #. module: hr_contract
