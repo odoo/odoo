@@ -300,6 +300,9 @@ class Base(models.AbstractModel):
                 or a string `'field:granularity'`. Right now, the only supported granularities
                 are `'day'`, `'week'`, `'month'`, `'quarter'` or `'year'`, and they only make sense for
                 date/datetime fields.
+                Additionally integer date parts are also supported:
+                `'year_number'`, `'quarter_number'`, `'month_number'`, `'iso_week_number'`, `'day_of_year'`, `'day_of_month'`,
+                'day_of_week', 'hour_number', 'minute_number' and 'second_number'.
         :param list aggregates: list of aggregates specification.
                 Each element is `'field:agg'` (aggregate field with aggregation function `'agg'`).
                 The possible aggregation functions are the ones provided by

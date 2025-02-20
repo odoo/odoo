@@ -4,7 +4,6 @@ import { registries, helpers, constants } from "@odoo/o-spreadsheet";
 import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { localization } from "@web/core/l10n/localization";
 
 const { pivotTimeAdapterRegistry } = registries;
 const { formatValue, toNumber, toJsDate, toString } = helpers;
@@ -181,10 +180,7 @@ const odooYearAdapter = {
 
 const odooDayOfWeekAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult, locale) {
-        const weekStart = localization.weekStart; // 1 = Monday, 7 = Sunday
-        const dayOffset = Number(readGroupResult[groupBy]); // offset from the first day of the week
-        const fromSundayIsZero = (dayOffset + weekStart) % 7;
-        const fromLocaleIsZero = (7 - locale.weekStart + fromSundayIsZero) % 7;
+        const fromLocaleIsZero = (7 - locale.weekStart + Number(readGroupResult[groupBy])) % 7;
         return fromLocaleIsZero + 1; // 1-based
     },
     increment(normalizedValue, step) {

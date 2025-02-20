@@ -47,26 +47,7 @@ class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
         if property_name not in READ_GROUP_NUMBER_GRANULARITY:
             raise ValueError(f'Error when processing the granularity {property_name} is not supported. Only {", ".join(READ_GROUP_NUMBER_GRANULARITY.keys())} are supported')
         granularity = READ_GROUP_NUMBER_GRANULARITY[property_name]
-        if property_name == 'day_of_week':
-            """
-            formula: ((7 - first_week_day) + day_in_SQL)  % 0-based first day of week
-
-                           | week starts on
-                       SQL | mon   sun   sat
-                           |  1  |  7  |  6   <-- first_week_day (in odoo)
-                      -----|-----------------
-                mon     1  |  0  |  1  |  2
-                tue     2  |  1  |  2  |  3
-                wed     3  |  2  |  3  |  4
-                thu     4  |  3  |  4  |  5
-                fri     5  |  4  |  5  |  6
-                sat     6  |  5  |  6  |  0
-                sun     7  |  6  |  0  |  1
-            """
-            first_week_day = int(get_lang(model.env, timezone).week_start)
-            sql_expr = SQL("mod(7 - %s + date_part(%s, %s)::int, 7)", first_week_day, granularity, sql_expr)
-        else:
-            sql_expr = SQL('date_part(%s, %s)', granularity, sql_expr)
+        sql_expr = SQL('date_part(%s, %s)', granularity, sql_expr)
         return sql_expr
 
 
