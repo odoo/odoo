@@ -131,6 +131,7 @@
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
             'web/static/lib/zxing-library/zxing-library.js',
+            'web/static/lib/dompurify/DOMpurify.js',
 
 
             ('include', 'point_of_sale.base_app'),
@@ -178,6 +179,8 @@
             ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
             'web/static/src/webclient/company_service.js',
+
+            'html_editor/static/src/**/*',
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/hoot-dom/**/*",
