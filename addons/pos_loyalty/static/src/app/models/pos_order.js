@@ -1469,10 +1469,8 @@ patch(PosOrder.prototype, {
         return lines;
     },
 
-    _isRefundAndSalesNotAllowed(values, options) {
+    isSaleDisallowed(values, options) {
         // Allow gift cards to be added to a refund
-        return (
-            super._isRefundAndSalesNotAllowed(values, options) && !options.eWalletGiftCardProgram
-        );
+        return super.isSaleDisallowed(values, options) && !options.eWalletGiftCardProgram;
     },
 });

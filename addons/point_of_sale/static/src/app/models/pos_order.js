@@ -112,6 +112,10 @@ export class PosOrder extends Base {
         );
     }
 
+    get isRefund() {
+        return this.order_type === "out_refund";
+    }
+
     getEmailItems() {
         return [_t("the receipt")].concat(this.isToInvoice() ? [_t("the invoice")] : []);
     }
@@ -465,23 +469,12 @@ export class PosOrder extends Base {
         return true;
     }
 
-    _isRefundOrder() {
-        if (this.lines.length > 0 && this.lines[0].refunded_orderline_id) {
-            return true;
-        }
-        return false;
-    }
-
     doNotAllowRefundAndSales() {
         return true;
     }
 
-    _isRefundAndSalesNotAllowed(values, options) {
-        return (
-            this._isRefundOrder() &&
-            this.doNotAllowRefundAndSales() &&
-            (!values.qty || values.qty > 0)
-        );
+    isSaleDisallowed(values, options) {
+        return this.isRefund && this.doNotAllowRefundAndSales() && (!values.qty || values.qty > 0);
     }
 
     getSelectedOrderline() {
@@ -523,7 +516,7 @@ export class PosOrder extends Base {
             newPaymentLine.setAmount(totalAmountDue);
 
             if (
-                (payment_method.payment_terminal && !this._isRefundOrder()) ||
+                (payment_method.payment_terminal && !this.isRefund) ||
                 payment_method.payment_method_type === "qr_code"
             ) {
                 newPaymentLine.setPaymentStatus("pending");
@@ -743,7 +736,7 @@ export class PosOrder extends Base {
 
     isRefundInProcess() {
         return (
-            this._isRefundOrder() &&
+            this.isRefund &&
             this.payment_ids.some(
                 (pl) => pl.payment_method_id.use_payment_terminal && pl.payment_status !== "done"
             )
