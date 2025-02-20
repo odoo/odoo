@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.1\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
-"PO-Revision-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"PO-Revision-Date: 2025-02-20 10:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -242,11 +242,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_from_systray
 msgid "Attendance From Systray"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_install_kiosk_pwa
-msgid "Attendance Kiosk"
 msgstr ""
 
 #. module: hr_attendance
@@ -682,6 +677,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_ir_http__display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__display_name
@@ -839,6 +835,11 @@ msgid "Group By"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__has_message
 msgid "Has Message"
 msgstr ""
@@ -895,6 +896,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_attendance.field_ir_http__id
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__id
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__id
@@ -1202,6 +1204,11 @@ msgstr ""
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_officer
 msgid "Officer: Manage attendances"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.open_kiosk_url
+msgid "Open Kiosk Url"
 msgstr ""
 
 #. module: hr_attendance

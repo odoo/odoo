@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.1\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
-"PO-Revision-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"PO-Revision-Date: 2025-02-20 10:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -562,7 +562,7 @@ msgstr ""
 
 #. module: website_event
 #. odoo-javascript
-#: code:addons/website_event/static/src/js/website_event.js:0
+#: code:addons/website_event/static/src/interactions/modal_attendees_registration.js:0
 msgid "Error"
 msgstr ""
 
@@ -605,11 +605,6 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
 msgid "Event Menu"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
-msgid "Event Name"
 msgstr ""
 
 #. module: website_event
@@ -745,6 +740,11 @@ msgid "Following content will appear on all events."
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__footer_visible
+msgid "Footer Visible"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Get directions"
 msgstr ""
@@ -769,6 +769,11 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
 msgid "Harmony Under the Stars"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__header_visible
+msgid "Header Visible"
 msgstr ""
 
 #. module: website_event
@@ -869,6 +874,16 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
 msgid "John DOE"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
+msgid "Join online"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
+msgid "Join online <i class=\"ms-1 fa fa-globe\"/>"
 msgstr ""
 
 #. module: website_event
@@ -1078,7 +1093,7 @@ msgstr ""
 
 #. module: website_event
 #. odoo-javascript
-#: code:addons/website_event/static/src/js/register_toaster_widget.js:0
+#: code:addons/website_event/static/src/interactions/register_toaster.js:0
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Register"
@@ -1173,6 +1188,7 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_seo_optimized
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__is_seo_optimized
 msgid "SEO optimized"
 msgstr ""
 
@@ -1210,6 +1226,7 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__seo_name
 msgid "Seo name"
 msgstr ""
 
@@ -1258,11 +1275,6 @@ msgid "Start Today"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
-msgid "Start → End"
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
 msgid "Starts <span/>"
 msgstr ""
@@ -1278,10 +1290,17 @@ msgid "Template badge"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__website_absolute_url
+#: model:ir.model.fields,help:website_event.field_event_tag__website_absolute_url
+#: model:ir.model.fields,help:website_event.field_event_tag_category__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_url
 #: model:ir.model.fields,help:website_event.field_event_tag__website_url
 #: model:ir.model.fields,help:website_event.field_event_tag_category__website_url
-msgid "The full URL to access the document through the website."
+msgid "The full relative URL to access the document through the website."
 msgstr ""
 
 #. module: website_event
@@ -1441,6 +1460,13 @@ msgid "Website"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_absolute_url
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_absolute_url
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_website_event_menu
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "Website Event Menu"
@@ -1498,21 +1524,25 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__website_meta_description
 msgid "Website meta description"
 msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_keywords
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__website_meta_keywords
 msgid "Website meta keywords"
 msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__website_meta_title
 msgid "Website meta title"
 msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_og_img
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__website_meta_og_img
 msgid "Website opengraph image"
 msgstr ""
 
@@ -1550,8 +1580,9 @@ msgid "available)"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
-msgid "e.g. \"Conference for Architects\""
+#. odoo-python
+#: code:addons/website_event/models/event_event.py:0
+msgid "date_end"
 msgstr ""
 
 #. module: website_event

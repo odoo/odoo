@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.1\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
-"PO-Revision-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"PO-Revision-Date: 2025-02-20 10:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -213,11 +213,6 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>All "
@@ -272,8 +267,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
 "<small class=\"form-text text-muted\">\n"
-"                                                        Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.\n"
-"                                                    </small>"
+"                                            Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.\n"
+"                                        </small>"
 msgstr ""
 
 #. module: website_sale
@@ -343,7 +338,6 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
 msgid "<span class=\"px-3\">or</span>"
@@ -461,7 +455,7 @@ msgid ""
 "                        <hr/>\n"
 "                    </t>\n"
 "                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
@@ -519,7 +513,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_abandoned_cart
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__is_abandoned_cart
-#: model:ir.model.fields,field_description:website_sale.field_sale_subscription_report__is_abandoned_cart
 msgid "Abandoned Cart"
 msgstr ""
 
@@ -685,11 +678,6 @@ msgid "All Products"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__all_pricelist_ids
-msgid "All pricelists"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__everyone
 msgid "All users"
 msgstr ""
@@ -852,11 +840,6 @@ msgstr ""
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_bathroom
 msgid "Bathroom Cabinets"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Be aware!"
 msgstr ""
 
 #. module: website_sale
@@ -1397,7 +1380,6 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Continue checkout"
 msgstr ""
 
@@ -1427,6 +1409,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Create"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model,website_form_label:website_sale.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: website_sale
@@ -1578,11 +1565,6 @@ msgid "Default Currency"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
-msgid "Default Pricelist if any"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default Sort"
 msgstr ""
@@ -1643,11 +1625,6 @@ msgstr ""
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_delivery_and_installation
 msgid "Delivery and Installation"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.total
-msgid "Delivery will be updated after choosing a new delivery method"
 msgstr ""
 
 #. module: website_sale
@@ -1969,14 +1946,14 @@ msgid "Error! You cannot create recursive categories."
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Extra Images"
-msgstr ""
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Extra Info"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Extra Media"
 msgstr ""
 
 #. module: website_sale
@@ -2059,11 +2036,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Fill in your address"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__fiscal_position_id
-msgid "Fiscal Position"
 msgstr ""
 
 #. module: website_sale
@@ -2360,6 +2332,12 @@ msgid "Invalid image"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "Invalid video URL provided."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_account
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing"
@@ -2390,12 +2368,6 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-msgid "It is forbidden to modify a sales order which is not in draft status."
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid ""
 "It seems that a delivery method is not compatible with your address. Please "
@@ -2412,7 +2384,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#: code:addons/website_sale/static/src/js/cart_service.js:0
 msgid "Item(s) added to your cart"
 msgstr ""
 
@@ -2457,12 +2429,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Month"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
-#: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
-msgid "Last Online Sales Order"
 msgstr ""
 
 #. module: website_sale
@@ -2566,14 +2532,14 @@ msgid "List"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Little Icons"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Little Icons"
 msgstr ""
 
 #. module: website_sale
@@ -2633,14 +2599,14 @@ msgid "Mandatory (no guest checkout)"
 msgstr ""
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_cabinets_medicine
-msgid "Medicine Cabinets"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_cabinets_medicine
+msgid "Medicine Cabinets"
 msgstr ""
 
 #. module: website_sale
@@ -3184,6 +3150,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Price will be updated after choosing a delivery method"
 msgstr ""
 
 #. module: website_sale
@@ -3789,11 +3760,6 @@ msgid "Sample"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Save address"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Search Abandoned Sales Orders"
 msgstr ""
@@ -4209,10 +4175,20 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
-#: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_absolute_url
+#: model:ir.model.fields,help:website_sale.field_product_template__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
+#: model:ir.model.fields,help:website_sale.field_product_template__website_url
+msgid "The full relative URL to access the document through the website."
 msgstr ""
 
 #. module: website_sale
@@ -4224,7 +4200,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
+#: code:addons/website_sale/controllers/cart.py:0
 msgid "The given product does not exist therefore it cannot be added to cart."
 msgstr ""
 
@@ -4252,6 +4228,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
+#: model:ir.model.fields,help:website_sale.field_sale_report__public_categ_ids
 msgid ""
 "The product will be available in each mentioned eCommerce category. Go to "
 "Shop > Edit Click on the page and enable 'Categories' to view all eCommerce "
@@ -4289,14 +4266,14 @@ msgid "There is no unpaid order from the website yet"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
-msgid "These other products might interest you"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
+msgid "These other products might interest you"
 msgstr ""
 
 #. module: website_sale
@@ -4312,6 +4289,18 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "This line doesn't belong to your order."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "This line doesn't exist anymore."
 msgstr ""
 
 #. module: website_sale
@@ -4601,7 +4590,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#: code:addons/website_sale/static/src/js/cart_service.js:0
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -4639,10 +4628,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__website_id
-#: model:ir.model.fields,field_description:website_sale.field_sale_subscription_report__website_id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__website_id
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Website"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_absolute_url
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_absolute_url
+msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_sale
@@ -4797,8 +4791,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
 "You are editing your <b>delivery and billing</b> addresses\n"
-"                                        at the same time!<br/>\n"
-"                                        If you want to modify your billing address, create a"
+"                            at the same time!<br/>\n"
+"                            If you want to modify your billing address, create a"
 msgstr ""
 
 #. module: website_sale
@@ -4844,6 +4838,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
 msgid "Your address"
 msgstr ""
 
@@ -4916,9 +4911,15 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__public_categ_ids
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "eCommerce Categories"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "eCommerce Category"
 msgstr ""
 
 #. module: website_sale
@@ -4975,8 +4976,44 @@ msgid "in category \""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/crm_team.py:0
+msgid "is_abandoned_cart"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "list_price asc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "list_price desc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/res_config_settings.py:0
+msgid "model"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "name asc"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "new address"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "publish_date desc"
 msgstr ""
 
 #. module: website_sale
@@ -4992,4 +5029,10 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "website_sale.checkout"
 msgstr ""

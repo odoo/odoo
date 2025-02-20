@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.1\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
-"PO-Revision-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"PO-Revision-Date: 2025-02-20 10:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,6 +72,16 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,website_form_label:pos_sale.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
 msgid "Currency Rate"
 msgstr ""
@@ -95,6 +105,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_product_template__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_res_partner__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
@@ -165,6 +176,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__id
 #: model:ir.model.fields,field_description:pos_sale.field_product_template__id
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_sale.field_res_partner__id
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__id
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
@@ -174,7 +186,6 @@ msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__invoiced
 msgid "Invoiced"
 msgstr ""
 
@@ -243,13 +254,11 @@ msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__order_reference__pos_order
 msgid "POS Order"
 msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__paid
 msgid "Paid"
 msgstr ""
 
@@ -285,7 +294,6 @@ msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__done
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__done
 msgid "Posted"
 msgstr ""
 
@@ -440,6 +448,17 @@ msgstr ""
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Warning for %s"
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_partner_view_buttons_pos_sale
+msgid "Warning on Sale"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "What do you want to do?"
 msgstr ""
 
@@ -455,4 +474,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "from"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/pos_order.py:0
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "id"
 msgstr ""
