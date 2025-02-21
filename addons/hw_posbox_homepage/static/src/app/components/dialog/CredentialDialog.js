@@ -60,33 +60,23 @@ export class CredentialDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <BootstrapDialog identifier="'credential-configuration'" btnName="'Credential'">
+        <BootstrapDialog identifier="'credential-configuration'" btnName="'Credentials'">
             <t t-set-slot="header">
-                Configure credential
+                Configure Credentials
             </t>
             <t t-set-slot="body">
                 <div class="alert alert-info fs-6" role="alert">
-                    Set the DB UUID and your Contract Number you want to use.
+                    Set the Database UUID and your Contract Number you want to use to validate your subscription.
                 </div>
-                <div class="mt-3">
-                    <div class="input-group-sm mb-3">
-                        <label for="iotname">DB uuid</label>
-                        <input name="iotname" type="text" class="form-control" t-model="this.form.db_uuid" />
-                        <small t-if="!this.form.db_uuid" class="text-danger">Please enter a correct db UUID</small>
-                    </div>
-                    <div class="input-group-sm mb-3">
-                        <label for="token">Contract number</label>
-                        <input name="token" type="text" class="form-control" t-model="this.form.enterprise_code" />
-                        <small t-if="!this.form.enterprise_code" class="text-danger">Please enter a contract number</small>
-                    </div>
-                    <div class="d-flex justify-content-end gap-2">
-                        <button type="submit" class="btn btn-warning btn-sm" t-on-click="connectToServer">Connect</button>
-                    </div>
+                <div class="d-flex flex-column gap-2 mt-3">
+                    <input type="text" class="form-control" placeholder="Database UUID" t-model="form.db_uuid"/>
+                    <input type="text" class="form-control" placeholder="Odoo contract number" t-model="form.enterprise_code"/>
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button class="btn btn-danger btn-sm" t-on-click="clearConfiguration">Clear configuration</button>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="!form.db_uuid" t-on-click="connectToServer">Connect</button>
+                <button class="btn btn-secondary btn-sm" t-on-click="clearConfiguration">Clear configuration</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
     `;
