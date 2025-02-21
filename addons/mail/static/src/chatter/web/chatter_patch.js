@@ -6,7 +6,7 @@ import { FollowerList } from "@mail/core/web/follower_list";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
-import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
+import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { RecipientsInput } from "@mail/core/web/recipients_input";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
@@ -77,7 +77,7 @@ Object.assign(Chatter.defaultProps, {
  */
 patch(Chatter.prototype, {
     setup() {
-        this.messageHighlight = useMessageHighlight();
+        this.messageHighlight = useMessageScrolling();
         super.setup(...arguments);
         this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
