@@ -40,6 +40,12 @@ class StockWarehouseOrderpoint(models.Model):
             }
         return super()._get_replenishment_order_notification()
 
+    def _compute_allowed_replenishment_uom_ids(self):
+        super()._compute_allowed_replenishment_uom_ids()
+        for orderpoint in self:
+            if 'manufacture' in orderpoint.rule_ids.mapped('action'):
+                orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.bom_ids.product_uom_id
+
     @api.depends('route_id')
     def _compute_show_bom(self):
         manufacture_route = []
