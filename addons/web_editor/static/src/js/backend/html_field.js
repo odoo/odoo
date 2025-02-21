@@ -66,6 +66,7 @@ export class HtmlField extends Component {
         this.codeViewRef = useRef("codeView");
         this.iframeRef = useRef("iframe");
         this.codeViewButtonRef = useRef("codeViewButton");
+        this.userService = useService('user');
 
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder();
@@ -160,6 +161,15 @@ export class HtmlField extends Component {
                 this.resizerHandleObserver.disconnect();
             }
         });
+        this.isPortalUser = false;
+        this.userService.hasGroup('base.group_portal')
+            .then(function(isPortal) {
+                this.isPortalUser = isPortal;
+            }.bind(this))
+            .catch(function(error) {
+                //  Might assume non-portal if in doubt.
+                this.isPortalUser = false;
+            }.bind(this));
     }
 
     /**
@@ -403,7 +413,12 @@ export class HtmlField extends Component {
                 if (urgent && status(this) !== 'destroyed') {
                     await this.updateValue();
                 }
-                await savePendingImagesPromise;
+                try {
+                    await savePendingImagesPromise;
+                } catch (error) {
+                    this.isPortalUser ? null : (() => { throw error })();
+                    // Portal users don't have rights to create attachments. Silently keep base64.
+                }
                 const codeViewEl = this._getCodeViewEl();
                 if (codeViewEl) {
                     codeViewEl.value = this.wysiwyg.getValue();
