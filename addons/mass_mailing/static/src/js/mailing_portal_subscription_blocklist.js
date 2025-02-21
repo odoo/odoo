@@ -1,9 +1,9 @@
 /** @odoo-module alias=mailing.PortalSubscriptionBlocklist **/
 
 import { rpc } from "@web/core/network/rpc";
-import { renderToElement } from "@web/core/utils/render";
+import { setElementContent } from "@web/core/utils/html";
+import { renderToMarkup } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
-
 
 publicWidget.registry.MailingPortalSubscriptionBlocklist = publicWidget.Widget.extend({
     events: {
@@ -114,13 +114,13 @@ publicWidget.registry.MailingPortalSubscriptionBlocklist = publicWidget.Widget.e
     _updateInfo: function (infoKey) {
         const updateInfo = document.getElementById('o_mailing_subscription_update_info');
         if (infoKey !== undefined) {
-            const infoContent = renderToElement(
+            const infoContent = renderToMarkup(
                 "mass_mailing.portal.blocklist_update_info",
                 {
                     infoKey: infoKey,
                 }
             );
-            updateInfo.innerHTML = infoContent.innerHTML;
+            setElementContent(updateInfo, infoContent);
             if (['blocklist_add', 'blocklist_remove'].includes(infoKey)) {
                 updateInfo.classList.add('text-success');
                 updateInfo.classList.remove('text-danger');
