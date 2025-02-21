@@ -13,6 +13,8 @@ export class EmbeddedCaptionComponent extends Component {
         id: { type: String },
         editable: { type: Element },
         addHistoryStep: { type: Function },
+        undo: { type: Function },
+        redo: { type: Function },
         focusInput: { type: Boolean },
         host: { type: Object },
     };
@@ -29,16 +31,7 @@ export class EmbeddedCaptionComponent extends Component {
         } else {
             this.captionInput = useRef("autofocus");
         }
-        useEffect(
-            () => {
-                this.image.setAttribute("data-caption", this.state.caption);
-                // Adapt the figcaption element's placeholder to the new caption
-                // for screen reader users.
-                this.captionInput.el.parentElement.setAttribute("placeholder", this.state.caption);
-                this.props.addHistoryStep();
-            },
-            () => [this.state.caption]
-        );
+        useEffect(this.commitCaption.bind(this), () => [this.state.caption]);
         // Ensure synchronicity between the state and the attribute.
         this.observer = new MutationObserver(mutations => {
             for (const mutation of mutations) {
@@ -57,10 +50,43 @@ export class EmbeddedCaptionComponent extends Component {
         this.observer.disconnect();
     }
 
+    commitCaption() {
+        if (typeof this.state.caption === "string") {
+            this.image.setAttribute("data-caption", this.state.caption);
+            // Adapt the figcaption element's placeholder to the new caption
+            // for screen reader users.
+            this.captionInput.el.parentElement.setAttribute("placeholder", this.state.caption);
+            this.props.addHistoryStep();
+        } else {
+            this.state.caption === "";
+        }
+    }
+
     onInputBlur() {
         this.state.caption = this.captionInput.el.value;
     }
 
+    onInputKeyup(ev) {
+        if (ev.key === "z" && ev.ctrlKey && !this._appliedNativeHistory) {
+            if (ev.shiftKey) {
+                this.props.redo();
+            } else {
+                this.props.undo();
+            }
+        }
+        this._appliedNativeHistory = false;
+    }
+
+    onInputBeforeInput(ev) {
+        this._appliedNativeHistory = false;
+        if (ev.inputType === "historyUndo" || ev.inputType === "historyRedo") {
+            // Input elements handle their own history, but this event is not
+            // triggered if no changes were made to the input. So we handle the
+            // editor history on keyup in those cases, but let the browser do
+            // its thing otherwise.
+            this._appliedNativeHistory = true;
+        }
+    }
 }
 
 export const captionEmbedding = {

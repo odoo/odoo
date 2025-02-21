@@ -159,6 +159,8 @@ export class CaptionPlugin extends Plugin {
             Object.assign(props, {
                 editable: this.editable,
                 addHistoryStep: this.dependencies.history.addStep,
+                undo: this.dependencies.history.undo,
+                redo: this.dependencies.history.redo,
             });
         }
     }
