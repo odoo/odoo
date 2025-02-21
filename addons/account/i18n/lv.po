@@ -4598,7 +4598,7 @@ msgstr "Uzņēmums"
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_company_id
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_company_id
 msgid "Company "
-msgstr ""
+msgstr "Uzņēmums"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -6822,7 +6822,7 @@ msgstr "E-pasta domēns piem., 'piemers.lv' e-pastā 'odoo@piemers.lv'"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_template_id
 msgid "Email template"
-msgstr ""
+msgstr "E-pasta sagatave"
 
 #. module: account
 #: model:account.account,name:account.1_employee_payroll_taxes
@@ -7480,13 +7480,15 @@ msgstr "Fonts awesome ikona, piem., fa-tasks"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid "For any other question, write to"
-msgstr ""
+msgstr "Citu jautājumu gadījumā rakstiet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid ""
 "For new invoices, please ensure a PDF or electronic invoice file is attached"
 msgstr ""
+"Jauniem rēķiniem, lūdzu, nodrošiniet, ka PDF fails vai elektroniskā rēķina "
+"fails ir pievienots"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -7931,6 +7933,9 @@ msgid ""
 "    <br/><br/>\n"
 "    Your email has been discarded. the e-mail address you have used only accepts new invoices:"
 msgstr ""
+"Sveicināti,\n"
+"    <br/><br/>\n"
+"    Jūsu e-pasts ir atmests. Jūsu izmantotā e-pasta adrese pieņem tikai jaunus rēķinus:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -8767,7 +8772,7 @@ msgstr "Rēķinu skaits"
 #: model:mail.message.subtype,description:account.mt_invoice_created
 #: model:mail.message.subtype,name:account.mt_invoice_created
 msgid "Invoice Created"
-msgstr "Rēķins Izveidots"
+msgstr "Rēķins izveidots"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_invoice_tree
@@ -8865,12 +8870,6 @@ msgid "Invoice Status"
 msgstr "Rēķina statuss"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
-#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
-msgid "Invoice Template Pdf Report"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 msgid "Invoice Totals"
@@ -8958,6 +8957,8 @@ msgstr "Rēķinu nosūtīšana"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
 msgid "Invoice template"
 msgstr "Rēķina veidne"
 
@@ -9992,7 +9993,7 @@ msgstr "Sūtījumu pielikumu logrīks"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_lang
 msgid "Mail Lang"
-msgstr ""
+msgstr "Pasta valoda"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_tracking_value
@@ -14080,15 +14081,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"Some invoice(s) already have a generated pdf. The existing pdf will be used "
-"for sending. If you want to regenerate them, please delete the attachment "
-"from the invoice."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid ""
 "Some journal items already exist in this journal but with other accounts "
@@ -16524,6 +16516,8 @@ msgid ""
 "To add information to a previously sent invoice, reply to your \"sent\" "
 "email"
 msgstr ""
+"Lai pievienotu informāciju iepriekš nosūtītajam rēķinam, atbildiet uz Jūsu "
+"\"nosūtīto\" e-pastu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -17115,7 +17109,7 @@ msgstr "Automātiska valūtas maiņas kursu atjaunināšana"
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
 msgid "Updated"
-msgstr ""
+msgstr "Atjaunots"
 
 #. module: account
 #. odoo-javascript
@@ -18113,6 +18107,8 @@ msgid ""
 "You cannot delete this mail template, it is used in the invoice sending "
 "flow."
 msgstr ""
+"Jūs nevarat izdzēst šo pasta veidni, tā tiek izmantota rēķinu nosūtīšanas "
+"plūsmā."
 
 #. module: account
 #. odoo-python
@@ -18627,7 +18623,7 @@ msgstr ""
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_sending_method__email
 msgid "by Email"
-msgstr ""
+msgstr "izmantojot E-pastu"
 
 #. module: account
 #. odoo-python

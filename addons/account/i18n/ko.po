@@ -8728,12 +8728,6 @@ msgid "Invoice Status"
 msgstr "청구서 상태"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
-#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
-msgid "Invoice Template Pdf Report"
-msgstr "청구서 템플릿 PDF 보고서"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 msgid "Invoice Totals"
@@ -8815,6 +8809,8 @@ msgstr "청구서 전송"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
 msgid "Invoice template"
 msgstr "청구서 서식"
 
@@ -13873,16 +13869,6 @@ msgstr "일반 우편"
 #: code:addons/account/models/company.py:0
 msgid "Some documents are being sent by another process already."
 msgstr "일부 문서는 이미 다른 프로세스에 의해 전송되고 있습니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"Some invoice(s) already have a generated pdf. The existing pdf will be used "
-"for sending. If you want to regenerate them, please delete the attachment "
-"from the invoice."
-msgstr ""
-"일부 청구서에는 이미 생성된 PDF가 있습니다. 기존 PDF가 전송에 사용됩니다. 다시 생성하려면 청구서에서 첨부 파일을 삭제하세요."
 
 #. module: account
 #. odoo-python
