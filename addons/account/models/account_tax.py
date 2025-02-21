@@ -2139,7 +2139,7 @@ class AccountTax(models.Model):
             tax_totals_summary['tax_amount_currency'] += values['tax_amount_currency']
             tax_totals_summary['tax_amount'] += values['tax_amount']
 
-        # Subtotals.
+        # Tax groups.
         untaxed_amount_subtotal_label = _("Untaxed Amount")
         subtotals = defaultdict(lambda: {
             'tax_groups': [],
@@ -2149,20 +2149,6 @@ class AccountTax(models.Model):
             'base_amount': 0.0,
         })
 
-        def subtotal_grouping_function(base_line, tax_data):
-            return tax_data['tax'].tax_group_id.preceding_subtotal or untaxed_amount_subtotal_label
-
-        base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, subtotal_grouping_function)
-        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
-        for preceding_subtotal, values in values_per_grouping_key.items():
-            preceding_subtotal = preceding_subtotal or untaxed_amount_subtotal_label
-            subtotal = subtotals[preceding_subtotal]
-            subtotal['base_amount_currency'] += values['total_excluded_currency']
-            subtotal['base_amount'] += values['total_excluded']
-            subtotal['tax_amount_currency'] += values['tax_amount_currency']
-            subtotal['tax_amount'] += values['tax_amount']
-
-        # Tax groups.
         def tax_group_grouping_function(base_line, tax_data):
             return tax_data['tax'].tax_group_id
 
@@ -2217,6 +2203,33 @@ class AccountTax(models.Model):
                 'group_name': tax_group.name,
                 'group_label': tax_group.pos_receipt_label,
             })
+
+        # Subtotals.
+        def subtotal_grouping_function(base_line, tax_data):
+            return tax_data['tax'].tax_group_id.preceding_subtotal or untaxed_amount_subtotal_label
+
+        base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, subtotal_grouping_function)
+        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        for preceding_subtotal, values in values_per_grouping_key.items():
+            preceding_subtotal = preceding_subtotal or untaxed_amount_subtotal_label
+            subtotal = subtotals[preceding_subtotal]
+            is_first_preceding_subtotal = (
+                preceding_subtotal == untaxed_amount_subtotal_label
+                or (
+                    untaxed_amount_subtotal_label not in subtotals_order
+                    and subtotals_order[preceding_subtotal] == 0
+                )
+            )
+            if is_first_preceding_subtotal:
+                # The first subtotal is always the base of the whole document.
+                subtotal['base_amount_currency'] += values['total_excluded_currency']
+                subtotal['base_amount'] += values['total_excluded']
+            else:
+                # Otherwise, it's the base of the first tax in the group.
+                subtotal['base_amount_currency'] += values['base_amount_currency']
+                subtotal['base_amount'] += values['base_amount']
+            subtotal['tax_amount_currency'] += values['tax_amount_currency']
+            subtotal['tax_amount'] += values['tax_amount']
 
         # Cash rounding
         cash_rounding_lines = [base_line for base_line in base_lines if base_line['special_type'] == 'cash_rounding']
