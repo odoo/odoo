@@ -82,11 +82,9 @@ export class ServerDialog extends Component {
                 </div>
             </t>
             <t t-set-slot="footer">
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="this.state.loading or !form.token" t-on-click="connectToServer">Connect</button>
-                    <button type="button" class="btn btn-secondary btn-sm" t-if="store.base.server_status" t-on-click="clearConfiguration">Disconnect from current</button>
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                </div>
+                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="state.loading or !form.token" t-on-click="connectToServer">Connect</button>
+                <button type="button" class="btn btn-secondary btn-sm" t-if="store.base.server_status" t-on-click="clearConfiguration">Disconnect from current</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
     `;
