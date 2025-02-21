@@ -819,9 +819,6 @@ test("concurrency: single category", async () => {
     const compPromise = mountWithSearch(TestComponent, {
         resModel: "partner",
         searchViewId: false,
-        context: {
-            searchpanel_default_company_id: [5],
-        },
     });
 
     // Case 1: search panel is awaited to build the query with search defaults
