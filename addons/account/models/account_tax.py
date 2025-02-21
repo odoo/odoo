@@ -1732,6 +1732,7 @@ class AccountTax(models.Model):
             'account_id': tax_rep_data['account'].id or base_line_grouping_key['account_id'],
             'tax_ids': [Command.set(tax_rep_data['taxes'].ids)],
             'tax_tag_ids': [Command.set(tax_rep_data['tax_tags'].ids)],
+            '__keep_zero_line': False,
         }
 
     @api.model
@@ -2389,11 +2390,13 @@ class AccountTax(models.Model):
 
         # Remove tax lines having a zero amount.
         tax_lines_mapping = {
-            k: v
+            frozendict({grouping_k: k[grouping_k] for grouping_k in k if not grouping_k.startswith('__')}): v
             for k, v in tax_lines_mapping.items()
             if (
-                not self.env['res.currency'].browse(k['currency_id']).is_zero(v['amount_currency'])
-                or not company.currency_id.is_zero(v['balance'])
+                k['__keep_zero_line'] or (
+                    not self.env['res.currency'].browse(k['currency_id']).is_zero(v['amount_currency'])
+                    or not company.currency_id.is_zero(v['balance'])
+                )
             )
         }
 
