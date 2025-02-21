@@ -5,6 +5,7 @@ import { getContent } from "../_helpers/selection";
 import { setFontFamily, undo, redo } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 import { animationFrame } from "@odoo/hoot-mock";
+import { expandToolbar } from "../_helpers/toolbar";
 
 test("should give a few characters a fontFamily", async () => {
     await testEditor({
@@ -56,7 +57,7 @@ test("should overide fontFamily on the selected characters", async () => {
 
 test("should change the font family of a few characters", async () => {
     const { el } = await setupEditor("<p>ab[cde]fg</p>");
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(queryOne(".btn[title='Font family']").textContent).toBe("Default");
     await click(".btn[title='Font family']");
     await waitFor(".o_font_family_selector_menu");
@@ -69,7 +70,7 @@ test("should change the font family of a few characters", async () => {
 });
 test("should undo and redo the font family changes", async () => {
     const { editor, el } = await setupEditor("<p>ab[cde]fg</p>");
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(queryOne(".btn[title='Font family']").textContent).toBe("Default");
     await click(".btn[title='Font family']");
     await waitFor(".o_font_family_selector_menu");
@@ -88,7 +89,7 @@ test("should remove font family on the selected content using remove format", as
     const { el } = await setupEditor(
         '<p>ab<span style="font-family: Arial, sans-serif;">[cde]</span>fg</p>'
     );
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(queryOne(".btn[title='Font family']").textContent).toBe("Arial");
     await click(".btn[title='Remove Format']");
     await animationFrame();
@@ -100,7 +101,7 @@ test("should remove font family on the selected content using Default font famil
     const { el } = await setupEditor(
         '<p>ab<span style="font-family: Arial, sans-serif;">[cde]</span>fg</p>'
     );
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(queryOne(".btn[title='Font family']").textContent).toBe("Arial");
     await click(".btn[title='Font family']");
     await waitFor(".o_font_family_selector_menu");
@@ -112,7 +113,7 @@ test("should remove font family on the selected content using Default font famil
 
 test("should contain the 5 available font + default", async () => {
     await setupEditor("<p>ab[cde]fg</p>");
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(queryOne(".btn[title='Font family']").textContent).toBe("Default");
     await click(".btn[title='Font family']");
     await animationFrame();

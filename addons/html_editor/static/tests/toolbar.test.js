@@ -31,6 +31,7 @@ import {
 } from "./_helpers/selection";
 import { strong } from "./_helpers/tags";
 import { insertText } from "./_helpers/user_actions";
+import { expandToolbar } from "./_helpers/toolbar";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -109,7 +110,7 @@ test("toolbar buttons react to selection change", async () => {
 
     // set selection to open toolbar
     setContent(el, "<p>[test] some text</p>");
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
 
     // check that bold button is not active
     expect(".btn[name='bold']").not.toHaveClass("active");
@@ -156,7 +157,7 @@ test("toolbar buttons react to selection change (2)", async () => {
 test("toolbar list buttons react to selection change", async () => {
     const { el } = await setupEditor("<ul><li>[abc]</li></ul>");
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".btn[name='bulleted_list']").toHaveClass("active");
     expect(".btn[name='numbered_list']").not.toHaveClass("active");
     expect(".btn[name='checklist']").not.toHaveClass("active");
@@ -328,7 +329,7 @@ test("toolbar works: can select font size", async () => {
 
 test("toolbar works: show the correct text alignment", async () => {
     const { el } = await setupEditor("<p>[test</p><p><br>]</p>");
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect("button[title='Text align']").toHaveCount(1);
     expect("button[title='Text align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
     await click("button[title='Text align']");
@@ -341,7 +342,7 @@ test("toolbar works: show the correct text alignment", async () => {
 
 test("toolbar works: show the correct text alignment after undo/redo", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect("button[title='Text align']").toHaveCount(1);
     expect("button[title='Text align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
     await click("button[title='Text align']");
@@ -595,7 +596,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
                 },
             ],
             user_commands: { id: "test_cmd", run: () => null },
-            toolbar_groups: withSequence(24, { id: "test_group", namespace: "aNamespace" }),
+            toolbar_groups: withSequence(24, { id: "test_group", namespaces: ["aNamespace"] }),
             toolbar_items: [
                 {
                     id: "test_btn",
@@ -622,7 +623,7 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
         static id = "TestPlugin";
         resources = {
             user_commands: { id: "test_cmd", run: () => null },
-            toolbar_groups: withSequence(24, { id: "test_group", namespace: "image" }),
+            toolbar_groups: withSequence(24, { id: "test_group", namespaces: ["image"] }),
             toolbar_items: [
                 {
                     id: "test_btn",
@@ -653,6 +654,42 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
     expect.verifySteps(["image format evaluated"]);
 });
 
+test("toolbar opens in 'compact' namespace by default", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
+    await expandToolbar();
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+});
+
+test("toolbar items without namespace default to 'expanded'", async () => {
+    class TestPlugin extends Plugin {
+        static id = "TestPlugin";
+        resources = {
+            user_commands: { id: "test_cmd", run: () => null },
+            toolbar_groups: { id: "test_group" },
+            toolbar_items: [
+                {
+                    id: "test_btn",
+                    groupId: "test_group",
+                    commandId: "test_cmd",
+                    title: "Test Button",
+                    icon: "fa-square",
+                },
+            ],
+        };
+    }
+    await setupEditor("<p>[test]</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+    });
+    await waitFor(".o-we-toolbar");
+    // Test button in not present in compact toolbar
+    expect(".o-we-toolbar .btn[name='test_btn']").toHaveCount(0);
+    await expandToolbar();
+    // Test button is present in expanded toolbar by default
+    expect(".o-we-toolbar .btn[name='test_btn']").toHaveCount(1);
+});
+
 test("plugins can create buttons with text in toolbar", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
@@ -673,7 +710,7 @@ test("plugins can create buttons with text in toolbar", async () => {
     await setupEditor(`<div> <p class="foo">[Foo]</p> </div>`, {
         config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
     });
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect("button[name='test_btn']").toHaveText("Text button");
 });
 

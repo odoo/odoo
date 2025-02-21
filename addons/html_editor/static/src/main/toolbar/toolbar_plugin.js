@@ -9,6 +9,8 @@ import { ToolbarMobile } from "./mobile_toolbar";
 import { debounce } from "@web/core/utils/timing";
 import { omit, pick } from "@web/core/utils/objects";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
@@ -24,7 +26,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  *
  * @typedef {Object} ToolbarGroup
  * @property {string} id
- * @property {string} [namespace]
+ * @property {string[]} [namespaces]
  *
  *
  * @typedef {ToolbarCommandItem | ToolbarComponentItem} ToolbarItem
@@ -36,6 +38,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @property {string} id
  * @property {string} groupId Id of a toolbar group
  * @property {string} commandId
+ * @property {string[]} [namespaces]
  * @property {Object} [commandParams] Passed to the command's `run` function
  * @property {TranslatedString | TranslatedStringGetter} [title] * - becomes the button's title (and tooltip content)
  * @property {string} [icon] *
@@ -48,6 +51,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * Adds a custom component to the toolbar.
  * @property {string} id
  * @property {string} groupId
+ * @property {string[]} [namespaces]
  * @property {TranslatedString | TranslatedStringGetter} [title]
  * @property {Function} Component
  * @property {Object} props
@@ -114,6 +118,25 @@ export class ToolbarPlugin extends Plugin {
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         step_added_handlers: () => this.updateToolbar(),
+        user_commands: {
+            id: "expandToolbar",
+            run: () => {
+                this.isToolbarExpanded = true;
+                this.updateToolbar();
+            },
+        },
+        toolbar_groups: withSequence(100, { id: "expand_toolbar", namespaces: ["compact"] }),
+        toolbar_items: {
+            id: "expand_toolbar",
+            groupId: "expand_toolbar",
+            commandId: "expandToolbar",
+            title: _t("Expand toolbar"),
+            icon: "fa-ellipsis-v",
+        },
+        toolbar_namespaces: withSequence(100, {
+            id: "compact",
+            isApplied: () => !this.isToolbarExpanded,
+        }),
     };
 
     setup() {
@@ -157,7 +180,12 @@ export class ToolbarPlugin extends Plugin {
         this.onSelectionChangeActive = true;
         this.debouncedUpdateToolbar = debounce(this.updateToolbar, DELAY_TOOLBAR_OPEN);
 
-        if (!this.isMobileToolbar) {
+        if (this.isMobileToolbar) {
+            this.addDomListener(this.editable, "pointerup", () => {
+                // Collapse toolbar to compact mode when tapping outside of it
+                this.isToolbarExpanded = false;
+            });
+        } else {
             // Mouse interaction behavior:
             // Close toolbar on mousedown and prevent it from opening until mouseup.
             this.addDomListener(this.editable, "mousedown", () => {
@@ -197,6 +225,7 @@ export class ToolbarPlugin extends Plugin {
                 }
             });
         }
+        this.isToolbarExpanded = false;
     }
 
     destroy() {
@@ -246,8 +275,13 @@ export class ToolbarPlugin extends Plugin {
         const groups = this.getResource("toolbar_groups");
 
         return groups.map((group) => ({
-            ...group,
-            buttons: buttons.filter((button) => button.groupId === group.id),
+            ...omit(group, "namespaces"),
+            buttons: buttons
+                .filter((button) => button.groupId === group.id)
+                .map((button) => ({
+                    ...button,
+                    namespaces: button.namespaces || group.namespaces || ["expanded"],
+                })),
         }));
     }
 
@@ -288,6 +322,10 @@ export class ToolbarPlugin extends Plugin {
         if (this.shouldBeVisible(selectionData)) {
             // Open toolbar or update its position
             const props = { toolbar: this.getToolbarInfo(), class: "shadow rounded my-2" };
+            if (!this.overlay.isOpen) {
+                // Open toolbar in compact mode
+                this.isToolbarExpanded = false;
+            }
             this.overlay.open({ props });
         } else if (this.overlay.isOpen && !this.shouldPreventClosing(selectionData)) {
             // Close toolbar
@@ -322,13 +360,9 @@ export class ToolbarPlugin extends Plugin {
 
     updateNamespace() {
         const traversedNodes = this.getFilterTraverseNodes();
-        for (const namespace of this.getResource("toolbar_namespaces")) {
-            if (namespace.isApplied(traversedNodes)) {
-                this.state.namespace = namespace.id;
-                return;
-            }
-        }
-        this.state.namespace = undefined;
+        const namespaces = this.getResource("toolbar_namespaces");
+        const activeNamespace = namespaces.find((ns) => ns.isApplied(traversedNodes));
+        this.state.namespace = activeNamespace?.id || "expanded";
     }
 
     updateButtonsStates(selection) {
@@ -348,20 +382,18 @@ export class ToolbarPlugin extends Plugin {
         }
         const nodes = this.getFilterTraverseNodes();
         for (const buttonGroup of this.buttonGroups) {
-            if (buttonGroup.namespace === this.state.namespace) {
-                for (const button of buttonGroup.buttons) {
-                    this.state.buttonsActiveState[button.id] = button.isActive?.(selection, nodes);
-                    this.state.buttonsDisabledState[button.id] = button.isDisabled?.(
-                        selection,
-                        nodes
-                    );
-                    this.state.buttonsAvailableState[button.id] =
-                        button.isAvailable === undefined || button.isAvailable(selection);
-                    this.state.buttonsTitleState[button.id] =
-                        button.title instanceof Function
-                            ? button.title(selection, nodes)
-                            : button.title;
+            for (const button of buttonGroup.buttons) {
+                if (!button.namespaces.includes(this.state.namespace)) {
+                    continue;
                 }
+                this.state.buttonsActiveState[button.id] = button.isActive?.(selection, nodes);
+                this.state.buttonsDisabledState[button.id] = button.isDisabled?.(selection, nodes);
+                this.state.buttonsAvailableState[button.id] =
+                    button.isAvailable === undefined || button.isAvailable(selection);
+                this.state.buttonsTitleState[button.id] =
+                    button.title instanceof Function
+                        ? button.title(selection, nodes)
+                        : button.title;
             }
         }
         this.updateSelection = null;
