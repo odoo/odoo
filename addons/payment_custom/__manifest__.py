@@ -16,7 +16,7 @@
         'data/payment_provider_data.xml',  # Depends on `payment_method_wire_transfer`.
     ],
     'assets': {
-        'web.assets_frontend': [
+        'web.assets_frontend_lazy': [
             'payment_custom/static/src/js/post_processing.js',
         ],
     },
