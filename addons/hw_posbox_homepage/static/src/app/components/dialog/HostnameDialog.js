@@ -31,9 +31,9 @@ export class HostnameDialog extends Component {
             if (data.status === "failure") {
                 this.state.error = data.message;
             }
-            this.state.waitRestart = true;
         } catch {
-            console.warn("Error while fetching data");
+            console.debug("Error while fetching data: the server is most likely rebooting to apply the new hostname.");
+            this.state.waitRestart = true;
         }
         this.state.loading = false;
     }
@@ -61,7 +61,7 @@ export class HostnameDialog extends Component {
             </t>
             <t t-set-slot="footer">
                 <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="state.loading" t-on-click="rename">Rename</button>
+                    <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="state.loading or !form.hostname" t-on-click="rename">Rename</button>
                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
                 </div>
             </t>
