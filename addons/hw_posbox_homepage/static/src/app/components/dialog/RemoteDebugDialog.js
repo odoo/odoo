@@ -83,14 +83,12 @@ export class RemoteDebugDialog extends Component {
                     </button>
                 </div>
                 <input t-model="this.state.ngrokToken" placeholder="Authentication token" class="form-control" />
-                <div class="d-flex justify-content-end gap-2">
-                    <button type="submit" class="btn btn-primary mt-2 btn-sm" t-on-click="connectToRemoteDebug">Enable remote debugging</button>
-                </div>
                 <div t-if="this.state.ngrok" class="alert alert-success fs-6 mt-2" role="alert">
                     Your IoT Box is now accessible from the internet.
                 </div>
             </t>
             <t t-set-slot="footer">
+                <button type="submit" class="btn btn-secondary btn-sm" t-on-click="connectToRemoteDebug">Enable remote debugging</button>
                 <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
