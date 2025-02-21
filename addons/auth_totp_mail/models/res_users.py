@@ -200,10 +200,11 @@ class ResUsers(models.Model):
             'partner_ids': [],
             'scheduled_date': False,
         }
-        with self.env.cr.savepoint():
-            template.with_context(**context).send_mail(
-                self.id, force_send=True, raise_exception=True, email_values=email_values, email_layout_xmlid='mail.mail_notification_light'
-            )
+        template.with_context(**context).send_mail(
+            self.id, force_send=True, raise_exception=True,
+            email_values=email_values,
+            email_layout_xmlid='mail.mail_notification_light'
+        )
 
     def _totp_rate_limit(self, limit_type):
         self.ensure_one()
