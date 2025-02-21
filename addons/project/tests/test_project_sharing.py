@@ -333,12 +333,18 @@ class TestProjectSharing(TestProjectSharingCommon):
         # However, cache is updated, but nothing is written.
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             Task.with_context(default_child_ids=[Command.update(self.task_no_collabo.id, {'name': 'Foo'})]).create({'name': 'foo'})
-        with Task.env.cr.savepoint() as sp:
+        with (
+            self.assertRaisesRegex(AccessError, "not allowed to delete 'Task'"),
+            Task.env.cr.savepoint() as sp,
+        ):
             task = Task.with_context(default_child_ids=[Command.delete(self.task_no_collabo.id)]).create({'name': 'foo'})
             task.env.invalidate_all()
             self.assertTrue(self.task_no_collabo.exists(), "Task should still be there, no delete is sent")
             sp.rollback()
-        with self.env.cr.savepoint() as sp:
+        with (
+            self.assertRaises(AccessError),
+            Task.env.cr.savepoint() as sp,
+        ):
             self.task_no_collabo.parent_id = self.task_no_collabo.create({'name': 'parent collabo'})
             task = Task.with_context(default_child_ids=[Command.unlink(self.task_no_collabo.id)]).create({'name': 'foo'})
             task.env.invalidate_all()
@@ -364,12 +370,18 @@ class TestProjectSharing(TestProjectSharingCommon):
         # Same thing but using context defaults
         with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
             Task.with_context(default_tag_ids=[Command.create({'name': 'Bar'})]).create({'name': 'foo'})
-        with Task.env.cr.savepoint() as sp:
+        with (
+            self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"),
+            Task.env.cr.savepoint() as sp,
+        ):
             task = Task.with_context(default_tag_ids=[Command.update(self.task_tag.id, {'name': 'Bar'})]).create({'name': 'foo'})
             task.env.invalidate_all()
             self.assertNotEqual(self.task_tag.name, 'Bar')
             sp.rollback()
-        with Task.env.cr.savepoint() as sp:
+        with (
+            self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"),
+            Task.env.cr.savepoint() as sp
+        ):
             Task.with_context(default_tag_ids=[Command.delete(self.task_tag.id)]).create({'name': 'foo'})
             task.env.invalidate_all()
             self.assertTrue(self.task_tag.exists())

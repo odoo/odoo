@@ -36,7 +36,7 @@ import typing
 import uuid
 import warnings
 from collections import defaultdict, deque
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from inspect import getmembers
 from operator import attrgetter, itemgetter
 
@@ -76,7 +76,7 @@ from .utils import (
 )
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Collection, Iterable, Iterator, Reversible, Sequence
+    from collections.abc import Collection, Iterator, Reversible, Sequence
     from types import MappingProxyType
     from .table_objects import TableObject
     from .environments import Environment
@@ -1328,6 +1328,19 @@ class BaseModel(metaclass=MetaModel):
         for fname, value in defaults.items():
             if fname in self._fields:
                 field = self._fields[fname]
+                if (
+                    field.relational
+                    and not self.env.su
+                    and isinstance(value, Iterable)
+                ):
+                    # since the value will be converted into a SET, we still
+                    # need to check permissions for these actions
+                    for cmd in value:
+                        command_code = cmd[0] if isinstance(cmd, (tuple, list)) and len(cmd) >= 2 else None
+                        if command_code == Command.DELETE:
+                            self.env[field.comodel_name].browse(cmd[1]).check_access('unlink')
+                        elif command_code == Command.UPDATE or (field.type == 'one2many' and command_code in (Command.UNLINK, Command.LINK)):
+                            self.env[field.comodel_name].browse(cmd[1]).check_access('write')
                 value = field.convert_to_cache(value, self, validate=False)
                 defaults[fname] = field.convert_to_write(value, self)
 
