@@ -45,6 +45,11 @@ class HrRecruitmentSource(models.Model):
             source.check_access('create')
             source.alias_id = self.env['mail.alias'].sudo().create(vals)
 
+    def create_and_get_alias(self):
+        self.ensure_one()
+        self.create_alias()
+        return self.email
+
     def unlink(self):
         """ Cascade delete aliases to avoid useless / badly configured aliases. """
         aliases = self.alias_id

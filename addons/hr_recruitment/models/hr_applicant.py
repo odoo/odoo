@@ -327,16 +327,15 @@ class HrApplicant(models.Model):
         Returns:
             Domain()
         """
-        self.ensure_one()
-        domain = Domain("id", "=", self.id)
-        if self.email_normalized:
-            domain |= Domain("email_normalized", "=", self.email_normalized)
-        if self.partner_phone_sanitized:
-            domain |= Domain("partner_phone_sanitized", "=", self.partner_phone_sanitized)
-        if self.linkedin_profile:
-            domain |= Domain("linkedin_profile", "=", self.linkedin_profile)
-        if self.pool_applicant_id:
-            domain |= Domain("pool_applicant_id", "=", self.pool_applicant_id)
+        domain = Domain.AND([
+            Domain('company_id', 'in', self.mapped('company_id.id')),
+            Domain.OR([
+                Domain("id", "in", self.ids),
+                Domain("email_normalized", "in", [email for email in self.mapped("email_normalized") if email]),
+                Domain("partner_phone_sanitized", "in", [phone for phone in self.mapped("partner_phone_sanitized") if phone]),
+                Domain("linkedin_profile", "in", [linkedin_profile for linkedin_profile in self.mapped("linkedin_profile") if linkedin_profile]),
+            ])
+        ])
         if ignore_talent:
             domain &= Domain("talent_pool_ids", "=", False)
         if only_talent:
@@ -536,14 +535,12 @@ class HrApplicant(models.Model):
             'hired': Domain('date_closed', '!=', False),
             'ongoing': Domain(['&', ('active', '=', True), ('date_closed', '=', False)]),
         }
-        if not all(v in ([state for state in valid_statuses_domain] + [False]) for v in value):
+        if not all(v in (list(valid_statuses_domain) + [False]) for v in value):
             raise UserError(_('Some values do not exist in the application status'))
-        positive_operator = operator not in expression.NEGATIVE_TERM_OPERATORS
-        domain = Domain([])
+        domain = Domain.FALSE
         for status in value:
-            domain &= valid_statuses_domain[status] if positive_operator else ~valid_statuses_domain[status]
-
-        return domain
+            domain |= valid_statuses_domain[status]
+        return ~domain if operator in expression.NEGATIVE_TERM_OPERATORS else domain
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment']._read_group(
@@ -707,11 +704,6 @@ class HrApplicant(models.Model):
                         record_name=applicant.display_name,
                         model_description="Applicant",
                     )
-        if vals.get('date_closed'):
-            for applicant in self:
-                if applicant.job_id.date_to:
-                    applicant.availability = applicant.job_id.date_to + relativedelta(days=1)
-
         return res
 
     @api.model
@@ -723,23 +715,15 @@ class HrApplicant(models.Model):
         else:
             hr_job = self.env['hr.job']
 
-        nocontent_body = Markup("""<p class="o_view_nocontent_smiling_face">%(help_title)s</p>""") % {
-            'help_title': _("No application found. Let's create one !"),
-        }
-
-        if hr_job:
-            pattern = r'(.*)<a>(.*?)<\/a>(.*)'
-            match = re.fullmatch(pattern, _('Have you tried to <a>add skills to your job position</a> and search into the Reserve ?'))
-            nocontent_body += Markup("""<p>%(para_1)s<a href="%(link)s">%(para_2)s</a>%(para_3)s</p>""") % {
-            'para_1': match[1],
-            'para_2': match[2],
-            'para_3': match[3],
-            'link': f'/odoo/recruitment/{hr_job.id}',
+        nocontent_body = Markup("""
+<p class="o_view_nocontent_smiling_face">%(help_title)s</p>
+""") % {
+            'help_title': _("No applications found."),
         }
 
         if hr_job.alias_email:
             nocontent_body += Markup('<p class="o_copy_paste_email oe_view_nocontent_alias">%(helper_email)s <a href="mailto:%(email)s">%(email)s</a></p>') % {
-                'helper_email': _("Try creating an application by sending an email to"),
+                'helper_email': _("Send applications to"),
                 'email': hr_job.alias_email,
             }
 

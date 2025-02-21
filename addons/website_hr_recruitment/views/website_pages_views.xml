@@ -40,16 +40,6 @@
             <attribute name="type">object</attribute>
             <attribute name="action">open_website_url</attribute>
         </kanban>
-        <xpath expr="//div[hasclass('o_kanban_card_header_title')]" position="inside">
-            <div class="text-muted fw-bold ps-3">
-                <span class="me-3" t-if="record.website_id.value" groups="website.group_multi_website">
-                    <i class="fa fa-globe me-1" title="Website"/>
-                    <field name="website_id"/>
-                </span>
-                <field name="is_seo_optimized" widget="boolean"/> SEO Optimized
-            </div>
-        </xpath>
-        <xpath expr="//div[hasclass('o_link_trackers')]" position="replace"/>
     </field>
 </record>
 
