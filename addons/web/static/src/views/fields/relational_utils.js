@@ -463,6 +463,7 @@ export class AvatarMany2XAutocomplete extends Many2XAutocomplete {
     }
 }
 
+// aqui. podemos chamar esse metodo, mas ja com algumas informacoes preenchidas
 export function useOpenMany2XRecord({
     resModel,
     onRecordSaved,
@@ -494,6 +495,7 @@ export function useOpenMany2XRecord({
 
         const { create: canCreate, write: canWrite } = activeActions;
         const readonly = !(resId ? canWrite : canCreate);
+        // debugger;
 
         addDialog(
             FormViewDialog,

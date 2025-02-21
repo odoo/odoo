@@ -155,18 +155,19 @@ class ProductSupplierinfo(models.Model):
             }
 
     @api.model
-    def name_create(self, name):
-        partner_id, partner_name = self.env['res.partner'].name_create(name)
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        res = super().name_search(name, args, operator, limit)
+        res = [(r[0], r[1], {'is_vendor': True}) for r in res]
 
-        active_id = self.env.context.get('active_id', False)
-        is_product_template = self.env.context.get('active_model') == 'product.template'
+        partner_args = [['display_name', '!=', r[1]] for r in res]
+        partners = self.env['res.partner'].name_search(name, partner_args, operator, limit - len(res))
 
-        if not is_product_template or not active_id:
-            return partner_id, partner_name
-
-        supplier_info = self.create({
-            'partner_id': partner_id,
-            'product_tmpl_id': active_id,
-        })
-
-        return supplier_info.id, supplier_info.display_name
+        ''''
+            Quando passamos False, e o user seleciona, o name_create eh criado para o supplier_info.
+            Contudo, o nome do partner eh passado, precisamos passar o ID! Precisamos:
+            1) descobrir onde o name_create esta sendo chamado
+            2) passar o partner_id
+            3) ter certeza que o supplier_info esta, agora, sendo criado corretamente
+        '''
+        res += [(False, p[1], {'is_vendor': False, 'partner_id': p[0]}) for p in partners]
+        return res
