@@ -495,6 +495,7 @@ test("parsing a searchpanel field select one", async () => {
             activeValueId: false,
             color: null,
             description: "res.company",
+            depth: 0,
             empty: false,
             enableCounters: false,
             expand: false,

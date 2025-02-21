@@ -165,14 +165,14 @@ export class SearchArchParser {
                     }
                     preField.defaultAutocompleteValue.label = option[1];
                 } else if (fieldType === "many2one") {
-                    this.labels.push((orm) => {
-                        return orm
+                    this.labels.push((orm) =>
+                        orm
                             .call(relation, "read", [value, ["display_name"]], { context })
                             .then((results) => {
                                 preField.defaultAutocompleteValue.label =
                                     results[0]["display_name"];
-                            });
-                    });
+                            })
+                    );
                 }
             }
         } else {
@@ -355,6 +355,7 @@ export class SearchArchParser {
                 section.activeValueId = this.searchPanelDefaults[attrs.name];
                 section.icon = section.icon || "fa-folder";
                 section.hierarchize = evaluateBooleanExpr(attrs.hierarchize || "1");
+                section.depth = attrs.depth ? parseInt(attrs.depth) : 0;
                 section.values.set(false, {
                     childrenIds: [],
                     display_name: ALL.toString(),
