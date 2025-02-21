@@ -29,7 +29,7 @@ class WebsiteEventTrackQuizCommunityController(EventCommunityController):
     @http.route()
     def community(self, event, **kwargs):
         values = self._get_community_leaderboard_render_values(event, None, None)
-        return request.render('website_event_track_quiz.event_leaderboard', values)
+        return request.render('website_event_track_quiz.event_leaderboard', values | {'seo_object': event.community_menu_ids})
 
     def _get_community_leaderboard_render_values(self, event, search_term, page):
         values = self._get_leaderboard(event, search_term)
