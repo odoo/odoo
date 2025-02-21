@@ -317,16 +317,16 @@ export function useVisible(refName, cb, { ready = true } = {}) {
 }
 
 /**
- * @typedef {Object} MessageHighlight
- * @property {function} clearHighlight
+ * @typedef {Object} MessageScrolling
+ * @property {function} clear
  * @property {function} highlightMessage
  * @property {number|null} highlightedMessageId
- * @returns {MessageHighlight}
+ * @returns {MessageScrolling}
  */
-export function useMessageHighlight(duration = 2000) {
+export function useMessageScrolling(duration = 2000) {
     let timeout;
     const state = useState({
-        clearHighlight() {
+        clear() {
             if (this.highlightedMessageId) {
                 browser.clearTimeout(timeout);
                 timeout = null;
@@ -341,17 +341,35 @@ export function useMessageHighlight(duration = 2000) {
             if (thread.notEq(message.thread)) {
                 return;
             }
-            await thread.loadAround(message.id);
+            state.initiated = true;
+            let messageScrollDirection;
+            if (message.notIn(thread.messages)) {
+                messageScrollDirection = message.id < thread.messages[0]?.id ? "top" : "bottom";
+                await thread.loadAround(message.id);
+            }
             const lastHighlightedMessageId = state.highlightedMessageId;
-            this.clearHighlight();
+            this.clear();
             if (lastHighlightedMessageId === message.id) {
                 // Give some time for the state to update.
                 await new Promise(setTimeout);
             }
-            thread.scrollTop = undefined;
+            thread.scrollTop = messageScrollDirection === "top" ? "bottom" : undefined;
+            if (thread.scrollTop === "bottom") {
+                state.startupDeferred = new Deferred();
+                await state.startupDeferred;
+                state.startupDeferred = null;
+            }
             state.highlightedMessageId = message.id;
-            timeout = browser.setTimeout(() => this.clearHighlight(), duration);
+            state.initiated = false;
+            timeout = browser.setTimeout(() => this.clear(), duration);
         },
+        initiated: false,
+        /**
+         * Deferred during highlight startup, i.e. highlight is initiated but isn't scrolling yet
+         * Useful to set correct starting condition to initiate scroll to highlight, like scroll to bottom.
+         */
+        startupDeferred: null,
+        /** Deferred during scrolling to highlight */
         scrollPromise: null,
         /**
          * Scroll the element into view and expose a promise that will resolved
