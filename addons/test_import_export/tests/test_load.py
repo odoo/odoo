@@ -1742,3 +1742,16 @@ class test_inherits(ImporterCase):
             parent._get_external_ids()[parent.id],
             ['xxx.parent'],
         )
+
+
+class CheckSavepoint(ImporterCase):
+    model_name = 'export.unique'
+
+    @mute_logger("odoo.sql_db")
+    def test_max_savepoint(self):
+        savepoint_start = self.env.cr.savepoint_count
+        data = [[str(i)] for i in range(100)] + [[str(i)] for i in range(20)]
+        self.import_(['value'], data)
+        current_savepoint = self.env.cr.savepoint_count - savepoint_start
+        self.assertTrue(current_savepoint < 100, "Too many savepoints in the same transaction (current %d), load method should not create a savepoint for each record" % current_savepoint)
+        self.assertEqual(current_savepoint, 3, "Too many savepoints in the same transaction (current %d)" % current_savepoint)

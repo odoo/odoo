@@ -64,19 +64,18 @@ class ResUsersDeletion(models.Model):
             user_name = user.name
             requester_name = delete_request.create_uid.name
             # Step 1: Delete User
-            try:
-                self.env.cr.execute("SAVEPOINT delete_user")
-                partner = user.partner_id
-                user.unlink()
-                _logger.info("User #%i %r, deleted. Original request from %r.",
-                             user.id, user_name, delete_request.create_uid.name)
-                self.env.cr.execute("RELEASE SAVEPOINT delete_user")
-                delete_request.state = 'done'
-            except Exception as e:
-                _logger.error("User #%i %r could not be deleted. Original request from %r. Related error: %s",
-                             user.id, user_name, requester_name, e)
-                self.env.cr.execute("ROLLBACK TO SAVEPOINT delete_user")
-                delete_request.state = "fail"
+            with self.env.cr.savepoint() as savepoint:  # TODO savepoint in loop, it could be a commit
+                try:
+                    partner = user.partner_id
+                    user.unlink()
+                    _logger.info("User #%i %r, deleted. Original request from %r.",
+                                user.id, user_name, delete_request.create_uid.name)
+                    delete_request.state = 'done'
+                except Exception as e:  # noqa: BLE001
+                    _logger.error("User #%i %r could not be deleted. Original request from %r. Related error: %s",
+                                user.id, user_name, requester_name, e)
+                    savepoint.rollback()
+                    delete_request.state = "fail"
             # make sure we never rollback the work we've done, this can take a long time
             cron_done, cron_remaining = cron_done + 1, cron_remaining - 1
             if auto_commit:
@@ -87,16 +86,15 @@ class ResUsersDeletion(models.Model):
 
             # Step 2: Delete Linked Partner
             #         Could be impossible if the partner is linked to a SO for example
-            try:
-                self.env.cr.execute("SAVEPOINT delete_partner")
-                partner.unlink()
-                _logger.info("Partner #%i %r, deleted. Original request from %r.",
-                             partner.id, user_name, delete_request.create_uid.name)
-                self.env.cr.execute("RELEASE SAVEPOINT delete_partner")
-            except Exception as e:
-                _logger.warning("Partner #%i %r could not be deleted. Original request from %r. Related error: %s",
-                             partner.id, user_name, requester_name, e)
-                self.env.cr.execute("ROLLBACK TO SAVEPOINT delete_partner")
+            with self.env.cr.savepoint() as savepoint:
+                try:
+                    partner.unlink()
+                    _logger.info("Partner #%i %r, deleted. Original request from %r.",
+                                partner.id, user_name, delete_request.create_uid.name)
+                except Exception as e:  # noqa: BLE001
+                    _logger.warning("Partner #%i %r could not be deleted. Original request from %r. Related error: %s",
+                                partner.id, user_name, requester_name, e)
+                    savepoint.rollback()
             # make sure we never rollback the work we've done, this can take a long time
             if auto_commit:
                 self.env.cr.commit()

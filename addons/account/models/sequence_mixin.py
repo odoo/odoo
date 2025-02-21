@@ -335,16 +335,16 @@ class SequenceMixin(models.AbstractModel):
                     continue
                 for field in registry.field_inverses[inverse_field[0]] if inverse_field else [None]:
                     self.env.add_to_compute(triggered_field, self[field.name] if field else self)
-        while True:
-            format_values['seq'] = format_values['seq'] + 1
-            sequence = format_string.format(**format_values)
-            try:
-                with self.env.cr.savepoint(flush=False), mute_logger('odoo.sql_db'):
+        with self.env.cr.savepoint(flush=False) as savepoint, mute_logger('odoo.sql_db'):
+            while True:
+                format_values['seq'] = format_values['seq'] + 1
+                sequence = format_string.format(**format_values)
+                try:
                     self[self._sequence_field] = sequence
                     self.flush_recordset([self._sequence_field])
                     break
-            except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
-                pass
+                except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
+                    savepoint.rollback()
         self._compute_split_sequence()
         self.flush_recordset(['sequence_prefix', 'sequence_number'])
 

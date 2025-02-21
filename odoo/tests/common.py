@@ -950,6 +950,7 @@ class TransactionCase(BaseCase):
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+        self.addCleanup(self.cr._clear_savepoint_count)
 
 
 class SingleTransactionCase(BaseCase):

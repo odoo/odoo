@@ -50,6 +50,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_array_type((1231,), 'f
 
 _logger = logging.getLogger(__name__)
 _logger_conn = _logger.getChild("connection")
+_logger_savepoint = logging.getLogger("odoo.savepoint.count")
 
 real_time = time.time.__call__  # ensure we have a non patched time for query times when using freezegun
 
@@ -99,6 +100,8 @@ class Savepoint:
         self._cr = cr
         self.closed = False
         cr.execute('SAVEPOINT "%s"' % self.name)
+        if hasattr(self._cr, '_increase_savepoint_count'):
+            self._cr._increase_savepoint_count()
 
     def __enter__(self):
         return self
@@ -152,6 +155,10 @@ class BaseCursor:
         # for managing environments is instantiated by registry.cursor().  It
         # is not done here in order to avoid cyclic module dependencies.
         self.transaction = None
+        self.savepoint_count = 0
+
+    def _increase_savepoint_count(self):
+        self.savepoint_count += 1
 
     def flush(self):
         """ Flush the current transaction, and run precommit hooks. """
@@ -298,6 +305,17 @@ class Cursor(BaseCursor):
 
         self.cache = {}
         self._now = None
+
+    def _increase_savepoint_count(self):
+        super()._increase_savepoint_count()
+        # This is not an abitrary number but linked to the size of the shared memory size that store sub trans info
+        stack_info = False
+        if self.savepoint_count % 10 == 0 and odoo.registry(self.dbname).ready:
+            stack_info = True
+        _logger_savepoint.info("New savepoint: savepoint count %s", self.savepoint_count, stack_info=stack_info)
+
+    def _clear_savepoint_count(self):
+        self.savepoint_count = 0
 
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}
@@ -483,6 +501,7 @@ class Cursor(BaseCursor):
         self.prerollback.clear()
         self.postrollback.clear()
         self.postcommit.run()
+        self._clear_savepoint_count()
         return result
 
     def rollback(self):
@@ -493,6 +512,7 @@ class Cursor(BaseCursor):
         result = self._cnx.rollback()
         self._now = None
         self.postrollback.run()
+        self._clear_savepoint_count()
         return result
 
     def __getattr__(self, name):
