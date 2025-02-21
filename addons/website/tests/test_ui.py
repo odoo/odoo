@@ -708,3 +708,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_website_font_family(self):
         self.start_tour("/", "website_font_family", login="admin")
+
+    def test_website_seo_notification(self):
+        self.start_tour(self.env['website'].get_client_action_url("/"), "website_seo_notification", login="admin")

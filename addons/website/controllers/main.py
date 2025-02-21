@@ -803,11 +803,12 @@ class Website(Home):
             raise werkzeug.exceptions.Forbidden()
 
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
-        if res_model == 'website.page':
-            fields.extend(['website_indexed', 'website_id'])
-
         res = {'can_edit_seo': True}
         record = request.env[res_model].browse(res_id)
+        if res_model == 'website.page':
+            fields.extend(['website_indexed', 'website_id'])
+            res["website_is_published"] = record.website_published
+
         try:
             request.website._check_user_can_modify(record)
         except AccessError:
