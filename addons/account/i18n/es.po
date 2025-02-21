@@ -9015,12 +9015,6 @@ msgid "Invoice Status"
 msgstr "Estado de la factura"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
-#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
-msgid "Invoice Template Pdf Report"
-msgstr "Informe PDF de la plantilla de la factura"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 msgid "Invoice Totals"
@@ -9114,6 +9108,8 @@ msgstr "Envío de facturas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
 msgid "Invoice template"
 msgstr "Plantilla de factura"
 
@@ -11835,7 +11831,7 @@ msgstr "Advertencia de crédito de la empresa"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Libro mayor del contacto"
+msgstr "Libro mayor de la empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
@@ -14289,17 +14285,6 @@ msgstr "Correo postal"
 #: code:addons/account/models/company.py:0
 msgid "Some documents are being sent by another process already."
 msgstr "Algunos documentos ya se están enviando por otro proceso."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"Some invoice(s) already have a generated pdf. The existing pdf will be used "
-"for sending. If you want to regenerate them, please delete the attachment "
-"from the invoice."
-msgstr ""
-"Algunas facturas ya tienen un PDF generado y es el que se enviará. Elimine "
-"el archivo adjunto de la factura si desea volver a generarlos."
 
 #. module: account
 #. odoo-python
