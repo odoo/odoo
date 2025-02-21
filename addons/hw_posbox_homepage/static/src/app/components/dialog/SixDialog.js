@@ -16,7 +16,7 @@ export class SixDialog extends Component {
         this.form = useState({ terminal_id: this.store.base.six_terminal });
     }
 
-    async connectToServer() {
+    async configureSix() {
         try {
             if (!this.form.terminal_id) {
                 return;
@@ -36,7 +36,7 @@ export class SixDialog extends Component {
         }
     }
 
-    async clearConfiguration() {
+    async disconnectSix() {
         try {
             const data = await this.store.rpc({
                 url: "/hw_posbox_homepage/six_payment_terminal_clear",
@@ -59,26 +59,22 @@ export class SixDialog extends Component {
 
         <BootstrapDialog identifier="'six-configuration'" btnName="'Configure'">
             <t t-set-slot="header">
-                Configure Six Terminal
+                Configure a Six Terminal
             </t>
             <t t-set-slot="body">
-                <div class="alert alert-warning fs-6" role="alert">
+                <div class="alert alert-info fs-6" role="alert">
                     Set the Terminal ID (TID) of the terminal you want to use.
                 </div>
                 <div class="mt-3">
                     <div class="input-group-sm mb-3">
-                        <label for="iotname">Terminal ID (Digit only)</label>
-                        <input name="iotname" type="text" class="form-control" t-model="this.form.terminal_id" />
-                        <small t-if="!this.form.terminal_id" class="text-danger">Please enter a correct terminal ID</small>
-                    </div>
-                    <div class="d-flex justify-content-end gap-2">
-                        <button class="btn btn-danger btn-sm" t-on-click="clearConfiguration">Clear configuration</button>
-                        <button type="submit" class="btn btn-warning btn-sm" t-on-click="connectToServer">Connect</button>
+                        <input type="text" class="form-control" placeholder="Six Terminal ID (digits only)" t-model="this.form.terminal_id" />
                     </div>
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="!form.terminal_id" t-on-click="configureSix">Configure</button>
+                <button class="btn btn-secondary btn-sm" t-on-click="disconnectSix">Disconnect current</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
     `;
