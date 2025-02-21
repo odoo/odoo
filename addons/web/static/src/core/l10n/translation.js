@@ -1,7 +1,8 @@
 import { markup } from "@odoo/owl";
 
 import { Deferred } from "@web/core/utils/concurrency";
-import { escape, sprintf } from "@web/core/utils/strings";
+import { htmlEscape } from "@web/core/utils/html";
+import { sprintf } from "@web/core/utils/strings";
 
 export const translationLoaded = Symbol("translationLoaded");
 export const translatedTerms = {
@@ -117,7 +118,7 @@ function _safeSprintf(str, ...values) {
         hasMarkup = values.some((v) => v instanceof Markup);
     }
     if (hasMarkup) {
-        return markup(sprintf(escape(str), ..._escapeNonMarkup(values)));
+        return markup(sprintf(htmlEscape(str), ..._escapeNonMarkup(values)));
     }
     return sprintf(str, ...values);
 }
@@ -133,9 +134,9 @@ function _escapeNonMarkup(values) {
     if (Object.prototype.toString.call(values[0]) === "[object Object]") {
         const sanitized = {};
         for (const [key, value] of Object.entries(values[0])) {
-            sanitized[key] = value instanceof Markup ? value : escape(value);
+            sanitized[key] = htmlEscape(value);
         }
         return [sanitized];
     }
-    return values.map((x) => (x instanceof Markup ? x : escape(x)));
+    return values.map((x) => htmlEscape(x));
 }

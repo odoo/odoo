@@ -139,22 +139,6 @@ function isBinSize(value) {
     return /^\d+(\.\d*)? [^0-9]+$/.test(value);
 }
 
-/**
- * Checks if a html content is empty. If there are only formatting tags
- * with style attributes or a void content. Famous use case is
- * '<p style="..." class=".."><br></p>' added by some web editor(s).
- * Note that because the use of this method is limited, we ignore the cases
- * like there's one <img> tag in the content. In such case, even if it's the
- * actual content, we consider it empty.
- *
- * @param {string} innerHTML
- * @returns {boolean} true if no content found or if containing only formatting tags
- */
-export function isHtmlEmpty(innerHTML = "") {
-    const div = Object.assign(document.createElement("div"), { innerHTML });
-    return div.innerText.trim() === "";
-}
-
 export class KanbanRecord extends Component {
     static components = {
         Dropdown,
