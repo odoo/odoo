@@ -883,12 +883,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     if ((orm && field.local) || (orm && field.related) || (orm && field.compute)) {
                         continue;
                     }
-
+                    const raw =
+                        typeof record.raw[name] == "object" ? record.raw[name]?.id || false : false;
                     if (field.type === "many2one") {
-                        result[name] = record[name]?.id || record.raw[name] || false;
+                        result[name] = record[name]?.id || raw || false;
                     } else if (X2MANY_TYPES.has(field.type)) {
                         const ids = [...record[name]].map((record) => record.id).filter(Boolean);
-                        result[name] = ids.length ? ids : (!orm && record.raw[name]) || [];
+                        result[name] = ids.length ? ids : (!orm && raw) || [];
                     } else if (typeof record[name] === "object") {
                         result[name] = JSON.stringify(record[name]);
                     } else {
