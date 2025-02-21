@@ -18,7 +18,7 @@ patch(Activity.prototype, {
         return formatDateTime(this.create_date);
     },
     async edit() {
-        return new Promise((resolve) =>
+        await new Promise((resolve) =>
             this.store.env.services.action.doAction(
                 {
                     type: "ir.actions.act_window",
@@ -48,6 +48,7 @@ patch(Activity.prototype, {
             payload: { id: this.res_id, model: this.res_model },
         });
     },
+    /** @returns {Promise<import("@web/webclient/actions/action_service").ActionDescription>} */
     async markAsDoneAndScheduleNext() {
         const action = await this.store.env.services.orm.call(
             "mail.activity",

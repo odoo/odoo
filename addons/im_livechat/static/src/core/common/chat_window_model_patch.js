@@ -11,6 +11,7 @@ export const CW_LIVECHAT_STEP = {
 const chatWindowPatch = {
     setup() {
         super.setup(...arguments);
+        /** @type {undefined|"CONFIRM_CLOSE"|"FEEDBACK"} */
         this.livechatStep = CW_LIVECHAT_STEP.NONE;
     },
     close(options = {}) {

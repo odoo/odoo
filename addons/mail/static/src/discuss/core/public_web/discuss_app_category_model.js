@@ -4,14 +4,6 @@ import { browser } from "@web/core/browser/browser";
 
 export class DiscussAppCategory extends Record {
     static id = "id";
-    /** @returns {import("models").DiscussAppCategory} */
-    static get(data) {
-        return super.get(data);
-    }
-    /** @returns {import("models").DiscussAppCategory|import("models").DiscussAppCategory[]} */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
 
     /**
      * @param {import("models").Thread} t1

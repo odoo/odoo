@@ -6,18 +6,6 @@ const VIDEO_EXTENSIONS = new Set(["mp4", "mov", "avi", "mkv", "webm", "mpeg", "m
 export class LinkPreview extends Record {
     static _name = "mail.link.preview";
     static id = "id";
-    /** @returns {import("models").LinkPreview} */
-    static get(data) {
-        return super.get(data);
-    }
-    /**
-     * @template T
-     * @param {T} data
-     * @returns {T extends any[] ? import("models").LinkPreview[] : import("models").LinkPreview}
-     */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
 
     /** @type {number} */
     id;

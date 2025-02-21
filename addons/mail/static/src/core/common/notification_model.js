@@ -5,20 +5,6 @@ import { _t } from "@web/core/l10n/translation";
 export class Notification extends Record {
     static _name = "mail.notification";
     static id = "id";
-    /** @type {Object.<number, import("models").Notification>} */
-    static records = {};
-    /** @returns {import("models").Notification} */
-    static get(data) {
-        return super.get(data);
-    }
-    /**
-     * @template T
-     * @param {T} data
-     * @returns {T extends any[] ? import("models").Notification[] : import("models").Notification}
-     * */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
 
     /** @type {number} */
     id;
@@ -39,13 +25,12 @@ export class Notification extends Record {
             if (!this.mail_message_id?.isSelfAuthored) {
                 return;
             }
-            const failure = Object.values(this.store.Failure.records).find((f) => {
-                return (
+            const failure = Object.values(this.store.Failure.records).find(
+                (f) =>
                     f.resModel === thread?.model &&
                     f.type === this.notification_type &&
                     (f.resModel !== "discuss.channel" || f.resIds.has(thread?.id))
-                );
-            });
+            );
             return this.isFailure
                 ? {
                       id: failure ? failure.id : this.store.Failure.nextId.value++,

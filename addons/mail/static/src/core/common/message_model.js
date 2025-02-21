@@ -17,20 +17,6 @@ const { DateTime } = luxon;
 export class Message extends Record {
     static _name = "mail.message";
     static id = "id";
-    /** @type {Object.<number, import("models").Message>} */
-    static records = {};
-    /** @returns {import("models").Message} */
-    static get(data) {
-        return super.get(data);
-    }
-    /**
-     * @template T
-     * @param {T} data
-     * @returns {T extends any[] ? import("models").Message[] : import("models").Message}
-     */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
 
     /** @param {Object} data */
     update(data) {

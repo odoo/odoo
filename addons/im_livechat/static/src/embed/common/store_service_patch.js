@@ -10,6 +10,7 @@ const StorePatch = {
     setup() {
         super.setup(...arguments);
         this.livechat_rule = Record.one("im_livechat.channel.rule");
+        /** @type {boolean} */
         this.livechat_available = session.livechatData?.isAvailable;
         this.activeLivechats = Record.many("Thread", {
             inverse: "storeAsActiveLivechats",

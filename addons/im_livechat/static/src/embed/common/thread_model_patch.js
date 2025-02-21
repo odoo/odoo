@@ -66,7 +66,7 @@ patch(Thread.prototype, {
         });
         this.requested_by_operator = false;
     },
-
+    /** @returns {boolean} */
     get isLastMessageFromCustomer() {
         return this.newestPersistentOfAllMessage?.isSelfAuthored;
     },
