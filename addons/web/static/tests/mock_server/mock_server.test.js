@@ -913,6 +913,32 @@ test("performRPC: formatted_read_group, group by datetime with number granularit
     }
 });
 
+test("performRPC: formatted_read_group day_of_week", async () => {
+    Bar._records = [
+        { foo: 11, datetime: "2025-02-17 13:00:00" }, // Monday
+        { foo: 22, datetime: "2025-02-18 13:00:00" }, // Tuesday
+        { foo: 33, datetime: "2025-02-19 13:00:00" }, // Wednesday
+        { foo: 44, datetime: "2025-02-20 13:00:00" }, // Thursday
+        { foo: 55, datetime: "2025-02-21 13:00:00" }, // Friday
+        { foo: 66, datetime: "2025-02-22 13:00:00" }, // Saturday
+        { foo: 77, datetime: "2025-02-23 13:00:00" }, // Sunday
+    ];
+    await makeMockServer();
+
+    const response = await ormRequest({
+        model: "bar",
+        method: "formatted_read_group",
+        kwargs: {
+            domain: [],
+            groupby: ["datetime:day_of_week"],
+            aggregates: ["foo:sum"],
+        },
+    });
+
+    expect(response.map((x) => x["datetime:day_of_week"])).toEqual([0, 1, 2, 3, 4, 5, 6]);
+    expect(response.map((x) => x["foo:sum"])).toEqual([77, 11, 22, 33, 44, 55, 66]);
+});
+
 test("performRPC: formatted_read_group, group by m2m", async () => {
     await makeMockServer();
 
