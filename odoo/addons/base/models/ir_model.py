@@ -233,6 +233,8 @@ class IrModel(models.Model):
     view_ids = fields.One2many('ir.ui.view', compute='_view_ids', string='Views')
     count = fields.Integer(compute='_compute_count', string="Count (Incl. Archived)",
                            help="Total number of records in this model")
+    fold_name = fields.Char(string="Fold Field", help="In a Kanban view where columns are records of this model, the value "
+        "of this (boolean) field determines which column should be folded by default.")
 
     @api.depends()
     def _inherited_models(self):
@@ -297,6 +299,12 @@ class IrModel(models.Model):
             for field in order_fields:
                 if field not in stored_fields:
                     raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.", field))
+
+    @api.constrains('fold_name')
+    def _check_fold_name(self):
+        for model in self:
+            if model.fold_name and model.fold_name not in model.field_id.mapped('name'):
+                raise ValidationError(_("The value of 'Fold Field' should be a field name of the model."))
 
     _obj_name_uniq = models.Constraint('UNIQUE (model)', 'Each model must have a unique name.')
 
@@ -378,7 +386,7 @@ class IrModel(models.Model):
             vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
         res = super().write(vals)
         # ordering has been changed, reload registry to reflect update + signaling
-        if 'order' in vals:
+        if 'order' in vals or 'fold_name' in vals:
             self.env.flush_all()  # _setup_models__ need to fetch the updated values from the db
             self.pool._setup_models__(self._cr)
         return res
@@ -416,6 +424,7 @@ class IrModel(models.Model):
             'state': 'manual' if model._custom else 'base',
             'abstract': model._abstract,
             'transient': model._transient,
+            'fold_name': model._fold_name,
         }
 
     def _reflect_models(self, model_names):
@@ -470,6 +479,7 @@ class IrModel(models.Model):
             '_abstract': bool(model_data['abstract']),
             '_transient': bool(model_data['transient']),
             '_order': model_data['order'],
+            '_fold_name': model_data['fold_name'],
             '__doc__': model_data['info'],
         }
 
