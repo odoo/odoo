@@ -1,9 +1,10 @@
 .o_hr_recruitment_kanban {
     .o_kanban_renderer {
         &.o_kanban_ungrouped .o_kanban_record {
-            width: 450px;
+            width: 100%;
             &:not(.o_kanban_ghost) {
-                min-height: 220px;
+                min-height: 80px;
+                justify-content: center;
             }
         }
 
@@ -21,8 +22,33 @@
     }
 }
 
+.content_centered {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
 .o_kanban_view {
     .o_view_sample_data .ribbon {
         display: none;
+    }
+
+    .o_kanban_renderer {
+        // Grouped / Ungrouped sections hidding
+        &.o_kanban_grouped {
+            .o_recruitment_kanban_card_ungrouped {
+                display:none !important;
+            }
+
+            .content_centered {
+                margin: 1rem;
+            }
+        }
+        &.o_kanban_ungrouped {
+            .o_recruitment_kanban_card_grouped {
+                display:none !important;
+            }
+        }
     }
 }
