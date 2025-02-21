@@ -40,7 +40,7 @@ export const imStatusService = {
                 const store = env.services["mail.store"];
                 const persona = store.Persona.get({
                     type: partner_id ? "partner" : "guest",
-                    id: partner_id ?? guest_id,
+                    id: partner_id || guest_id,
                 });
                 if (!persona) {
                     return; // Do not store unknown persona's status
