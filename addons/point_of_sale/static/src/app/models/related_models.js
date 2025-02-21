@@ -949,6 +949,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                                 .filter(Boolean);
                             if (existingRecords.length) {
                                 record[field] = [["set", ...existingRecords]];
+                            } else {
+                                record[field] = [];
                             }
                         } else if (
                             params.type === "many2one" &&
