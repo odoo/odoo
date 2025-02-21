@@ -446,9 +446,10 @@ class PosSession(models.Model):
 
     def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
-        self.ensure_one()
+        record = self.ensure_one()
+        if self.env.user.has_group('point_of_sale.group_pos_user'):
+            record = record.sudo()
         data = {}
-        sudo = self.env.user.has_group('point_of_sale.group_pos_user')
         if self.get_session_orders().filtered(lambda o: o.state != 'cancel') or self.sudo().statement_line_ids:
             self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
             if self.state == 'closed':
@@ -459,14 +460,10 @@ class PosSession(models.Model):
             if self.update_stock_at_closing:
                 self._create_picking_at_end_of_session()
                 self._get_closed_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
-            try:
-                with self.env.cr.savepoint():
-                    data = self.with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
-            except AccessError as e:
-                if sudo:
-                    data = self.sudo().with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
-                else:
-                    raise e
+            # when the user is POS, update the record in sudo
+            data = record.with_company(record.company_id).with_context(
+                check_move_validity=False, skip_invoice_sync=True
+            )._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
 
             balance = sum(self.move_id.line_ids.mapped('balance'))
             try:
@@ -506,6 +503,7 @@ class PosSession(models.Model):
         self.picking_ids.move_ids.sudo()._trigger_scheduler()
 
         self.write({'state': 'closed'})
+        self.env.flush_all()  # ensure sale.report is up to date
         return True
 
     def _post_statement_difference(self, amount):
