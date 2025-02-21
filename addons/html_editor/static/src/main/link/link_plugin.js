@@ -405,12 +405,10 @@ export class LinkPlugin extends Plugin {
                         link.className = classes;
                     }
                     const image = isImage && findInSelection(selection, "img");
-                    if (isImage) {
-                        if (image.parentElement.matches("figure[contenteditable=false]")) {
-                            link.setAttribute("contenteditable", true);
-                        }
-                        image.before(link);
-                        link.append(image);
+                    const figure = image?.parentElement?.matches("figure[contenteditable=false]") && image.parentElement;
+                    if (figure) {
+                        figure.before(link);
+                        link.append(figure);
                     } else {
                         const content = this.dependencies.selection.extractContent(selection);
                         link.append(content);
@@ -559,8 +557,9 @@ export class LinkPlugin extends Plugin {
         } else if (!selection.isCollapsed) {
             // Open the link tool only if we have an image selected
             const imageNode = findInSelection(selection, "img");
-            if (imageNode?.parentNode?.tagName === "A" && this.isLinkAllowedOnSelection()) {
-                this.openLinkTools(imageNode.parentElement);
+            const parentLink = imageNode && closestElement(imageNode, "a");
+            if (parentLink && this.isLinkAllowedOnSelection()) {
+                this.openLinkTools(parentLink);
             } else {
                 this.linkInDocument = null;
                 this.closeLinkTools();
@@ -634,10 +633,11 @@ export class LinkPlugin extends Plugin {
         if (selectedImageNodes && startLink && endLink && startLink === endLink) {
             for (const imageNode of selectedImageNodes) {
                 let imageLink;
+                const imageOrFigure = closestElement(imageNode, "figure") || imageNode;
                 if (direction === DIRECTIONS.RIGHT) {
-                    imageLink = this.dependencies.split.splitAroundUntil(imageNode, endLink);
+                    imageLink = this.dependencies.split.splitAroundUntil(imageOrFigure, endLink);
                 } else {
-                    imageLink = this.dependencies.split.splitAroundUntil(imageNode, startLink);
+                    imageLink = this.dependencies.split.splitAroundUntil(imageOrFigure, startLink);
                 }
                 cursors.update(callbacksForCursorUpdate.unwrap(imageLink));
                 unwrapContents(imageLink);
