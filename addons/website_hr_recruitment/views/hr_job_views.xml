@@ -12,15 +12,10 @@
                 <field name="website_published" invisible="1"/>
                 <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not website_published"/>
             </xpath>
-            <xpath expr="//div[@name='kanban_boxes']" position="attributes">
-                <attribute name="class" add="border-top pt-2 mx-n2 px-3" separator=" "/>
-            </xpath>
-            <xpath expr="//div[@name='kanban_boxes']" position="inside">
-                <field name="website_url" invisible="1"/>
-                <div class="col-6">
-                    <field name="is_published" widget="boolean_toggle_labeled"/>
-                </div>
-                <div class="col-6" name="bottom_right"></div>
+            <xpath expr="//button[@name='%(hr_recruitment.action_hr_job_applications)d']" position="replace">
+                <a type="object" name="open_website_url" class="btn btn-primary" role="button">
+                    Job Page
+                </a>
             </xpath>
         </field>
     </record>
@@ -44,16 +39,6 @@
         <field name="name">hr.job.view.kanban</field>
         <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='bottom_right']" position="replace">
-                <field name="website_url" invisible="1"/>
-                <div class="o_link_trackers col-6 text-end">
-                    <a type="object" name="open_website_url">
-                        <i class="fa fa-fw fa-external-link" role="img"></i>
-                        Job Page
-                    </a>
-                </div>
-            </xpath>
-
             <xpath expr="//div[@name='menu_new_applications']" position="after">
                 <field name="full_url" widget="CopyClipboardJobLinkButton"/>
             </xpath>
