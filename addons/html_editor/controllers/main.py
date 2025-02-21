@@ -361,7 +361,9 @@ class HTML_Editor(http.Controller):
         inserted into the DOM.
         """
         self._clean_context()
-        attachment = request.env['ir.attachment'].browse(attachment.id)
+        attachment = request.env['ir.attachment'].search([('id', '=', attachment.id), ('name', '!=', False)], limit=1)
+        if not attachment:
+            return "/html_editor/static/src/img/placeholder_thumbnail.png"
 
         fields = {
             'original_id': attachment.id,
