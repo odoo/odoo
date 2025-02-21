@@ -26,6 +26,12 @@
             Wishlist
         </we-button>
     </we-row>
+    <xpath expr="//we-button[hasclass('o_we_cta_large')]" position="attributes">
+        <attribute name="data-customize-website-views" add="website_sale_wishlist.product_add_to_wishlist_large" separator=", "/>
+    </xpath>
+    <xpath expr="//we-button[hasclass('o_we_cta_boxed')]" position="attributes">
+        <attribute name="data-customize-website-views" add="website_sale_wishlist.product_add_to_wishlist_boxed" separator=", "/>
+    </xpath>
     <div name="o_wsale_checkout_pages" position="inside">
         <we-checkbox
             string="Add to Wishlist"

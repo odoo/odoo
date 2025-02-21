@@ -409,6 +409,12 @@
         </div>
         <!-- Product page -->
         <div data-js="WebsiteSaleProductPage" data-selector="main:has(.o_wsale_product_page)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Product Page">
+            <we-checkbox
+                string="Search Bar"
+                data-customize-website-views="website_sale.product_search"
+                data-no-preview="true"
+                data-reload="/"
+            />
             <!-- Image config -->
             <we-button-group string="Images Width" data-no-preview="true" data-reload="/">
                 <we-button data-set-image-width="none" data-img="/website_sale/static/src/img/snippet_options/image-width-none.svg" title="None"/>
@@ -467,6 +473,11 @@
                 <we-button class="o_we_bg_success" data-name="o_wsale_add_extra_images" data-add-images="true" data-no-preview="true">Add</we-button>
                 <we-button class="o_we_bg_danger" data-name="o_wsale_clear_extra_images" data-clear-images="true" data-no-preview="true">Remove all</we-button>
             </we-row>
+            <we-checkbox string="Separators"
+                data-customize-website-views="website_sale.variants_separator, website_sale.cta_separator"
+                data-no-preview="true"
+                data-reload="/"
+            />
             <we-row string="Cart" class="o_we_full_row" data-name="o_wsale_cart_opt">
                 <we-button
                     title="Buy Now"
@@ -488,6 +499,34 @@
                     Quantity
                 </we-button>
             </we-row>
+            <we-select
+                data-name="cta_opt"
+                string="Style"
+                class="o_we_sublevel_1"
+                data-no-preview="true"
+                data-reload="/"
+            >
+                <we-button
+                    data-name="cta_default_opt"
+                    data-customize-website-views=""
+                >
+                    Default
+                </we-button>
+                <we-button
+                    class="o_we_cta_boxed"
+                    data-name="cta_boxed"
+                    data-customize-website-views="website_sale.cta_wrapper_boxed"
+                >
+                    Boxed
+                </we-button>
+                <we-button
+                    class="o_we_cta_large"
+                    data-name="cta_large_opt"
+                    data-customize-website-views="website_sale.cta_wrapper_large, website_sale.product_buy_now_large, website_sale.product_quantity_large"
+                >
+                    Large
+                </we-button>
+            </we-select>
             <div data-name="o_wsale_actions_opt" class="d-none">
                 <we-row string="Actions" class="o_we_full_row" data-name="o_we_actions_opt"/>
             </div>
@@ -505,7 +544,7 @@
             />
             <we-checkbox
                 string="Terms and Conditions"
-                data-customize-website-views="website_sale.product_custom_text"
+                data-customize-website-views="website_sale.product_terms_and_conditions"
                 data-no-preview="true"
                 data-reload="/"
             />

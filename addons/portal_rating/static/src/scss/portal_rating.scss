@@ -1,7 +1,14 @@
 /* static stars */
+// portal_rating
 $o-w-rating-star-color: #FACC2E;
-.o_website_rating_static{
-    color: $o-w-rating-star-color;
+
+.o_website_rating_static {
+    color: var(--WebsiteRating__star-color,  #{$o-w-rating-star-color});
+}
+
+// website_sale
+#product_details {
+    --WebsiteRating__star-color: currentColor;
 }
 
 .o_website_rating_card_container {

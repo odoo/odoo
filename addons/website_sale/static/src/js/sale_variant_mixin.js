@@ -560,9 +560,9 @@ var VariantMixin = {
         radio.click();  // Trigger onChangeVariant.
         var $parent = $(ev.target).closest('.js_product');
         $parent.find('.o_variant_pills')
-            .removeClass("active")
+            .removeClass("active border-primary text-primary-emphasis bg-primary-subtle")
             .filter(':has(input:checked)')
-            .addClass("active");
+            .addClass("active border-primary text-primary-emphasis bg-primary-subtle");
     },
 
     /**
