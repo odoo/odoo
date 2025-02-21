@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-
 import json
+import warnings
 
 from odoo import fields
 
@@ -27,10 +26,10 @@ fields.Field.__doc__ += """
 
         Sparse fields have a very small probability of being not null. Therefore
         many such fields can be serialized compactly into a common location, the
-        latter being a so-called "serialized" field.
+        latter being a JSON field.
 
-        :param sparse: the name of the field where the value of this field must
-            be stored.
+        :param sparse: the name of the JSON field where the value of this field
+            must be stored.
 """
 fields.Field.sparse = None
 
@@ -49,7 +48,7 @@ def _get_attrs(self, model_class, name):
 @monkey_patch(fields.Field)
 def _compute_sparse(self, records):
     for record in records:
-        values = record[self.sparse]
+        values = record[self.sparse] or {}
         record[self.name] = values.get(self.name)
     if self.relational:
         for record in records:
@@ -58,7 +57,7 @@ def _compute_sparse(self, records):
 @monkey_patch(fields.Field)
 def _inverse_sparse(self, records):
     for record in records:
-        values = record[self.sparse]
+        values = record[self.sparse] or {}
         value = self.convert_to_read(record[self.name], record, use_display_name=False)
         if value:
             if values.get(self.name) != value:
@@ -80,6 +79,10 @@ class Serialized(fields.Field):
     column_type = ('text', 'text')
 
     prefetch = False                    # not prefetched by default
+
+    def _get_attrs(self, model_class, name):
+        warnings.warn("Since Odoo 19, the Serialized field is deprecated, use Json field instead", DeprecationWarning, stacklevel=2)
+        return super()._get_attrs(model_class, name)
 
     def convert_to_column_insert(self, value, record, values=None, validate=True):
         return self.convert_to_cache(value, record, validate=validate)
