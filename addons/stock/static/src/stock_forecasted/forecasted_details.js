@@ -59,4 +59,8 @@ export class ForecastedDetails extends Component {
     get freeStockLabel() {
         return _t('Free Stock');
     }
+
+    should_have_grey_bg(line){
+        return !line.document_in && !line.reservation && !line.in_transit && line.replenishment_filled && !line.document_out && !line.removal_date
+    }
 }
