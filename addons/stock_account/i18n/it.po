@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -585,11 +585,11 @@ msgstr "Collegati a "
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Lot %(lot)s has a negative quantity in stock. Correct this"
-"                         quantity before enabling lot valuation"
+"Lot %(lot)s has a negative quantity in stock.\n"
+"Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
-"Il lotto %(lot)s presenta una quantità di giacenze negativa. Correggi la "
-"quantità prima di attivare la valutazione del lotto"
+"Il lotto %(lot)s ha una quantità negativa in stock.\n"
+"Correggi la quantità prima di attivare/disattivare la valutazione del lotto."
 
 #. module: stock_account
 #. odoo-python
@@ -679,6 +679,16 @@ msgstr "In uscita"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Prodotto"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Please assign lots to all your quantities before enabling lot valuation."
+msgstr ""
+"Il prodotto %(product)s presenta una quantità nell'ubicazione %(location)s senza lotto.\n"
+"Assegna i lotti a tutte le tue quantità prima di attivare la valutazione."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category

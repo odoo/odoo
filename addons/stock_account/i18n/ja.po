@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -492,7 +492,7 @@ msgstr "チェックを入れた場合、評価はロット/シリアル番号�
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Incoming"
-msgstr "入荷"
+msgstr "入荷予定"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -561,9 +561,11 @@ msgstr "以下に関連した"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Lot %(lot)s has a negative quantity in stock. Correct this"
-"                         quantity before enabling lot valuation"
-msgstr "ロット%(lot)s在庫量がマイナスです。ロット評価を有効にする前に、この数量を修正して下さい。 "
+"Lot %(lot)s has a negative quantity in stock.\n"
+"Correct this quantity before enabling/disabling lot valuation."
+msgstr ""
+"ロット%(lot)sの在庫数量がマイナスです。\n"
+"ロット評価を有効化/無効化する前に、この数量を修正して下さい。"
 
 #. module: stock_account
 #. odoo-python
@@ -653,6 +655,16 @@ msgstr "出庫"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "プロダクト"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Please assign lots to all your quantities before enabling lot valuation."
+msgstr ""
+"プロダクト%(product)s は、ロットなしで評価対象のロケーション %(location)s に数量があります。.\n"
+"ロット評価を有効にする前に、全ての数量にロットを割当てて下さい。"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -1017,7 +1029,7 @@ msgstr "残在庫価値合計"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 msgid "Total Value"
-msgstr "合計金額"
+msgstr "総在庫価値"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking

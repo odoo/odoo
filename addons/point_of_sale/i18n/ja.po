@@ -319,7 +319,7 @@ msgid ""
 "             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
 "</p>"
 msgstr ""
-"<p> %(client_name)s様、<br/>領収書 %(is_invoiced)s             %(pos_name)s金額 "
+"<p> %(client_name)s様、<br/>レシート %(is_invoiced)s             %(pos_name)s金額: "
 "%(amount)s 発行元:%(company_name)sをお送りします</p>"
 
 #. module: point_of_sale
@@ -456,12 +456,12 @@ msgstr "オーダ用のセッション固有のシーケンス番号。クライ
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt."
-msgstr "印刷された領収書にフッタとして挿入される短いテキスト。"
+msgstr "印刷されたレシートにフッタとして挿入される短いテキスト。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_header
 msgid "A short text that will be inserted as a header in the printed receipt."
-msgstr "印刷された領収書のヘッダとして挿入される短いテキスト。"
+msgstr "印刷されたレシートのヘッダとして挿入される短いテキスト。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1182,12 +1182,12 @@ msgstr "バーコードスキャナ/カードリーダー"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__basic_receipt
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_basic_receipt
 msgid "Basic Receipt"
-msgstr "基本の領収書"
+msgstr "基本レシート"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Before Closing Difference"
-msgstr "違いを閉じる前に"
+msgstr "レジ締め前の差額"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -1707,7 +1707,7 @@ msgstr "顧客を選択"
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 msgid "Choose how the URL to the portal will be print on the receipt."
-msgstr "ポータルサイトのURLを領収書にどのように印刷するかを選択します。"
+msgstr "ポータルサイトのURLをレシートにどのように印刷するかを選択します。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1833,7 +1833,7 @@ msgstr "セッション終了"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
-msgstr "クロージング差異%(payment_method)s(%(session)s)"
+msgstr "クロージング差額%(payment_method)s(%(session)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2607,7 +2607,7 @@ msgstr "差異"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Difference at closing PoS session"
-msgstr "PoSセッション終了時の違い"
+msgstr "PoSセッション終了時の差額"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -4655,7 +4655,7 @@ msgstr "この払戻し行には、マイナスの数量しか入力できませ
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Only administrators can edit receipt headers and footers"
-msgstr "管理者のみが領収書のヘッダとフッタを編集できます。"
+msgstr "管理者のみがレシートのヘッダとフッタを編集できます。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -5152,7 +5152,7 @@ msgstr "支払名デモ"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr "領収書情報"
+msgstr "支払レシート情報"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
@@ -5918,13 +5918,13 @@ msgstr "印刷"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Print Basic Receipt"
-msgstr "基本の領収書を印刷"
+msgstr "基本レシートを印刷"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Print Full Receipt"
-msgstr "完全な領収書を印刷"
+msgstr "詳細レシートを印刷"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5955,17 +5955,11 @@ msgstr "価格を表示しない基本チケットを印刷します。ギフト
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_use_ticket_qr_code
-msgid ""
-"Print information on the receipt to allow the costumer to easily request the"
-" invoice anytime, from Odoo's portal"
-msgstr "領収書に情報を印刷することで、顧客はOdooのポータルからいつでも簡単に顧客請求書を請求できます。"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"Print information on the receipt to allow the customer to easily request the"
-" invoice anytime, from Odoo's portal."
-msgstr "領収書に情報を印刷することで、顧客はOdooのポータルからいつでも簡単に顧客請求書を請求できます。"
+"Print information on the receipt to allow the customer to easily access the "
+"invoice anytime, from Odoo's portal."
+msgstr "顧客がいつでもOdooのポータルから顧客請求書に簡単にアクセスできるように、レシートに情報を印刷します。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6318,13 +6312,13 @@ msgstr "理由"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Receipt"
-msgstr "入荷"
+msgstr "レシート"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Receipt %s"
-msgstr "領収書%s"
+msgstr "レシート%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
@@ -6343,7 +6337,7 @@ msgstr "レシートヘッダ"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pos_reference
 msgid "Receipt Number"
-msgstr "領収書番号"
+msgstr "レシート番号"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6516,8 +6510,8 @@ msgstr "請求書を再印刷"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
-msgid "Request invoice"
-msgstr "請求書を請求"
+msgid "Request Invoice"
+msgstr "請求書をリクエスト"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6933,7 +6927,7 @@ msgstr "返金要求を送信する"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Send Text receipt Using sms"
-msgstr "SMSを使用してテキスト領収書を送信"
+msgstr "SMSを使用してテキストレシートを送信"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7855,7 +7849,7 @@ msgstr "レシートを自動印刷できる場合は、レシート画面をス
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
-msgstr "領収書は、各注文の最後に自動的に印刷されます。"
+msgstr "レシートは、各注文の最後に自動的に印刷されます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9330,7 +9324,7 @@ msgstr "請求書"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "the receipt"
-msgstr "領収書"
+msgstr "レシート"
 
 #. module: point_of_sale
 #. odoo-javascript

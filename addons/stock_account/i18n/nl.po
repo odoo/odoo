@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -584,11 +584,11 @@ msgstr "Gelinkt aan"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Lot %(lot)s has a negative quantity in stock. Correct this"
-"                         quantity before enabling lot valuation"
+"Lot %(lot)s has a negative quantity in stock.\n"
+"Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
-"Partij %(lot)s heeft een negatieve hoeveelheid op voorraad. Corrigeer deze "
-"hoeveelheid voordat je partijwaardering inschakelt"
+"Partij-/serienummer %(lot)s heeft een negatieve hoeveelheid op voorraad.\n"
+"Corrigeer deze hoeveelheid voordat je Partij-/serienummer-waardering in-/uitschakelt."
 
 #. module: stock_account
 #. odoo-python
@@ -681,6 +681,16 @@ msgstr "Uitgaand"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Product"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Please assign lots to all your quantities before enabling lot valuation."
+msgstr ""
+"Product %(product)s heeft hoeveelheid in gewaardeerde locatie %(location)s zonder partij-/serienummer.\n"
+"Wijs partij-/serienummers toe aan alle hoeveelheden voordat je partij-/serienummer-waardering inschakelt."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
