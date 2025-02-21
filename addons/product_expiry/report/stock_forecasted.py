@@ -11,36 +11,49 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
         res["use_expiration_date"] = any(self.env['product.product'].browse(res["product_variants_ids"]).mapped('use_expiration_date'))
+        if res["use_expiration_date"]:
+            res["to_remove_qty"] = res['quantity_on_hand'] + res['incoming_qty'] - res['outgoing_qty'] - res['virtual_available']
         return res
 
     def _get_quant_domain(self, location_ids, product_ids):
         res = super()._get_quant_domain(location_ids, product_ids)
         if any(self.env['product.product'].browse(product_ids).mapped('use_expiration_date')):
-            res += ['|', ('removal_date', '=', False), ('removal_date', '>=', date.today())]
+            res += ['|', ('removal_date', '=', False), ('removal_date', '>', date.today())]
         return res
 
+    def _get_expired_quant_domain(self, location_ids, product_ids):
+        res = super()._get_quant_domain(location_ids, product_ids)
+        res += [('removal_date', '<=', date.today())]
+        return res
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         res = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit, read)
         removal_date = self.env.context.get('removal_date', False)
         if removal_date:
-            res["removal_date"] = format_date(self.env, removal_date)
+            res["removal_date"] = removal_date if removal_date == -1 else format_date(self.env, removal_date)
         return res
 
-    def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
-        res = super()._get_report_lines(product_template_ids, product_ids, wh_location_ids, wh_stock_location, read)
-        out = []
-        for line in res:
-            out.append(line)
-            product = self.env['product.product'].browse(line['product']['id'])
-            if product.use_expiration_date and not line['document_in'] and not line['reservation'] and not line['in_transit'] and line['replenishment_filled'] and not line['document_out']:
-                # If we find a "free quantity" line for a product with expiration dates, we insert the "To remove on" lines here.
-                out += [
-                    self.with_context(removal_date=removal_date)._prepare_report_line(free_stock, product=product, read=read)
-                    for removal_date, free_stock in self.env['stock.quant']._read_group(
-                        self._get_quant_domain(wh_location_ids, product.ids),
-                        ['removal_date:day'], ['available_quantity:sum']
-                    )
-                    if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding)
-                ]
-        return out
+    def _get_products_to_always_include(self, products, product_templates):
+        if not products:
+            return self.env['product.template'].browse(product_templates).product_variant_ids.filtered(lambda p: p.use_expiration_date)
+        return self.env['product.product'].browse(products).filtered(lambda p: p.use_expiration_date)
+
+    def _free_stock_lines(self, product, free_stock, wh_location_ids, read):
+        res = []
+        if product.use_expiration_date:
+            reserved_expired, unreserved_expired = self.env['stock.quant']._read_group(self._get_expired_quant_domain(wh_location_ids, product.ids), aggregates=['reserved_quantity:sum', 'available_quantity:sum'])[0]
+            # Insert the "To remove now" line here, before the free stock line
+            if not float_is_zero(unreserved_expired, precision_rounding=product.uom_id.rounding):
+                res += [self.with_context(removal_date=-1)._prepare_report_line(unreserved_expired, product=product, read=read)]
+            # Insert the "To remove on" lines here, before the free stock line
+            res += [
+                self.with_context(removal_date=removal_date)._prepare_report_line(free_stock, product=product, read=read)
+                for removal_date, free_stock in self.env['stock.quant']._read_group(
+                    self._get_quant_domain(wh_location_ids, product.ids),
+                    ['removal_date:day'], ['available_quantity:sum']
+                )
+                if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding)
+            ]
+            # Compensate for any reserved products that are no longer fresh
+            free_stock += reserved_expired
+        return res + super()._free_stock_lines(product, free_stock, wh_location_ids, read)

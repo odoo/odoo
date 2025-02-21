@@ -1,7 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/views/fields/formatters";
 import { Component, markup } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
 
 export class ForecastedHeader extends Component {
     static template = "stock.ForecastedHeader";
@@ -32,9 +31,5 @@ export class ForecastedHeader extends Component {
             context.search_default_product_id = this.props.docs.product_variants_ids;
         }
         return context;
-    }
-
-    get onHandLabel() {
-        return _t('On Hand')
     }
 }
