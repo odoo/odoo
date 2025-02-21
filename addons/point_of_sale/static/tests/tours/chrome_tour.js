@@ -67,7 +67,16 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.isShown(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
+<<<<<<< saas-17.4:addons/point_of_sale/static/tests/tours/chrome_tour.js
             PaymentScreen.enterPaymentLineAmount("Cash", "20", true, { change: "18.0" }),
+||||||| 643180fc73658ca2425dc4bc6a9f242978efe9fc:addons/point_of_sale/static/tests/tours/Chrome.tour.js
+            PaymentScreen.enterPaymentLineAmount("Cash", "20"),
+            PaymentScreen.remainingIs("0.0"),
+=======
+            PaymentScreen.enterPaymentLineAmount("Cash", "20"),
+            PaymentScreen.changeIs("18.0"),
+            PaymentScreen.remainingIs("0.0"),
+>>>>>>> 2c8cd008662cada402c5dcf8582125041215a252:addons/point_of_sale/static/tests/tours/Chrome.tour.js
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
             ReceiptScreen.totalAmountContains("2.0"),
