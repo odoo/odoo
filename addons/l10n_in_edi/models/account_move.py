@@ -2,13 +2,12 @@ import base64
 import json
 import logging
 import re
-import psycopg2
 from collections import defaultdict
 
 from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, LockError, UserError
 from odoo.tools import float_is_zero, float_compare
 
 from odoo.addons.l10n_in.models.account_invoice import EDI_CANCEL_REASON
@@ -157,12 +156,8 @@ class AccountMove(models.Model):
 
     def _l10n_in_lock_invoice(self):
         try:
-            with self.env.cr.savepoint(flush=False):
-                self.env.cr.execute(
-                    "SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT",
-                    [tuple(self.ids)]
-                )
-        except psycopg2.errors.LockNotAvailable:
+            self.lock_for_update()
+        except LockError:
             raise UserError(_('This electronic document is being processed already.')) from None
 
     def _l10n_in_edi_send_invoice(self):
