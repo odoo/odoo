@@ -18,6 +18,8 @@ QUnit.test("search emoji from keywords", async () => {
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "mexican");
     await contains(".o-Emoji", { text: "🌮" });
+    await insertText("input[placeholder='Search for an emoji']", "9", { replace: true });
+    await contains(":nth-child(1 of .o-Emoji)", { text: "9️⃣" });
 });
 
 QUnit.test("search emoji from keywords should be case insensitive", async () => {
