@@ -50,7 +50,7 @@ class SaleOrder(models.Model):
             ('product_id.type', '=', 'service'),
         ], aggregates=['order_id:array_agg'])[0][0]
         for order in self:
-            order.show_project_button = order.id in show_button_ids and order.project_count
+            order.show_project_button = order.state not in ['draft', 'sent'] and order.project_count
             order.show_task_button = order.show_project_button or order.tasks_count
             order.show_create_project_button = (
                 is_project_manager
@@ -76,26 +76,30 @@ class SaleOrder(models.Model):
             aggregates=['id:recordset', '__count']
         )
         so_with_tasks = self.env['sale.order']
+        projects = self.env['project.project'].search([('reinvoiced_sale_order_id', 'in', self.ids)])
+        projects_per_so = defaultdict(lambda: self.env['project.project'])
+        for project in projects:
+            projects_per_so[project.reinvoiced_sale_order_id.id] |= project
         for order, state, tasks_ids, tasks_count in tasks_per_so:
             if order:
                 order.tasks_ids += tasks_ids
-                order.tasks_count += tasks_count
-                order.closed_task_count += state in CLOSED_STATES and tasks_count
                 so_with_tasks += order
             else:
                 # tasks that have no sale_order_id need to be associated with the SO from their sale_line_id
                 for task in tasks_ids:
                     task_so = task.sale_line_id.order_id
                     task_so.tasks_ids = [Command.link(task.id)]
-                    task_so.tasks_count += 1
-                    task_so.closed_task_count += state in CLOSED_STATES
                     so_with_tasks += task_so
         remaining_orders = self - so_with_tasks
         if remaining_orders:
             remaining_orders.tasks_ids = [Command.clear()]
             remaining_orders.tasks_count = 0
             remaining_orders.closed_task_count = 0
-
+        for order in self:
+            order.tasks_ids |= projects_per_so[order.id].tasks
+            order.tasks_count = len(order.tasks_ids)
+            order.closed_task_count = sum(1 for task in order.tasks_ids if task.state in CLOSED_STATES)
+            
     @api.depends('order_line.product_id.service_tracking')
     def _compute_visible_project(self):
         """ Users should be able to select a project_id on the SO if at least one SO line has a product with its service tracking
@@ -108,10 +112,11 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
         is_project_manager = self.env.user.has_group('project.group_project_manager')
-        projects = self.env['project.project'].search([('sale_order_id', 'in', self.ids)])
+        projects = self.env['project.project'].search(['|', ('sale_order_id', 'in', self.ids), ('reinvoiced_sale_order_id', 'in', self.ids)])
         projects_per_so = defaultdict(lambda: self.env['project.project'])
         for project in projects:
             projects_per_so[project.sale_order_id.id] |= project
+            projects_per_so[project.reinvoiced_sale_order_id.id] |= project
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
             projects |= order.order_line.mapped('project_id')
