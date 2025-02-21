@@ -1640,6 +1640,16 @@ class Website(models.Model):
                     yield page
 
     def get_website_page_ids(self):
+        """
+        Returns website page IDs grouped by website.
+
+        If called with an empty or non-existent recordset, returns all pages
+        under the None key.
+        Else, returns a mapping of website IDs to their respective page IDs.
+
+        :returns: Dict mapping website ID (or None) to list of website.page IDs.
+        :rtype: dict[int | None, list[int]]
+        """
         if not self.env.user.has_group('website.group_website_restricted_editor'):
             # Note that `website.pages` have `0,0,0,0` ACL rights by default for
             # everyone except for the website designer which receive `1,0,0,0`.
@@ -1651,12 +1661,20 @@ class Website(models.Model):
             raise AccessError(_("Access Denied"))
 
         domain = Domain('url', '!=', False)
-        if self:
-            domain &= self.website_domain()
-        pages = self.env['website.page'].sudo().search(domain)
-        if self:
-            pages = pages.with_context(website_id=self.id)._get_most_specific_pages()
-        return pages.ids
+        pages_sudo = self.env['website.page'].sudo()
+
+        if not self or not self.exists():
+            pages = pages_sudo.search(domain)
+            return {None: pages.ids}
+
+        pages_by_website = {}
+        for website in self:
+            website_domain = Domain.AND((domain, website.website_domain()))
+            pages = pages_sudo.search(website_domain)
+            pages_for_website = pages.with_context(website_id=website.id)._get_most_specific_pages()
+            pages_by_website[website.id] = pages_for_website.ids
+
+        return pages_by_website
 
     def _get_website_pages(self, domain=None, order='name', limit=None):
         website = self.get_current_website()

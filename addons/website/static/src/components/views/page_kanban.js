@@ -2,13 +2,10 @@ import { usePageManager } from "./page_manager_hook";
 import {PageSearchModel} from "./page_search_model";
 import {registry} from '@web/core/registry';
 import {kanbanView} from "@web/views/kanban/kanban_view";
-import {CheckboxItem} from "@web/core/dropdown/checkbox_item";
 
 export class PageKanbanController extends kanbanView.Controller {
-    static template = "website.PageKanbanView";
     static components = {
         ...kanbanView.Controller.components,
-        CheckboxItem,
     };
 
     setup() {
