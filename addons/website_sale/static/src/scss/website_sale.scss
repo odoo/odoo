@@ -830,21 +830,15 @@ a.no-decoration {
 
 .o_website_sale_checkout {
     #cart_products {
-        @include media-breakpoint-down(md) {
-            --cart-product-image-size-sm: 3rem;
+        --cart-product-image-size-lg: 6rem;
+        --cart-product-image-size-sm: 4rem;
 
-            .o_cart_product_image {
+        .o_cart_product_image img {
+            width: var(--cart-product-image-size-lg);
+
+            @include media-breakpoint-down(md) {
                 width: var(--cart-product-image-size-sm);
             }
-
-            .o_image_64_max {
-                max-width: var(--cart-product-image-size-sm);
-                max-height: var(--cart-product-image-size-sm);
-            }
-        }
-
-        .o_cart_product_image {
-            width: 4rem;
         }
 
         .o_description_line {
