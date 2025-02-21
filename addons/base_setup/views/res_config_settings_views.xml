@@ -134,6 +134,27 @@
                         <setting help="This name will be used for the application when Odoo is installed through the browser.">
                             <field name="web_app_name" placeholder="Odoo"/>
                         </setting>
+                        <setting>
+                            <field name="web_app_short_name" placeholder="Odoo" />
+                        </setting>
+                        <setting string="Colors">
+                            <div class="w-50 row">
+                                <span class="d-block w-75 py-2">Background Color</span>
+                                <field
+                                    name="web_app_background_color"
+                                    class="d-block w-25 p-0 m-0"
+                                    widget="color"
+                                />
+                            </div>
+                            <div class="w-50 row mt-1">
+                                <span class="d-block w-75 py-2">Theme Color</span>
+                                <field
+                                    name="web_app_theme_color"
+                                    class="d-block w-25 p-0 m-0"
+                                    widget="color"
+                                />
+                            </div>
+                        </setting>
                     </block>
 
                         <block title="Integrations" name="integration">
