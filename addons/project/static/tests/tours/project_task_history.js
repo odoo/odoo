@@ -188,6 +188,9 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: ".o_menu_item i.fa-history",
         run: "click",
     }, {
+        trigger: ".modal",
+        in_modal: false,
+    }, {
         content: "Close History Dialog",
         trigger: ".modal-header .btn-close",
         run: "click",
