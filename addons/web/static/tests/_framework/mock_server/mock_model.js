@@ -2969,31 +2969,25 @@ export class Model extends Array {
                 case "many2many":
                 case "one2many": {
                     if (relatedFields && Object.keys(relatedFields).length) {
-                        const ids = unique(records.flatMap((r) => r[fieldName]));
-                        const result = getRelation(field).web_read(
-                            ids,
-                            relatedFields,
-                            makeKwArgs({ context: spec[fieldName].context })
-                        );
-                        /** @type {Record<string, ModelRecord>} */
-                        const allRelRecords = {};
-                        for (const relRecord of result) {
-                            allRelRecords[relRecord.id] = relRecord;
-                        }
                         const { limit, order } = spec[fieldName];
+                        const relModel = getRelation(field);
                         for (const record of records) {
                             /** @type {number[]} */
-                            const relResIds = record[fieldName];
-                            let relRecords = relResIds.map((resId) => allRelRecords[resId]);
+                            let relResIds = record[fieldName];
                             if (order) {
-                                relRecords = orderByField(getRelation(field), order, relRecords);
+                                const relRecords = relModel.read(relResIds);
+                                const orderedRelRecords = orderByField(relModel, order, relRecords);
+                                relResIds = orderedRelRecords.map((r) => r.id);
                             }
+                            let result = relModel.web_read(
+                                relResIds,
+                                relatedFields,
+                                makeKwArgs({ context: spec[fieldName].context })
+                            );
                             if (limit) {
-                                relRecords = relRecords.map((r, i) =>
-                                    i < limit ? r : { id: r.id }
-                                );
+                                result = result.map((r, i) => (i < limit ? r : { id: r.id }));
                             }
-                            record[fieldName] = relRecords;
+                            record[fieldName] = result;
                         }
                     }
                     break;
