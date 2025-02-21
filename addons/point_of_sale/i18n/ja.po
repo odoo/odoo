@@ -460,12 +460,12 @@ msgstr "注文のセッション固有のシーケンス番号"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt."
-msgstr "印刷された領収書にフッタとして挿入される短いテキスト。"
+msgstr "印刷されたレシートにフッタとして挿入される短いテキスト。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_header
 msgid "A short text that will be inserted as a header in the printed receipt."
-msgstr "印刷された領収書のヘッダとして挿入される短いテキスト。"
+msgstr "印刷されたレシートのヘッダとして挿入される短いテキスト。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__detailed_type
@@ -1111,7 +1111,7 @@ msgstr "基準額"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Before Closing Difference"
-msgstr "違いを閉じる前に"
+msgstr "レジ締め前の差額"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -2361,7 +2361,7 @@ msgstr "差異"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Difference at closing PoS session"
-msgstr "PoSセッション終了時の違い"
+msgstr "PoSセッション終了時の差額"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -4150,7 +4150,7 @@ msgstr "この払戻し行には、マイナスの数量しか入力できませ
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Only administrators can edit receipt headers and footers"
-msgstr "管理者のみが領収書のヘッダとフッタを編集できます。"
+msgstr "管理者のみがレシートのヘッダとフッタを編集できます。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -4650,12 +4650,12 @@ msgstr "支払名デモ"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr "領収書情報"
+msgstr "支払レシート情報"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
 msgid "Payment Reference"
-msgstr "支払参照"
+msgstr "支払参照番号"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_status
@@ -5730,14 +5730,14 @@ msgstr "理由"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #, python-format
 msgid "Receipt"
-msgstr "入荷"
+msgstr "レシート"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Receipt %s"
-msgstr "領収書%s"
+msgstr "レシート%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
@@ -5758,7 +5758,7 @@ msgstr "レシートヘッダ"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pos_reference
 #, python-format
 msgid "Receipt Number"
-msgstr "領収書番号"
+msgstr "レシート番号"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -7220,7 +7220,7 @@ msgstr "レシートを自動印刷できる場合は、レシート画面をス
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
-msgstr "領収書は、各注文の最後に自動的に印刷されます。"
+msgstr "レシートは、各注文の最後に自動的に印刷されます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8542,7 +8542,7 @@ msgstr "請求書"
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "the receipt"
-msgstr "領収書"
+msgstr "レシート"
 
 #. module: point_of_sale
 #. odoo-javascript

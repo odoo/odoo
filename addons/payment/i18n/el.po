@@ -10,6 +10,7 @@
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
 # Charalampos Loukas, 2025
+# Anastasia Mimou, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Charalampos Loukas, 2025\n"
+"Last-Translator: Anastasia Mimou, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -138,6 +139,9 @@ msgid ""
 "                                If you believe that it is an error, please contact the website\n"
 "                                administrator."
 msgstr ""
+"<strong>Δεν βρέθηκε κατάλληλη μέθοδος πληρωμής.</strong><br/>\n"
+"                                Αν πιστεύετε ότι πρόκειται για λάθος, παρακαλώ επικοινωνήστε με τον διαχειριστή\n"
+"                                της ιστοσελίδας."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -329,6 +333,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Είστε σίγουροι ότι θέλετε να ακυρώσετε την εξουσιοδοτημένη συναλλαγή; Αυτή η"
+" ενέργεια δεν μπορεί να αναιρεθεί."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -738,7 +744,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "Μόνο Πλήρες"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -748,7 +754,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Δημιουργία Συνδέσμου Πληρωμής Πώλησης"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -822,6 +828,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"Στη λειτουργία δοκιμής, επεξεργάζεται μια ψεύτικη πληρωμή μέσω διεπαφής δοκιμής πληρωμής.\n"
+"Αυτή η λειτουργία συνιστάται κατά την ρύθμιση του παρόχου."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -1023,7 +1031,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_onboarding_onboarding_step
 msgid "Onboarding Step"
-msgstr ""
+msgstr "Βήμα Εγγραφής"
 
 #. module: payment
 #: model:onboarding.onboarding.step,step_image_alt:payment.onboarding_onboarding_step_payment_provider
@@ -1033,7 +1041,7 @@ msgstr ""
 #. module: payment
 #: model:onboarding.onboarding.step,title:payment.onboarding_onboarding_step_payment_provider
 msgid "Online Payments"
-msgstr ""
+msgstr "Online Πληρωμές"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
@@ -1189,13 +1197,13 @@ msgstr "Μέθοδοι Πληρωμής"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Πάροχος Πληρωμών"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_provider
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
 msgid "Payment Providers"
-msgstr ""
+msgstr "Πάροχοι Πληρωμών"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1410,7 +1418,7 @@ msgstr "Επιστροφές"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Αριθμός Επιστροφών"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
@@ -1551,7 +1559,7 @@ msgstr "Κατάσταση"
 #. module: payment
 #: model:onboarding.onboarding.step,done_text:payment.onboarding_onboarding_step_payment_provider
 msgid "Step Completed!"
-msgstr ""
+msgstr "Βήμα Ολοκληρωμένο!"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__stripe
@@ -1600,7 +1608,7 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Ο κωδικός ασφαλείας πρόσβασης είναι άκυρος."
 
 #. module: payment
 #. odoo-python
@@ -1959,7 +1967,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_refund
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "Τύπος Επιστροφής Χρημάτων που Υποστηρίζεται"
 
 #. module: payment
 #. odoo-javascript
@@ -2124,7 +2132,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Η πληρωμή σας έχει εγκριθεί."
 
 #. module: payment
 #. odoo-python
@@ -2147,7 +2155,7 @@ msgstr ""
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been cancelled."
-msgstr ""
+msgstr "Η πληρωμή σας έχει ακυρωθεί."
 
 #. module: payment
 #. odoo-python
@@ -2193,7 +2201,7 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been successfully processed."
-msgstr ""
+msgstr "Η πληρωμή σας έχει ολοκληρωθεί με επιτυχία."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
