@@ -2,24 +2,37 @@ declare module "models" {
     import { Rtc as RtcClass } from "@mail/discuss/call/common/rtc_service";
     import { RtcSession as RtcSessionClass } from "@mail/discuss/call/common/rtc_session_model";
 
-    export interface ChannelMember {
-        rtcSession: RtcSession,
-    }
-    export interface Store {
-        allActiveRtcSessions: RtcSession[],
-        ["discuss.channel.rtc.session"]: typeof RtcSessionClass,
-        nextTalkingTime: number,
-        ringingThreads: Thread[],
-    }
     export interface Rtc extends RtcClass {}
     export interface RtcSession extends RtcSessionClass {}
+
+    export interface ChannelMember {
+        rtcSession: RtcSession;
+    }
+    export interface Persona {
+        currentRtcSession: RtcSession;
+    }
+    export interface Settings {
+        getVolume: (rtcSession: RtcSession) => number;
+    }
+    export interface Store {
+        allActiveRtcSessions: RtcSession[];
+        "discuss.channel.rtc.session": StaticMailRecord<RtcSession, typeof RtcSessionClass>;
+        nextTalkingTime: number;
+        ringingThreads: Thread[];
+        rtc: Rtc;
+        Rtc: StaticMailRecord<Rtc, typeof RtcClass>;
+    }
     export interface Thread {
-        activeRtcSession: RtcSession,
-        rtcInvitingSession: RtcSession,
-        rtcSessions: RtcSession[],
+        activeRtcSession: RtcSession;
+        hadSelfSession: boolean;
+        lastSessionIds: Set<number>;
+        rtcInvitingSession: RtcSession;
+        rtcSessions: RtcSession[];
+        videoCount: Readonly<number>;
     }
 
     export interface Models {
-        "discuss.channel.rtc.session": RtcSession,
+        "discuss.channel.rtc.session": RtcSession;
+        Rtc: Rtc;
     }
 }

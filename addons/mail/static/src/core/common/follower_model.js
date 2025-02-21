@@ -4,20 +4,6 @@ import { rpc } from "@web/core/network/rpc";
 export class Follower extends Record {
     static _name = "mail.followers";
     static id = "id";
-    /** @type {Object.<number, import("models").Follower>} */
-    static records = {};
-    /** @returns {import("models").Follower} */
-    static get(data) {
-        return super.get(data);
-    }
-    /**
-     * @template T
-     * @param {T} data
-     * @returns {T extends any[] ? import("models").Follower[] : import("models").Follower}
-     */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
 
     thread = Record.one("Thread");
     /** @type {number} */

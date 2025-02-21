@@ -6,10 +6,10 @@ import { compareDatetime } from "@mail/utils/common/misc";
 
 /** @type {import("models").Thread} */
 const threadPatch = {
-    /** @type {integer|undefined} */
-    recipientsCount: undefined,
     setup() {
         super.setup();
+        /** @type {number|undefined} */
+        this.recipientsCount = undefined;
         this.recipients = Record.many("mail.followers");
         this.activities = Record.many("mail.activity", {
             sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
@@ -74,7 +74,7 @@ const threadPatch = {
         await this.store.chatHub.initPromise;
         const chatWindow = this.store.ChatWindow.get({ thread: this });
         await chatWindow?.close();
-        super.unpin(...arguments);
+        await super.unpin(...arguments);
     },
 };
 patch(Thread.prototype, threadPatch);

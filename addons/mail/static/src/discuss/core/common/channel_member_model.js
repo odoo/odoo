@@ -10,20 +10,6 @@ const { DateTime } = luxon;
 export class ChannelMember extends Record {
     static _name = "discuss.channel.member";
     static id = "id";
-    /** @type {Object.<number, import("models").ChannelMember>} */
-    static records = {};
-    /** @returns {import("models").ChannelMember} */
-    static get(data) {
-        return super.get(data);
-    }
-    /**
-     * @template T
-     * @param {T} data
-     * @returns {T extends any[] ? import("models").ChannelMember[] : import("models").ChannelMember}
-     */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
 
     /** @type {string} */
     create_date;

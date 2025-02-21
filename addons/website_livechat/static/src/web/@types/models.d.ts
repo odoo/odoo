@@ -1,6 +1,6 @@
 declare module "models" {
     export interface Thread {
-        visitor: Persona,
-        visitorPartner: Persona,
+        visitor: Persona;
+        visitorPartner: Persona;
     }
 }

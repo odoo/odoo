@@ -9,9 +9,11 @@ const StorePatch = {
         super.setup(...arguments);
         this.initChannelsUnreadCounter = 0;
     },
+    /** @returns {import("models").Thread[]} */
     getSelfImportantChannels() {
         return this.getSelfRecentChannels().filter((channel) => channel.importantCounter > 0);
     },
+    /** @returns {import("models").Thread[]} */
     getSelfRecentChannels() {
         return Object.values(this.Thread.records)
             .filter((thread) => thread.model === "discuss.channel" && thread.selfMember)
