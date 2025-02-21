@@ -93,7 +93,7 @@ class MailBot(models.AbstractModel):
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "onboarding_canned"
                 return self.env._(
-                    "Wonderful! 😇%(new_line)sTry typing %(command_start)s:%(command_end)s to use "
+                    "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to use "
                     "canned responses. I've created a temporary one for you.",
                     **self._get_style_dict()
                 )
