@@ -7,7 +7,8 @@
         </xpath>
 
         <xpath expr="//img/../.." position="after">
-            <div t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
+            <div t-attf-class="header o_company_#{company.id}_layout"
+                t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
                 <t t-call="#{custom_header}"/>
             </div>
         </xpath>
