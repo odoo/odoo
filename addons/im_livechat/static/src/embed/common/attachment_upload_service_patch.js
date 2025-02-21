@@ -6,6 +6,7 @@ patch(AttachmentUploadService.prototype, {
     async upload(thread, composer, file, options) {
         if (thread.channel_type === "livechat" && thread.isTransient) {
             thread = await this.env.services["im_livechat.livechat"].persist();
+            thread.readyToSwapDeferred.resolve();
             composer = thread.composer;
             if (!thread) {
                 return;

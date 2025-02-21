@@ -131,20 +131,29 @@ export class LivechatService {
         }
         const temporaryThread = this.thread;
         await this._createThread({ persist: true });
-        if (temporaryThread) {
+        const deleteTemporary = async () => {
             await this.store.chatHub.initPromise;
-            const chatWindow = this.store.ChatWindow.get({ thread: temporaryThread });
-            await chatWindow.close({ force: true });
-            temporaryThread.delete();
-        }
+            await this.store.ChatWindow.get({ thread: temporaryThread })?.close({ force: true });
+            temporaryThread?.delete();
+        };
         if (!this.thread) {
+            await deleteTemporary();
             return;
         }
+        this.thread.fetchNewMessages();
+        this.env.services["mail.store"].initialize();
         this.busService.addChannel(`mail.guest_${this.guestToken}`);
-        await Promise.all([
-            this.thread.openChatWindow({ focus: true }),
-            this.env.services["mail.store"].initialize(),
-        ]);
+        this.thread.readyToSwapDeferred.then(async () => {
+            if (!this.thread) {
+                return;
+            }
+            // Do not load unread messaes: new messages were loaded to avoid
+            // flickering, we do not want another load that would result in the
+            // same issue.
+            this.thread.scrollUnread = false;
+            deleteTemporary();
+            this.thread.openChatWindow({ focus: true });
+        });
         return this.thread;
     }
 

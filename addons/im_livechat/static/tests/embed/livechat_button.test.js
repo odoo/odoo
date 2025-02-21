@@ -35,12 +35,6 @@ test("open/close temporary channel", async () => {
 test("open/close persisted channel", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
-    onRpc("/im_livechat/get_session", async (req) => {
-        const { params } = await req.json();
-        if (params.persisted) {
-            asyncStep("persisted");
-        }
-    });
     const env = await start({ authenticateAs: false });
     env.services.bus_service.subscribe("discuss.channel/new_message", () =>
         asyncStep("discuss.channel/new_message")
@@ -49,7 +43,7 @@ test("open/close persisted channel", async () => {
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "How can I help?");
     await triggerHotkey("Enter");
-    await waitForSteps(["persisted"]);
+    await contains(".o-mail-Thread:not([data-transient])");
     await contains(".o-mail-Message-content", { text: "How can I help?" });
     await waitForSteps(["discuss.channel/new_message"]);
     await click("[title*='Close Chat Window']");
