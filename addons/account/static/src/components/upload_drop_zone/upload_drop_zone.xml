@@ -37,7 +37,21 @@
                   </div>
                 </t>
                 <t t-elif="props.visible">
-                    <i class="fa fa-upload fa-10x pe-none"/>
+                    <img
+                        class="img-fluid"
+                        src="/account/static/src/img/bill.svg"
+                        style="height: auto; width: 120px;"
+                    />
+                    <span class="position-absolute fa-stack-2x mt-2">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-upload fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h2 class="mt-5 fw-bold text-primary text-center">
+                        <t t-out="props.dropZoneTitle"/>
+                    </h2>
+                    <span class="mt-2 text-primary text-center">
+                        <t t-out="props.dropZoneDescription"/>
+                    </span>
                 </t>
             </div>
         </t>

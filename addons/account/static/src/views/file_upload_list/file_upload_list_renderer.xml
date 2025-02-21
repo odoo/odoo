@@ -4,7 +4,9 @@
         <xpath expr="//div[@t-ref='root']" position="before">
             <UploadDropZone
                 visible="dropzoneState.visible"
-                hideZone="() => dropzoneState.visible = false"/>
+                hideZone="() => dropzoneState.visible = false"
+                dropZoneTitle="dropZoneTitle"
+                dropZoneDescription="dropZoneDescription"/>
         </xpath>
         <xpath expr="//div[@t-ref='root']" position="attributes">
             <attribute name="t-on-dragenter.stop.prevent">onDragStart</attribute>

@@ -1,3 +1,4 @@
+import { _t } from '@web/core/l10n/translation';
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { UploadDropZone } from "@account/components/upload_drop_zone/upload_drop_zone";
 import { useState } from "@odoo/owl";
@@ -14,6 +15,7 @@ export class FileUploadKanbanRenderer extends KanbanRenderer {
         super.setup();
         this.dropzoneState = useState({ visible: false });
         this.uploadFileFromData = uploadFileFromData();
+        this.dropZoneTitle = _t("Drop and let the AI process your bills automatically.");
     }
 
     async onPaste(ev) {
