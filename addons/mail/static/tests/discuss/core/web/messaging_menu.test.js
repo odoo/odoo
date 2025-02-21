@@ -96,6 +96,37 @@ test("channel preview show deleted messages", async () => {
     });
 });
 
+test("deleted message should not show parent message reference", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    const messageId_1 = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<p>Parent Message</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const messageId_2 = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<p>message</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        parent_id: messageId_1,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageInReply", { text: "Parent Message" });
+    rpc("/mail/message/update_content", {
+        message_id: messageId_2,
+        body: "",
+        attachment_ids: [],
+    });
+    await contains(".o-mail-Message", { text: "This message has been removed" });
+    await contains(".o-mail-MessageInReply", { count: 0 });
+});
+
 test("channel preview ignores transient message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
