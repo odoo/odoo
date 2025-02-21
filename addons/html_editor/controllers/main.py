@@ -363,15 +363,18 @@ class HTML_Editor(http.Controller):
         inserted into the DOM.
         """
         self._clean_context()
-        attachment = request.env['ir.attachment'].browse(attachment.id)
-        fields = {
-            'original_id': attachment.id,
-            'datas': data,
-            'type': 'binary',
-            'res_model': res_model or 'ir.ui.view',
-            'mimetype': mimetype or attachment.mimetype,
-            'name': name or attachment.name,
-        }
+        try:
+            attachment = request.env['ir.attachment'].browse(attachment.id)
+            fields = {
+                'original_id': attachment.id,
+                'datas': data,
+                'type': 'binary',
+                'res_model': res_model or 'ir.ui.view',
+                'mimetype': mimetype or attachment.mimetype,
+                'name': name or attachment.name,
+            }
+        except:
+            return "/html_editor/static/src/img/placeholder_thumbnail.png"
         if fields['res_model'] == 'ir.ui.view':
             fields['res_id'] = 0
         elif res_id:
