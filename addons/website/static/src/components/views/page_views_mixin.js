@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import {useService} from "@web/core/utils/hooks";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
@@ -19,9 +18,8 @@ export const PageControllerMixin = (component) => class extends component {
         super.setup();
         this.website = useService('website');
         this.dialog = useService('dialog');
-        this.orm = useService('orm');
 
-        this.websiteSelection = odoo.debug ? [{id: 0, name: _t("All Websites")}] : [];
+        this.websiteSelection = [];
 
         this.state = useState({
             activeWebsite: undefined,
@@ -70,10 +68,5 @@ export const PageControllerMixin = (component) => class extends component {
                 }
             });
         }
-    }
-
-    onSelectWebsite(website) {
-        this.state.activeWebsite = website;
-        this.env.searchModel.notifyWebsiteChange(website.id);
     }
 };
