@@ -8263,10 +8263,19 @@ test(`default_order on x2many embedded view`, async () => {
         "My little Foo Value",
     ]);
 
-    // client-side sort on edit
+    // no client-side sort after edit
     await contains(`.o_data_row:eq(1) .o_data_cell:eq(0)`).click();
     await contains(`.modal .o_field_widget[name=foo] input`).edit("zzz");
     await contains(`.modal-footer .o_form_button_save`).click();
+    expect(queryAllTexts`.o_data_row .o_data_cell:nth-child(2)`).toEqual([
+        "zop",
+        "zzz",
+        "xop",
+        "My little Foo Value",
+    ]);
+
+    // server-side sort post save
+    await contains(`.o_form_button_save`).click();
     expect(queryAllTexts`.o_data_row .o_data_cell:nth-child(2)`).toEqual([
         "zzz",
         "zop",
