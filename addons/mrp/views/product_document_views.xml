@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="product.product_document_form"/>
         <field name="arch" type="xml">
             <sheet position="inside">
-                <group name="mrp" string="Manufacturing">
+                <group name="mrp" string="Manufacturing" groups="mrp.group_mrp_user">
                     <field name="attached_on_mrp" class="oe_inline"/>
                 </group>
             </sheet>
