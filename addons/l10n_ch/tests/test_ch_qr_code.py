@@ -63,6 +63,11 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
         # flush manually  to have the right env to get possible values of `qr_code_method`
         self.env.flush_all()
 
+        # if the invoice is in draft, we won't generate a qr-code
+        self.assertIsNone(self.ch_qr_invoice._generate_qr_code())
+
+        self.ch_qr_invoice.action_post()
+
         # First check with a regular IBAN
         with self.assertRaises(UserError, msg="It shouldn't be possible to generate a Swiss QR-code for partners without a complete Swiss address."):
             self.ch_qr_invoice._generate_qr_code()
