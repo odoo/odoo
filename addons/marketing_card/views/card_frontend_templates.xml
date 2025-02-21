@@ -11,8 +11,8 @@
             <t t-set="share_url_quoted" t-value="quote(share_url)"/>
             <div class="d-flex flex-column align-items-center text-center mt-5 h-100">
                 <div class="mb-5 d-flex flex-column align-items-center justify-content-center">
-                    <h1 t-out="campaign.request_title">Share with your community!</h1>
-                    <p t-out="campaign.request_description or None" class="mb-5"/>
+                    <h1 t-field="campaign.request_title">Share with your community!</h1>
+                    <p t-field="campaign.request_description" class="mb-5"/>
                     <a t-att-href="card._get_card_url()" class="border border-3"
                        style="max-width: 80%; height: auto; max-height: 80%;">
                         <img t-att-src="card._get_card_url()" class="w-100"/>
@@ -34,7 +34,7 @@
                 <br/>
                 <div id="thanks-section" t-if="not is_html_empty(campaign.reward_message) or campaign.reward_target_url" style="width: 50%;"
                 t-attf-class="alert alert-info d-flex flex-column align-items-center {{'d-none' if not card.share_status == 'shared' else ''}}">
-                    <p t-if="campaign.reward_message" t-out="campaign.reward_message"/>
+                    <p t-if="campaign.reward_message" t-field="campaign.reward_message"/>
                     <p t-if="campaign.reward_target_url"><a t-att-href="campaign.reward_target_url">Click here for your reward!</a></p>
                 </div>
             </div>
