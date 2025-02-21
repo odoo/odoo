@@ -204,7 +204,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         else:
             self._assertion_report = None
         self._ordinary_tables: set[str] | None = None  # cached names of regular tables
-        self._constraint_queue: deque[tuple] = deque()  # queue of functions to call on finalization of constraints
+        self._constraint_queue: dict[typing.Any, Callable[[BaseCursor], None]] = {}  # queue of functions to call on finalization of constraints
         self.__caches: dict[str, LRU] = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
 
         # update context during loading modules
@@ -563,38 +563,40 @@ class Registry(Mapping[str, type["BaseModel"]]):
             self._is_modifying_relations[field] = result
             return result
 
-    def post_init(self, func, *args, **kwargs):
+    def post_init(self, func: Callable, *args, **kwargs) -> None:
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
 
-    def post_constraint(self, func, *args, **kwargs):
+    def post_constraint(self, cr: BaseCursor, func: Callable[[BaseCursor], None], key) -> None:
         """ Call the given function, and delay it if it fails during an upgrade. """
         try:
-            if (func, args, kwargs) not in self._constraint_queue:
+            if key not in self._constraint_queue:
                 # Module A may try to apply a constraint and fail but another module B inheriting
                 # from Module A may try to reapply the same constraint and succeed, however the
                 # constraint would already be in the _constraint_queue and would be executed again
                 # at the end of the registry cycle, this would fail (already-existing constraint)
                 # and generate an error, therefore a constraint should only be applied if it's
                 # not already marked as "to be applied".
-                func(*args, **kwargs)
+                with cr.savepoint(flush=False):
+                    func(cr)
         except Exception as e:
             if self._is_install:
                 _schema.error(*e.args)
             else:
                 _schema.info(*e.args)
-                self._constraint_queue.append((func, args, kwargs))
+                self._constraint_queue[key] = func
 
-    def finalize_constraints(self) -> None:
+    def finalize_constraints(self, cr: Cursor) -> None:
         """ Call the delayed functions from above. """
-        while self._constraint_queue:
-            func, args, kwargs = self._constraint_queue.popleft()
+        for func in self._constraint_queue.values():
             try:
-                func(*args, **kwargs)
+                with cr.savepoint(flush=False):
+                    func(cr)
             except Exception as e:
                 # warn only, this is not a deployment showstopper, and
                 # can sometimes be a transient error
                 _schema.warning(*e.args)
+        self._constraint_queue.clear()
 
     def init_models(self, cr: Cursor, model_names: Iterable[str], context: dict[str, typing.Any], install: bool = True):
         """ Initialize a list of models (given by their name). Call methods
@@ -706,9 +708,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     method = 'btree'
                     where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
                 try:
-                    sql.create_index(cr, indexname, tablename, [expression], method, where)
+                    with cr.savepoint(flush=False):
+                        sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
-                    _schema.error("Unable to add index for %s", self)
+                    _schema.error("Unable to add index %r for %s", indexname, self)
 
             elif not index and tablename == existing.get(indexname):
                 _schema.info("Keep unexpected index %s on table %s", indexname, tablename)
