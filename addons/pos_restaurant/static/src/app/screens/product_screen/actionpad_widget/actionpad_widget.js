@@ -22,9 +22,6 @@ patch(ActionpadWidget.prototype, {
             this.pos.config.module_pos_restaurant && this.pos.mainScreen.component !== TicketScreen
         );
     },
-    get currentOrder() {
-        return this.pos.getOrder();
-    },
     get hasChangesToPrint() {
         let hasChange = this.pos.getOrderChanges();
         hasChange =
