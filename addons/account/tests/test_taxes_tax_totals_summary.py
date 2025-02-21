@@ -2151,6 +2151,64 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 invoice = self.convert_document_to_invoice(document)
                 self.assert_invoice_tax_totals_summary(invoice, expected_values)
 
+    def _test_preceding_subtotal_with_include_base_amount(self):
+        self.tax_groups[1].preceding_subtotal = "PRE GROUP 1"
+        self.tax_groups[2].preceding_subtotal = "PRE GROUP 2"
+        tax_1 = self.percent_tax(10.0, include_base_amount=True, tax_group_id=self.tax_groups[1].id)
+        tax_2 = self.percent_tax(20.0, include_base_amount=True, tax_group_id=self.tax_groups[1].id)
+        tax_3 = self.percent_tax(30.0, include_base_amount=True, tax_group_id=self.tax_groups[1].id)
+        tax_4 = self.percent_tax(50.0, tax_group_id=self.tax_groups[2].id)
+
+        document = self.populate_document(self.init_document([
+            {'price_unit': 1000.0, 'tax_ids': tax_1 + tax_2 + tax_3 + tax_4},
+        ]))
+        expected_values = {
+            'same_tax_base': False,
+            'currency_id': self.currency.id,
+            'base_amount_currency': 1000.0,
+            'tax_amount_currency': 1574.0,
+            'total_amount_currency': 2574.0,
+            'subtotals': [
+                {
+                    'name': "PRE GROUP 1",
+                    'base_amount_currency': 1000.0,
+                    'tax_amount_currency': 716.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[1].id,
+                            'base_amount_currency': 1000.0,
+                            'tax_amount_currency': 716.0,
+                            'display_base_amount_currency': 1000.0,
+                        },
+                    ],
+                },
+                {
+                    'name': "PRE GROUP 2",
+                    'base_amount_currency': 1716.0,
+                    'tax_amount_currency': 858.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[2].id,
+                            'base_amount_currency': 1716.0,
+                            'tax_amount_currency': 858.0,
+                            'display_base_amount_currency': 1716.0,
+                        },
+                    ],
+                },
+            ],
+        }
+        return document, expected_values
+
+    def test_preceding_subtotal_with_include_base_amount_generic_helpers(self):
+        document, expected_values = self._test_preceding_subtotal_with_include_base_amount()
+        self.assert_tax_totals_summary(document, expected_values)
+        self._run_js_tests()
+
+    def test_preceding_subtotal_with_include_base_amount_invoices(self):
+        document, expected_values = self._test_preceding_subtotal_with_include_base_amount()
+        invoice = self.convert_document_to_invoice(document)
+        self.assert_invoice_tax_totals_summary(invoice, expected_values)
+
     def _test_reverse_charge_percent_tax(self):
         tax = self.percent_tax(
             21.0,
