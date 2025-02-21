@@ -29,7 +29,9 @@ class WebsiteBlog(http.Controller):
         return ','.join(request.env['ir.http']._slug(tag) for tag in tag_ids)
 
     def nav_list(self, blog=None):
-        dom = blog and [('blog_id', '=', blog.id)] or []
+        blog = blog or request.params.get('blog')
+        dom = [('blog_id', '=', blog.id)] if blog else []
+
         if not request.env.user.has_group('website.group_website_designer'):
             dom += [('post_date', '<=', fields.Datetime.now())]
         groups = request.env['blog.post']._read_group(
