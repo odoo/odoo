@@ -43,18 +43,19 @@ odoo_help() {
   echo ' Welcome to Odoo IoT Box tools'
   echo '-------------------------------'
   echo ''
-  echo 'odoo                Starts/Restarts Odoo server manually (not through odoo.service)'
-  echo 'odoo_logs           Displays Odoo server logs in real time'
-  echo 'odoo_conf           Displays Odoo configuration file content'
-  echo 'write_mode          Enables system write mode'
-  echo 'read_mode           Switches system to read-only mode'
-  echo 'install             Bypasses ramdisks to allow package installation'
-  echo 'blackbox            Lists all serial connected devices'
-  echo 'odoo_start          Starts Odoo service'
-  echo 'odoo_stop           Stops Odoo service'
-  echo 'odoo_restart        Restarts Odoo service'
-  echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
-  echo 'devtools            Enables/Disables specific functions for development (more help with devtools help)'
+  echo 'odoo                  Starts/Restarts Odoo server manually (not through odoo.service)'
+  echo 'odoo_logs             Displays Odoo server logs in real time'
+  echo 'odoo_conf             Displays Odoo configuration file content'
+  echo 'write_mode            Enables system write mode'
+  echo 'read_mode             Switches system to read-only mode'
+  echo 'install               Bypasses ramdisks to allow package installation'
+  echo 'blackbox              Lists all serial connected devices'
+  echo 'odoo_start            Starts Odoo service'
+  echo 'odoo_stop             Stops Odoo service'
+  echo 'odoo_restart          Restarts Odoo service'
+  echo 'odoo_dev <branch>     Resets Odoo on the specified branch from odoo-dev repository'
+  echo 'odoo_origin <branch>  Resets Odoo on the specified branch from the odoo repository'
+  echo 'devtools              Enables/Disables specific functions for development (more help with devtools help)'
   echo ''
   echo 'Odoo IoT online help: <https://www.odoo.com/documentation/master/applications/general/iot.html>'
 }
@@ -71,6 +72,22 @@ odoo_dev() {
   sudo git remote add dev https://github.com/odoo-dev/odoo.git
   sudo git fetch dev \$1 --depth=1 --prune
   sudo git reset --hard dev/\$1
+  sudo chown -R odoo:odoo /home/pi/odoo
+  cd \$pwd
+}
+
+odoo_origin() {
+  if [ -z \"\$1\" ]; then
+    odoo_help
+    return
+  fi
+  write_mode
+  pwd=\$(pwd)
+  cd /home/pi/odoo
+  sudo git config --global --add safe.directory /home/pi/odoo
+  sudo git remote set-url origin https://github.com/odoo/odoo.git  # ensure odoo repository
+  sudo git fetch origin \$1 --depth=1 --prune
+  sudo git reset --hard origin/\$1
   sudo chown -R odoo:odoo /home/pi/odoo
   cd \$pwd
 }
