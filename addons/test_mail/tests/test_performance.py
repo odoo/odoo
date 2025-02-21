@@ -781,7 +781,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance', 'post_install', '-at_install', 'prout')
 class TestMailAPIPerformance(BaseMailPerformance):
 
     @classmethod
@@ -812,6 +812,23 @@ class TestMailAPIPerformance(BaseMailPerformance):
         cls.container.message_subscribe(cls.partners.ids, subtype_ids=[
             cls.env.ref('mail.mt_comment').id,
             cls.env.ref('test_mail.st_mail_test_container_child_full').id
+        ])
+
+        cls.test_records_recipients = cls.env['mail.performance.thread.recipients'].create([
+            {
+                'email_from': 'only.email.1@test.example.com',
+            }, {
+                'email_from': 'only.email.2@test.example.com',
+            }, {
+                'email_from': 'both.1@test.example.com',
+                'partner_id': cls.partners[0].id,
+            }, {
+                'email_from': 'trice.1@test.example.com',
+                'partner_id': cls.partners[1].id,
+                'user_id': cls.user_admin.id,
+            }, {
+                'partner_id': cls.partners[2].id,
+            },
         ])
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -888,6 +905,30 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertIn(mails[-2].id, unlinked_mails, 'Mail: mails with invalid recipient are also to be unlinked')
         self.assertEqual(mails[-1].state, 'exception')
         self.assertIn(mails[-1].id, unlinked_mails, 'Mail: mails with invalid recipient are also to be unlinked')
+
+    @users('employee')
+    @warmup
+    def test_message_get_default_recipients(self):
+        records = self.test_records_recipients.with_env(self.env)
+        with self.assertQueryCount(employee=44):  # tm: 8
+            defaults = records._message_get_default_recipients()
+        print('defaults', defaults)
+
+    @users('employee')
+    @warmup
+    def test_message_get_suggested_recipients(self):
+        record = self.test_records_recipients[0].with_env(self.env)
+        with self.assertQueryCount(employee=44):  # tm: 16
+            recipients = record._message_get_suggested_recipients(no_create=False)
+        print('recipients', recipients)
+
+    @users('employee')
+    @warmup
+    def test_message_get_suggested_recipients_batch(self):
+        records = self.test_records_recipients.with_env(self.env)
+        with self.assertQueryCount(employee=44):  # tm: 25
+            recipients = records._message_get_suggested_recipients_batch(no_create=False)
+        print('recipients', recipients)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('admin', 'employee')
