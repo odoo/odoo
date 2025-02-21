@@ -13,7 +13,7 @@ from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('res_partner', 'mail_tools')
+@tagged('res_partner', 'mail_tools', 'mail_thread_api')
 class TestPartner(MailCommon):
 
     @classmethod
@@ -304,7 +304,7 @@ class TestPartner(MailCommon):
                     self.assertEqual(partner.name, exp_name)
 
     @users('employee_c2')
-    def test_res_partner_find_or_create_from_emails_dupes_email_field(self):
+    def test_find_or_create_from_emails_dupes_email_field(self):
         """ Specific test for duplicates management: based on email to avoid
         creating similar partners. """
         # all same partner, same email 'test.customer@test.dupe.example.com'
@@ -433,6 +433,36 @@ class TestPartner(MailCommon):
                     self.assertIn(partner, self._new_partners)
                 self.assertEqual(partner.email, expected_email)
                 self.assertEqual(partner.name, expected_name)
+
+    def test_message_get_default_recipients(self):
+        """ Specific use case: partner should contact himself """
+        partners = self.env['res.partner'].create([
+            {'name': 'Raoulette', 'email': '"Raoulette" <raoulette@example.com>'},
+            {'name': 'Ignassette', 'email': 'wrong'}
+        ])
+        defaults = partners._message_get_default_recipients()
+        for partner in partners:
+            with self.subTest(partner=partner.name):
+                self.assertEqual(defaults[partner.id], {
+                    'email_cc': '', 'email_to': '',
+                    'partner_ids': partner.ids,
+                })
+
+    def test_message_get_suggested_recipients(self):
+        """ Specific use case: partner should contact himself """
+        partners = self.env['res.partner'].create([
+            {'name': 'Raoulette', 'email': '"Raoulette" <raoulette@example.com>'},
+            {'name': 'Ignassette', 'email': 'wrong'}
+        ])
+        for partner in partners:
+            with self.subTest(partner_name=partner.name):
+                suggested = partner._message_get_suggested_recipients()
+                self.assertEqual(suggested, [{
+                    'create_values': {},
+                    'email': partner.email_normalized,
+                    'name': partner.name,
+                    'partner_id': partner.id,
+                }])
 
     def test_log_portal_group(self):
         Users = self.env['res.users']

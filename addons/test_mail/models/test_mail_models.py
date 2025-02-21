@@ -144,16 +144,6 @@ class MailTestGatewayGroups(models.Model):
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
-    def _message_get_default_recipients(self):
-        return dict(
-            (record.id, {
-                'email_cc': False,
-                'email_to': record.email_from if not record.customer_id.ids else False,
-                'partner_ids': record.customer_id.ids,
-            })
-            for record in self
-        )
-
 
 class MailTestTrack(models.Model):
     """ This model can be used in tests when automatic subscription and simple
