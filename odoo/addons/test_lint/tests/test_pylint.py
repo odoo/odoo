@@ -37,6 +37,7 @@ class TestPyLint(TransactionCase):
         'gettext-placeholders',
         'gettext-repr',
         'raise-unlink-override',
+        'prefer-env-translation',
     ]
 
     BAD_FUNCTIONS = [
