@@ -11,6 +11,7 @@
                 <field name="res_model" optional="hidden"/>
                 <field name="campaign_id" optional="hidden"/>
                 <field name="share_status"/>
+                <field name="lang" optional="hidden"/>
             </list>
         </field>
     </record>
@@ -28,7 +29,11 @@
                 </group>
                 <group>
                     <field name="campaign_id"/>
+                    <field name="lang"/>
+                    <field name="share_status"/>
                     <filter string="Campaign" name="by_campaign" context="{'group_by': 'campaign_id'}"/>
+                    <filter string="Language" name="by_lang" context="{'group_by': 'lang'}"/>
+                    <filter string="Status" name="by_status" context="{'group_by': 'share_status'}"/>
                 </group>
             </search>
         </field>
