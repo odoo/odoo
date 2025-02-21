@@ -36,7 +36,7 @@ export class SingleData extends Component {
                 <i t-if="this.props.icon" class="me-2 fa" t-att-class="this.props.icon" aria-hidden="true"></i>
                 <t t-esc="this.props.name" />
             </h6>
-            <p t-if="!this.valueIsURL" class="m-0 text-secondary one-line" t-esc="this.props.value" />
+            <p t-if="!this.valueIsURL" class="m-0 text-secondary one-line" t-esc="this.props.value or 'Not Configured'" />
             <a t-if="this.valueIsURL" t-att-href="this.props.value" target="_blank" class="m-0 text-secondary one-line" t-esc="this.props.value" />
         </div>
         <div t-if="this.props.btnName">
