@@ -109,24 +109,28 @@ export class FormatPlugin extends Plugin {
             {
                 id: "bold",
                 groupId: "decoration",
+                namespaces: ["compact", "expanded"],
                 commandId: "formatBold",
                 isActive: isFormatted(this, "bold"),
             },
             {
                 id: "italic",
                 groupId: "decoration",
+                namespaces: ["compact", "expanded"],
                 commandId: "formatItalic",
                 isActive: isFormatted(this, "italic"),
             },
             {
                 id: "underline",
                 groupId: "decoration",
+                namespaces: ["compact", "expanded"],
                 commandId: "formatUnderline",
                 isActive: isFormatted(this, "underline"),
             },
             {
                 id: "strikethrough",
                 groupId: "decoration",
+                namespaces: ["compact", "expanded"],
                 commandId: "formatStrikethrough",
                 isActive: isFormatted(this, "strikeThrough"),
             },
