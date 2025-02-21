@@ -38,7 +38,7 @@ import re
 import uuid
 import warnings
 from collections import defaultdict, OrderedDict
-from collections.abc import MutableMapping
+from collections.abc import Iterable, MutableMapping
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
@@ -1429,6 +1429,23 @@ class BaseModel(metaclass=MetaModel):
         for fname, value in defaults.items():
             if fname in self._fields:
                 field = self._fields[fname]
+                if (
+                    field.relational
+                    and not self.env.su
+                    and isinstance(value, Iterable)
+                ):
+                    # since the value will be converted into a SET, we still
+                    # need to check permissions for these actions
+                    for cmd in value:
+                        command_code = cmd[0] if isinstance(cmd, (tuple, list)) and len(cmd) >= 2 else None
+                        if command_code == Command.DELETE:
+                            record = self.env[field.comodel_name].browse(cmd[1])
+                            record.check_access_rights('unlink')
+                            record.check_access_rule('unlink')
+                        elif command_code == Command.UPDATE or (field.type == 'one2many' and command_code in (Command.UNLINK, Command.LINK)):
+                            record = self.env[field.comodel_name].browse(cmd[1])
+                            record.check_access_rights('write')
+                            record.check_access_rule('write')
                 value = field.convert_to_cache(value, self, validate=False)
                 defaults[fname] = field.convert_to_write(value, self)
 
