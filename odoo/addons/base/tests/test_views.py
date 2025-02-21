@@ -1530,7 +1530,7 @@ class TestTemplating(ViewCase):
         arch = etree.fromstring(arch_string)
         self.View.distribute_branding(arch)
 
-        self.assertEqual(arch, E.root(E.item(E.span({'t-call': "foo"}))))
+        self.assertEqual(arch, E.root(E.item(E.span(E.t({'t-call': "foo"})))))
 
     def test_esc_no_branding(self):
         view = self.View.create({
