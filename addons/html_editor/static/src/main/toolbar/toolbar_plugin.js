@@ -2,12 +2,12 @@ import { Plugin } from "@html_editor/plugin";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
 import { isTextNode } from "@web/views/view_compiler";
-import { Toolbar } from "./toolbar";
+import { composeToolbarButton, Toolbar } from "./toolbar";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { ToolbarMobile } from "./mobile_toolbar";
 import { debounce } from "@web/core/utils/timing";
-import { omit, pick } from "@web/core/utils/objects";
+import { omit } from "@web/core/utils/objects";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
@@ -103,6 +103,23 @@ import { _t } from "@web/core/l10n/translation";
  * };
  */
 
+/**
+ * Types after conversion to renderable toolbar buttons:
+ *
+ * @typedef {Object} ToolbarCommandButton
+ * @property {string} id
+ * @property {string} groupId
+ * @property {TranslatedString} title
+ * @property {Function} run
+ * @property {string} [icon]
+ * @property {string} [text]
+ * @property {(selection: EditorSelection) => boolean} [isAvailable]
+ * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
+ * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
+ *
+ * @typedef {ToolbarComponentItem} ToolbarComponentButton
+ */
+
 /** Delay in ms for toolbar open after keyup, double click or triple click. */
 const DELAY_TOOLBAR_OPEN = 300;
 
@@ -125,7 +142,10 @@ export class ToolbarPlugin extends Plugin {
                 this.updateToolbar();
             },
         },
-        toolbar_groups: withSequence(100, { id: "expand_toolbar", namespaces: ["compact"] }),
+        toolbar_groups: [
+            withSequence(100, { id: "expand_toolbar", namespaces: ["compact"] }),
+            withSequence(30, { id: "layout" }),
+        ],
         toolbar_items: {
             id: "expand_toolbar",
             groupId: "expand_toolbar",
@@ -235,21 +255,6 @@ export class ToolbarPlugin extends Plugin {
     }
 
     /**
-     * @typedef {Object} ToolbarCommandButton
-     * @property {string} id
-     * @property {string} groupId
-     * @property {TranslatedString} title
-     * @property {Function} run
-     * @property {string} [icon]
-     * @property {string} [text]
-     * @property {(selection: EditorSelection) => boolean} [isAvailable]
-     * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
-     * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
-     *
-     * @typedef {ToolbarComponentItem} ToolbarComponentButton
-     */
-
-    /**
      * @returns {(ToolbarCommandButton| ToolbarComponentButton)[]}
      */
     getButtons() {
@@ -259,11 +264,7 @@ export class ToolbarPlugin extends Plugin {
         /** @returns {ToolbarCommandButton} */
         const commandItemToButton = (/** @type {ToolbarCommandItem}*/ item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
-            return {
-                ...pick(command, "title", "icon", "isAvailable"),
-                ...omit(item, "commandId", "commandParams"),
-                run: () => command.run(item.commandParams),
-            };
+            return composeToolbarButton(command, item);
         };
 
         return toolbarItems.map((item) => ("Component" in item ? item : commandItemToButton(item)));

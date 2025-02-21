@@ -159,6 +159,9 @@ test("toolbar list buttons react to selection change", async () => {
     const { el } = await setupEditor("<ul><li>[abc]</li></ul>");
 
     await expandToolbar();
+    click(".btn[name='list_selector'].dropdown-toggle");
+    await waitFor(".btn[name='list_selector'].dropdown-toggle.show");
+
     expect(".btn[name='bulleted_list']").toHaveClass("active");
     expect(".btn[name='numbered_list']").not.toHaveClass("active");
     expect(".btn[name='checklist']").not.toHaveClass("active");
@@ -331,10 +334,10 @@ test("toolbar works: can select font size", async () => {
 test("toolbar works: show the correct text alignment", async () => {
     const { el } = await setupEditor("<p>[test</p><p><br>]</p>");
     await expandToolbar();
-    expect("button[title='Text align']").toHaveCount(1);
-    expect("button[title='Text align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
-    await click("button[title='Text align']");
-    await contains(".o_align_selector_menu .dropdown-item .fa-align-right").click();
+    expect("button[name='text_align']").toHaveCount(1);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
+    await click("button[name='text_align']");
+    await contains(".o-we-toolbar-dropdown .btn.fa-align-right").click();
     expect(getContent(el)).toBe(
         `<p style="text-align: right;">[test</p><p style="text-align: right;"><br>]</p>`
     );
@@ -344,10 +347,10 @@ test("toolbar works: show the correct text alignment", async () => {
 test("toolbar works: show the correct text alignment after undo/redo", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await expandToolbar();
-    expect("button[title='Text align']").toHaveCount(1);
-    expect("button[title='Text align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
-    await click("button[title='Text align']");
-    await contains(".o_align_selector_menu .dropdown-item .fa-align-center").click();
+    expect("button[name='text_align']").toHaveCount(1);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
+    await click("button[name='text_align']");
+    await contains(".o-we-toolbar-dropdown .btn.fa-align-center").click();
     expect(getContent(el)).toBe(`<p style="text-align: center;">[test]</p>`);
     expect("button[title='Text align'] span").toHaveInnerHTML(
         `<i class="fa fa-align-center"> </i>`
