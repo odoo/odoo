@@ -85,6 +85,14 @@ class PosConfig(models.Model):
             'record': config,
             'noupdate': True,
         }])
+        if not self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False):
+            convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_floor.xml', idref=None, mode='init', noupdate=True)
+        config_floors = [(5, 0)]
+        if (floor_main := self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False)):
+            config_floors += [(4, floor_main.id)]
+        if (floor_patio := self.env.ref('pos_restaurant.floor_patio', raise_if_not_found=False)):
+            config_floors += [(4, floor_patio.id)]
+        config.update({'floor_ids': config_floors})
         if with_demo_data:
             config._load_bar_demo_data()
         return {'config_id': config.id}
@@ -127,8 +135,14 @@ class PosConfig(models.Model):
             'record': config,
             'noupdate': True,
         }])
-        if not self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False) and self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False):
+        if not self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False):
             convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_floor.xml', idref=None, mode='init', noupdate=True)
+        config_floors = [(5, 0)]
+        if (floor_main := self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False)):
+            config_floors += [(4, floor_main.id)]
+        if (floor_patio := self.env.ref('pos_restaurant.floor_patio', raise_if_not_found=False)):
+            config_floors += [(4, floor_patio.id)]
+        config.update({'floor_ids': config_floors})
         if with_demo_data:
             config._load_restaurant_demo_data()
             if self.env.company.id == self.env.ref('base.main_company').id:
