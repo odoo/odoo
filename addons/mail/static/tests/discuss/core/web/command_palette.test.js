@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     insertText,
+    openDiscuss,
     start,
     startServer,
     triggerHotkey,
@@ -155,4 +156,11 @@ test("hide conversations in recent if they have mentions", async () => {
         text: "OdooBot",
         count: 1,
     });
+});
+
+test("Ctrl-K opens @ command palette in discuss app", async () => {
+    await start();
+    await openDiscuss();
+    triggerHotkey("control+k");
+    await contains(".o_command_palette_search", { text: "@" });
 });
