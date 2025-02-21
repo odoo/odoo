@@ -441,7 +441,7 @@ export class EmojiPicker extends Component {
         if (recentEmojis.length > 0 && this.searchTerm) {
             emojisToDisplay = emojisToDisplay.filter((emoji) => !recentEmojis.includes(emoji));
         }
-        if (this.searchTerm.length > 1) {
+        if (this.searchTerm.length > 0) {
             return fuzzyLookup(this.searchTerm, emojisToDisplay, (emoji) => [
                 emoji.name,
                 ...emoji.keywords,
