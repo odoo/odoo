@@ -55,6 +55,41 @@
     }
 }
 
+// MASONRY LAYOUT
+.o_masonry {
+    &.o_spc-none div.o_masonry_col {
+        padding: 0;
+
+        > img, > a > img, > .media_iframe_video {
+            margin: 0 !important;
+        }
+    }
+
+    &.o_spc-small div.o_masonry_col {
+        padding: 0 ($spacer * .5);
+
+        > img, > a > img, > .media_iframe_video {
+            margin-bottom: $spacer !important;
+        }
+    }
+
+    &.o_spc-medium div.o_masonry_col {
+        padding: 0 $spacer;
+
+        > img, > a > img, > .media_iframe_video {
+            margin-bottom: $spacer * 2 !important;
+        }
+    }
+
+    &.o_spc-big div.o_masonry_col {
+        padding: 0 ($spacer * 1.5);
+
+        > img, > a > img, > .media_iframe_video {
+            margin-bottom: $spacer * 3 !important;
+        }
+    }
+}
+
 @include media-breakpoint-up(lg) {
     .o_grid_mode {
         display: grid !important;
