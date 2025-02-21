@@ -7,7 +7,6 @@ export const fileUploadKanbanView = {
     ...kanbanView,
     Controller: FileUploadKanbanController,
     Renderer: FileUploadKanbanRenderer,
-    buttonTemplate: "account.FileuploadKanbanView.Buttons",
 };
 
 registry.category("views").add("file_upload_kanban", fileUploadKanbanView);

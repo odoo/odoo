@@ -1,6 +1,6 @@
 <templates>
 
-    <t t-name="account.AccountMoveListView.Buttons" t-inherit="account.FileuploadListView.Buttons" t-inherit-mode="primary">
+    <t t-name="account.AccountMoveListView" t-inherit="account.FileuploadListView" t-inherit-mode="primary">
         <xpath expr="//t[@t-call='account.DocumentViewUploadButton']" position="replace">
             <t t-if="showUploadButton" t-call="account.AccountViewUploadButton"/>
         </xpath>

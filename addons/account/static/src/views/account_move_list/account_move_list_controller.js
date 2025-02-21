@@ -5,6 +5,7 @@ import { AccountFileUploader } from "@account/components/account_file_uploader/a
 import { useService } from "@web/core/utils/hooks";
 
 export class AccountMoveListController extends FileUploadListController {
+    static template = "account.AccountMoveListView";
     static components = {
         ...FileUploadListController.components,
         AccountFileUploader,
