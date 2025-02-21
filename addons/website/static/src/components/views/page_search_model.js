@@ -1,7 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { Domain } from '@web/core/domain';
 import { SearchModel } from '@web/search/search_model';
-import { onWillStart, useState } from "@odoo/owl";
 
 export class PageSearchModel extends SearchModel {
     /**
@@ -10,79 +8,81 @@ export class PageSearchModel extends SearchModel {
     setup() {
         super.setup(...arguments);
         this.website = useService('website');
+    }
 
-        this.pagesState = useState({
-            websiteDomain: false,
+    /**
+     * @override
+     */
+    async load() {
+        await super.load(...arguments);
+
+        // Call `fetchWebsites` to populate `this.website.websites`.
+        await this.website.fetchWebsites();
+
+        if (this.searchViewFields.website_id) {
+            await this.createFilterForAllWebsites();
+            await this.selectCurrentWebsiteFilter();
+        }
+    }
+
+    /**
+     * Creates filter for all available websites.
+     */
+    async createFilterForAllWebsites() {
+        const existingWebsiteFilters = this.getSearchItems(
+            (searchItem) => searchItem.type === "filter" && searchItem.name.startsWith("website_")
+        );
+
+        // Check if filters are already created
+        if (existingWebsiteFilters.length === this.website.websites.length) {
+            return;
+        }
+
+        let websitePageIds = {};
+        if (this.resModel === "website.page") {
+            const websiteIds = this.website.websites.map((website) => website.id);
+            websitePageIds = await this.orm.call("website", "get_website_page_ids", [websiteIds]);
+        }
+
+        const websiteFilters = this.website.websites.map((website) => {
+            const websiteDomain =
+                this.resModel === "website.page"
+                    ? [["id", "in", websitePageIds[website.id] || []]]
+                    : [["website_id", "in", [false, website.id]]];
+
+            return {
+                name: `website_${website.id}`,
+                description: website.name,
+                domain: websiteDomain,
+                type: "filter",
+            };
         });
-        onWillStart(async () => {
-            // Before the searchModel performs its DB search call, append the
-            // website domain to the search domain.
-            await this.website.fetchWebsites();
-            const website = await this.getCurrentWebsite();
-            await this.notifyWebsiteChange(website.id);
-        });
+
+        this._createGroupOfSearchItems(websiteFilters);
     }
 
     /**
-     * @override
+     * Selects the current website filter if no other website filter is active.
      */
-    exportState() {
-        const state = super.exportState();
-        state.websiteDomain = this.pagesState.websiteDomain;
-        return state;
-    }
-
-    /**
-     * @override
-     */
-    _importState(state) {
-        super._importState(...arguments);
-
-        if (state.websiteDomain) {
-            this.pagesState.websiteDomain = state.websiteDomain;
-        }
-    }
-
-    /**
-     * @override
-     */
-    _getDomain(params = {}) {
-        let domain = super._getDomain(params);
-        if (!this.pagesState.websiteDomain) {
-            return domain;
+    async selectCurrentWebsiteFilter() {
+        const currentlySelectedWebsiteFilters = this.getSearchItems(
+            (searchItem) =>
+                searchItem.type === "filter" &&
+                searchItem.name.startsWith("website_") &&
+                searchItem.isActive
+        );
+        if (currentlySelectedWebsiteFilters.length) {
+            return;
         }
 
-        domain = Domain.and([
-            domain,
-            this.pagesState.websiteDomain,
-        ]);
-        return params.raw ? domain : domain.toList();
-    }
-
-    /**
-     * Updates the website domain state and notifies the change. That domain
-     * state will be appended to the base SearchModel domain.
-     *
-     * @param {number} websiteId - The ID of the website.
-     */
-    async notifyWebsiteChange(websiteId) {
-        let websiteDomain = [];
-        if (websiteId && 'website_id' in this.searchViewFields) {
-            if (this.resModel === 'website.page') {
-                // In case of `website.page`, we can't find the website pages
-                // with a regular domain (because we need to filter duplicates).
-                const pageIds = await this.orm.call(
-                    "website",
-                    "get_website_page_ids",
-                    [websiteId],
-                );
-                websiteDomain = [['id', 'in', pageIds]];
-            } else {
-                websiteDomain = [['website_id', 'in', [false, websiteId]]];
-            }
+        const currentWebsite = await this.getCurrentWebsite();
+        const [currentWebsiteFilter] = this.getSearchItems(
+            (searchItem) =>
+                searchItem.type === "filter" && searchItem.name === `website_${currentWebsite.id}`
+        );
+        if (currentWebsiteFilter) {
+            this.toggleSearchItem(currentWebsiteFilter.id);
         }
-        this.pagesState.websiteDomain = websiteDomain;
-        this._notify();
     }
 
     /**

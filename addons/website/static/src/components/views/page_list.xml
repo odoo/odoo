@@ -9,31 +9,4 @@
     </xpath>
 </t>
 
-<t t-name="website.PageListView" t-inherit="web.ListView">
-    <xpath expr="//SearchBar" position="inside">
-        <t t-set-slot="search-bar-additional-menu">
-            <t t-call="website.RecordFilter"/>
-        </t>
-    </xpath>
-</t>
-
-<t t-name="website.RecordFilter">
-    <div t-if="pageManager.websites.length > 1" class="o_dropdown_container o_website_menu w-100 w-lg-auto h-100 px-3 border-start">
-        <div class="px-3 fs-5 mb-2">
-            <i class="me-2 fa fa-globe"/>
-            <h5 class="o_dropdown_title d-inline">Website</h5>
-        </div>
-        <t t-foreach="pageManager.websites" t-as="website" t-key="website.id">
-            <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: website.isActive }"
-                checked="website.isActive"
-                closingMode="'none'"
-                t-esc="website.name"
-                attrs=" { title: website.name.length > 15 ? website.name : '' }"
-                onSelected="() => this.pageManager.selectWebsite(website)"
-            />
-            <div t-if="!website.id" class="dropdown-divider"/>
-        </t>
-    </div>
-</t>
-
 </templates>
