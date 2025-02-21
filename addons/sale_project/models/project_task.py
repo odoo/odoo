@@ -55,7 +55,7 @@ class ProjectTask(models.Model):
             return search_on_comodel
         return sales_orders
 
-    @api.depends('sale_line_id', 'project_id', 'allow_billable')
+    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'project_id.reinvoiced_sale_order_id')
     def _compute_sale_order_id(self):
         for task in self:
             if not task.allow_billable:
@@ -64,6 +64,7 @@ class ProjectTask(models.Model):
             sale_order = (
                 task.sale_line_id.order_id
                 or task.project_id.sale_order_id
+                or task.project_id.reinvoiced_sale_order_id
                 or task.sale_order_id
             )
             if sale_order and not task.partner_id:
