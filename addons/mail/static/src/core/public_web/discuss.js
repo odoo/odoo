@@ -74,6 +74,11 @@ export class Discuss extends Component {
                         this.thread.composer.autofocus++;
                     }
                 }
+                if (getActiveHotkey(ev) === "control+k") {
+                    this.store.env.services.command.openMainPalette({ searchValue: "@" });
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
             },
             { capture: true }
         );
