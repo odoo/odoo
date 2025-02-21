@@ -316,13 +316,8 @@ export class ProductScreen extends Component {
             this.state.currentOffset = 0;
         }
         const result = await this.loadProductFromDB();
-        if (result.length > 0) {
-            this.notification.add(
-                _t('%s product(s) found for "%s".', result.length, searchProductWord),
-                3000
-            );
-        } else {
-            this.notification.add(_t('No more product found for "%s".', searchProductWord));
+        if (result.length === 0) {
+            this.notification.add(_t('No other products found for "%s".', searchProductWord), 3000);
         }
         if (this.state.previousSearchWord === searchProductWord) {
             this.state.currentOffset += result.length;
