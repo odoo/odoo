@@ -57,8 +57,12 @@ class SaleOrder(models.Model):
             ('order_id.state', 'not in', ['draft', 'sent']),
         ], aggregates=['order_id:array_agg'])[0][0]
         for order in self:
-            order.show_project_button = order.id in show_button_ids and order.project_count
-            order.show_task_button = order.show_project_button or order.tasks_count
+            state = order.state not in ['draft', 'sent']
+            service_tracking = any(line.product_id.service_tracking == 'no' for line in order.order_line)
+            order.show_project_button = state and order.project_count
+            order.show_task_button = state and (any(order.order_line.mapped('project_id'))
+                or order.tasks_count
+                or (service_tracking and order.project_id))
             order.show_create_project_button = (
                 is_project_manager
                 and order.id in show_button_ids
@@ -116,10 +120,10 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
         is_project_manager = self.env.user.has_group('project.group_project_manager')
-        projects = self.env['project.project'].search([('sale_order_id', 'in', self.ids)])
+        projects = self.env['project.project'].search(['|', ('sale_order_id', 'in', self.ids), ('reinvoiced_sale_order_id', 'in', self.ids)])
         projects_per_so = defaultdict(lambda: self.env['project.project'])
         for project in projects:
-            projects_per_so[project.sale_order_id.id] |= project
+            projects_per_so[project.sale_order_id.id or project.reinvoiced_sale_order_id.id] |= project
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
             projects |= order.project_id
@@ -298,12 +302,10 @@ class SaleOrder(models.Model):
         task = self.env['project.task'].browse(self.env.context.get('create_for_task_id'))
         if project or task:
             service_sol = next((sol for sol in created_records.order_line if sol.is_service), False)
-            if not service_sol and not self.env.context.get('from_embedded_action'):
-                raise UserError(_('The Sales Order must contain at least one service product.'))
             if project and not project.sale_line_id:
                 project.sale_line_id = service_sol
                 if not project.reinvoiced_sale_order_id:
-                    project.reinvoiced_sale_order_id = service_sol.order_id
+                    project.reinvoiced_sale_order_id = service_sol.order_id or created_records[0] if created_records else False
             if task and not task.sale_line_id:
                 created_records.with_context(disable_project_task_generation=True).action_confirm()
                 task.sale_line_id = service_sol
