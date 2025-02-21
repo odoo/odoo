@@ -118,10 +118,11 @@
                   sample="1"
                   decoration-muted="state == 'cancel'">
                 <header>
-                    <button name="%(sale.action_view_sale_advance_payment_inv)d"
-                            type="action"
-                            string="Create Invoices"
-                            class="btn-secondary"/>
+                    <button
+                        string="Create Invoices"
+                        name="%(sale.action_view_sale_advance_payment_inv)d"
+                        type="action"
+                        class="btn-secondary"/>
                 </header>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="currency_id" column_invisible="True"/>
@@ -255,101 +256,122 @@
             <form string="Sales Order" class="o_sale_order">
             <header>
                 <button
+                    string="Capture Transaction"
                     name="payment_action_capture"
                     type="object"
-                    string="Capture Transaction"
                     data-hotkey="shift+g"
                     class="oe_highlight"
                     invisible="not authorized_transaction_ids"/>
                 <button
+                    string="Void Transaction"
                     name="payment_action_void"
                     type="object"
-                    string="Void Transaction"
                     data-hotkey="shift+v"
                     confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
                     invisible="not authorized_transaction_ids"/>
                 <button
+                    string="Create Invoice"
                     id="create_invoice"
                     name="%(sale.action_view_sale_advance_payment_inv)d"
                     type="action"
-                    string="Create Invoice"
                     class="btn-primary"
                     data-hotkey="q"
                     invisible="invoice_status != 'to invoice'"/>
                 <button
+                    string="Create Invoice"
                     id="create_invoice_percentage"
                     name="%(sale.action_view_sale_advance_payment_inv)d"
                     type="action"
                     context="{'default_advance_payment_method': 'percentage'}"
-                    string="Create Invoice"
                     data-hotkey="q"
                     invisible="invoice_status != 'no' or state != 'sale'"/>
                 <button
-                    id="send_by_email_primary"
+                    string="Send"
+                    id="quotation_send_primary"
                     name="action_quotation_send"
                     type="object"
                     context="{'validate_analytic': True, 'check_document_layout': True}"
-                    string="Send by Email"
                     class="btn-primary"
                     data-hotkey="g"
                     invisible="state != 'draft'"/>
                 <button
+                    string="Send PRO-FORMA Invoice"
                     id="send_proforma_primary"
                     name="action_quotation_send"
                     type="object"
                     context="{'proforma': True, 'validate_analytic': True}"
-                    string="Send PRO-FORMA Invoice"
                     class="btn-primary"
                     groups="sale.group_proforma_sales"
                     invisible="state != 'draft' or invoice_count &gt;= 1"/>
                 <button
+                    string="Confirm"
                     id="action_confirm"
                     name="action_confirm"
                     type="object"
                     context="{'validate_analytic': True}"
-                    string="Confirm"
                     class="btn-primary"
                     data-hotkey="q"
                     invisible="state != 'sent'"/>
                 <button
+                    string="Print"
+                    name="sale.action_report_saleorder"
+                    type="action"
+                    data-hotkey="i"
+                    invisible="state == 'sale'"/>
+                <button
+                    string="Confirm"
                     name="action_confirm"
                     type="object"
                     context="{'validate_analytic': True}"
-                    string="Confirm"
                     data-hotkey="q"
                     invisible="state != 'draft'"/>
                 <button
+                    string="Send PRO-FORMA Invoice"
                     id="send_proforma"
                     name="action_quotation_send"
                     type="object"
                     context="{'proforma': True, 'validate_analytic': True}"
-                    string="Send PRO-FORMA Invoice"
                     invisible="state == 'draft' or invoice_count &gt;= 1"
                     groups="sale.group_proforma_sales"/>
                 <button
-                    id="send_by_email"
+                    string="Send"
+                    id="quotation_send"
                     name="action_quotation_send"
                     type="object"
                     context="{'validate_analytic': True, 'check_document_layout': True}"
-                    string="Send by Email"
                     data-hotkey="g"
                     invisible="state not in ('sent', 'sale')"/>
 
                 <!-- allow to unlock locked orders even if setting is not enabled (e.g. orders synchronized from connectors) -->
-                <button name="action_unlock" type="object" string="Unlock"
-                        invisible="not locked" groups="sales_team.group_sale_manager"/>
-                <button name="action_preview_sale_order" string="Preview" type="object" class="btn-secondary"/>
                 <button
+                    string="Unlock"
+                    name="action_unlock"
+                    type="object"
+                    invisible="not locked"
+                    groups="sales_team.group_sale_manager"/>
+                <button
+                    string="Preview"
+                    name="action_preview_sale_order"
+                    type="object"
+                    class="btn-secondary"/>
+                <button
+                    string="Cancel"
                     name="action_cancel"
                     type="object"
-                    string="Cancel"
                     confirm="Are you sure you want to cancel this order? This may affect related documents or processes."
-                    invisible="state not in ['draft', 'sent', 'sale'] or not id or locked"
                     data-hotkey="x"
-                />
-                <button name="action_draft" invisible="state != 'cancel'" type="object" string="Set to Quotation" data-hotkey="w"/>
+                    invisible="state not in ['draft', 'sent', 'sale'] or not id or locked"/>
+                <button
+                    string="Set to Quotation"
+                    name="action_draft"
+                    type="object"
+                    data-hotkey="w"
+                    invisible="state != 'cancel'"/>
                 <t groups="sale.group_auto_done_setting">
-                    <button name="action_lock" type="object" string="Lock"
+                    <button
+                        string="Lock"
+                        name="action_lock"
+                        type="object"
                         help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."
                         invisible="locked or state != 'sale'"
                         groups="sales_team.group_sale_manager"/>
@@ -357,12 +379,17 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
             </header>
             <div
-                 class="alert alert-warning" role="alert"
-                 invisible="partner_credit_warning == ''">
+                class="alert alert-warning"
+                role="alert"
+                invisible="partner_credit_warning == ''"
+            >
                 <field name="partner_credit_warning"/>
             </div>
-            <div class="alert alert-warning p-3 text-center" role="alert"
-                invisible="state not in ['draft', 'sent'] or not has_archived_products">
+            <div
+                class="alert alert-warning p-3 text-center"
+                role="alert"
+                invisible="state not in ['draft', 'sent'] or not has_archived_products"
+            >
                 <span>Warning: This quote contains archived product(s)</span>
             </div>
             <div
@@ -560,7 +587,12 @@
                                     <create name="add_product_control" string="Add a product"/>
                                     <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                     <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
-                                    <button name="action_add_from_catalog" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
+                                    <button
+                                        string="Catalog"
+                                        name="action_add_from_catalog"
+                                        type="object"
+                                        class="px-4 btn-link"
+                                        context="{'order_id': parent.id}"/>
                                 </control>
 
                                 <!-- Non readonly invisible fields, must be specified manually, because fields added automatically by the ORM
@@ -690,11 +722,12 @@
                                     <create name="add_product_control" string="Add product"/>
                                     <create name="add_section_control" string="Add section" context="{'default_display_type': 'line_section'}"/>
                                     <create name="add_note_control" string="Add note" context="{'default_display_type': 'line_note'}"/>
-                                    <button name="action_add_from_catalog"
-                                            context="{'order_id': parent.id}"
-                                            string="Catalog"
-                                            type="object"
-                                            class="btn-secondary"/>
+                                    <button
+                                        string="Catalog"
+                                        name="action_add_from_catalog"
+                                        type="object"
+                                        class="btn-secondary"
+                                        context="{'order_id': parent.id}"/>
                                 </control>
                                 <templates>
                                     <t t-name="card" class="row g-0 ps-0 pe-0">
@@ -744,11 +777,12 @@
                         </field>
                         <div class="float-end d-flex gap-1 mb-2"
                              name="so_button_below_order_lines">
-                            <button string="Discount"
-                                    name="action_open_discount_wizard"
-                                    type="object"
-                                    class="btn btn-secondary"
-                                    groups="sale.group_discount_per_so_line"/>
+                            <button
+                                string="Discount"
+                                name="action_open_discount_wizard"
+                                type="object"
+                                class="btn btn-secondary"
+                                groups="sale.group_discount_per_so_line"/>
                         </div>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
                             <group colspan="4" class="order-1 order-lg-0">
@@ -788,9 +822,9 @@
                                 <div class="o_row">
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
                                     <button
+                                        string="Update Taxes"
                                         name="action_update_taxes"
                                         type="object"
-                                        string="Update Taxes"
                                         help="Recompute all taxes based on this fiscal position"
                                         class="btn-link mb-1 px-0"
                                         icon="fa-refresh"
