@@ -605,7 +605,7 @@ class SaleOrder(models.Model):
         :return: Whether the order has deliverable products.
         :rtype: bool
         """
-        return not self.only_services
+        return bool(self.order_line.product_id) and not self.only_services
 
     def _remove_delivery_line(self):
         super()._remove_delivery_line()
