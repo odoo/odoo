@@ -413,12 +413,8 @@ def set_not_null(cr, tablename, columnname):
         "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL",
         SQL.identifier(tablename), SQL.identifier(columnname),
     )
-    try:
-        with cr.savepoint(flush=False):
-            cr.execute(query, log_exceptions=False)
-            _schema.debug("Table %r: column %r: added constraint NOT NULL", tablename, columnname)
-    except Exception:
-        raise Exception("Table %r: unable to set NOT NULL on column %r", tablename, columnname)
+    cr.execute(query, log_exceptions=False)
+    _schema.debug("Table %r: column %r: added constraint NOT NULL", tablename, columnname)
 
 
 def drop_not_null(cr, tablename, columnname):
@@ -452,26 +448,18 @@ def add_constraint(cr, tablename, constraintname, definition):
         "COMMENT ON CONSTRAINT %s ON %s IS %s",
         SQL.identifier(constraintname), SQL.identifier(tablename), definition,
     )
-    try:
-        with cr.savepoint(flush=False):
-            cr.execute(query1, log_exceptions=False)
-            cr.execute(query2, log_exceptions=False)
-            _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
-    except Exception:
-        raise Exception("Table %r: unable to add constraint %r as %s", tablename, constraintname, definition)
+    cr.execute(query1, log_exceptions=False)
+    cr.execute(query2, log_exceptions=False)
+    _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
 
 
 def drop_constraint(cr, tablename, constraintname):
-    """ drop the given constraint. """
-    try:
-        with cr.savepoint(flush=False):
-            cr.execute(SQL(
-                "ALTER TABLE %s DROP CONSTRAINT %s",
-                SQL.identifier(tablename), SQL.identifier(constraintname),
-            ))
-            _schema.debug("Table %r: dropped constraint %r", tablename, constraintname)
-    except Exception:
-        _schema.warning("Table %r: unable to drop constraint %r!", tablename, constraintname)
+    """ Drop the given constraint. """
+    cr.execute(SQL(
+        "ALTER TABLE %s DROP CONSTRAINT %s",
+        SQL.identifier(tablename), SQL.identifier(constraintname),
+    ))
+    _schema.debug("Table %r: dropped constraint %r", tablename, constraintname)
 
 
 def add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
@@ -609,11 +597,10 @@ def add_index(cr, indexname, tablename, definition, *, unique: bool, comment='')
         "COMMENT ON INDEX %s IS %s",
         SQL.identifier(indexname), comment,
     ) if comment else None
-    with cr.savepoint(flush=False):
-        cr.execute(query, log_exceptions=False)
-        if query_comment:
-            cr.execute(query_comment, log_exceptions=False)
-        _schema.debug("Table %r: created index %r (%s)", tablename, indexname, definition.code)
+    cr.execute(query, log_exceptions=False)
+    if query_comment:
+        cr.execute(query_comment, log_exceptions=False)
+    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, definition.code)
 
 
 def create_unique_index(cr, indexname, tablename, expressions):

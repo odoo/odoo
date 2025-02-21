@@ -1098,9 +1098,19 @@ class Field(typing.Generic[T]):
             # _init_column may delay computations in post-init phase
             @model.pool.post_init
             def add_not_null():
-                # flush values before adding NOT NULL constraint
-                model.flush_model([self.name])
-                model.pool.post_constraint(apply_required, model, self.name)
+                # At the time this function is called, the model's _fields may have been reset, although
+                # the model's class is still the same. Retrieve the field to see whether the NOT NULL
+                # constraint still applies.
+                field = model._fields[self.name]
+                if not field.required or not field.store:
+                    return
+                # Flush values before adding NOT NULL constraint.
+                model.flush_model([field.name])
+                model.pool.post_constraint(
+                    model.env.cr,
+                    lambda cr: sql.set_not_null(cr, model._table, field.name),
+                    key=f"add_not_null:{model._table}:{field.name}",
+                )
 
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
@@ -1618,15 +1628,6 @@ class Field(typing.Generic[T]):
     def determine_group_expand(self, records, values, domain):
         """ Return a domain representing a condition on ``self``. """
         return determine(self.group_expand, records, values, domain)
-
-def apply_required(model, field_name):
-    """ Set a NOT NULL constraint on the given field, if necessary. """
-    # At the time this function is called, the model's _fields may have been reset, although
-    # the model's class is still the same. Retrieve the field to see whether the NOT NULL
-    # constraint still applies
-    field = model._fields[field_name]
-    if field.store and field.required:
-        sql.set_not_null(model.env.cr, model._table, field_name)
 
 
 # forward-reference to models because we have this last cyclic dependency
