@@ -2181,7 +2181,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate Audit Trail"
-msgstr ""
+msgstr "Aktiver revisjonsspor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -3081,7 +3081,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.account_audit_trail_menu
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Audit Trail"
-msgstr ""
+msgstr "Revisjonsspor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
@@ -8750,12 +8750,6 @@ msgid "Invoice Status"
 msgstr "Fakturastatus"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
-#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
-msgid "Invoice Template Pdf Report"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 msgid "Invoice Totals"
@@ -8842,6 +8836,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
 msgid "Invoice template"
 msgstr ""
 
@@ -13961,15 +13957,6 @@ msgstr "Tradisjonell post"
 #: code:addons/account/models/company.py:0
 msgid "Some documents are being sent by another process already."
 msgstr "Noen dokumenter sendes allerede av en annen prosess."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"Some invoice(s) already have a generated pdf. The existing pdf will be used "
-"for sending. If you want to regenerate them, please delete the attachment "
-"from the invoice."
-msgstr ""
 
 #. module: account
 #. odoo-python

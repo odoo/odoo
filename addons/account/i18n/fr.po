@@ -9050,12 +9050,6 @@ msgid "Invoice Status"
 msgstr "Statut de la facture"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
-#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
-msgid "Invoice Template Pdf Report"
-msgstr "Modèle de facture rapport PDF"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 msgid "Invoice Totals"
@@ -9149,6 +9143,8 @@ msgstr "Envoi de la facture"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
 msgid "Invoice template"
 msgstr "Modèle de facture"
 
@@ -14338,18 +14334,6 @@ msgstr "Envoi postal"
 #: code:addons/account/models/company.py:0
 msgid "Some documents are being sent by another process already."
 msgstr "Certains documents sont envoyés via un autre processus. "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"Some invoice(s) already have a generated pdf. The existing pdf will be used "
-"for sending. If you want to regenerate them, please delete the attachment "
-"from the invoice."
-msgstr ""
-"Certaines factures ont déjà un fichier PDF généré. Le PDF existant sera "
-"utilisé pour l'envoi. Si vous souhaitez les générer à nouveau, veuillez "
-"supprimer la pièce jointe de la facture."
 
 #. module: account
 #. odoo-python

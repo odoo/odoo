@@ -4,8 +4,8 @@
 # 
 # Translators:
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2025
-# Maitê Dietze, 2025
 # Wil Odoo, 2025
+# Maitê Dietze, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,6 +142,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on "
 "%(date)s)%(attachment_extension)s"
 msgstr ""
+"%(attachment_name)s (detached by %(user)s on "
+"%(date)s)%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -8990,12 +8992,6 @@ msgid "Invoice Status"
 msgstr "Status da fatura"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
-#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
-msgid "Invoice Template Pdf Report"
-msgstr "Relatório de modelo de fatura em pdf"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 msgid "Invoice Totals"
@@ -9089,6 +9085,8 @@ msgstr "Envio de faturas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
 msgid "Invoice template"
 msgstr "Modelo de fatura"
 
@@ -14258,17 +14256,6 @@ msgstr "Correio"
 #: code:addons/account/models/company.py:0
 msgid "Some documents are being sent by another process already."
 msgstr "Alguns documentos já estão sendo enviados por outro processo."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"Some invoice(s) already have a generated pdf. The existing pdf will be used "
-"for sending. If you want to regenerate them, please delete the attachment "
-"from the invoice."
-msgstr ""
-"Já há PDFs gerados para algumas faturas. Os PDFs existentes serão usados "
-"para o envio. Se você quiser gerá-los novamente, exclua o anexo da fatura."
 
 #. module: account
 #. odoo-python
