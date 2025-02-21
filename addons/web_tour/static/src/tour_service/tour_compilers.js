@@ -397,8 +397,10 @@ export function compileTourToMacro(tour, options) {
         onTourEnd,
     } = options;
     const currentStepIndex = tourState.get(tour.name, "currentIndex");
+    const copiedTour = {...tour};
+    copiedTour.steps = filteredSteps;
     return {
-        ...tour,
+        ...copiedTour,
         checkDelay,
         steps: filteredSteps
             .reduce((newSteps, step, i) => {
@@ -409,7 +411,7 @@ export function compileTourToMacro(tour, options) {
                     return [
                         ...newSteps,
                         ...stepCompiler(i, step, {
-                            tour,
+                            tour: copiedTour,
                             pointer,
                             stepDelay,
                             keepWatchBrowser,
