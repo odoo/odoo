@@ -11,6 +11,10 @@ const StorePatch = {
         this.channels = this.makeCachedFetchData("channels_as_member");
         this.fetchSsearchConversationsSequential = useSequential();
     },
+    /**
+     * @param {string} categoryId
+     * @returns {number}
+     * */
     getDiscussSidebarCategoryCounter(categoryId) {
         return this.DiscussAppCategory.get({ id: categoryId }).threads.reduce((acc, channel) => {
             if (categoryId === "channels") {
@@ -20,6 +24,7 @@ const StorePatch = {
             }
         }, 0);
     },
+    /** @param {string} searchValue */
     async searchConversations(searchValue) {
         const data = await this.fetchSsearchConversationsSequential(async () => {
             const data = await rpc("/discuss/search", { term: searchValue });

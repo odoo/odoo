@@ -11,6 +11,7 @@ patch(Message.prototype, {
         /** @type {luxon.DateTime} */
         this.pinned_at = Record.attr(undefined, { type: "datetime" });
     },
+    /** @returns {Deferred<boolean>} */
     pin() {
         if (this.pinned_at) {
             return this.unpin();
@@ -43,6 +44,7 @@ patch(Message.prototype, {
         );
         return def;
     },
+    /** @returns {Deferred<boolean>} */
     unpin() {
         const def = new Deferred();
         this.store.env.services.dialog.add(

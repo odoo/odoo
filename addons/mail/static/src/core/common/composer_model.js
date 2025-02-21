@@ -2,14 +2,6 @@ import { OR, Record } from "@mail/core/common/record";
 
 export class Composer extends Record {
     static id = OR("thread", "message");
-    /** @returns {import("models").Composer} */
-    static get(data) {
-        return super.get(data);
-    }
-    /** @returns {import("models").Composer|import("models").Composer[]} */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
 
     clear() {
         this.attachments.length = 0;

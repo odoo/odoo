@@ -33,6 +33,7 @@ const threadPatch = {
             },
         });
         this.loadSubChannelsDone = false;
+        /** @type {import("models").Thread|null} */
         this.lastSubChannelLoaded = null;
     },
     get canLeave() {
@@ -84,7 +85,7 @@ const threadPatch = {
     /**
      * @param {*} param0
      * @param {string} [param0.searchTerm]
-     * @returns {import("models").Thread[]}
+     * @returns {Promise<import("models").Thread[]|undefined>}
      */
     async loadMoreSubChannels({ searchTerm } = {}) {
         if (this.loadSubChannelsDone) {

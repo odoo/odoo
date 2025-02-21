@@ -8,6 +8,7 @@ const messagePatch = {
     canReplyAll(thread) {
         return this.canForward(thread) && !this.is_note;
     },
+    /** @param {import("models").Thread} thread */
     canForward(thread) {
         return (
             !["discuss.channel", "mail.box"].includes(thread.model) &&

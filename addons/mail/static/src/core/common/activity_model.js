@@ -2,24 +2,8 @@ import { Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 
 export class Activity extends Record {
-    static name = "mail.activity";
+    static _name = "mail.activity";
     static id = "id";
-    /** @type {Object.<number, import("models").Activity>} */
-    static records = {};
-    /** @returns {import("models").Activity} */
-    static get(data) {
-        return super.get(data);
-    }
-    /**
-     * @template T
-     * @param {T} data
-     * @param {Object} [param1]
-     * @param {boolean} param1.broadcast
-     * @returns {T extends any[] ? import("models").Activity[] : import("models").Activity}
-     */
-    static insert(data, { broadcast = true } = {}) {
-        return super.insert(...arguments);
-    }
     /**
      * @param {Object} data
      * @param {Object} [param1]
@@ -87,8 +71,6 @@ export class Activity extends Record {
     res_id;
     /** @type {string} */
     res_name;
-    /** @type {number|false} */
-    request_partner_id;
     /** @type {'overdue'|'planned'|'today'} */
     state;
     /** @type {string} */

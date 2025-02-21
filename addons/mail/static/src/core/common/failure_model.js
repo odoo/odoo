@@ -6,16 +6,6 @@ import { _t } from "@web/core/l10n/translation";
 export class Failure extends Record {
     static nextId = markRaw({ value: 1 });
     static id = "id";
-    /** @type {Object.<number, import("models").Failure>} */
-    static records = {};
-    /** @returns {import("models").Failure} */
-    static get(data) {
-        return super.get(data);
-    }
-    /** @returns {import("models").Failure|import("models").Failure[]} */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
 
     notifications = Record.many("mail.notification", {
         /** @this {import("models").Failure} */

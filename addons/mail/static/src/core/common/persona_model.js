@@ -17,16 +17,6 @@ const { DateTime } = luxon;
 
 export class Persona extends Record {
     static id = AND("type", "id");
-    /** @type {Object.<number, import("models").Persona>} */
-    static records = {};
-    /** @returns {import("models").Persona} */
-    static get(data) {
-        return super.get(data);
-    }
-    /** @returns {import("models").Persona|import("models").Persona[]} */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
     static new() {
         const record = super.new(...arguments);
         record.debouncedSetImStatus = debounce(

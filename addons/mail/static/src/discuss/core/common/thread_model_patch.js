@@ -67,8 +67,11 @@ const threadPatch = {
                 return this.computeCorrespondent();
             },
         });
+        /** @type {"video_full_screen"|undefined} */
         this.default_display_mode = undefined;
+        /** @type {Deferred<Thread|undefined>} */
         this.fetchChannelInfoDeferred = undefined;
+        /** @type {"not_fetched"|"fetching"|"fetched"} */
         this.fetchChannelInfoState = "not_fetched";
         this.hasOtherMembersTyping = Record.attr(false, {
             /** @this {import("models").Thread} */
@@ -155,6 +158,7 @@ const threadPatch = {
                 return res;
             },
         });
+        /** @type {number|undefined} */
         this.member_count = undefined;
         /** @type {string} name: only for channel. For generic thread, @see display_name */
         this.name = undefined;
@@ -199,6 +203,7 @@ const threadPatch = {
         });
         this.typingMembers = Record.many("discuss.channel.member", { inverse: "threadAsTyping" });
     },
+    /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {
         return this.channel_member_ids.filter(
             (member) => !this.store.onlineMemberStatuses.includes(member.persona?.im_status)
@@ -218,6 +223,7 @@ const threadPatch = {
         }
         return super.avatarUrl;
     },
+    /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
         if (this.channel_type === "channel") {
             return undefined;
@@ -233,6 +239,7 @@ const threadPatch = {
         }
         return undefined;
     },
+    /** @returns {import("models").ChannelMember[]} */
     get correspondents() {
         return this.channel_member_ids.filter(({ persona }) => persona.notEq(this.store.self));
     },
@@ -349,6 +356,7 @@ const threadPatch = {
      * To be overridden.
      * The purpose is to exclude technical channel_member_ids like bots and avoid
      * "wrong" seen message indicator
+     * @returns {import("models").ChannelMember[]}
      */
     get membersThatCanSeen() {
         return this.channel_member_ids;

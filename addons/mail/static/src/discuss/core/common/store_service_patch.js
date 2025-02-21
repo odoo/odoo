@@ -25,6 +25,13 @@ const storeServicePatch = {
     get onlineMemberStatuses() {
         return ["away", "bot", "online"];
     },
+    /**
+     * @param {Object} param0
+     * @param {string} param0.default_display_mode
+     * @param {number[]} param0.partners_to
+     * @param {string} param0.name
+     * @returns {Promise<import("models").Thread>}
+     */
     async createGroupChat({ default_display_mode, partners_to, name }) {
         const data = await rpc("/discuss/channel/create_group", {
             default_display_mode,
@@ -36,6 +43,7 @@ const storeServicePatch = {
         channel.open({ focus: true });
         return channel;
     },
+    /** @param {number} channelId */
     async fetchChannel(channelId) {
         const channelIds = this.fetchParams.find(
             (fetchParams) => fetchParams[0] === "discuss.channel"
@@ -59,10 +67,14 @@ const storeServicePatch = {
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
             .map((thread) => thread.correspondent.persona.id);
     },
+    /**
+     * @param {import("models").ChannelMember} m1
+     * @param {import("models").ChannelMember} m2
+     */
     sortMembers(m1, m2) {
         return m1.persona.name?.localeCompare(m2.persona.name) || m1.id - m2.id;
     },
-    /** @param {[number]} partnerIds */
+    /** @param {number[]} partnerIds */
     async startChat(partnerIds) {
         const partners_to = [...new Set([this.self.id, ...partnerIds])];
         if (partners_to.length === 1) {

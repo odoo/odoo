@@ -15,14 +15,6 @@ export class ChatHub extends Record {
     WINDOW = 380; // same value as $o-mail-ChatWindow-width
 
     /** @returns {import("models").ChatHub} */
-    static get(data) {
-        return super.get(data);
-    }
-    /** @returns {import("models").ChatHub|import("models").ChatHub[]} */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
-    /** @returns {import("models").ChatHub} */
     static new() {
         /** @type {import("models").ChatHub} */
         const chatHub = super.new(...arguments);
