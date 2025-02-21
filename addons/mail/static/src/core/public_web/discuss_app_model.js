@@ -2,15 +2,6 @@ import { Record } from "@mail/core/common/record";
 import { browser } from "@web/core/browser/browser";
 
 export class DiscussApp extends Record {
-    /** @returns {import("models").DiscussApp} */
-    static get(data) {
-        return super.get(data);
-    }
-    /** @returns {import("models").DiscussApp|import("models").DiscussApp[]} */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
-
     INSPECTOR_WIDTH = 300;
     /** @type {'main'|'channel'|'chat'|'livechat'} */
     activeTab = "main";

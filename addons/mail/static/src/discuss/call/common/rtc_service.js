@@ -200,15 +200,6 @@ class Network {
 }
 
 export class Rtc extends Record {
-    /** @returns {import("models").Rtc} */
-    static get(data) {
-        return super.get(...arguments);
-    }
-    /** @returns {import("models").Rtc} */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
-
     notifications = reactive(new Map());
     /** @type {Map<string, number>} timeoutId by notificationId for call notifications */
     timeouts = new Map();

@@ -36,50 +36,10 @@ export const addFieldsByPyModel = {
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
     static OTHER_LONG_TYPING = 60000;
+
     FETCH_LIMIT = 30;
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
     isReady = new Deferred();
-
-    /** @returns {import("models").Store|import("models").Store[]} */
-    static insert() {
-        return super.insert(...arguments);
-    }
-
-    /** @type {typeof import("@mail/core/common/chat_window_model").ChatWindow} */
-    ChatWindow;
-    /** @type {typeof import("@mail/core/common/composer_model").Composer} */
-    Composer;
-    /** @type {typeof import("@mail/core/common/failure_model").Failure} */
-    Failure;
-    /** @type {typeof import("@mail/core/common/attachment_model").Attachment} */
-    ["ir.attachment"];
-    /** @type {typeof import("@mail/core/common/activity_model").Activity} */
-    ["mail.activity"];
-    /** @type {typeof import("@mail/core/common/canned_response_model").CannedResponse} */
-    ["mail.canned.response"];
-    /** @type {typeof import("@mail/core/common/follower_model").Follower} */
-    ["mail.followers"];
-    /** @type {typeof import("@mail/core/common/link_preview_model").LinkPreview} */
-    ["mail.link.preview"];
-    /** @type {typeof import("@mail/core/common/message_model").Message} */
-    ["mail.message"];
-    /** @type {typeof import("@mail/core/common/notification_model").Notification} */
-    ["mail.notification"];
-    /** @type {typeof import("@mail/core/common/message_reactions_model").MessageReactions} */
-    MessageReactions;
-    /** @type {typeof import("@mail/core/common/persona_model").Persona} */
-    Persona;
-    /** @type {typeof import("@mail/core/common/country_model").Country} */
-    ["res.country"];
-    /** @type {typeof import("@mail/core/common/res_groups_model").ResGroups} */
-    ["res.groups"];
-    /** @type {typeof import("@mail/core/common/settings_model").Settings} */
-    Settings;
-    /** @type {typeof import("@mail/core/common/thread_model").Thread} */
-    Thread;
-    /** @type {typeof import("@mail/core/common/volume_model").Volume} */
-    Volume;
-
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**

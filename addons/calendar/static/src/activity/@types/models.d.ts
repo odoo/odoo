@@ -1,5 +1,5 @@
 declare module "models" {
-    interface Activity {
-        calendar_event_id: Number
+    export interface Activity {
+        rescheduleMeeting: () => Promise<void>;
     }
 }

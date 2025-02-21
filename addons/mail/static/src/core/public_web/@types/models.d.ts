@@ -1,19 +1,22 @@
 declare module "models" {
     import { DiscussApp as DiscussAppClass } from "@mail/core/public_web/discuss_app_model";
 
-    export interface DiscussApp extends DiscussAppClass { }
+    export interface DiscussApp extends DiscussAppClass {}
+
     export interface Store {
-        DiscussApp: DiscussApp,
-        discuss: DiscussApp,
-        action_discuss_id: number,
+        discuss: DiscussApp;
+        DiscussApp: StaticMailRecord<DiscussApp, typeof DiscussAppClass>;
     }
     export interface Thread {
-        setAsDiscussThread: (pushState: boolean) => void,
-        unpin: () => Promise<void>,
-        askLeaveConfirmation: (body: string) => void,
-        leaveChannel: () => Promise<void>,
+        askLeaveConfirmation: (body: string) => Promise<void>;
+        autoOpenChatWindowOnNewMessage: Readonly<boolean>;
+        notifyMessageToUser: (message: Message) => Promise<void>;
+        setActiveURL: () => void;
+        setAsDiscussThread: (pushState: boolean) => void;
+        unpin: () => Promise<void>;
     }
+
     export interface Models {
-        "DiscussApp": DiscussApp,
+        DiscussApp: DiscussApp;
     }
 }

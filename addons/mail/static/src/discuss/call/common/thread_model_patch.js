@@ -18,6 +18,7 @@ const ThreadPatch = {
             },
         });
         this.hadSelfSession = false;
+        /** @type {Set<number>} */
         this.lastSessionIds = new Set();
         this.rtcInvitingSession = Record.one("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */

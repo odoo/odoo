@@ -1,5 +1,5 @@
 declare module "models" {
     export interface Thread {
-        collaborator_ids: Persona[],
+        collaborator_ids: Persona[];
     }
 }

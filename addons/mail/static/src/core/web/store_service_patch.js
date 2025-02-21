@@ -11,6 +11,7 @@ const StorePatch = {
         super.setup(...arguments);
         this.activityCounter = 0;
         this.activity_counter_bus_id = 0;
+        /** @type {Object[]} */
         this.activityGroups = Record.attr([], {
             onUpdate() {
                 this.onUpdateActivityGroups();
@@ -62,6 +63,11 @@ const StorePatch = {
         }
     },
     onUpdateActivityGroups() {},
+    /**
+     * @param {string} resModel
+     * @param {number[]} resIds
+     * @param {number|undefined} defaultActivityTypeId
+     */
     async scheduleActivity(resModel, resIds, defaultActivityTypeId = undefined) {
         const context = {
             active_model: resModel,
@@ -71,7 +77,7 @@ const StorePatch = {
                 ? { default_activity_type_id: defaultActivityTypeId }
                 : {}),
         };
-        return new Promise((resolve) =>
+        await new Promise((resolve) =>
             this.env.services.action.doAction(
                 {
                     type: "ir.actions.act_window",
@@ -89,6 +95,10 @@ const StorePatch = {
             )
         );
     },
+    /**
+     * @param {object} param0
+     * @param {{ type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<import("models").Activity> }} param0.data
+     */
     _onActivityBroadcastChannelMessage({ data }) {
         switch (data.type) {
             case "INSERT":
@@ -133,6 +143,7 @@ const StorePatch = {
         }
         return false;
     },
+    /** @param {import("models").Thread} fromThread */
     onLinkFollowed(fromThread) {},
 };
 patch(Store.prototype, StorePatch);

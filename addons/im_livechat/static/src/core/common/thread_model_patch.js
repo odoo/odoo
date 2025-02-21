@@ -27,6 +27,7 @@ patch(Thread.prototype, {
                 return visitor;
             },
         });
+        /** @type {true|undefined} */
         this.open_chat_window = Record.attr(undefined, {
             /** @this {import("models").Thread} */
             onUpdate() {
@@ -63,6 +64,6 @@ patch(Thread.prototype, {
     get composerDisabledText() {
         return this.channel_type === "livechat" && this.livechat_active === false
             ? _t("This livechat conversation has ended")
-            : null;
+            : "";
     },
 });

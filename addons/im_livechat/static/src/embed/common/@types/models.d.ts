@@ -1,29 +1,19 @@
 declare module "models" {
-    export interface ChatWindpw {
-        hasFeedbackPanel: boolean,
-    }
-
-    export interface Message {
-        chatbotStep: ChatbotStep,
-    }
-
-    export interface Thread {
-        livechatWelcomeMessage: Message,
-        chatbot: Chatbot,
-        requested_by_operator: boolean,
-    }
-
     export interface Store {
-        livechat_rule: LivechatChannelRule;
+        activeLivechats: Thread[];
         livechat_available: boolean;
+        livechat_rule: LivechatChannelRule;
     }
-
-    export interface Models {
-        "ChatbotScriptStep": ChatbotScriptStep,
-        "ChatbotStep": ChatbotStep,
-        "Chatbot": Chatbot,
-        "ChatbotScriptStepAnswer": ChatbotScriptStepAnswer,
-        "chatbot.script": ChatbotScript,
-        "LivechatRule": LivechatRule,
+    export interface Thread {
+        _toggleChatbot: boolean;
+        chatbot: Chatbot;
+        chatbotTypingMessage: Message;
+        hasWelcomeMessage: Readonly<boolean>;
+        isLastMessageFromCustomer: Readonly<boolean>;
+        livechat_active: boolean;
+        livechat_operator_id: Persona;
+        livechatWelcomeMessage: Message;
+        requested_by_operator: boolean;
+        storeAsActiveLivechats: Store;
     }
 }

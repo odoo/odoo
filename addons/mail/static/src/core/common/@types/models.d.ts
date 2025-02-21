@@ -15,11 +15,9 @@ declare module "models" {
     import { Persona as PersonaClass } from "@mail/core/common/persona_model";
     import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
-    import { Store as StoreClass } from "@mail/core/common/store_service";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
 
-    // define interfaces for jsdoc, including with patches
     export interface Activity extends ActivityClass {}
     export interface Attachment extends AttachmentClass {}
     export interface CannedResponse extends CannedResponseClass {}
@@ -36,30 +34,48 @@ declare module "models" {
     export interface Persona extends PersonaClass {}
     export interface ResGroups extends ResGroupsClass {}
     export interface Settings extends SettingsClass {}
-    export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
     export interface Volume extends VolumeClass {}
 
-    // required to propagate types in relational fields
+    export interface Store {
+        ChatHub: StaticMailRecord<ChatHub, typeof ChatHubClass>;
+        ChatWindow: StaticMailRecord<ChatWindow, typeof ChatWindowClass>;
+        Composer: StaticMailRecord<Composer, typeof ComposerClass>;
+        Failure: StaticMailRecord<Failure, typeof FailureClass>;
+        "ir.attachment": StaticMailRecord<Attachment, typeof AttachmentClass>;
+        "mail.activity": StaticMailRecord<Activity, typeof ActivityClass>;
+        "mail.canned.response": StaticMailRecord<CannedResponse, typeof CannedResponseClass>;
+        "mail.followers": StaticMailRecord<Follower, typeof FollowerClass>;
+        "mail.link.preview": StaticMailRecord<LinkPreview, typeof LinkPreviewClass>;
+        "mail.message": StaticMailRecord<Message, typeof MessageClass>;
+        "mail.notification": StaticMailRecord<Notification, typeof NotificationClass>;
+        MessageReactions: StaticMailRecord<MessageReactions, typeof MessageReactionsClass>;
+        Persona: StaticMailRecord<Persona, typeof PersonaClass>;
+        "res.country": StaticMailRecord<Country, typeof CountryClass>;
+        "res.groups": StaticMailRecord<ResGroups, typeof ResGroupsClass>;
+        Settings: StaticMailRecord<Settings, typeof SettingsClass>;
+        Thread: StaticMailRecord<Thread, typeof ThreadClass>;
+        Volume: StaticMailRecord<Volume, typeof VolumeClass>;
+    }
+
     export interface Models {
-        "ChatHub": ChatHub,
-        "ChatWindow": ChatWindow,
-        "Composer": Composer,
-        "Failure": Failure,
-        "ir.attachment": Attachment,
-        "mail.activity": Activity,
-        "mail.canned.response": CannedResponse,
-        "mail.followers": Follower,
-        "mail.link.preview": LinkPreview,
-        "mail.message": Message,
-        "mail.notification": Notification,
-        "MessageReactions": MessageReactions,
-        "Persona": Persona,
-        "res.country": Country,
-        "res.groups": ResGroups,
-        "Settings": Settings,
-        "Store": Store,
-        "Thread": Thread,
-        "Volume": Volume,
+        ChatHub: ChatHub;
+        ChatWindow: ChatWindow;
+        Composer: Composer;
+        Failure: Failure;
+        "ir.attachment": Attachment;
+        "mail.activity": Activity;
+        "mail.canned.response": CannedResponse;
+        "mail.followers": Follower;
+        "mail.link.preview": LinkPreview;
+        "mail.message": Message;
+        "mail.notification": Notification;
+        MessageReactions: MessageReactions;
+        Persona: Persona;
+        "res.country": Country;
+        "res.groups": ResGroups;
+        Settings: Settings;
+        Thread: Thread;
+        Volume: Volume;
     }
 }
