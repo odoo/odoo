@@ -9,28 +9,29 @@
                 <form string="Job">
                     <header/> <!-- inherited in other module -->
                     <field name="active" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title">
                             <label for="name"/>
-                            <h1><field name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Sales Manager"/></h1>
+                            <h1>
+                                <field name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Sales Manager"/>
+                            </h1>
                         </div>
                         <notebook>
                             <page string="Details" name="recruitment_page" invisible="1">
                                 <group>
                                     <group name="recruitment">
-                                        <field name="company_id" options="{'no_create': True}" invisible="1" groups="base.group_multi_company" placeholder="Visible to all"/>
                                         <field name="department_id"/>
                                         <field name="contract_type_id"/>
                                     </group>
                                     <group name="recruitment2">
-                                        <label for="no_of_recruitment"/>
+                                        <label name="no_of_recruitment_label" for="no_of_recruitment"/>
                                         <div class="o_row" name="recruitment_target">
                                             <field name="no_of_recruitment" class="o_hr_narrow_field"/>
-                                            <span>new Employees</span>
+                                            <span>new hires</span>
                                         </div>
+                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>
                                     </group>
                                 </group>
                             </page>
