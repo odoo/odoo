@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
-import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { AlignSelector } from "./align_selector";
 import { reactive } from "@odoo/owl";
@@ -41,11 +40,10 @@ export class AlignPlugin extends Plugin {
             { hotkey: "control+shift+r", commandId: "alignRight" },
             { hotkey: "control+shift+j", commandId: "justify" },
         ],
-        toolbar_groups: withSequence(29, { id: "alignment" }),
         toolbar_items: [
             {
                 id: "alignment",
-                groupId: "alignment",
+                groupId: "layout",
                 title: _t("Text align"),
                 Component: AlignSelector,
                 props: {
