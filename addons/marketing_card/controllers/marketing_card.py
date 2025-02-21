@@ -70,13 +70,17 @@ class MarketingCardController(Controller):
     def card_campaign_preview(self, card_id=None, card_slug=None):
         """Route for users to preview their card and share it on their social platforms."""
         card = _get_card_from_url(card_id, card_slug)
+        card = card.with_context(lang=card.lang)
         if not card.share_status:
             card.sudo().share_status = 'visited'
 
         campaign_sudo = card.sudo().campaign_id
+        request.update_context(lang=card.lang)
         return request.render('marketing_card.card_campaign_preview', {
-            'card': card,
             'campaign': campaign_sudo,
+            'card': card,
+            'edit_in_backend': True,
+            'main_object': campaign_sudo,
             'quote': quote,
         })
 
