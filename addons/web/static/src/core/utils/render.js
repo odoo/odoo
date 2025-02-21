@@ -63,7 +63,7 @@ function render(template, context = {}) {
  *
  * @param {string} template
  * @param {Object} context
- * @returns string: the html of the template, as a markup string
+ * @returns {ReturnType<markup>} the html of the template, as a markup string
  */
 export function renderToMarkup(template, context = {}) {
     return markup(renderToString(template, context));

@@ -1,4 +1,4 @@
-import { escape } from "@web/core/utils/strings";
+import { htmlEscape } from "@web/core/utils/html";
 
 /**
  * Adds a span with a CSS class around chains of emojis in the message for styling purposes.
@@ -13,7 +13,7 @@ import { escape } from "@web/core/utils/strings";
  * @param {String} message a text message to format
  */
 export function formatText(message) {
-    message = escape(message);
+    message = htmlEscape(message);
     message = message.replaceAll(
         /(\p{Emoji_Presentation}+)/gu,
         "<span class='o_mail_emoji'>$1</span>"
