@@ -59,6 +59,16 @@ class BackgroundImagePlugin extends Plugin {
                         value: value,
                     });
                 },
+                getValue: ({ editingElement }) => {
+                    const filterEl = editingElement.querySelector(":scope > .o_we_bg_filter");
+                    if (!filterEl) {
+                        return "";
+                    }
+                    return this.dependencies.builderActions.getAction("styleAction").getValue({
+                        editingElement: filterEl,
+                        param: "background-color",
+                    });
+                },
             },
             toggleBgImage: {
                 load: this.loadReplaceBackgroundImage.bind(this),
