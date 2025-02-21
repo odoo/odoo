@@ -531,20 +531,4 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
             'partner_id': self.event_speaker.id,
         })
 
-        # ------------------------------------------------------------
-        # MEETING ROOMS
-        # ----------------------------------------------------------
-
-        self.env['event.meeting.room'].create({
-            'name': 'Best wood for furniture',
-            'summary': 'Let\'s talk about wood types for furniture',
-            'target_audience': 'wood expert(s)',
-            'is_pinned': True,
-            'website_published': True,
-            'event_id': self.event.id,
-            'room_lang_id': self.env.ref('base.lang_en').id,
-            'room_max_capacity': '12',
-            'room_participant_count': 9,
-        })
-
         self.env.flush_all()

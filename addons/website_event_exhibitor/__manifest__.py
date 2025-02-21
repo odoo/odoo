@@ -9,7 +9,7 @@
     'summary': 'Event: manage sponsors and exhibitors',
     'website': 'https://www.odoo.com/app/events',
     'depends': [
-        'website_event_jitsi',
+        'website_event',
     ],
     'data': [
         'security/security.xml',

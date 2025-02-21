@@ -4571,7 +4571,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'event_booth_sale',
             'website_event_booth_exhibitor',
             'website_customer',
-            'website_event_meet',
             'sale_planning',
             'sale_project',
             'sale_subscription',
