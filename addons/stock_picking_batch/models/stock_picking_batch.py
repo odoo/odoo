@@ -239,10 +239,18 @@ class StockPickingBatch(models.Model):
         empty_waiting_pickings = self.mapped('picking_ids').filtered(lambda p: (p.state in ('waiting', 'confirmed') and has_no_quantity(p)) or (p.state == 'assigned' and is_empty(p)))
         pickings = pickings - empty_waiting_pickings
 
-        empty_pickings = set()
+        empty_pickings = pickings.filtered(has_no_quantity)
+
+        # Run sanity_check as a batch and ignore the one in button_validate() since it is done here.
+        pickings._sanity_check(separate_pickings=False)
+        # Skip sanity_check in pickings button_validate() & remove 'waiting' pickings from the batch
+        context = {'skip_sanity_check': True, 'pickings_to_detach': empty_waiting_pickings.ids}
+        if len(empty_pickings) != len(pickings):
+            # If some pickings are at least partially done, other pickings (empty & waiting) will be removed from batch without being cancelled in case of no backorder
+            pickings = pickings - empty_pickings
+            context['pickings_to_detach'] = context['pickings_to_detach'] + empty_pickings.ids
+
         for picking in pickings:
-            if has_no_quantity(picking):
-                empty_pickings.add(picking.id)
             picking.message_post(
                 body=Markup("<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.batch>%s</a>") % (
                     _("Transferred by"),
@@ -250,17 +258,7 @@ class StockPickingBatch(models.Model):
                     picking.batch_id.id,
                     picking.batch_id.name))
 
-        # Run sanity_check as a batch and ignore the one in button_validate() since it is done here.
-        pickings._sanity_check(separate_pickings=False)
-        # Skip sanity_check in pickings button_validate() & remove 'waiting' pickings from the batch
-        context = {'skip_sanity_check': True, 'pickings_to_detach': empty_waiting_pickings.ids}
-        if len(empty_pickings) == len(pickings):
-            return pickings.with_context(**context).button_validate()
-        else:
-            # If some pickings are at least partially done, other pickings (empty & waiting) will be removed from batch without being cancelled in case of no backorder
-            pickings = pickings - self.env['stock.picking'].browse(empty_pickings)
-            context['pickings_to_detach'] = context['pickings_to_detach'] + list(empty_pickings)
-            return pickings.with_context(skip_immediate=True, **context).button_validate()
+        return pickings.with_context(**context).button_validate()
 
     def action_assign(self):
         self.ensure_one()

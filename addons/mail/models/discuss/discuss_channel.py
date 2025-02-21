@@ -1161,7 +1161,7 @@ class Channel(models.Model):
                 "channel_member_ids": [Command.create({"partner_id": self.env.user.partner_id.id})],
                 "channel_type": "channel",
                 "from_message_id": message.id,
-                "name": name or (message.body.striptags()[:30] if message else _("New Thread")),
+                "name": name or (message.body.striptags()[:30] if message.body else _("New Thread")),
                 "parent_channel_id": self.id,
             }
         )

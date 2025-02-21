@@ -582,7 +582,27 @@ class TestProcRule(TransactionCase):
         stock_move._action_confirm()
         self.assertEqual(orderpoint.qty_to_order, 6)
 
-
+    def test_rule_help_message_mto_mtso(self):
+        """Verify that the rule's help message correctly displays all relevant
+        information when the procurement method is MTO or MTSO.
+        """
+        mto_rule = self.env.ref('stock.route_warehouse0_mto').rule_ids[0]
+        source_mto = mto_rule.location_src_id.display_name
+        self.assertIn(
+            f'<br>A need is created in <b>{source_mto}</b> and a rule will be triggered to fulfill it.',
+            mto_rule.rule_message,
+            'The help message should correctly display information for MTO.'
+        )
+        # Switch to MTSO
+        mto_rule.procure_method = 'mts_else_mto'
+        source_mtso = mto_rule.location_src_id.display_name
+        self.assertIn(
+            f'<br>If the products are not available in <b>{source_mtso}</b>, a rule will be triggered to bring the missing quantity in this location.',
+            mto_rule.rule_message,
+            'The help message should correctly display information for MTSO.'
+        )
+        
+        
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
         super(TestProcRuleLoad, cls).setUp()

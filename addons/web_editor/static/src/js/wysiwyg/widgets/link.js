@@ -257,6 +257,10 @@ export class Link extends Component {
             // Text begins with a known protocol, accept it as valid URL.
             return text;
         } else {
+            const match = text.match(PHONE_REGEX);
+            if (match) {
+                return ("tel:" + match[0]).replace(/\s+/g, "");
+            }
             return deduceURLfromText(text, this.linkEl) || '';
         }
     }

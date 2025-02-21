@@ -24,7 +24,7 @@
                             <page string="Information" name="information">
                                 <group>
                                     <group string="Amount">
-                                        <field name="account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" readonly="1"/>
+                                        <field name="account_id" options="{'no_create': True}" domain="[('deprecated', '=', False), ('company_ids', 'parent_of', company_id)]" readonly="1"/>
                                         <field name="debit" readonly="1"/>
                                         <field name="credit" readonly="1"/>
                                         <field name="balance" readonly="1"/>
@@ -165,7 +165,7 @@
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="journal_id" readonly="1" options='{"no_open":True}' optional="hide"/>
                     <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
-                    <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_readonly"/>
+                    <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('deprecated', '=', False), ('company_ids', 'parent_of', company_id)]" groups="account.group_account_readonly"/>
                     <field name="partner_id" optional="show" readonly="move_type != 'entry'"/>
                     <field name="ref" optional="hide" readonly="False"/>
                     <field name="product_id" readonly="1" optional="hide"/>
@@ -1131,7 +1131,7 @@
                                                context="{'partner_id': partner_id, 'move_type': parent.move_type}"
                                                groups="account.group_account_readonly"
                                                options="{'no_quick_create': True}"
-                                               domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]"
+                                               domain="[('deprecated', '=', False), ('company_ids', 'parent_of', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]"
                                                required="display_type not in ('line_note', 'line_section')"/>
                                         <field name="analytic_distribution" widget="analytic_distribution"
                                                string="Analytic"
@@ -1236,7 +1236,7 @@
                                                 <field name="discount" string="Disc.%"/>
                                             </group>
                                             <group>
-                                                <field name="account_id" domain="[('deprecated', '=', False)]" options="{'no_create': True}" context="{'partner_id': partner_id, 'move_type': parent.move_type}"/>
+                                                <field name="account_id" domain="[('deprecated', '=', False), ('company_ids', 'parent_of', company_id)]" options="{'no_create': True}" context="{'partner_id': partner_id, 'move_type': parent.move_type}"/>
                                                 <field name="tax_ids" widget="many2many_tags"/>
                                                 <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
                                             </group>
@@ -1291,7 +1291,7 @@
                                         <field name="account_id"
                                                invisible="display_type in ('line_section', 'line_note')"
                                                required="display_type not in ('line_section', 'line_note')"
-                                               domain="[('deprecated', '=', False)]" />
+                                               domain="[('deprecated', '=', False), ('company_ids', 'parent_of', company_id)]" />
                                         <field name="partner_id"
                                                optional="show"
                                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
@@ -1374,7 +1374,7 @@
                                     <!-- Form view to cover mobile use -->
                                     <form>
                                       <group>
-                                        <field name="account_id" domain="[('deprecated', '=', False)]"/>
+                                        <field name="account_id" domain="[('deprecated', '=', False), ('company_ids', 'parent_of', company_id)]"/>
                                         <field name="partner_id" domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
                                         <field name="name"/>
                                         <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
