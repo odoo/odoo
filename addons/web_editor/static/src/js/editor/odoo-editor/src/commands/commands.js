@@ -379,15 +379,16 @@ export const editorCommands = {
                 currentNode.remove();
             }
             // If the first child of editable is contenteditable false element
-            // a chromium bug prevents selecting the container. Prepend a
-            // zero-width space so it's no longer the first child.
+            // a chromium bug prevents selecting the container.
+            // Add a paragraph above it so it's no longer the first child.
             if (
                 !isNodeToInsertContentEditable &&
                 editor.editable.firstChild === nodeToInsert &&
                 nodeToInsert.nodeName === 'DIV'
             ) {
-                const zws = document.createTextNode('\u200B');
-                nodeToInsert.before(zws);
+                const p = document.createElement("p");
+                p.append(document.createElement("br"));
+                nodeToInsert.before(p);
             }
             currentNode = convertedList || nodeToInsert;
         }

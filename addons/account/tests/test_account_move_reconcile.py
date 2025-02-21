@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=C0326
-from contextlib import contextmanager
+from contextlib import closing
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
@@ -2608,12 +2608,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertTrue(invoice.payment_state in ('in_payment', 'paid'))
 
     def test_reconcile_plan(self):
-        @contextmanager
-        def rollback():
-            savepoint = self.cr.savepoint()
-            yield
-            savepoint.rollback()
-
         comp_curr = self.company_data['currency']
 
         line_1 = self.create_line_for_reconciliation(600.0, 600.0, comp_curr, '2017-01-01')
@@ -2622,12 +2616,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         line_5 = self.create_line_for_reconciliation(-700.0, -700.0, comp_curr, '2017-01-04')
         line_4 = self.create_line_for_reconciliation(-500.0, -500.0, comp_curr, '2017-01-05')
 
-        with rollback():
+        with closing(self.cr.savepoint()):
             # 5 batches of 1 aml. This won't reconcile anything.
             self.env['account.move.line']._reconcile_plan([line_1, line_2, line_3, line_4, line_5])
             self.assertFalse(self._get_partials(line_1 + line_2 + line_3 + line_4 + line_5))
 
-        with rollback():
+        with closing(self.cr.savepoint()):
             # one batch of 5 amls.
             self.env['account.move.line']._reconcile_plan([line_1 + line_2 + line_3 + line_4 + line_5])
             self.assertRecordValues(
@@ -2640,7 +2634,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 ],
             )
 
-        with rollback():
+        with closing(self.cr.savepoint()):
             # Reconcile line_3 + line_5 and line_1 + line_4. line_2 is alone so will not be reconciled.
             self.env['account.move.line']._reconcile_plan([line_3 + line_5, line_1 + line_4, line_2])
             self.assertRecordValues(
@@ -2651,7 +2645,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 ],
             )
 
-        with rollback():
+        with closing(self.cr.savepoint()):
             # Reconcile line_3 + line_5 first, then line_1 + line_4, then the remaining amls with line_2.
             self.env['account.move.line']._reconcile_plan([[line_3 + line_5, line_1 + line_4, line_2]])
             self.assertRecordValues(
@@ -2663,7 +2657,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 ],
             )
 
-        with rollback():
+        with closing(self.cr.savepoint()):
             # Same as the previous test but with a lot of sub-plan to test the result is the same.
             self.env['account.move.line']._reconcile_plan([[[line_3 + line_5], [[line_1 + line_4], line_2]]])
             self.assertRecordValues(

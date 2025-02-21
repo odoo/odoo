@@ -129,3 +129,6 @@ class TestSnippets(HttpCase):
 
     def test_dropdowns_and_header_hide_on_scroll(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin')
+
+    def test_custom_popup_snippet(self):
+        self.start_tour(self.env["website"].get_client_action_url("/"), "custom_popup_snippet", login="admin")

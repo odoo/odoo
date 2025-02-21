@@ -134,7 +134,7 @@ QUnit.module(
             insertText(editor, '/banner');
             triggerEvent(editor.editable, "keydown", { key: "Enter" });
             await nextTick();
-            const p = editable.querySelectorAll('p')[1];
+            const p = editable.querySelectorAll('p')[2];
             setSelection(p, 0);
             insertText(editor, 'Test1');
             triggerEvent(editor.editable, "input", { inputType: "insertParagraph" });

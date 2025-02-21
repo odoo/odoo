@@ -99,7 +99,7 @@ class AccountMove(models.Model):
         document = self.env['l10n_ro_edi.document'].sudo().create({
             'invoice_id': self.id,
             'state': 'invoice_sending_failed',
-            'message': _("Error when sending the document to the SPV:\n%s", message),
+            'message': message,
         })
         if key_loading:
             document.key_loading = key_loading
@@ -196,6 +196,8 @@ class AccountMove(models.Model):
                 message=result['error'],
                 attachment_raw=result['attachment_raw'],
             )
+            self.message_post(body=_("Error when trying to send the E-Factura to the SPV: %s",
+                                     result['error']))
         else:  # result == {'key_loading': <str>, 'attachment_raw': <bytes>}; initial sending successful
             self._l10n_ro_edi_get_sending_and_failed_documents().unlink()
             self._l10n_ro_edi_create_document_invoice_sending(result['key_loading'], result['attachment_raw'])
@@ -244,6 +246,8 @@ class AccountMove(models.Model):
                     attachment_raw=result['attachment_raw'],
                     key_loading=result['key_loading'],
                 )
+                invoice.message_post(body=_("Error when trying to fetch the E-Factura from the SPV: %s",
+                                            result['error']))
             else:  # result == {'key_download': <str>}; SPV finished validation and sends us an approval answer
                 # use the obtained key_download to immediately make a download request and process them
                 final_result = self.env['l10n_ro_edi.document']._request_ciusro_download_answer(
@@ -255,12 +259,15 @@ class AccountMove(models.Model):
                 to_delete_documents |= invoice._l10n_ro_edi_get_sending_and_failed_documents()
                 final_result['key_loading'] = active_sending_document.key_loading
                 if final_result.get('error'):
+                    final_error_message = final_result['error'].replace('\t', '')
                     final_result['attachment_raw'] = previous_raw
                     invoice._l10n_ro_edi_create_document_invoice_sending_failed(
-                        message=final_result['error'].replace('\t', ''),
+                        message=final_error_message,
                         attachment_raw=final_result['attachment_raw'],
                         key_loading=final_result['key_loading'],
                     )
+                    invoice.message_post(body=_("Error when trying to download the E-Factura answer from the SPV: %s",
+                                                final_error_message))
                 else:
                     invoice._l10n_ro_edi_create_document_invoice_sent(final_result)
 
