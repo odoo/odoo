@@ -3659,7 +3659,10 @@ export class Wysiwyg extends Component {
                 mimetype: (isBackground ? el.dataset.mimetype : el.getAttribute('src').split(":")[1].split(";")[0]),
                 name: (el.dataset.fileName ? el.dataset.fileName : null),
             },
-        );
+        ).catch((error) => {
+            console.log(error.data.message);
+            return "/web_editor/static/src/img/placeholder_thumbnail.png";
+        });
         el.classList.remove('o_modified_image_to_save');
         if (isBackground) {
             const parts = weUtils.backgroundImageCssToParts($(el).css('background-image'));
