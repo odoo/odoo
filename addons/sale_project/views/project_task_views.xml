@@ -118,7 +118,7 @@
                 </group>
             </xpath>
             <xpath expr="//page[@name='settings']//field[@name='privacy_visibility']" position="after">
-                <field name="reinvoiced_sale_order_id" invisible="not allow_billable or not partner_id or is_template"/>
+                <field name="reinvoiced_sale_order_id" invisible="not allow_billable or not partner_id or is_template"  context="{'default_partner_id': partner_id}"/>
                 <label for="sale_line_id" invisible="not allow_billable or not partner_id or is_template"/>
                 <div 
                     class="o_row" 

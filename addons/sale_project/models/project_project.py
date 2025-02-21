@@ -125,7 +125,7 @@ class ProjectProject(models.Model):
             project.sale_order_line_count = len(sale_order_lines)
 
             # Use sudo to avoid AccessErrors when the SOLs belong to different companies.
-            project.sale_order_count = len(sale_order_lines.sudo().order_id)
+            project.sale_order_count = len(sale_order_lines.sudo().order_id or project.reinvoiced_sale_order_id)
 
     def _compute_invoice_count(self):
         data = self.env['account.move.line']._read_group(

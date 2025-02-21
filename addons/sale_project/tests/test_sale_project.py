@@ -1649,3 +1649,56 @@ class TestSaleProject(TestSaleProjectCommon):
             'allow_billable': True,
         })
         self.assertEqual(sale_order.project_id, project, "The created project should be linked to this sale order")
+
+    def test_sale_order_project_task_smartbutton(self):
+        """Test to verify that the project & task smart button is visible when a project is linked to a sale order.
+        Steps:
+            - Create a sale order with a product of type 'goods'.
+            - Create a project and link it to the sale order.
+            - Create a task and link it to the project.
+            - Verify that the project is linked to the sale order.
+            - Verify that the tasks is linked to the sale order.
+            - Verify that the project & task smart button is hidden.
+            - Confirm the sale order.
+            - Verify the visibility of the project & task smart button.
+        """
+
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.product_a.id,
+                    "product_uom_qty": 1,
+                }),
+            ],
+        })
+
+        project = self.env["project.project"].create({
+            "name": "Project X",
+            "partner_id": self.partner.id,
+            "allow_billable": True,
+            "reinvoiced_sale_order_id": sale_order.id,
+        })
+
+        self.env["project.task"].create({
+            "name": "task 1",
+            "project_id": project.id,
+        })
+
+        self.assertEqual(
+            (sale_order.project_count, sale_order.tasks_count),
+            (1, 1),
+            "The project and task should be linked to the sale order."
+        )
+        self.assertFalse(
+            sale_order.show_project_button or sale_order.show_task_button,
+            "Both the project and task smart buttons should be hidden in the sale order."
+        )
+
+        sale_order.action_confirm()
+        sale_order._compute_show_project_and_task_button()
+
+        self.assertTrue(
+            sale_order.show_project_button and sale_order.show_task_button,
+            "Both the project and task smart buttons should be shown in the sale order."
+        )
