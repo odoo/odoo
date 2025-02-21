@@ -268,8 +268,8 @@
                     <!-- Title -->
                     <h5 class="card-title d-flex align-items-start justify-content-between mt-0 mb-0">
                         <span t-field="sponsor.name" class="text-break fs-6 mb-2"/>
-                        <span t-if="sponsor.is_in_opening_hours and sponsor.chat_room_id"
-                            class="alert alert-danger mb-2 px-2 py-1 smaller lh-1">Live
+                        <span t-if="sponsor.is_in_opening_hours" class="alert alert-danger mb-2 px-2 py-1 smaller lh-1">
+                            Live
                         </span>
                     </h5>
                     <!-- Catchy sentence -->
