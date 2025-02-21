@@ -97,13 +97,13 @@ class RatingMixin(models.AbstractModel):
     def write(self, values):
         """ If the rated ressource name is modified, we should update the rating res_name too.
             If the rated ressource parent is changed we should update the parent_res_id too"""
-        result = super(RatingMixin, self).write(values)
-        for record in self:
+        result = super().write(values)
+        for record in self.sudo():  # ratings may be inaccessible
             if record._rec_name in values:  # set the res_name of ratings to be recomputed
                 res_name_field = self.env['rating.rating']._fields['res_name']
                 self.env.add_to_compute(res_name_field, record.rating_ids)
             if record._rating_get_parent_field_name() in values:
-                record.rating_ids.sudo().write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
+                record.rating_ids.write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
 
         return result
 
