@@ -57,7 +57,7 @@ export class EmbeddedCaptionComponent extends Component {
         this.observer.disconnect();
     }
 
-    onInputCaptionInput() {
+    onInputBlur() {
         this.state.caption = this.captionInput.el.value;
     }
 

@@ -4,7 +4,6 @@
     <t t-name="html_editor.EmbeddedCaption">
         <input t-attf-class="border-0 p-0"
             t-ref="autofocus" type="text" maxLength="100" t-att-placeholder="'Write your caption here'"
-            t-on-input.stop="onInputCaptionInput" t-on-keydown.stop=""
-            t-att-value="state.caption"/>
+            t-on-blur="onInputBlur" t-on-keydown.stop="" t-att-value="state.caption"/>
     </t>
 </templates>
