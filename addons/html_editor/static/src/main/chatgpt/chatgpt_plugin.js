@@ -26,7 +26,6 @@ export class ChatGPTPlugin extends Plugin {
                 id: "openChatGPTDialog",
                 title: _t("ChatGPT"),
                 description: _t("Generate or transform content with AI."),
-                icon: "fa-magic",
                 run: this.openDialog.bind(this),
             },
         ],
@@ -65,6 +64,7 @@ export class ChatGPTPlugin extends Plugin {
             keywords: [_t("AI")],
             categoryId: "ai",
             commandId: "openChatGPTDialog",
+            icon: "fa-magic",
             // isAvailable: () => !this.odooEditor.isSelectionInBlockRoot(), // TODO!
         },
     };
