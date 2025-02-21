@@ -66,6 +66,7 @@ export class HtmlField extends Component {
         this.codeViewRef = useRef("codeView");
         this.iframeRef = useRef("iframe");
         this.codeViewButtonRef = useRef("codeViewButton");
+        this.userService = useService('user');
 
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder();
@@ -403,7 +404,12 @@ export class HtmlField extends Component {
                 if (urgent && status(this) !== 'destroyed') {
                     await this.updateValue();
                 }
-                await savePendingImagesPromise;
+                try {
+                    await savePendingImagesPromise;
+                } catch (error) {
+                    await this.userService.hasGroup('base.group_portal') ? null : (() => { throw error; })();
+                    // Portal users don't have rights to create attachments. Silently keep base64.
+                }
                 const codeViewEl = this._getCodeViewEl();
                 if (codeViewEl) {
                     codeViewEl.value = this.wysiwyg.getValue();
