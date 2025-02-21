@@ -306,3 +306,6 @@ class HrEmployeeBase(models.AbstractModel):
             calendar = employee.resource_calendar_id or employee.company_id.resource_calendar_id
             calendar_periods_by_employee[employee] = [(start, stop, calendar)]
         return calendar_periods_by_employee
+
+    def _is_flexible(self):
+        return self.is_flexible
