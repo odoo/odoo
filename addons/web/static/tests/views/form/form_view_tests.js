@@ -9308,10 +9308,14 @@ QUnit.module("Views", (hooks) => {
         await clickSave(target);
         assert.deepEqual(getFooValues(), ["zop", "yop", "xop", "My little Foo Value"]);
 
-        // client-side sort on edit
+        // no client-side sort after edit
         await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
         await editInput(target, ".modal .o_field_widget[name=foo] input", "zzz");
         await click(target.querySelector(".modal-footer .o_form_button_save"));
+        assert.deepEqual(getFooValues(), ["zop", "zzz", "xop", "My little Foo Value"]);
+
+        // server-side sort post save
+        await clickSave(target);
         assert.deepEqual(getFooValues(), ["zzz", "zop", "xop", "My little Foo Value"]);
     });
 
