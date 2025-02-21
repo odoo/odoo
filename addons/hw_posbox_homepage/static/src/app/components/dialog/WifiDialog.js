@@ -47,7 +47,7 @@ export class WifiDialog extends Component {
             const data = await this.store.rpc({
                 url: "/hw_posbox_homepage/wifi",
             });
-            this.form.essid = data.currentWiFi;
+            this.form.essid = data.currentWiFi || "Select Network...";
             this.state.availableWiFi = data.availableWiFi;
 
             this.state.scanning = false;
@@ -149,23 +149,19 @@ export class WifiDialog extends Component {
                                 <t t-esc="wifi"/>
                             </option>
                         </select>
-                        <small t-if="this.form.essid == 'Select Network...'" class="text-danger">Please select a network</small>
                     </div>
 
                     <div class="mb-3">
                         <input name="password" type="password" class="form-control" aria-label="Username" aria-describedby="basic-addon1" t-model="this.form.password" placeholder="Wi-Fi password"/>
                     </div>
-
-                    <div class="d-flex justify-content-end gap-2">
-                        <button t-if="this.isCurrentlyConnectedToWifi()" type="submit" class="btn btn-secondary btn-sm" t-on-click="clearConfiguration">
-                            Disconnect From Current
-                        </button>
-                        <button type="submit" class="btn btn-primary btn-sm" t-on-click="connectToWiFi">Connect</button>
-                    </div>
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="form.essid === 'Select Network...'" t-on-click="connectToWiFi">Connect</button>
+                <button t-if="this.isCurrentlyConnectedToWifi()" type="submit" class="btn btn-secondary btn-sm" t-on-click="clearConfiguration">
+                    Disconnect From Current
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
     `;
