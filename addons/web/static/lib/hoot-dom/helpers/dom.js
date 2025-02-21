@@ -1375,11 +1375,14 @@ export function getNextFocusableElement(options) {
  * @returns {HTMLIFrameElement | null}
  */
 export function getParentFrame(node) {
-    const nodeDocument = node.ownerDocument;
-    const view = nodeDocument.defaultView;
+    const document = getDocument(node);
+    if (!document) {
+        return null;
+    }
+    const view = document.defaultView;
     if (view !== view.parent) {
         for (const iframe of view.parent.document.getElementsByTagName("iframe")) {
-            if (iframe.contentDocument === nodeDocument) {
+            if (iframe.contentWindow === view) {
                 return iframe;
             }
         }
