@@ -812,7 +812,7 @@ stepUtils.autoExpandMoreButtons(),
 {
     trigger: "body:not(:has(.modal))",
 },
-...stepUtils.statusbarButtonsSteps('Send by Email', _t("Try to send it to email"), ".o_statusbar_status .dropdown-toggle:contains('Quotation')"),
+...stepUtils.statusbarButtonsSteps('Send', _t("Try to send it to email"), ".o_statusbar_status .dropdown-toggle:contains('Quotation')"),
 {
     isActive: ["body:not(:has(.modal-footer button[name='action_send_mail']))"],
     trigger: ".modal .modal-footer button[name='document_layout_save']",
