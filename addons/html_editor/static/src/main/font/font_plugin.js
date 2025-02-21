@@ -164,12 +164,9 @@ export class FontPlugin extends Plugin {
             withSequence(10, {
                 id: "font",
             }),
-            withSequence(28, {
-                id: "font-size",
-            }),
         ],
         toolbar_items: [
-            {
+            withSequence(10, {
                 id: "font",
                 groupId: "font",
                 namespaces: ["compact", "expanded"],
@@ -186,10 +183,10 @@ export class FontPlugin extends Plugin {
                         this.updateFontSelectorParams();
                     },
                 },
-            },
-            {
+            }),
+            withSequence(20, {
                 id: "font-size",
-                groupId: "font-size",
+                groupId: "font",
                 namespaces: ["compact", "expanded"],
                 title: _t("Font size"),
                 Component: FontSizeSelector,
@@ -211,7 +208,7 @@ export class FontPlugin extends Plugin {
                         this.updateFontSizeSelectorParams();
                     },
                 },
-            },
+            }),
         ],
         powerbox_categories: withSequence(30, { id: "format", name: _t("Format") }),
         powerbox_items: [

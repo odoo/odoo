@@ -308,11 +308,11 @@ test("toolbar works: can select font size", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
     setContent(el, "<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     expect(inputEl).toHaveValue(getFontSizeFromVar("body-font-size").toString());
 
-    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
     const sizes = new Set(
         fontSizeItems.map((item) => getFontSizeFromVar(item.variableName).toString())
     );
@@ -321,7 +321,7 @@ test("toolbar works: can select font size", async () => {
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
     expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
     expect(inputEl).toHaveValue(h1Size);
-    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
     const oSmallSize = getFontSizeFromVar("small-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${oSmallSize}')`).click();
     expect(getContent(el)).toBe(`<p><span class="o_small-fs">[test]</span></p>`);
@@ -380,9 +380,9 @@ test("toolbar works: display correct font size on select all", async () => {
         return Math.round(pxValue);
     };
     await waitFor(".o-we-toolbar");
-    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
-    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
     await animationFrame();
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
@@ -398,7 +398,7 @@ test("toolbar works: displays correct font size on input", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
-    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     expect(iframeEl).toHaveCount(1);
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(inputEl).click();
@@ -421,7 +421,7 @@ test("toolbar works: font size dropdown closes on Enter and Tab key press", asyn
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
-    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     expect(iframeEl).toHaveCount(1);
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(inputEl).click();
@@ -442,7 +442,7 @@ test("toolbar works: ArrowUp/Down moves focus to font size dropdown", async () =
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
-    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     expect(iframeEl).toHaveCount(1);
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(inputEl).click();

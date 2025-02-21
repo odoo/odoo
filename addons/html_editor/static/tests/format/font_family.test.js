@@ -92,7 +92,7 @@ test("should remove font family on the selected content using remove format", as
     await expandToolbar();
     expect(queryOne(".btn[title='Font family']").textContent).toBe("Arial");
     await click(".btn[title='Remove Format']");
-    await animationFrame();
+    await waitFor(".btn[title='Font family']:contains('Default')");
     expect(queryOne(".btn[title='Font family']").textContent).toBe("Default");
     expect(getContent(el)).toBe("<p>ab[cde]fg</p>");
 });
