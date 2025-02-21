@@ -297,15 +297,27 @@ systemctl disable hostapd.service
 systemctl disable cups-browsed.service
 systemctl enable odoo.service
 
+# ========= BOOT FILE CONFIGURATION =========
+# Related documentation:
+# https://www.raspberrypi.com/documentation/computers/legacy_config_txt.html
+BOOT_CONFIG_FILE="/boot/config.txt"
+
 # disable overscan in /boot/config.txt, we can't use
 # overwrite_after_init because it's on a different device
 # (/dev/mmcblk0p1) and we don't mount that afterwards.
 # This option disables any black strips around the screen
 # cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
-echo "disable_overscan=1" >> /boot/config.txt
+echo "disable_overscan=1" >> ${BOOT_CONFIG_FILE}
+
+# Allow to detect displays after boot
+echo "hdmi_force_hotplug=1" >> ${BOOT_CONFIG_FILE} # HDMI output mode will be used, even if no HDMI monitor is detected
+echo "​hdmi_force_mode=1" >> ${BOOT_CONFIG_FILE} # Allow forced options below
+echo "hdmi_group=0" >> ${BOOT_CONFIG_FILE} # Automatically detect hdmi group
+echo "hdmi_mode=16" >> ${BOOT_CONFIG_FILE} # 1080p 60Hz 16:9
+echo "hdmi_ignore_edid=0xa5000080" >> ${BOOT_CONFIG_FILE} # safeguard against invalid display EDID
 
 # Use the fkms driver instead of the legacy one (RPI3 requires this)
-sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' /boot/config.txt
+sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' ${BOOT_CONFIG_FILE}
 
 # create dirs for ramdisks
 create_ramdisk_dir () {
