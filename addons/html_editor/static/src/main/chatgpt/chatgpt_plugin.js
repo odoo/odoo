@@ -56,6 +56,7 @@ export class ChatGPTPlugin extends Plugin {
                 commandId: "openChatGPTDialog",
                 text: "AI",
                 isDisabled: this.isReplaceableByAI.bind(this),
+                namespaces: ["compact", "expanded"],
             },
         ],
 

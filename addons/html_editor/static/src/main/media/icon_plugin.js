@@ -60,16 +60,10 @@ export class IconPlugin extends Plugin {
             },
         ],
         toolbar_groups: [
-            withSequence(1, {
-                id: "icon_color",
-                namespace: "icon",
-            }),
-            withSequence(1, {
-                id: "icon_size",
-                namespace: "icon",
-            }),
-            withSequence(3, { id: "icon_spin", namespace: "icon" }),
-            withSequence(3, { id: "icon_replace", namespace: "icon" }),
+            withSequence(1, { id: "icon_color", namespaces: ["icon"] }),
+            withSequence(1, { id: "icon_size", namespaces: ["icon"] }),
+            withSequence(3, { id: "icon_spin", namespaces: ["icon"] }),
+            withSequence(3, { id: "icon_replace", namespaces: ["icon"] }),
         ],
         toolbar_items: [
             {

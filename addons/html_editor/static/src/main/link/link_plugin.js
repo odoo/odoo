@@ -158,8 +158,8 @@ export class LinkPlugin extends Plugin {
         ],
 
         toolbar_groups: [
-            withSequence(40, { id: "link" }),
-            withSequence(30, { id: "image_link", namespace: "image" }),
+            withSequence(40, { id: "link", namespaces: ["compact", "expanded"] }),
+            withSequence(30, { id: "image_link", namespaces: ["image"] }),
         ],
         toolbar_items: [
             {

@@ -15,7 +15,6 @@ export class Toolbar extends Component {
                         type: Object,
                         shape: {
                             id: String,
-                            namespace: { type: String, optional: true },
                             buttons: {
                                 type: Array,
                                 element: {
@@ -27,6 +26,7 @@ export class Toolbar extends Component {
                                             title: { type: [String, Function] },
                                             isAvailable: { type: Function, optional: true },
                                             isDisabled: { type: Function, optional: true },
+                                            namespaces: { type: Array, element: String },
                                         };
                                         if (button.Component) {
                                             validate(button, {
@@ -72,15 +72,19 @@ export class Toolbar extends Component {
     }
 
     getFilteredButtonGroups() {
-        if (this.state.namespace) {
-            const filteredGroups = this.props.toolbar.buttonGroups.filter(
-                (group) => group.namespace === this.state.namespace
-            );
-            if (filteredGroups.length > 0) {
-                return filteredGroups;
-            }
-        }
-        return this.props.toolbar.buttonGroups.filter((group) => group.namespace === undefined);
+        let buttonGroups = this.props.toolbar.buttonGroups;
+        // Filter by namespace
+        buttonGroups = buttonGroups.map((group) => ({
+            ...group,
+            buttons: group.buttons.filter((b) => b.namespaces.includes(this.state.namespace)),
+        }));
+        // Filter out buttons that are not available
+        buttonGroups = buttonGroups.map((group) => ({
+            ...group,
+            buttons: group.buttons.filter((button) => this.state.buttonsAvailableState[button.id]),
+        }));
+        // Filter out groups left empty
+        return buttonGroups.filter((group) => group.buttons.length > 0);
     }
 
     onButtonClick(button) {

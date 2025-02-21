@@ -87,13 +87,13 @@ export class ImagePlugin extends Plugin {
             },
         ],
         toolbar_groups: [
-            withSequence(23, { id: "image_preview", namespace: "image" }),
-            withSequence(24, { id: "image_description", namespace: "image" }),
-            withSequence(25, { id: "image_shape", namespace: "image" }),
-            withSequence(26, { id: "image_padding", namespace: "image" }),
-            withSequence(26, { id: "image_size", namespace: "image" }),
-            withSequence(26, { id: "image_modifiers", namespace: "image" }),
-            withSequence(32, { id: "image_delete", namespace: "image" }),
+            withSequence(23, { id: "image_preview", namespaces: ["image"] }),
+            withSequence(24, { id: "image_description", namespaces: ["image"] }),
+            withSequence(25, { id: "image_shape", namespaces: ["image"] }),
+            withSequence(26, { id: "image_padding", namespaces: ["image"] }),
+            withSequence(26, { id: "image_size", namespaces: ["image"] }),
+            withSequence(26, { id: "image_modifiers", namespaces: ["image"] }),
+            withSequence(32, { id: "image_delete", namespaces: ["image"] }),
         ],
         toolbar_items: [
             {

@@ -15,11 +15,12 @@ import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { contains } from "@web/../tests/web_test_helpers";
 import { execCommand } from "./_helpers/userCommands";
+import { expandToolbar } from "./_helpers/toolbar";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
 
     await click(".o-we-toolbar .o-select-color-foreground");
@@ -37,7 +38,7 @@ test("can set foreground color", async () => {
 test("can set background color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
 
     await click(".o-select-color-background");
@@ -57,7 +58,7 @@ test("can set background color", async () => {
 test("can render and apply color theme", async () => {
     await setupEditor("<p>[test]</p>");
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
@@ -76,7 +77,7 @@ test("can render and apply color theme", async () => {
 test("can render and apply gradient color", async () => {
     await setupEditor("<p>[test]</p>");
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
     expect(queryOne("button[data-color='o-color-1']").style.backgroundColor).toBe(
@@ -105,7 +106,7 @@ test("custom text-colors used in the editor are shown in the colorpicker", async
             <font style="color: rgb(0, 255, 0);">[test]</font>
         </p>`
     );
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
@@ -126,7 +127,7 @@ test("custom background colors used in the editor are shown in the colorpicker",
             <font style="background-color: rgb(0, 255, 0);">[test]</font>
         </p>`
     );
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-background");
     await animationFrame();
@@ -142,7 +143,7 @@ test("custom background colors used in the editor are shown in the colorpicker",
 
 test("select hex color and apply it", async () => {
     const { el } = await setupEditor(`<p>[test]</p>`);
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
 
     await click(".o-we-toolbar .o-select-color-foreground");
@@ -171,7 +172,7 @@ test("always show the current custom color", async () => {
     const defaultTextColor = "rgb(1, 10, 100)";
     const styleContent = `* {color: ${defaultTextColor};}`;
     await setupEditor(`<p>[test]</p>`, { styleContent });
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
 
@@ -202,7 +203,7 @@ test("always show the current custom color", async () => {
 
 test("show applied text color selected in solid color tab", async () => {
     setupEditor(`<p><font style="color: rgb(255, 0, 0);">[test]</font></p>`);
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
     expect(".o_color_section .o_color_button.selected").toHaveCount(1);
@@ -227,7 +228,7 @@ test("Can reset a color", async () => {
             <font style="color: rgb(255, 0, 0);">[test]</font>
         </p>`
     );
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(1);
     expect(".tested").not.toHaveInnerHTML("test");
     await click(".o-we-toolbar .o-select-color-foreground");
@@ -249,7 +250,7 @@ test("selected text color is shown in the toolbar and update when hovering", asy
         </p>`
     );
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await animationFrame();
     expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
@@ -272,7 +273,7 @@ test("selected text color is shown in the toolbar and update when clicking", asy
         </p>`
     );
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await animationFrame();
     expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
@@ -292,7 +293,7 @@ test("selected text color is not shown in the toolbar after removeFormat", async
         { styleContent }
     );
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
     await click(".btn .fa-eraser");
@@ -308,7 +309,7 @@ test("collapsed selection color is shown in the permanent toolbar", async () => 
     await setupEditor(`<font style="color: rgb(255, 0, 0);">t[]est</font>`, {
         props: { toolbar: true },
     });
-    await animationFrame();
+    await expandToolbar();
     expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
 });
 
@@ -316,7 +317,7 @@ test("selected color is shown and updates when selection change", async () => {
     const { el } = await setupEditor(
         `<p><font style="color: rgb(255, 156, 0);">test1</font> <font style="color: rgb(150, 255, 0);">[test2]</font></p>`
     );
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await animationFrame();
     expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(150, 255, 0)" });
@@ -337,7 +338,7 @@ test("selected background color is shown in the toolbar and update when clicking
         </p>`
     );
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     await animationFrame();
     expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
     await click(".o-select-color-background");
@@ -350,7 +351,7 @@ test("selected background color is shown in the toolbar and update when clicking
 test("clicking on button color parent does not crash", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
     await click(".o_colorpicker_section");
@@ -364,7 +365,7 @@ test("gradient picker correctly shows the current selected gradient", async () =
     await setupEditor(
         `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
     );
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
@@ -380,7 +381,7 @@ test("gradient picker does change the selector gradient color", async () => {
     await setupEditor(
         `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
     );
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
@@ -399,7 +400,7 @@ test("clicking on the angle input does not close the dropdown", async () => {
     await setupEditor(
         `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
     );
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
@@ -412,7 +413,7 @@ test("clicking on the angle input does not close the dropdown", async () => {
 
 test("should be able to select farthest-corner option in radial gradient", async () => {
     await setupEditor(`<p>a[bcd]e</p>`);
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
     expect(".btn:contains('Gradient')").toHaveCount(1);
@@ -432,7 +433,7 @@ describe("color preview", () => {
     test("preview color should work and be reverted", async () => {
         await setupEditor("<p>[test]</p>");
 
-        await waitFor(".o-we-toolbar");
+        await expandToolbar();
         expect(".o_font_color_selector").toHaveCount(0);
         await click(".o-we-toolbar .o-select-color-foreground");
         await animationFrame();
@@ -448,7 +449,7 @@ describe("color preview", () => {
     test("preview color and close dropdown should revert the preview", async () => {
         await setupEditor("<p>[test]</p>");
 
-        await waitFor(".o-we-toolbar");
+        await expandToolbar();
         expect(".o_font_color_selector").toHaveCount(0);
         await click(".o-we-toolbar .o-select-color-foreground");
         await animationFrame();
@@ -464,7 +465,7 @@ describe("color preview", () => {
     test("preview color and then apply works with undo/redo", async () => {
         const { editor } = await setupEditor("<p>[test]</p>");
 
-        await waitFor(".o-we-toolbar");
+        await expandToolbar();
         expect(".o_font_color_selector").toHaveCount(0);
         await click(".o-we-toolbar .o-select-color-foreground");
         await animationFrame();
@@ -491,7 +492,7 @@ describe("color preview", () => {
     test("preview color are not restored when undo", async () => {
         const { editor } = await setupEditor("<p>[test]</p>");
 
-        await waitFor(".o-we-toolbar");
+        await expandToolbar();
         expect(".o_font_color_selector").toHaveCount(0);
         await click(".o-we-toolbar .o-select-color-foreground");
         await animationFrame();
@@ -532,7 +533,7 @@ describe("color preview", () => {
         `,
             { styleContent }
         );
-        await waitFor(".o-we-toolbar");
+        await expandToolbar();
         await animationFrame();
         await click(".o-select-color-background");
         await animationFrame();
@@ -598,7 +599,7 @@ describe("color preview", () => {
         `,
             { styleContent }
         );
-        await waitFor(".o-we-toolbar");
+        await expandToolbar();
         await animationFrame();
         await click(".o-select-color-background");
         await animationFrame();

@@ -172,6 +172,7 @@ export class FontPlugin extends Plugin {
             {
                 id: "font",
                 groupId: "font",
+                namespaces: ["compact", "expanded"],
                 title: _t("Font style"),
                 Component: FontSelector,
                 props: {
@@ -189,6 +190,7 @@ export class FontPlugin extends Plugin {
             {
                 id: "font-size",
                 groupId: "font-size",
+                namespaces: ["compact", "expanded"],
                 title: _t("Font size"),
                 Component: FontSizeSelector,
                 props: {
