@@ -6,10 +6,10 @@
                 <strong>Carrier:</strong>
                 <p t-field="o.carrier_id"/>
             </div>
-            <div t-if="o.weight">
+            <div t-if="o.shipping_weight">
                 <strong>Weight:</strong>
                 <br/>
-                <span t-field="o.weight"/>
+                <span t-field="o.shipping_weight"/>
                 <span t-field="o.weight_uom_name"/>
             </div>
             <div t-if="o.carrier_id" class="col" name="div_shipping_method">
