@@ -24,6 +24,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         dropship_route = self.env['stock.route'].search([('name', '=', 'Dropship')])
         self.comp2.write({'route_ids': [(4, buy_route.id), (4, mto_route.id), (4, resupply_route.id)]})
         self.finished.write({'route_ids': [(4, dropship_route.id)]})
+        self.env['stock.quant']._update_available_quantity(self.comp2, self.env.ref('stock.stock_location_stock'), 5)
 
         warehouse = self.env['stock.warehouse'].create({
             'name': 'Warehouse For subcontract',
@@ -89,6 +90,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.bom.bom_line_ids = [(0, 0, {'product_id': self.comp1.id, 'product_qty': 1})]
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
+        self.env['stock.quant']._update_available_quantity(self.comp1, self.env.ref('stock.stock_location_stock'), 5)
         # Create a supplier and set it to component
         vendor = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         self.env['product.supplierinfo'].create({
@@ -145,7 +147,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
             'is_subcontracting_location': True,
         })
 
-        dropship_subcontractor_route = self.env['stock.route'].search([('name', '=', 'Dropship Subcontractor on Order')])
+        dropship_route = self.env['stock.route'].search([('name', '=', 'Dropship')])
 
         subcontractor, vendor = self.env['res.partner'].create([
             {'name': 'SuperSubcontractor', 'property_stock_subcontractor': sub_location.id},
@@ -160,7 +162,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
             'name': 'Component',
             'type': 'consu',
             'seller_ids': [(0, 0, {'partner_id': vendor.id})],
-            'route_ids': [(6, 0, dropship_subcontractor_route.ids)]
+            'route_ids': [(6, 0, dropship_route.ids)]
         }])
 
         self.env['mrp.bom'].create({
@@ -348,15 +350,15 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
 
     def test_two_boms_same_component_supplier(self):
         """
-        The "Dropship Subcontractor" route is modified: the propagation of the
+        The "Dropship" route is modified: the propagation of the
         buy rule is set to "Leave Empty".
         Two subcontracted products (different subcontractor) that use the same
         component. The component has its own supplier. Confirm one PO for each
         subcontrated product. It should generate two PO from component's
         supplier to each subcontractor.
         """
-        dropship_subcontractor_route = self.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping')
-        dropship_subcontractor_route.rule_ids.filtered(lambda r: r.action == 'buy').group_propagation_option = 'none'
+        dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+        dropship_route.rule_ids.filtered(lambda r: r.action == 'buy').group_propagation_option = 'none'
 
         subcontractor01, subcontractor02, component_supplier = self.env['res.partner'].create([{
             'name': 'Super Partner %d' % i
@@ -370,7 +372,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         } for name, vendor, routes in [
             ('SuperProduct 01', subcontractor01, []),
             ('SuperProduct 02', subcontractor02, []),
-            ('Component', component_supplier, dropship_subcontractor_route.ids),
+            ('Component', component_supplier, dropship_route.ids),
         ]])
 
         self.env['mrp.bom'].create([{
@@ -402,11 +404,11 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         """
         Take two BoM having those components. One being subcontracted and the other not.
          - Compo RR : Buy & Reordering rule to resupply subcontractor.
-         - Compo DROP : Buy & Dropship subcontractor on order.
+         - Compo DROP : Buy & Dropship.
         Check that depending on the context, the right route is shown on the report.
         """
         route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
-        route_dropship = self.env['stock.route'].search([('name', '=', 'Dropship Subcontractor on Order')], limit=1)
+        dropship_route = self.env['stock.route'].search([('name', '=', 'Dropship')], limit=1)
         warehouse = self.env['stock.warehouse'].search([], limit=1)
 
         compo_drop, compo_rr = self.env['product.product'].create([{
@@ -415,7 +417,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
             'seller_ids': [Command.create({'partner_id': self.subcontractor_partner1.parent_id.id})],
             'route_ids': [Command.set(routes)],
         } for name, routes in [
-            ('Compo DROP', [route_buy.id, route_dropship.id]),
+            ('Compo DROP', [route_buy.id, dropship_route.id]),
             ('Compo RR', [route_buy.id]),
         ]])
 
@@ -449,7 +451,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         report = self.env['report.mrp.report_bom_structure'].with_context(warehouse_id=warehouse.id)._get_report_data(bom_subcontract.id)
         component_lines = report.get('lines', []).get('components', [])
         self.assertEqual(component_lines[0]['product_id'], compo_drop.id)
-        self.assertEqual(component_lines[0]['route_name'], 'Dropship Subcontractor on Order')
+        self.assertEqual(component_lines[0]['route_name'], 'Dropship')
         self.assertEqual(component_lines[1]['product_id'], compo_rr.id)
         self.assertEqual(component_lines[1]['route_name'], 'Buy', 'Despite the RR linked to it, it should still display the Buy route')
 

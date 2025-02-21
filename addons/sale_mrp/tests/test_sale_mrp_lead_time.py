@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from datetime import timedelta
 
 from odoo import fields
@@ -22,8 +23,8 @@ class TestSaleMrpLeadTime(TestStockCommon):
             p1.is_storable = True
             p1.sale_delay = 5.0
             p1.route_ids.clear()
-            p1.route_ids.add(cls.warehouse_1.manufacture_pull_id.route_id)
-            p1.route_ids.add(cls.warehouse_1.mto_pull_id.route_id)
+            cls.product_1 = p1.save()
+            cls.product_1.route_ids = [Command.link(cls.warehouse_1.mto_pull_id.route_id.id)]
 
         # Update the product_2 with type
         with Form(cls.product_2) as p2:
