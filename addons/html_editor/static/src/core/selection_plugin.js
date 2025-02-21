@@ -393,17 +393,18 @@ export class SelectionPlugin extends Plugin {
     getSelectionData() {
         const selection = this.document.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
-        const documentSelection = selection
-            ? Object.freeze({
-                  anchorNode: selection.anchorNode,
-                  anchorOffset: selection.anchorOffset,
-                  focusNode: selection.focusNode,
-                  focusOffset: selection.focusOffset,
-                  commonAncestorContainer: selection.rangeCount
-                      ? selection.getRangeAt(0).commonAncestorContainer
-                      : null,
-              })
-            : null;
+        const documentSelection =
+            selection?.anchorNode && selection?.focusNode
+                ? Object.freeze({
+                      anchorNode: selection.anchorNode,
+                      anchorOffset: selection.anchorOffset,
+                      focusNode: selection.focusNode,
+                      focusOffset: selection.focusOffset,
+                      commonAncestorContainer: selection.rangeCount
+                          ? selection.getRangeAt(0).commonAncestorContainer
+                          : null,
+                  })
+                : null;
         if (documentSelectionIsInEditable) {
             this.activeSelection = this.makeActiveSelection(selection);
         } else if (!this.activeSelection.anchorNode.isConnected) {
@@ -854,8 +855,10 @@ export class SelectionPlugin extends Plugin {
         }
     }
 
-    isSelectionInEditable({ anchorNode, focusNode }) {
+    isSelectionInEditable({ anchorNode, focusNode } = {}) {
         return (
+            !!anchorNode &&
+            !!focusNode &&
             this.editable.contains(anchorNode) &&
             (focusNode === anchorNode || this.editable.contains(focusNode))
         );
