@@ -21,10 +21,18 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Minute Maid", "1", "2"),
             ProductScreen.totalAmountIs("2.0"),
+<<<<<<< 18.0
             Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("2", "1"),
             FloorScreen.clickTable("2"),
             ProductScreen.totalAmountIs("2.0"),
+||||||| b4432d2aa092395b91724f0ac1224be7d22fcf1e
+            ProductScreen.back(),
+            FloorScreen.orderCountSyncedInTableIs("2", "1"),
+            FloorScreen.clickTable("2"),
+            ProductScreen.totalAmountIs("2.0"),
+=======
+>>>>>>> f174fb47472ed8806234aafde3c0025f346ea9e1
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
