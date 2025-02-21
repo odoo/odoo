@@ -152,7 +152,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <button name="action_quotation_send" id="send_by_email_primary" position="attributes">
+            <button name="action_quotation_send" id="quotation_send_primary" position="attributes">
                 <attribute name="invisible" separator="or" add="is_abandoned_cart and not cart_recovery_email_sent"/>
             </button>
             <button name="action_quotation_send" position="after">
@@ -164,7 +164,7 @@
                     data-hotkey="l"
                     invisible="not is_abandoned_cart or cart_recovery_email_sent"/>
             </button>
-            <button name="action_quotation_send" id="send_by_email" position="after">
+            <button name="action_quotation_send" id="quotation_send" position="after">
                 <button
                     name="action_quotation_send"
                     id="send_by_email_bis"

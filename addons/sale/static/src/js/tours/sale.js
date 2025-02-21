@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: ".o_statusbar_buttons button[name='action_quotation_send']",
         },
         ...stepUtils.statusbarButtonsSteps(
-            "Send by Email",
+            "Send",
             markup(_t("<b>Send the quote</b> to yourself and check what the customer will receive.")),
         ),
         {
