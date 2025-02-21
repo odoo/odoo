@@ -142,6 +142,21 @@ class TestPhonenumbersPatch(BaseCase):
         )
         self._assert_parsing_phonenumbers(parse_test_lines_MU)
 
+    def test_region_MX_monkey_patch(self):
+        """ Test Mexican phone numbers patch for removed 1 in mobile numbers """
+        if not phonenumbers:
+            self.skipTest('Cannot test without phonenumbers module installed.')
+
+        # Phone numbers starting with 1 should have the 1 removed
+        parsed = phonenumbers.parse('15585440749', region="MX")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+52 55 8544 0749')
+
+        # Phone numbers without the 1 should still be parsed
+        parsed = phonenumbers.parse('5595440749', region="MX")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+52 55 9544 0749')
+
     def test_region_KE_monkey_patch(self):
         """Makes sure that patch for kenyan phone numbers work"""
         gt_KE_number = 711123456  # what national number we expect after parsing
