@@ -1,17 +1,14 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.LanguageSelector">
-        <button t-if="state.languages.length === 1"
-            class="btn btn-light px-1"
-            name="translate"
-            t-att-title="props.title"
-            t-on-click="() => this.onSelected(state.languages[0][1])"
-            t-att-disabled="props.isDisabled()">
-                Translate
-        </button>
-        <Dropdown t-elif="state.languages.length > 1">
-            <button class="btn btn-light" name="translate" t-att-title="props.title" t-att-disabled="props.isDisabled()">
-                Translate
-            </button>
+        <t t-if="state.languages.length === 1">
+            <t t-call="html_editor.translateButton">
+                <t t-set="onClick" t-value="() => this.onSelected(state.languages[0][1])"/>
+            </t>
+        </t>
+        <Dropdown t-else="">
+            <t t-call="html_editor.translateButton">
+                <t t-set="onClick" t-value="() => {}"/>
+            </t>
             <t t-set-slot="content">
                 <t t-foreach="state.languages" t-as="language" t-key="language[0]">
                     <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(language[1])">
@@ -21,4 +18,12 @@
             </t>
         </Dropdown>
     </t>
+
+    <t t-name="html_editor.translateButton">
+        <button class="btn btn-light" name="translate" t-att-title="props.title"
+            t-att-disabled="props.isDisabled()" t-on-click="onClick">
+            <span class="oe-language-icon"/>
+        </button>
+    </t>
+
 </templates>
