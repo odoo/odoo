@@ -1982,15 +1982,6 @@ class CrmLead(models.Model):
             res.update(super(CrmLead, leftover)._notify_get_reply_to(default=default, author_id=author_id))
         return res
 
-    def _message_get_default_recipients(self):
-        return {
-            r.id: {
-                'partner_ids': [],
-                'email_to': ','.join(tools.email_normalize_all(r.email_from)) or r.email_from,
-                'email_cc': False,
-            } for r in self
-        }
-
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         # remove default author when going through the mail gateway. Indeed we

@@ -78,17 +78,6 @@ class ResPartner(models.Model):
         partners += self
         return email_to_lst, partners
 
-    def _message_get_default_recipients(self):
-        return {
-            r.id:
-            {
-                'partner_ids': [r.id],
-                'email_to': False,
-                'email_cc': False,
-            }
-            for r in self
-        }
-
     # ------------------------------------------------------------
     # ORM
     # ------------------------------------------------------------

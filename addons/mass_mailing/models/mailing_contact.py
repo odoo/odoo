@@ -146,15 +146,6 @@ class MailingContact(models.Model):
         contact = self.create({'name': name, 'email': email, 'list_ids': [(4, list_id)]})
         return contact.id, contact.display_name
 
-    def _message_get_default_recipients(self):
-        return {
-            r.id: {
-                'partner_ids': [],
-                'email_to': ','.join(tools.email_normalize_all(r.email)) or r.email,
-                'email_cc': False,
-            } for r in self
-        }
-
     def action_import(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_contact_import_action")
         context = self.env.context.copy()
