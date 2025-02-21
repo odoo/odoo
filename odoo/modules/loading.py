@@ -495,7 +495,7 @@ def load_modules(
             _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
 
         # STEP 3.6: apply remaining constraints in case of an upgrade
-        registry.finalize_constraints()
+        registry.finalize_constraints(cr)
 
         # STEP 4: Finish and cleanup installations
         if registry.updated_modules:
