@@ -280,6 +280,9 @@ class PosOrder(models.Model):
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True,
         help='The rate of the currency to the currency of rate applicable at the date of the order')
 
+    order_type = fields.Selection(
+        [('out_refund', 'Refund'), ('out_invoice', 'Sale')],
+        default='out_invoice', compute='_compute_order_type', store=True)
     state = fields.Selection(
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted')],
         'Status', readonly=True, copy=False, default='draft', index=True)
@@ -334,6 +337,11 @@ class PosOrder(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to_invoice', 'To Invoice'),
     ], string='Invoice Status', compute='_compute_invoice_status')
+
+    @api.depends('lines')
+    def _compute_order_type(self):
+        for order in self:
+            order.order_type = 'out_refund' if len(order.lines.refunded_orderline_id.ids) > 0 else 'out_invoice'
 
     @api.depends('account_move')
     def _compute_invoice_status(self):

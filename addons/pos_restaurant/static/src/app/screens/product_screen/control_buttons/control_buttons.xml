@@ -4,7 +4,7 @@
        <xpath
             expr="//button[hasclass('more-btn')]"
             position="before">
-           <button t-if="pos.config.module_pos_restaurant and !props.showRemainingButtons and !pos.getOrder()?._isRefundOrder()"
+           <button t-if="pos.config.module_pos_restaurant and !props.showRemainingButtons and !pos.getOrder()?.isRefund"
                    t-att-class="buttonClass" t-on-click="()=>this.pos.addCourse()">
                 <span>Course</span>
            </button>
