@@ -2,6 +2,7 @@
 
 import { SingleData } from "./components/SingleData.js";
 import { FooterButtons } from "./components/FooterButtons.js";
+import { HostnameDialog } from "./components/dialog/HostnameDialog.js";
 import { ServerDialog } from "./components/dialog/ServerDialog.js";
 import { WifiDialog } from "./components/dialog/WifiDialog.js";
 import useStore from "./hooks/useStore.js";
@@ -18,6 +19,7 @@ export class Homepage extends Component {
     static components = {
         SingleData,
         FooterButtons,
+        HostnameDialog,
         ServerDialog,
         WifiDialog,
         UpdateDialog,
@@ -142,7 +144,7 @@ export class Homepage extends Component {
             </div>
             <SingleData t-if="!store.base.is_access_point_up" name="'Name'" value="state.data.hostname" icon="'fa-id-card'">
 				<t t-set-slot="button">
-					<ServerDialog t-if="this.store.isLinux" />
+					<HostnameDialog t-if="this.store.isLinux" />
 				</t>
 			</SingleData>
             <SingleData t-if="store.advanced" name="'Version'" value="state.data.version" icon="'fa-microchip'">
