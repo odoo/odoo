@@ -134,12 +134,12 @@ export class FormatPlugin extends Plugin {
                 commandId: "formatStrikethrough",
                 isActive: isFormatted(this, "strikeThrough"),
             },
-            {
+            withSequence(20, {
                 id: "remove_format",
                 groupId: "decoration",
                 commandId: "removeFormat",
                 isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
-            },
+            }),
         ],
         /** Handlers */
         beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
