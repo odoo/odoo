@@ -908,6 +908,8 @@ class Picking(models.Model):
 
     def do_print_picking(self):
         self.write({'printed': True})
+        if not self.env.ref('stock.action_report_picking', raise_if_not_found=False):
+            raise UserError(_("'Picking Operations' not found, It may have been deleted."))
         return self.env.ref('stock.action_report_picking').report_action(self)
 
     def should_print_delivery_address(self):
