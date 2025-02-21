@@ -1,9 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
-import { ProductCatalogOrderLine } from "@product/product_catalog/order_line/order_line";
+import { ProductCatalogSaleOrder } from "@sale/product_catalog/sale_order_line/sale_order_line";
 
-export class ProductCatalogSaleOrderLine extends ProductCatalogOrderLine {
+export class ProductCatalogSaleOrderLine extends ProductCatalogSaleOrder {
     static props = {
-        ...ProductCatalogOrderLine.props,
+        ...ProductCatalogSaleOrder.props,
         deliveredQty: Number,
     }
 

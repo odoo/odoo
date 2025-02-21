@@ -30,6 +30,14 @@ export class ProductCatalogKanbanModel extends RelationalModel {
             for (const record of result.records) {
                 record.productCatalogData = orderLinesInfo[record.id];
             }
+            if (Object.values(orderLinesInfo).some(obj => 'last_invoice_date' in obj)){
+                const prioritized_products = Object.values(result.records).filter(obj => obj.productCatalogData.last_invoice_date != false)
+                const remaining_products = Object.values(result.records).filter(obj => obj.productCatalogData.last_invoice_date == false)
+                result.records = Object.values(prioritized_products).sort((obj1, obj2) => {
+                    return new Date(obj2.productCatalogData.last_invoice_date || 0) - new Date(obj1.productCatalogData.last_invoice_date || 0);
+                });
+                result.records.push(...remaining_products)
+            }
         }
         return result;
     }
