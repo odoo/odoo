@@ -13252,3 +13252,57 @@ test("expand record in dialog", async () => {
     await contains(".o_dialog .modal-header .o_expand_button").click();
     expect.verifySteps([[4, "turtle", "ir.actions.act_window", [[false, "form"]]]]);
 });
+
+test("edit o2m with default_order on a field not in view", async () => {
+    Partner._records[0].turtles = [1, 2, 3];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list default_order="turtle_int">
+                        <field name="turtle_foo"/>
+                        <field name="turtle_bar"/>
+                    </list>
+                    <form>
+                        <field name="turtle_foo"/>
+                    </form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["yop", "blip", "kawa"]);
+
+    await contains(".o_data_row:eq(1) .o_data_cell").click();
+    await contains(".modal .o_field_widget[name=turtle_foo] input").edit("blip2");
+    await contains(".modal-footer .o_form_button_save").click();
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["yop", "blip2", "kawa"]);
+});
+
+test("edit o2m with default_order on a field not in view (2)", async () => {
+    Partner._records[0].turtles = [1, 2, 3];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list default_order="turtle_foo,turtle_int">
+                        <field name="turtle_foo"/>
+                        <field name="turtle_bar"/>
+                    </list>
+                    <form>
+                        <field name="turtle_foo"/>
+                    </form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blip", "kawa", "yop"]);
+
+    await contains(".o_data_row:eq(1) .o_data_cell").click();
+    await contains(".modal .o_field_widget[name=turtle_foo] input").edit("kawa2");
+    await contains(".modal-footer .o_form_button_save").click();
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blip", "kawa2", "yop"]);
+});
