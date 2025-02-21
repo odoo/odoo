@@ -8,6 +8,7 @@ const messagePatch = {
     setup() {
         super.setup();
         this.chatbotStep = Record.one("ChatbotStep", { inverse: "message" });
+        this.disableChatbotAnswers = false;
     },
     canAddReaction(thread) {
         return (

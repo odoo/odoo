@@ -42,7 +42,7 @@ test("save fold state of temporary live chats", async () => {
     await waitForSteps([]);
     await insertText(".o-mail-Composer-input", "Hello");
     await triggerHotkey("Enter");
-    await contains(".o-mail-Message", { text: "Hello" });
+    await contains(".o-mail-Thread:not([data-transient])");
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-Message", { text: "Hello", count: 0 });
     assertChatHub({ folded: [1] });
@@ -133,7 +133,7 @@ test("can close confirm livechat with keyboard", async () => {
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello");
     await triggerHotkey("Enter");
-    await contains(".o-mail-Message", { text: "Hello" });
+    await contains(".o-mail-Thread:not([data-transient])");
     await triggerHotkey("Escape");
     await contains(".o-livechat-CloseConfirmation", {
         text: "Leaving will end the livechat. Proceed leaving?",

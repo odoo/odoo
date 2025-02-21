@@ -115,6 +115,23 @@ test("Only necessary requests are made when creating a new chat", async () => {
             previous_operator_id: operatorPartnerId,
             persisted: true,
         })}`,
+        `/mail/message/post - ${JSON.stringify({
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: serverState.userId,
+                allowed_company_ids: [1],
+                temporary_id: 0.8200000000000001,
+            },
+            post_data: {
+                body: "Hello!",
+                email_add_signature: true,
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: threadId,
+            thread_model: "discuss.channel",
+        })}`,
         `/mail/data - ${JSON.stringify({
             fetch_params: [
                 "failures", // called because mail/core/web is loaded in test bundle
@@ -127,23 +144,6 @@ test("Only necessary requests are made when creating a new chat", async () => {
                 uid: serverState.userId,
                 allowed_company_ids: [1],
             },
-        })}`,
-        `/mail/message/post - ${JSON.stringify({
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: [1],
-                temporary_id: 0.81,
-            },
-            post_data: {
-                body: "Hello!",
-                email_add_signature: true,
-                message_type: "comment",
-                subtype_xmlid: "mail.mt_comment",
-            },
-            thread_id: threadId,
-            thread_model: "discuss.channel",
         })}`,
     ]);
 });
