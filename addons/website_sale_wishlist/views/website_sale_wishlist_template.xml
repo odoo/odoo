@@ -22,7 +22,7 @@
     </template>
 
     <template id="product_cart_lines" inherit_id="website_sale.cart_lines" active="True">
-        <div name="o_wsale_cart_line_button_container" position="inside">
+        <xpath expr="//div[@name='o_wsale_cart_line_button_container']/a" position="after">
             <a
                 t-if="line._is_sellable()"
                 href="#"
@@ -33,7 +33,7 @@
             >
                 Save for Later
             </a>
-        </div>
+        </xpath>
 
         <xpath expr="//div[@name='o_wsale_cart_line_button_container_mobile']/button" position="before">
             <button
