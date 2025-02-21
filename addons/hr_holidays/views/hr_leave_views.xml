@@ -716,11 +716,23 @@
             'search_default_waiting_for_me': 1,
             'search_default_waiting_for_me_manager': 2,
             'hide_employee_name': 1,
+<<<<<<< 9c864204e84b2d769eeedffe6aa2b2263cf3889f
             'holiday_status_display_name': False}</field>
         <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
+||||||| 28d1f3e90759cfb4a8950d653c4cdf8f0aa5e341
+            'holiday_status_name_get': False}</field>
+        <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
+=======
+            'holiday_status_name_get': False}</field>
+        <field name="domain">['|', '|', '|', '|', ('employee_id.company_id', 'in', allowed_company_ids),
+>>>>>>> d242039166a514975510c9e6a3e5f60d183edb16
                                     '&amp;', ('multi_employee', '=', True),
                                     '&amp;', ('state', 'in', ['draft', 'confirm', 'validate1']),
-                                    ('employee_ids.company_id', 'in', allowed_company_ids)]</field>
+                                    ('employee_ids.company_id', 'in', allowed_company_ids),
+                                    '&amp;', ('holiday_type', '=', 'company'),
+                                    ('mode_company_id', 'in', allowed_company_ids),
+                                    ('holiday_type', '=', 'department'),
+                                    ('holiday_type', '=', 'category')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.
