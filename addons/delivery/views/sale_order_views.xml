@@ -11,6 +11,11 @@
                 <field name="is_all_service" invisible="1"/>
                 <field name="recompute_delivery_price" invisible="1"/>
             </field>
+            <field name="partner_shipping_id" position="after">
+                <field name="delivery_address_id" string="Pickup Point" invisible="delivery_method != 'pickup_point'" widget="pickup_location_many2one"/>
+                <field name="delivery_address_id" string="Delivery Address" invisible="delivery_method != 'classic'" readonly="state in ['cancel', 'sale']"/>
+                <field name="delivery_address_id" string="Delivery Store" invisible="delivery_method != 'store'" widget="pickup_location_many2one"/>
+            </field>
             <div name="so_button_below_order_lines" position="inside">
                 <button
                     string="Add shipping"

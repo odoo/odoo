@@ -51,7 +51,7 @@ class DeliveryCarrier(models.Model):
 
     # === BUSINESS METHODS ===#
 
-    def _in_store_get_close_locations(self, partner_address, product_id=None):
+    def _in_store_get_close_locations(self, partner_address, product_id=None, parent_record=None):
         """ Get the formatted close pickup locations sorted by distance to the partner address.
 
         :param res.partner partner_address: The address to use to sort the pickup locations.
@@ -70,13 +70,13 @@ class DeliveryCarrier(models.Model):
         partner_address.geo_localize()  # Calculate coordinates.
 
         pickup_locations = []
-        order_sudo = request.cart
+        record = parent_record or request.cart
         for wh in self.warehouse_ids:
             # Prepare the stock data based on either the product or the order.
             if product:  # Called from the product page.
                 in_store_stock_data = utils.format_product_stock_values(product, wh.id)
             else:  # Called from the checkout page.
-                in_store_stock_data = {'in_stock': order_sudo._is_in_stock(wh.id)}
+                in_store_stock_data = {'in_stock': record._is_in_stock(wh.id)}
 
             # Prepare the warehouse location.
             wh_location = wh.partner_id
