@@ -121,7 +121,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
     def _get_invoice_send_wizard(cls, invoice):
         out_invoice_send_wizard = cls.env['account.move.send.wizard']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'sending_methods': []})
         return out_invoice_send_wizard
 
     @classmethod

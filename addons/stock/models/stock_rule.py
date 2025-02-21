@@ -172,7 +172,7 @@ class StockRule(models.Model):
                 suffix += _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring the missing quantity in this location.", source)
             message_dict = {
                 'pull': _(
-                    'When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill the need.',
+                    'When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill the need. %(suffix)s',
                     destination=destination,
                     operation=operation,
                     source_location=source,
@@ -258,6 +258,8 @@ class StockRule(models.Model):
             'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.warehouse_id.id,
             'procure_method': 'make_to_order',
+            'description_picking': move_to_copy.product_id.with_context(lang=move_to_copy._get_lang())._get_description(
+                self.picking_type_id) or move_to_copy.description_picking,
         }
         return new_move_vals
 

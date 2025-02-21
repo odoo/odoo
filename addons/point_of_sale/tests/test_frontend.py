@@ -1430,7 +1430,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             "state_id": self.env.ref("base.state_us_30").id,  # Ohio
             "country_id": self.env.ref("base.us").id,
             "zip": "26432685463",
-            "phone": "1234567890",
+            "phone": "9898989899",
             "mobile": "0987654321",
             "email": "john@doe.com"
         })
@@ -1504,20 +1504,15 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_product_categories_order(self):
         """ Verify that the order of categories doesnt change in the frontend """
         self.env['pos.category'].search([]).write({'sequence': 100})
-        catgA = self.env['pos.category'].create({
+        self.env['pos.category'].create({
             'name': 'AAA',
             'parent_id': False,
             'sequence': 1,
         })
-        catgB = self.env['pos.category'].create({
+        self.env['pos.category'].create({
             'name': 'AAC',
             'parent_id': False,
             'sequence': 3,
-        })
-        self.env['pos.category'].create({
-            'name': 'AAD',
-            'parent_id': False,
-            'sequence': 4,
         })
         parentA = self.env['pos.category'].create({
             'name': 'AAB',
@@ -1528,7 +1523,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'AAX',
             'parent_id': parentA.id,
         })
-        catgC = self.env['pos.category'].create({
+        self.env['pos.category'].create({
             'name': 'AAY',
             'parent_id': parentB.id,
         })
@@ -1536,7 +1531,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # It's presence is checked during the tour to make sure app doesn't crash.
         self.env['product.product'].create({
             'name': 'Product in AAB and AAX',
-            'pos_categ_ids': [(6, 0, [parentA.id, parentB.id, catgA.id, catgB.id, catgC.id])],
+            'pos_categ_ids': [(6, 0, [parentA.id, parentB.id])],
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
@@ -1571,6 +1566,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Test sofa',
             'available_in_pos': True,
             "default_code": "CHAIR_01",
+        })
+        self.env['product.product'].create({
+            'name': 'clémentine',
+            'available_in_pos': True,
         })
         self.main_pos_config.open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchProducts', login="pos_user")

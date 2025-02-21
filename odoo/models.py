@@ -2983,7 +2983,19 @@ class BaseModel(metaclass=MetaModel):
             # the result of current sql_field might be 'null'::jsonb
             # ('null'::jsonb)::text == 'null'
             # ('null'::jsonb->>0)::text IS NULL
-            return SQL('(%s->>0)::%s', sql_field, SQL(field._column_type[1]))
+            sql_field = SQL('(%s->>0)::%s', sql_field, SQL(field._column_type[1]))
+
+            if field.type == 'many2one':
+                comodel = self.env[field.comodel_name]
+                sql_field = SQL(
+                    '''(SELECT %(cotable_alias)s.id
+                        FROM %(cotable)s AS %(cotable_alias)s
+                        WHERE %(cotable_alias)s.id = %(ref)s)''',
+                    cotable=SQL.identifier(comodel._table),
+                    cotable_alias=SQL.identifier(Query.make_alias(comodel._table, 'exists')),
+                    ref=sql_field,
+                )
+            return sql_field
 
         return sql_field
 

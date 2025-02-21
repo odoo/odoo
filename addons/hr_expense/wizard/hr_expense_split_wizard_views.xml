@@ -20,7 +20,9 @@
                             <field name="product_has_tax" column_invisible="True"/>
                             <field name="product_has_cost" column_invisible="True"/>
                             <field name="name"/>
-                            <field name="product_id"/>
+                            <field name="product_id"
+                                context="{'default_detailed_type': 'service', 'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"
+                            />
                             <field name="employee_id" widget="many2one_avatar_user"/>
                             <field name="tax_ids" widget="many2many_tags" readonly="not product_has_tax"/>
                             <field name="tax_amount_currency"/>

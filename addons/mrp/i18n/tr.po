@@ -3457,7 +3457,7 @@ msgstr "Malzeme Uygunluğu"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_merge
 msgid "Merge"
-msgstr "Birleştirme"
+msgstr "Birleştir"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_error
@@ -4060,18 +4060,19 @@ msgstr "Bileşenleri seçin ve ardından üretin"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm
 msgid "Pick components then manufacture (2 steps)"
-msgstr ""
+msgstr "Bileşen malzemeleri depodan çekin, sonra üretim yapın(2 adım)"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Pick components, manufacture and then store products (3 steps)"
-msgstr "Bileşenleri seçin, ürünleri üretin ve saklayın (3. adım)"
+msgstr "Bileşenleri seçin, ürünleri üretin ve stok sahasına alın (3. adım)"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
 msgid "Pick components, manufacture, then store products (3 steps)"
 msgstr ""
+"Bileşenleri seçin, ürünleri üretin, sonra stok sahasına alın (3. adım)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
@@ -5099,7 +5100,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce_all
 msgid "Show Produce All"
-msgstr ""
+msgstr "Tümünü Üret'i Göster"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -6351,7 +6352,7 @@ msgid ""
 "created to fulfill the need."
 msgstr ""
 "<b>%s</b>,<br/> ürünlerine ihtiyaç duyulduğunda, ihtiyacı karşılamak için "
-"bir üretim siparişi yaratılır."
+"bir üretim emri yaratılır."
 
 #. module: mrp
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
@@ -6797,6 +6798,15 @@ msgid ""
 "                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Bu ürünlerden beklenenden farklı bir miktar kullandınız.\n"
+"                        <b invisible=\"consumption == 'strict'\">\n"
+"                            Farkında olduğunuzu teyit ediniz.\n"
+"                        </b>\n"
+"                        <b invisible=\"consumption != 'strict'\">\n"
+"                            Malzeme kullanımınızı teyit ediniz veya müdürünüzden doğrulamasını isteyiniz\n"
+"                            <span invisible=\"mrp_production_count != 1\">bu üretim emri</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">bu üretim emirleri</span>.\n"
+"                        </b>"
 
 #. module: mrp
 #. odoo-python

@@ -43,6 +43,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                你好！<br/><br/>\n"
+"                你已要求訂閱郵寄清單 <strong t-out=\"object.name or ''\"/>。\n"
+"                <br/><br/>\n"
+"                請到以下網址確認： <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                如果這是錯誤，或你沒有請求此操作，請忽略此訊息。\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
