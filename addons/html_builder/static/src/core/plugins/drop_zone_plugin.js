@@ -157,6 +157,7 @@ export class DropZonePlugin extends Plugin {
         this.clearDropZone();
         return (elementToAdd) => {
             target[insertMethod](elementToAdd);
+            this.dispatchTo("on_add_element_handlers", { elementToAdd: elementToAdd });
             scrollToWindow(elementToAdd, { behavior: "smooth", offset: 50 });
             this.dependencies.history.addStep();
             this.dispatchTo("update_interactions", elementToAdd);
