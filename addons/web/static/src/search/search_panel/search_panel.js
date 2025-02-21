@@ -87,16 +87,15 @@ export class SearchPanel extends Component {
         );
 
         useSetupAction({
-            getGlobalState: () => {
-                return {
-                    searchPanel: this.exportState(),
-                };
-            },
+            getGlobalState: () => ({
+                searchPanel: this.exportState(),
+            }),
         });
 
         onWillStart(async () => {
             await this.env.searchModel.sectionsPromise;
             this.expandDefaultValue();
+            this.expandValues();
             this.updateActiveValues();
         });
 
@@ -173,6 +172,35 @@ export class SearchPanel extends Component {
                 for (const ancestorId of ancestorIds) {
                     this.state.expanded[category.id][ancestorId] = true;
                 }
+            }
+        }
+    }
+
+    expandValues() {
+        if (this.hasImportedState) {
+            return;
+        }
+        const categories = this.env.searchModel.getSections((s) => s.type === "category");
+        for (const category of categories) {
+            if (category.depth === 0) {
+                continue;
+            }
+
+            this.state.expanded[category.id] ||= {};
+            const expand = (id, level) => {
+                if (!level) {
+                    return;
+                }
+                this.state.expanded[category.id][id] = true;
+                const { childrenIds } = category.values.get(id);
+                level -= 1;
+                for (const childId of childrenIds) {
+                    expand(childId, level);
+                }
+            };
+
+            for (const rootId of category.rootIds) {
+                expand(rootId, category.depth);
             }
         }
     }
