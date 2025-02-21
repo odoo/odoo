@@ -66,5 +66,12 @@ const messagePatch = {
             mentionedPartners,
         });
     },
+    /**
+     * @override
+     */
+    async remove() {
+        await super.remove();
+        this.parentMessage = false;
+    },
 };
 patch(Message.prototype, messagePatch);
