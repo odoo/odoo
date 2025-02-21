@@ -125,7 +125,6 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         this.hardwareProxy = hardware_proxy;
-        this.hiddenProductIds = new Set();
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
@@ -2171,10 +2170,11 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         const excludedProductIds = [
-            this.config.tip_product_id?.id,
-            ...this.hiddenProductIds,
-            ...this.session._pos_special_products_ids,
-        ];
+            this.config.tip_product_id?.product_tmpl_id?.id,
+            ...this.session._pos_special_products_ids.map(
+                (id) => this.models["product.product"].get(id)?.product_tmpl_id?.id
+            ),
+        ].filter(Boolean);
 
         list = list
             .filter(
