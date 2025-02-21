@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     insertText,
+    openDiscuss,
     start,
     startServer,
     triggerHotkey,
@@ -130,4 +131,13 @@ test("only partners with dedicated users will be displayed in command palette", 
     await contains(".o_command_name", { text: "Create Channel" });
     await contains(".o_command_name", { text: "Create Chat" });
     await contains(".o_command_name", { text: "Portal", count: 0 });
+});
+
+test("should open command palette in discuss with conversation mode enabled by default", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel_1" });
+    await start();
+    await openDiscuss(channelId);
+    triggerHotkey("control+k");
+    await contains(".o_command_palette_search", { text: "@" });
 });
