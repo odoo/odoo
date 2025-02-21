@@ -302,11 +302,39 @@ export class KanbanRenderer extends Component {
 
     getGroupAggregate(group) {
         const { sumField } = this.props.list.model.progressAttributes;
-        const value = group.getAggregates(sumField && sumField.name);
-        const title = sumField ? sumField.string : this.env._t("Count");
+        let value = group.getAggregates(sumField && sumField.name);
+        let title = sumField ? sumField.string : this.env._t("Count");
         let currency = false;
-        if (sumField && value && sumField.currency_field) {
-            currency = session.currencies[session.company_currency_id];
+        // Early return if no sum field or no value
+        if (!sumField || !value) {
+            return { value, currency, title };
+        }
+        // Get records data for the current group
+        const records = group.list.records;
+        const values = records.map(r => r.data);
+        // Check currency for monetary fields
+        if (sumField.type === "integer" || sumField.type === "float" || sumField.type === "monetary" || sumField.widget === 'monetary') {
+            const currencyField = sumField.currency_field || 'currency_id';
+            // Get currency from first record that has one
+            const firstRecordWithCurrency = values.find(v => v[currencyField]);
+            const firstCurrencyId = firstRecordWithCurrency && firstRecordWithCurrency[currencyField][0];
+            if (firstCurrencyId) {
+                // Check if all records have the same currency
+                const sameCurrency = values.every(value => {
+                    const recordCurrencyId = value[currencyField] && value[currencyField][0];
+                    return !recordCurrencyId || recordCurrencyId === firstCurrencyId;
+                });
+                if (!sameCurrency) {
+                    value = 0;
+                    title = this.env._t('Different currencies cannot be aggregated');
+                    currency = false;
+                } else {
+                    currency = session.currencies[firstCurrencyId];
+                }
+            } else {
+                // Fallback to company currency if no currency found on records
+                currency = session.currencies[session.company_currency_id];
+            }
         }
         return { value, currency, title };
     }
