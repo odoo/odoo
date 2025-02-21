@@ -209,6 +209,12 @@ export class Thread extends Record {
      * Content should be fetched and inserted in a controlled way.
      */
     messages = fields.Many("mail.message");
+    /**
+     * Phantom messages is a snapshot of `messages` while the thread is being loaded.
+     * In other words: when thread is not loaded or loading, phantom messages are the
+     * messages before thread loading.
+     */
+    phantomMessages = fields.Many("mail.message");
     /** @type {string} */
     modelName;
     /** @type {string} */
@@ -656,7 +662,9 @@ export class Thread extends Record {
         this.isLoaded = false;
         this.scrollTop = undefined;
         try {
+            this.phantomMessages = this.messages;
             this.messages = await this.fetchMessages({ around: messageId });
+            this.phantomMessages = [];
         } catch {
             this.isLoaded = true;
             return;
