@@ -4,6 +4,7 @@ import json
 import logging
 import netifaces
 import platform
+import re
 import subprocess
 import threading
 import time
@@ -155,7 +156,7 @@ class IotBoxOwlHomePage(http.Controller):
 
         six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
         network_qr_codes = wifi.generate_network_qr_codes()
-        odoo_server_url = helpers.get_odoo_server_url()
+        odoo_server_url = helpers.get_odoo_server_url() or ''
 
         return json.dumps({
             'db_uuid': helpers.get_conf('db_uuid'),
@@ -164,7 +165,7 @@ class IotBoxOwlHomePage(http.Controller):
             'ip': helpers.get_ip(),
             'mac': helpers.get_mac_address(),
             'devices': grouped_devices,
-            'server_status': odoo_server_url or 'Not Configured',
+            'server_status': odoo_server_url,
             'pairing_code': connection_manager.pairing_code,
             'pairing_code_expired': not connection_manager.running and not odoo_server_url,
             'six_terminal': six_terminal,
@@ -324,8 +325,42 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Ngrok tunnel is now enabled',
         }
 
+    @http.route('/hw_posbox_homepage/update_hostname', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    def update_hostname(self, hostname):
+        """Update the hostname of the IoT Box.
+
+        :param hostname: new hostname to set
+        """
+        current_hostname = helpers.get_hostname()
+        if not hostname or platform.system() != 'Linux' or hostname == current_hostname:
+            return {
+                'status': 'failure',
+                'message': 'Hostname is not valid or already set.',
+            }
+
+        # Sanitize the hostname
+        hostname = re.sub(r'[^a-zA-Z0-9-]', '', hostname).encode('ascii')
+
+        with helpers.writable():
+            try:
+                subprocess.run(
+                    ['sudo', 'tee', '/root_bypass_ramdisks/etc/hostname'], input=hostname, check=True
+                ) # this is used exclusively for an elevated-privileges write to a file
+                subprocess.run(
+                    ['sudo', 'sed', '-i', f's/\\b{current_hostname}/{hostname.decode("ascii")}/g', '/root_bypass_ramdisks/etc/hosts'],
+                    check=True,
+                )
+                subprocess.run(['sudo', 'reboot'], check=False)  # Reboot to apply the new hostname
+            except subprocess.CalledProcessError:
+                _logger.exception("Failed to update hostname")
+                return {
+                    'status': 'failure',
+                    'message': 'Failed to update hostname, please try again.',
+                }
+
+
     @http.route('/hw_posbox_homepage/connect_to_server', auth="none", type="jsonrpc", methods=['POST'], cors='*')
-    def connect_to_odoo_server(self, token=False, iotname=False):
+    def connect_to_odoo_server(self, token):
         if token:
             try:
                 if len(token.split('|')) == 4:
@@ -348,10 +383,6 @@ class IotBoxOwlHomePage(http.Controller):
                     'status': 'failure',
                     'message': 'Failed to write server configuration files on IoT. Please try again.',
                 }
-
-        if iotname and platform.system() == 'Linux' and iotname != helpers.get_hostname():
-            subprocess.run([file_path(
-                'iot_box_image/configuration/rename_iot.sh'), iotname], check=False)
 
         # 1 sec delay for IO operations (save_conf_server)
         helpers.odoo_restart(1)
