@@ -49,7 +49,7 @@ export class BootstrapDialog extends Component {
                     <div class="modal-body position-relative dialog-body">
                         <t t-slot="body" />
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
                         <t t-slot="footer" />
                     </div>
                 </div>
