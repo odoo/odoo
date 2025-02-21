@@ -17,9 +17,11 @@
     <t t-name="account.DocumentViewUploadButton">
         <DocumentFileUploader resModel="props.resModel">
             <t t-set-slot="toggler">
-                <button type="button" class="btn btn-secondary" data-hotkey="shift+i">
-                    Upload
-                </button>
+                <t t-if="!hideUploadButton">
+                    <button type="button" class="btn btn-secondary" data-hotkey="shift+i">
+                        Upload
+                    </button>
+                </t>
             </t>
         </DocumentFileUploader>
     </t>
