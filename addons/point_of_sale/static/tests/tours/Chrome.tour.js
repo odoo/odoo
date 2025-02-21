@@ -77,6 +77,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.enterPaymentLineAmount("Cash", "20"),
+            PaymentScreen.changeIs("18.0"),
             PaymentScreen.remainingIs("0.0"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
