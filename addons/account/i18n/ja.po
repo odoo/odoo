@@ -13,8 +13,8 @@
 # 764374359f7a865bd0df682e21e54552_335e00f <6548f6be8d222d7d28a3e8d58aa819d1_1128047>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
-# Junko Augias, 2025
 # Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3864,21 +3864,21 @@ msgstr "勘定科目表設定済"
 msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
-msgstr "このアカウントでジャーナルアイテムの請求書と支払いの照合が許可されている場合は、このチェックボックスをオンにします。"
+msgstr "この勘定科目で仕訳明細の請求書と支払いの照合が許可されている場合は、このチェックボックスをオンにします。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
-msgstr "このジャーナルから作成された請求書とクレジットノートで同じシーケンスを共有したくない場合は、このボックスをオンにします"
+msgstr "この仕訳帳から作成された請求書とクレジットノートで同じシーケンス番号を共有したくない場合は、このボックスをオンにします"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_sequence
 msgid ""
 "Check this box if you don't want to share the same sequence on payments and "
 "bank transactions posted on this journal"
-msgstr "この仕訳から作成された支払と銀行取引は同じシーケンスを共有したくない場合は、チェックしてください"
+msgstr "この仕訳から作成された支払と銀行取引で同じシーケンス番号を共有したくない場合は、チェックして下さい"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -3899,7 +3899,7 @@ msgstr "製品や請求書と使用する価格に税金が含まれている場
 #: model:ir.model.fields,help:account.field_account_account_template__reconcile
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
-msgstr "ユーザがこのアカウントのエントリーを消し込みしたい場合はこのオプションをチェックして下さい。"
+msgstr "ユーザがこの勘定科目の仕訳を消し込みしたい場合はこのオプションをチェックして下さい。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8354,12 +8354,12 @@ msgstr "仕訳グループは、関連データを一緒に表示するための
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__line_ids
 msgid "Journal items"
-msgstr "仕訳アイテム"
+msgstr "仕訳明細"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "マッチング番号が設定されていない仕訳項目"
+msgstr "マッチング番号が設定されていない仕訳明細"
 
 #. module: account
 #. odoo-python
@@ -12665,7 +12665,7 @@ msgstr "Snailmail"
 msgid ""
 "Some journal items already exist in this journal but with other accounts "
 "than the allowed ones."
-msgstr "一部のジャーナルアイテムはこのジャーナルにすでに存在しますが、許可されているアカウント以外のアカウントがあります。"
+msgstr "一部の仕訳明細はこの仕訳帳にすでに存在しますが、許可されている勘定科目以外の勘定科目があります。"
 
 #. module: account
 #. odoo-python
@@ -12674,7 +12674,7 @@ msgstr "一部のジャーナルアイテムはこのジャーナルにすでに
 msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
-msgstr "一部のジャーナルアイテムはこのアカウントにすでに存在しますが、許可されているもの以外のジャーナルにあります。"
+msgstr "一部の仕訳明細はこの勘定科目にすでに存在しますが、許可されている仕訳帳以外の仕訳帳内にあります。"
 
 #. module: account
 #. odoo-python
@@ -14322,7 +14322,7 @@ msgstr "要求されたページは無効であるか、もう存在しません
 msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
-msgstr "ジャーナルアイテムの残額は、その通貨（会社の通貨ではない可能性があります）で表されます。"
+msgstr "仕訳明細の残額は、その通貨（会社の通貨ではない可能性があります）で表されます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
@@ -14944,8 +14944,8 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"これらを使用して、銀行取引明細書または口座の消込時に\n"
-"ジャーナルアイテムをすばやく作成できます。"
+"これらを使用して、銀行取引明細書または勘定科目の消込時に\n"
+"仕訳明細をすばやく作成できます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14958,7 +14958,7 @@ msgstr "「送信 &amp; 印刷」をクリックしたときにこれらのオ�
 #: model:digest.tip,name:account.digest_tip_account_0
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
-msgstr "ヒント：印刷したり、封筒に入れたり、請求書を投稿したりする必要はありません。"
+msgstr "ヒント: 印刷したり、封筒に入れたり、請求書を投稿したりする必要はありません。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
