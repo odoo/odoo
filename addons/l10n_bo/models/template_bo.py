@@ -13,7 +13,7 @@ class AccountChartTemplate(models.AbstractModel):
             'name': 'Kyohei Ltda.',
             'code_digits': '7',
             'visible': True,
-            'anglo_saxon_accounting': True,
+            'use_anglo_saxon': True,
             'property_account_receivable_id': 'l10n_bo_1120101',
             'property_account_payable_id': 'l10n_bo_2110101',
             'property_account_expense_categ_id': 'l10n_bo_5110101',
@@ -29,7 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_bo_res_company(self):
         return {
             self.env.company.id: {
-                'anglo_saxon_accounting': True,
+                'use_anglo_saxon': True,
                 'account_fiscal_country_id': 'base.bo',
                 'bank_account_code_prefix': '111030',
                 'cash_account_code_prefix': '111010',
@@ -72,16 +72,16 @@ class AccountChartTemplate(models.AbstractModel):
             'general': {'code': 'MISC'},
             'exch': {'code': 'EXCH'},
             'caba': {
-                'name': 'Impuestos',
+                'name': 'Taxes',
                 'code': 'TAXES'
             },
             'def_in' :{
-                'name': 'Ingreso diferido',
+                'name': 'Deferred income',
                 'code': 'DFIN',
                 'type': 'general'
             },
             'def_out' :{
-                'name': 'Gasto diferido',
+                'name': 'Deferred expense',
                 'code': 'DFOUT',
                 'type': 'general'
             },
@@ -93,7 +93,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_bo_reconcile_model(self):
         return {
             'financial_transaction_tax_template': {
-                'name': 'ITF Automático',
+                'name': 'ITF',
                 'rule_type': 'writeoff_suggestion',
                 'auto_reconcile': True,
                 'match_text_location_label': True,
