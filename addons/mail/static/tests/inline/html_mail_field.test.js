@@ -61,6 +61,11 @@ beforeEach(() => {
             htmlEditor = editor;
             return super.onEditorLoad(...arguments);
         },
+        getConfig() {
+            const config = super.getConfig();
+            config.Plugins = config.Plugins.filter((Plugin) => Plugin.id !== "editorVersion");
+            return config;
+        },
     });
 });
 
