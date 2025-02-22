@@ -148,6 +148,7 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on "
 "%(date)s)%(attachment_extension)s"
 msgstr ""
+"%(attachment_name)s （由 %(user)s 于 %(date)s 取消附上）%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -8689,12 +8690,6 @@ msgid "Invoice Status"
 msgstr "发票状态"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
-#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
-msgid "Invoice Template Pdf Report"
-msgstr "发票模板 PDF 报表"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 msgid "Invoice Totals"
@@ -8776,6 +8771,8 @@ msgstr "传送发票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
 msgid "Invoice template"
 msgstr "发票模板"
 
@@ -13814,15 +13811,6 @@ msgstr "传统信件"
 #: code:addons/account/models/company.py:0
 msgid "Some documents are being sent by another process already."
 msgstr "部分文件已经通过另一个程序发送。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"Some invoice(s) already have a generated pdf. The existing pdf will be used "
-"for sending. If you want to regenerate them, please delete the attachment "
-"from the invoice."
-msgstr "一些发票已经生成了 pdf。现有的 pdf 将用于发送。如果您想重新生成它们，请从发票中删除附件。"
 
 #. module: account
 #. odoo-python

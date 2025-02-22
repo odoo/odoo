@@ -8,8 +8,8 @@
 # Larissa Manderfeld, 2024
 # Yana Bystrytska, 2024
 # Bohdan Lisnenko, 2025
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # Wil Odoo, 2025
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,6 +146,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on "
 "%(date)s)%(attachment_extension)s"
 msgstr ""
+"%(attachment_name)s (відокремлений від %(user)s на "
+"%(date)s)%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -1907,7 +1909,7 @@ msgstr "Розрахунок з кредиторами"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Заповнювач префікса облікового запису"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -7316,7 +7318,7 @@ msgstr "Бухгалтерський рахунок"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "Префікси фінансових рахунків"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -8963,12 +8965,6 @@ msgid "Invoice Status"
 msgstr "Статус рахунка-фактури"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
-#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
-msgid "Invoice Template Pdf Report"
-msgstr "Шаблон друкованої форми Pdf рахунків-фактур"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 msgid "Invoice Totals"
@@ -9060,6 +9056,8 @@ msgstr "Надсилання рахунка-фактури"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
 msgid "Invoice template"
 msgstr "Шаблон рахунка-фактури"
 
@@ -10744,7 +10742,7 @@ msgstr "Нова назва журналу"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__new_move_ids
 msgid "New Move"
-msgstr "Нове переміщення"
+msgstr "Нова проводка"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -12265,7 +12263,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Please create new accounts from the Chart of Accounts menu."
-msgstr "Будь ласка, створіть нові облікові записи в меню План рахунків."
+msgstr "Будь ласка, створіть нові рахунки в меню План рахунків."
 
 #. module: account
 #. odoo-python
@@ -12919,7 +12917,7 @@ msgid ""
 " name, etc."
 msgstr ""
 "Довідка про документ, що використовується для випуски цього платежу. "
-"Наприклад, номер перевірки, назва файлу і т.д."
+"Наприклад, номер чеку, назва файлу і т.д."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__refund
@@ -14156,7 +14154,7 @@ msgstr "Показати різницю в оплаті"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_move__show_payment_term_details
 msgid "Show Payment Term Details"
-msgstr "Показатм деталі терміну оплати"
+msgstr "Показати деталі терміну оплати"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -14215,18 +14213,6 @@ msgstr "Деякі документи вже надсилаються іншим
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"Some invoice(s) already have a generated pdf. The existing pdf will be used "
-"for sending. If you want to regenerate them, please delete the attachment "
-"from the invoice."
-msgstr ""
-"Деякі рахунки-фактури вже мають згенерований pdf-файл. Для надсилання буде "
-"використано існуючий pdf. Якщо ви хочете їх відновити, видаліть вкладення з "
-"рахунку-фактури."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid ""
 "Some journal items already exist in this journal but with other accounts "
@@ -14242,8 +14228,8 @@ msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
 msgstr ""
-"Деякі статті журналу вже існують у цьому рахунку, але в інших журналах, ніж "
-"дозволені."
+"Деякі елементи журналу вже існують у цьому рахунку, але в інших журналах, "
+"ніж дозволені."
 
 #. module: account
 #. odoo-python
@@ -15284,7 +15270,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr "Банківська виписка, використовувана для звірки"
+msgstr "Банківська виписка використовується для узгодження"
 
 #. module: account
 #. odoo-python
@@ -15369,7 +15355,7 @@ msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
 msgstr ""
-"Країна, вказана у іноземній схемі оподаткування ПДВ, має відповідати країні,"
+"Країна, вказана в іноземній схемі оподаткування ПДВ, має відповідати країні,"
 " вказаній у звіті."
 
 #. module: account
@@ -15382,7 +15368,7 @@ msgstr "Країна для використоання податкових зв
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
 msgid "The currency used to enter statement"
-msgstr "Валюта, використана у виписці"
+msgstr "Валюта використовується у виписці"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15415,7 +15401,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "The date selected is protected by: %(lock_date_info)s."
-msgstr ""
+msgstr "Вибрана дата захищена: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__fiscalyear_lock_date
@@ -15423,6 +15409,8 @@ msgid ""
 "The date the Global Lock Date is set to by this exception. If the lock date "
 "is not changed it is set to the maximal date."
 msgstr ""
+"Дата глобальної дати блокування встановлена ​​цим винятком. Якщо дата "
+"блокування не змінена, вона встановлюється на максимальну дату."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__purchase_lock_date
@@ -15430,6 +15418,8 @@ msgid ""
 "The date the Purchase Lock Date is set to by this exception. If the lock "
 "date is not changed it is set to the maximal date."
 msgstr ""
+"Дата, на яку встановлено дату блокування покупки за цим винятком. Якщо дата "
+"блокування не змінена, вона встановлюється на максимальну дату."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__sale_lock_date
@@ -15437,6 +15427,8 @@ msgid ""
 "The date the Sale Lock Date is set to by this exception. If the lock date is"
 " not changed it is set to the maximal date."
 msgstr ""
+"Дата, на яку встановлено дату блокування продажу за цим винятком. Якщо дата "
+"блокування не змінена, вона встановлюється на максимальну дату."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__tax_lock_date
@@ -15444,6 +15436,8 @@ msgid ""
 "The date the Tax Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
 msgstr ""
+"Дата, на яку встановлюється ця дата блокування податку. Якщо дата блокування"
+" не змінена, вона встановлюється на максимальну дату."
 
 #. module: account
 #. odoo-python
@@ -15480,7 +15474,7 @@ msgstr "Запис %(name)s (id %(id)s) має бути в чернетці."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
-msgstr ""
+msgstr "Запис захищено незмінним хешем."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -15544,7 +15538,7 @@ msgstr "Наступні записи журналу будуть створен
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "The following accounts must be assigned to at least one company:"
-msgstr ""
+msgstr "Наступні рахунки мають бути призначені принаймні одній компанії:"
 
 #. module: account
 #. odoo-python
@@ -15612,7 +15606,7 @@ msgstr "Рахунок вже містить рядки, він не оновл�
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "The invoice having been sent, the button has changed priority."
-msgstr "Рахунок надіслано, кнопка змінила пріоритет."
+msgstr "Рахунок-фактуру надіслано, кнопка змінила пріоритет."
 
 #. module: account
 #. odoo-python
@@ -15700,7 +15694,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Ім'я псевдоніма електронної пошти, наприклад, \"Робота\", якщо ви хочете "
+"Ім'я псевдоніма електронної пошти, наприклад, 'jobs', якщо ви хочете "
 "отримувати повідомлення електронної пошти на <jobs@example.odoo.com>"
 
 #. module: account
@@ -15711,6 +15705,9 @@ msgid ""
 " Please change the journal entry date or the following lock dates to "
 "proceed: %(lock_date_info)s."
 msgstr ""
+"В операції відмовлено, оскільки це вплине на вже видану податкову "
+"декларацію. Щоб продовжити, змініть дату запису в журналі або наступні дати "
+"блокування: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -15896,7 +15893,7 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
-"Майстра реєстру платежів слід викликати лише для записів account.move або "
+"Візард реєстру платежів слід викликати лише для записів account.move або "
 "account.move.line."
 
 #. module: account
@@ -15940,7 +15937,7 @@ msgstr "Розділи, визначені у звіті, не можуть са
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date
 msgid "The selected Date"
-msgstr ""
+msgstr "Обрана дата"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -15968,6 +15965,8 @@ msgid ""
 "The sending of invoices is not set up properly, make sure the report used is"
 " set for invoices."
 msgstr ""
+"Надсилання рахунків-фактур налаштовано неправильно, переконайтеся, що "
+"друкована форма, яка використовується, налаштована для рахунків-фактур."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -16028,6 +16027,11 @@ msgid ""
 "The month detected here is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Послідовність перезапускатиметься о 1 на початку кожного місяця.\n"
+"Початок звітного періоду виявлено тут '%(year)s'.\n"
+"Кінець звітного періоду виявлено тут '%(year_end)s'.\n"
+"Місяць виявлено тут '%(month)s'.\n"
+"Зростаюче число в цьому випадку є '%(formatted_seq)s'."
 
 #. module: account
 #. odoo-python
@@ -16159,6 +16163,8 @@ msgid ""
 "There are entries that cannot be hashed. They can be protected by the Hard "
 "Lock Date."
 msgstr ""
+"Є записи, які не можна хешувати. Їх можна захистити за допомогою Жорсткою "
+"датою блокування."
 
 #. module: account
 #. odoo-python
@@ -16170,13 +16176,13 @@ msgstr "Немає жодного елементу журналу у стату�
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "There are payments in progress. Make sure you don't pay twice."
-msgstr ""
+msgstr "Виконуються платежі. Переконайтеся, що ви не платите двічі."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "There are still draft entries before the selected date."
-msgstr ""
+msgstr "До вибраної дати ще є чернетки."
 
 #. module: account
 #. odoo-python
@@ -16185,6 +16191,8 @@ msgid ""
 "There are still draft entries in the period you want to hard lock. You "
 "should either post or delete them."
 msgstr ""
+"Ще є чернетки для періоду, який потрібно жорстко заблокувати. Ви повинні "
+"опублікувати або видалити їх."
 
 #. module: account
 #. odoo-python
@@ -16194,6 +16202,8 @@ msgid ""
 "The entries from journal prefixes containing them will not be secured: "
 "%(prefix_info)s"
 msgstr ""
+"Є ще незвірені рядки банківської виписки до вибраної дати. Записи з "
+"префіксів журналу, які їх містять, не будуть захищені: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -16220,6 +16230,7 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
+"Немає жодного запису в журналі, позначеного для незмінності даних бухобліку."
 
 #. module: account
 #. odoo-python
@@ -16294,6 +16305,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr ""
+"Цей рахунок було відокремлено від %(account_name)s (%(company_name)s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -16355,7 +16367,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "This can only be used on accounts."
-msgstr ""
+msgstr "Це можна використовувати лише на рахунках."
 
 #. module: account
 #. odoo-python
@@ -16370,6 +16382,7 @@ msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
 msgstr ""
+"Цей документ захищено хешем. Тому ви не можете редагувати наступні поля: %s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -16449,7 +16462,7 @@ msgstr "Цей рахунок-фактура надсилається у фон�
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid "This is the Audit Trail Report"
-msgstr ""
+msgstr "Це звіт про аудиторський слід"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -16469,25 +16482,25 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the full amount."
-msgstr ""
+msgstr "Це повна сума."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the next unreconciled installment."
-msgstr ""
+msgstr "Це черговий незвірений внесок."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the overdue amount."
-msgstr ""
+msgstr "Це протермінована сума."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This journal entry has been secured."
-msgstr ""
+msgstr "Цей запис у журналі захищено."
 
 #. module: account
 #. odoo-python
@@ -16521,6 +16534,9 @@ msgid ""
 "This move could not be locked either because some move with the same "
 "sequence prefix has a higher number. You may need to resequence it."
 msgstr ""
+"Цю проводку також не вдалося заблокувати, оскільки деякі проводки з тим "
+"самим префіксом послідовності мають більший номер. Можливо, вам доведеться "
+"змінити її послідовність."
 
 #. module: account
 #. odoo-python
@@ -16593,12 +16609,12 @@ msgstr "Цей повторюваний запис походить із %s"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post_until
 #: model:ir.model.fields,help:account.field_account_move__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
-msgstr "Цей повторюваний рух буде опубліковано до цієї дати включно."
+msgstr "Цю повторювану проводку буде опубліковано до цієї дати включно."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting cannot be changed after an invoice is created."
-msgstr ""
+msgstr "Цей параметр не можна змінити після створення рахунку-фактури."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16606,7 +16622,7 @@ msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
 msgstr ""
-"Це оновить усі податки та облікові записи на основі поточної вибраної схеми "
+"Це оновить усі податки та рахунки на основі поточної вибраної схеми "
 "оподаткування."
 
 #. module: account
@@ -16624,7 +16640,7 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Вони можуть бути використані для швидкого створення журнальних статей при узгодженні\n"
+"Вони можуть бути використані для швидкого створення елементів журналу при узгодженні\n"
 "банківської виписки або рахунку."
 
 #. module: account
@@ -16632,6 +16648,8 @@ msgstr ""
 msgid ""
 "Tick this checkbox if you want accounts to be grouped by name for merging."
 msgstr ""
+"Позначте це, якщо ви хочете, щоб рахунки були згруповані за назвою для "
+"об’єднання."
 
 #. module: account
 #: model:digest.tip,name:account.digest_tip_account_0
@@ -16644,7 +16662,7 @@ msgstr ""
 #: model:digest.tip,name:account.digest_tip_account_1
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_1
 msgid "Tip: Stop chasing the Documents you need"
-msgstr ""
+msgstr "Порада: перестаньте шукати потрібні вам документи"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -16682,6 +16700,8 @@ msgid ""
 "To add information to a previously sent invoice, reply to your \"sent\" "
 "email"
 msgstr ""
+"Щоб додати інформацію до раніше надісланого рахунка-фактури, дайте відповідь"
+" на свій «надісланий» електронний лист."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -16701,7 +16721,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "To pay"
-msgstr ""
+msgstr "На оплату"
 
 #. module: account
 #. odoo-python
@@ -16711,6 +16731,9 @@ msgid ""
 "manually validated. You should go on the partner bank account of %(partner)s"
 " in order to validate it."
 msgstr ""
+"Для запису платежів з %(method_name)s, банківський рахунок одержувача "
+"потрібно підтвердити вручну. Ви повинні перейти на банківський рахунок "
+"партнера %(partner)s щоб підтвердити його."
 
 #. module: account
 #. odoo-python
@@ -16758,7 +16781,7 @@ msgstr "Разом"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_edit_total_amount
 #: model:ir.model.fields,field_description:account.field_account_move__quick_edit_total_amount
 msgid "Total (Tax inc.)"
-msgstr "Всього (з ПДВ.)"
+msgstr "Всього (з ПДВ)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__total_amount
@@ -16877,19 +16900,19 @@ msgstr "Загальна сума рахунку літерами"
 #: model:ir.model.fields,help:account.field_res_partner__credit
 #: model:ir.model.fields,help:account.field_res_users__credit
 msgid "Total amount this customer owes you."
-msgstr " Загальна сума, яку цей клієнт повинен заплатити вам"
+msgstr "Загальна сума, яку цей клієнт повинен заплатити вам"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__debit
 #: model:ir.model.fields,help:account.field_res_users__debit
 msgid "Total amount you have to pay to this vendor."
-msgstr " Загальна сума, яку ви повинні заплатити цьому постачальнику"
+msgstr "Загальна сума, яку ви повинні заплатити цьому постачальнику"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Total for the installments before %(date)s."
-msgstr ""
+msgstr "Усього за розстрочки раніше %(date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
@@ -16905,13 +16928,13 @@ msgstr "Всього у пдписаній валюті"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs & revenues by project, department, etc"
-msgstr "Відстежуйте витрати та доходи за проектом, відділом тощо"
+msgstr "Відстежуйте витрати та доходи за проєктом, відділом тощо"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Trade %s"
-msgstr ""
+msgstr "Торгівля %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_details
@@ -16921,7 +16944,7 @@ msgstr "Деталі транзакції"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Transaction Feeds"
-msgstr ""
+msgstr "Джерело виписки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
@@ -16987,6 +17010,10 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Активуйте сповіщення під час створення рахунків-фактур і замовлень на продаж"
+" для партнерів із загальною сумою дебіторської заборгованості, що перевищує "
+"ліміт. Встановіть значення більше 0,0, щоб активувати перевірку кредитного "
+"ліміту"
 
 #. module: account
 #. odoo-python
@@ -17076,12 +17103,12 @@ msgstr "Розгорнути все"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr ""
+msgstr "Нехешовані записи"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr ""
+msgstr "Нехешовані записи"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -17124,12 +17151,12 @@ msgstr "Забрати позначку Надіслано"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Unmerge"
-msgstr ""
+msgstr "Розʼєднати"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
 msgid "Unmerge account"
-msgstr ""
+msgstr "Розʼєднати рахунок"
 
 #. module: account
 #. odoo-javascript
@@ -17173,7 +17200,7 @@ msgstr "Не узгоджено"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "Unreconciled Bank Statement Line"
-msgstr ""
+msgstr "Неузгоджений рядок банківської виписки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unreconciled
@@ -17209,12 +17236,12 @@ msgstr "Неоподаткована сума підписана"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_in_currency_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_in_currency_signed
 msgid "Untaxed Amount Signed Currency"
-msgstr ""
+msgstr "Неоподатковувана підписана сума валюти"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal_currency
 msgid "Untaxed Amount in Currency"
-msgstr ""
+msgstr "Неоподаткована сума у валюті"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -17301,12 +17328,12 @@ msgstr "Помилка завантаження"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Use Bill Reference"
-msgstr ""
+msgstr "Використовувати референс рахунка від постачальника"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__cta
 msgid "Use CTA"
-msgstr ""
+msgstr "Використовувати CTA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
@@ -17359,7 +17386,7 @@ msgstr "Використання при податковому закритті"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__current
 msgid "Use the most recent rate at the date of the report"
-msgstr ""
+msgstr "Використовуйте останній курс на дату звіту"
 
 #. module: account
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
@@ -17436,7 +17463,7 @@ msgstr "Користувач"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_fiscalyear_lock_date
 msgid "User Fiscalyear Lock Date"
-msgstr ""
+msgstr "Дата блокування звітного періоду користувача"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__user_groupby
@@ -17446,7 +17473,7 @@ msgstr "Користувач групування"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_hard_lock_date
 msgid "User Hard Lock Date"
-msgstr ""
+msgstr "Жорстка дата блокування користувача"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__user_has_group_validate_bank_account
@@ -17457,17 +17484,17 @@ msgstr "Користувач має банківський рахунок для
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_purchase_lock_date
 msgid "User Purchase Lock Date"
-msgstr ""
+msgstr "Дата блокування купівлі користувача"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_sale_lock_date
 msgid "User Sale Lock Date"
-msgstr ""
+msgstr "Дата блокування продажів користувача"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_tax_lock_date
 msgid "User Tax Lock Date"
-msgstr ""
+msgstr "Дата блокування податків користувача"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
@@ -17490,7 +17517,7 @@ msgstr "ПДВ обов'язкове"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
-msgstr ""
+msgstr "Дійсний для"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17529,7 +17556,7 @@ msgstr "Підтверджено"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Validating"
-msgstr ""
+msgstr "Підтвердження"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
@@ -17621,7 +17648,7 @@ msgstr "Рахунок знижок рахунків постачальникі�
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "Сторно продавця"
+msgstr "Сторно постачальника"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -17659,7 +17686,7 @@ msgstr "Постачальники"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Verify the price and update if necessary."
-msgstr ""
+msgstr "Перевірте ціну та оновіть її, якщо необхідно."
 
 #. module: account
 #. odoo-javascript
@@ -17680,6 +17707,8 @@ msgid ""
 "Want to make your life even easier and automate bill validation from this "
 "vendor ?"
 msgstr ""
+"Хочете зробити своє життя ще простішим і автоматизувати перевірку рахунків "
+"від цього постачальника?"
 
 #. module: account
 #. odoo-javascript
@@ -17714,7 +17743,7 @@ msgstr "Попередження"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_warning_account
 msgid "Warnings in Invoices"
-msgstr "Попередження в рахунках"
+msgstr "Попередження в рахунках-фактурах"
 
 #. module: account
 #. odoo-python
@@ -17734,7 +17763,7 @@ msgid ""
 "Please go to Account Configuration and select or install a fiscal localization."
 msgstr ""
 "Ми не можемо знайти план рахунків для цієї компанії, його потрібно налаштувати. \n"
-"Перейдіть до Налаштування обліку та виберіть або встановіть фіскальну локалізацію."
+"Перейдіть до Налаштування бухобліку та виберіть або встановіть фіскальну локалізацію."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -17848,7 +17877,7 @@ msgstr "Через співставлення партнера"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "With residual"
-msgstr ""
+msgstr "Із залишком"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -17863,12 +17892,12 @@ msgstr "Помічник"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__wizard_line_ids
 msgid "Wizard Line"
-msgstr ""
+msgstr "Рядок помічника"
 
 #. module: account
 #: model:account.account,name:account.1_wip
 msgid "Work in Progress"
-msgstr ""
+msgstr "В процесі"
 
 #. module: account
 #. odoo-javascript
@@ -17905,7 +17934,7 @@ msgstr "Щорічно"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "You are about to send"
-msgstr ""
+msgstr "Ви майже надіслали"
 
 #. module: account
 #. odoo-python
@@ -17978,7 +18007,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Ви можете лише створювати документи продажу."
 
 #. module: account
 #. odoo-python
@@ -18029,7 +18058,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
-msgstr ""
+msgstr "Ви не можете заблокувати оплачений рахунок."
 
 #. module: account
 #. odoo-python
@@ -18109,7 +18138,7 @@ msgstr "Ви не можете видалити звіт, який має вар
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "Ви не можете створювати рахунки-фактури, які не опубліковані."
 
 #. module: account
 #. odoo-python
@@ -18167,7 +18196,7 @@ msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
 msgstr ""
-"Ви не можете зареєструвати платежі за вхідні та вихідні транзакції "
+"Ви не можете зареєструвати платежі за вхідні та вихідні транзакції "
 "одночасно."
 
 #. module: account
@@ -18177,7 +18206,7 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
-"Ви не можете скинути в чернеткц ці проводки. Натомість потрібно надіслати "
+"Ви не можете скинути в чернетку ці проводки. Натомість потрібно надіслати "
 "запит на скасування."
 
 #. module: account
@@ -18187,6 +18216,8 @@ msgid ""
 "You can't unlink this company from this account since there are some journal"
 " items linked to it."
 msgstr ""
+"Ви не можете від’єднати цю компанію від цього рахунку, оскільки з нею "
+"пов’язані деякі елементи журналу."
 
 #. module: account
 #. odoo-python
@@ -18194,6 +18225,7 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
 msgstr ""
+"Ви не можете додавати/змінювати записи до та включно з: %(lock_date_info)s."
 
 #. module: account
 #. odoo-python
@@ -18273,6 +18305,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
+"Ви не можете видалити елементи журналу, що належать до заблокованого запису "
+"журналу."
 
 #. module: account
 #. odoo-python
@@ -18302,6 +18336,8 @@ msgid ""
 "You cannot delete this mail template, it is used in the invoice sending "
 "flow."
 msgstr ""
+"Ви не можете видалити цей шаблон електронної пошти, він використовується в "
+"процесі надсилання рахунків-фактур."
 
 #. module: account
 #. odoo-python
@@ -18310,7 +18346,7 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
-"Ви не можете видалити цей звіт (%s), він використовується бухгілтерським "
+"Ви не можете видалити цей звіт (%s), він використовується бухгалтерським "
 "механізмом створенням PDF."
 
 #. module: account
@@ -18338,7 +18374,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "You cannot duplicate a Lock Date Exception."
-msgstr ""
+msgstr "Не можна дублювати виняткову дату блокування."
 
 #. module: account
 #. odoo-python
@@ -18360,6 +18396,9 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
+"Ви не можете редагувати журнал проводки рахунка, якщо її було опубліковано "
+"один раз, якщо назву не видалено або встановлено на \"/\". Це може створити "
+"розрив у послідовності."
 
 #. module: account
 #. odoo-python
@@ -18369,6 +18408,9 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
+"Ви не можете редагувати журнал проводки рахунка з присвоєним порядковим "
+"номером, якщо назву не видалено або встановлено на \"/\". Це може створити "
+"розрив у послідовності."
 
 #. module: account
 #. odoo-python
@@ -18431,6 +18473,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
 msgstr ""
+"Ви не можете змінити наступні поля лише для читання під час опублікованої "
+"проводки: %s"
 
 #. module: account
 #. odoo-python
@@ -18447,7 +18491,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 msgid ""
 "You cannot perform this action on an account that contains journal items."
-msgstr "Цю дію не можна виконати в обліку, який містить елементи журналу."
+msgstr "Цю дію не можна виконати на рахунку, який містить проводки."
 
 #. module: account
 #. odoo-python
@@ -18470,7 +18514,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot register payments for miscellaneous entries."
-msgstr ""
+msgstr "Ви не можете зареєструвати платежі для різних записів."
 
 #. module: account
 #. odoo-python
@@ -18505,7 +18549,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr ""
+msgstr "Ви не можете скинути у чернетку заблокований запис журналу."
 
 #. module: account
 #. odoo-python
@@ -18527,6 +18571,8 @@ msgstr "Ви не можете скинути до чернетки запис �
 msgid ""
 "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
 msgstr ""
+"Ви не можете скасувати винятки для дати блокування. Запитайте когось із "
+"роллю «Радник»."
 
 #. module: account
 #. odoo-python
@@ -18633,6 +18679,8 @@ msgid ""
 "You do not have the right to perform this operation as you do not have "
 "access to the following companies: %s."
 msgstr ""
+"Ви не маєте права виконувати цю операцію, оскільки не маєте доступу до "
+"наступних компаній: %s."
 
 #. module: account
 #. odoo-python
@@ -18673,7 +18721,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
-msgstr ""
+msgstr "Вам необхідно обрати хоча би два рахунки."
 
 #. module: account
 #. odoo-python
@@ -18782,12 +18830,12 @@ msgstr "активуйте валюту рахунка"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr ""
+msgstr "псевдонім"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "amounts for"
-msgstr ""
+msgstr "сума для"
 
 #. module: account
 #. odoo-javascript
@@ -18818,20 +18866,20 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "bills for"
-msgstr ""
+msgstr "рахунки для"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "by %s"
-msgstr ""
+msgstr "через %s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_sending_method__email
 msgid "by Email"
-msgstr ""
+msgstr "через Email"
 
 #. module: account
 #. odoo-python
@@ -18859,7 +18907,7 @@ msgstr "закрити"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
-msgstr ""
+msgstr "дати для"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -18886,7 +18934,7 @@ msgstr "напр., GEBABEBB"
 #: code:addons/account/models/account_analytic_distribution_model.py:0
 #: code:addons/account/models/account_analytic_plan.py:0
 msgid "e.g. %(prefix)s"
-msgstr ""
+msgstr "напр. %(prefix)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -18901,7 +18949,7 @@ msgstr "напр., 30 днів"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "e.g. Bank Fees"
-msgstr "наприклад, банківська комісія"
+msgstr "напр., Банківська комісія"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -18932,18 +18980,18 @@ msgstr "напр. My Company"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "e.g. https://www.odoo.com"
-msgstr "наприклад, https://www.odoo.com"
+msgstr "напр., https://www.odoo.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "напр. mycompany.com"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_edi_format
 msgid "eInvoice format"
-msgstr ""
+msgstr "формат електронних рахунків"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -18954,12 +19002,12 @@ msgstr "записи"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "everyone"
-msgstr ""
+msgstr "кожен"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range."
-msgstr ""
+msgstr "виходять за межі типового діапазону."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -18994,7 +19042,7 @@ msgstr "у відсотках"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "invoice(s)"
-msgstr ""
+msgstr "рахунок(и)"
 
 #. module: account
 #. odoo-python
@@ -19006,7 +19054,7 @@ msgstr "рахунки-фактури"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "is a key action. Have you reviewed everything?"
-msgstr ""
+msgstr "є ключовою дією. Ви все переглянули?"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -19035,12 +19083,12 @@ msgstr "юридичний."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this customer."
-msgstr ""
+msgstr "перелічені нижче для цього клієнта."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this vendor."
-msgstr ""
+msgstr "перелічені нижче для цього постачальника."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19149,7 +19197,7 @@ msgstr "надійний"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "try our sample"
-msgstr ""
+msgstr "спробуйте наш приклад"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19187,7 +19235,7 @@ msgstr "ненадійні банківські рахунки"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "will auto-confirm on their respective dates."
-msgstr ""
+msgstr "буде автоматично підтверджено у відповідні дати."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19201,7 +19249,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "without making any corrections."
-msgstr ""
+msgstr "без жодних виправлень."
 
 #. module: account
 #. odoo-python
@@ -19210,6 +19258,8 @@ msgid ""
 "{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were "
 "transferred to <strong>{account_target_name}</strong> by {link}"
 msgstr ""
+"{amount} ({debit_credit}) з <strong>{account_source_name}</strong> куди "
+"переміщено <strong>{account_target_name}</strong> {link}"
 
 #. module: account
 #. odoo-python
@@ -19226,7 +19276,9 @@ msgstr "{{ object.company_id.name }} Сторно (Ref {{ object.name or 'n/a' }
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
-msgstr "{{ object.company_id.name }} Рахунок (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+"{{ object.company_id.name }} Рахунок-фактура (Ref {{ object.name or 'n/a' "
+"}})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt

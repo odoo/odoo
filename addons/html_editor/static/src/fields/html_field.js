@@ -1,3 +1,5 @@
+import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
+import { stripVersion } from "@html_editor/html_migrations/html_migrations_utils";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
 import {
     COLLABORATION_PLUGINS,
@@ -64,6 +66,7 @@ export class HtmlField extends Component {
     };
 
     setup() {
+        this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.mutex = new Mutex();
 
         this.codeViewRef = useRef("codeView");
@@ -80,7 +83,9 @@ export class HtmlField extends Component {
         this.state = useState({
             key: 0,
             showCodeView: false,
-            containsComplexHTML: computeContainsComplexHTML(this.value),
+            containsComplexHTML: computeContainsComplexHTML(
+                this.props.record.data[this.props.name]
+            ),
         });
 
         useRecordObserver((record) => {
@@ -106,7 +111,10 @@ export class HtmlField extends Component {
 
     get value() {
         const value = this.props.record.data[this.props.name];
-        const newVal = fixInvalidHTML(value);
+        const newVal = this.htmlUpgradeManager.processForUpgrade(fixInvalidHTML(value), {
+            containsComplexHTML: this.state.containsComplexHTML,
+            env: this.env,
+        });
         if (instanceofMarkup(value)) {
             return markup(newVal);
         }
@@ -134,6 +142,7 @@ export class HtmlField extends Component {
         if (this.props.isCollaborative) {
             stripHistoryIds(element);
         }
+        stripVersion(element);
     }
 
     async updateValue(value) {
@@ -281,6 +290,7 @@ export class HtmlField extends Component {
             value: this.value,
             cssAssetId: this.props.cssReadonlyAssetId,
             hasFullHtml: this.sandboxedPreview,
+            isFixedValue: true,
         };
         if (this.props.embeddedComponents) {
             config.embeddedComponents = [...READONLY_MAIN_EMBEDDINGS];

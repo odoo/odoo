@@ -35,6 +35,9 @@ msgid ""
 "                                A password reset was requested for the Odoo account linked to this email.\n"
 "                                You may change your password by following this link which will remain valid during"
 msgstr ""
+",<br/><br/>\n"
+"                                Ar šo e-pasta ziņojumu saistītajam Odoo kontam tika pieprasīta paroles atiestatīšana.\n"
+"                                Jūs varat mainīt savu paroli, sekojot šai saitei, kas paliks spēkā arī turpmāk"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -630,7 +633,7 @@ msgstr "Klienta konts"
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Dear"
-msgstr "Cienījamais(-ā)"
+msgstr "Sveicināti"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -903,6 +906,14 @@ msgid "Status"
 msgstr "Statuss"
 
 #. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr ""
@@ -984,7 +995,7 @@ msgstr "piem. Jānis Bērziņš"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "hours:<br/>"
-msgstr ""
+msgstr "stundas:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email

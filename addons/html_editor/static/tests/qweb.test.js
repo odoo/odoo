@@ -276,7 +276,7 @@ test("cleaning removes content editable", async () => {
             <t t-raw="test">Hello</t>
         </div>`,
         {
-            config,
+            config: { Plugins: config.Plugins.filter((plugin) => plugin.id !== "editorVersion") },
         }
     );
     expect(getContent(el)).toBe(`

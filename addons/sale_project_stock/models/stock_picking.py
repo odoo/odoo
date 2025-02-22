@@ -14,7 +14,7 @@ class StockPicking(models.Model):
 
         for picking in self:
             project = picking.project_id
-            sale_order = project.reinvoiced_sale_order_id
+            sale_order = project.sudo().reinvoiced_sale_order_id
             if not (sale_order and picking.picking_type_id.analytic_costs):
                 continue
             reinvoicable_stock_moves = picking.move_ids.filtered(lambda m: m.product_id.expense_policy in {'sales_price', 'cost'})
@@ -58,5 +58,5 @@ class StockPicking(models.Model):
                 # Create the sale lines in batch
                 sale_line_values_to_create.append(stock_move._sale_prepare_sale_line_values(sale_order, price, last_sequence))
                 last_sequence += 1
-            self.env['sale.order.line'].with_context(skip_procurement=True).create(sale_line_values_to_create)
+            self.env['sale.order.line'].with_context(skip_procurement=True).sudo().create(sale_line_values_to_create)
         return res

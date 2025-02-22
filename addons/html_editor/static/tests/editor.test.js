@@ -1,10 +1,23 @@
+import { Editor } from "@html_editor/editor";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { insertText } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
+
+beforeEach(() => {
+    patchWithCleanup(Editor.prototype, {
+        preparePlugins() {
+            this.config.Plugins = (this.config.Plugins || MAIN_PLUGINS).filter(
+                (plugin) => plugin.id !== "editorVersion"
+            );
+            super.preparePlugins();
+        },
+    });
+});
 
 test("can get content of an Editor", async () => {
     const { el, editor } = await setupEditor("<p>hel[lo] world</p>", {});

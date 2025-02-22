@@ -44,15 +44,20 @@ export class Thread extends Record {
     static new() {
         const thread = super.new(...arguments);
         Record.onChange(thread, ["state"], () => {
+            if (
+                thread.state === "folded" ||
+                (thread.state === "open" &&
+                    this.store.env.services.ui.isSmall &&
+                    this.store.env.services["im_livechat.livechat"])
+            ) {
+                const cw = this.store.ChatWindow?.insert({ thread });
+                thread.store.chatHub.folded.delete(cw);
+                thread.store.chatHub.folded.unshift(cw);
+            }
             if (thread.state === "open" && !this.store.env.services.ui.isSmall) {
                 const cw = this.store.ChatWindow?.insert({ thread });
                 thread.store.chatHub.opened.delete(cw);
                 thread.store.chatHub.opened.unshift(cw);
-            }
-            if (thread.state === "folded") {
-                const cw = this.store.ChatWindow?.insert({ thread });
-                thread.store.chatHub.folded.delete(cw);
-                thread.store.chatHub.folded.unshift(cw);
             }
         });
         return thread;

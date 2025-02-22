@@ -62,3 +62,11 @@ PAYMENT_STATUS_MAPPING = {
     'cancel': ('CANCELLED',),
     'declined': ('REJECTED', 'REJECTED_CAPTURE'),
 }
+
+# Mapping of response codes indicating Worldline handled the request
+# See https://apireference.connect.worldline-solutions.com/s2sapi/v1/en_US/json/response-codes.html.
+VALID_RESPONSE_CODES = {
+    200: 'Successful',
+    201: 'Created',
+    402: 'Payment Rejected',
+}

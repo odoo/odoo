@@ -27,7 +27,19 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid "%s (customer not on Peppol)"
+msgid " (Demo/Test mode)"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid " (customer not on Peppol)"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid "%(peppol_label)s%(not_valid)s%(peppol_proxy_mode)s"
 msgstr ""
 
 #. module: account_peppol
@@ -42,6 +54,8 @@ msgid ""
 "<br/>\n"
 "                            If you need a Peppol compliant software, we recommend"
 msgstr ""
+"<br/>\n"
+"                            Ja Jums nepieciešama Peppol saderīga programmatūra, mēs iesakām"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -447,6 +461,7 @@ msgid ""
 "In Belgium, electronic invoicing will be <u>mandatory as of January "
 "2026</u>."
 msgstr ""
+"Beļģijā, elektroniskie rēķini būs <u>obligāti no 2026.gada janvāra</u>."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__in_verification
@@ -603,6 +618,8 @@ msgid ""
 "PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
 "invoice on Peppol.</b>"
 msgstr ""
+"PS: <b style=\"color: $o-enterprise-action-color;\">Mēs nenosūtījām Jūsu "
+"rēķinu caur Peppol.</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -610,6 +627,8 @@ msgid ""
 "PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
 "color\">sent on Peppol</b>."
 msgstr ""
+"PS: Šis rēķins arī tika <b style=\"color: $o-enterprise-action-"
+"color\">nosūtīts caur Peppol</b>."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -681,12 +700,6 @@ msgid "Peppol error: %s"
 msgstr ""
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Peppol is in testing/demo mode."
-msgstr ""
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
 msgid "Peppol ready invoices"
 msgstr ""
@@ -745,14 +758,14 @@ msgstr "Lūdzu, verificējiet partnera konfigurāciju partnera uzstādījumos."
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Primary contact email"
-msgstr ""
+msgstr "Primārais kontakta e-pasts"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Primary contact email for Peppol-related communication"
-msgstr ""
+msgstr "Primārais kontakta e-pasta priekš Peppol saistītām komunikācijām"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type

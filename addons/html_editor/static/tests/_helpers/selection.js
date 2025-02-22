@@ -61,7 +61,7 @@ function _getElemContent(el, selection, options) {
 
 function getElemContent(el, selection, options) {
     const tag = el.tagName.toLowerCase();
-    const attributes = [...el.attributes];
+    let attributes = [...el.attributes];
     if (options.sortAttrs) {
         attributes.sort((attr1, attr2) => {
             if (attr1.name === attr2.name) {
@@ -69,6 +69,9 @@ function getElemContent(el, selection, options) {
             }
             return attr1.name > attr2.name ? 1 : -1;
         });
+    }
+    if (!options.showVersion) {
+        attributes = attributes.filter((attr) => attr.name !== "data-oe-version");
     }
     const attrs = [];
     for (const attr of attributes) {

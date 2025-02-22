@@ -1,9 +1,3 @@
-export const excalidrawWebsiteDomainList = [
-    "excalidraw.com",
-    "link.excalidraw.com",
-    "app.excalidraw.com",
-];
-
 /**
  * Checks if the given URL contains the specified hostname and returns a reconstructed URL if it does.
  *

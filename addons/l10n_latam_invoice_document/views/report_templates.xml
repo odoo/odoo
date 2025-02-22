@@ -78,8 +78,7 @@
             <attribute name="t-if">not custom_header</attribute>
         </xpath>
         <xpath expr="//img/../.." position="after">
-            <div t-attf-class="o_company_#{company.id}_layout header"
-                 t-if="custom_header and company._localization_use_documents()">
+            <div t-if="custom_header and company._localization_use_documents()">
                 <t t-call="#{custom_header}"/>
             </div>
         </xpath>

@@ -877,35 +877,10 @@ export const accountTaxHelpers = {
             tax_totals_summary.tax_amount += values.tax_amount;
         }
 
-        // Subtotals.
+        // Tax groups.
         const untaxed_amount_subtotal_label = _t("Untaxed Amount");
         const subtotals = {};
 
-        const subtotal_grouping_function = (base_line, tax_data) =>
-            tax_data.tax.tax_group_id.preceding_subtotal || untaxed_amount_subtotal_label;
-
-        base_lines_aggregated_values = this.aggregate_base_lines_tax_details(base_lines, subtotal_grouping_function);
-        values_per_grouping_key = this.aggregate_base_lines_aggregated_values(base_lines_aggregated_values);
-
-        for (const values of Object.values(values_per_grouping_key)) {
-            const subtotal_label = values.grouping_key || untaxed_amount_subtotal_label;
-            if (!(subtotal_label in subtotals)) {
-                subtotals[subtotal_label] = {
-                    tax_groups: [],
-                    tax_amount_currency: 0.0,
-                    tax_amount: 0.0,
-                    base_amount_currency: 0.0,
-                    base_amount: 0.0,
-                };
-            }
-            const subtotal = subtotals[subtotal_label];
-            subtotal.base_amount_currency += values.total_excluded_currency;
-            subtotal.base_amount += values.total_excluded;
-            subtotal.tax_amount_currency += values.tax_amount_currency;
-            subtotal.tax_amount += values.tax_amount;
-        }
-
-        // Tax groups.
         const tax_group_grouping_function = (base_line, tax_data) => {
             return {
                 grouping_key: tax_data.tax.tax_group_id.id,
@@ -967,6 +942,15 @@ export const accountTaxHelpers = {
 
             // Order of the subtotals.
             const preceding_subtotal = tax_group.preceding_subtotal || untaxed_amount_subtotal_label;
+            if (!(preceding_subtotal in subtotals)) {
+                subtotals[preceding_subtotal] = {
+                    tax_groups: [],
+                    tax_amount_currency: 0.0,
+                    tax_amount: 0.0,
+                    base_amount_currency: 0.0,
+                    base_amount: 0.0,
+                };
+            }
             if (!(preceding_subtotal in subtotals_order)) {
                 subtotals_order[preceding_subtotal] = order;
             }
@@ -983,6 +967,42 @@ export const accountTaxHelpers = {
                 group_name: tax_group.name,
                 group_label: tax_group.pos_receipt_label,
             });
+        }
+
+        // Subtotals.
+        const subtotal_grouping_function = (base_line, tax_data) =>
+            tax_data.tax.tax_group_id.preceding_subtotal || untaxed_amount_subtotal_label;
+
+        base_lines_aggregated_values = this.aggregate_base_lines_tax_details(base_lines, subtotal_grouping_function);
+        values_per_grouping_key = this.aggregate_base_lines_aggregated_values(base_lines_aggregated_values);
+
+        for (const values of Object.values(values_per_grouping_key)) {
+            const preceding_subtotal = values.grouping_key || untaxed_amount_subtotal_label;
+            if (!(preceding_subtotal in subtotals)) {
+                subtotals[preceding_subtotal] = {
+                    tax_groups: [],
+                    tax_amount_currency: 0.0,
+                    tax_amount: 0.0,
+                    base_amount_currency: 0.0,
+                    base_amount: 0.0,
+                };
+            }
+            const is_first_preceding_subtotal =
+                preceding_subtotal === untaxed_amount_subtotal_label ||
+                (!(untaxed_amount_subtotal_label in subtotals_order) &&
+                    subtotals_order[preceding_subtotal] === 0);
+            const subtotal = subtotals[preceding_subtotal];
+            if (is_first_preceding_subtotal) {
+                // The first subtotal is always the base of the whole document.
+                subtotal.base_amount_currency += values.total_excluded_currency;
+                subtotal.base_amount += values.total_excluded;
+            } else {
+                // Otherwise, it's the base of the first tax in the group.
+                subtotal.base_amount_currency += values.base_amount_currency;
+                subtotal.base_amount += values.base_amount;
+            }
+            subtotal.tax_amount_currency += values.tax_amount_currency;
+            subtotal.tax_amount += values.tax_amount;
         }
 
         // Cash rounding
