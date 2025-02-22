@@ -3,16 +3,16 @@ import { Interaction } from "@web/public/interaction";
 import { VERSION_SELECTOR } from "@html_editor/html_migrations/html_migrations_utils";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 
-export class HtmlMigrationInteraction extends Interaction {
+export class HtmlMigrationsInteraction extends Interaction {
     static selector = `${VERSION_SELECTOR}, .o_knowledge_behavior_anchor`;
     static upgradeElements = [];
 
     setup() {
         this.editable = this.el.parentElement;
-        if (HtmlMigrationInteraction.upgradeElements.some((el) => el.contains(this.editable))) {
+        if (HtmlMigrationsInteraction.upgradeElements.some((el) => el.contains(this.editable))) {
             return;
         }
-        HtmlMigrationInteraction.upgradeElements.push(this.editable);
+        HtmlMigrationsInteraction.upgradeElements.push(this.editable);
         this.shouldMigrate = true;
     }
 
@@ -36,4 +36,4 @@ export class HtmlMigrationInteraction extends Interaction {
 
 registry
     .category("public.interactions")
-    .add("html_editor.html_migration", HtmlMigrationInteraction);
+    .add("html_editor.html_migrations", HtmlMigrationsInteraction);

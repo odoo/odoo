@@ -11,24 +11,35 @@ class EmbeddedDummy extends Component {
 }
 
 export class EmbeddedComponentInteraction extends Interaction {
+    static selector = "[data-embedded]";
+
+    dynamicContent = {
+        _root: {
+            "t-component": () => this.getComponentInfo(),
+        },
+    };
+
+    static getEmbeddings() {
+        return PUBLIC_EMBEDDINGS;
+    }
+
+    static getEmbeddingMap = memoize(
+        (embeddings) => new Map(embeddings.map((embedding) => [embedding.name, embedding]))
+    );
+
     static getTocManager = memoize(
         (element) =>
             new TableOfContentManager({
                 el: element,
             })
     );
-    static selector = "[data-embedded]";
-    static getEmbeddingMap = memoize(
-        (embeddings) => new Map(embeddings.map((embedding) => [embedding.name, embedding]))
-    );
-    static getEmbeddings() {
-        return PUBLIC_EMBEDDINGS;
+
+    destroy() {
+        // TODO: test this, interaction_service first destroys every interaction,
+        // then it destroys OWL roots. Meaning the DOM manipulation will be done on
+        // live OWL components which will then be destroyed, should work but better be sure.
+        this.el.append(...Object.values(this.getEditableDescendants?.(this.el) || {}));
     }
-    dynamicContent = {
-        _root: {
-            "t-component": () => this.getComponentInfo(),
-        },
-    };
 
     getComponentInfo() {
         const {
@@ -52,7 +63,8 @@ export class EmbeddedComponentInteraction extends Interaction {
         };
         const subEnv = {};
         if (getEditableDescendants) {
-            subEnv.getEditableDescendants = () => getEditableDescendants(this.el);
+            this.getEditableDescendants = getEditableDescendants;
+            subEnv.getEditableDescendants = getEditableDescendants;
         }
         const props = {
             ...(getProps?.(this.el) || {}),
@@ -60,10 +72,6 @@ export class EmbeddedComponentInteraction extends Interaction {
         };
         this.setupNewComponent({ name: name, env: subEnv, props });
         return [Extended, props];
-    }
-
-    getEmbedding(host) {
-        return this.embeddingMap.get(host.dataset.embedded);
     }
 
     setupNewComponent({ name, env, props }) {
