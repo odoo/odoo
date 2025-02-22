@@ -3,36 +3,36 @@
     <data>
 
         <record id="rc_iva_retention_tax_report" model="account.report">
-            <field name="name">Formulario 604v3: Retenciones RC-IVA</field>
+            <field name="name">Form 604v3: RC-IVA Withholdings</field>
             <field name="root_report_id" ref="account.generic_tax_report"/>
             <field name="country_id" ref="base.bo"/>
             <field name="filter_fiscal_position" eval="True"/>
             <field name="availability_condition">country</field>
             <field name="column_ids">
                 <record id="rc_iva_retention_tax_report_code" model="account.report.column">
-                    <field name="name">Cód. Casilla</field>
+                    <field name="name">Box Code</field>
                     <field name="expression_label">code</field>
                     <field name="figure_type">string</field>
                 </record>
                 <record id="rc_iva_retention_tax_report_balance" model="account.report.column">
-                    <field name="name">Importe</field>
+                    <field name="name">Amount</field>
                     <field name="expression_label">balance</field>
                     <field name="figure_type">monetary</field>
                 </record>
             </field>
             <field name="line_ids">
                 <record id="f604_v3_tax_report" model="account.report.line">
-                    <field name="sequence" eval="0"/>
-                    <field name="name">Form. 604v3: Retenciones RC-IVA (personas naturales)</field>
+                    <field name="sequence" eval="False"/>
+                    <field name="name">Form 604v3: RC-IVA Withholdings (natural persons)</field>
                     <field name="code">f604_v3_tax_report</field>
-                    <field name="hierarchy_level" eval="0"/>
+                    <field name="hierarchy_level" eval="False"/>
                     <field name="children_ids">
                         <record id="local_services_retained_rc_iva_tax_line" model="account.report.line">
                             <field name="sequence" eval="101"/>
-                            <field name="name">Impuesto Retenido por Servicios Nacionales</field>
+                            <field name="name">Tax Withheld for National Services</field>
                             <field name="code">rcIva404</field>
-                            <field name="hide_if_zero" eval="0"/>
-                            <field name="foldable" eval="1"/>
+                            <field name="hide_if_zero" eval="False"/>
+                            <field name="foldable" eval="True"/>
                             <field name="expression_ids">
                                 <record id="local_services_retained_rc_iva_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -50,9 +50,9 @@
                             <field name="children_ids">
                                 <record id="local_service_retained_rc_iva_tax_line" model="account.report.line">
                                     <field name="sequence" eval="102"/>
-                                    <field name="name">Retención</field>
+                                    <field name="name">Withholding</field>
                                     <field name="code">rcIva404s</field>
-                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="hide_if_zero" eval="False"/>
                                     <field name="expression_ids">
                                         <record id="local_services_retained_rc_iva_amount_tax_tag" model="account.report.expression">
                                             <field name="label">balance</field>
@@ -65,7 +65,7 @@
                                     <field name="sequence" eval="103"/>
                                     <field name="name">Grossing Up</field>
                                     <field name="code">rcIva404gs</field>
-                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="hide_if_zero" eval="False"/>
                                     <field name="expression_ids">
                                         <record id="grossing_up_local_services_retained_rc_iva_amount_tax_tag" model="account.report.expression">
                                             <field name="label">balance</field>
@@ -78,10 +78,10 @@
                         </record>
                         <record id="international_services_retained_rc_iva_tax_line" model="account.report.line">
                             <field name="sequence" eval="104"/>
-                            <field name="name">Impuesto Retenido por Servicios Extranjeros</field>
+                            <field name="name">Tax Withheld for Foreign Services</field>
                             <field name="code">rcIva405</field>
-                            <field name="hide_if_zero" eval="0"/>
-                            <field name="foldable" eval="1"/>
+                            <field name="hide_if_zero" eval="False"/>
+                            <field name="foldable" eval="True"/>
                             <field name="expression_ids">
                                 <record id="international_services_retained_rc_iva_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -99,9 +99,9 @@
                             <field name="children_ids">
                                 <record id="international_service_retained_rc_iva_tax_line" model="account.report.line">
                                     <field name="sequence" eval="105"/>
-                                    <field name="name">Retención</field>
+                                    <field name="name">Withholding</field>
                                     <field name="code">rcIva405s</field>
-                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="hide_if_zero" eval="False"/>
                                     <field name="expression_ids">
                                         <record id="international_service_retained_rc_iva_amount_tax_tag" model="account.report.expression">
                                             <field name="label">balance</field>
@@ -114,7 +114,7 @@
                                     <field name="sequence" eval="106"/>
                                     <field name="name">Grossing Up</field>
                                     <field name="code">rcIva405gs</field>
-                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="hide_if_zero" eval="False"/>
                                     <field name="expression_ids">
                                         <record id="grossing_up_international_service_retained_rc_iva_amount_tax_tag" model="account.report.expression">
                                             <field name="label">balance</field>
@@ -127,10 +127,10 @@
                         </record>
                         <record id="miscellaneous_services_retained_rc_iva_tax_line" model="account.report.line">
                             <field name="sequence" eval="107"/>
-                            <field name="name">Impuesto Retenido por Otros Conceptos</field>
+                            <field name="name">Tax Withheld for Other Concepts</field>
                             <field name="code">rcIva406</field>
-                            <field name="hide_if_zero" eval="0"/>
-                            <field name="foldable" eval="1"/>
+                            <field name="hide_if_zero" eval="False"/>
+                            <field name="foldable" eval="True"/>
                             <field name="expression_ids">
                                 <record id="miscellaneous_services_retained_rc_iva_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -148,9 +148,9 @@
                             <field name="children_ids">
                                 <record id="miscellaneous_service_retained_rc_iva_tax_line" model="account.report.line">
                                     <field name="sequence" eval="108"/>
-                                    <field name="name">Retención</field>
+                                    <field name="name">Withholding</field>
                                     <field name="code">rcIva406s</field>
-                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="hide_if_zero" eval="False"/>
                                     <field name="expression_ids">
                                         <record id="miscellaneous_service_retained_rc_iva_amount_tax_tag" model="account.report.expression">
                                             <field name="label">balance</field>
@@ -163,7 +163,7 @@
                                     <field name="sequence" eval="109"/>
                                     <field name="name">Grossing Up</field>
                                     <field name="code">rcIva406gs</field>
-                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="hide_if_zero" eval="False"/>
                                     <field name="expression_ids">
                                         <record id="grossing_up_miscellaneous_service_retained_rc_iva_amount_tax_tag" model="account.report.expression">
                                             <field name="label">balance</field>
@@ -176,9 +176,9 @@
                         </record>
                         <record id="determined_rc_iva_retention_amount_tax_line" model="account.report.line">
                             <field name="sequence" eval="110"/>
-                            <field name="name">Impuesto Retenido Determinado (C404 + C405 + C406)</field>
+                            <field name="name">Determined Withheld Tax (C404 + C405 + C406)</field>
                             <field name="code">rcIva909</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="determined_rc_iva_retention_amount_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -196,9 +196,9 @@
                         </record>
                         <record id="rc_iva_retention_payment_on_account_in_sworn_statements_tax_line" model="account.report.line">
                             <field name="sequence" eval="111"/>
-                            <field name="name">Pagos a Cuenta Realizados en DDJJ Anterior y/o en Boletas de Pago</field>
+                            <field name="name">Payments on Account Made in Previous Sworn Declarations and/or Payment Slips</field>
                             <field name="code">rcIva622</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="rc_iva_retention_payment_on_account_in_sworn_statements_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -215,9 +215,9 @@
                         </record>
                         <record id="previous_rc_iva_retention_payments_on_account_to_compensate_tax_line" model="account.report.line">
                             <field name="sequence" eval="112"/>
-                            <field name="name">Saldo Disponible de Pagos del Período Anterior a Compensar</field>
+                            <field name="name">Available Balance of Previous Period Payments to Offset</field>
                             <field name="code">rcIva640</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="previous_rc_iva_retention_payments_on_account_to_compensate_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -234,9 +234,9 @@
                         </record>
                         <record id="rc_iva_retention_taxpayer_favor_balance_payments_on_account_tax_line" model="account.report.line">
                             <field name="sequence" eval="113"/>
-                            <field name="name">Diferencia a Favor del Contribuyente para el Siguiente Período (C622 + C640 - C909; Si > 0 )</field>
+                            <field name="name">Taxpayer Credit for Next Period (C622 + C640 - C909; If > 0)</field>
                             <field name="code">rcIva747</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="rc_iva_retention_taxpayer_favor_balance_payments_on_account_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -255,9 +255,9 @@
                         </record>
                         <record id="rc_iva_retention_treasury_favor_balance_tax_line" model="account.report.line">
                             <field name="sequence" eval="114"/>
-                            <field name="name">Saldo Definitivo a Favor del Fisco (C909 - C622 - C640; Si > 0)</field>
+                            <field name="name">Definitive Credit in Favor of the Treasury (C909 - C622 - C640; If > 0)</field>
                             <field name="code">rcIva996</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="rc_iva_retention_treasury_favor_balance_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -276,9 +276,9 @@
                         </record>
                         <record id="rc_iva_retention_payment_in_values_tax_line" model="account.report.line">
                             <field name="sequence" eval="115"/>
-                            <field name="name">Imputación de Crédito en Valores (Sujeto a Verificación y Confirmación por Parte del SIN)</field>
+                            <field name="name">Allocation of Credit in Securities (Subject to Verification and Confirmation by the SIN)</field>
                             <field name="code">rcIva677</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="rc_iva_retention_payment_in_values_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -295,9 +295,9 @@
                         </record>
                         <record id="rc_iva_retention_cash_payment_tax_line" model="account.report.line">
                             <field name="sequence" eval="116"/>
-                            <field name="name">Impuesto a Pagar en Efectivo (C996-C677;Si > 0)</field>
+                            <field name="name">Cash Tax Payment (C996 - C677; If > 0)</field>
                             <field name="code">rcIva576</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="rc_iva_cash_payment_tax_code" model="account.report.expression">
                                     <field name="label">code</field>

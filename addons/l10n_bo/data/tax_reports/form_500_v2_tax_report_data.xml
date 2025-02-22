@@ -3,36 +3,36 @@
     <data>
 
         <record id="iue_tax_report" model="account.report">
-            <field name="name">Formulario 500v2: IUE</field>
+            <field name="name">Form 500v2: IUE</field>
             <field name="root_report_id" ref="account.generic_tax_report"/>
             <field name="country_id" ref="base.bo"/>
             <field name="filter_fiscal_position" eval="True"/>
             <field name="availability_condition">country</field>
             <field name="column_ids">
                 <record id="iue_tax_report_code" model="account.report.column">
-                    <field name="name">Cód. Casilla</field>
+                    <field name="name">Box Code</field>
                     <field name="expression_label">code</field>
                     <field name="figure_type">string</field>
                 </record>
                 <record id="iue_tax_report_balance" model="account.report.column">
-                    <field name="name">Importe</field>
+                    <field name="name">Amount</field>
                     <field name="expression_label">balance</field>
                     <field name="figure_type">monetary</field>
                 </record>
             </field>
             <field name="line_ids">
                 <record id="f500_v2_tax_report" model="account.report.line">
-                    <field name="sequence" eval="0"/>
-                    <field name="name">Form. 500v2: Impuesto a las Utilidades IUE</field>
+                    <field name="sequence" eval="False"/>
+                    <field name="name">Form 500v2: IUE Profit Tax</field>
                     <field name="code">f500_v2_tax_report</field>
-                    <field name="hierarchy_level" eval="0"/>
+                    <field name="hierarchy_level" eval="False"/>
                     <field name="children_ids">
                         <record id="current_period_profit_tax_line" model="account.report.line">
-                            <field name="sequence" eval="1"/>
-                            <field name="name">Utilidad contable de la gestión de Estados Financieros</field>
+                            <field name="sequence" eval="True"/>
+                            <field name="name">Accounting Profit from Financial Statements</field>
                             <field name="code">iue42</field>
-                            <field name="hide_if_zero" eval="0"/>
-                            <field name="foldable" eval="1"/>
+                            <field name="hide_if_zero" eval="False"/>
+                            <field name="foldable" eval="True"/>
                             <field name="expression_ids">
                                 <record id="current_profit_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -51,7 +51,7 @@
                             <field name="children_ids">
                                 <record id="operating_income_tax_line" model="account.report.line">
                                     <field name="sequence" eval="2"/>
-                                    <field name="name">Ingreso Operativo</field>
+                                    <field name="name">Operating Income</field>
                                     <field name="code">INOP</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -68,7 +68,7 @@
                                 </record>
                                 <record id="other_income_tax_line" model="account.report.line">
                                     <field name="sequence" eval="3"/>
-                                    <field name="name">Otros Ingresos</field>
+                                    <field name="name">Other Income</field>
                                     <field name="code">OTIN</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -85,7 +85,7 @@
                                 </record>
                                 <record id="direct_cost_tax_line" model="account.report.line">
                                     <field name="sequence" eval="4"/>
-                                    <field name="name">Costos</field>
+                                    <field name="name">Costs</field>
                                     <field name="code">COST</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -103,7 +103,7 @@
                                 </record>
                                 <record id="expense_tax_line" model="account.report.line">
                                     <field name="sequence" eval="5"/>
-                                    <field name="name">Gastos</field>
+                                    <field name="name">Expenses</field>
                                     <field name="code">GAST</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -121,7 +121,7 @@
                                 </record>
                                 <record id="depreciation_tax_line" model="account.report.line">
                                     <field name="sequence" eval="6"/>
-                                    <field name="name">Depreciaciones</field>
+                                    <field name="name">Depreciation</field>
                                     <field name="code">DEPR</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -141,9 +141,9 @@
                         </record>
                         <record id="current_period_loss_tax_line" model="account.report.line">
                             <field name="sequence" eval="7"/>
-                            <field name="name">Pérdida contable de la gestión de Estados Financieros</field>
+                            <field name="name">Accounting Loss from Financial Statements</field>
                             <field name="code">iue68</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="current_period_loss_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -162,9 +162,9 @@
                         </record>
                         <record id="non_deductible_expense_tax_line" model="account.report.line">
                             <field name="sequence" eval="8"/>
-                            <field name="name">Total Gastos No Deducibles</field>
+                            <field name="name">Total Non-Deductible Expenses</field>
                             <field name="code">iue71</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="foldable" eval="True"/>
                             <field name="expression_ids">
                                 <record id="non_deductible_expense_tax_code" model="account.report.expression">
@@ -183,7 +183,7 @@
                             <field name="children_ids">
                                 <record id="non_deductible_rent_expense_tax_line" model="account.report.line">
                                     <field name="sequence" eval="9"/>
-                                    <field name="name">Alquileres</field>
+                                    <field name="name">Rentals</field>
                                     <field name="code">ALQ</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -199,7 +199,7 @@
                                 </record>
                                 <record id="non_deductible_depreciation_tax_line" model="account.report.line">
                                     <field name="sequence" eval="10"/>
-                                    <field name="name">Depreciaciones</field>
+                                    <field name="name">Depreciation</field>
                                     <field name="code">DEP</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -216,7 +216,7 @@
                                 </record>
                                 <record id="non_deductible_partner_expense_tax_line" model="account.report.line">
                                     <field name="sequence" eval="11"/>
-                                    <field name="name">Retiros de socios</field>
+                                    <field name="name">Partner Withdrawals</field>
                                     <field name="code">RSO</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -235,9 +235,9 @@
                         </record>
                         <record id="deductible_expense_allocation_tax_line" model="account.report.line">
                             <field name="sequence" eval="12"/>
-                            <field name="name">Total Regularizaciones para Imputar Gastos Deducibles</field>
+                            <field name="name">Total Adjustments to Allocate Deductible Expenses</field>
                             <field name="code">iue480</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="deductible_expense_allocation_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -255,9 +255,9 @@
                         </record>
                         <record id="untaxed_income_tax_line" model="account.report.line">
                             <field name="sequence" eval="13"/>
-                            <field name="name">Total Rentas No Gravadas</field>
+                            <field name="name">Total Non-Taxable Income</field>
                             <field name="code">iue495</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="foldable" eval="True"/>
                             <field name="expression_ids">
                                 <record id="untaxed_income_tax_code" model="account.report.expression">
@@ -276,7 +276,7 @@
                             <field name="children_ids">
                                 <record id="untaxed_stock_dividends_income_tax_line" model="account.report.line">
                                     <field name="sequence" eval="14"/>
-                                    <field name="name">Ingreso por Dividendos de Acciones</field>
+                                    <field name="name">Income from Stock Dividends</field>
                                     <field name="code">INDI</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -292,7 +292,7 @@
                                 </record>
                                 <record id="foreign_income_tax_line" model="account.report.line">
                                     <field name="sequence" eval="15"/>
-                                    <field name="name">Ingreso de Fuente Extranjera</field>
+                                    <field name="name">Foreign Source Income</field>
                                     <field name="code">INEX</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -308,7 +308,7 @@
                                 </record>
                                 <record id="foreign_utility_tax_line" model="account.report.line">
                                     <field name="sequence" eval="15"/>
-                                    <field name="name">Utilidad de Fuente Extranjera</field>
+                                    <field name="name">Foreign Profit</field>
                                     <field name="code">UTEX</field>
                                     <field name="groupby">account_id</field>
                                     <field name="foldable" eval="True"/>
@@ -326,9 +326,9 @@
                         </record>
                         <record id="partial_in_country_activities_income_tax_line" model="account.report.line">
                             <field name="sequence" eval="16"/>
-                            <field name="name">Total Consolidado de Importes Cancelados Durante la Gestión por Actividades Parcialmente Realizadas en el País</field>
+                            <field name="name">Total Consolidated Amount of Payments Cancelled during the Period for Partially Performed Domestic Activities</field>
                             <field name="code">iue345</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="partial_in_country_activities_income_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -346,9 +346,9 @@
                         </record>
                         <record id="deferred_profit_for_next_period_tax_line" model="account.report.line">
                             <field name="sequence" eval="17"/>
-                            <field name="name">Utilidades de las ventas a plazos que van a ser diferidas para la siguiente gestión fiscal</field>
+                            <field name="name">Profit from Credit Sales to be Deferred to the Next Tax Period</field>
                             <field name="code">iue563</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="deferred_profit_for_next_period_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -366,9 +366,9 @@
                         </record>
                         <record id="deferred_profit_from_previous_period_tax_line" model="account.report.line">
                             <field name="sequence" eval="18"/>
-                            <field name="name">Utilidades de las ventas a plazos diferidos durante la gestión fiscal anterior</field>
+                            <field name="name">Profit from Credit Sales Deferred in the Previous Tax Period</field>
                             <field name="code">iue589</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="deferred_profit_from_previous_period_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -386,9 +386,9 @@
                         </record>
                         <record id="net_profit_tax_line" model="account.report.line">
                             <field name="sequence" eval="19"/>
-                            <field name="name">Utilidad Neta (C42 + C71 + C589 - C68 - C480 - C495 - C563; Si > 0)</field>
+                            <field name="name">Net Profit (C42 + C71 + C589 - C68 - C480 - C495 - C563; If > 0)</field>
                             <field name="code">iue592</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="net_profit_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -407,9 +407,9 @@
                         </record>
                         <record id="net_loss_tax_line" model="account.report.line">
                             <field name="sequence" eval="20"/>
-                            <field name="name">Perdida Neta (C68 + C480 + C495 + C563 - C42 - C71 - C589 - ; Si > 0)</field>
+                            <field name="name">Net Loss (C68 + C480 + C495 + C563 - C42 - C71 - C589; If > 0)</field>
                             <field name="code">iue606</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="net_loss_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -428,9 +428,9 @@
                         </record>
                         <record id="previous_period_uncompensated_loss_tax_line" model="account.report.line">
                             <field name="sequence" eval="21"/>
-                            <field name="name">Pérdida no compensada gestión anterior (C1013 del Form. de la gestión anterior)</field>
+                            <field name="name">Uncompensated Loss from the Previous Period (C1013 from the previous period’s form)</field>
                             <field name="code">iue619</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="previous_period_uncompensated_loss_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -448,9 +448,9 @@
                         </record>
                         <record id="next_period_uncompensated_loss_tax_line" model="account.report.line">
                             <field name="sequence" eval="22"/>
-                            <field name="name">Pérdida no compensada gestión para la gestión siguiente (C606 + C619 - C592; Si > 0)</field>
+                            <field name="name">Loss to be Carried Forward to the Next Period (C606 + C619 - C592; If > 0)</field>
                             <field name="code">iue1013</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="previous_period_uncompensated_loss_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -469,9 +469,9 @@
                         </record>
                         <record id="taxable_net_profit_tax_line" model="account.report.line">
                             <field name="sequence" eval="23"/>
-                            <field name="name">Utilidad neta imponible (C592 - C606 - C619; Si > 0)</field>
+                            <field name="name">Taxable Net Profit (C592 - C606 - C619; If > 0)</field>
                             <field name="code">iue26</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="taxable_net_profit_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -490,9 +490,9 @@
                         </record>
                         <record id="iue_tax_amount_tax_line" model="account.report.line">
                             <field name="sequence" eval="24"/>
-                            <field name="name">Impuesto determinado (C26 * 25%)</field>
+                            <field name="name">Determined Tax (C26 * 25%)</field>
                             <field name="code">iue909</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="iue_tax_amount_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -511,9 +511,9 @@
                         </record>
                         <record id="previous_iue_payment_on_account_in_sworn_statements_tax_line" model="account.report.line">
                             <field name="sequence" eval="25"/>
-                            <field name="name">Pagos a cuenta realizados en DDJJ anterior y/o en boletas de pago</field>
+                            <field name="name">Payments on Account Made in Previous Sworn Statements and/or Payment Slips</field>
                             <field name="code">iue622</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="iue_tax_amount_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -531,9 +531,9 @@
                         </record>
                         <record id="previous_period_payment_balance_to_compensate_tax_line" model="account.report.line">
                             <field name="sequence" eval="26"/>
-                            <field name="name">Saldo disponible de pagos del periodo anterior a compensar</field>
+                            <field name="name">Available Balance of Payments from the Previous Period to be Offset</field>
                             <field name="code">iue640</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="previous_period_payment_balance_to_compensate_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -551,9 +551,9 @@
                         </record>
                         <record id="iue_taxpayer_favor_balance_for_next_period_tax_line" model="account.report.line">
                             <field name="sequence" eval="27"/>
-                            <field name="name">Diferencia a favor del contribuyente para el siguiente período (C622 + C640 - C909; Si > 0)</field>
+                            <field name="name">Balance in Favor of the Taxpayer for the Next Period (C622 + C640 - C909; If > 0)</field>
                             <field name="code">iue747</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="iue_taxpayer_favor_balance_for_next_period_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -572,9 +572,9 @@
                         </record>
                         <record id="iue_treasury_favor_balance_tax_line" model="account.report.line">
                             <field name="sequence" eval="28"/>
-                            <field name="name">Saldo definitivo a favor del fisco (C909 + C622 - C640; Si > 0)</field>
+                            <field name="name">Definitive Balance in Favor of the Treasury (C909 + C622 - C640; If > 0)</field>
                             <field name="code">iue996</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="iue_treasury_favor_balance_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -593,9 +593,9 @@
                         </record>
                         <record id="credit_allocation_in_values_tax_line" model="account.report.line">
                             <field name="sequence" eval="29"/>
-                            <field name="name">Imputación de crédito en valores (Sujeto a verificación y confirmación por parte del SIN)</field>
+                            <field name="name">Assignment of Credit in Securities (Subject to verification and confirmation by SIN)</field>
                             <field name="code">iue677</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="credit_allocation_in_values_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
@@ -613,9 +613,9 @@
                         </record>
                         <record id="iue_to_pay_in_cash_tax_line" model="account.report.line">
                             <field name="sequence" eval="30"/>
-                            <field name="name">Impuesto a pagar en efectivo (C996 - C677; Si > 0) (Si la presentación es fuera de término, debe realizar el pago en la boleta F.1000)</field>
+                            <field name="name">Cash Payment Tax (C996 - C677; If > 0) (If filing is late, payment must be made using form F.1000)</field>
                             <field name="code">iue576</field>
-                            <field name="hide_if_zero" eval="0"/>
+                            <field name="hide_if_zero" eval="False"/>
                             <field name="expression_ids">
                                 <record id="iue_to_pay_in_cash_tax_code" model="account.report.expression">
                                     <field name="label">code</field>
