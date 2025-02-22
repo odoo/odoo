@@ -4427,6 +4427,72 @@ class AccountMove(models.Model):
     def is_outbound(self, include_receipts=True):
         return self.move_type in self.get_outbound_types(include_receipts)
 
+    def _get_epd_data(self):
+        self.ensure_one()
+        term_lines = self.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        return term_lines._get_epd_data()
+
+    def _get_invoice_next_payment_values(self):
+        self.ensure_one()
+        if self.currency_id.is_zero(self.amount_residual):
+            payment_state = 'fully_paid'
+        elif self.currency_id.is_zero(self.amount_total - self.amount_residual):
+            payment_state = 'not_paid'
+        else:
+            payment_state = 'partially_paid'
+
+        term_lines = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        epd_installment = term_lines._get_epd_data()
+        epd_info = {}
+        if epd_installment:
+            installment_state = 'epd'
+            amount_due = epd_installment['amount_residual_currency_unsigned']
+            discount_date = epd_installment['line'].discount_date
+            discount_amount_currency = epd_installment['discount_amount_currency']
+            days_left = (discount_date - fields.Date.context_today(self)).days  # should never be lower than 0 since epd is valid
+            if days_left > 0:
+                discount_msg = _(
+                    "Discount of %(amount)s if paid within %(days)s days",
+                    amount=self.currency_id.format(discount_amount_currency),
+                    days=days_left,
+                )
+            else:
+                discount_msg = _(
+                    "Discount of %(amount)s if paid today",
+                    amount=self.currency_id.format(discount_amount_currency),
+                )
+
+            epd_info.update({
+                'epd_discount_amount_currency': discount_amount_currency,
+                'epd_discount_amount': epd_installment['discount_amount'],
+                'discount_date': fields.Date.to_string(discount_date),
+                'epd_days_left': days_left,
+                'epd_line': epd_installment['line'],
+                'epd_discount_msg': discount_msg,
+            })
+        else:
+            installment_state = None
+            amount_due = self.amount_residual
+            next_amount_to_pay = self.amount_residual
+
+        return {
+            'payment_state': payment_state,
+            'installment_state': installment_state,
+            'next_amount_to_pay': self.amount_residual,
+            'amount_paid': self.amount_total - self.amount_residual,
+            'amount_due': amount_due,
+            'due_date': self.invoice_date_due,
+            **epd_info,
+        }
+
+    def _get_invoice_portal_extra_values(self):
+        self.ensure_one()
+        return {
+            'invoice': self,
+            'currency': self.currency_id,
+            **self._get_invoice_next_payment_values(),
+        }
+
     def _get_accounting_date(self, invoice_date, has_tax):
         """Get correct accounting date for previous periods, taking tax lock date into account.
         When registering an invoice in the past, we still want the sequence to be increasing.

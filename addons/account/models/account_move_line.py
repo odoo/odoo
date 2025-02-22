@@ -3142,6 +3142,28 @@ class AccountMoveLine(models.Model):
         }
 
     # -------------------------------------------------------------------------
+    # INSTALLMENTS
+    # -------------------------------------------------------------------------
+    def _get_epd_data(self, payment_currency=None, payment_date=None):
+        move = self.move_id
+        move.ensure_one()
+        payment_date = payment_date or fields.Date.context_today(self)
+        sign = move.direction_sign
+        for line in self:
+            if line.reconciled:
+                continue
+            if move._is_eligible_for_early_payment_discount(payment_currency or line.currency_id, payment_date):
+                return{
+                    'line': line,
+                    'amount_residual_currency': line.discount_amount_currency,
+                    'amount_residual': line.discount_balance,
+                    'amount_residual_currency_unsigned': -sign * line.discount_amount_currency,
+                    'amount_residual_unsigned': -sign * line.discount_balance,
+                    'discount_amount_currency': line.amount_currency - line.discount_amount_currency,
+                    'discount_amount': line.balance - line.discount_balance,
+                }
+
+    # -------------------------------------------------------------------------
     # MISC
     # -------------------------------------------------------------------------
 
