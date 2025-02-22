@@ -569,7 +569,11 @@ export class Thread extends Record {
     }
 
     get showUnreadBanner() {
-        return !this.selfMember?.hideUnreadBanner && this.selfMember?.localMessageUnreadCounter > 0;
+        return (
+            !this.selfMember?.hideUnreadBanner &&
+            this.selfMember?.localMessageUnreadCounter > 0 &&
+            this.firstUnreadMessage
+        );
     }
 
     /** @type {undefined|number[]} */
