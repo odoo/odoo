@@ -26,13 +26,13 @@ from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, Command, tools
+from odoo import _, api, exceptions, fields, models, Command
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachableError
 from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
 from odoo.tools import (
-    is_html_empty, html_escape, html2plaintext, parse_contact_from_email,
+    is_html_empty, html_escape, html2plaintext,
     clean_context, split_every, Query, SQL,
     ormcache, is_list_of,
 )
@@ -1957,7 +1957,8 @@ class MailThread(models.AbstractModel):
     # RECIPIENTS MANAGEMENT TOOLS
     # ------------------------------------------------------
 
-    def _partner_find_from_emails_single(self, emails, avoid_alias=True, filter_found=None, additional_values=None, no_create=False):
+    def _partner_find_from_emails_single(self, emails, avoid_alias=True, ban_emails=None,
+                                         filter_found=None, additional_values=None, no_create=False):
         """ Shortcut version of '_partner_find_from_emails', two usages.
 
         Either 'record._partner_find_from_emails_single([..])' on a singleton
@@ -1970,7 +1971,8 @@ class MailThread(models.AbstractModel):
             {self: emails}, avoid_alias=avoid_alias, filter_found=filter_found, additional_values=additional_values, no_create=no_create
         )[self.id]
 
-    def _partner_find_from_emails(self, records_emails, avoid_alias=True, filter_found=None, additional_values=None, no_create=False):
+    def _partner_find_from_emails(self, records_emails, avoid_alias=True, ban_emails=None,
+                                  filter_found=None, additional_values=None, no_create=False):
         """ Find or create partners based on emails. Result is contextualized
         based on records, calling 'Model._get_customer_information()' to populate
         new partners data. It relies on 'ResPartner._find_or_create_from_emails()'
@@ -1980,6 +1982,8 @@ class MailThread(models.AbstractModel):
           to this record e.g. {<crm.lead, 4>: ['"Customer" <customer@test.example.com>']};
         :param bool avoid_alias: skip link for any email matching existing aliases
           notably to avoid creating contacts that could mess with mailgateway;
+        :param list ban_emails: optional list of banished emails e.g. because
+          it may interfere with master data like aliases;
         :param callable filter_found: if given, filters found partners based on emails;
         :param dict additional_values: optional email-key based dict, giving
           values to populate new partners. Added to default values coming from
@@ -2030,11 +2034,11 @@ class MailThread(models.AbstractModel):
 
         # fetch information used to find existing partners, beware portal/public who
         # cannot read followers
-        followers = self.sudo().message_partner_ids
+        followers = self.sudo().message_partner_ids if 'message_partner_ids' in self else self.env['res.partner']
         aliases = self.env['mail.alias'].sudo().search(
             [('alias_full_name', 'in', emails_key_all)]
         ) if avoid_alias else self.env['mail.alias'].sudo()
-        emails_ban = aliases.mapped('alias_full_name')
+        ban_emails = (ban_emails or []) + aliases.mapped('alias_full_name')
 
         # inspired notably from odoo/odoo@80a0b45df806ffecfb068b5ef05ae1931d655810; final
         # ordering is search order defined in '_find_or_create_from_emails', which is id ASC
@@ -2058,7 +2062,7 @@ class MailThread(models.AbstractModel):
                     **emails_normalized_info.get(mail_key, {}),
                 } for mail_key in emails_key_all
             },
-            ban_emails=emails_ban,
+            ban_emails=ban_emails,
             filter_found=filter_found,
             no_create=no_create,
             sort_key=sort_key,
@@ -2071,126 +2075,6 @@ class MailThread(models.AbstractModel):
                 # use an "OR" to avoid duplicates in returned recordset
                 found_results[res_id] |= partner
         return found_results
-
-    def _message_add_suggested_recipients(self, primary_email=False):
-        self.ensure_one()
-        email_to_lst, partners = [], self.env['res.partner']
-
-        # add responsible
-        user_field = self._fields.get('user_id')
-        if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
-            # SUPERUSER because of a read on res.users that would crash otherwise
-            partners += self.sudo().user_id.partner_id
-
-        # add customers
-        partners += self._mail_get_partners()[self.id].filtered(lambda p: not p.is_public)
-
-        # add email
-        if not primary_email:
-            email_fname = self._mail_get_primary_email_field()
-            if email_fname and self[email_fname]:
-                email_to_lst.append(self[email_fname])
-        else:
-            email_to_lst.append(primary_email)
-
-        return email_to_lst, partners
-
-    def _message_get_suggested_recipients(self, reply_discussion=False, reply_message=None,
-                                          no_create=True, primary_email=False, additional_partners=None):
-        """ Get suggested recipients, contextualized depending on discussion.
-
-        :param bool reply_discussion: consider user replies to the discussion.
-          Last relevant message is fetched and used to search for additional
-          'To' and 'Cc' to propose;
-        :param bool reply_message: specific message user is replying-to. Bypasses
-          'reply_discussion';
-        :param bool no_create: do not create partners when emails are not linked
-          to existing partners, see '_partner_find_from_emails';
-        :param bool primary_email: new primary_email that isn't stored inside DB;
-        :param bool additional_partners: partners that needs to be added to the suggested recipients;
-
-        :returns: list of dictionaries (per suggested recipient) containing:
-            * create_values:         dict: data to populate new partner, if not found
-            * email:                 str: email of recipient
-            * name:                  str: name of the recipient
-            * partner_id:            int: recipient partner id
-        """
-        def email_key(email):
-            return email_normalize(email, strict=False) or email.strip()
-
-        self.ensure_one()
-        email_to_lst, partners = self._message_add_suggested_recipients(primary_email)
-        partners += additional_partners or self.env['res.partner']
-
-        # find last relevant message
-        if reply_discussion:
-            messages = self.message_ids.sorted(
-                lambda msg: (
-                    msg.message_type == 'email',              # incoming email = probably customer
-                    msg.message_type == 'comment',            # user input > other input
-                    msg.date, msg.id,                         # newer first
-                ), reverse=True,
-            )
-            reply_message = next(
-                (msg for msg in messages if msg.message_type in ('comment', 'email')),
-                self.env['mail.message']
-            )
-        # fetch answer-based recipients as well as author
-        if reply_message:
-            # direct recipients, and author if not archived / root
-            partners += (reply_message.partner_ids | reply_message.author_id).filtered(lambda p: p.active)
-            # To and Cc emails (mainly for incoming email), and email_from if not linked to hereabove author
-            email_to_lst += [reply_message.incoming_email_to or '', reply_message.incoming_email_cc or '', reply_message.email_from or '']
-            from_normalized = email_normalize(reply_message.email_from)
-            if from_normalized and from_normalized != reply_message.author_id.email_normalized:
-                email_to_lst.append(reply_message.email_from)
-        # flatten emails, as some inputs are stringified list of emails (e.g. Cc, To)
-        email_to_lst = [
-            e for email_input in email_to_lst
-            for e in email_split_and_format(email_input)
-            if e and e.strip()
-        ]
-
-        # organize and deduplicate partners, exclude followers, keep ordering
-        followers = self.message_partner_ids
-        # sanitize email inputs, exclude followers and aliases, add some banned emails, keep ordering, then link to partners
-        skip_emails_normalized = (followers | partners).mapped('email_normalized') + (followers | partners).mapped('email')
-        skip_emails_normalized += [self.env.ref('base.partner_root').email_normalized]  # never propose odoobot
-        if email_to_lst:
-            skip_emails_normalized.extend(
-                self.env['mail.alias'].sudo().search(
-                    [('alias_full_name', 'in', [email_key(e) for e in email_to_lst])]
-                ).mapped('alias_full_name')
-            )
-        email_to_lst = [e for e in email_to_lst if email_key(e) not in skip_emails_normalized]
-        partners += self._partner_find_from_emails_single(email_to_lst, no_create=no_create)
-
-        # final filtering
-        partners = self.env['res.partner'].browse(tools.misc.unique(
-            p.id for p in partners if p not in followers
-        ))
-        email_to_lst = list(tools.misc.unique(
-            e for e in email_to_lst
-            if email_key(e) not in (partners.mapped('email_normalized') + partners.mapped('email'))
-        ))
-        # fetch model-related additional information
-        emails_normalized_info = self._get_customer_information() if email_to_lst else {}
-
-        recipients = [{
-            'email': partner.email_normalized,
-            'name': partner.name,
-            'partner_id': partner.id,
-            'create_values': {},
-        } for partner in partners]
-        for email_input in email_to_lst:
-            name, email_normalized = parse_contact_from_email(email_input)
-            recipients.append({
-                'email': email_normalized,
-                'name': emails_normalized_info.get(email_normalized, {}).pop('name', False) or name,
-                'partner_id': False,
-                'create_values': emails_normalized_info.get(email_normalized, {}),
-            })
-        return recipients
 
     def _mail_find_user_for_gateway(self, email_value, alias=None):
         """ Utility method to find user from email address that can create documents
