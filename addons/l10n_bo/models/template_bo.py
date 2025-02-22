@@ -13,7 +13,7 @@ class AccountChartTemplate(models.AbstractModel):
             'name': 'Kyohei Ltda.',
             'code_digits': '7',
             'visible': True,
-            'use_anglo_saxon': True,
+            'anglo_saxon_accounting': True,
             'property_account_receivable_id': 'l10n_bo_1120101',
             'property_account_payable_id': 'l10n_bo_2110101',
             'property_account_expense_categ_id': 'l10n_bo_5110101',
@@ -29,7 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_bo_res_company(self):
         return {
             self.env.company.id: {
-                'use_anglo_saxon': True,
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.bo',
                 'bank_account_code_prefix': '111030',
                 'cash_account_code_prefix': '111010',
