@@ -40,7 +40,7 @@ class AccountMoveLine(models.Model):
             # Don't create value for more quantity than received
             quantity = po_line.qty_received - (po_line.qty_invoiced - line.quantity)
             quantity = max(min(line.quantity, quantity), 0)
-            if float_is_zero(quantity, precision_rounding=uom.rounding):
+            if uom.is_zero(quantity):
                 continue
 
             layers = line._get_valued_in_moves().stock_valuation_layer_ids.filtered(lambda svl: svl.product_id == line.product_id and not svl.stock_valuation_layer_id)
@@ -102,7 +102,7 @@ class AccountMoveLine(models.Model):
                     qty_to_invoice_per_layer[initial_layer][0] -= common_qty
                     qty_to_invoice_per_layer[initial_layer][1] -= common_qty
                     total_layer_qty_to_invoice = max(0, total_layer_qty_to_invoice - common_qty)
-                if float_compare(total_layer_qty_to_invoice, 0, precision_rounding=product_uom.rounding) > 0:
+                if product_uom.compare(total_layer_qty_to_invoice, 0) > 0:
                     qty_to_invoice_per_layer[layer] = [total_layer_qty_to_invoice, total_layer_qty_to_invoice]
             else:
                 invoice = aml.move_id
@@ -133,10 +133,10 @@ class AccountMoveLine(models.Model):
                     for layer in qty_to_invoice_per_layer:
                         if layer.stock_move_id._is_in():
                             layers_to_consume.append((layer, qty_to_invoice_per_layer[layer][1]))
-                while float_compare(aml_qty, 0, precision_rounding=product_uom.rounding) > 0 and layers_to_consume:
+                while product_uom.compare(aml_qty, 0) > 0 and layers_to_consume:
                     layer, total_layer_qty_to_invoice = layers_to_consume[0]
                     layers_to_consume = layers_to_consume[1:]
-                    if float_is_zero(total_layer_qty_to_invoice, precision_rounding=product_uom.rounding):
+                    if product_uom.is_zero(total_layer_qty_to_invoice):
                         continue
                     common_qty = min(aml_qty, total_layer_qty_to_invoice)
                     aml_qty -= common_qty
@@ -152,7 +152,7 @@ class AccountMoveLine(models.Model):
         for layer in layers:
             # use the link between `self` and `layer` (i.e. the qty of `layer` billed by `self`)
             invoicing_layer_qty = layers_and_invoices_qties[(layer, invoice)][1]
-            if float_is_zero(invoicing_layer_qty, precision_rounding=product_uom.rounding):
+            if product_uom.is_zero(invoicing_layer_qty):
                 continue
             # We will only consider the total quantity to invoice of the layer because we don't
             # want to invoice a part of the layer that has not been invoiced and that has been
@@ -168,7 +168,7 @@ class AccountMoveLine(models.Model):
                     continue
                 initial_invoiced_qty = layers_and_invoices_qties[(layer, reversed_invoice)][0]
                 initial_pdiff_svl = layer.stock_valuation_layer_ids.filtered(lambda svl: svl.account_move_line_id.move_id == reversed_invoice)
-                if not initial_pdiff_svl or float_is_zero(initial_invoiced_qty, precision_rounding=product_uom.rounding):
+                if not initial_pdiff_svl or product_uom.is_zero(initial_invoiced_qty):
                     continue
                 # We have an already-out quantity: we must skip the part already invoiced. So, first,
                 # let's compute the already invoiced quantity...
