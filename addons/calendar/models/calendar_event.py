@@ -534,34 +534,38 @@ class Meeting(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # Prevent sending update notification when _inverse_dates is called
-        self = self.with_context(is_calendar_event_new=True)
-        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
+        self = self.with_context(is_calendar_event_new=True, mail_activity_quick_generation=True)
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'partner_ids'])
 
         vals_list = [  # Else bug with quick_create when we are filter on an other user
             dict(vals, user_id=defaults.get('user_id', self.env.user.id)) if not 'user_id' in vals else vals
             for vals in vals_list
         ]
-        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
         # get list of models ids and filter out None values directly
+        meeting_activity_types = self.env['mail.activity.type'].search([('category', '=', 'meeting')])
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
-        model_name = defaults.get('res_model')
-        valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
-        if meeting_activity_type and not defaults.get('activity_ids'):
+        all_models = self.env['ir.model'].sudo().browse(model_ids)
+        valid_models = all_models.filtered(lambda m: m.is_mail_activity)
+        if meeting_activity_types and not defaults.get('activity_ids'):
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
                 if values.get('activity_ids'):
                     continue
                 res_model_id = values.get('res_model_id', defaults.get('res_model_id'))
+                res_model = all_models.filtered(lambda m: m.id == res_model_id)
                 res_id = values.get('res_id', defaults.get('res_id'))
                 user_id = values.get('user_id', defaults.get('user_id'))
                 if not res_model_id or not res_id:
                     continue
-                if res_model_id not in valid_activity_model_ids:
+                if res_model not in valid_models:
                     continue
+                meeting_activity_type = meeting_activity_types.filtered(
+                    lambda act: act.res_model in {False, res_model.model}
+                )
                 activity_vals = {
                     'res_model_id': res_model_id,
                     'res_id': res_id,
-                    'activity_type_id': meeting_activity_type.id,
+                    'activity_type_id': meeting_activity_type[:1].id,
                 }
                 if user_id:
                     activity_vals['user_id'] = user_id
@@ -997,13 +1001,28 @@ class Meeting(models.Model):
 
     def _sync_activities(self, fields):
         # update activities
+        column_names = ['id']
+        if 'name' in fields:
+            column_names.append('summary')
+        if 'description' in fields:
+            column_names.append('note')
+        if 'start' in fields:
+            column_names.append('date_deadline')
+        if 'user_id' in fields:
+            column_names.append('user_id')
+
+        values = []
+        modified_activity_ids = []
         for event in self:
             if event.activity_ids:
                 activity_values = {}
                 if 'name' in fields:
-                    activity_values['summary'] = event.name
+                    activity_values['summary'] = f"'{event.name}'"
                 if 'description' in fields:
-                    activity_values['note'] = event.description
+                    if event.description:
+                        activity_values['note'] = f"'{event.description}'"
+                    else:
+                        activity_values['note'] = False
                 if 'start' in fields:
                     # self.start is a datetime UTC *only when the event is not allday*
                     # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)
@@ -1013,11 +1032,32 @@ class Meeting(models.Model):
                     if user_tz and not event.allday:
                         deadline = pytz.utc.localize(deadline)
                         deadline = deadline.astimezone(pytz.timezone(user_tz))
-                    activity_values['date_deadline'] = deadline.date()
+                    activity_values['date_deadline'] = f"DATE('{str(deadline.date())}')"
                 if 'user_id' in fields:
                     activity_values['user_id'] = event.user_id.id
                 if activity_values.keys():
-                    event.activity_ids.write(activity_values)
+                    modified_activity_ids.extend(event.activity_ids.ids)
+                    for activity_id in event.activity_ids:
+                        record_values = [activity_id.id]
+                        for key in activity_values.keys():
+                            record_values.append(activity_values[key])
+                        values.append(record_values)
+        if not values:
+            return
+        self.env['mail.activity'].flush_model()
+        values = ['(' + ','.join([str(v) for v in record_values]) + ')' for record_values in values]        
+        query = f'''
+            UPDATE "mail_activity"
+            SET {', '.join([c_name + '= v.' + c_name for c_name in column_names])}
+            FROM (VALUES
+                {','.join(values)}
+            ) AS v({','.join([c_name for c_name in column_names])})
+            WHERE mail_activity.id = v.id;
+        '''
+        self.env.cr.execute(query)
+        modified_records = self.env['mail.activity'].search([('id', 'in', modified_activity_ids)])
+        modified_records.modified(fnames=column_names[1:])
+        modified_records.invalidate_recordset()
 
     # ------------------------------------------------------------
     # ALARMS
