@@ -8,7 +8,8 @@ import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
-        if (paymentMethod.is_online_payment && typeof this.currentOrder.id === "string") {
+        // Validate if the ID is valid (string or number) before synchronization, since after calling `syncAllOrders`, the type of `id` changes to number.
+        if (paymentMethod.is_online_payment && (typeof this.currentOrder.id === "string" || typeof this.currentOrder.id === "number" )) {
             this.currentOrder.date_order = luxon.DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
             this.pos.addPendingOrder([this.currentOrder.id]);
             await this.pos.syncAllOrders();
