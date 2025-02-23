@@ -2887,13 +2887,13 @@ msgstr "捨棄"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_tree
 msgid "Disconnect"
-msgstr "中斷連線"
+msgstr "終止連線"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Disconnected from the RTC call by the server"
-msgstr "伺服器與 RTC 調用斷開連接"
+msgstr "已被伺服器終止與 RTC 召用的連線"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
@@ -3610,7 +3610,7 @@ msgstr "未能載入 GIF⋯"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Failed to load the SFU server, falling back to peer-to-peer"
-msgstr "未能載入 SFU 伺服器，正在回退至點對點連接。"
+msgstr "未能載入 SFU 伺服器，正嘗試使用後備的點對點連線。"
 
 #. module: mail
 #. odoo-javascript
@@ -3788,7 +3788,7 @@ msgstr "文件"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Fold"
-msgstr "收攏"
+msgstr "收起"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__fold_state__folded
@@ -10979,7 +10979,7 @@ msgstr "正在舉手"
 msgid ""
 "reply to missing document (%(model)s,%(thread)s), fall back on document "
 "creation"
-msgstr "處理遺失的檔案 (%(model)s,%(thread)s)，退回到檔案建立"
+msgstr "回覆的目標文件缺漏（%(model)s，%(thread)s），正嘗試使用後備的文件建立功能。"
 
 #. module: mail
 #. odoo-python
@@ -10987,7 +10987,7 @@ msgstr "處理遺失的檔案 (%(model)s,%(thread)s)，退回到檔案建立"
 msgid ""
 "reply to model %s that does not accept document update, fall back on "
 "document creation"
-msgstr "回覆模型 %s 不接受文件更新文件建立"
+msgstr "回覆的目標模型 %s 不接受文件更新，正嘗試使用後備的文件建立功能。"
 
 #. module: mail
 #. odoo-python

@@ -7,8 +7,8 @@
 # Vitalii Fedko, 2024
 # Tymofii Lytvynenko <till.svit@gmail.com>, 2024
 # Yana Bystrytska, 2024
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # Wil Odoo, 2025
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15149,6 +15149,7 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
+"Немає жодного запису в журналі, позначеного для незмінності даних бухобліку."
 
 #. module: account
 #. odoo-python
@@ -15292,6 +15293,7 @@ msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
 msgstr ""
+"Цей документ захищено хешем. Тому ви не можете редагувати наступні поля: %s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -15371,7 +15373,7 @@ msgstr "Цей рахунок-фактура надсилається у фон�
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid "This is the Audit Trail Report"
-msgstr ""
+msgstr "Це звіт про аудиторський слід"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -15594,6 +15596,8 @@ msgid ""
 "To add information to a previously sent invoice, reply to your \"sent\" "
 "email"
 msgstr ""
+"Щоб додати інформацію до раніше надісланого рахунка-фактури, дайте відповідь"
+" на свій «надісланий» електронний лист."
 
 #. module: account
 #. odoo-python
@@ -15613,6 +15617,9 @@ msgid ""
 "manually validated. You should go on the partner bank account of %(partner)s"
 " in order to validate it."
 msgstr ""
+"Для запису платежів з %(method_name)s, банківський рахунок одержувача "
+"потрібно підтвердити вручну. Ви повинні перейти на банківський рахунок "
+"партнера %(partner)s щоб підтвердити його."
 
 #. module: account
 #. odoo-python
@@ -15879,6 +15886,10 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Активуйте сповіщення під час створення рахунків-фактур і замовлень на продаж"
+" для партнерів із загальною сумою дебіторської заборгованості, що перевищує "
+"ліміт. Встановіть значення більше 0,0, щоб активувати перевірку кредитного "
+"ліміту"
 
 #. module: account
 #. odoo-python
@@ -15971,12 +15982,12 @@ msgstr "Розгорнути все"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr ""
+msgstr "Нехешовані записи"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr ""
+msgstr "Нехешовані записи"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -16094,7 +16105,7 @@ msgstr "Неоподаткована сума підписана"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal_currency
 msgid "Untaxed Amount in Currency"
-msgstr ""
+msgstr "Неоподаткована сума у валюті"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -16180,7 +16191,7 @@ msgstr "Помилка завантаження"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Use Bill Reference"
-msgstr ""
+msgstr "Використовувати референс рахунка від постачальника"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
@@ -16358,7 +16369,7 @@ msgstr "Підтверджено"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Validating"
-msgstr ""
+msgstr "Підтвердження"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
@@ -17171,6 +17182,9 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
+"Ви не можете редагувати журнал проводки рахунка, якщо її було опубліковано "
+"один раз, якщо назву не видалено або встановлено на \"/\". Це може створити "
+"розрив у послідовності."
 
 #. module: account
 #. odoo-python
@@ -17180,6 +17194,9 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
+"Ви не можете редагувати журнал проводки рахунка з присвоєним порядковим "
+"номером, якщо назву не видалено або встановлено на \"/\". Це може створити "
+"розрив у послідовності."
 
 #. module: account
 #. odoo-python
@@ -17249,6 +17266,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
 msgstr ""
+"Ви не можете змінити наступні поля лише для читання під час опублікованої "
+"проводки: %s"
 
 #. module: account
 #. odoo-python
@@ -17566,12 +17585,12 @@ msgstr "активуйте валюту рахунка"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr ""
+msgstr "псевдонім"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "amounts for"
-msgstr ""
+msgstr "сума для"
 
 #. module: account
 #. odoo-javascript
@@ -17625,7 +17644,7 @@ msgstr "закрити"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
-msgstr ""
+msgstr "дати для"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -17705,7 +17724,7 @@ msgstr "наприклад, https://www.odoo.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "напр. mycompany.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -17715,7 +17734,7 @@ msgstr "записи"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range."
-msgstr ""
+msgstr "виходять за межі типового діапазону."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -17756,7 +17775,7 @@ msgstr "рахунки-фактури"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "is a key action. Have you reviewed everything?"
-msgstr ""
+msgstr "є ключовою дією. Ви все переглянули?"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -17785,12 +17804,12 @@ msgstr "юридичний."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this customer."
-msgstr ""
+msgstr "перелічені нижче для цього клієнта."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this vendor."
-msgstr ""
+msgstr "перелічені нижче для цього постачальника."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17910,7 +17929,7 @@ msgstr "надійний"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "try our sample"
-msgstr ""
+msgstr "спробуйте наш приклад"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17954,7 +17973,7 @@ msgstr "користувач"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "will auto-confirm on their respective dates."
-msgstr ""
+msgstr "буде автоматично підтверджено у відповідні дати."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17972,6 +17991,8 @@ msgid ""
 "{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were "
 "transferred to <strong>{account_target_name}</strong> by {link}"
 msgstr ""
+"{amount} ({debit_credit}) з <strong>{account_source_name}</strong> куди "
+"переміщено <strong>{account_target_name}</strong> {link}"
 
 #. module: account
 #. odoo-python
