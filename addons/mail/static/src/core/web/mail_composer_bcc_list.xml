@@ -2,10 +2,15 @@
 <templates>
     <t t-name="mail.MailComposerBccList">
         <t t-if="hasRecipients()">
-            <t t-out="getRecipientListToHTML()"/>
-            <button class="btn btn-link badge rounded-pill border-0 p-1" title="Show all recipients" t-if="hasMoreRecipients()" t-on-click="onClickRecipientList">
-                <i class="fa fa-caret-down"/>
-            </button>
+            <div class="d-flex">
+                <span class="d-flex overflow-hidden">
+                    <span t-out="getRecipientListToHTML()" class="ps-1 text-truncate"/>
+                    <span t-out="getRecipientCount()" class="ps-1"/>
+                </span>
+                <button class="btn btn-link badge rounded-pill border-0 p-1" title="Show all recipients" t-if="hasMoreRecipients()" t-on-click="onClickRecipientList">
+                    <i class="fa fa-caret-down"/>
+                </button>
+            </div>
         </t>
     </t>
 </templates>
