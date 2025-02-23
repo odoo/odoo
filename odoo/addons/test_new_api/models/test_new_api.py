@@ -2290,3 +2290,24 @@ class Test_New_ViewStrId(models.Model):
     _table_query = "SELECT 'hello' AS id, 'test' AS name"
 
     name = fields.Char()
+
+
+class Test_New_ApiCreatePerformance(models.Model):
+    _name = _description = 'test_new_api.create.performance'
+
+    confirmed = fields.Boolean()
+    name = fields.Char()
+    name_changes = fields.Integer(compute='_compute_name_changes', store=True)
+    line_ids = fields.One2many('test_new_api.create.performance.line', 'perf_id')
+    tag_ids = fields.Many2many('test_new_api.create.performance.line', 'test_create_perf_tag_ids')
+
+    @api.depends('name')
+    def _compute_name_changes(self):
+        for record in self:
+            record.name_changes += 1
+
+
+class Test_New_ApiCreatePerformance(models.Model):
+    _name = _description = 'test_new_api.create.performance.line'
+
+    perf_id = fields.Many2one('test_new_api.create.performance')
