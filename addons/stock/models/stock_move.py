@@ -325,7 +325,7 @@ class StockMove(models.Model):
         for move in self:
             move.move_lines_count = len(move.move_line_ids)
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty', 'state')
+    @api.depends('product_id', 'product_id.uom_id', 'product_uom', 'product_uom_qty', 'state')
     def _compute_product_qty(self):
         for move in self:
             move.product_qty = move.product_uom._compute_quantity(
