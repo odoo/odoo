@@ -38,7 +38,9 @@ function supportItem(env) {
 
 class ShortcutsFooterComponent extends Component {
     static template = "web.UserMenu.ShortcutsFooterComponent";
-    static props = {};
+    static props = {
+        switchNamespace: { type: Function, optional: true },
+    };
     setup() {
         this.runShortcutKey = isMacOS() ? "CONTROL" : "ALT";
     }
