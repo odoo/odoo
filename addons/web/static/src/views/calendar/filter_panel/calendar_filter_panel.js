@@ -75,6 +75,7 @@ export class CalendarFilterPanel extends Component {
             value: result[0],
             label: result[1],
             model: resModel,
+            avatarField: section.avatar.field,
         }));
 
         if (records.length > 7) {

@@ -171,21 +171,8 @@ export class CalendarArchParser {
                         if (node.hasAttribute("write_field")) {
                             filterInfo.writeFieldName = node.getAttribute("write_field");
                         }
-                        if (node.hasAttribute("filters")) {
-                            if (node.hasAttribute("color")) {
-                                filterInfo.colorFieldName = node.getAttribute("color");
-                            }
-                            if (node.hasAttribute("avatar_field") && field.relation) {
-                                if (
-                                    field.relation.includes([
-                                        "res.users",
-                                        "res.partners",
-                                        "hr.employee",
-                                    ])
-                                ) {
-                                    filterInfo.avatarFieldName = "image_128";
-                                }
-                            }
+                        if (node.hasAttribute("filters") && node.hasAttribute("color")) {
+                            filterInfo.colorFieldName = node.getAttribute("color");
                         }
                     }
 

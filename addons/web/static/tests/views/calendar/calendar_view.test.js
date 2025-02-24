@@ -635,7 +635,7 @@ test(`check the avatar of the attendee in the calendar filter panel`, async () =
         type: "calendar",
         arch: `
             <calendar date_start="start" date_stop="stop">
-                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" avatar_field="avatar_128"/>
             </calendar>
         `,
     });
