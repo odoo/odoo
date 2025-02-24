@@ -27,6 +27,7 @@ export class ComboPage extends Component {
         }
 
         this.state = useState({
+            selectedValues: this.env.selectedValues,
             currentComboIndex: 0,
             selectedCombos: [],
             showResume: false,
@@ -52,6 +53,10 @@ export class ComboPage extends Component {
 
     get currentCombo() {
         return this.comboIds[this.state.currentComboIndex];
+    }
+
+    isEveryValueSelected() {
+        return Object.values(this.state.selectedValues).find((value) => !value) == false;
     }
 
     getSelectedValues(attrValIds) {
@@ -123,7 +128,14 @@ export class ComboPage extends Component {
             this.selfOrder.editedLine.delete();
         }
 
-        this.selfOrder.addToCart(this.props.product, 1, "", {}, {}, this.state.selectedCombos);
+        this.selfOrder.addToCart(
+            this.props.product,
+            this.state.qty,
+            "",
+            {},
+            {},
+            this.state.selectedCombos
+        );
         this.router.back();
     }
 

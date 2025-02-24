@@ -293,7 +293,7 @@ export class SelfOrder extends Reactive {
                     combo_line_id: comboLine.combo_line_id,
                     price_unit: comboLine.price_unit,
                     order_id: this.currentOrder,
-                    qty: 1,
+                    qty: values.qty,
                     attribute_value_ids: comboLine.attribute_value_ids?.map((attr) => [
                         "link",
                         attr,
