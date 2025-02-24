@@ -421,6 +421,7 @@ test("the embedded actions should not be displayed when switching view", async (
 });
 
 test("User can move the main (first) embedded action", async () => {
+    mockTouch(true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
@@ -428,7 +429,6 @@ test("User can move the main (first) embedded action", async () => {
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
-    mockTouch(true);
     await contains(".o_embedded_actions > button:first-child").dragAndDrop(
         ".o_embedded_actions > button:nth-child(2)"
     );

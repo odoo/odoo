@@ -24,7 +24,10 @@ import { getRunner } from "./main_runner";
  *  | "regex"
  *  | "string"
  *  | "symbol"
+ *  | "url"
  *  | "undefined"} ArgumentPrimitive
+ *
+ * @typedef {[string, ArgumentType]} Label
  *
  * @typedef {string | RegExp | { new(): any }} Matcher
  *
@@ -87,6 +90,7 @@ const {
     setTimeout,
     String,
     TypeError,
+    WeakSet,
     window,
 } = globalThis;
 /** @type {Storage["getItem"]} */
@@ -116,7 +120,7 @@ const $writeText = $clipboard?.writeText.bind($clipboard);
 const getConstructor = (value) => {
     const { constructor } = value;
     if (constructor !== Object) {
-        return constructor;
+        return constructor || { name: null };
     }
     const str = value.toString();
     const match = str.match(R_OBJECT);
@@ -208,7 +212,7 @@ const _formatHumanReadable = (value, length) => {
     } else if (typeof value === "function") {
         humanReadableValue = getFunctionString(value);
     } else if (value && typeof value === "object") {
-        if (value instanceof RegExp) {
+        if (value instanceof RegExp || value instanceof URL) {
             humanReadableValue = truncate(value);
         } else if (value instanceof Date) {
             humanReadableValue = value.toISOString();
@@ -297,6 +301,7 @@ const R_OBJECT = /^\[object ([\w-]+)\]$/;
 const dmp = new DiffMatchPatch();
 const { DIFF_INSERT, DIFF_DELETE } = DiffMatchPatch;
 
+const labelObjects = new WeakSet();
 const objectConstructors = new Map();
 const windowTarget = {
     addEventListener: window.addEventListener.bind(window),
@@ -834,6 +839,9 @@ export function getTypeOf(value) {
             if (value instanceof RegExp) {
                 return "regex";
             }
+            if (value instanceof URL) {
+                return "url";
+            }
             if ($isArray(value)) {
                 const types = [...value].map(getTypeOf);
                 const arrayType = new Set(types).size === 1 ? types[0] : "any";
@@ -853,6 +861,13 @@ export function getTypeOf(value) {
 
 export function hasClipboard() {
     return Boolean($clipboard);
+}
+
+/**
+ * @param {[string, ArgumentType]} label
+ */
+export function isLabel(label) {
+    return labelObjects.has(label);
 }
 
 /**
@@ -893,6 +908,8 @@ export function isOfType(value, type) {
             return isNode(value);
         case "regex":
             return value instanceof RegExp;
+        case "url":
+            return value instanceof URL;
         default:
             return typeof value === type;
     }
@@ -977,27 +994,32 @@ export function lookup(pattern, items, property = "key") {
 }
 
 /**
- * @param {EventTarget} target
- * @param {string[]} types
+ * @template [T=any]
+ * @param {T} value
+ * @param {ArgumentType} type
  */
-export function makePublicListeners(target, types) {
-    for (const type of types) {
-        let listener = null;
-        $defineProperty(target, `on${type}`, {
-            get() {
-                return listener;
-            },
-            set(value) {
-                if (listener) {
-                    target.removeEventListener(type, listener);
-                }
-                listener = value;
-                if (listener) {
-                    target.addEventListener(type, listener);
-                }
-            },
-        });
+export function makeLabel(value, type) {
+    if (isLabel(value)) {
+        [value, type] = value;
+    } else if (type === undefined) {
+        type = getTypeOf(value);
     }
+    if (type !== null) {
+        value = formatHumanReadable(value);
+    }
+    const label = [value, type];
+    labelObjects.add(label);
+    return label;
+}
+
+/**
+ * Special label type used in test results
+ * @param {string} className
+ */
+export function makeLabelIcon(className) {
+    const label = [className, "icon"];
+    labelObjects.add(label);
+    return label;
 }
 
 /**
@@ -1418,10 +1440,10 @@ export class Markup {
                         const classList = ["no-underline"];
                         let tagName = "t";
                         if (diff[0] === DIFF_INSERT) {
-                            classList.push("text-pass", "bg-pass-900");
+                            classList.push("text-emerald", "bg-emerald-900");
                             tagName = "ins";
                         } else if (diff[0] === DIFF_DELETE) {
-                            classList.push("text-fail", "bg-fail-900");
+                            classList.push("text-rose", "bg-rose-900");
                             tagName = "del";
                         }
                         return new this({
@@ -1439,7 +1461,7 @@ export class Markup {
      * @param {unknown} value
      */
     static green(content, value) {
-        return [new this({ className: "text-pass", content }), deepCopy(value)];
+        return [new this({ className: "text-emerald", content }), deepCopy(value)];
     }
 
     /**
@@ -1454,7 +1476,7 @@ export class Markup {
      * @param {unknown} value
      */
     static red(content, value) {
-        return [new this({ className: "text-fail", content }), deepCopy(value)];
+        return [new this({ className: "text-rose", content }), deepCopy(value)];
     }
 
     /**
@@ -1467,34 +1489,69 @@ export class Markup {
     }
 }
 
-export class FormattedString extends String {
-    static RAW = "raw";
+/**
+ * Centralized version of {@link EventTarget} to make cleanups more streamlined.
+ */
+export class MockEventTarget extends EventTarget {
+    /** @type {string[]} */
+    static publicListeners = [];
 
-    /** @type {string} */
-    type;
+    constructor() {
+        super(...arguments);
 
-    /**
-     * @param {unknown} value
-     * @param {string} [type]
-     */
-    constructor(value, type) {
-        if (!type) {
-            if (value instanceof FormattedString) {
-                type = value.type;
-            } else {
-                type = getTypeOf(value);
-            }
+        for (const type of this.constructor.publicListeners) {
+            let listener = null;
+            $defineProperty(this, `on${type}`, {
+                get() {
+                    return listener;
+                },
+                set(value) {
+                    if (listener) {
+                        this.removeEventListener(type, listener);
+                    }
+                    listener = value;
+                    if (listener) {
+                        this.addEventListener(type, listener);
+                    }
+                },
+            });
         }
-
-        if (type !== FormattedString.RAW) {
-            value = formatHumanReadable(value);
-        }
-
-        super(value);
-
-        this.type = type;
     }
 }
+
+export const CASE_EVENT_TYPES = {
+    assertion: {
+        value: 0b1,
+        icon: "fa-check",
+        color: "emerald",
+    },
+    error: {
+        value: 0b10,
+        icon: "fa-exclamation",
+        color: "rose",
+    },
+    interaction: {
+        value: 0b100,
+        icon: "fa-bolt",
+        color: "purple",
+    },
+    query: {
+        value: 0b1000,
+        icon: "fa-search text-sm",
+        color: "amber",
+    },
+    server: {
+        value: 0b10000,
+        icon: "fa-globe",
+        color: "lime",
+    },
+    step: {
+        value: 0b100000,
+        icon: "fa-arrow-right text-sm",
+        color: "orange",
+    },
+};
+export const DEFAULT_EVENT_TYPES = CASE_EVENT_TYPES.assertion.value | CASE_EVENT_TYPES.error.value;
 
 export const INCLUDE_LEVEL = {
     url: 1,

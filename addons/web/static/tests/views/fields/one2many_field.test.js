@@ -1,5 +1,6 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import {
+    click,
     getNextFocusableElement,
     press,
     queryAll,
@@ -4769,14 +4770,14 @@ test("one2many with CREATE _onChanges correctly refreshed", async () => {
     _onChangestep = 1;
     await contains('[name="turtle_int"] input').edit("10", { confirm: "blur" });
     // put the list back in non edit mode
-    contains('[name="foo"] input').click();
+    await click('[name="foo"] input');
     expect(queryAllTexts(".o_data_row")).toEqual(["first 10", "second -10"]);
 
     // trigger the second onchange
     _onChangestep = 2;
     await contains(".o_field_x2many_list tbody tr td").click();
     await contains('[name="turtle_int"] input').edit("20", { confirm: "blur" });
-    contains('[name="foo"] input').click();
+    await click('[name="foo"] input');
     expect(queryAllTexts(".o_data_row")).toEqual(["first 20", "second -20"]);
     expect(".o_field_widget").toHaveCount(delta);
 
@@ -7977,8 +7978,7 @@ test("default value for nested one2manys (coming from onchange)", async () => {
 });
 
 test("display correct value after validation error", async () => {
-    expect.assertions(4);
-    expect.errors(1);
+    expect.assertions(5);
 
     function validationHandler(env, error, originalError) {
         if (originalError.data.name === "odoo.exceptions.ValidationError") {
@@ -8025,7 +8025,9 @@ test("display correct value after validation error", async () => {
     // click and edit value to 'pinky', which trigger a failed onchange
     await contains(".o_data_row .o_data_cell").click();
     await contains(".o_field_widget[name=turtle_foo] input").edit("pinky", { confirm: false });
+    expect.errors(1);
     await contains(".o_form_view").click();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_data_row .o_data_cell").toHaveText("foo");
 
     // we make sure here that when we save, the values are the current
@@ -12734,7 +12736,6 @@ test("one2many with default_order on id, but id not in view", async () => {
 });
 
 test("one2many causes an onchange on the parent which fails", async () => {
-    expect.errors(1);
     Partner._onChanges = {
         turtles: function () {},
     };
@@ -12759,10 +12760,12 @@ test("one2many causes an onchange on the parent which fails", async () => {
     expect(".o_field_widget[name='turtle_foo'] input").toHaveValue("blip");
 
     // onchange on parent record fails
+    expect.errors(1);
     await contains(".o_field_widget[name='turtle_foo'] input").edit("new value", {
         confirm: "blur",
     });
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_data_cell[name='turtle_foo']").toHaveText("blip");
     expect(".o_error_dialog").toHaveCount(1);
 });
@@ -13116,4 +13119,58 @@ test("expand record in dialog", async () => {
     expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
     await contains(".o_dialog .modal-header .o_expand_button").click();
     expect.verifySteps([[4, "turtle", "ir.actions.act_window", [[false, "form"]]]]);
+});
+
+test("edit o2m with default_order on a field not in view", async () => {
+    Partner._records[0].turtles = [1, 2, 3];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list default_order="turtle_int">
+                        <field name="turtle_foo"/>
+                        <field name="turtle_bar"/>
+                    </list>
+                    <form>
+                        <field name="turtle_foo"/>
+                    </form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["yop", "blip", "kawa"]);
+
+    await contains(".o_data_row:eq(1) .o_data_cell").click();
+    await contains(".modal .o_field_widget[name=turtle_foo] input").edit("blip2");
+    await contains(".modal-footer .o_form_button_save").click();
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["yop", "blip2", "kawa"]);
+});
+
+test("edit o2m with default_order on a field not in view (2)", async () => {
+    Partner._records[0].turtles = [1, 2, 3];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list default_order="turtle_foo,turtle_int">
+                        <field name="turtle_foo"/>
+                        <field name="turtle_bar"/>
+                    </list>
+                    <form>
+                        <field name="turtle_foo"/>
+                    </form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blip", "kawa", "yop"]);
+
+    await contains(".o_data_row:eq(1) .o_data_cell").click();
+    await contains(".modal .o_field_widget[name=turtle_foo] input").edit("kawa2");
+    await contains(".modal-footer .o_form_button_save").click();
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blip", "kawa2", "yop"]);
 });

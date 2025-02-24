@@ -2201,31 +2201,22 @@ class AccountTax(models.Model):
             })
 
         # Subtotals.
-        def subtotal_grouping_function(base_line, tax_data):
-            return tax_data['tax'].tax_group_id.preceding_subtotal or untaxed_amount_subtotal_label
+        if not subtotals:
+            subtotals[untaxed_amount_subtotal_label]
 
-        base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, subtotal_grouping_function)
-        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
-        for preceding_subtotal, values in values_per_grouping_key.items():
-            preceding_subtotal = preceding_subtotal or untaxed_amount_subtotal_label
-            subtotal = subtotals[preceding_subtotal]
-            is_first_preceding_subtotal = (
-                preceding_subtotal == untaxed_amount_subtotal_label
-                or (
-                    untaxed_amount_subtotal_label not in subtotals_order
-                    and subtotals_order[preceding_subtotal] == 0
-                )
-            )
-            if is_first_preceding_subtotal:
-                # The first subtotal is always the base of the whole document.
-                subtotal['base_amount_currency'] += values['total_excluded_currency']
-                subtotal['base_amount'] += values['total_excluded']
-            else:
-                # Otherwise, it's the base of the first tax in the group.
-                subtotal['base_amount_currency'] += values['base_amount_currency']
-                subtotal['base_amount'] += values['base_amount']
-            subtotal['tax_amount_currency'] += values['tax_amount_currency']
-            subtotal['tax_amount'] += values['tax_amount']
+        ordered_subtotals = sorted(subtotals.items(), key=lambda item: subtotals_order.get(item[0], 0))
+        accumulated_tax_amount_currency = 0.0
+        accumulated_tax_amount = 0.0
+        for subtotal_label, subtotal in ordered_subtotals:
+            subtotal['name'] = subtotal_label
+            subtotal['base_amount_currency'] = tax_totals_summary['base_amount_currency'] + accumulated_tax_amount_currency
+            subtotal['base_amount'] = tax_totals_summary['base_amount'] + accumulated_tax_amount
+            for tax_group in subtotal['tax_groups']:
+                subtotal['tax_amount_currency'] += tax_group['tax_amount_currency']
+                subtotal['tax_amount'] += tax_group['tax_amount']
+                accumulated_tax_amount_currency += tax_group['tax_amount_currency']
+                accumulated_tax_amount += tax_group['tax_amount']
+            tax_totals_summary['subtotals'].append(subtotal)
 
         # Cash rounding
         cash_rounding_lines = [base_line for base_line in base_lines if base_line['special_type'] == 'cash_rounding']
@@ -2262,7 +2253,7 @@ class AccountTax(models.Model):
                     max_subtotal, max_tax_group = max(
                         [
                             (subtotal, tax_group)
-                            for subtotal in subtotals.values()
+                            for subtotal in tax_totals_summary['subtotals']
                             for tax_group in subtotal['tax_groups']
                         ],
                         key=lambda item: item[1]['tax_amount_currency'],
@@ -2273,12 +2264,6 @@ class AccountTax(models.Model):
                     max_subtotal['tax_amount'] += cash_rounding_base_amount
                     tax_totals_summary['tax_amount_currency'] += cash_rounding_base_amount_currency
                     tax_totals_summary['tax_amount'] += cash_rounding_base_amount
-
-        # Flat the subtotals.
-        ordered_subtotals = sorted(subtotals.items(), key=lambda item: subtotals_order.get(item[0], 0))
-        for subtotal_label, subtotal in ordered_subtotals:
-            subtotal['name'] = subtotal_label
-            tax_totals_summary['subtotals'].append(subtotal)
 
         # Subtract the cash rounding from the untaxed amounts.
         cash_rounding_base_amount_currency = tax_totals_summary.get('cash_rounding_base_amount_currency', 0.0)

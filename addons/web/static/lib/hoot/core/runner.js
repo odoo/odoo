@@ -7,6 +7,7 @@ import { enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
 import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
+    CASE_EVENT_TYPES,
     Callbacks,
     HootError,
     INCLUDE_LEVEL,
@@ -20,11 +21,13 @@ import {
     formatTechnical,
     formatTime,
     getFuzzyScore,
+    isLabel,
     normalize,
     storageGet,
     storageSet,
     stringify,
 } from "../hoot_utils";
+import { cleanupAnimations } from "../mock/animation";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
@@ -32,12 +35,12 @@ import { cleanupNetwork } from "../mock/network";
 import { cleanupWindow, getViewPortHeight, getViewPortWidth, mockTouch } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
-import { makeFixtureManager } from "./fixture";
-import { logLevels, logger } from "./logger";
+import { HootFixtureElement, makeFixtureManager } from "./fixture";
+import { LOG_LEVELS, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag, getTagSimilarities } from "./tag";
 import { Test, testError } from "./test";
-import { EXCLUDE_PREFIX, createUrlFromId, setParams, urlParams } from "./url";
+import { EXCLUDE_PREFIX, createUrlFromId, setParams } from "./url";
 
 /**
  * @typedef {{
@@ -134,9 +137,9 @@ const filterReady = (jobs) =>
  */
 const formatAssertions = (assertions) => {
     const lines = [];
-    for (let i = 0; i < assertions.length; i++) {
-        const { failedDetails, label, message } = assertions[i];
-        lines.push(`\n${i + 1}. [${label}] ${message}`);
+    for (const { failedDetails, label, message, number } of assertions) {
+        const formattedMessage = message.map((part) => (isLabel(part) ? part[0] : String(part)));
+        lines.push(`\n${number}. [${label}] ${formattedMessage.join(" ")}`);
         if (failedDetails) {
             for (let [key, value] of failedDetails) {
                 if (Markup.isMarkup(key)) {
@@ -180,7 +183,7 @@ const getDefaultPresets = () =>
         [
             "mobile",
             {
-                icon: "fa-mobile",
+                icon: "fa-mobile font-bold",
                 label: "Mobile",
                 platform: "android",
                 size: [375, 667],
@@ -407,13 +410,13 @@ export class Runner {
         this.fixture = makeFixtureManager(this);
         this.test = this._addConfigurators(this.addTest, false);
 
-        const initialConfig = { ...DEFAULT_CONFIG, ...config };
-        const reactiveConfig = reactive({ ...initialConfig, ...urlParams }, () => {
+        this.initialConfig = { ...DEFAULT_CONFIG, ...config };
+        const reactiveConfig = reactive({ ...this.initialConfig }, () => {
             setParams(
                 $fromEntries(
                     $entries(this.config).map(([key, value]) => [
                         key,
-                        deepEqual(value, initialConfig[key]) ? null : value,
+                        deepEqual(value, DEFAULT_CONFIG[key]) ? null : value,
                     ])
                 )
             );
@@ -853,7 +856,7 @@ export class Runner {
         this.state.status = "running";
 
         /** @type {Runner["_handleError"]} */
-        const handleError = !this.config.notrycatch && this._handleError.bind(this);
+        const handleError = this._handleError.bind(this);
 
         /**
          * @param {Job} [job]
@@ -903,14 +906,17 @@ export class Runner {
                             await this._callbacks.call("after-suite", suite, handleError);
                         });
 
-                        suite.runCount++;
-                        if (suite.config.multi && suite.runCount < suite.config.multi) {
-                            suite.resetIndex();
-                        }
-                        suite.parent?.reporting.add({ suites: +1 });
-                        suite.callbacks.clear();
-
                         logger.logSuite(suite);
+
+                        suite.runCount++;
+                        if (suite.willRunAgain()) {
+                            suite.reset();
+                        } else {
+                            suite.cleanup();
+                        }
+                        if (suite.runCount < (suite.config.multi || 0)) {
+                            continue;
+                        }
                     }
                 }
                 job = nextJob(job);
@@ -994,7 +1000,6 @@ export class Runner {
 
             // Log test errors and increment counters
             this.expectHooks.after(this);
-            test.runCount++;
             if (lastResults.pass) {
                 logger.logTest(test);
 
@@ -1006,8 +1011,8 @@ export class Runner {
                 this._failed++;
 
                 const failReasons = [];
-                const failedAssertions = lastResults.assertions.filter(
-                    (assertion) => !assertion.pass
+                const failedAssertions = lastResults.events.filter(
+                    (event) => event.type & CASE_EVENT_TYPES.assertion.value && !event.pass
                 );
                 if (failedAssertions.length) {
                     const s = failedAssertions.length === 1 ? "" : "s";
@@ -1016,11 +1021,11 @@ export class Runner {
                         ...formatAssertions(failedAssertions)
                     );
                 }
-                if (lastResults.errors.length) {
-                    const s = lastResults.errors.length === 1 ? "" : "s";
+                if (lastResults.currentErrors.length) {
+                    const s = lastResults.currentErrors.length === 1 ? "" : "s";
                     failReasons.push(
                         `\nError${s} during test:`,
-                        ...lastResults.errors.map((e) => `\n${e.message}`)
+                        ...lastResults.currentErrors.map((error) => `\n${error.message}`)
                     );
                 }
                 logger.logGlobalError(
@@ -1041,19 +1046,25 @@ export class Runner {
 
             this._pushTest(test);
             this.totalTime = formatTime($now() - this._startTime);
+            test.runCount++;
 
+            if (this.debug) {
+                return new Promise(() => {});
+            }
             if (this.config.bail && this._failed >= this.config.bail) {
                 return this.stop();
             }
+
             if (test.willRunAgain()) {
-                test.run = test.run.bind(test);
+                test.reset();
             } else {
-                if (this.debug) {
-                    return new Promise(() => {});
-                }
-                test.setRunFn(null);
-                job = nextJob(job);
+                test.cleanup();
             }
+            if (test.runCount < (test.config.multi || 0)) {
+                continue;
+            }
+
+            job = nextJob(job);
         }
 
         if (this.state.status === "done") {
@@ -1095,6 +1106,11 @@ export class Runner {
             const errorMessage = ["Some tests failed: see above for details"];
             if (this.config.headless) {
                 const link = createUrlFromId(this.state.failedIds, "test");
+                // Tweak parameters to make debugging easier
+                link.searchParams.set("debug", "assets");
+                link.searchParams.set("loglevel", LOG_LEVELS.tests);
+                link.searchParams.delete("debugTest");
+                link.searchParams.delete("headless");
                 errorMessage.push(`Failed tests link: ${link.toString()}`);
             }
             // Use console.dir for this log to appear on runbot sub-builds page
@@ -1525,7 +1541,7 @@ export class Runner {
                 mockUserAgent(preset.platform);
             }
             if (typeof preset.touch === "boolean") {
-                mockTouch(preset.touch);
+                this.beforeEach(() => mockTouch(preset.touch));
             }
             this.checkPresetForViewPort();
         }
@@ -1571,10 +1587,13 @@ export class Runner {
      * @param {Error | ErrorEvent | PromiseRejectionEvent} ev
      */
     _handleError(ev) {
-        const error = ensureError(ev);
-        if (this.config.notrycatch || handledErrors.has(error)) {
-            // Already handled
+        if (this.config.notrycatch) {
             return;
+        }
+        const error = ensureError(ev);
+        if (handledErrors.has(error)) {
+            // Already handled
+            return safePrevent(ev);
         }
         handledErrors.add(error);
 
@@ -1591,7 +1610,7 @@ export class Runner {
             return safePrevent(ev);
         }
 
-        if (this.state.currentTest) {
+        if (this.state.currentTest && !(error instanceof HootError)) {
             // Handle the error in the current test
             const handled = this._handleErrorInTest(ev, error);
             if (handled) {
@@ -1621,17 +1640,7 @@ export class Runner {
             }
         }
 
-        const { lastResults } = this.state.currentTest;
-        if (!lastResults) {
-            return false;
-        }
-
-        lastResults.registerError(error);
-        if (lastResults.expectedErrors >= lastResults.caughtErrors) {
-            return true;
-        }
-
-        return false;
+        return this.expectHooks.error(error);
     }
 
     /**
@@ -1704,6 +1713,10 @@ export class Runner {
         }
 
         // Register default hooks
+        this.beforeAll(() => {
+            document.head.appendChild(HootFixtureElement.styleElement);
+            return () => HootFixtureElement.styleElement.remove();
+        });
         this.afterAll(
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
@@ -1712,17 +1725,17 @@ export class Runner {
         );
         this.beforeEach(this.fixture.setup, setupTime);
         this.afterEach(
+            cleanupAnimations,
             cleanupWindow,
             cleanupNetwork,
             cleanupNavigator,
-            this.fixture.cleanup,
             cleanupDOM,
             cleanupTime,
             cleanupDate
         );
 
         if (this.debug) {
-            logger.level = logLevels.DEBUG;
+            logger.level = LOG_LEVELS.debug;
         }
         enableEventLogs(this.debug);
         setFrameRate(this.config.fps);
