@@ -324,3 +324,8 @@ class TestFrontend(TestFrontendCommon):
         assert_payment(1, 4.4)
         self.start_pos_tour('PoSPaymentSyncTour3')
         assert_payment(2, 6.6)
+
+    def test_refund_no_tables(self):
+        self.pos_config.floor_ids.unlink()
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('RefundNoTable')
