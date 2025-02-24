@@ -116,7 +116,6 @@ class SaleOrder(models.Model):
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
         """ Override of `website_sale_stock` to skip the verification when click and collect
         is activated. The quantity is verified later. """
-        self.ensure_one()
         product = self.env['product.product'].browse(product_id)
         if (
             product.is_storable

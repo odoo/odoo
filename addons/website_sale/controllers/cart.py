@@ -132,7 +132,7 @@ class Cart(PaymentPortal):
         order_sudo = request.cart or request.website._create_cart()
 
         product = request.env['product.product'].browse(product_id).exists()
-        if quantity and (not product or not product._is_add_to_cart_allowed()):
+        if not product or not product._is_add_to_cart_allowed():
             raise UserError(_(
                 "The given product does not exist therefore it cannot be added to cart."
             ))
