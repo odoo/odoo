@@ -5750,17 +5750,9 @@ class AccountMove(models.Model):
                 },
             ]
 
-        limit = job_count + 1
-        to_process = self.env['account.move'].search(
-            [('sending_data', '!=', False)],
-            limit=limit,
-        )
-        need_retrigger = len(to_process) > job_count
+        domain = [('sending_data', '!=', False)]
+        to_process = self.search(domain, limit=job_count).try_lock_for_update()
         if not to_process:
-            return
-
-        to_process = to_process[:job_count]
-        if not self.env['res.company']._with_locked_records(to_process, allow_raising=False):
             return
 
         # Collect moves by res.partner that executed the Send & Print wizard, must be done before the _process
@@ -5782,8 +5774,7 @@ class AccountMove(models.Model):
                 partner._bus_send(*get_account_notification(partner_moves_success, True))
             partner_moves_error.sending_data = False
 
-        if need_retrigger:
-            self.env.ref('account.ir_cron_account_move_send')._trigger()
+        self.env['ir.cron']._commit_progress(len(to_process), remaining=self.search_count(domain))
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
