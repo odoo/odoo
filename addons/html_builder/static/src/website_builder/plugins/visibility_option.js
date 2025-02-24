@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
-import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { pyToJsLocale } from "@web/core/l10n/utils";
 import { Component } from "@odoo/owl";
@@ -148,18 +147,10 @@ class VisibilityOptionPlugin extends Plugin {
         return false;
     }
     onTargetHide(editingEl) {
-        applyFunDependOnSelectorAndExclude(
-            this.dependencies.visibility.hideInvisibleEl,
-            editingEl,
-            this.deviceSelector
-        );
+        this.dependencies.visibility.hideInvisibleEl(editingEl);
     }
     onTargetShow(editingEl) {
-        applyFunDependOnSelectorAndExclude(
-            this.dependencies.visibility.showInvisibleEl,
-            editingEl,
-            this.deviceSelector
-        );
+        this.dependencies.visibility.showInvisibleEl(editingEl);
     }
     normalizeCSSSelectors(rootEl) {
         for (const el of selectElements(rootEl, this.visibilityOptionSelector)) {

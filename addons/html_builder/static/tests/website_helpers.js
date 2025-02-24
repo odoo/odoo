@@ -14,6 +14,7 @@ import {
     contains,
     defineModels,
     getService,
+    mockService,
     models,
     mountWithCleanup,
     patchWithCleanup,
@@ -374,4 +375,35 @@ export async function confirmAddSnippet(snippetName) {
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
     await contains(previewSelector).click();
     await animationFrame();
+}
+
+export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) {
+    mockService("website", {
+        get currentWebsite() {
+            return {
+                metadata: {
+                    defaultLangName: "English (US)",
+                },
+                id: 1,
+            };
+        },
+    });
+    const snippetEl = await getStructureSnippet(snippetName);
+    return setupWebsiteBuilder(snippetEl.outerHTML, {
+        ...options,
+        hasToCreateWebsite: false,
+    });
+}
+
+export async function getStructureSnippet(snippetName) {
+    const html = await getWebsiteSnippets();
+    const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
+    return snippetsDocument.querySelector(`[data-snippet=${snippetName}]`).cloneNode(true);
+}
+
+export async function insertStructureSnippet(editor, snippetName) {
+    const snippetEl = await getStructureSnippet(snippetName);
+    const parentEl = editor.editable.querySelector("#wrap") || editor.editable;
+    parentEl.append(snippetEl);
+    editor.shared.history.addStep();
 }

@@ -6,8 +6,8 @@ import {
     defineWebsiteModels,
     openBuilderSidebar,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
 } from "./website_helpers";
-import { setupWebsiteBuilderWithSnippet } from "./options/helpers";
 import { animationFrame, click, waitFor } from "@odoo/hoot-dom";
 
 defineWebsiteModels();

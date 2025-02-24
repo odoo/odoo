@@ -1,7 +1,11 @@
 import { expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
+} from "../website_helpers";
 
 defineWebsiteModels();
 
@@ -27,6 +31,22 @@ test("click on 'Show/hide on desktop'", async () => {
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     await contains("button[data-action-id='toggleDeviceVisibility']").click();
     expect(".o_we_invisible_el_panel").not.toBeDisplayed();
+});
+
+test("show/hide a section", async () => {
+    await setupWebsiteBuilderWithSnippet("s_text_image");
+    await contains(":iframe section").click();
+    await contains(
+        "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
+    ).click();
+    expect(":iframe section").toHaveClass("d-lg-none o_snippet_desktop_invisible");
+    expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");
+    expect(":iframe section").toHaveAttribute("data-invisible", "1");
+    await contains(".o_we_invisible_entry").click();
+    expect(":iframe section").toHaveClass(
+        "d-lg-none o_snippet_desktop_invisible o_snippet_override_invisible"
+    );
+    expect(":iframe section").not.toHaveAttribute("data-invisible");
 });
 
 test("click on 'Hide on Mobile' then on 'Hide on desktop'", async () => {
