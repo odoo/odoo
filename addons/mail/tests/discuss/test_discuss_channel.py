@@ -447,8 +447,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                         ],
                         "res.partner": self._filter_partners_fields(
                             {
+                                "avatar_128_access_token": limited_field_access_token(
+                                    self.user_admin.partner_id, "avatar_128"
+                                ),
                                 "id": self.user_admin.partner_id.id,
-                                "im_status": "offline",
+                                "im_status": self.user_admin.im_status,
                                 "name": self.user_admin.partner_id.name,
                                 "write_date": fields.Datetime.to_string(
                                     self.user_admin.partner_id.write_date
