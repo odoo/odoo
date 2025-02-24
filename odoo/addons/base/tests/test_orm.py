@@ -187,6 +187,24 @@ class TestORM(TransactionCase):
         with self.assertRaises(LockError):
             inexisting.lock_for_update()
 
+    def test_try_lock_for_update(self):
+        partner = self.env['res.partner']
+        p1, p2, *_other = recs = partner.search([], limit=4)
+
+        # lock p1
+        self.assertEqual(p1.try_lock_for_update(allow_referencing=True), p1)
+        self.assertEqual(p1.try_lock_for_update(allow_referencing=False), p1)
+
+        with self.env.registry.cursor() as cr:
+            sub_recs = (p1 + p2).with_env(partner.env(cr=cr))
+            self.assertEqual(sub_recs.try_lock_for_update(), sub_recs[1])
+
+        self.assertEqual(recs.try_lock_for_update(limit=1), p1)
+        self.assertEqual(recs.try_lock_for_update(), recs)
+
+        # check that order is preserved when limiting
+        self.assertEqual(recs[::-1].try_lock_for_update(limit=1), recs[-1])
+
     def test_write_duplicate(self):
         p1 = self.env['res.partner'].create({'name': 'W'})
         (p1 + p1).write({'name': 'X'})
