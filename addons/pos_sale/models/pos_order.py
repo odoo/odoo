@@ -71,7 +71,7 @@ class PosOrder(models.Model):
             # confirm the unconfirmed sale orders that are linked to the sale order lines
             sale_orders = so_lines.mapped('order_id')
             for sale_order in sale_orders.filtered(lambda so: so.state in ['draft', 'sent']):
-                sale_order.action_confirm()
+                sale_order.with_context(skip_procurement=True).action_confirm()
 
             # update the demand qty in the stock moves related to the sale order line
             # flush the qty_delivered to make sure the updated qty_delivered is used when
