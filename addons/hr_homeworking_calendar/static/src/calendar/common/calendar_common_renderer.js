@@ -18,6 +18,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         });
     },
     get options(){
+        const dayCellDidMount = this.context?.hideInfo ? () => {} : this.onDayCellDidMount;
         return {
             ...super.options,
             eventOrder: function(event1, event2){
@@ -31,7 +32,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                     }
                 }
             },
-            dayCellDidMount: this.onDayCellDidMount,
+            dayCellDidMount: dayCellDidMount,
             dayHeaderDidMount: this.onDayHeaderDidMount,
             dayHeaderWillUnmount: this.onDayHeaderWillUnmount,
         };
