@@ -51,6 +51,7 @@ patch(PosStore.prototype, {
         const destKey = destLine.preparationKey;
         const srcQty = srcPrep[srcKey]?.quantity;
 
+        destLine.tax_ids = srcLine.tax_ids;
         if (srcQty) {
             if (srcQty <= qty) {
                 const newPrep = { ...srcPrep[srcKey], uuid: destLine.uuid };
