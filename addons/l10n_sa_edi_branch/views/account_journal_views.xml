@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_journal_form" model="ir.ui.view">
+            <field name="name">account.journal.form.l10n_sa_edi_branch</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="l10n_sa_edi.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='l10n_sa_serial_number']" position="after">
+                    <field name="l10n_sa_use_branch_crn" invisible="1"/>
+                    <field name="l10n_sa_branch_crn" placeholder="e.g: 3999999999" attrs="{'invisible': [('l10n_sa_use_branch_crn', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
