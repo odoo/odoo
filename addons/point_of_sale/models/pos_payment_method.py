@@ -113,6 +113,8 @@ class PosPaymentMethod(models.Model):
         for pm in self:
             if pm.journal_id and pm.journal_id.type not in ['cash', 'bank']:
                 raise UserError(_("Only journals of type 'Cash' or 'Bank' could be used with payment methods."))
+            if pm.journal_id and pm.journal_id.type == 'bank':
+                pm.outstanding_account_id = self.env['account.payment']._get_outstanding_account('inbound')
         if self.is_cash_count:
             self.use_payment_terminal = False
 
