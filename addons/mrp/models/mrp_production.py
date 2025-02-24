@@ -1831,6 +1831,8 @@ class MrpProduction(models.Model):
         new_moves_vals = []
         moves = []
         move_to_backorder_moves = {}
+        # unlink all unregistered move lines linked a move containing an effictive registration
+        (self.move_raw_ids | self.move_finished_ids).filtered(lambda m: m.picked and not m.additional).move_line_ids.filtered(lambda ml: not ml.picked).unlink()
         for production in self:
             for move in production.move_raw_ids | production.move_finished_ids:
                 if move.additional:
