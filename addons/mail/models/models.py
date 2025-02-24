@@ -250,9 +250,9 @@ class Base(models.AbstractModel):
         primary_emails = self._mail_get_primary_email()
         for record in self:
             email_cc_lst, email_to_lst = [], []
-            # main recipients (res.partner)
+            # main recipients (res.partner) (filter twice, otherwise prefetch is lost /shrug)
             recipients_all = customers.get(record.id).filtered(lambda p: not p.is_public)
-            recipients = recipients_all.filtered(lambda p: p.email_normalized)
+            recipients = customers.get(record.id).filtered(lambda p: not p.is_public and p.email_normalized)
             # to computation
             email_to = primary_emails[record.id]
             if not email_to:
