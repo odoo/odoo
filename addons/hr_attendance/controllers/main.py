@@ -111,7 +111,13 @@ class HrAttendance(http.Controller):
                         'kiosk_mode': kiosk_mode,
                         'from_trial_mode': from_trial_mode,
                         'barcode_source': company.attendance_barcode_source,
+<<<<<<< 18.0
                         'lang': py_to_js_locale(company.partner_id.lang),
+||||||| f3d4028ecf4b84d27354297a830978def25e393d
+                        'lang': company.partner_id.lang,
+=======
+                        'lang': company.partner_id.lang or company.env.lang,
+>>>>>>> 888c62d581bcd14b692a37413526b66fce4c84cf
                         'server_version_info': version_info.get('server_version_info'),
                     },
                 }
