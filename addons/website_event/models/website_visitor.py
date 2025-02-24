@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.exceptions import UserError
 
 
 class WebsiteVisitor(models.Model):
@@ -61,8 +62,8 @@ class WebsiteVisitor(models.Model):
         """ Search visitors with terms on events within their event registrations. E.g. [('event_registered_ids',
         'in', [1, 2])] should return visitors having a registration on events 1, 2 as
         well as their children for notification purpose. """
-        if operator == "not in":
-            raise NotImplementedError("Unsupported 'Not In' operation on visitors registrations")
+        if operator in ('not in', 'not any'):
+            raise UserError(self.env._("Unsupported 'Not In' operation on visitors registrations"))
 
         all_registrations = self.env['event.registration'].sudo().search([
             ('event_id', operator, operand)

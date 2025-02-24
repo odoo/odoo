@@ -26,6 +26,8 @@ OPERATOR_MAPPING = {
     '<=': operator.le,
     '>': operator.gt,
     '>=': operator.ge,
+    'in': lambda elem, container: elem in container,
+    'not in': lambda elem, container: elem not in container,
 }
 
 def _rating_avg_to_text(rating_avg):
