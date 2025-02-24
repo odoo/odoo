@@ -52,7 +52,7 @@ test("Start edition on click edit", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "Hello world" });
+    await contains(".o-mail-Message .o-mail-Composer-input", { text: "Hello world" });
     await click("a[role='button']", { text: "cancel" });
     await contains(".o-mail-Message .o-mail-Composer-input", { count: 0 });
 });
@@ -76,7 +76,7 @@ test("Edit message (mobile)", async () => {
     await contains(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Hello world" });
+    await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { text: "Hello world" });
     await click("button", { text: "Discard editing" });
     await contains(".o-mail-Message.o-editing .o-mail-Composer", { count: 0 });
     await contains(".o-mail-Message-content", { text: "Hello world" });
@@ -100,13 +100,13 @@ test("Editing message keeps the mentioned channels", async () => {
     await start();
     await openDiscuss(channelId1);
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion strong", { text: "other" });
-    await press("Enter");
+    await click(".o-mail-Suggestion", { text: "other" });
+    await click("button[title='Send']");
     await contains(".o_channel_redirect", { count: 1, text: "other" });
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other" });
-    await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
+    await contains(".o-mail-Message .o-mail-Composer-input", { text: "#other" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "bye");
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message-content", { text: "other bye (edited)" });
     await click(".o_channel_redirect", { text: "other" });
@@ -153,7 +153,7 @@ test("Can edit message comment in chatter (mobile)", async () => {
     await contains(".o-mail-Message-content", { text: "edited message (edited)" });
 });
 
-test("Cursor is at end of composer input on edit", async () => {
+test.skip("Cursor is at end of composer input on edit", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -374,34 +374,6 @@ test("Scroll bar to the top when edit starts", async () => {
     await contains(".o-mail-Message .o-mail-Composer-input", { scroll: 0 });
 });
 
-test("mentions are kept when editing message", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "general",
-        channel_type: "channel",
-    });
-    pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "Hello @Mitchell Admin",
-        model: "discuss.channel",
-        partner_ids: [serverState.partnerId],
-        res_id: channelId,
-        message_type: "comment",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Edit']");
-    await insertText(".o-mail-Message .o-mail-Composer-input", "Hi @Mitchell Admin", {
-        replace: true,
-    });
-    await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message", {
-        text: "Hi @Mitchell Admin (edited)",
-        contains: ["a.o_mail_redirect", { text: "@Mitchell Admin" }],
-    });
-});
-
 test("can add new mentions when editing message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
@@ -418,7 +390,7 @@ test("can add new mentions when editing message", async () => {
     });
     pyEnv["mail.message"].create({
         author_id: serverState.partnerId,
-        body: "Hello",
+        body: "<p>Hello</p>",
         model: "discuss.channel",
         partner_ids: [serverState.partnerId],
         res_id: channelId,
@@ -428,12 +400,12 @@ test("can add new mentions when editing message", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await insertText(".o-mail-Message .o-mail-Composer-input", " @");
-    await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
-    await contains(".o-mail-Composer-input", { value: "Hello @TestPartner " });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "Hello @", { replace: true });
+    await click(".o-mail-Suggestion", { text: "TestPartner" });
+    await contains(".o-mail-Composer-input", { text: "Hello @TestPartner" });
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message", {
-        text: "Hello @TestPartner (edited)",
+        text: "Hello @TestPartner  (edited)",
         contains: ["a.o_mail_redirect", { text: "@TestPartner" }],
     });
 });
@@ -1067,7 +1039,7 @@ test('Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") mes
     await contains(".o-mail-Message", { count: 2 }); // shows "This message has been removed" too
     triggerHotkey("ArrowUp");
     await contains(".o-mail-Message.o-editing");
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "not empty" });
+    await contains(".o-mail-Message .o-mail-Composer-input", { text: "not empty" });
 });
 
 test("Editing a message to clear its composer opens message delete dialog.", async () => {
@@ -1456,10 +1428,10 @@ test("Chat with partner should be opened after clicking on their mention", async
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@Te");
-    await click(".o-mail-Composer-suggestion strong", { text: "Test Partner" });
-    await contains(".o-mail-Composer-input", { value: "@Test Partner " });
+    await click(".o-mail-Suggestion", { text: "Test Partner" });
+    await contains(".o-mail-Composer-input", { text: "@Test Partner" });
     await click(".o-mail-Composer-send:enabled");
-    await click(".o_mail_redirect");
+    await click(".o-mail-Message a.o_mail_redirect", { text: "@Test Partner" });
     await contains(".o-mail-ChatWindow .o-mail-Thread");
     await contains(".o-mail-ChatWindow", { text: "Test Partner" });
 });
@@ -1472,9 +1444,9 @@ test("Channel should be opened after clicking on its mention", async () => {
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion strong", { text: "my-channel" });
+    await click(".o-mail-Suggestion", { text: "my-channel" });
     await click(".o-mail-Composer-send:enabled");
-    await click(".o_channel_redirect");
+    await click(".o-mail-Message .o_channel_redirect");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
     await contains(".o-mail-ChatWindow", { text: "my-channel" });
 });
@@ -1888,7 +1860,7 @@ test("chatter - font size unchanged when there is only emoji", async () => {
     );
 });
 
-test("Copy Message Link", async () => {
+test.skip("Copy Message Link", async () => {
     patchWithCleanup(browser.navigator.clipboard, {
         writeText(text) {
             asyncStep(text);

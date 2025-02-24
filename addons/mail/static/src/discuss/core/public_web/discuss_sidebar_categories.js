@@ -11,7 +11,6 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { markEventHandled } from "@web/core/utils/misc";
 
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
     "mail.discuss_sidebar_channel_indicators"
@@ -57,7 +56,6 @@ export class DiscussSidebarSubchannel extends Component {
 
     /** @param {MouseEvent} ev */
     openThread(ev, thread) {
-        markEventHandled(ev, "sidebar.openThread");
         thread.setAsDiscussThread();
     }
 }
@@ -142,7 +140,6 @@ export class DiscussSidebarChannel extends Component {
 
     /** @param {MouseEvent} ev */
     openThread(ev, thread) {
-        markEventHandled(ev, "sidebar.openThread");
         thread.setAsDiscussThread();
     }
 }

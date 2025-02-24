@@ -397,16 +397,16 @@ export class Store extends BaseStore {
         { mentionedChannels = [], mentionedPartners = [], specialMentions = [] } = {}
     ) {
         const validMentions = {};
-        validMentions.threads = mentionedChannels.filter((thread) => {
-            if (thread.parent_channel_id) {
-                return body.includes(
-                    `#${thread.parent_channel_id.displayName} > ${thread.displayName}`
-                );
-            }
-            return body.includes(`#${thread.displayName}`);
-        });
+        const htmlBody = new DOMParser().parseFromString(body, "text/html");
+        const threadsInBody = htmlBody.querySelectorAll(".o_channel_redirect");
+        const partnersInBody = htmlBody.querySelectorAll(".o_mail_redirect");
+        validMentions.threads = mentionedChannels.filter((thread) =>
+            Array.from(threadsInBody).some(
+                (t) => t.dataset.oeModel === thread.model && t.dataset.oeId === thread.id.toString()
+            )
+        );
         validMentions.partners = mentionedPartners.filter((partner) =>
-            body.includes(`@${partner.name}`)
+            Array.from(partnersInBody).some((p) => p.dataset.oeId === partner.id.toString())
         );
         validMentions.specialMentions = this.specialMentions
             .filter((special) => body.includes(`@${special.label}`))
@@ -446,7 +446,7 @@ export class Store extends BaseStore {
             partner_ids.push(...recipientIds);
         }
         postData = {
-            body: await prettifyMessageContent(body, validMentions),
+            body: await prettifyMessageContent(body),
             email_add_signature: emailAddSignature,
             message_type: "comment",
             subtype_xmlid: subtype,

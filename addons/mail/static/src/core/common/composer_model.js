@@ -4,13 +4,8 @@ export class Composer extends Record {
     static id = OR("thread", "message");
 
     clear() {
+        this.htmlBody = "<p><br/></p>";
         this.attachments.length = 0;
-        this.text = "";
-        Object.assign(this.selection, {
-            start: 0,
-            end: 0,
-            direction: "none",
-        });
     }
 
     attachments = Record.many("ir.attachment");
@@ -20,14 +15,8 @@ export class Composer extends Record {
     mentionedPartners = Record.many("Persona");
     mentionedChannels = Record.many("Thread");
     cannedResponses = Record.many("mail.canned.response");
-    text = "";
+    htmlBody = "<p><br/></p>";
     thread = Record.one("Thread");
-    /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
-    selection = {
-        start: 0,
-        end: 0,
-        direction: "none",
-    };
     /** @type {boolean} */
     forceCursorMove;
     isFocused = false;

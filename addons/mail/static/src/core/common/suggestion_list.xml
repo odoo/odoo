@@ -1,0 +1,98 @@
+<templates xml:space="preserve">
+    <t t-name="mail.SuggestionList">
+        <div t-ref="root" class="o-mail-SuggestionList py-2 bg-white overflow-auto my-1" style="width:300px;max-height:40vh;" t-on-mousedown.stop="" t-on-scroll="onScroll" >
+            <t t-foreach="suggestions" t-as="suggestion" t-key="suggestion_index">
+                <t t-if="suggestion.categoryId !== lastCategory">
+                    <div class="o-we-category mx-3 my-1 text-uppercase" t-esc="this.mailSuggestionsRegistry.get(suggestion.categoryId).name"/>
+                    <t t-set="lastCategory" t-value="suggestion.categoryId"/>
+                </t>
+                <div class="o-mail-Suggestion d-flex align-items-center px-3 py-2 cursor-pointer"
+                    t-att-class="{active: suggestion_index === currentIndex}"
+                    t-on-mouseenter="() => this.onMouseEnter(suggestion_index)"
+                    t-on-click="() => this.props.applySuggestion(suggestion)">
+                    <t t-if="suggestion.thread" t-call="mail.SuggestionList.Thread" t-with="suggestion"/>
+                    <t t-if="suggestion.partner" t-call="mail.SuggestionList.Partner" t-with="suggestion"/>
+                    <t t-if="suggestion.special" t-call="mail.SuggestionList.Special" t-with="suggestion"/>
+                    <t t-if="suggestion.command" t-call="mail.SuggestionList.Command" t-with="suggestion"/> 
+                    <t t-if="suggestion.cannedResponse" t-call="mail.SuggestionList.CannedResponse" t-with="suggestion"/>
+                    <t t-if="suggestion.emoji" t-call="mail.SuggestionList.Emoji" t-with="suggestion"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.SuggestionList.Special">
+        <div class="overflow-hidden">
+            <b class="o-mail-Suggestion-title text-truncate" t-esc="suggestion.special.displayName"/>
+            <div class="o-mail-Suggestion-description text-truncate" t-esc="suggestion.special.description" t-att-class="{'invisible': !suggestion.special.description}" />
+        </div>
+    </t>
+
+    <t t-name="mail.SuggestionList.Partner">
+        <t t-set="partner" t-value="suggestion.partner"/>
+        <div class="o-mail-Suggestion-avatar-status position-relative bg-white">
+            <img t-if="partner.avatarUrl" class="o-mail-Suggestion-img flex-shrink-0 rounded" t-att-src="partner.avatarUrl"/>
+            <ImStatus t-if="partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" persona="partner"/>
+        </div>
+        <div class="overflow-hidden ms-3">
+            <b class="o-mail-Suggestion-title text-truncate" t-esc="partner.name"/>
+            <div class="o-mail-Suggestion-description text-truncate" t-esc="partner.email" t-att-class="{'invisible': !partner.email}" />
+        </div>
+    </t>
+
+    <t t-name="mail.SuggestionList.Thread">
+        <t t-set="thread" t-value="suggestion.thread"/>
+        <img t-if="thread?.avatarUrl" class="o-mail-Suggestion-img rounded flex-shrink-0" t-att-src="thread.avatarUrl"/>
+        <div class="overflow-hidden ms-3">
+            <b class="o-mail-Suggestion-title text-truncate">
+                <t t-if="thread.parent_channel_id">
+                    <t t-esc="thread.parent_channel_id.displayName"/>
+                    <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                </t>
+                <t t-esc="thread.displayName"/>
+            </b>
+            <div class="o-mail-Suggestion-description text-truncate" t-esc="thread.description" t-att-class="{'invisible': !thread.description}" />
+        </div>
+    </t>
+
+    <t t-name="mail.SuggestionList.Command">
+        <i t-if="suggestion.command.icon" class="o-mail-Suggestion-img rounded d-flex flex-shrink-0 align-items-center justify-content-center fa" t-att-class="suggestion.command.icon"/>
+        <div class="overflow-hidden ms-3">
+            <b class="o-mail-Suggestion-title text-truncate" t-esc="suggestion.command.name"/>
+            <div class="o-mail-Suggestion-description text-wrap" t-esc="suggestion.command.help" t-att-class="{'invisible': !suggestion.command.help}" />
+        </div>
+    </t>
+
+    <t t-name="mail.SuggestionList.CannedResponse">
+        <div class="overflow-hidden ms-3">
+            <b class="o-mail-Suggestion-title text-truncate" t-esc="suggestion.title"/>
+            <div class="o-mail-Suggestion-description text-truncate" t-esc="suggestion.description" t-att-class="{'invisible': !suggestion.description}" />
+        </div>
+    </t>
+
+    <t t-name="mail.SuggestionList.Emoji">
+        <div class="overflow-hidden">
+            <strong class="px-2 align-self-center flex-shrink-1 fs-3">
+                <t t-esc="suggestion.emoji.codepoints"/>
+            </strong>
+            <em class="text-600 text-truncate align-self-center">
+                <t t-esc="suggestion.emoji.shortcodes.join(' ')"/>
+            </em>
+        </div>
+    </t>
+
+    <t t-name="mail.Suggestion.Partner">
+        <a t-att-href="href" t-att-data-oe-id="partnerId" data-oe-model="res.partner" target="_blank" contenteditable="false" draggable="false"
+           class="o_mail_redirect">@<t t-esc="displayName"/>
+        </a>
+    </t>
+
+    <t t-name="mail.Suggestion.Special">
+        <a t-att-href="href" target="_blank" contenteditable="false" draggable="false" class="o-discuss-mention">@<t t-esc="label"/>
+        </a>
+    </t>
+
+    <t t-name="mail.Suggestion.Thread">
+        <a t-att-href="href" t-att-class="className" t-att-data-oe-id="threadId" data-oe-model="discuss.channel" target="_blank" contenteditable="false" draggable="false" t-out="displayName"/>
+    </t>
+</templates>

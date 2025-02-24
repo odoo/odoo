@@ -3,7 +3,6 @@ import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { markEventHandled } from "@web/core/utils/misc";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -83,7 +82,6 @@ composerActionsRegistry
         name: _t("Add Emojis"),
         onClick: (component, action, ev) => {
             pickerOnClick(component, action, ev);
-            markEventHandled(ev, "Composer.onClickAddEmoji");
         },
         setup: (action) => {
             const component = useComponent();
@@ -113,7 +111,6 @@ composerActionsRegistry
         onClick: (component, action, ev) => {
             component.fileUploaderRef.el?.click();
             const composer = toRaw(component.props.composer);
-            markEventHandled(ev, "composer.clickOnAddAttachment");
             composer.autofocus++;
         },
         setup: () => {
@@ -143,7 +140,7 @@ composerActionsRegistry
                 .find(([delimiter]) => delimiter === "::"),
         icon: "fa fa-file-text-o",
         name: _t("Insert a Canned response"),
-        onClick: (component, action, ev) => component.onClickInsertCannedResponse(ev),
+        onClick: (component) => component.onClickInsertCannedResponse(),
         sequence: 5,
     });
 

@@ -78,7 +78,7 @@ test("can change the thread name of #general", async () => {
 
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer.o-focused");
     await contains("input.o-mail-Discuss-threadName:value(general)");
     await insertText("input.o-mail-Discuss-threadName:enabled", "special", { replace: true });
     triggerHotkey("Enter");
@@ -117,7 +117,7 @@ test("can change the thread description of #general", async () => {
 
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer.o-focused");
     await contains("input.o-mail-Discuss-threadDescription:value(General announcements...)");
     await insertText("input.o-mail-Discuss-threadDescription:enabled", "I want a burger today!", {
         replace: true,
@@ -243,7 +243,7 @@ test("Can use channel command /who", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
-    await press("Enter");
+    await click("button[title='Send']");
     await contains(".o_mail_notification", { text: "You are alone in this channel." });
 });
 
@@ -382,7 +382,7 @@ test("reply to message from inbox (message linked to document)", async () => {
     await contains(".o-mail-Message.o-selected");
     await contains(".o-mail-Composer");
     await contains(".o-mail-Composer-coreHeader", { text: "on: Refactoring" });
-    await insertText(".o-mail-Composer-input:focus", "Hello");
+    await insertText(".o-mail-Composer.o-focused .o-mail-Composer-input", "Hello");
     await press("Enter");
     await contains(".o-mail-Composer", { count: 0 });
     await contains(".o-mail-Message:not(.o-selected)");
@@ -910,7 +910,7 @@ test("post a simple message", async () => {
         asyncStep("message_post");
         expect(args.thread_model).toBe("discuss.channel");
         expect(args.thread_id).toBe(channelId);
-        expect(args.post_data.body).toBe("Test");
+        expect(args.post_data.body).toBe("<p>Test</p>");
         expect(args.post_data.message_type).toBe("comment");
         expect(args.post_data.subtype_xmlid).toBe("mail.mt_comment");
         await messagePostDef;
@@ -923,7 +923,7 @@ test("post a simple message", async () => {
     await press("Enter");
     await waitForSteps(["message_post"]);
     // optimistically show posted message
-    await contains(".o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Composer-input", { text: "" });
     await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
     await contains(".o-mail-Message-content", { text: "Test" });
     expect(".o-mail-Message-content").toHaveStyle({ opacity: "0.5" });
@@ -941,7 +941,9 @@ test("post several messages with failures", async () => {
     /** awaiting deferreds of message_post of msg 0, 1, 2 respectively  */
     const messagePostDefs = [new Deferred(), new Deferred(), new Deferred()];
     onRpcBefore("/mail/message/post", async (args) => {
-        await messagePostDefs[parseInt(args.post_data.body)];
+        const textContent = new DOMParser().parseFromString(args.post_data.body, "text/html").body
+            .textContent;
+        await messagePostDefs[parseInt(textContent)];
     });
     await start();
     await openDiscuss(channelId);
@@ -950,13 +952,13 @@ test("post several messages with failures", async () => {
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "0");
     await press("Enter");
-    await contains(".o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Composer-input", { text: "" });
     await insertText(".o-mail-Composer-input", "1");
     await press("Enter");
-    await contains(".o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Composer-input", { text: "" });
     await insertText(".o-mail-Composer-input", "2");
     await press("Enter");
-    await contains(".o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Composer-input", { text: "" });
     await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
     await contains(".o-mail-Thread", {
         contains: [
@@ -1038,10 +1040,10 @@ test("auto-focus composer on opening thread", async () => {
     await contains(".o-mail-Composer", { count: 0 });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer.o-focused");
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo User" });
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Demo User" });
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer.o-focused");
 });
 
 test("no out-of-focus notification on receiving self messages in chat", async () => {
@@ -1886,14 +1888,12 @@ test("composer state: attachments save and restore", async () => {
     const [channelId] = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Special" }]);
     await start();
     await openDiscuss(channelId);
-    await contains(
-        ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]"
-    );
+    await contains(".o-mail-Composer:has(p[placeholder='Message #General…']) input[type=file]");
     // Add attachment in a message for #general
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await editInput(
         document.body,
-        ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]",
+        ".o-mail-Composer:has(p[placeholder='Message #General…']) input[type=file]",
         [file]
     );
     await contains(".o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)");
@@ -1905,12 +1905,10 @@ test("composer state: attachments save and restore", async () => {
         new File(["hello3, world"], "text3.txt", { type: "text/plain" }),
         new File(["hello4, world"], "text4.txt", { type: "text/plain" }),
     ];
-    await contains(
-        ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]"
-    );
+    await contains(".o-mail-Composer:has(p[placeholder='Message #Special…']) input[type=file]");
     await editInput(
         document.body,
-        ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]",
+        ".o-mail-Composer:has(p[placeholder='Message #Special…']) input[type=file]",
         files
     );
     await contains(".o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)", { count: 3 });
@@ -2076,7 +2074,7 @@ test("Escape key should focus the composer if it's not focused", async () => {
     await openDiscuss(channelId);
     await click("button[title='Pinned Messages']");
     triggerHotkey("escape");
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer.o-focused");
 });
 
 test("Notification settings: basic rendering", async () => {

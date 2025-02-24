@@ -97,8 +97,9 @@ export class LinkPastePlugin extends Plugin {
 
     /**
      * @param {EditorSelection} selection
+     * @param {ClipboardEvent} ev
      */
-    removeFullySelectedLink(selection) {
+    removeFullySelectedLink(selection, ev) {
         // Replace entire link if its label is fully selected.
         const link = closestElement(selection.anchorNode, "a");
         if (link && cleanZWChars(selection.textContent()) === cleanZWChars(link.innerText)) {

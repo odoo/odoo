@@ -1,6 +1,6 @@
 import { ImageCropPlugin } from "@html_editor/main/media/image_crop_plugin";
 import { MediaPlugin } from "@html_editor/main/media/media_plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 
 export class ProjectSharingMediaPlugin extends MediaPlugin {
     resources = {

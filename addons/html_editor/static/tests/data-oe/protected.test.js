@@ -6,7 +6,7 @@ import { deleteBackward, insertText, undo } from "../_helpers/user_actions";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { parseHTML } from "@html_editor/utils/html";
 import { Plugin } from "@html_editor/plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 import { execCommand } from "../_helpers/userCommands";
 
 test("should ignore protected elements children mutations (true)", async () => {

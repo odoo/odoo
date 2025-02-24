@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add("crm_livechat.create_lead_from_chatbot",
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "edit I'd like to know more about the CRM application.",
+            run: "composer I'd like to know more about the CRM application.",
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("crm_livechat.create_lead_from_chatbot",
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "edit visitor@example.com",
+            run: "composer visitor@example.com",
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Composer-input",

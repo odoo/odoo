@@ -81,9 +81,9 @@ test("reply: discard on pressing escape", async () => {
     await contains(".o-mail-Composer");
     // Escape on suggestion prompt does not stop replying
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-SuggestionList");
     triggerHotkey("Escape");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-SuggestionList", { count: 0 });
     await contains(".o-mail-Composer");
     await click(".o-mail-Composer-input").catch(() => {});
     triggerHotkey("Escape");

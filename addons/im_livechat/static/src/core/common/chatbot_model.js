@@ -193,8 +193,8 @@ export class Chatbot extends Record {
     async _processAnswer(message) {
         if (
             this.currentStep.type === "free_input_multi" &&
-            this.thread.composer.text &&
-            this.tmpAnswer !== this.thread.composer.text
+            this.thread.composer.htmlBody &&
+            this.tmpAnswer !== this.thread.composer.htmlBody
         ) {
             return await this._delayThenProcessAnswerAgain(message);
         }
@@ -212,7 +212,7 @@ export class Chatbot extends Record {
     }
 
     async _delayThenProcessAnswerAgain(message) {
-        this.tmpAnswer = this.thread.composer.text;
+        this.tmpAnswer = this.thread.composer.htmlBody;
         await Promise.resolve(); // Ensure that it's properly debounced when called again
         return this._processAnswerDebounced(message);
     }

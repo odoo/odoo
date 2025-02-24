@@ -380,6 +380,16 @@ export class Message extends Component {
         }
     }
 
+    onClickEdit() {
+        const message = toRaw(this.props.message);
+        const htmlBody = message.body;
+        message.composer = {
+            mentionedPartners: message.recipients,
+            htmlBody,
+        };
+        this.state.isEditing = true;
+    }
+
     /**
      * @param {MouseEvent} ev
      */

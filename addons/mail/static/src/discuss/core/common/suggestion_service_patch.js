@@ -1,10 +1,17 @@
 import { SuggestionService } from "@mail/core/common/suggestion_service";
 import { cleanTerm } from "@mail/utils/common/format";
+import { _t } from "@web/core/l10n/translation";
 
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
 const commandRegistry = registry.category("discuss.channel_commands");
+const mailSuggestionsRegistry = registry.category("mail.suggestions");
+
+mailSuggestionsRegistry.add("command", {
+    name: _t("Channel Command"),
+    sequence: 1,
+});
 
 /** @type {SuggestionService} */
 const suggestionServicePatch = {
@@ -37,14 +44,13 @@ const suggestionServicePatch = {
                 }
                 return true;
             })
-            .map(([name, command]) => {
-                return {
-                    channel_types: command.channel_types,
-                    help: command.help,
-                    id: command.id,
-                    name,
-                };
-            });
+            .map(([name, command]) => ({
+                channel_types: command.channel_types,
+                help: command.help,
+                id: command.id,
+                icon: command.icon,
+                name,
+            }));
         const sortFunc = (c1, c2) => {
             if (c1.channel_types && !c2.channel_types) {
                 return -1;
@@ -74,10 +80,23 @@ const suggestionServicePatch = {
             }
             return c1.id - c2.id;
         };
-        return {
-            type: "ChannelCommand",
-            suggestions: sort ? commands.sort(sortFunc) : commands,
-        };
+        return sort
+            ? [
+                  ...commands.sort(sortFunc).map((c) => ({
+                      title: c.name,
+                      description: c.help,
+                      categoryId: "command",
+                      command: c,
+                  })),
+              ]
+            : [
+                  ...commands.map((c) => ({
+                      title: c.name,
+                      description: c.help,
+                      categoryId: "command",
+                      command: c,
+                  })),
+              ];
     },
     /** @override */
     sortPartnerSuggestionsContext() {

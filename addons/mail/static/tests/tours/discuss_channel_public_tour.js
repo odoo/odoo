@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Write something in composer",
             trigger: ".o-mail-Composer-input",
-            run: "edit cheese",
+            run: "composer cheese",
         },
         { trigger: ".o-mail-Composer button[title='More Actions']", run: "click" },
         {
@@ -158,7 +158,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Edit message",
             trigger: ".o-mail-Message .o-mail-Composer-input",
-            run: "edit vegetables",
+            run: "composer vegetables",
         },
         {
             content: "Add one more file in composer",

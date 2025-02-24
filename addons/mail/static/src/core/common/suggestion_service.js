@@ -2,9 +2,34 @@ import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { cleanTerm } from "@mail/utils/common/format";
 import { toRaw } from "@odoo/owl";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { _t } from "@web/core/l10n/translation";
 
 import { registry } from "@web/core/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
+
+export const mailSuggestionsRegistry = registry.category("mail.suggestions");
+
+mailSuggestionsRegistry
+    .add("partner", {
+        name: _t("Contact"),
+        sequence: 1,
+    })
+    .add("thread", {
+        name: _t("Channel"),
+        sequence: 1,
+    })
+    .add("special", {
+        name: _t("Special Command"),
+        sequence: 5,
+    })
+    .add("cannedResponse", {
+        name: _t("Canned Response"),
+        sequence: 1,
+    })
+    .add("emoji", {
+        name: _t("Emoji"),
+        sequence: 1,
+    });
 
 export class SuggestionService {
     /**
@@ -142,10 +167,23 @@ export class SuggestionService {
             }
             return c1.id - c2.id;
         };
-        return {
-            type: "mail.canned.response",
-            suggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
-        };
+        return sort
+            ? [
+                  ...cannedResponses.sort(sortFunc).map((c) => ({
+                      title: c.source,
+                      description: c.substitution,
+                      categoryId: "cannedResponse",
+                      cannedResponse: c,
+                  })),
+              ]
+            : [
+                  ...cannedResponses.map((c) => ({
+                      title: c.source,
+                      description: c.substitution,
+                      categoryId: "cannedResponse",
+                      cannedResponse: c,
+                  })),
+              ];
     }
 
     searchEmojisSuggestions(cleanedSearchTerm) {
@@ -153,10 +191,13 @@ export class SuggestionService {
         if (this.emojis && cleanedSearchTerm) {
             emojis = fuzzyLookup(cleanedSearchTerm, this.emojis, (emoji) => emoji.shortcodes);
         }
-        return {
-            type: "emoji",
-            suggestions: emojis,
-        };
+        return [
+            ...emojis.map((e) => ({
+                title: e.name,
+                categoryId: "emoji",
+                emoji: e,
+            })),
+        ];
     }
 
     /**
@@ -246,12 +287,41 @@ export class SuggestionService {
                         cleanTerm(special.description.toString()).includes(cleanedSearchTerm))
             )
         );
-        return {
-            type: "Partner",
-            suggestions: sort
-                ? [...this.sortPartnerSuggestions(suggestions, cleanedSearchTerm, thread)]
-                : suggestions,
-        };
+        return sort
+            ? [
+                  ...this.sortPartnerSuggestions(suggestions, cleanedSearchTerm, thread).map((p) =>
+                      p.isSpecial
+                          ? {
+                                title: p.displayName,
+                                description: p.description,
+                                categoryId: "special",
+                                special: p,
+                            }
+                          : {
+                                title: p.name,
+                                description: p.email,
+                                categoryId: "partner",
+                                partner: p,
+                            }
+                  ),
+              ]
+            : [
+                  ...suggestions.map((p) =>
+                      p.isSpecial
+                          ? {
+                                title: p.displayName,
+                                description: p.description,
+                                categoryId: "special",
+                                special: p,
+                            }
+                          : {
+                                title: p.name,
+                                description: p.email,
+                                categoryId: "partner",
+                                partner: p,
+                            }
+                  ),
+              ];
     }
 
     /**
@@ -338,10 +408,23 @@ export class SuggestionService {
             }
             return c1.id - c2.id;
         };
-        return {
-            type: "Thread",
-            suggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
-        };
+        return sort
+            ? [
+                  ...suggestionList.sort(sortFunc).map((t) => ({
+                      title: t.displayName,
+                      description: t.description,
+                      categoryId: "thread",
+                      thread: t,
+                  })),
+              ]
+            : [
+                  ...suggestionList.map((t) => ({
+                      title: t.displayName,
+                      description: t.description,
+                      categoryId: "thread",
+                      thread: t,
+                  })),
+              ];
     }
 }
 

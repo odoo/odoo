@@ -353,6 +353,14 @@ export class SelectionPlugin extends Plugin {
             cloneContents: () => range.cloneContents(),
         });
     }
+
+    /**
+     * @return { Selection }
+     */
+    getSelection() {
+        return this.document.getSelection();
+    }
+
     /**
      @return { EditorSelection }
      */
@@ -364,7 +372,7 @@ export class SelectionPlugin extends Plugin {
      * @return { SelectionData }
      */
     getSelectionData() {
-        const selection = this.document.getSelection();
+        const selection = this.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         const documentSelection =
             selection?.anchorNode && selection?.focusNode

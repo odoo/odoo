@@ -17,7 +17,7 @@ import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import { contains, patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { fontSizeItems, fontItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
-import { MAIN_PLUGINS } from "../src/plugin_sets";
+import { MAIN_PLUGINS } from "../src/plugin_sets_core_main";
 import { convertNumericToUnit, getCSSVariableValue, getHtmlStyle } from "../src/utils/formatting";
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";

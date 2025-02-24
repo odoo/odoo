@@ -1,13 +1,16 @@
 import { Composer } from "@mail/core/common/composer";
+import { SuggestionPlugin } from "@mail/core/common/plugins/suggestion_plugin";
 
 import { patch } from "@web/core/utils/patch";
 
 patch(Composer.prototype, {
-    setup() {
-        super.setup();
+    get wysiwygConfigs() {
+        const configs = super.wysiwygConfigs;
         if (this.env.inFrontendPortalChatter) {
-            this.suggestion = undefined;
+            configs.Plugins = configs.Plugins.filter((plugin) => plugin !== SuggestionPlugin);
+            configs.classList.push("o-mail-Composer-input-portal");
         }
+        return configs;
     },
 
     get showComposerAvatar() {

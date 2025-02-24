@@ -1,6 +1,6 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
+import { isEventHandled } from "@web/core/utils/misc";
 
 import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 
@@ -137,7 +137,6 @@ export class NavigableList extends Component {
         const hotkey = getActiveHotkey(ev);
         switch (hotkey) {
             case "enter":
-                markEventHandled(ev, "NavigableList.select");
                 if (this.state.activeIndex === null) {
                     this.close();
                     return;
@@ -145,7 +144,6 @@ export class NavigableList extends Component {
                 this.selectOption(ev, this.state.activeIndex);
                 break;
             case "escape":
-                markEventHandled(ev, "NavigableList.close");
                 this.close();
                 break;
             case "tab":

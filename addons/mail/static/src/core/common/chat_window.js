@@ -107,13 +107,16 @@ export class ChatWindow extends Component {
         if (ev.target.closest(".o-dropdown") || ev.target.closest(".o-dropdown--menu")) {
             return;
         }
+        if (
+            document.querySelector(".o-mail-SuggestionList") &&
+            (ev.key === "Tab" || ev.key === "Enter")
+        ) {
+            return;
+        }
         ev.stopPropagation(); // not letting home menu steal my CTRL-C
         switch (ev.key) {
             case "Escape":
-                if (
-                    isEventHandled(ev, "NavigableList.close") ||
-                    isEventHandled(ev, "Composer.discard")
-                ) {
+                if (isEventHandled(ev, "Composer.discard")) {
                     return;
                 }
                 if (this.state.editingName) {
