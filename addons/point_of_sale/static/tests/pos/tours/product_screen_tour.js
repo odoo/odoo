@@ -534,3 +534,17 @@ registry.category("web_tour.tours").add("CustomerPopupTour", {
             ProductScreen.clickCustomer("Z partner to scroll"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pricelist_multi_items_different_qty_thresholds", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("tpmcapi product"),
+            ProductScreen.clickDisplayedProduct("tpmcapi product"),
+            ProductScreen.clickDisplayedProduct("tpmcapi product"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("30"),
+        ].flat(),
+});
