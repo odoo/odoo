@@ -12,11 +12,11 @@ import { deepCopy, isObject, pick } from "@web/core/utils/objects";
 import * as fields from "./mock_fields";
 import { MockServer } from "./mock_server";
 import {
-    MockServerError,
     getKwArgs,
     getRecordQualifier,
     makeKwArgs,
     makeServerError,
+    MockServerError,
     safeSplit,
 } from "./mock_server_utils";
 
@@ -24,17 +24,15 @@ const {
     DEFAULT_FIELD_VALUES,
     DEFAULT_RELATIONAL_FIELD_VALUES,
     DEFAULT_SELECTION_FIELD_VALUES,
+    S_FIELD,
     isComputed,
 } = fields;
 
 /**
+ * @typedef {import("fields").INumerical["aggregator"]} Aggregator
+ * @typedef {import("fields").FieldDefinition} FieldDefinition
+ * @typedef {import("fields").FieldType} FieldType
  * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
- *
- * @typedef {import("./mock_fields").FieldDefinition} FieldDefinition
- *
- * @typedef {import("./mock_fields").FieldType} FieldType
- *
- * @typedef {FieldDefinition["type"]} FieldType
  *
  * @typedef {{
  *  domain?: DomainListRepr;
@@ -46,8 +44,6 @@ const {
  *  orderby?: string;
  * }} GroupByParams
  *
- * @typedef {import("./mock_fields").GroupOperator} GroupOperator
- *
  * @typedef {typeof Model} ModelConstructor
  *
  * @typedef {{
@@ -56,14 +52,14 @@ const {
  *  id: number | false;
  *  name: string;
  *  write_date: string;
- *  [key: string]: any;
+ *  [key: string]: unknown;
  * }} ModelRecord
  *
  * @typedef {{
  *  __domain: string;
  *  __count: number;
- *  __range: Record<string, any>;
- *  [key: string]: any;
+ *  __range: Record<string, unknown>;
+ *  [key: string]: unknown;
  * }} ModelRecordGroup
  *
  * @typedef {{
@@ -132,35 +128,48 @@ const DATETIME_FORMAT = {
 };
 
 /**
- * @param {Model} model
- * @param {ModelRecord} record
- * @param {Record<string, any>} [context]
+ * @param {Iterable<[FieldDefinition, string, Aggregator?]>} aggregatedFields
+ * @param {ModelRecordGroup} group
+ * @param {ModelRecord[]} records
  */
-const applyDefaults = ({ _fields }, record, context) => {
-    for (const fieldName in _fields) {
-        if (fieldName === "id" || record[fieldName] !== undefined) {
-            continue;
-        }
-        if (fieldName === "active") {
-            record[fieldName] = true;
-            continue;
-        }
-        if (fieldName === "create_uid") {
-            record.create_uid = MockServer.env.uid;
-            continue;
-        }
-        const fieldDef = _fields[fieldName];
-        if (context && `default_${fieldName}` in context) {
-            record[fieldName] = context[`default_${fieldName}`];
-        } else if ("default" in fieldDef) {
-            record[fieldName] =
-                typeof fieldDef.default === "function"
-                    ? fieldDef.default(record)
-                    : fieldDef.default;
-        } else if (isX2MField(fieldDef)) {
-            record[fieldName] = [];
-        } else {
-            record[fieldName] = DEFAULT_FIELD_VALUES[fieldDef.type]();
+const aggregateFields = (aggregatedFields, group, records) => {
+    for (const [field, name, aggregator] of aggregatedFields) {
+        switch (field.type) {
+            case "integer":
+            case "float": {
+                if (aggregator === "array_agg") {
+                    group[name] = records.map((r) => r[field.name]);
+                } else if (records.length) {
+                    group[name] = 0;
+                    for (const r of records) {
+                        group[name] += r[field.name];
+                    }
+                } else {
+                    group[name] = false;
+                }
+                break;
+            }
+            case "many2one":
+            case "reference": {
+                const ids = records.map((r) => r[field.name]);
+                if (aggregator === "array_agg") {
+                    group[name] = ids.map((id) => (id ? id : null));
+                } else {
+                    const uniqueIds = unique(ids).filter(Boolean);
+                    group[name] = uniqueIds.length;
+                }
+                break;
+            }
+            case "boolean": {
+                if (aggregator === "array_agg") {
+                    group[name] = records.map((r) => r[field.name]);
+                } else if (aggregator === "bool_or") {
+                    group[name] = records.some((r) => Boolean(r[field.name]));
+                } else if (aggregator === "bool_and") {
+                    group[name] = records.every((r) => Boolean(r[field.name]));
+                }
+                break;
+            }
         }
     }
 };
@@ -179,13 +188,6 @@ const assignArray = (target, ...arrays) => {
     target.length = Math.max(...arrays.map((array) => array.length));
     return target;
 };
-
-/**
- *
- * @param {string} name
- * @returns
- */
-const constructorToModelName = (name) => name.replace(/([a-z])([A-Z])/g, "$1.$2").toLowerCase();
 
 /**
  * Converts an Object representing a record to actual return Object of the
@@ -227,6 +229,16 @@ const convertToOnChange = (model, values, specification) => {
         }
     }
     return values;
+};
+
+/**
+ * @param {typeof Model} ModelClass
+ */
+const createRawInstance = (ModelClass) => {
+    modelInstanceLock++;
+    const model = new ModelClass();
+    modelInstanceLock--;
+    return model;
 };
 
 /**
@@ -359,6 +371,85 @@ const getDateNumberSortingValue = (group, fieldName) => {
     }
     return value;
 };
+
+/**
+ * @param {unknown} value
+ */
+const isEmptyValue = (value) => {
+    if (!value) {
+        return true;
+    }
+    if (Array.isArray(value)) {
+        return value.length === 0;
+    }
+    if (typeof value === "object") {
+        return Object.keys(value).length === 0;
+    }
+    return false;
+};
+
+/**
+ * @this {typeof Model}
+ * @param {Model} [previous]
+ */
+function getModelDefinition(previous) {
+    const model = createRawInstance(this);
+    model._name ||= this.getModelName(model);
+
+    // Inheritted properties
+    if (previous && !modelInstanceLock) {
+        if (this === previous.constructor) {
+            // Same constructor: override model properties
+            for (const [key, map] of INHERITED_PRIMITIVE_KEYS) {
+                model[key] = map ? map(previous[key]) : previous[key];
+            }
+            for (const [key, map] of INHERITED_OBJECT_KEYS) {
+                Object.assign(model[key], map ? map(previous[key]) : previous[key]);
+            }
+            assignArray(model._records, deepCopy(previous._records));
+        } else {
+            // Different constructor: only re-assign empty values
+            for (const [key, map] of INHERITED_PRIMITIVE_KEYS) {
+                if (isEmptyValue(model[key])) {
+                    model[key] = map ? map(previous[key]) : previous[key];
+                }
+            }
+            for (const [key, map] of INHERITED_OBJECT_KEYS) {
+                for (const subKey in previous[key]) {
+                    // Assign only if empty
+                    if (isEmptyValue(previous[key][subKey])) {
+                        previous[key][subKey] = map
+                            ? map(previous[key][subKey])
+                            : previous[key][subKey];
+                    }
+                }
+            }
+            if (!model._records.length) {
+                assignArray(model._records, deepCopy(previous._records));
+            }
+        }
+    }
+
+    // Fields declared on '_fields' object
+    for (const [fieldName, fieldDef] of Object.entries(model._fields)) {
+        if (!fieldDef) {
+            delete model._fields[fieldName];
+            continue;
+        }
+        validateFieldDefinition(fieldName, fieldDef);
+    }
+
+    // Fields declared as JS class fields (do not override explicit fields)
+    for (const [fieldName, fieldDef] of Object.entries(model)) {
+        if (!fieldDef?.[S_FIELD]) {
+            continue;
+        }
+        model._fields[fieldName] ||= validateFieldDefinition(fieldName, fieldDef);
+        delete model[fieldName];
+    }
+
+    return model;
+}
 
 /**
  * Returns the field by which a given model must be ordered.
@@ -564,10 +655,10 @@ const isValidFieldValue = (record, fieldDef) => {
             return typeof value === "boolean";
         }
         case "date": {
-            return DATE_REGEX.test(value);
+            return R_DATE.test(value);
         }
         case "datetime": {
-            return DATE_TIME_REGEX.test(value);
+            return R_DATE_TIME.test(value);
         }
         case "float":
         case "monetary": {
@@ -1216,6 +1307,20 @@ const updateComodelRelationalFields = (model, record, originalRecord) => {
 };
 
 /**
+ * @param {string} fieldName
+ * @param {FieldDefinition} fieldDef
+ */
+const validateFieldDefinition = (fieldName, fieldDef) => {
+    if (fieldDef[S_FIELD] && fieldDef.name) {
+        throw new MockServerError(
+            `cannot set the name of field "${fieldName}" from its definition: got "${fieldDef.name}"`
+        );
+    }
+    delete fieldDef[S_FIELD];
+    return fieldDef;
+};
+
+/**
  * @param {string} modelName
  * @param {ViewType} viewType
  * @param {number | false} viewId
@@ -1230,11 +1335,28 @@ const viewNotFoundError = (modelName, viewType, viewId, consequence) => {
     return new MockServerError(message);
 };
 
+const INHERITED_OBJECT_KEYS = [
+    ["_computes", null],
+    ["_fields", deepCopy],
+    ["_onChanges", null],
+    ["_toolbar", deepCopy],
+    ["_views", null],
+];
+const INHERITED_PRIMITIVE_KEYS = [
+    ["_description", null],
+    ["_inherit", null],
+    ["_order", null],
+    ["_parent_name", null],
+    ["_rec_name", null],
+    ["_related", (set) => new Set(set)],
+];
+
 // Other constants
-const AGGREGATE_FUNCTION_REGEX = /(\w+)(?::(\w+)(?:\((\w+)\))?)?/;
-const DATE_REGEX = /\d{4}-\d{2}-\d{2}/;
-const DATE_TIME_REGEX = /\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?/;
-/** @type {GroupOperator[]} */
+const R_AGGREGATE_FUNCTION = /(\w+)(?::(\w+)(?:\((\w+)\))?)?/;
+const R_CAMEL_CASE = /([a-z])([A-Z])/g;
+const R_DATE = /\d{4}-\d{2}-\d{2}/;
+const R_DATE_TIME = /\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?/;
+/** @type {Aggregator[]} */
 const VALID_AGGREGATE_FUNCTIONS = [
     "array_agg",
     "avg",
@@ -1251,7 +1373,12 @@ const VALID_AGGREGATE_FUNCTIONS = [
 const inlineViewArchs = Object.create(null);
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
-let modelInstanceLock = false;
+/**
+ * This variable is meant to prevent model instances from inheritting properties
+ * from their assigned definition. The default behaviour (i.e. with inheritance)
+ * is only meant to be applied on automatic array creations (e.g. when calling `.filter()`).
+ */
+let modelInstanceLock = 0;
 
 /**
  * @param {string} modelName
@@ -1285,50 +1412,15 @@ export class Model extends Array {
     static definitionGetter = null;
 
     static get definition() {
-        if (!this.definitionGetter) {
-            this.definitionGetter = createJobScopedGetter((previous) => {
-                modelInstanceLock = true;
-                const model = new this();
-                modelInstanceLock = false;
-
-                // Inheritted properties
-                if (previous) {
-                    model._computes = { ...previous._computes };
-                    model._fetch = previous._fetch;
-                    model._fields = { ...previous._fields };
-                    model._inherit = previous._inherit;
-                    model._name = previous._name;
-                    model._onChanges = { ...previous._onChanges };
-                    model._order = previous._order;
-                    model._parent_name = previous._parent_name;
-                    model._rec_name = previous._rec_name;
-                    model._records = JSON.parse(JSON.stringify(previous._records));
-                    model._related = new Set(previous._related);
-                    model._toolbar = JSON.parse(JSON.stringify(previous._toolbar));
-                    model._views = { ...previous._views };
-                }
-
-                // Records
-                assignArray(model, model._records);
-
-                // Name
-                model._name ||= constructorToModelName(this.name) || "anonymous";
-
-                // Fields
-                for (const [key, value] of Object.entries(model)) {
-                    if (value?.[fields.FIELD_SYMBOL]) {
-                        model._fields[key] = value;
-                        delete model[key];
-                    }
-                }
-                if (!model._rec_name && "name" in model._fields) {
-                    model._rec_name = "name";
-                }
-
-                return model;
-            });
-        }
+        this.definitionGetter ||= createJobScopedGetter(getModelDefinition);
         return this.definitionGetter();
+    }
+
+    static get _description() {
+        return this.definition._description;
+    }
+    static set _description(value) {
+        this.definition._description = value;
     }
 
     static get _fields() {
@@ -1388,10 +1480,10 @@ export class Model extends Array {
     }
 
     static get _records() {
-        return this.definition;
+        return this.definition._records;
     }
     static set _records(value) {
-        assignArray(this.definition, value);
+        assignArray(this.definition._records, value);
     }
 
     static get _toolbar() {
@@ -1408,12 +1500,25 @@ export class Model extends Array {
         this.definition._views = value;
     }
 
+    /**
+     * @param {Model} [instance]
+     */
+    static getModelName(instance) {
+        instance ||= createRawInstance(this);
+        return (
+            instance._name ||
+            instance._inherit ||
+            (this.name ? this.name.replace(R_CAMEL_CASE, "$1.$2").toLowerCase() : "anonymous")
+        );
+    }
+
     /** @type {Record<string, (this: Model, fieldName: string) => void>} */
     _computes = {};
-    _fetch = false;
+    _description = "";
     /**
      * @type {Omit<Model,
      *  "_computes"
+     *  | "_description"
      *  | "_fields"
      *  | "_inherit"
      *  | "_name"
@@ -1477,7 +1582,7 @@ export class Model extends Array {
             const modelInstance = this.constructor.definition;
 
             this._computes = modelInstance._computes;
-            this._fetch = modelInstance._fetch;
+            this._description = modelInstance._description;
             this._fields = modelInstance._fields;
             this._inherit = modelInstance._inherit;
             this._name = modelInstance._name;
@@ -1485,7 +1590,6 @@ export class Model extends Array {
             this._order = modelInstance._order;
             this._parent_name = modelInstance._parent_name;
             this._rec_name = modelInstance._rec_name;
-            this._records = modelInstance._records;
             this._related = modelInstance._related;
             this._views = modelInstance._views;
         }
@@ -1583,7 +1687,7 @@ export class Model extends Array {
             const record = { id: this._getNextId() };
             ids.push(record.id);
             this.push(record);
-            applyDefaults(this, values, kwargs.context);
+            this._applyDefaults(values, kwargs.context);
             this._write(values, record.id);
         }
         this.browse(ids)._applyComputesAndValidate();
@@ -1825,54 +1929,6 @@ export class Model extends Array {
      * @param {boolean} [lazy]
      */
     read_group(domain, fields, groupby, offset, limit, orderby, lazy) {
-        /**
-         * @param {ModelRecordGroup} group
-         * @param {ModelRecord[]} records
-         */
-        const aggregateFields = (group, records) => {
-            for (const { fieldName, func, name } of aggregatedFields) {
-                switch (this._fields[fieldName].type) {
-                    case "integer":
-                    case "float": {
-                        if (func === "array_agg") {
-                            group[name] = records.map((r) => r[fieldName]);
-                        } else {
-                            if (!records.length) {
-                                group[name] = false;
-                            } else {
-                                group[name] = 0;
-                                for (const r of records) {
-                                    group[name] += r[fieldName];
-                                }
-                            }
-                        }
-                        break;
-                    }
-                    case "many2one":
-                    case "reference": {
-                        const ids = records.map((r) => r[fieldName]);
-                        if (func === "array_agg") {
-                            group[name] = ids.map((id) => (id ? id : null));
-                        } else {
-                            const uniqueIds = unique(ids).filter(Boolean);
-                            group[name] = uniqueIds.length;
-                        }
-                        break;
-                    }
-                    case "boolean": {
-                        if (func === "array_agg") {
-                            group[name] = records.map((r) => r[fieldName]);
-                        } else if (func === "bool_or") {
-                            group[name] = records.some((r) => Boolean(r[fieldName]));
-                        } else if (func === "bool_and") {
-                            group[name] = records.every((r) => Boolean(r[fieldName]));
-                        }
-                        break;
-                    }
-                }
-            }
-        };
-
         const kwargs = getKwArgs(
             arguments,
             "domain",
@@ -1898,37 +1954,32 @@ export class Model extends Array {
         if (fields.length === 0) {
             for (const fieldName in this._fields) {
                 if (!groupByFieldNames.includes(fieldName)) {
-                    aggregatedFields.push({ fieldName, name: fieldName });
+                    aggregatedFields.push([this._fields[fieldName], fieldName]);
                 }
             }
         } else {
-            fields.forEach((fspec) => {
-                const [, name, func, fname] = fspec.match(AGGREGATE_FUNCTION_REGEX);
-                const fieldName = func ? fname || name : name;
-                if (func && !VALID_AGGREGATE_FUNCTIONS.includes(func)) {
-                    throw new MockServerError(`invalid aggregation function "${func}"`);
+            for (const fspec of fields) {
+                const [, name, aggregator, fname] = fspec.match(R_AGGREGATE_FUNCTION);
+                const fieldName = aggregator ? fname || name : name;
+                if (aggregator && !VALID_AGGREGATE_FUNCTIONS.includes(aggregator)) {
+                    throw new MockServerError(`invalid aggregation function "${aggregator}"`);
                 }
-                if (!this._fields[fieldName]) {
-                    return;
-                }
-                if (groupByFieldNames.includes(fieldName)) {
-                    // grouped fields are not aggregated
-                    return;
-                }
+                const field = this._fields[fieldName];
                 if (
-                    ["many2one", "reference"].includes(this._fields[fieldName].type) &&
-                    !["count_distinct", "array_agg"].includes(func)
+                    !field ||
+                    groupByFieldNames.includes(fieldName) || // grouped fields are not aggregated
+                    (["many2one", "reference"].includes(field.type) &&
+                        !["count_distinct", "array_agg"].includes(aggregator))
                 ) {
-                    return;
+                    continue;
                 }
-
-                aggregatedFields.push({ fieldName, func, name });
-            });
+                aggregatedFields.push([field, name, aggregator]);
+            }
         }
 
         if (!groupBy.length) {
             const group = { __count: records.length, __domain: kwargs.domain };
-            aggregateFields(group, records);
+            aggregateFields(aggregatedFields, group, records);
             return [group];
         }
 
@@ -2066,7 +2117,7 @@ export class Model extends Array {
                 countKey = "__count";
             }
             group[countKey] = groupRecords.length;
-            aggregateFields(group, groupRecords);
+            aggregateFields(aggregatedFields, group, groupRecords);
             readGroupResult.push(group);
         }
 
@@ -2714,6 +2765,39 @@ export class Model extends Array {
         }
     }
 
+    /**
+     * @param {ModelRecord} record
+     * @param {Record<string, any>} [context]
+     */
+    _applyDefaults(record, context) {
+        for (const fieldName in this._fields) {
+            if (fieldName === "id" || record[fieldName] !== undefined) {
+                continue;
+            }
+            if (fieldName === "active") {
+                record[fieldName] = true;
+                continue;
+            }
+            if (fieldName === "create_uid") {
+                record.create_uid = MockServer.env.uid;
+                continue;
+            }
+            const fieldDef = this._fields[fieldName];
+            if (context && `default_${fieldName}` in context) {
+                record[fieldName] = context[`default_${fieldName}`];
+            } else if ("default" in fieldDef) {
+                record[fieldName] =
+                    typeof fieldDef.default === "function"
+                        ? fieldDef.default.call(this, record)
+                        : fieldDef.default;
+            } else if (isX2MField(fieldDef)) {
+                record[fieldName] = [];
+            } else {
+                record[fieldName] = DEFAULT_FIELD_VALUES[fieldDef.type]();
+            }
+        }
+    }
+
     _compute_display_name() {
         if (this._rec_name) {
             for (const record of this) {
@@ -3280,7 +3364,7 @@ export class Model extends Array {
  *  }
  */
 export class ServerModel extends Model {
-    _fetch = true;
+    static _fetch = true;
 }
 
 export const Command = {

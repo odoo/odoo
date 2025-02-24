@@ -141,7 +141,7 @@ test("radio field on a selection in a new record", async () => {
 });
 
 test("two radio field with same selection", async () => {
-    Partner._fields.color_2 = Partner._fields.color;
+    Partner._fields.color_2 = { ...Partner._fields.color };
     Partner._records[0].color = "black";
     Partner._records[0].color_2 = "black";
 

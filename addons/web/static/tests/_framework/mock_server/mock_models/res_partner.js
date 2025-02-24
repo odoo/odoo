@@ -5,11 +5,11 @@ export class ResPartner extends ServerModel {
     _name = "res.partner";
 
     _records = [
-        {
-            id: serverState.companies[0]?.id,
+        ...serverState.companies.map((company) => ({
+            id: company.id,
             active: true,
-            name: serverState.companies[0]?.name,
-        },
+            name: company.name,
+        })),
         {
             id: serverState.partnerId,
             active: true,

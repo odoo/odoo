@@ -6,6 +6,7 @@ import {
     defineModels,
     fields,
     makeServerError,
+    MockServer,
     mockService,
     models,
     mountView,
@@ -1326,8 +1327,9 @@ test("can properly evaluate invisible elements in a hierarchy card", async () =>
 test("Reload the view with the same unfolded records when clicking with a view button", async () => {
     mockService("action", {
         doActionButton({ resId, onClose }) {
-            const record = Employee._records[resId - 1];
-            record.name = "_" + record.name;
+            for (const record of MockServer.env["hr.employee"].browse(resId)) {
+                record.name = "_" + record.name;
+            }
             onClose();
         },
     });

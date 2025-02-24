@@ -74,6 +74,7 @@ import { currencies } from "@web/core/currency";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
+import { omit } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { session } from "@web/session";
 import { floatField } from "@web/views/fields/float/float_field";
@@ -124,7 +125,7 @@ class Foo extends models.Model {
             amount: 1200,
             currency_id: 2,
             reference: "bar,1",
-            properties: {},
+            properties: [],
         },
         {
             id: 2,
@@ -136,7 +137,7 @@ class Foo extends models.Model {
             m2m: [1, 2, 3],
             amount: 500,
             reference: "res.currency,1",
-            properties: {},
+            properties: [],
         },
         {
             id: 3,
@@ -148,7 +149,7 @@ class Foo extends models.Model {
             m2m: [],
             amount: 300,
             reference: "res.currency,2",
-            properties: {},
+            properties: [],
         },
         {
             id: 4,
@@ -159,7 +160,7 @@ class Foo extends models.Model {
             m2o: 1,
             m2m: [1],
             amount: 0,
-            properties: {},
+            properties: [],
         },
     ];
 }
@@ -5024,14 +5025,17 @@ test(`archive/unarchive handles returned action`, async () => {
         },
     ]);
 
-    onRpc("/web/dataset/call_kw/foo/action_archive", () => ({
-        type: "ir.actions.act_window",
-        name: "Archive Action",
-        res_model: "bar",
-        view_mode: "form",
-        target: "new",
-        views: [[false, "form"]],
-    }));
+    onRpc("foo", "action_archive", ({ parent }) => {
+        parent();
+        return {
+            type: "ir.actions.act_window",
+            name: "Archive Action",
+            res_model: "bar",
+            view_mode: "form",
+            target: "new",
+            views: [[false, "form"]],
+        };
+    });
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(11);
@@ -6352,8 +6356,8 @@ test(`bounce create button when no data and click on empty area`, async () => {
 });
 
 test(`no content helper when no data`, async () => {
-    const records = Foo._records.slice(0);
-    Foo._records.splice(0);
+    const records = Foo._records.map((record) => omit(record, "id"));
+    Foo._records = [];
 
     await mountView({
         resModel: "foo",
@@ -6365,7 +6369,7 @@ test(`no content helper when no data`, async () => {
     expect(`.o_list_view table`).toHaveCount(1, { message: "should have a table in the dom" });
     expect(`.o_view_nocontent`).toHaveText("click to add a partner");
 
-    Foo._records.push(...records);
+    MockServer.env["foo"].create(records);
     await contains(`.o_searchview_input`).press("enter");
     expect(`.o_view_nocontent`).toHaveCount(0, {
         message: "should not display the no content helper",
@@ -10068,9 +10072,8 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
     };
 
     stepAllNetworkCalls();
-    onRpc("write", ({ args }) => {
-        for (const id of args[0]) {
-            const record = Foo._records.find((r) => r.id === id);
+    onRpc("write", function ({ args }) {
+        for (const record of this.env["foo"].browse(args[0])) {
             record.int_field = args[1].foo.length;
         }
     });
@@ -11309,11 +11312,6 @@ test(`grouped list view move to next page when all records from the current page
 test(`list view move to previous page when all records from last page archive/unarchived`, async () => {
     // add active field on foo model and make all records active
     Foo._fields.active = fields.Boolean({ default: true });
-
-    onRpc("/web/dataset/call_kw/foo/action_archive", () => {
-        Foo._records[3].active = false;
-        return {};
-    });
 
     await mountView({
         resModel: "foo",
@@ -16597,7 +16595,7 @@ test("two pages, go page 2, record deleted meanwhile", async () => {
     expect(getPagerValue()).toEqual([1, 3]);
     expect(getPagerLimit()).toBe(4);
 
-    Foo._records.splice(3);
+    MockServer.env["foo"].unlink(4);
     await pagerNext();
     expect(".o_data_row").toHaveCount(3);
     expect(getPagerValue()).toEqual([1, 3]);
@@ -16627,7 +16625,7 @@ test("two pages, go page 2, record deleted meanwhile (grouped case)", async () =
     expect(getPagerValue(queryFirst(".o_group_header"))).toEqual([1, 3]);
     expect(getPagerLimit(queryFirst(".o_group_header"))).toBe(4);
 
-    Foo._records.splice(3);
+    MockServer.env["foo"].unlink(4);
     await pagerNext(queryFirst(".o_group_header"));
     expect(".o_data_row").toHaveCount(3);
     expect(".o_group_header .o_pager").toHaveCount(0);

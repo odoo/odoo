@@ -212,7 +212,7 @@ const memoize = (instanceGetter) => {
     return function memoized(...args) {
         if (!called) {
             called = true;
-            value = instanceGetter(...args);
+            value = instanceGetter.call(this, ...args);
         }
         return value;
     };
@@ -617,15 +617,15 @@ export async function copy(text) {
  */
 export function createJobScopedGetter(instanceGetter, afterCallback) {
     /** @type {F} */
-    const getInstance = () => {
+    function getInstance() {
         if (runner.dry) {
-            return memoized();
+            return memoized.call(this);
         }
 
         const currentJob = runner.state.currentTest || runner.suiteStack.at(-1) || runner;
         if (!instances.has(currentJob)) {
             const parentInstance = [...instances.values()].at(-1);
-            instances.set(currentJob, instanceGetter(parentInstance));
+            instances.set(currentJob, instanceGetter.call(this, parentInstance));
 
             if (canCallAfter) {
                 runner.after(() => {
@@ -639,7 +639,7 @@ export function createJobScopedGetter(instanceGetter, afterCallback) {
         }
 
         return instances.get(currentJob);
-    };
+    }
 
     const memoized = memoize(instanceGetter);
 

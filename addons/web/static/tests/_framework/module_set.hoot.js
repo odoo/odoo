@@ -171,6 +171,66 @@ const findMockFactory = (name) => {
 };
 
 /**
+ * Reduce the size of the given field and freeze it.
+ *
+ * @param {Record<string, unknown>>} field
+ */
+const freezeField = (field) => {
+    delete field.name;
+    if (field.groupable) {
+        delete field.groupable;
+    }
+    if (!field.readonly && !field.related) {
+        delete field.readonly;
+    }
+    if (!field.required) {
+        delete field.required;
+    }
+    if (field.searchable) {
+        delete field.searchable;
+    }
+    if (field.sortable) {
+        delete field.sortable;
+    }
+    if (field.store && !field.related) {
+        delete field.store;
+    }
+    return Object.freeze(field);
+};
+
+/**
+ * Reduce the size of the given model and freeze it.
+ *
+ * @param {Record<string, unknown>>} model
+ */
+const freezeModel = (model) => {
+    if (model.fields) {
+        for (const [fieldName, field] of Object.entries(model.fields)) {
+            model.fields[fieldName] = freezeField(field);
+        }
+        Object.freeze(model.fields);
+    }
+    if (model.inherit) {
+        if (model.inherit.length) {
+            model.inherit = model.inherit.filter((m) => m !== "base");
+        }
+        if (!model.inherit.length) {
+            delete model.inherit;
+        }
+    }
+    if (model.order === "id") {
+        delete model.order;
+    }
+    if (model.parent_name === "parent_id") {
+        delete model.parent_name;
+    }
+    if (model.rec_name === "name") {
+        delete model.rec_name;
+    }
+    return Object.freeze(model);
+};
+
+/**
  * @param {string} name
  */
 const getAddonName = (name) => name.match(R_PATH_ADDON)?.[1];
@@ -265,6 +325,19 @@ const resolveAddonDependencies = (dependencies) => {
     }
 
     Object.assign(dependencies, solved);
+};
+
+/**
+ * @param {Record<string, unknown>>} model
+ */
+const unfreezeModel = (model) => {
+    const fields = Object.create(null);
+    if (model.fields) {
+        for (const [fieldName, field] of Object.entries(model.fields)) {
+            fields[fieldName] = { ...field };
+        }
+    }
+    return { ...model, fields };
 };
 
 /**
@@ -469,7 +542,7 @@ const globalFetchCache = Object.create(null);
 const modelsToFetch = new Set();
 /** @type {Map<string, string[]>} */
 const moduleNamesCache = new Map();
-/** @type {Map<string, Record<string, any>>} */
+/** @type {Map<string, Record<string, unknown>>} */
 const serverModelCache = new Map();
 /** @type {string[]} */
 const sortedModuleNames = [];
@@ -514,12 +587,16 @@ export async function fetchModelDefinitions(modelNames) {
         const modelDefs = await response.json();
 
         for (const [modelName, modelDef] of Object.entries(modelDefs)) {
-            serverModelCache.set(modelName, modelDef);
+            serverModelCache.set(modelName, freezeModel(modelDef));
             modelsToFetch.delete(modelName);
         }
     }
 
-    return [...modelNames].map((modelName) => [modelName, serverModelCache.get(modelName)]);
+    const result = Object.create(null);
+    for (const modelName of modelNames) {
+        result[modelName] = unfreezeModel(serverModelCache.get(modelName));
+    }
+    return result;
 }
 
 /**
