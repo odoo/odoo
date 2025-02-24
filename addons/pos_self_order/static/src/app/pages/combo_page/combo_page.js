@@ -125,7 +125,7 @@ export class ComboPage extends Component {
 
         this.selfOrder.addToCart(
             this.props.productTemplate,
-            1,
+            this.state.qty,
             "",
             {},
             {},
