@@ -157,6 +157,11 @@ class PosOrderLine(models.Model):
     sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line")
     down_payment_details = fields.Text(string="Down Payment Details")
 
+    def _get_line_route(self):
+        if self.sale_order_line_id.route_id:
+            return self.sale_order_line_id.route_id
+        return super()._get_line_route()
+
     def _export_for_ui(self, orderline):
         result = super()._export_for_ui(orderline)
         result['down_payment_details'] = bool(orderline.down_payment_details) and orderline.down_payment_details
