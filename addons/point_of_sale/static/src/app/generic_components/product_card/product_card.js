@@ -22,4 +22,8 @@ export class ProductCard extends Component {
         class: "",
         showWarning: false,
     };
+
+    get productQty() {
+        return this.env.utils.formatProductQty(this.props.productCartQty ?? 0, false);
+    }
 }

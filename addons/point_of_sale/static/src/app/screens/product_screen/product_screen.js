@@ -193,7 +193,10 @@ export class ProductScreen extends Component {
         return this.env.utils.formatCurrency(this.currentOrder?.get_total_with_tax() ?? 0);
     }
     get items() {
-        return this.currentOrder.lines?.reduce((items, line) => items + line.qty, 0) ?? 0;
+        return this.env.utils.formatProductQty(
+            this.currentOrder.lines?.reduce((items, line) => items + line.qty, 0) ?? 0,
+            false
+        );
     }
     getProductName(product) {
         const productTmplValIds = product.attribute_line_ids
