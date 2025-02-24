@@ -304,7 +304,7 @@ class SaleOrder(models.Model):
         # NOTE: the provided product_id should not be given after `_create_new_cart_line` call as it
         # could be different from the line's product_id (see variant generation logic in
         # `_prepare_order_line_values`).
-        self._verify_cart_after_update(order_line)
+        self._verify_cart_after_update()
 
         return {
             'line_id': order_line.id,
@@ -385,7 +385,8 @@ class SaleOrder(models.Model):
             warning = ''
 
         order_line = self._cart_update_order_line(order_line, quantity, **kwargs)
-        self._verify_cart_after_update(order_line)
+        if not self.env.context.get('skip_cart_verification'):
+            self._verify_cart_after_update()
 
         return {
             'line_id': order_line.id,
@@ -420,10 +421,12 @@ class SaleOrder(models.Model):
             ):
                 for linked_line_id in order_line.linked_line_ids:
                     if quantity != linked_line_id.product_uom_qty:
-                        self._cart_update_line_quantity(
+                        self.with_context(skip_cart_verification=True)._cart_update_line_quantity(
                             line_id=linked_line_id.id,
                             quantity=quantity,
                         )
+
+            order_line._check_validity()
 
         return order_line
 
@@ -440,9 +443,12 @@ class SaleOrder(models.Model):
         if quantity <= 0.0:
             return self.env['sale.order.line']
 
-        return self.env['sale.order.line'].sudo().create(
+        line = self.env['sale.order.line'].create(
             self._prepare_order_line_values(product_id, quantity, **kwargs)
         )
+
+        line._check_validity()
+        return line
 
     def _prepare_order_line_values(
         self,
@@ -511,18 +517,12 @@ class SaleOrder(models.Model):
 
         return values
 
-    def _verify_cart_after_update(self, order_line):
-        if (
-            order_line
-            and order_line.product_template_id.type != 'combo'
-            and order_line.price_unit == 0
-            and self.website_id.prevent_zero_price_sale
-            and order_line.product_template_id.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
-        ):
-            raise UserError(_(
-                "The given product does not have a price therefore it cannot be added to cart.",
-            ))
+    def _verify_cart_after_update(self):
+        """Global checks on the cart after updates.
 
+        Called from controllers to ensure it's only done once by request (combos,
+        optional products, ...).
+        """
         if self.only_services:
             self._remove_delivery_line()
         elif self.carrier_id:
