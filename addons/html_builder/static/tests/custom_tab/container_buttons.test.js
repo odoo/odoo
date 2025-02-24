@@ -139,7 +139,8 @@ test("Use the sidebar 'save snippet' buttons", async () => {
         ".o_customize_tab .options-container > div:contains('Button') button.oe_snippet_save";
 
     // Check that there is no custom section.
-    const customGroupSelector = "div[data-category='snippet_groups'] span:contains('Custom')";
+    const customGroupSelector =
+        ".o-snippets-menu #snippet_groups .o_snippet_thumbnail_title:contains('Custom')";
     expect(".o-snippets-menu div:contains('Custom Inner Content')").toHaveCount(0);
     expect(customGroupSelector).toHaveCount(0);
 
