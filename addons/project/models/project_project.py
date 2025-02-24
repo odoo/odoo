@@ -166,7 +166,7 @@ class Project(models.Model):
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
-    allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
+    allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'), inverse='_inverse_allow_task_dependencies')
     allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
     task_properties_definition = fields.PropertiesDefinition('Task Properties')
@@ -381,6 +381,35 @@ class Project(models.Model):
                 project.access_instruction_message = _('Grant employees access to your project or tasks by adding them as followers. Employees automatically get access to the tasks they are assigned to.')
             else:
                 project.access_instruction_message = ''
+
+    def _inverse_allow_task_dependencies(self):
+        """ Reset state for waiting tasks in the project if the feature is disabled
+            or recompute the tasks with dependencies if the project has the feature enabled again
+        """
+        project_with_task_dependencies_feature = self.filtered('allow_task_dependencies')
+        projects_without_task_dependencies_feature = self - project_with_task_dependencies_feature
+        ProjectTask = self.env['project.task']
+        if (
+            project_with_task_dependencies_feature
+            and (
+                open_tasks_with_dependencies := ProjectTask.search([
+                    ('project_id', 'in', project_with_task_dependencies_feature.ids),
+                    ('depend_on_ids.state', 'in', ProjectTask.OPEN_STATES),
+                    ('state', 'in', ProjectTask.OPEN_STATES),
+                ])
+            )
+        ):
+            open_tasks_with_dependencies.state = '04_waiting_normal'
+        if (
+            projects_without_task_dependencies_feature
+            and (
+                waiting_tasks := ProjectTask.search([
+                    ('project_id', 'in', projects_without_task_dependencies_feature.ids),
+                    ('state', '=', '04_waiting_normal'),
+                ])
+            )
+        ):
+            waiting_tasks.state = '01_in_progress'
 
     # TODO: Remove in master
     @api.onchange('date_start', 'date')
