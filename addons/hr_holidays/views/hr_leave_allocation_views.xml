@@ -164,6 +164,10 @@
                                     readonly="is_officer != True and state not in ('draft','confirm')"/>
                                 <span class="ml8" invisible="type_request_unit == 'hour'">Days</span>
                                 <span class="ml8" invisible="type_request_unit != 'hour'">Hours</span>
+                                <span class="ml8" invisible="allocation_type != 'accrual'"> 
+                                    <button string="Details" name="action_show_details" type="object" class="btn btn-link"/>
+                                    <field name="accrual_detail_ids" invisible="1" />
+                                </span>
                             </div>
                         </group>
                         <group name="alloc_right_col">
