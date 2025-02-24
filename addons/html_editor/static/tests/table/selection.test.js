@@ -1,11 +1,10 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { bold, resetSize, setColor, insertText } from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
 import { press, queryAll, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { nodeSize } from "@html_editor/utils/position";
 
 function expectContentToBe(el, html) {
