@@ -112,7 +112,6 @@ export class CalendarController extends Component {
                 Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
             calendarMode: CALENDAR_MODE.normal,
         });
-        this.hasQuick = Object.keys(this.model.meta.quickFields).length > 0;
 
         this.searchBarToggler = useSearchBarToggler();
 

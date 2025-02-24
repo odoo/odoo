@@ -15,6 +15,7 @@ import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { Cache } from "@web/core/utils/cache";
 import { useDebounced } from "@web/core/utils/timing";
+import { groupBy } from "@web/core/utils/arrays";
 
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
@@ -124,6 +125,10 @@ export class CalendarModel extends Model {
     }
     get hasEditDialog() {
         return this.meta.hasEditDialog;
+    }
+    get hasQuick() {
+        // FIXME: rename
+        return Object.keys(this.meta.quickFields).length > 0;
     }
     get hasQuickCreate() {
         return this.meta.quickCreate;
@@ -248,12 +253,12 @@ export class CalendarModel extends Model {
         await this.load();
     }
 
-	async unlinkRecords(recordsId) {
-		if (recordsId.length) {
-			await this.orm.unlink(this.meta.resModel, recordsId);
-			await this.load();
-		}
-	}
+    async unlinkRecords(recordsId) {
+        if (recordsId.length) {
+            await this.orm.unlink(this.meta.resModel, recordsId);
+            await this.load();
+        }
+    }
 
     async updateFilters(fieldName, filters, active) {
         // update filters directly, to provide a direct feedback to the user
@@ -403,6 +408,22 @@ export class CalendarModel extends Model {
                     if (filter.value === value && !filter.active) {
                         delete data.records[recordId];
                     }
+                }
+            }
+        }
+
+        // Compute filter counts
+        if (this.hasQuick) {
+            const records = Object.values(data.records);
+            for (const [fieldName, { filters }] of Object.entries(data.filterSections)) {
+                const groups = groupBy(records, ({ rawRecord }) => {
+                    const rawValue = rawRecord[fieldName];
+                    const fieldType = this.meta.fields[fieldName].type;
+                    // FIXME: make this robust
+                    return fieldType === "many2one" ? rawValue?.[0] : rawValue;
+                });
+                for (const filter of filters) {
+                    filter.count = groups[filter.value]?.length || 0;
                 }
             }
         }
@@ -742,6 +763,7 @@ export class CalendarModel extends Model {
         const previousFilters = previousSection ? previousSection.filters : [];
 
         const rawFilters = Object.values(data.records).reduce((filters, record) => {
+            // FIXME: doesn't work for many2many/one2Many
             const rawValues = ["many2many", "one2many"].includes(field.type)
                 ? record.rawRecord[fieldName]
                 : [record.rawRecord[fieldName]];
