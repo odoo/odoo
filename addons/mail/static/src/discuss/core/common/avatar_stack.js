@@ -15,28 +15,36 @@ import { Component } from "@odoo/owl";
 export class AvatarStack extends Component {
     static template = "mail.AvatarStack";
     static props = {
+        containerClass: { type: String, optional: true },
         direction: { type: String, optional: true, validate: (d) => ["v", "h"].includes(d) },
         avatarClass: { type: Function, optional: true },
         max: { type: Number, optional: true },
+        onClick: { type: Function, optional: true },
         personas: Array,
         size: { type: Number, optional: true },
         slots: { optional: true },
     };
     static defaultProps = {
         avatarClass: () => "",
+        onClick: () => {},
         max: 4,
         size: 24,
         direction: "h",
     };
 
     getStyle(index) {
-        let style = `width: ${this.props.size}px; height: ${this.props.size}px;`;
-        if (index === 0) {
-            return style;
+        const styles = [
+            "box-sizing: content-box",
+            `height: ${this.props.size}px`,
+            `padding: 1.5px`,
+            `width: ${this.props.size}px`,
+            `z-index: ${this.props.personas.length - index}`,
+        ];
+        if (index !== 0) {
+            // Compute cumulative offset,
+            const marginDirection = this.props.direction === "v" ? "top" : "left";
+            styles.push(`margin-${marginDirection}: -${this.props.size / 4.5}px`);
         }
-        // Compute cumulative offset,
-        const marginDirection = this.props.direction === "v" ? "top" : "left";
-        style += `margin-${marginDirection}: -${this.props.size / 3}px`;
-        return style;
+        return styles.join(";");
     }
 }

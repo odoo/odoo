@@ -30,11 +30,14 @@
             <AvatarStack
                 t-if="!state.expanded"
                 direction="compact ? 'v' : 'h'"
+                containerClass="compact ? '' : 'cursor-pointer'"
                 avatarClass="(p) => this.avatarClass(p)"
-                max="compact ? 1 : 4"
+                max="compact ? 1 : 7"
+                size="28"
+                onClick="() => this.state.expanded = true"
                 personas="sessions.map((s) => s.channel_member_id?.persona).filter(p => p)"
             >
-                <t t-set-slot="avatarExtraInfo" t-slot-scope="scope">
+                <t t-if="compact" t-set-slot="avatarExtraInfo" t-slot-scope="scope">
                     <div class="o-mail-DiscussSidebarCallParticipants-status small" t-att-class="{
                         'position-absolute bg-inherit p-0 rounded-circle o-compact d-flex o-xsmaller text-start': compact,
                         'ms-1 d-flex align-items-center justify-content-center': !compact,
@@ -63,8 +66,8 @@
 
     <t t-name="mail.DiscussSidebarCallParticipants.participant">
         <div class="o-mail-DiscussSidebarCallParticipants-participant d-flex text-reset overflow-hidden align-items-center" t-att-class="{ 'justify-content-center bg-inherit': isCompact }">
-            <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:24px;height:24px;margin:1px">
-                <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-src="session.channel_member_id.persona.avatarUrl" t-att-class="{'o-isTalking shadow': !session.isMute and session.isTalking}" alt="Participant avatar" t-att-title="session.channel_member_id.persona.name"/>
+            <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:28px;height:28px;margin:1px">
+                <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-src="session.channel_member_id.persona.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar" t-att-title="session.channel_member_id.persona.name"/>
             </div>
             <span t-if="!isCompact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bold smaller user-select-none" t-att-title="session.channel_member_id.persona.name" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
                 <t t-esc="session.channel_member_id.persona.name"/>
