@@ -23,6 +23,70 @@ import {
 } from "@odoo/owl";
 import { session } from "@web/session";
 
+/**
+ * @typedef Config
+ * @property {number | false} actionId
+ * @property {string | false} actionType
+ * @property {() => []} breadcrumbs
+ * @property {() => string} getDisplayName
+ * @property {(string) => any} setDisplayName
+ * @property {() => Record<string, any>} getPagerProps
+ * @property {Record<string, any>[]} viewSwitcherEntry
+ * @property {typeof Component} Banner
+ *
+ * @typedef {import("@web/env").OdooEnv} OdooEnv
+ * @typedef {import("./utils").OrderTerm} OrderTerm
+ *
+ * @typedef ViewProps
+ * @property {string} resModel
+ * @property {ViewType} type
+ *
+ * @property {string} [arch] if given, fields must be given too /\ no post processing is done (evaluation of "groups" attribute,...)
+ * @property {Record<string, any>} [fields] if given, arch must be given too
+ * @property {number|false} [viewId]
+ * @property {Record<string, any>} [actionMenus]
+ * @property {boolean} [loadActionMenus=false]
+ *
+ * @property {string} [searchViewArch] if given, searchViewFields must be given too
+ * @property {Record<string, any>} [searchViewFields] if given, searchViewArch must be given too
+ * @property {number|false} [searchViewId]
+ * @property {Record<string, any>[]} [irFilters]
+ * @property {boolean} [loadIrFilters=false]
+ *
+ * @property {Record<string, any>} [comparison]
+ * @property {Record<any, any>} [context={}]
+ * @property {DomainRepr} [domain]
+ * @property {string[]} [groupBy]
+ * @property {OrderTerm[]} [orderBy]
+ *
+ * @property {boolean} [useSampleModel]
+ * @property {string} [noContentHelp]
+ *
+ * @property {Record<string, any>} [display={}] to rework
+ *
+ * --- Manipulated by withSearch ---
+ * @property {boolean} [activateFavorite]
+ * @property {Record<string, any>[]} [dynamicFilters]
+ * @property {boolean} [hideCustomGroupBy]
+ * @property {string[]} [searchMenuTypes]
+ * @property {Record<string, any>} [globalState]
+ *
+ * @typedef {"activity"
+ *  | "calendar"
+ *  | "cohort"
+ *  | "form"
+ *  | "gantt"
+ *  | "graph"
+ *  | "grid"
+ *  | "hierarchy"
+ *  | "kanban"
+ *  | "list"
+ *  | "map"
+ *  | "pivot"
+ *  | "search"
+ * } ViewType
+ */
+
 const viewRegistry = registry.category("views");
 
 viewRegistry.addValidation({
@@ -30,18 +94,6 @@ viewRegistry.addValidation({
     Controller: { validate: (c) => c.prototype instanceof Component },
     "*": true,
 });
-
-/** @typedef {Object} Config
- *  @property {integer|false} actionId
- *  @property {string|false} actionType
- *  @property {() => []} breadcrumbs
- *  @property {() => string} getDisplayName
- *  @property {(string) => void} setDisplayName
- *  @property {() => Object} getPagerProps
- *  @property {Object[]} viewSwitcherEntry
- *  @property {Object[]} viewSwitcherEntry
- *  @property {Component} Banner
- */
 
 /**
  * Returns the default config to use if no config, or an incomplete config has
@@ -78,43 +130,6 @@ export function getDefaultConfig() {
     };
     return config;
 }
-
-/** @typedef {import("./utils").OrderTerm} OrderTerm */
-
-/** @typedef {Object} ViewProps
- *  @property {string} resModel
- *  @property {string} type
- *
- *  @property {string} [arch] if given, fields must be given too /\ no post processing is done (evaluation of "groups" attribute,...)
- *  @property {Object} [fields] if given, arch must be given too
- *  @property {number|false} [viewId]
- *  @property {Object} [actionMenus]
- *  @property {boolean} [loadActionMenus=false]
- *
- *  @property {string} [searchViewArch] if given, searchViewFields must be given too
- *  @property {Object} [searchViewFields] if given, searchViewArch must be given too
- *  @property {number|false} [searchViewId]
- *  @property {Object[]} [irFilters]
- *  @property {boolean} [loadIrFilters=false]
- *
- *  @property {Object} [context={}]
- *  @property {DomainRepr} [domain]
- *  @property {string[]} [groupBy]
- *  @property {OrderTerm[]} [orderBy]
- *
- *  @property {boolean} [useSampleModel]
- *  @property {string} [noContentHelp]
- *
- *  @property {Object} [display={}] to rework
- *
- *  manipulated by withSearch
- *
- *  @property {boolean} [activateFavorite]
- *  @property {Object[]} [dynamicFilters]
- *  @property {boolean} [hideCustomGroupBy]
- *  @property {string[]} [searchMenuTypes]
- *  @property {Object} [globalState]
- */
 
 export class ViewNotFoundError extends Error {}
 
@@ -170,6 +185,8 @@ const STANDARD_PROPS = [
 ];
 
 const ACTIONS = ["create", "delete", "edit", "group_create", "group_delete", "group_edit"];
+
+/** @extends {Component<ViewProps, import("@web/env").OdooEnv>} */
 export class View extends Component {
     static _download = async function () {};
     static template = "web.View";
@@ -224,6 +241,9 @@ export class View extends Component {
         useDebugCategory("view", { component: this });
     }
 
+    /**
+     * @param {ViewProps} props
+     */
     async loadView(props) {
         const type = props.type;
 
@@ -447,6 +467,9 @@ export class View extends Component {
         }
     }
 
+    /**
+     * @param {ViewProps} nextProps
+     */
     onWillUpdateProps(nextProps) {
         const oldProps = pick(this.props, "arch", "type", "resModel");
         const newProps = pick(nextProps, "arch", "type", "resModel");
