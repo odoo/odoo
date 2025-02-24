@@ -62,7 +62,7 @@
                             <page id="counterpart_items_tab"
                                   string="Counterpart Items"
                                   name="counterpart_items"
-                                  invisible="rule_type == 'invoice_matching'">
+                                  invisible="rule_type == 'invoice_matching' and  payment_tolerance_param == 0">
                                 <group class="oe_inline">
                                     <field name="line_ids"
                                            default="{'default_model_id': self, 'default_company_id': self.company_id}"
