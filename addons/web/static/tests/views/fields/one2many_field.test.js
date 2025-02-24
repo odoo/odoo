@@ -21,6 +21,7 @@ import {
     fields,
     getService,
     makeServerError,
+    MockServer,
     mockService,
     models,
     mountView,
@@ -1086,15 +1087,7 @@ test("embedded one2many with handle widget", async () => {
 
     await clickSave();
 
-    expect(
-        Turtle._records.map((r) => {
-            return {
-                id: r.id,
-                turtle_foo: r.turtle_foo,
-                turtle_int: r.turtle_int,
-            };
-        })
-    ).toEqual([
+    expect(MockServer.env["turtle"].map((r) => pick(r, "id", "turtle_foo", "turtle_int"))).toEqual([
         { id: 1, turtle_foo: "yop", turtle_int: 1 },
         { id: 2, turtle_foo: "blip", turtle_int: 0 },
         { id: 3, turtle_foo: "kawa", turtle_int: 21 },
@@ -8960,8 +8953,10 @@ test("one2many form view with action button", async () => {
     // See https://github.com/odoo/odoo/issues/24189
     mockService("action", {
         doActionButton(params) {
-            Partner._records[1].name = "new name";
-            Partner._records[1].timmy = [12];
+            for (const record of MockServer.env["partner"].browse(params.resIds)) {
+                record.name = "new name";
+                record.timmy = [12];
+            }
             params.onClose();
         },
     });
@@ -10192,11 +10187,7 @@ test("reordering embedded one2many with handle widget starting with same sequenc
     ]);
 
     await clickSave();
-    expect(
-        Turtle._records.map((r) => {
-            return { id: r.id, turtle_int: r.turtle_int };
-        })
-    ).toEqual([
+    expect(MockServer.env["turtle"].map((r) => pick(r, "id", "turtle_int"))).toEqual([
         { id: 1, turtle_int: 2 },
         { id: 2, turtle_int: 3 },
         { id: 3, turtle_int: 4 },
@@ -11878,9 +11869,10 @@ test("nested one2manys, multi page, onchange", async () => {
     expect.verifySteps(["onchange"]);
 
     await clickSave();
-    expect(Partner._records[0].int_field).toBe(5);
-    expect(Turtle._records[1].turtle_int).toBe(5);
-    expect(Turtle._records[0].turtle_int).toBe(5);
+
+    expect(MockServer.env["partner"][0].int_field).toBe(5);
+    expect(MockServer.env["turtle"][1].turtle_int).toBe(5);
+    expect(MockServer.env["turtle"][0].turtle_int).toBe(5);
 });
 
 test("multi page, command forget for record of second page", async () => {
