@@ -34,7 +34,7 @@ class HrLeaveAllocation(models.Model):
     def _domain_holiday_status_id(self):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             return [('requires_allocation', '=', 'yes')]
-        return [('employee_requests', '=', 'yes')]
+        return [('requires_allocation', '=', 'yes'), ('employee_requests', '=', 'yes')]
 
     def _domain_employee_id(self):
         domain = [('company_id', 'in', self.env.companies.ids)]

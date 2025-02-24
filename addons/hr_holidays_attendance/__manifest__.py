@@ -21,7 +21,7 @@ Convert employee's extra hours to leave allocations.
     ],
     'assets': {
         'web.assets_backend': [
-            'hr_holidays_attendance/static/src/xml/time_off_calendar.xml',
+            'hr_holidays_attendance/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',

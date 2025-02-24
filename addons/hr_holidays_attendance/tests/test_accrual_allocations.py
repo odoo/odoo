@@ -5,6 +5,7 @@ import datetime
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -22,6 +23,23 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             'requires_allocation': 'yes',
             'allocation_validation_type': 'hr',
         })
+    
+    def test_create_allocation_based_on_extra_hours(self):
+        """
+        A UserError should be raised if the user tries to create an allocation based on extra hours
+        """
+        with self.assertRaises(UserError):
+            leave_type = self.env['hr.leave.type'].create({
+                'name': 'Extra Hours',
+                'time_type': 'leave',
+                'requires_allocation': 'extra_hours'
+            })
+            with Form(self.env['hr.leave.allocation']) as allocation_form:
+                allocation_form.employee_id = self.employee_emp
+                allocation_form.holiday_status_id = leave_type
+                allocation_form.name = 'Extra hours allocation for employee'
+                return allocation_form.save()
+
 
     def test_frequency_hourly_attendance(self):
         with freeze_time("2017-12-5"):
