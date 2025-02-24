@@ -7,7 +7,7 @@
         </xpath>
     </t>
 
-    <t t-name="hr_homeworking_calendar.CalendarCommonRenderer.buttonWorklocation">
+    <t t-if="!hideWorkLocation" t-name="hr_homeworking_calendar.CalendarCommonRenderer.buttonWorklocation">
         <t t-if="multiCalendar">
             <t t-call="hr_homeworking_calendar.MultiCalendarButtonWorkLocation"/>
         </t>
