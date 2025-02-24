@@ -815,6 +815,41 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.start_pos_tour("PosLoyaltyFreeProductTour2")
 
+    def test_loyalty_program_different_orders(self):
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program Test',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'reward_point_amount': 10,
+                'minimum_amount': 5,
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'required_points': 30,
+                'reward_product_id': self.product_a.id,
+                'reward_product_qty': 1,
+            })],
+        })
+
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        card = self.env['loyalty.card'].create({
+            'partner_id': partner.id,
+            'program_id': loyalty_program.id,
+            'points': 0,
+        })
+
+        self.main_pos_config.open_ui()
+
+        self.start_pos_tour("PosLoyaltyMultipleOrders")
+
+        self.assertEqual(card.points, 0, "Loyalty card credited for a draft order")
+
     def test_refund_with_gift_card(self):
         """When adding a gift card when there is a refund in the order, the amount
         of the gift card is set to the amount of the refund"""

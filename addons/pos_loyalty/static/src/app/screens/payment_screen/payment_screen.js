@@ -76,7 +76,9 @@ patch(PaymentScreen.prototype, {
      * @override
      */
     async _postPushOrderResolve(order, server_ids) {
-        await this._postProcessLoyalty(order);
+        if (order.isPaid()) {
+            await this._postProcessLoyalty(order);
+        }
         return super._postPushOrderResolve(order, server_ids);
     },
     async _postProcessLoyalty(order) {
