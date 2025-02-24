@@ -189,7 +189,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     },
     _addNewProductsImpl: function (product_id) {
         var self = this;
-        $('.o_product_feature_panel').addClass('d-md-block');
+        self.el.classList.remove('d-none');
         if (!self.comparelist_product_ids.includes(product_id)) {
             self.comparelist_product_ids.push(product_id);
             if (Object.prototype.hasOwnProperty.call(self.product_data, product_id)) {
@@ -262,12 +262,14 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @private
      */
     _updateComparelistView: function () {
+        const self = this;
         this.$('.o_product_circle').text(this.comparelist_product_ids.length);
-        this.$('.o_comparelist_button').removeClass('d-md-block');
+        self.el.classList.add('d-none');
+
         if (Object.keys(this.comparelist_product_ids || {}).length === 0) {
-            $('.o_product_feature_panel').removeClass('d-md-block');
+            self.el.classList.add('d-none');
         } else {
-            $('.o_product_feature_panel').addClass('d-md-block');
+            self.el.classList.remove('d-none');
             this.$('.o_comparelist_products').addClass('d-md-block');
             if (this.comparelist_product_ids.length >=2) {
                 this.$('.o_comparelist_button').addClass('d-md-block');

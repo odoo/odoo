@@ -707,6 +707,7 @@ body:not(.editor_enable) #category_header {
 #o_wsale_floating_bar_rail {
     --_container-gap: calc(var(--o-wsale-container-fluid-padding-xl, var(--gutter-x)) * 0.5);
     right: calc(var(--_container-gap) + #{$border-width});
+    transition: right .3s, bottom .3s;
     width: 0;
 
     #o_wsale_floating_bar {
@@ -715,8 +716,13 @@ body:not(.editor_enable) #category_header {
         gap: map-get($spacers, 1) 0;
     }
 
-    body:has(.o-livechat-root.o-livechat-LivechatButton-isVisible) & {
-        transition: right .3s, bottom .3s;
+    body:has(.o_product_feature_panel:not(.d-none)) & {
+        #o_wsale_floating_bar {
+            bottom: calc(10px + 70px);
+        }
+    }
+
+    body:has(.o-livechat-root.o-livechat-LivechatButton-isVisible):not(:has(.o_product_feature_panel:not(.d-none))) & {
 
         #o_wsale_floating_bar {
             bottom: 10px;
