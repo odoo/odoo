@@ -5,6 +5,8 @@ export class CustomInnerSnippet extends Component {
     static props = {
         snippetModel: { type: Object },
         snippet: { type: Object },
+        onClickHandler: { type: Function },
+        disabledTooltip: { type: String },
     };
 
     setup() {
