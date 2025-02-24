@@ -71,8 +71,14 @@ class AccountMove(models.Model):
 
     def _compute_l10n_in_edi_content(self):
         for move in self:
-            move.l10n_in_edi_content = base64.b64encode(
-                json.dumps(move._l10n_in_edi_generate_invoice_json()).encode()
+            move.l10n_in_edi_content = (
+                move.country_code == 'IN'
+                and move.company_id.l10n_in_edi_feature
+                and move.is_sale_document(include_receipts=True)
+                and move.journal_id.type == 'sale'
+                and base64.b64encode(
+                    json.dumps(move._l10n_in_edi_generate_invoice_json()).encode()
+                )
             )
 
     #  Action Methods
@@ -510,7 +516,7 @@ class AccountMove(models.Model):
             "DocDtls": {
                 "Typ": (self.move_type == "out_refund" and "CRN") or (self.debit_origin_id and "DBN") or "INV",
                 "No": self.name,
-                "Dt": self.invoice_date.strftime("%d/%m/%Y")
+                "Dt": self.invoice_date and self.invoice_date.strftime("%d/%m/%Y")
             },
             "SellerDtls": self._get_l10n_in_edi_partner_details(seller_buyer['seller_details']),
             "BuyerDtls": self._get_l10n_in_edi_partner_details(
