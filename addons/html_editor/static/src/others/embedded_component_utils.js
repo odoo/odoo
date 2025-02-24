@@ -419,6 +419,11 @@ export class StateChangeManager {
      * recompute `data-embedded-props` for the next mounting operation.
      */
     changeState() {
+        if (!this.previousEmbeddedState) {
+            // If there is no previousEmbeddedState, it means that no
+            // effective change was performed, so there is nothing to commit.
+            return;
+        }
         const previousEmbeddedState = this.previousEmbeddedState;
         this.previousEmbeddedState = null;
         const previous = JSON.stringify(sortedCopy(this.state));
