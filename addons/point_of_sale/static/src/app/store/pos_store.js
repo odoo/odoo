@@ -788,8 +788,8 @@ export class PosStore extends Reactive {
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         const code = opts.code;
+        let pack_lot_ids = {};
         if (values.product_id.isTracked() && (configure || code)) {
-            let pack_lot_ids = {};
             const packLotLinesToEdit =
                 (!values.product_id.isAllowOnlyOneLot() &&
                     this.get_order()
@@ -883,6 +883,13 @@ export class PosStore extends Reactive {
             this.selectOrderLine(order, order.get_last_orderline());
         }
 
+        if (product.tracking === "serial") {
+            this.selectedOrder.get_selected_orderline().setPackLotLines({
+                modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
+                newPackLotLines: pack_lot_ids.newPackLotLines ?? [],
+                setQuantity: true,
+            });
+        }
         if (configure) {
             this.numberBuffer.reset();
         }
