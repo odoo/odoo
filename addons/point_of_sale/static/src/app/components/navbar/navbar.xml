@@ -7,7 +7,7 @@
                 <div class="d-flex flex-shrink-0 gap-1 position-relative">
                     <div class="navbar-menu d-flex d-lg-grid overflow-hidden position-relative">
                         <button class="register-label btn btn-lg lh-lg" t-att-class="{'text-primary fw-bolder': mainButton === 'register'}" t-on-click="() => this.pos.showOrderScreen(true)">
-                            <span t-if="!ui.isSmall">Register</span>
+                            <span t-if="!ui.isSmall">Checkout</span>
                             <i t-else="" class="fa fa-fw fa-pencil" t-att-class="{'fa-lg' : !ui.isSmall}"/>
                         </button>
                         <button class="orders-button btn btn-lg lh-lg" t-att-class="{'text-primary fw-bolder': mainButton === 'order'}" t-on-click="() => this.pos.showScreen('TicketScreen')">
