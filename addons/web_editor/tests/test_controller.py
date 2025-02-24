@@ -24,17 +24,6 @@ class TestController(HttpCase):
         cls.headers = {"Content-Type": "application/json"}
         cls.pixel = 'R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
 
-    def _build_payload(self, params=None):
-        """
-        Helper to properly build jsonrpc payload
-        """
-        return {
-            "jsonrpc": "2.0",
-            "method": "call",
-            "id": 0,
-            "params": params or {},
-        }
-
     def test_01_upload_document(self):
         self.authenticate('admin', 'admin')
         # Upload document.
@@ -140,7 +129,7 @@ class TestController(HttpCase):
 
     def test_04_admin_attachment(self):
         self.authenticate(self.admin, self.admin)
-        payload = self._build_payload({"name": "pixel", "data": self.pixel, "is_image": True})
+        payload = self.build_rpc_payload({"name": "pixel", "data": self.pixel, "is_image": True})
         response = self.url_open('/web_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers)
         self.assertEqual(200, response.status_code)
         attachment = self.env['ir.attachment'].search([('name', '=', 'pixel')])
