@@ -420,16 +420,15 @@ export function createReporting(parentReporting) {
  * @returns {T}
  */
 export function createMock(target, descriptors) {
-    const mock = $assign($create($getPrototypeOf(target)), target);
     let owner = target;
-    let keys;
-
-    while (!keys?.length) {
-        keys = $ownKeys(owner);
+    let keys = $ownKeys(owner);
+    while (!keys.length) {
         owner = $getPrototypeOf(owner);
+        keys = $ownKeys(owner);
     }
 
     // Copy original descriptors
+    const mock = $assign($create(owner), target);
     for (const property of keys) {
         $defineProperty(mock, property, {
             get() {

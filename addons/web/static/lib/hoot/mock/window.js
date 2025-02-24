@@ -25,7 +25,7 @@ import {
     mockedWindowScrollTo,
 } from "./animation";
 import { MockConsole } from "./console";
-import { MockDate } from "./date";
+import { MockDate, MockIntl } from "./date";
 import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
     MockBroadcastChannel,
@@ -323,6 +323,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     history: { value: mockHistory },
     innerHeight: { get: () => getCurrentDimensions().height },
     innerWidth: { get: () => getCurrentDimensions().width },
+    Intl: { value: MockIntl },
     localStorage: { value: mockLocalStorage, writable: false },
     matchMedia: { value: mockedMatchMedia },
     MessageChannel: { value: MockMessageChannel },
