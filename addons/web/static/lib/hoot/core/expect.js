@@ -604,7 +604,7 @@ export function makeExpect(params) {
                 const fActual = actualErrors.map(formatError);
                 const fExpected = errors.map(formatError);
                 assertion.failedDetails = detailsFromValuesWithDiff(fExpected, fActual);
-                assertion.stack = getStack(0);
+                assertion.stack = getStack(1);
             }
             currentResult.registerEvent("assertion", assertion);
         }
@@ -642,7 +642,7 @@ export function makeExpect(params) {
             };
             if (!pass) {
                 assertion.failedDetails = detailsFromValuesWithDiff(steps, receivedSteps);
-                assertion.stack = getStack(0);
+                assertion.stack = getStack(1);
             }
             currentResult.registerEvent("assertion", assertion);
         }

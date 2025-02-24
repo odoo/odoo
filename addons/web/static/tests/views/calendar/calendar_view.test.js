@@ -5194,7 +5194,7 @@ test("html field on calendar shouldn't have a tooltip", async () => {
         `,
     });
 
-    await clickEvent(Event._records[0].id);
+    await clickEvent(MockServer.env["event"][0].id);
     const descriptionField = queryFirst('.o_cw_popover_field .o_field_widget[name="description"]');
     const parentLi = descriptionField.closest("li");
     expect(parentLi).toHaveAttribute("data-tooltip", "");
