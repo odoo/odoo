@@ -24,7 +24,7 @@
         <tbody>
             <tr>
                 <td valign="center">
-                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: auto; max-width: 200px; max-height: 36px;" t-att-alt="'%s' % company.name"/>
+                    <img translate="no" t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: auto; max-width: 200px; max-height: 36px;" t-att-alt="'%s' % company.name"/>
                 </td>
             </tr>
             <tr>
@@ -90,7 +90,7 @@
     <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" style="font-size: 13px;"/>
 </t>
 <!-- FOOTER -->
-<div style="margin-top:32px;">
+<div style="margin-top:32px;" translate="no">
     <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
     <b t-out="company.name" style="font-size:11px;"/><br/>
     <p style="color: #999999; margin-top:2px; font-size:11px;">
@@ -139,7 +139,7 @@
                         </span>
                     </t>
                 </td><td valign="middle" align="right">
-                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: 48px;" t-att-alt="'%s' % company.name"/>
+                    <img translate="no" t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: 48px;" t-att-alt="'%s' % company.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
                   <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;"/>
@@ -155,7 +155,7 @@
     </tr>
     <!-- FOOTER -->
     <tr>
-        <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
+        <td translate="no" align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
             <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
             <b t-out="company.name"/><br/>
             <div style="color: #999999;">
