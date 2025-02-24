@@ -42,12 +42,6 @@ class TestLeadEnrich(TestCrmCommon, MockIAPEnrich):
         for lead in leads:
             self.assertEqual(lead.street, 'Simulator Street')
 
-    # @users('sales_manager')
-    # def test_enrich_error_credit(self):
-    #     leads = self.env['crm.lead'].browse(self.leads.ids)
-    #     with self.mockIAPEnrichGateway(sim_error='credit'):
-    #         leads.iap_enrich()
-
     @users('user_sales_manager')
     def test_enrich_error_jsonrpc_exception(self):
         leads = self.env['crm.lead'].browse(self.leads.ids)
