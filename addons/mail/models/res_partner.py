@@ -201,9 +201,9 @@ class ResPartner(models.Model):
                 }
                 for name in names if name not in partners.mapped('email') and name not in (ban_emails or [])
             ]
-            # create partners once
+            # create partners once, avoid current user being followers of those
             if tocreate_vals_list:
-                partners += self.create(tocreate_vals_list)
+                partners += self.with_context(mail_create_nosubscribe=True).create(tocreate_vals_list)
 
         # sort partners (already ordered based on search)
         if sort_key:
