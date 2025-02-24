@@ -286,3 +286,33 @@ registry.category("web_tour.tours").add("LotTour", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("OrderTimeTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            ProductScreen.setTimeZone("Asia/Tokyo"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+
+            Chrome.clickOrders(),
+            {
+                content: "Validate order time matches local timezone",
+                trigger: ".orders .order-row:first .small.text-muted",
+                run: function ({ anchor: displayedTimeElement }) {
+                    const displayedTimeText = displayedTimeElement.textContent.trim();
+                    const currentOrder = window.posmodel.getOrder();
+                    const orderDateUTC = currentOrder.date_order;
+                    const orderDateTime = luxon.DateTime.fromSQL(orderDateUTC, {
+                        zone: "UTC",
+                    }).toLocal();
+                    const convertedOrderTime = orderDateTime.toFormat("HH:mm");
+                    if (convertedOrderTime !== displayedTimeText) {
+                        throw new Error("Order time does not match local timezone");
+                    }
+                },
+            },
+        ].flat(),
+});
