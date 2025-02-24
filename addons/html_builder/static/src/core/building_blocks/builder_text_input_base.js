@@ -1,4 +1,5 @@
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
+import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 export const textInputBasePassthroughProps = {
     action: { type: String, optional: true },
@@ -11,6 +12,8 @@ export const textInputBasePassthroughProps = {
 export class BuilderTextInputBase extends Component {
     static template = "html_builder.BuilderTextInputBase";
     static props = {
+        slots: { type: Object, optional: true },
+        inputRef: { type: Function, optional: true },
         ...textInputBasePassthroughProps,
         commit: { type: Function },
         preview: { type: Function },
@@ -19,7 +22,7 @@ export class BuilderTextInputBase extends Component {
     };
 
     setup() {
-        this.inputRef = useRef("input");
+        this.inputRef = useForwardRefToParent("inputRef");
     }
 
     onChange() {

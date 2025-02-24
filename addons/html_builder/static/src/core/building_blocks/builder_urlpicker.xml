@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderUrlPicker">
+    <BuilderComponent>
+        <BuilderTextInputBase
+                t-props="textInputBaseProps"
+                inputRef="inputRef"
+                commit="commit"
+                preview="preview"
+                value="state.value"
+        >
+            <button class="btn" title="Preview this URL in a new tab" t-on-click="openPreviewUrl">
+                <i class="fa fa-fw fa-external-link"/>
+            </button>
+        </BuilderTextInputBase>
+    </BuilderComponent>
+</t>
+
+</templates>
