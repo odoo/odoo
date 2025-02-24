@@ -994,12 +994,12 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
                 </templates>
             </kanban>
         `,
-        "form,foo_partner_type_form_view": `
+        "form,foo.partner_type_form_view": `
             <form>
                 <field name="color"/>
                 <field name="company_ids" context="{
                     'default_color': 2,
-                    'form_view_ref': 'bar_rescompany_form_view',
+                    'form_view_ref': 'bar.rescompany_form_view',
                 }"/>
             </form>
         `,
@@ -1016,11 +1016,11 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
     expectedContexts.set("onchange:partner", { ...userContext });
     expectedContexts.set("view:partner.type", {
         ...userContext,
-        form_view_ref: "foo_partner_type_form_view",
+        form_view_ref: "foo.partner_type_form_view",
     });
     expectedContexts.set("onchange:partner.type", {
         ...userContext,
-        form_view_ref: "foo_partner_type_form_view",
+        form_view_ref: "foo.partner_type_form_view",
     });
 
     onRpc("get_views", ({ model, kwargs }) => {
@@ -1040,7 +1040,7 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
             <form>
                 <field string="Partner Types" name="type_ids" widget="one2many" context="{
                     'default_partner_id': id,
-                    'form_view_ref': 'foo_partner_type_form_view'
+                    'form_view_ref': 'foo.partner_type_form_view'
                 }"/>
             </form>
         `,
@@ -1052,12 +1052,12 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
     expectedContexts.clear();
     expectedContexts.set("view:partner.type", {
         ...userContext,
-        form_view_ref: "foo_partner_type_form_view",
+        form_view_ref: "foo.partner_type_form_view",
     });
     expectedContexts.set("onchange:partner.type", {
         ...userContext,
         default_partner_id: 2,
-        form_view_ref: "foo_partner_type_form_view",
+        form_view_ref: "foo.partner_type_form_view",
     });
 
     await contains(
@@ -1073,12 +1073,12 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
     expectedContexts.clear();
     expectedContexts.set("view:res.company", {
         ...userContext,
-        form_view_ref: "bar_rescompany_form_view",
+        form_view_ref: "bar.rescompany_form_view",
     });
     expectedContexts.set("onchange:res.company", {
         ...userContext,
         default_color: 2,
-        form_view_ref: "bar_rescompany_form_view",
+        form_view_ref: "bar.rescompany_form_view",
     });
 
     await contains(`.modal [name=company_ids] .o_field_x2many_list_row_add a`).click();
@@ -1090,7 +1090,7 @@ test(`x2many form_view_ref with defined list`, async () => {
 
     PartnerType._records = [{ id: 1, name: "Timmy 1" }];
     PartnerType._views = {
-        "form,foo_partner_type_form_view": `
+        "form,foo.partner_type_form_view": `
             <form>
                 <div class="form_view_ref_partner_type">
                     <field name="display_name" />
@@ -1110,7 +1110,7 @@ test(`x2many form_view_ref with defined list`, async () => {
     expectedContexts.set("partner", { ...userContext });
     expectedContexts.set("partner.type", {
         ...userContext,
-        form_view_ref: "foo_partner_type_form_view",
+        form_view_ref: "foo.partner_type_form_view",
     });
 
     onRpc("get_views", ({ model, kwargs }) => {
@@ -1126,7 +1126,7 @@ test(`x2many form_view_ref with defined list`, async () => {
                 <field name="type_ids" invisible="1" />
                 <field string="Partner Types" name="type_ids" context="{
                     'default_partner_id': id,
-                    'form_view_ref': 'foo_partner_type_form_view'
+                    'form_view_ref': 'foo.partner_type_form_view'
                 }">
                     <list>
                         <field name="display_name" />
