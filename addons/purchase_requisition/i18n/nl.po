@@ -3,7 +3,7 @@
 # 	* purchase_requisition
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -282,7 +282,7 @@ msgstr "Vergelijk productregels"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -343,7 +343,7 @@ msgstr "Aangemaakt op"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid "Creation Blocked"
-msgstr "Aanmaken geblokkeerd"
+msgstr "Vergrendeld aanmaken"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__currency_id
@@ -429,7 +429,7 @@ msgstr "Volgers"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Contacten)"
+msgstr "Volgers (Partners)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
@@ -513,8 +513,8 @@ msgid ""
 "we cannot recreate that in this case."
 msgstr ""
 "Als de gekozen leverancier of een van de producten in de oorspronkelijke "
-"bestelling een blokkeringswaarschuwing heeft, voorkomen we dat er een "
-"alternatieve bestelling wordt gemaakt. Dit komt omdat deze velden normaal "
+"order een blokkeringswaarschuwing heeft, voorkomen we dat er een "
+"alternatieve order wordt gemaakt. Dit komt omdat deze velden normaal "
 "gesproken worden gewist met een waarschuwingsbericht in de "
 "formulierweergave, maar dat kunnen we in dit geval niet opnieuw maken."
 
@@ -820,7 +820,7 @@ msgstr "Inkoopsjablonen"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_qty
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -968,7 +968,7 @@ msgid ""
 " to create an alternative."
 msgstr ""
 "De leverancier die je hebt geselecteerd of ten minste een van de producten "
-"die je kopieert van de oorspronkelijke bestelling, heeft een "
+"die je kopieert van de oorspronkelijke order, heeft een "
 "blokkeringswaarschuwing en kan niet worden geselecteerd om een alternatief "
 "te maken."
 
@@ -1004,7 +1004,7 @@ msgid ""
 msgstr ""
 "Om deze inkoopaanvraag te sluiten, annuleer je de gerelateerde inkoopoffertes.\n"
 "\n"
-"Stel je de puinhoop voor als iemand deze duplicaten bevestigt: verdubbel de bestelling, verdubbel de moeite :)"
+"Stel je de puinhoop voor als iemand deze duplicaten bevestigt: verdubbel de order, verdubbel de moeite :)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1032,7 +1032,7 @@ msgstr "Eenheid"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Unit Price"
-msgstr "Eenheidsprijs"
+msgstr "Prijs"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__vendor_id
@@ -1053,7 +1053,7 @@ msgid ""
 "Warning for %(partner)s:\n"
 "%(warning_message)s\n"
 msgstr ""
-"Waarschuwing voor %(contact)s:\n"
+"Waarschuwing voor %(partner)s:\n"
 "%(warning_message)s\n"
 
 #. module: purchase_requisition
@@ -1137,8 +1137,7 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a quantity."
 msgstr ""
-"Je kunt geen afroeporder bevestigen met regels waarin een hoeveelheid "
-"ontbreekt."
+"Je kunt geen afroeporder bevestigen met regels waarin een aantal ontbreekt."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1157,8 +1156,8 @@ msgid ""
 "You cannot have a negative or unit price of 0 for an already confirmed "
 "blanket order."
 msgstr ""
-"Je kunt geen negatieve prijs of eenheidsprijs van 0 hebben voor een reeds "
-"bevestigde afroeporder."
+"Je kunt geen negatieve prijs of prijs van 0 hebben voor een reeds bevestigde"
+" afroeporder."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

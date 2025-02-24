@@ -706,7 +706,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        以下に請求書をお送りします。\n"
 "        <t t-if=\"object.name\">\n"
-"            請求書 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"            請求書番号 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            請求書\n"
@@ -714,16 +714,16 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (参照番号: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        金額 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-"         <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        請求金額: <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"         発行元: <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
-"            この請求書はすでに支払済です。\n"
+"            この請求書はすでにお支払済です。\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            早急にお支払いをお願い致します。\n"
+"            お手数をおかけいたしますが、お支払いのお手続きをお願いいたします。\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br/><br/>\n"
-"                お支払いの際には以下の番号をご利用下さい: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                お支払い・お問合せの際には以下の番号をご使用下さい: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
 "                    アカウント <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
 "                </t>\n"
@@ -732,7 +732,7 @@ msgstr ""
 "        </t>\n"
 "        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            PS: タイムシートを <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">ポータルより</a>ご覧になれます。\n"
+"            追伸: タイムシートを <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">ポータルより</a>ご確認頂けます。\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        ご質問がございましたら、お気軽にお問合せ下さい。\n"
@@ -6086,7 +6086,7 @@ msgstr "不足の場合に承認される差額"
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
-msgstr "ダイジェスト"
+msgstr "レポート"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6435,7 +6435,7 @@ msgstr "配当金"
 #. odoo-python
 #: code:addons/account/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "アクセス権がありません。ユーザのダイジェストメールにこのデータをスキップしてください"
+msgstr "アクセス権がありません。ユーザのレポートメール用にこのデータをスキップしてください"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_extract
@@ -16503,12 +16503,12 @@ msgstr "取引フィード"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_transaction_type
 msgid "Transaction Type"
-msgstr "トランザクションタイプ"
+msgstr "取引タイプ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_transaction_type_param
 msgid "Transaction Type Parameter"
-msgstr "トランザクションタイプパラメータ"
+msgstr "取引タイプパラメータ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view

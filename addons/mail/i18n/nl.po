@@ -588,7 +588,7 @@ msgstr "Een busaanwezigheid moet een gebruiker of een gast hebben."
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_partner_or_guest_exists
 msgid "A channel member must be a partner or a guest."
-msgstr "Een kanaallid moet een contact of een gast zijn."
+msgstr "Een kanaallid moet een partner of een gast zijn."
 
 #. module: mail
 #. odoo-python
@@ -624,7 +624,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
 msgid "A message reaction must be from a partner or from a guest."
-msgstr "Een berichtreactie moet van een contact of van een gast zijn."
+msgstr "Een berichtreactie moet van een partner of van een gast zijn."
 
 #. module: mail
 #. odoo-python
@@ -658,7 +658,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
 msgid "A volume setting must have a partner or a guest."
-msgstr "Een volume-instelling moet een contact of een gast hebben."
+msgstr "Een volume-instelling moet een partner of een gast hebben."
 
 #. module: mail
 #. odoo-javascript
@@ -1093,7 +1093,7 @@ msgstr "Geavanceerde opties"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
-msgstr "Na Plandatum"
+msgstr "Na plandatum"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__warning
@@ -1238,7 +1238,7 @@ msgstr "Alle gesprekken zijn gedempt"
 #. odoo-python
 #: code:addons/mail/wizard/mail_resend_message.py:0
 msgid "All partners must belong to the same message"
-msgstr "Alle contacten moeten tot hetzelfde bericht behoren"
+msgstr "Alle partners moeten tot hetzelfde bericht behoren"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__allow_public_upload
@@ -1488,7 +1488,7 @@ msgstr "Audiospeler:"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__partners
 msgid "Authenticated Partners"
-msgstr "Geauthenticeerde contacten"
+msgstr "Geauthenticeerde partners"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_id
@@ -1509,7 +1509,7 @@ msgid ""
 " did not match any partner."
 msgstr ""
 "Auteur van het bericht. Als deze niet ingesteld is, kan email_from een "
-"e-mailadres bevatten wat niet overeenkomt met een contact."
+"e-mailadres bevatten wat niet overeenkomt met een partner."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
@@ -1671,7 +1671,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
 msgid "Before Plan Date"
-msgstr "Voor Plandatum"
+msgstr "Voor plandatum"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -2431,7 +2431,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__configuration
@@ -2681,7 +2681,7 @@ msgstr "Groepsgesprek maken"
 #: code:addons/mail/static/src/discuss/core/public_web/message_actions.js:0
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Create Thread"
-msgstr "Thread aanmaken"
+msgstr "Draad maken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
@@ -3050,9 +3050,9 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
-"Standaard ontvangers van de record:\n"
-"- contact (gebruik makende van de id van het contact of het partner_id veld) OF\n"
-"- e-mail (gebruik makende van het email_from veld)"
+"Standaard ontvangers van het record:\n"
+"- partner (met behulp van het id op een partner of het veld partner_id) OF\n"
+"- e-mail (met behulp van het veld email_from- of e-mail)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
@@ -3535,7 +3535,7 @@ msgstr "Bewerken"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr "Contacten bewerken"
+msgstr "Partners bewerken"
 
 #. module: mail
 #. odoo-python
@@ -3713,7 +3713,7 @@ msgid ""
 "found and replaces the author_id field in the chatter."
 msgstr ""
 "E-mailadres van de verzender. Dit veld is ingesteld wanneer er geen "
-"overeenkomende contact wordt gevonden en vervangt het author_id veld in de "
+"overeenkomende partner wordt gevonden en vervangt het author_id veld in de "
 "chatter."
 
 #. module: mail
@@ -3827,7 +3827,7 @@ msgstr "Inschakelen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
-msgstr "Bestellingstracering inschakelen"
+msgstr "Ordertracering inschakelen"
 
 #. module: mail
 #. odoo-javascript
@@ -3890,7 +3890,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
 msgid "Error, a partner cannot follow twice the same object."
-msgstr "Fout, een contact kan niet twee keer hetzelfde object volgen."
+msgstr "Fout, een partner kan niet twee keer hetzelfde object volgen."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
@@ -4194,7 +4194,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Contacten)"
+msgstr "Volgers (Partners)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__followers_partner_field_name
@@ -4606,7 +4606,7 @@ msgstr "Hostnaam of IP van de mailserver"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Hover on your message and mark as todo"
-msgstr "Beweeg de muis over uw bericht en markeer het als todo"
+msgstr "Beweeg de muis over het bericht en markeer het als te doen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__voice_active_duration
@@ -4834,7 +4834,7 @@ msgid ""
 "If set, the member will not receive notifications from the channel until "
 "this date."
 msgstr ""
-"Indien ingesteld, ontvangt het lid tot deze datum geen meldingen van het "
+"Indien ingesteld, ontvangt het lid t/m deze datum geen meldingen van het "
 "kanaal."
 
 #. module: mail
@@ -4865,7 +4865,7 @@ msgid ""
 "this date."
 msgstr ""
 "De gebruiker ontvangt indien ingesteld geen enkele melding van de kanalen "
-"tot deze datum."
+"t/m deze datum."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -6169,13 +6169,13 @@ msgstr "Menu"
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Contacten samenvoegen wizard"
+msgstr "Partners samenvoegen wizard"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/base_partner_merge_automatic_wizard.py:0
 msgid "Merged with the following partners: %s"
-msgstr "Samengevoegd met de volgende contacten: %s"
+msgstr "Samengevoegd met de volgende partners: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -6305,6 +6305,12 @@ msgstr "Bericht referenties, zoals identifiers van vorige berichten"
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Message should be a valid EmailMessage instance"
 msgstr "Bericht moet een geldige bericht instantie zijn"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
+msgid "Message sound"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__name
@@ -6531,7 +6537,7 @@ msgstr "Duur dempen"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__mute_until_dt
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__mute_until_dt
 msgid "Mute notifications until"
-msgstr "Meldingen dempen tot"
+msgstr "Meldingen dempen t/m"
 
 #. module: mail
 #. odoo-javascript
@@ -6973,7 +6979,7 @@ msgid ""
 "Notification should receive partners given as a list of IDs (received "
 "%(pids)s)"
 msgstr ""
-"De melding moet contacten ontvangen als een lijst van ID's (%(pids)s "
+"De melding moet partners ontvangen als een lijst van ID's (%(pids)s "
 "ontvangen)"
 
 #. module: mail
@@ -7552,35 +7558,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__partner_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 msgid "Partner"
-msgstr "Contact"
+msgstr "Partner"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 msgid "Partner Profile"
-msgstr "Contactprofiel"
+msgstr "Profiel Partner"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_readonly
 msgid "Partner Readonly"
-msgstr "Contact alleen lezen"
+msgstr "Partner alleen lezen"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
 msgid "Partner with additional information for mail resend"
-msgstr "Contact met aanvullende informatie voor e-mail opnieuw verzenden"
+msgstr "Partner met aanvullende informatie voor e-mail opnieuw verzenden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_partner_ids
 msgid "Partners"
-msgstr "Contacten"
+msgstr "Partners"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notified_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__notified_partner_ids
 msgid "Partners with Need Action"
-msgstr "Contacten met benodigde actie"
+msgstr "Partners met benodigde actie"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__password
@@ -7753,7 +7759,7 @@ msgid ""
 msgstr ""
 "Beleid om een bericht te versturen bij een document door gebruik te maken van de mail gateway.\n"
 "-iedereen: iedereen mag posten\n"
-"-contacten: alleen geautoriseerde contacten\n"
+"-partners: alleen geautoriseerde partners\n"
 "-volgers: alleen volgers van een bijbehorend document of leden van gevolgde kanalen\n"
 
 #. module: mail
@@ -7833,7 +7839,7 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received "
 "%(pids)s)"
 msgstr ""
-"Het posten van een bericht moet contacten ontvangen als een lijst van ID's "
+"Het posten van een bericht moet partners ontvangen als een lijst van ID's "
 "(%(pids)s ontvangen)"
 
 #. module: mail
@@ -8024,7 +8030,7 @@ msgstr "Reagerende gast"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__partner_id
 msgid "Reacting Partner"
-msgstr "Reagerende contact"
+msgstr "Reagerende partner"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reaction_ids
@@ -8222,7 +8228,7 @@ msgstr "Gerelateerd bericht"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__partner_id
 msgid "Related Partner"
-msgstr "Gerelateerde contact"
+msgstr "Gerelateerde partner"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__relation_field
@@ -9684,8 +9690,8 @@ msgid ""
 "and the command palette. Consequently, it cannot be archived or deleted."
 msgstr ""
 "Het activiteitstyape 'To-Do' wordt gebruikt om herinneringen te maken vanuit"
-" het bovenste balkmenu en het commandopalet. Bijgevolg kan het niet worden "
-"gearchiveerd of verwijderd."
+" het bovenste balkmenu en het opdrachtenpalet. Bijgevolg kan het niet worden"
+" gearchiveerd of verwijderd."
 
 #. module: mail
 #. odoo-javascript
@@ -9714,7 +9720,7 @@ msgid ""
 "to tax."
 msgstr ""
 "Het btw-nummer. Waarden hier worden gevalideerd op basis van het "
-"landformaat. Je kunt '/' gebruiken om aan te geven dat het contact niet "
+"landformaat. Je kunt '/' gebruiken om aan te geven dat de partner niet "
 "belastingplichtig is."
 
 #. module: mail
@@ -10195,7 +10201,7 @@ msgstr "Aan (e-mails)"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__recipient_ids
 #: model:ir.model.fields,field_description:mail.field_mail_template__partner_to
 msgid "To (Partners)"
-msgstr "Aan (Contacten)"
+msgstr "Aan (Partners)"
 
 #. module: mail
 #. odoo-javascript
@@ -10479,7 +10485,7 @@ msgstr "Verwijderen uit blacklist"
 #. odoo-python
 #: code:addons/mail/wizard/mail_blacklist_remove.py:0
 msgid "Unblock Reason: %(reason)s"
-msgstr "Reden om te deblokkeren : %(reason)s"
+msgstr "Reden om te ontgrendelen : %(reason)s"
 
 #. module: mail
 #. odoo-javascript
@@ -11009,7 +11015,7 @@ msgstr "Audiodetectie"
 #: code:addons/mail/static/src/discuss/voice_message/common/composer_actions_patch.js:0
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.xml:0
 msgid "Voice Message"
-msgstr "Stem Bericht"
+msgstr "Spraakbericht"
 
 #. module: mail
 #. odoo-javascript
@@ -11037,12 +11043,12 @@ msgstr "Volume"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "Volume per partner"
-msgstr "Volume per contact"
+msgstr "Volume per partner"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__volume_settings_ids
 msgid "Volumes of other partners"
-msgstr "Volumes van andere contacten"
+msgstr "Volumes van andere partners"
 
 #. module: mail
 #. odoo-javascript
@@ -11320,7 +11326,7 @@ msgstr "Je kunt alleen chatten met bestaande gebruikers."
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "You can only chat with partners that have a dedicated user."
 msgstr ""
-"Je kunt alleen chatten met contacten waaraan een gebruiker is gekoppeld."
+"Je kunt alleen chatten met partners waaraan een gebruiker is gekoppeld."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -11501,7 +11507,7 @@ msgstr "[%(name)s] (geen e-mailadres)"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid "addresses linked to registered partners"
-msgstr "adressen gekoppeld aan geregistreerde contacten"
+msgstr "adressen gekoppeld aan geregistreerde partners"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
@@ -12116,7 +12122,7 @@ msgstr "jij"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid "your alias"
-msgstr "jouw alias"
+msgstr "je alias"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form

@@ -713,7 +713,7 @@ msgstr "割当タイプ"
 msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to approve"
 " it."
-msgstr "承認するためには、休暇割当が \"未承認\"または\"2次承認\"でなければなりません。"
+msgstr "承認するためには、休暇割当が \"承認待ち\"または\"2次承認\"でなければなりません。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -738,12 +738,12 @@ msgstr "休暇申請を拒否するには、確認済、２次承認または検
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
-msgstr "\"否認\"に再設定するには、休暇割当ステータスが \"未承認\"である必要があります。"
+msgstr "\"否認\"に再設定するには、休暇割当ステータスが \"承認待ち\"である必要があります。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
 msgid "Allocation to Approve"
-msgstr "割当申請"
+msgstr "承認待ちの割当申請"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_approve_department
@@ -3470,7 +3470,7 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
-"休暇申請が作成されると、ステータスは'未承認'となります。\n"
+"休暇申請が作成されると、ステータスは'承認待ち'となります。\n"
 "マネジャーにより休暇申請が却下された場合、ステータスは'否認'となります。\n"
 "休暇申請がマネジャーに承認されると、ステータスは'承認済'となります。"
 
@@ -3482,7 +3482,7 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
-"休暇申請が作成されると、ステータスは'送信予定'に設定されます。ユーザが休暇申請を確認すると、ステータスは'承認中'になります。マネージャーが休暇申請を否認した場合、ステータスは'否認'です。休暇申請がマネージャーによって承認されると、ステータスは'承認済み'になります。"
+"休暇申請が作成されると、ステータスは'送信予定'に設定されます。ユーザが休暇申請を確認すると、ステータスは'承認待ち'になります。マネージャーが休暇申請を否認した場合、ステータスは'否認'です。休暇申請がマネージャーによって承認されると、ステータスは'承認済み'になります。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3777,7 +3777,7 @@ msgstr "チームメンバーの休暇"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
 msgid "Time Off to Approve"
-msgstr "承認するための休暇"
+msgstr "承認待ちの休暇"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -3826,13 +3826,13 @@ msgstr "あなたがマネージャーである人々の休暇"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "Time off request must be confirmed (\"To Approve\") in order to approve it."
-msgstr "休暇申請を承認するには、休暇申請を確認する必要があります('承認するには')。"
+msgstr "休暇申請を承認するには、休暇申請が確認済 (\"承認待ち\") である必要があります。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Time off request must be confirmed in order to approve it."
-msgstr "休暇申請を承認するには、休暇申請を確認する必要があります。"
+msgstr "休暇申請を承認するには、休暇申請が確認済である必要があります。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3874,7 +3874,7 @@ msgstr "終了日"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__confirm
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "To Approve"
-msgstr "未承認"
+msgstr "承認待ち"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter

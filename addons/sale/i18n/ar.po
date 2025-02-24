@@ -890,6 +890,8 @@ msgid ""
 "<span><b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.\n"
 "        </span>"
 msgstr ""
+"<span><b>تهانينا</b>، لقد تم إرسال أول عرض السعر لك!<br>تحقق من بريدك الإلكتروني لتصديق عرض السعر.\n"
+"        </span> "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -996,7 +998,7 @@ msgstr "يجب أن يكون لعرض السعر تاريخ تأكيد. "
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "A line on these orders missing a product, you cannot confirm it."
-msgstr ""
+msgstr "هناك بند في هذه الطلبات ينقصه منتج، وبالتالي لا يمكنك تأكيده. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1010,6 +1012,8 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
+"يجب أن يكون عنصر ”الكومبو“ الخاص ببند أمر البيع من بين عناصر الكومبو المتاحة"
+" في البند المرتبط به. "
 
 #. module: sale
 #. odoo-python
@@ -1220,6 +1224,13 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
 msgstr ""
+"يتيح لك مشاركة المستند مع عملائك ضمن عملية بيع.\n"
+"اتركه فارغاً إذا كنت لا ترغب في مشاركة هذا المستند مع عميل المبيعات.\n"
+"في مرحلة عرض السعر: سيتم إرسال المستند إلى العملاء وبمقدورهم الوصول إليه في أي وقت.\n"
+"مثال: قد يكون هذا الخيار مفيداً لمشاركة ملفات وصف المنتج.\n"
+"في مرحلة التأكيد: سيتم إرسال المستند إلى العملاء وبمقدورهم الوصول إليه.\n"
+"مثال: قد يكون هذا الخيار مفيداً لمشاركة دليل المستخدم أو المحتوى الرقمي الذي تم شراؤه عن طريق المتجر الإلكتروني. \n"
+"داخل PDF عرض السعر: سيتم تضمين المستند في ملف pdf لعرض السعر وداخل أمر البيع بين صفحات الترويسة وجدول عرض السعر. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2163,7 +2174,7 @@ msgstr "خصم على البنود"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "الخصم- على المنتجات التي تحتوي على الضرائب التالية: %(taxes)s "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3023,7 +3034,7 @@ msgstr "بنود الطلب المرتبطة "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
 msgid "Linked Virtual"
-msgstr ""
+msgstr "مرتبط افتراضياً "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4711,6 +4722,8 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"تم تحديد بعض الطلبات المؤكدة. قد تتأثر المنتجات المتعلقة بها\n"
+"                        جراء الإلغاء. "
 
 #. module: sale
 #. odoo-python
