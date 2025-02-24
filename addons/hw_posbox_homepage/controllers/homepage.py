@@ -100,7 +100,12 @@ class IotBoxOwlHomePage(http.Controller):
     @http.route('/hw_posbox_homepage/wifi_clear', auth='none', type='http', cors='*')
     def clear_wifi_configuration(self):
         helpers.update_conf({'wifi_ssid': '', 'wifi_password': ''})
+<<<<<<< saas-18.1
         wifi.disconnect()
+||||||| b9abe46c1492b09e369434e76ec8196c6b02dd19
+        helpers.unlink_file('wifi_network.txt')
+=======
+>>>>>>> 7cbfc781db192128cb96f98fdf9b2cd634c0f232
         return json.dumps({
             'status': 'success',
             'message': 'Successfully disconnected from wifi',
