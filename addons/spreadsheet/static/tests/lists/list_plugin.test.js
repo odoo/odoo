@@ -86,7 +86,7 @@ test("Numeric/monetary fields are correctly loaded and displayed", async () => {
         field_with_array_agg: 0,
         currency_id: 2,
         pognon: 0,
-    })
+    });
     const { model } = await createSpreadsheetWithList({
         columns: ["pognon", "probability", "field_with_array_agg"],
     });
@@ -987,7 +987,7 @@ test("can import (export) action xml id", async function () {
                 domain: [],
                 model: "partner",
                 orderBy: [],
-                actionXmlId: "spreadsheet.test_action"
+                actionXmlId: "spreadsheet.test_action",
             },
         },
     };
