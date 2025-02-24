@@ -2486,6 +2486,11 @@ class Application:
                 # Logs the error here so the traceback starts with ``__call__``.
                 if hasattr(exc, 'loglevel'):
                     _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
+                elif isinstance(exc, Unauthorized) and exc.www_authenticate is None:
+                    warnings.warn(
+                        "Missing WWW-Authenticate header with 401-Unauthorized "
+                        f"response for path {httprequest.path}. Use 403-Forbidden "
+                        "or set www_authenticate to another falsy value than None.")
                 elif isinstance(exc, HTTPException):
                     pass
                 elif isinstance(exc, SessionExpiredException):
