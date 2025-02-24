@@ -166,7 +166,8 @@ class StockMove(models.Model):
         index='btree_not_null')
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route")
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="the warehouse to consider for the route selection on the next procurement (if any).")
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', compute="_compute_warehouse_id", store=True,
+        help="the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
     quantity = fields.Float(
         'Quantity', compute='_compute_quantity', digits='Product Unit', inverse='_set_quantity', store=True)
@@ -249,6 +250,12 @@ class StockMove(models.Model):
                 continue
             loc_dest = ml.move_id.location_dest_id._get_putaway_strategy(ml.product_id, ml.quantity_product_uom)
             ml.location_dest_id = loc_dest
+
+    @api.depends('picking_id')
+    def _compute_warehouse_id(self):
+        for move in self:
+            if not move.warehouse_id:
+                move.warehouse_id = move.location_id.warehouse_id or move.location_dest_id.warehouse_id
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'product_id')
     def _compute_display_assign_serial(self):
