@@ -133,18 +133,7 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
             'lang_ids': [(6, 0, [cls.parseltongue.id])],
         }).lang_install()
         cls.headers = {"Content-Type": "application/json"}
-    
-    def _build_payload(self, params=None):
-        """
-        Helper to properly build jsonrpc payload
-        """
-        return {
-            "jsonrpc": "2.0",
-            "method": "call",
-            "id": 0,
-            "params": params or {},
-        }
-    
+
     def test_teaser_manual(self):
         blog_post_parseltongue = self.test_blog_post.with_context(lang=self.parseltongue.code)
 
@@ -215,7 +204,7 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
         self.assertEqual('All blogs', blog_post.with_context(lang=en_lang.code).content)
         
         # Test updating translation
-        payload = self._build_payload({
+        payload = self.build_rpc_payload({
             'model': blog_post._name,
             'record_id': blog_post.id,
             'field_name': 'content',
