@@ -2008,6 +2008,9 @@ export class PosStore extends Reactive {
 
         // Add the product after having the extra information.
         await this.addProductFromUi(product, options);
+        if (product.tracking == "serial") {
+            this.selectedOrder?.selected_orderline?.set_quantity_by_lot();
+        }
         this.numberBuffer.reset();
     }
 
