@@ -505,3 +505,41 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             ProductScreen.productIsDisplayed("Test Product 2"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("ProductCardUoMPrecision", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
+            ProductConfiguratorPopup.pickRadio("Leather"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("."),
+                Numpad.click("1"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "0.1",
+                }),
+            ]),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
+            ProductConfiguratorPopup.pickRadio("wool"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("."),
+                Numpad.click("7"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "0.7",
+                }),
+            ]),
+            ProductScreen.productCardQtyIs("Configurable Chair", "0.8"),
+            {
+                content:
+                    "Check the cart button if it shows the quantity in correct format/precision",
+                isActive: ["mobile"],
+                trigger: ".review-button:contains('0.8')",
+            },
+        ].flat(),
+});
