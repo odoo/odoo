@@ -6,7 +6,7 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <list string="Product" multi_edit="1" sample="1">
-                <field name="product_variant_count" column_invisible="True"/>
+                <field name="product_single_variant_id" column_invisible="True"/>
                 <field name="sale_ok" column_invisible="True"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="cost_currency_id" column_invisible="True"/>
@@ -14,7 +14,7 @@
                 <field name="name" string="Product Name"/>
                 <field name="default_code" optional="show"/>
                 <field name="product_tag_ids" widget="many2many_tags" optional="hide"/>
-                <field name="barcode" optional="hide" readonly="product_variant_count != 1"/>
+                <field name="barcode" optional="hide" readonly="not product_single_variant_id"/>
                 <field name="company_id" options="{'no_create': True}"
                     groups="base.group_multi_company" optional="hide"/>
                 <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id'}" optional="show" decoration-muted="not sale_ok"/>
