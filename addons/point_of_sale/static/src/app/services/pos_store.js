@@ -1252,6 +1252,15 @@ export class PosStore extends WithLazyGetterTrap {
                     if (order) {
                         delete order.uiState?.lineToRefund[refundedOrderLine.uuid];
                     }
+<<<<<<< e9a10fece6dac756a6c580964070fd890fb68f93
+||||||| f17834f03161ce49fd0360738eecc044c0b1662d
+                    refundedOrderLine.refunded_qty += Math.abs(line.qty);
+=======
+                    refundedOrderLine.refunded_qty = refundedOrderLine.refund_orderline_ids.reduce(
+                        (sum, obj) => sum + Math.abs(obj.qty),
+                        0
+                    );
+>>>>>>> 25f477a9d99d24c2ee72e9eb4f53e09ca11b5a46
                 }
             }
 
