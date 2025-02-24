@@ -1050,11 +1050,8 @@ class StockQuant(models.Model):
         quant = None
         if quants:
             # quants are already ordered in _gather
-            # lock the first available, see _acquire_one_job for explanations
-            select = quants._as_query(ordered=True).select()
-            select = SQL("%s LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED", select)
-            for [quant_id] in self.env.execute_query(select):
-                quant = self.browse(quant_id)
+            # lock the first available
+            quant = quants.try_lock_for_update(allow_referencing=True, limit=1)
 
         if quant:
             vals = {'in_date': in_date}
