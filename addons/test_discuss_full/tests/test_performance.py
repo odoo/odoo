@@ -387,6 +387,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "avatar_128_access_token": limited_field_access_token(
                         self.users[0].partner_id, "avatar_128"
                     ),
+                    "can_add_reaction": True,
                     "id": self.users[0].partner_id.id,
                     "isAdmin": False,
                     "isInternalUser": True,

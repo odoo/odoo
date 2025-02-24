@@ -52,6 +52,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             [
                 {
                     "avatar_128_access_token": limited_field_access_token(guest, "avatar_128"),
+                    "can_add_reaction": True,
                     "id": guest.id,
                     "im_status": "offline",
                     "name": "Visitor",

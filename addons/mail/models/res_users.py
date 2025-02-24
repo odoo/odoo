@@ -293,8 +293,11 @@ class Users(models.Model):
                     "settings": settings._res_users_settings_format(),
                 }
             )
+            store.add(self.env.user.partner_id, {"can_add_reaction": True})
+
         elif guest := self.env["mail.guest"]._get_guest_from_context():
             store.add({"self": Store.one(guest, fields=["avatar_128", "name"])})
+            store.add(guest, {"can_add_reaction": True})
 
     def _init_messaging(self, store):
         self.ensure_one()
