@@ -629,7 +629,7 @@ test("empty group when grouped by date", async () => {
 
     expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017\n(1)", "February 2017\n(3)"]);
 
-    Partner._records.shift(); // remove only record of the first group
+    MockServer.env["partner"].shift(); // remove only record of the first group
 
     await press("Enter"); // reload
     await animationFrame();
@@ -1582,7 +1582,7 @@ test("kanban with an action id as on_create attrs", async () => {
             // simplified flow in this test: simulate a target new action which
             // creates a record and closes itself
             expect.step(`doAction ${action}`);
-            Partner._records.push({ id: 299, foo: "new" });
+            MockServer.env["partner"].create({ foo: "new" });
             options.onClose();
         },
     });

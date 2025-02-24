@@ -21,6 +21,7 @@ import {
     fields,
     getService,
     makeServerError,
+    MockServer,
     mockService,
     models,
     mountView,
@@ -11807,9 +11808,10 @@ test("nested one2manys, multi page, onchange", async () => {
     expect.verifySteps(["onchange"]);
 
     await clickSave();
-    expect(Partner._records[0].int_field).toBe(5);
-    expect(Turtle._records[1].turtle_int).toBe(5);
-    expect(Turtle._records[0].turtle_int).toBe(5);
+
+    expect(MockServer.env["partner"][0].int_field).toBe(5);
+    expect(MockServer.env["turtle"][1].turtle_int).toBe(5);
+    expect(MockServer.env["turtle"][0].turtle_int).toBe(5);
 });
 
 test("multi page, command forget for record of second page", async () => {

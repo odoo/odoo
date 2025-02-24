@@ -6,6 +6,7 @@ import {
     contains,
     defineModels,
     fields,
+    MockServer,
     mockService,
     models,
     mountView,
@@ -33,18 +34,15 @@ test("widget many2many_binary", async () => {
     expect.assertions(17);
 
     mockService("http", () => ({
-        post(route, params) {
+        post(route, { ufile }) {
             expect(route).toBe("/web/binary/upload_attachment");
-            expect(params.ufile[0].name).toBe("fake_file.tiff", {
+            expect(ufile[0].name).toBe("fake_file.tiff", {
                 message: "file is correctly uploaded to the server",
             });
-            const file = {
-                id: 10,
-                name: params.ufile[0].name,
-                mimetype: "text/plain",
-            };
-            IrAttachment._records.push(file);
-            return JSON.stringify([file]);
+            const ids = MockServer.env["ir.attachment"].create(
+                ufile.map(({ name }) => ({ name, mimetype: "text/plain" }))
+            );
+            return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
         },
     }));
 
@@ -137,27 +135,23 @@ test("widget many2many_binary displays notification on error", async () => {
     expect.assertions(12);
 
     mockService("http", () => ({
-        post(route, params) {
+        post(route, { ufile }) {
             expect(route).toBe("/web/binary/upload_attachment");
-            expect([params.ufile[0].name, params.ufile[1].name]).toEqual(
-                ["good_file.txt", "bad_file.txt"],
-                { message: "files are correctly sent to the server" }
-            );
-            const files = [
+            expect([ufile[0].name, ufile[1].name]).toEqual(["good_file.txt", "bad_file.txt"], {
+                message: "files are correctly sent to the server",
+            });
+            const ids = MockServer.env["ir.attachment"].create({
+                name: ufile[0].name,
+                mimetype: "text/plain",
+            });
+            return JSON.stringify([
+                ...MockServer.env["ir.attachment"].read(ids),
                 {
-                    id: 10,
-                    name: params.ufile[0].name,
+                    name: ufile[1].name,
                     mimetype: "text/plain",
+                    error: `Error on file: ${ufile[1].name}`,
                 },
-                {
-                    id: 11,
-                    name: params.ufile[1].name,
-                    mimetype: "text/plain",
-                    error: `Error on file: ${params.ufile[1].name}`,
-                },
-            ];
-            IrAttachment._records.push(files[0]);
-            return JSON.stringify(files);
+            ]);
         },
     }));
 
