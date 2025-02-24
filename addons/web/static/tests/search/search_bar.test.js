@@ -1777,6 +1777,102 @@ test(`quoted search term performs a name_search with operator = for subitems`, a
     expect(".o_searchview_autocomplete .o-dropdown-item.o_indent").toHaveText("First record");
 });
 
+test("Search with starting quote: search with starts_with", async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+    await editSearch(`"yo`);
+    await keyDown("Enter");
+    await animationFrame();
+    expect(searchBar.env.searchModel._domain).toEqual([["foo", "=ilike", "yo%"]]);
+    expect(getFacetTexts()).toEqual(["Foo\nyo"]);
+});
+
+test(`Search with starting quote: search with starts_with on view defined's "filter_domain"`, async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field string="Foo" name="foo" filter_domain="[('name', 'ilike', self)]"/>
+            </search>
+        `,
+    });
+    await editSearch(`"Second`);
+    await keyDown("Enter");
+    await animationFrame();
+    expect(searchBar.env.searchModel._domain).toEqual([["name", "=ilike", "Second%"]]);
+    expect(getFacetTexts()).toEqual(["Foo\nSecond"]);
+});
+
+test(`Search with starting quote: search with starts_with as operator for subitems`, async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field string="Company" name="company"/>
+            </search>
+        `,
+    });
+    await editSearch(`"First`);
+    await click(".o_expand");
+    await animationFrame();
+    expect(".o_searchview_autocomplete .o-dropdown-item.o_indent").toHaveText("First record");
+});
+
+test("Search with ending quote: search with ends_with", async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+    await editSearch(`yo"`);
+    await keyDown("Enter");
+    await animationFrame();
+    expect(searchBar.env.searchModel._domain).toEqual([["foo", "=ilike", "%yo"]]);
+    expect(getFacetTexts()).toEqual(["Foo\nyo"]);
+});
+
+test(`Search with ending quote: search with ends_with on view defined's "filter_domain"`, async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field string="Foo" name="foo" filter_domain="[('name', 'ilike', self)]"/>
+            </search>
+        `,
+    });
+    await editSearch(`record"`);
+    await keyDown("Enter");
+    await animationFrame();
+    expect(searchBar.env.searchModel._domain).toEqual([["name", "=ilike", "%record"]]);
+    expect(getFacetTexts()).toEqual(["Foo\nrecord"]);
+});
+
+test(`Search with ending quote: search with ends_with as operator for subitems`, async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field string="Company" name="company"/>
+            </search>
+        `,
+    });
+    await editSearch(`st record"`);
+    await click(".o_expand");
+    await animationFrame();
+    expect(".o_searchview_autocomplete .o-dropdown-item.o_indent").toHaveText("First record");
+});
+
 test("subitems have a load more item if there is more records available", async () => {
     for (let i = 0; i < 20; i++) {
         Partner._records.push({
