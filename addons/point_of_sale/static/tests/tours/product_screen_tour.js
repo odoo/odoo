@@ -505,3 +505,21 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             ProductScreen.productIsDisplayed("Test Product 2"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("ProductCardUoMPrecision", {
+    checkDelay: 100,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false, "1", "5.10"),
+            ProductConfiguratorPopup.pickRadio("Leather"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([Numpad.click("1"), Numpad.click("."), Numpad.click("9")]),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false, "1", "10.20"),
+            ProductConfiguratorPopup.pickRadio("wool"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([Numpad.click("2"), Numpad.click("."), Numpad.click("3")]),
+            ProductScreen.productCardQtyIs("Configurable Chair", "4.2"),
+        ].flat(),
+});
