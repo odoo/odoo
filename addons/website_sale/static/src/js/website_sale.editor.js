@@ -114,6 +114,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     willStart: async function () {
         const _super = this._super.bind(this);
+        this.isLayoutList = this.$target[0].closest('#o_wsale_container').classList.contains('o_wsale_layout_list');
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.defaultSort = this.$target[0].closest('[data-default-sort]').dataset.defaultSort
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
@@ -263,6 +264,8 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         // of arbitrary DOM elements and not just widgets.
         await this._super(...arguments);
         this.$el.find('[data-name="ribbon_customize_opt"]').toggleClass('d-none', !this.ribbonEditMode);
+        this.$el[0].querySelector('.o_wsale_soptions_menu_sizes').classList.toggle('d-none', this.isLayoutList);
+        this.$el[0].querySelector('[data-name="o_wsale_change_sequence_widget"]').classList.toggle('d-none', this.isLayoutList);
     },
 
     //--------------------------------------------------------------------------
