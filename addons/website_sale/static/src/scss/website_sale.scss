@@ -699,24 +699,24 @@ body:not(.editor_enable) #category_header {
         gap: map-get($spacers, 1) 0;
     }
 
-    body:has(.o-livechat-root) & {
+    body:has(.o-livechat-root.o-livechat-LivechatButton-isVisible) & {
         transition: right .3s, bottom .3s;
 
         #o_wsale_floating_bar {
-            bottom: 3vh;
+            bottom: 10px;
         }
 
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(sm) {
             #o_wsale_floating_bar.o_wsale_has_pricelist {
-                bottom: calc(3vh + 70px);
+                bottom: calc(10px + 70px);
             }
 
             &:not(:has(#o_wsale_floating_bar.o_wsale_has_pricelist)) {
-                right: calc(3vw + 70px);
+                right: calc(px + 70px);
             }
         }
 
-        @include media-breakpoint-up(md) {
+        @include media-breakpoint-up(sm) {
             --_offset: calc(calc(100vw - 100%) * .5);
             --_livechat-gap: calc(3vw + 80px);
 
