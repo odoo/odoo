@@ -45,11 +45,11 @@
                         <group>
                             <field name="employee_id" invisible="1"/>
                             <field name="line_type_id"/>
-                            <field name="display_type" required="1"/>
                         </group>
                         <group>
                             <field name="date_start" string="Duration" widget="daterange" options="{'end_date_field': 'date_end'}"/>
                             <field name="date_end" invisible="1"/>
+                            <field name="display_type" required="1"/>
                         </group>
                     </group>
                     <field name="description" placeholder="Description"/>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="resume_line_view_from" model="ir.ui.view">
+        <field name="name">hr.resume.line.view.form.inherit.event.hr.skills</field>
+        <field name="model">hr.resume.line</field>
+        <field name="inherit_id" ref="hr_skills.resume_line_view_form"/>
+        <field name="arch" type="xml">
+            <field name="display_type" position="after">
+                <field
+                    name="event_id"
+                    options="{'no_create': True}"
+                    context="{'list_view_ref': 'event_hr_skills.event_event_view_list_hr_skills_summary'}"
+                    invisible="display_type != 'event'"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-inherit="hr_skills.ResumeListRenderer.RecordRow" t-inherit-mode="extension">
+    <xpath expr="//t[@id='row']" position='after'>
+        <t t-if="data.display_type === 'event'">
+            <td class="o_resume_timeline_cell position-relative pe-lg-2">
+                <div class="rounded-circle bg-info position-relative"/>
+            </td>
+            <td class="o_data_cell pt-0" t-on-click="(ev) => this.onCellClicked(record, null, ev)">
+                <div t-attf-class="o_resume_line {{data.display_type == 'certification' ? 'o_resume_line_display_certification' : ''}}" t-att-data-id="id">
+                    <small class="o_resume_line_dates fw-bold">
+                        <t t-out="formatDate(data.date_start)"/> -
+                        <t t-if="data.date_end" t-out="formatDate(data.date_end)"/>
+                        <t t-else="">Current</t>
+                    </small>
+                    <h4 class="o_resume_line_title mt-2" t-esc="data.name"/>
+                    <p t-if="data.description" class="o_resume_line_desc" t-out="data.description" t-ref="link-target-blank"/>
+                </div>
+            </td>
+        </t>
+    </xpath>
+</t>
+
+</templates>
+
