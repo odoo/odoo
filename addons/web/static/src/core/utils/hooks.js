@@ -142,9 +142,11 @@ export const SERVICES_METADATA = {};
 export function useService(serviceName) {
     const component = useComponent();
     const { services } = component.env;
-    if (!(serviceName in services)) {
-        throw new Error(`Service ${serviceName} is not available`);
-    }
+    setTimeout(() => {
+        if (!(serviceName in services)) {
+            throw new Error(`Service ${serviceName} is not available`);
+        }
+    }, 0);
     const service = services[serviceName];
     if (SERVICES_METADATA[serviceName]) {
         if (service instanceof Function) {
