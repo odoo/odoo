@@ -1,90 +1,127 @@
-.o-snippets-menu {
+.o_block_tab {
+    background-color: $o-we-sidebar-blocks-content-bg;
+    padding: 0 $o-we-sidebar-blocks-content-spacing;
+    height: 100%; // give enough space for tips pointing at snippets after a snippet search
+    z-index: 1;
 
-    .o-section {
-        padding-left: 6px;
+
+    .o_snippets_container, .o_snippets_container_header {
+        padding: $o-we-sidebar-blocks-content-spacing 0;
     }
-    .o-block-container {
-        > .row {
-            margin-right: 2px;
-        }
-    }
-    .o-draggable-block {
-        padding: 1px;
-    }
-    .block {
-        background-color: rgba(62, 62, 70, 0.9);
-        color: $o-we-color;
 
-        &:hover {
-            background: $o-we-dropdown-item-bg-hover;
-            color: $o-we-dropdown-item-hover-color;
-        }
+    .o_snippets_container_body {
+        display: flex; // Needed for too long snippet names
+        flex-wrap: wrap;
+        margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
 
-        &.to_install {
-            .img-container {
-                position: relative;
+        .o_snippet {
+            position: relative;
+            flex: 0 0 auto;
+            width: percentage(1 / 3);
+            background-color: $o-we-sidebar-blocks-content-snippet-bg;
+            background-clip: padding-box;
+            border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
+            margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
+            user-select: none;
+            @include o-grab-cursor;
 
-                .btn {
-                    width: 80%;
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    -ms-transform: translate(-50%, -50%);
+            .o_snippet_thumbnail_title {
+                @include o-text-overflow(block);
+                white-space: normal;
+                padding: $o-we-sidebar-blocks-content-spacing / 2;
+                text-align: center;
+            }
+
+            .o_snippet_thumbnail {
+                width: 100%;
+                overflow: hidden;
+
+                .o_snippet_thumbnail_img {
+                    width: 100%;
+                    padding-top: 75%;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    background-position: top center;
+                    overflow: hidden;
+                }
+            }
+
+            &.o_disabled {
+                pointer-events: initial;
+
+                .o_snippet_undroppable {
+                    @include o-position-absolute(8px, 6px, auto, auto);
+                }
+            }
+
+            &.o_to_install {
+                .o_install_btn {
+                    @include o-position-absolute($top: 10px);
+                    z-index: 1;
                 }
 
-                &:not(:hover) .btn {
+                &:not(:hover) .o_install_btn {
                     display: none;
                 }
+            }
 
-                img {
+            &.o_disabled, &.o_to_install {
+                cursor: default;
+                background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .2);
+
+                .o_snippet_thumbnail_img {
                     opacity: .4;
                     filter: saturate(0) blur(1px);
+                }
+            }
+
+            &:not(:hover):not(.o_disabled):not(.o_to_install) {
+                background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .9);
+
+                .o_snippet_thumbnail {
+                    filter: saturate(.7);
+                    opacity: .9;
                 }
             }
         }
     }
 
-    // TODO improve later + better class names
-    .custom-inner-content {
+    #snippet_custom_content .o_snippet {
         display: flex;
         width: 100%;
 
-        .thumbnail,
+        .o_snippet_thumbnail,
         .rename-delete-buttons {
             display: flex;
             align-items: center;
-            background-color: rgba(62, 62, 70, 0.9);
         }
 
-        .thumbnail {
-            flex-grow: 1;
+        .o_snippet_thumbnail {
             min-width: 0; // Ensure text-overflow on flex children
         }
 
-        .thumbnail-title {
+        .o_snippet_thumbnail_title {
             white-space: nowrap;
         }
 
-        .thumbnail-img {
+        .o_snippet_thumbnail_img {
             flex-shrink: 0;
             width: 41px;
             height: 30px; // 82x60 -> 41x30
             padding: 0;
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: top center;
-            overflow: hidden;
         }
 
+        // TODO improve the following rules later
         .rename-delete-buttons button {
             // @extend %we-generic-link;
             padding-left: $o-we-sidebar-content-field-button-group-button-spacing;
             padding-right: $o-we-sidebar-content-field-button-group-button-spacing;
         }
 
-        &:not(:hover) .rename-delete-buttons button {
-            display: none;
+        &:not(:hover), &.o_disabled:hover {
+            .rename-delete-buttons button {
+                display: none;
+            }
         }
 
         .rename-input {

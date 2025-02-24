@@ -2,39 +2,44 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BlockTab">
-    <div class="ps-2 mt-3 mb-1">Categories</div>
-    <div class="o-block-container container ms-2 mt-2">
-        <div class="row">
-            <div t-foreach="this.snippetModel.snippetGroups" t-as="snippet" t-key="snippet.id" class="o-draggable-block col-4 o_draggable" t-att-data-category="'snippet_groups'" t-att-data-id="snippet.id">
-                <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet.moduleId ? 'to_install' : '' " t-on-click="() => this.openSnippetDialog(snippet)">
-                    <div class="img-container">
-                        <img t-att-src="snippet.thumbnailSrc" class="w-100"/>
-                        <button t-if="snippet.moduleId" class="btn btn-primary" t-on-click="() => this.snippetModel.installSnippetModule(snippet)">Install</button>
-                    </div>
-                    <span class="text-center pt-1 pb-2" t-esc="snippet.title"/>
-                </div>
+    <t t-set="disabledGroupTooltip">No block of this category can be dropped on this page.</t>
+    <t t-set="disabledBlockTooltip">This block cannot be dropped anywhere on this page.</t>
+    <div class="o_block_tab">
+        <div class="o_snippets_container" id="snippet_groups">
+            <div class="o_snippets_container_header"><span>Categories</span></div>
+            <div class="o_snippets_container_body">
+                <t t-foreach="this.snippetModel.snippetGroups" t-as="snippet" t-key="snippet.id">
+                    <Snippet snippet="snippet"
+                             snippetModel="this.snippetModel"
+                             onClickHandler="() => this.openSnippetDialog(snippet)"
+                             disabledTooltip="disabledGroupTooltip"/>
+                </t>
             </div>
         </div>
-    </div>
 
-    <t t-if="this.snippetModel.hasCustomInnerContents">
-        <div class="o-section mt-3 mb-1">Custom Inner Content</div>
-        <t t-foreach="this.snippetModel.snippetCustomInnerContents" t-as="snippet" t-key="snippet.id">
-            <CustomInnerSnippet snippet="snippet" snippetModel="this.snippetModel"/>
-        </t>
-    </t>
-
-    <div class="o-section mt-4 mb-1">Inner Content</div>
-    <div class="o-block-container container m-2 mt-2">
-        <div class="row">
-            <div t-foreach="this.snippetModel.snippetInnerContents" t-as="snippet" t-key="snippet.id" class="o-draggable-block col-4 o_draggable" t-att-name="snippet.title" t-att-data-category="'snippet_content'" t-att-data-id="snippet.id">
-                <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet.moduleId ? 'to_install' : '' ">
-                    <div class="img-container">
-                        <img t-att-src="snippet.thumbnailSrc" class="w-100"/>
-                        <button t-if="snippet.moduleId" class="btn btn-primary" t-on-click="() => this.snippetModel.installSnippetModule(snippet)">Install</button>
-                    </div>
-                    <span class="text-center pt-1 pb-2" t-esc="snippet.title"/>
+        <t t-if="this.snippetModel.hasCustomInnerContents">
+            <div class="o_snippets_container" id="snippet_custom_content">
+                <div class="o_snippets_container_header"><span>Custom Inner Content</span></div>
+                <div class="o_snippets_container_body">
+                    <t t-foreach="this.snippetModel.snippetCustomInnerContents" t-as="snippet" t-key="snippet.id">
+                        <CustomInnerSnippet snippet="snippet"
+                                            snippetModel="this.snippetModel"
+                                            onClickHandler.bind="showSnippetTooltip"
+                                            disabledTooltip="disabledBlockTooltip"/>
+                    </t>
                 </div>
+            </div>
+        </t>
+
+        <div class="o_snippets_container" id="snippet_content">
+            <div class="o_snippets_container_header"><span>Inner Content</span></div>
+            <div class="o_snippets_container_body">
+                <t t-foreach="this.snippetModel.snippetInnerContents" t-as="snippet" t-key="snippet.id">
+                    <Snippet snippet="snippet"
+                             snippetModel="this.snippetModel"
+                             onClickHandler.bind="showSnippetTooltip"
+                             disabledTooltip="disabledBlockTooltip"/>
+                </t>
             </div>
         </div>
     </div>

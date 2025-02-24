@@ -26,11 +26,13 @@ test("display inner content snippet", async () => {
         snippetContent,
         dropzoneSelectors,
     });
-    const snippetInnerContentSelector = `.o-snippets-menu [data-category="snippet_content"]`;
+    const snippetInnerContentSelector = ".o-snippets-menu #snippet_content .o_snippet";
     expect(snippetInnerContentSelector).toHaveCount(2);
     expect(queryAllTexts(snippetInnerContentSelector)).toEqual(["Button A", "Button B"]);
-    const imgSrc = queryAll(`${snippetInnerContentSelector} img`).map((img) => img.dataset.src);
-    expect(imgSrc).toEqual(["buttonA.svg", "buttonB.svg"]);
+    const thumbnailImgUrls = queryAll(
+        `${snippetInnerContentSelector} .o_snippet_thumbnail_img`
+    ).map((thumbnail) => thumbnail.style.backgroundImage);
+    expect(thumbnailImgUrls).toEqual(['url("buttonA.svg")', 'url("buttonB.svg")']);
 });
 
 test("drag & drop inner content block", async () => {
