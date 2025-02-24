@@ -72,7 +72,10 @@ patch(PaymentScreen.prototype, {
      */
     async _postPushOrderResolve(order, server_ids) {
         for (const order_id of server_ids) {
-            await this._postProcessLoyalty(this.pos.models["pos.order"].get(order_id));
+            const order = this.pos.models["pos.order"].get(order_id);
+            if (order.is_paid()) {
+                await this._postProcessLoyalty(order);
+            }
         }
         return super._postPushOrderResolve(order, server_ids);
     },
