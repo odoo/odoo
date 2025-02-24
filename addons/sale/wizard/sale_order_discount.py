@@ -117,6 +117,7 @@ class SaleOrderDiscount(models.TransientModel):
             total_price_per_tax_groups[line.tax_ids] += (discounted_price * line.product_uom_qty)
 
         discount_dp = self.env['decimal.precision'].precision_get('Discount')
+        context = {'lang': self.sale_order_id._get_lang()}  # noqa: F841
         if not total_price_per_tax_groups:
             # No valid lines on which the discount can be applied
             return
@@ -136,8 +137,9 @@ class SaleOrderDiscount(models.TransientModel):
                 ),
             }]
         else:
-            vals_list = [
-                self._prepare_discount_line_values(
+            vals_list = []
+            for taxes, subtotal in total_price_per_tax_groups.items():
+                discount_line_value = self._prepare_discount_line_values(
                     product=discount_product,
                     amount=subtotal * discount_percentage,
                     taxes=taxes,
@@ -151,8 +153,8 @@ class SaleOrderDiscount(models.TransientModel):
                         "- On products with the following taxes %(taxes)s",
                         taxes=", ".join(taxes.mapped('name')),
                     )
-                ) for taxes, subtotal in total_price_per_tax_groups.items()
-            ]
+                )
+                vals_list.append(discount_line_value)
         return self.env['sale.order.line'].create(vals_list)
 
     def action_apply_discount(self):
