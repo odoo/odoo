@@ -17,7 +17,7 @@
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
                 <span t-if="props.productCartQty"
-                    t-out="props.productCartQty"
+                    t-out="this.productQty"
                     class="product-cart-qty position-absolute bottom-0 end-0 m-1 px-2 rounded bg-black text-white fs-5 fw-bolder"/>
             </div>
             <div t-if="props.comboExtraPrice" class="d-flex px-2 pb-1">
