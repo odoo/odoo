@@ -85,6 +85,7 @@ export class PosStore extends Reactive {
         this.notification = notification;
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
+        this.renderProductScreen = false; // used to rendering the product screen to synchronize product data between the backend and frontend.
 
         // Business data; loaded from the server at launch
         this.company_logo = null;
@@ -1568,11 +1569,31 @@ export class PosStore extends Reactive {
             {
                 props: {
                     resId: product?.id,
-                    onSave: (record) => {
-                        this.data.read("product.product", [record.evalContext.id]);
+                    onSave: async (record) => {
+                        const domain = product
+                            ? ["product_tmpl_id", "=", product.raw.product_tmpl_id]
+                            : ["id", "=", record.evalContext.id];
+
+                        const newProduct = await this.data.searchRead(
+                            "product.product",
+                            [domain],
+                            this.data.fields["product.product"],
+                            {
+                                context: { display_default_code: false },
+                            }
+                        );
+
+                        if (newProduct.length > 1) {
+                            newProduct.forEach((p) => {
+                                if (this.mainProductVariant[p.id]) {
+                                    p.available_in_pos = false;
+                                }
+                            });
+                        }
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
+                        this.renderProductScreen = true;
                     },
                 },
             }
