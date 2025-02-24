@@ -745,15 +745,15 @@ class IrActionsServer(models.Model):
                 action.webhook_sample_payload = False
                 continue
             payload = {
-                'id': 1,
+                '_id': 1,
                 '_model': self.model_id.model,
-                '_name': action.name,
+                '_action': f'{action.name}(#{action.id})',
             }
             if self.model_id:
                 sample_record = self.env[self.model_id.model].with_context(active_test=False).search([], limit=1)
                 for field in action.webhook_field_ids:
                     if sample_record:
-                        payload['id'] = sample_record.id
+                        payload['_id'] = sample_record.id
                         payload.update(sample_record.read(self.webhook_field_ids.mapped('name'), load=None)[0])
                     else:
                         payload[field.name] = WEBHOOK_SAMPLE_VALUES[field.ttype] if field.ttype in WEBHOOK_SAMPLE_VALUES else WEBHOOK_SAMPLE_VALUES[None]
