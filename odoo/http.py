@@ -184,8 +184,8 @@ import werkzeug.wsgi
 from werkzeug.urls import URL, url_parse, url_encode, url_quote
 from werkzeug.exceptions import (
     default_exceptions as werkzeug_default_exceptions,
-    HTTPException, NotFound, UnsupportedMediaType, UnprocessableEntity,
-    InternalServerError
+    HTTPException, Unauthorized, NotFound, UnsupportedMediaType,
+    UnprocessableEntity, InternalServerError
 )
 try:
     from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
@@ -1406,7 +1406,8 @@ class Response(werkzeug.wrappers.Response):
             return result
 
         if isinstance(result, werkzeug.exceptions.HTTPException):
-            _logger.warning("%s returns an HTTPException instead of raising it.", fname)
+            warnings.warn(
+                f"{fname} returns an HTTPException instead of raising it.")
             raise result
 
         if isinstance(result, werkzeug.wrappers.Response):
