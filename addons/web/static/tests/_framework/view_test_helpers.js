@@ -4,21 +4,19 @@ import { animationFrame, Deferred, tick } from "@odoo/hoot-mock";
 import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { View, getDefaultConfig } from "@web/views/view";
+import { getDefaultConfig, View } from "@web/views/view";
 import { mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
 import { getMockEnv, getService, makeMockEnv } from "./env_test_helpers";
-import { MockServer } from "./mock_server/mock_server";
+import { registerDefaultViewArchs } from "./mock_server/mock_model";
 
 /**
- * @typedef {{
- *  arch?: string;
- *  config?: Record<string, any>;
+ * @typedef {import("@web/views/view").Config} Config
+ *
+ * @typedef {ViewProps & {
+ *  config?: Config;
  *  env?: import("@web/env").OdooEnv;
  *  resId?: number;
- *  resModel: string;
- *  searchViewArch?: string;
- *  type: ViewType;
  *  [key: string]: any;
  * }} MountViewParams
  *
@@ -32,25 +30,13 @@ import { MockServer } from "./mock_server/mock_server";
  * }} SelectorOptions
  *
  * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
+ * @typedef {import("@web/views/view").ViewProps} ViewProps
  * @typedef {import("./mock_server/mock_model").ViewType} ViewType
  */
 
 //-----------------------------------------------------------------------------
 // Internals
 //-----------------------------------------------------------------------------
-
-/**
- *
- * @param {string} modelName
- * @param {number | false} viewId
- * @param {ViewType} viewType
- * @param {string} arch
- */
-const registerDefaultView = (modelName, viewId, viewType, arch) => {
-    const model = MockServer.env[modelName];
-    const key = model._getViewKey(viewType, viewId);
-    model._views[key] ||= arch || `<${viewType} />`;
-};
 
 class ViewDialog extends Component {
     static components = { Dialog, View };
@@ -236,38 +222,35 @@ export async function mountView(params, target = null) {
 }
 
 /**
- * @param {MountViewParams} params
- * @returns {typeof View.props}
+ * @param {ViewProps} props
+ * @returns {ViewProps}
  */
-export function parseViewProps(params) {
+export function parseViewProps(props) {
     let className = "o_action";
-    if (params.className) {
-        className += " " + params.className;
+    if (props.className) {
+        className += " " + props.className;
     }
 
-    const viewProps = { ...params, className };
+    const viewProps = { ...props, className };
 
-    // View & search view arch
     if (
-        "arch" in params ||
-        "searchViewArch" in params ||
-        "searchViewId" in params ||
-        "viewId" in params
+        "arch" in props ||
+        "searchViewArch" in props ||
+        "searchViewId" in props ||
+        "viewId" in props
     ) {
         viewProps.viewId ||= 123_456_789;
         viewProps.searchViewId ||= 987_654_321;
-        registerDefaultView(viewProps.resModel, viewProps.viewId, viewProps.type, viewProps.arch);
-        registerDefaultView(
-            viewProps.resModel,
-            viewProps.searchViewId,
-            "search",
-            viewProps.searchViewArch
-        );
+        registerDefaultViewArchs(viewProps.resModel, {
+            [[viewProps.type, viewProps.viewId]]: viewProps.arch,
+            [["search", viewProps.searchViewId]]: viewProps.searchViewArch,
+        });
+        // Force `get_views` call
+        delete viewProps.arch;
+        delete viewProps.searchViewArch;
     }
 
-    delete viewProps.arch;
     delete viewProps.config;
-    delete viewProps.searchViewArch;
 
     return viewProps;
 }
