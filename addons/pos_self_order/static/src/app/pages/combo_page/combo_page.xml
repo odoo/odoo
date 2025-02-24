@@ -113,7 +113,7 @@
         <div
             t-if="state.showResume || (!state.showResume and showQtyButtons)"
             class="page-buttons d-flex justify-content-end gap-3 p-3 border-top bg-view">
-            <button t-if="!state.showResume and showQtyButtons" class="btn btn-primary btn-lg" t-on-click="next">Next</button>
+            <button t-if="!state.showResume and showQtyButtons" class="btn btn-primary btn-lg" t-on-click="next" t-att-disabled="this.isEveryValueSelected()">Next</button>
             <button t-if="state.showResume and selfOrder.ordering" class="btn btn-primary btn-lg" t-on-click="addToCart">Add to cart</button>
         </div>
     </t>
