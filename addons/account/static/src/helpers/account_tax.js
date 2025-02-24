@@ -971,39 +971,31 @@ export const accountTaxHelpers = {
         }
 
         // Subtotals.
-        const subtotal_grouping_function = (base_line, tax_data) =>
-            tax_data.tax.tax_group_id.preceding_subtotal || untaxed_amount_subtotal_label;
+        if (!Object.keys(subtotals).length) {
+            subtotals[untaxed_amount_subtotal_label] = {
+                tax_groups: [],
+                tax_amount_currency: 0.0,
+                tax_amount: 0.0,
+                base_amount_currency: 0.0,
+                base_amount: 0.0,
+            };
+        }
 
-        base_lines_aggregated_values = this.aggregate_base_lines_tax_details(base_lines, subtotal_grouping_function);
-        values_per_grouping_key = this.aggregate_base_lines_aggregated_values(base_lines_aggregated_values);
-
-        for (const values of Object.values(values_per_grouping_key)) {
-            const preceding_subtotal = values.grouping_key || untaxed_amount_subtotal_label;
-            if (!(preceding_subtotal in subtotals)) {
-                subtotals[preceding_subtotal] = {
-                    tax_groups: [],
-                    tax_amount_currency: 0.0,
-                    tax_amount: 0.0,
-                    base_amount_currency: 0.0,
-                    base_amount: 0.0,
-                };
+        const ordered_subtotals = Array.from(Object.entries(subtotals))
+            .sort((a, b) => (subtotals_order[a[0]] || 0) - (subtotals_order[b[0]] || 0));
+        let accumulated_tax_amount_currency = 0.0;
+        let accumulated_tax_amount = 0.0;
+        for (const [subtotal_label, subtotal] of ordered_subtotals) {
+            subtotal.name = subtotal_label;
+            subtotal.base_amount_currency = tax_totals_summary.base_amount_currency + accumulated_tax_amount_currency;
+            subtotal.base_amount = tax_totals_summary.base_amount + accumulated_tax_amount;
+            for (const tax_group of subtotal.tax_groups) {
+                subtotal.tax_amount_currency += tax_group.tax_amount_currency;
+                subtotal.tax_amount += tax_group.tax_amount;
+                accumulated_tax_amount_currency += tax_group.tax_amount_currency;
+                accumulated_tax_amount += tax_group.tax_amount;
             }
-            const is_first_preceding_subtotal =
-                preceding_subtotal === untaxed_amount_subtotal_label ||
-                (!(untaxed_amount_subtotal_label in subtotals_order) &&
-                    subtotals_order[preceding_subtotal] === 0);
-            const subtotal = subtotals[preceding_subtotal];
-            if (is_first_preceding_subtotal) {
-                // The first subtotal is always the base of the whole document.
-                subtotal.base_amount_currency += values.total_excluded_currency;
-                subtotal.base_amount += values.total_excluded;
-            } else {
-                // Otherwise, it's the base of the first tax in the group.
-                subtotal.base_amount_currency += values.base_amount_currency;
-                subtotal.base_amount += values.base_amount;
-            }
-            subtotal.tax_amount_currency += values.tax_amount_currency;
-            subtotal.tax_amount += values.tax_amount;
+            tax_totals_summary.subtotals.push(subtotal);
         }
 
         // Cash rounding
@@ -1035,7 +1027,7 @@ export const accountTaxHelpers = {
                     subtotals[untaxed_amount_subtotal_label].base_amount_currency += cash_rounding_base_amount_currency;
                     subtotals[untaxed_amount_subtotal_label].base_amount += cash_rounding_base_amount;
                 } else if (strategy === 'biggest_tax') {
-                    const [max_subtotal, max_tax_group] = Array.from(Object.values(subtotals))
+                    const [max_subtotal, max_tax_group] = tax_totals_summary.subtotals
                         .flatMap(subtotal => subtotal.tax_groups.map(tax_group => [subtotal, tax_group]))
                         .reduce((a, b) => (b[1].tax_amount_currency > a[1].tax_amount_currency ? b : a));
 
@@ -1048,14 +1040,6 @@ export const accountTaxHelpers = {
                 }
             }
         }
-
-        // Flat the subtotals.
-        const ordered_subtotals = Array.from(Object.entries(subtotals))
-            .sort((a, b) => (subtotals_order[a[0]] || 0) - (subtotals_order[b[0]] || 0));
-        ordered_subtotals.forEach(([subtotal_label, subtotal]) => {
-            subtotal.name = subtotal_label;
-            tax_totals_summary.subtotals.push(subtotal);
-        });
 
         // Subtract the cash rounding from the untaxed amounts.
         const cash_rounding_base_amount_currency = tax_totals_summary.cash_rounding_base_amount_currency || 0.0;
