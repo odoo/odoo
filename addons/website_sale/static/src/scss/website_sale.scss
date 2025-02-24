@@ -105,11 +105,16 @@ $input-border-color: $gray-400;
             &.o_wsale_has_sidebar {
                 @include media-breakpoint-up(sm) {
                     #o_wsale_pager {
+                        border-left: #{$border-width} solid #{$border-color};
                         border-right: #{$border-width} solid #{$border-color};
                     }
                 }
                 @include media-breakpoint-up(lg) {
                     --o-wsale-topbar-border-width: 0 #{$border-width} #{$border-width} 0;
+
+                    #o_wsale_pager {
+                        border-left: 0;
+                    }
                 }
             }
 
@@ -307,6 +312,11 @@ $input-border-color: $gray-400;
         .o_pricelist_dropdown_span {
             max-width: $o-wsale-dropdown-width-overflow;
         }
+    }
+
+    #o_wsale_pager.o_wsale_pager_accommodate_floating {
+        // Accommodate enough empty space for the floating bar
+        padding-bottom: map-get($spacers, 4) + map-get($spacers, 5) !important;
     }
 
     // Remove the breadcrumb splitter '/' on small devices
@@ -696,7 +706,7 @@ body:not(.editor_enable) #category_header {
 // ==== Floating Bar
 #o_wsale_floating_bar_rail {
     --_container-gap: calc(var(--o-wsale-container-fluid-padding-xl, var(--gutter-x)) * 0.5);
-    right: var(--_container-gap);
+    right: calc(var(--_container-gap) + #{$border-width});
     width: 0;
 
     #o_wsale_floating_bar {
