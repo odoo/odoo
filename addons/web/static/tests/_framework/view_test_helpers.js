@@ -229,7 +229,7 @@ export async function mountView(params, target = null) {
     after(() => actionManagerEl.remove());
     const config = { ...getDefaultConfig(), ...params.config };
     return mountWithCleanup(View, {
-        env: params.env || getMockEnv() || (await makeMockEnv({ config })),
+        env: params.env || getMockEnv() || (await makeMockEnv({ config }, { lazy: false })),
         props: parseViewProps(params),
         target: actionManagerEl,
     });

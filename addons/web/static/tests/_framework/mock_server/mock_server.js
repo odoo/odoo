@@ -61,6 +61,7 @@ const { DateTime } = luxon;
  * @typedef {{
  *  final?: boolean;
  *  pure?: boolean;
+ *  requiresModels?: boolean;
  * }} RouteOptions
  *
  * @typedef {`/${string}`} RoutePath
@@ -334,10 +335,14 @@ const serverFields = new WeakSet();
 //-----------------------------------------------------------------------------
 
 export class MockServer {
+    static READY = 0;
+    static STARTED = 0b1;
+    static MODELS_LOADED = 0b10;
+
     /** @type {MockServer | null} */
     static get current() {
         const mockServer = getCurrentMockServer();
-        return mockServer?.started ? mockServer : null;
+        return mockServer?.status & MockServer.STARTED ? mockServer : null;
     }
 
     static get env() {
@@ -383,37 +388,15 @@ export class MockServer {
     ormListeners = [];
     /** @type {[RegExp[], RouteCallback, RouteOptions][]} */
     routes = [];
-    started = false;
+    /** @type {number} */
+    status = MockServer.READY;
 
     // WebSocket connections
     /** @type {import("@odoo/hoot-mock").ServerWebSocket[]} */
     websockets = [];
 
     constructor() {
-        // Set default routes
-        this._onRoute(["/web/action/load"], this.loadAction);
-        this._onRoute(["/web/action/load_breadcrumbs"], this.loadActionBreadcrumbs);
-        this._onRoute(["/web/bundle/<string:bundle_name>"], this.loadBundle, { pure: true });
-        this._onRoute(["/web/dataset/call_kw", "/web/dataset/call_kw/<path:path>"], this.callKw, {
-            final: true,
-        });
-        this._onRoute(
-            ["/web/dataset/call_button", "/web/dataset/call_button/<path:path>"],
-            this.callKw,
-            { final: true }
-        );
-        this._onRoute(["/web/dataset/resequence"], this.resequence);
-        this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage, {
-            pure: true,
-        });
-        this._onRoute(["/web/webclient/load_menus/<string:unique>"], this.loadMenus, {
-            pure: true,
-        });
-        this._onRoute(["/web/webclient/translations/<string:unique>"], this.loadTranslations, {
-            pure: true,
-        });
-
-        mockFetch((input, init) => this._handle(input, init));
+        mockFetch(this._handle.bind(this));
         mockWebSocket((ws) => this.websockets.push(ws));
     }
 
@@ -441,7 +424,7 @@ export class MockServer {
                 const model = this._getModelDefinition(ModelClass);
                 assign(this.modelSpecs, model._name, model);
             }
-            if (this.started) {
+            if (this.status & MockServer.MODELS_LOADED) {
                 this._loadModels();
             }
         }
@@ -480,14 +463,58 @@ export class MockServer {
         return url ? this.websockets.filter((ws) => ws.url.includes(url)) : this.websockets;
     }
 
-    async start() {
-        if (this.started) {
-            throw new MockServerError("MockServer has already been started");
-        }
-        this.started = true;
+    /**
+     * @param {{
+     *  lazy?: boolean;
+     * }} options
+     */
+    async start(options) {
+        this.status |= MockServer.STARTED;
 
-        await this._loadModels();
-        this._generateRecords();
+        // Set default routes
+        this._onRoute(["/web/action/load"], this.loadAction);
+        this._onRoute(["/web/action/load_breadcrumbs"], this.loadActionBreadcrumbs);
+        this._onRoute(["/web/bundle/<string:bundle_name>"], this.loadBundle, {
+            pure: true,
+            requiresModels: false,
+        });
+        this._onRoute(["/web/dataset/call_kw", "/web/dataset/call_kw/<path:path>"], this.callKw, {
+            final: true,
+        });
+        this._onRoute(
+            ["/web/dataset/call_button", "/web/dataset/call_button/<path:path>"],
+            this.callKw,
+            { final: true }
+        );
+        this._onRoute(["/web/dataset/resequence"], this.resequence);
+        this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage, {
+            requiresModels: false,
+            pure: true,
+        });
+        this._onRoute(["/web/webclient/load_menus/<string:unique>"], this.loadMenus, {
+            requiresModels: false,
+            pure: true,
+        });
+        this._onRoute(["/web/webclient/translations/<string:unique>"], this.loadTranslations, {
+            requiresModels: false,
+            pure: true,
+        });
+
+        // Add routes from "mock_rpc" registry
+        for (const [route, callback] of mockRpcRegistry.getEntries()) {
+            if (typeof callback === "function") {
+                this._onRpc(route, callback);
+            }
+        }
+
+        // Register ambiant parameters
+        this.configure(getCurrentParams());
+
+        if (!options?.lazy) {
+            await this._loadModels();
+        }
+
+        registerDebugInfo(this);
 
         return this;
     }
@@ -584,64 +611,6 @@ export class MockServer {
             }
         }
         return listeners;
-    }
-
-    /**
-     * @private
-     */
-    _generateRecords() {
-        for (const model of Object.values(this.models)) {
-            const seenIds = new Set();
-            for (const record of model) {
-                // Check for unknown fields
-                for (const fieldName in record) {
-                    if (!(fieldName in model._fields)) {
-                        throw new MockServerError(
-                            `unknown field "${fieldName}" on ${getRecordQualifier(
-                                record
-                            )} in model "${model._name}"`
-                        );
-                    }
-                }
-                // Apply values and default values
-                for (const [fieldName, fieldDef] of Object.entries(model._fields)) {
-                    if (fieldName === "id") {
-                        record[fieldName] ||= model._getNextId();
-                        continue;
-                    }
-                    if ("default" in fieldDef) {
-                        const def = fieldDef.default;
-                        record[fieldName] ??=
-                            typeof def === "function" ? def.call(this, record) : def;
-                    }
-                    record[fieldName] ??= DEFAULT_FIELD_VALUES[fieldDef.type]?.() ?? false;
-                }
-                if (seenIds.has(record.id)) {
-                    throw new MockServerError(
-                        `duplicate ID ${record.id} in model "${model._name}"`
-                    );
-                }
-                seenIds.add(record.id);
-            }
-        }
-
-        // creation of the ir.model.fields records, required for tracked fields
-        const IrModelFields = this.models["ir.model.fields"];
-        if (IrModelFields) {
-            for (const model of Object.values(this.models)) {
-                for (const [fieldName, field] of Object.entries(model._fields)) {
-                    if (field.tracking) {
-                        IrModelFields.create({
-                            model: model._name,
-                            name: fieldName,
-                            ttype: field.type,
-                        });
-                    }
-                }
-            }
-        }
-
-        Object.values(this.models).forEach((model) => model._applyComputesAndValidate());
     }
 
     /**
@@ -777,15 +746,8 @@ export class MockServer {
      * @private
      * @param {string} url
      * @param {RequestInit} init
-     * @param {RouteOptions} [options]
      */
-    async _handle(url, init, options = {}) {
-        if (!this.started) {
-            throw new MockServerError(
-                `cannot handle \`fetch\`: server has not been started (did you forget to call \`start()\`?)`
-            );
-        }
-
+    async _handle(url, init) {
         const method = init?.method?.toUpperCase() || (init?.body ? "POST" : "GET");
         const request = new Request(url, { method, ...(init || {}) });
 
@@ -797,8 +759,11 @@ export class MockServer {
 
         let result = null;
         for (const [callback, routeParams, routeOptions] of listeners) {
-            const pure = options.pure ?? routeOptions.pure;
-            const final = options.final ?? routeOptions.final;
+            const { final, pure, requiresModels = true } = routeOptions;
+            if (requiresModels && !(this.status & MockServer.MODELS_LOADED)) {
+                await this._loadModels();
+            }
+
             try {
                 result = await callback.call(this, request, routeParams);
             } catch (error) {
@@ -837,6 +802,8 @@ export class MockServer {
      * @private
      */
     async _loadModels() {
+        this.status |= MockServer.MODELS_LOADED;
+
         const models = Object.values(this.modelSpecs);
         const serverModelInheritances = new Set();
         this.modelSpecs = Object.create(null);
@@ -953,6 +920,60 @@ export class MockServer {
                     model._related.add(name);
                 }
             }
+
+            // Generate initial records
+            const seenIds = new Set();
+            for (const record of model) {
+                // Check for unknown fields
+                for (const fieldName in record) {
+                    if (!(fieldName in model._fields)) {
+                        throw new MockServerError(
+                            `unknown field "${fieldName}" on ${getRecordQualifier(
+                                record
+                            )} in model "${model._name}"`
+                        );
+                    }
+                }
+                // Apply values and default values
+                for (const [fieldName, fieldDef] of Object.entries(model._fields)) {
+                    if (fieldName === "id") {
+                        record[fieldName] ||= model._getNextId();
+                        continue;
+                    }
+                    if ("default" in fieldDef) {
+                        const def = fieldDef.default;
+                        record[fieldName] ??=
+                            typeof def === "function" ? def.call(this, record) : def;
+                    }
+                    record[fieldName] ??= DEFAULT_FIELD_VALUES[fieldDef.type]?.() ?? false;
+                }
+                if (seenIds.has(record.id)) {
+                    throw new MockServerError(
+                        `duplicate ID ${record.id} in model "${model._name}"`
+                    );
+                }
+                seenIds.add(record.id);
+            }
+        }
+
+        // creation of the ir.model.fields records, required for tracked fields
+        const IrModelFields = this.models["ir.model.fields"];
+        if (IrModelFields) {
+            for (const model of models) {
+                for (const [fieldName, field] of Object.entries(model._fields)) {
+                    if (field.tracking) {
+                        IrModelFields.create({
+                            model: model._name,
+                            name: fieldName,
+                            ttype: field.type,
+                        });
+                    }
+                }
+            }
+        }
+
+        for (const model of models) {
+            model._applyComputesAndValidate();
         }
     }
 
@@ -968,10 +989,14 @@ export class MockServer {
                     return Reflect.get(target, p);
                 }
                 const model = Reflect.get(this.models, p);
-                if (!model) {
-                    throw modelNotFoundError(p, "could not get model from server environment");
+                if (model) {
+                    return model;
                 }
-                return model;
+                if (this.status & MockServer.MODELS_LOADED) {
+                    throw modelNotFoundError(p, "could not get model from server environment");
+                } else {
+                    throw modelNotFoundError(p, "server models haven't been loaded yet");
+                }
             },
             has: (target, p) => Reflect.has(target, p) || Reflect.has(this.models, p),
         });
@@ -1332,23 +1357,10 @@ export function logout() {
 
 /**
  * Shortcut function to create and start a {@link MockServer}.
+ * @type {MockServer["start"]}
  */
-export async function makeMockServer() {
-    const mockServer = getCurrentMockServer();
-
-    // Add routes from "mock_rpc" registry
-    for (const [route, callback] of mockRpcRegistry.getEntries()) {
-        if (typeof callback === "function") {
-            mockServer._onRpc(route, callback);
-        }
-    }
-
-    // Add other ambiant params
-    mockServer.configure(getCurrentParams());
-
-    registerDebugInfo(mockServer);
-
-    return mockServer.start();
+export async function makeMockServer(startOptions) {
+    return getCurrentMockServer().start(startOptions);
 }
 
 /**
