@@ -217,5 +217,6 @@ class TestSwissQR(AccountTestInvoicingCommon):
             'currency_id': self.env.company.currency_id.id,
         })
         payment_transaction._set_pending()
+        payment_transaction._post_process()
 
         self.assertEqual(order.reference, mod10r(order.reference[:-1]))
