@@ -1351,6 +1351,31 @@ describe("Embedded state", () => {
         );
     });
 
+    test("Removing a non-existing property in the embedded state should do nothing", async () => {
+        let counter;
+        patchWithCleanup(SavedCounter.prototype, {
+            setup() {
+                super.setup();
+                counter = this;
+            },
+        });
+        const { el } = await setupEditor(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}'></span></p>`,
+            { config: getConfig([savedCounter]) }
+        );
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true" contenteditable="false"><span class="counter">Counter:1</span></span></p>`
+        );
+        delete counter.embeddedState.notValue;
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true" contenteditable="false"><span class="counter">Counter:1</span></span></p>`
+        );
+        expect(counter.embeddedState).toEqual({
+            value: 1,
+        });
+    });
+
     test("Write on `data-embedded-state` should write on the state, re-render the component and write on `data-embedded-props` and the embedded state", async () => {
         let counter;
         patchWithCleanup(OffsetCounter.prototype, {
