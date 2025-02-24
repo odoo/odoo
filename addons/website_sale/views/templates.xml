@@ -332,8 +332,6 @@
                     <i class="fa fa-map-o d-md-none" role="img"/>
                 </a>
                 <div class="dropdown-menu" role="menu">
-                    <div class="dropdown-header d-md-none">Pricelist</div>
-
                     <t t-foreach="website_sale_pricelists" t-as="pl">
                         <t t-set="_is_active" t-value="pricelist.id == pl.id"/>
                         <a
@@ -751,7 +749,6 @@
                 <i t-if="_icon_classes" t-attf-class="fa fa-sort {{_icon_classes}}" role="img"/>
             </a>
             <div class="dropdown-menu dropdown-menu-end" role="menu">
-                <div class="dropdown-header d-md-none">Sort by</div>
                 <t t-foreach="website_sale_sortable" t-as="sortby">
                     <t t-set="_is_active" t-value="_current_sort == sortby[0]"/>
                     <a
