@@ -4,6 +4,7 @@
 from ast import literal_eval
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 
@@ -70,6 +71,12 @@ class StockPickingType(models.Model):
         for picking_type in self:
             if picking_type.code == 'mrp_operation':
                 picking_type.use_existing_lots = True
+
+    @api.constrains('default_location_dest_id')
+    def _check_default_location(self):
+        for record in self:
+            if record.code == 'mrp_operation' and record.default_location_dest_id.scrap_location:
+                raise ValidationError(_("You cannot set a scrap location as the destination location for a manufacturing type operation."))
 
     def _get_mo_count(self):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
