@@ -11,6 +11,7 @@ from . import test_pos_setup
 from . import test_pos_simple_orders
 from . import test_pos_simple_invoiced_orders
 from . import test_pos_basic_config
+from . import test_pos_product_variants
 from . import test_pos_products_with_tax
 from . import test_pos_margin
 from . import test_pos_multiple_receivable_accounts
