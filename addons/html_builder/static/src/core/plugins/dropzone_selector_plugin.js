@@ -31,10 +31,6 @@ export class DropZoneSelectorPlugin extends Plugin {
                 dropNear: ".o_mega_menu .nav-link",
             },
             {
-                selector: ".s_hr",
-                dropNear: "p, h1, h2, h3, blockquote, .s_hr",
-            },
-            {
                 selector: ".s_popup",
                 exclude: "#website_cookies_bar",
                 dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
@@ -60,6 +56,7 @@ export class DropZoneSelectorPlugin extends Plugin {
                 dropNear: "p, h1, h2, h3, blockquote, .card",
             },
             {
+                // TODO Move to website_massmailing
                 selector: ".js_subscribe",
                 dropNear: "p, h1, h2, h3, blockquote, .card",
             },
