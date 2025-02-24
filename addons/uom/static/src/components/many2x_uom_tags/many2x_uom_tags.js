@@ -13,6 +13,24 @@ import { UomAutoComplete } from "@uom/components/uom_autocomplete/uom_autocomple
 import { roundPrecision } from "@web/core/utils/numbers";
 import { onWillUpdateProps } from "@odoo/owl";
 
+function _getProductRelatedModel() {
+    const productModels = ["product.product", "product.template"];
+    const fieldName = this.props.productField;
+    if (!fieldName) {
+        const currentModel = this.props.record.resModel;
+        if (!productModels.includes(currentModel)) {
+            throw new Error(`${this.constructor.name} is not usable without 'product_field' option except when use in a view for 'product.product' or 'product.template' model`);
+        }
+        return currentModel;
+    }
+    const field = this.env.model.config.fields[fieldName];
+    let resModel = field?.relation;
+    if (!productModels.includes(resModel)) {
+        throw new Error(`${this.props.productField} is not a relational field for 'product.product' nor 'product.template'`);
+    }
+    return resModel;
+}
+
 export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
     static components = {
         ...Many2XAutocomplete.components,
@@ -28,7 +46,7 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
     async setup() {
         super.setup();
         onWillUpdateProps(async (nextProps) => {
-            if (nextProps.productModel !== this.props.productModel || 
+            if (nextProps.productModel !== this.props.productModel ||
                 nextProps.productId !== this.props.productId
             ) {
                 await this.updateReferenceUnit(nextProps);
@@ -94,8 +112,12 @@ export class Many2ManyUomTagsField extends Many2ManyTagsFieldColorEditable {
     }
     static defaultProps = {
         ...Many2OneField.defaultProps,
-        productField: "product_id",
         quantityField: "product_uom_qty",
+    }
+
+    async setup() {
+        super.setup();
+        this.productModel = _getProductRelatedModel.call(this);
     }
 }
 
@@ -112,10 +134,14 @@ export class Many2OneUomField extends Many2OneField {
     }
     static defaultProps = {
         ...Many2OneField.defaultProps,
-        productField: "product_id",
         quantityField: "product_uom_qty",
     }
-}   
+
+    async setup() {
+        super.setup();
+        this.productModel = _getProductRelatedModel.call(this);
+    }
+}
 
 export const many2ManyUomTagsField = {
     ...many2ManyTagsFieldColorEditable,
