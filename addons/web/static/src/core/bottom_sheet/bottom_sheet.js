@@ -94,17 +94,6 @@ export class BottomSheet extends Component {
         onMounted(() => {
             this._computeDimensions();
             this._initializePosition();
-
-            // If scrollEnd event is not supported (Safari), use the debounced handler.
-            // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollend_event#browser_compatibility
-            this.hasNativeScrollEnd = 'onscrollend' in window;
-            if (!this.hasNativeScrollEnd) {
-                this.onScrollEndDebounced = useDebounced( this.onScrollEnd.bind(this), 100, { execBeforeUnmount: false });
-                this.bottomSheetRootRef.el.addEventListener('scroll', () => {
-                    this.state.isDebouncedScrollEnd = true;
-                    this.onScrollEndDebounced({ target: this.bottomSheetRootRef.el });
-                });
-            }
         });
     }
 
@@ -179,14 +168,16 @@ export class BottomSheet extends Component {
         return 0;
     }
 
-    _onScroll(ev) {
+    _onScroll() {
         if (!this.data.isActive) {
             return;
         }
 
         const scrollTop = this.bottomSheetRootRef.el.scrollTop;
+        const { dismiss, initial, max } = this.snapPoints;
+        const threshold = this._dvhToPx(2);
 
-        if ((Math.abs(scrollTop - this.snapPoints.initial) <= this._dvhToPx(2)) && !this.state.isPositionedReady) {
+        if ( !this.state.isPositionedReady && (Math.abs(scrollTop - this.snapPoints.initial) <= threshold)) {
             this.state.isPositionedReady = true;
             // Initialize progress to 0 (neutral position)
             this._setProgress(0);
@@ -196,29 +187,11 @@ export class BottomSheet extends Component {
 
         if (progress !== this.state.progress) {
             this._setProgress(progress);
-        }
-    }
 
-    /**
-     * Handle scroll end with updated snap points
-     * @private
-     */
-    onScrollEnd (ev) {
-        // Make sure we only handle scroll events for the active sheet
-        if (!this.data.isActive) {
-            return;
-        }
-
-        const scrollTop = this.bottomSheetRootRef.el.scrollTop;
-        const { dismiss, initial, max } = this.snapPoints;
-        const threshold = this._dvhToPx(2);
-
-
-        // if (this.state.isPositionedReady) {
             if (Math.abs(scrollTop - dismiss) <= threshold) {
                 return this.remove();
             } else if (Math.abs(scrollTop - initial) <= threshold) {
-                // At initial position - reset progress
+                // At initial position
                 this._setProgress(0);
                 if (this.isBodyScrollable) {
                     this.bottomSheetRootRef.el.querySelector(".offcanvas-body").style.overflow = "hidden";
@@ -231,11 +204,6 @@ export class BottomSheet extends Component {
                     this.bottomSheetRootRef.el.querySelector(".offcanvas-body").style.overflow = "auto";
                 }
             }
-        // }
-
-        // Reset Safari scrollEnd debounced flag
-        if (!this.hasNativeScrollEnd) {
-            this.state.isDebouncedScrollEnd = false;
         }
     }
 

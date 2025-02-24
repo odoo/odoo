@@ -6,7 +6,6 @@
             t-att-class="{ o_inactive_bottom_sheet: !data.isActive, o_bottom_sheet_ready: this.state.isPositionedReady }"
             t-ref="bottomSheetRootRef"
             t-on-scroll="onScrollDebounced"
-            t-on-scrollend="onScrollEnd"
             >
             <div class="o_bottom_sheet_backdrop" t-on-click="dismiss"/>
             <div class="o_bottom_sheet_dismiss"/>
