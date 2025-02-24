@@ -356,6 +356,8 @@ registry.category("web_tour.tours").add("SearchProducts", {
             ProductScreen.clickDisplayedProduct("Test sofa"),
             ProductScreen.searchProduct("clémentine"),
             ProductScreen.clickDisplayedProduct("clémentine"),
+            ProductScreen.searchProduct("2100005000000"),
+            ProductScreen.clickDisplayedProduct("Wall Shelf Unit"),
         ].flat(),
 });
 
