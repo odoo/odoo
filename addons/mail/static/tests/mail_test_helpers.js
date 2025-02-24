@@ -342,7 +342,7 @@ export async function start(options) {
         restoreRegistry(registry);
         const rootTarget = target;
         target = document.createElement("div");
-        target.style.width = "100%";
+        target.classList.add("o-mail-Discuss-asTabContainer");
         rootTarget.appendChild(target);
         addSwitchTabDropdownItem(rootTarget, target);
         env = await makeMockEnv({}, { makeNew: true });
