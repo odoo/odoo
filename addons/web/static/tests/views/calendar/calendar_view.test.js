@@ -3776,6 +3776,8 @@ test(`form_view_id attribute works with popup (for creating events)`, async () =
 });
 
 test(`calendar fallback to form view id in action if necessary`, async () => {
+    Event._views["form,43"] = /* xml */ `<form />`;
+
     mockService("action", {
         doAction(request) {
             expect.step("doAction");
