@@ -71,6 +71,10 @@ Print product labels with barcode.
             'product/static/src/product_catalog/**/*.xml',
             'product/static/src/product_catalog/**/*.scss',
             'product/static/src/scss/product_form.scss',
+            ('remove', 'product/static/src/product_catalog/kanban_view.dark.scss'),
+        ],
+        'web.assets_web_dark': [
+            'product/static/src/product_catalog/kanban_view.dark.scss',
         ],
         'web.report_assets_common': [
             'product/static/src/scss/report_label_sheet.scss',
