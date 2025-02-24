@@ -6,19 +6,19 @@
         <t t-foreach="info.activities" t-as="activity" t-key="activity_index">
             <div class="row">
                 <div class="col-auto o_mail_activity">
-                    <a href="#"
-                       t-attf-class="{{ activity.status == 'late' ? 'text-danger' : '' }}"
+                    <button
+                       t-attf-class="border-0 bg-transparent p-0 fw-normal {{ activity.status == 'late' ? 'text-danger' : 'btn btn-link' }}"
                        t-att-data-res-id="activity.res_id" t-att-data-id="activity.id" t-att-data-model="activity.res_model"
                        t-on-click.stop.prevent="() => this.openActivity(activity)">
                         <t t-out="activity.name"/>
-                    </a>
+                    </button>
                 </div>
                 <div class="col-auto text-end text-nowrap">
                     <span><t t-out="activity.date"/></span>
                 </div>
             </div>
         </t>
-        <a t-if="info.more_activities" class="float-end see_all_activities" href="#" t-on-click.stop.prevent="(ev) => this.openAllActivities(ev)">See all activities</a>
+        <button t-if="info.more_activities" class="btn btn-link p-0 fw-normal float-end see_all_activities" t-on-click.stop.prevent="(ev) => this.openAllActivities(ev)">See all activities</button>
     </t>
 
 </templates>

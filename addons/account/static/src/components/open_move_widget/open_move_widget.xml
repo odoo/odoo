@@ -2,6 +2,7 @@
 <templates>
 
     <t t-name="account.OpenMoveWidget">
+        <!-- TODO: truncate not coming if we use button -->
         <a href="#" t-out="props.record.data[props.name] || '/'" t-on-click.prevent.stop="(ev) => this.openMove()"/>
     </t>
 

@@ -7,8 +7,8 @@
                 <span t-if="props.hasFoldButton" class="btn btn-light p-0" t-attf-aria-label="{{ foldButtonTitle }}" t-attf-title="{{ foldButtonTitle }}" style="margin-right: 1px">
                     <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
                 </span>
-                <a t-if="data.id and data.model === 'mrp.workorder'" href="#" t-on-click.prevent="openWorkorder" t-out="data.name"/>
-                <a t-elif="data.id and data.model" href="#" t-on-click.prevent="openForm" t-out="data.name"/>
+                <button t-if="data.id and data.model === 'mrp.workorder'" class="btn btn-link p-0 fw-normal" t-on-click.prevent="openWorkorder" t-out="data.name"/>
+                <button t-elif="data.id and data.model" class="btn btn-link p-0 fw-normal" t-on-click.prevent="openForm" t-out="data.name"/>
                 <t t-else="" t-out="data.name"/>
                 <button t-if="data.model === 'to_order'" class="ms-2 py-0 btn btn-secondary" t-on-click="openReplenish">Replenish</button>
             </div>
@@ -32,7 +32,7 @@
         <td class="text-end" t-if="props.showOptions.receipts">
             <t t-if="data.receipt">
                 <span t-attf-class="{{ getColorClass(data.receipt.decorator) }}" t-out="data.receipt.display"/>
-                <a href="#" role="button" t-on-click.prevent="openForecast" title="Forecast Report" t-attf-class="fa fa-fw fa-area-chart ms-1 {{getColorClass(data.receipt.decorator)}}"/>
+                <button role="button" t-on-click.prevent="openForecast" title="Forecast Report" t-attf-class="border-0 bg-transparent p-0 fa fa-fw fa-area-chart ms-1 {{getColorClass(data.receipt.decorator)}}"/>
             </t>
         </td>
         <td class="text-end" t-if="props.showOptions.unitCosts" t-out="formatMonetary(data.unit_cost)"/>

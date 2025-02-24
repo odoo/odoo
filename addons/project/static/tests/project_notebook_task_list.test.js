@@ -123,14 +123,14 @@ test("test Project Task Calendar Popover with task_stage_with_state_selection wi
         message: "The depend on tasks list should display all blocking tasks by default, thus we are looking for 2 in total"
     });
 
-    expect("div[name='child_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button").toHaveText("Hide closed tasks");
-    expect("div[name='depend_on_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button").toHaveText("Hide closed tasks");
+    expect("div[name='child_ids'] .o_field_x2many_list_row_add button.o_toggle_closed_task_button").toHaveText("Hide closed tasks");
+    expect("div[name='depend_on_ids'] .o_field_x2many_list_row_add button.o_toggle_closed_task_button").toHaveText("Hide closed tasks");
 
-    await click("div[name='child_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button");
+    await click("div[name='child_ids'] .o_field_x2many_list_row_add button.o_toggle_closed_task_button");
     await animationFrame();
 
-    expect("div[name='child_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button").toHaveText("Show closed tasks");
-    expect("div[name='depend_on_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button").toHaveText("Hide closed tasks");
+    expect("div[name='child_ids'] .o_field_x2many_list_row_add button.o_toggle_closed_task_button").toHaveText("Show closed tasks");
+    expect("div[name='depend_on_ids'] .o_field_x2many_list_row_add button.o_toggle_closed_task_button").toHaveText("Hide closed tasks");
 
     expect('div[name="child_ids"] .o_data_row').toHaveCount(3, {
         message: "The subtasks list should only display the open subtasks of the task, in this case 3"
@@ -139,11 +139,11 @@ test("test Project Task Calendar Popover with task_stage_with_state_selection wi
         message: "The depend on tasks list should still display all blocking tasks, in this case 2"
     });
 
-    await click("div[name='depend_on_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button");
+    await click("div[name='depend_on_ids'] .o_field_x2many_list_row_add button.o_toggle_closed_task_button");
     await animationFrame();
 
-    expect("div[name='child_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button").toHaveText("Show closed tasks");
-    expect("div[name='depend_on_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button").toHaveText("1 closed tasks");
+    expect("div[name='child_ids'] .o_field_x2many_list_row_add button.o_toggle_closed_task_button").toHaveText("Show closed tasks");
+    expect("div[name='depend_on_ids'] .o_field_x2many_list_row_add button.o_toggle_closed_task_button").toHaveText("1 closed tasks");
 
     expect('div[name="child_ids"] .o_data_row').toHaveCount(3, {
         message: "The subtasks list should only display the open subtasks of the task, in this case 3"
