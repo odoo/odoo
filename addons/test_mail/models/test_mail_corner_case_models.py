@@ -21,6 +21,19 @@ class MailPerformanceThread(models.Model):
             record.value_pc = float(record.value) / 100
 
 
+class MailPerformanceThreadRecipients(models.Model):
+    _name = 'mail.performance.thread.recipients'
+    _description = 'Performance: mail.thread, for recipients'
+    _inherit = ['mail.thread']
+    _primary_email = 'email_from'
+
+    name = fields.Char()
+    value = fields.Integer()
+    email_from = fields.Char('Email From')
+    partner_id = fields.Many2one('res.partner', string='Customer')
+    user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
+
+
 class MailPerformanceTracking(models.Model):
     _name = 'mail.performance.tracking'
     _description = 'Performance: multi tracking'
