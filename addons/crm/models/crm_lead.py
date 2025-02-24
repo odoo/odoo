@@ -764,6 +764,10 @@ class CrmLead(models.Model):
             if user_updated:
                 vals['date_open'] = now
 
+        # unarchive the lead when moved to the won stage
+        if stage_is_won and any(not lead.active for lead in self):
+            vals['active'] = True
+
         # stage change with new stage: update probability and date_closed
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
@@ -1799,7 +1803,7 @@ class CrmLead(models.Model):
 
         domain = ['|'] * (len(domain) - 1) + domain
         if include_lost:
-            domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
+            domain += ['|', '&', ('type', '=', 'opportunity'), ('won_status', '!=', 'pending'), ('active', '=', True)]
         else:
             domain += [('active', '=', True), ('won_status', '!=', 'won')]
 
@@ -1832,27 +1836,15 @@ class CrmLead(models.Model):
     # CUSTOMER TOOLS
     # --------------------------------------------------
 
-    def _find_matching_partner(self, email_only=False):
-        """ Try to find a matching partner with available information on the
-        lead, using notably customer's name, email, ...
-
-        :param email_only: Only find a matching based on the email. To use
-            for automatic process where ilike based on name can be too dangerous
-        :return: partner browse record
-        """
+    def _find_matching_partner(self):
         self.ensure_one()
         partner = self.partner_id
-
-        if not partner and self.email_from:
-            partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
-
-        if not partner and not email_only:
-            # search through the existing partners based on the lead's partner or contact name
-            # to be aligned with _create_customer, search on lead's name as last possibility
-            for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
-                partner = self.env['res.partner'].search([('name', 'ilike', customer_potential_name)], limit=1)
-                if partner:
-                    break
+        if not partner and self.email_normalized:
+            # some of the tests contain formatted emails, and it appears possible to have formatted emails in partner emails so used ilike
+            partners = self.env['res.partner'].search([('email', 'ilike', self.email_normalized)])
+            if partners:
+                partners = partners.sorted(key=lambda p: (p.company_id == self.company_id), reverse=True)
+                partner = partners[0]
 
         return partner
 

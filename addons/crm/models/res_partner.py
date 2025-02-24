@@ -62,9 +62,10 @@ class ResPartner(models.Model):
         '''
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
         action['context'] = {
-            'search_default_filter_won': 1,
-            'search_default_filter_ongoing': 1,
-            'search_default_filter_lost': 1
+            'search_default_filter_won_status_won': 1,
+            'search_default_filter_won_status_lost': 1,
+            'search_default_filter_won_status_pending': 1,
+            'active_test': False,
         }
         # we want the list view first
         action['views'] = sorted(action['views'], key=lambda view: view[1] != 'list')
