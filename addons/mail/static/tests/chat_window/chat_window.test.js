@@ -1046,3 +1046,15 @@ test("getting focus of chat window through tab key should jump to new message se
         ".o-mail-ChatWindow:eq(0) .o-mail-Thread"
     );
 });
+
+test("chat window with call shows a banner to advertise fullscreen feature", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({});
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await contains(".o-mail-ChatWindow");
+    await click("[title='Start a Call']");
+    await contains(".o-discuss-fullscreenBanner");
+    await click(".o-discuss-fullscreenBanner [title='Close banner']");
+    await contains(".o-discuss-fullscreenBanner", { count: 0 });
+});

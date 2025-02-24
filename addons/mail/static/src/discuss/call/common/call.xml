@@ -3,6 +3,7 @@
 
     <t t-name="discuss.Call">
         <PttAdBanner/>
+        <FullscreenBanner enterFullscreen.bind="enterFullScreen"/>
         <div class="o-discuss-Call user-select-none d-flex position-relative" t-att-class="{
             'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen,
             'o-compact': props.compact,
