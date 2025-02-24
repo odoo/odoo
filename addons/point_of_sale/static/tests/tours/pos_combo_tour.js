@@ -120,6 +120,7 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Office Combo"),
+            ProductScreen.checkExtraPrice("2"),
             combo.select("Combo Product 2"),
             combo.select("Combo Product 4"),
             combo.select("Combo Product 6"),
