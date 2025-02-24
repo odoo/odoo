@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Form view for Automation decanting process-->
+    <record id="view_automation_decanting_process" model="ir.ui.view">
+        <field name="name">automation.decanting.orders.process.form</field>
+        <field name="model">automation.decanting.orders.process</field>
+        <field name="arch" type="xml">
+            <form string="Automation Decanting Orders Process">
+                <sheet>
+                    <header>
+                        <button name="action_button_close" type="object"
+                                string="Close Crate" invisible="state in ('done')"/>
+                        <button name="action_open_decanting_wizard" type="object"
+                                string="Product Decanting" class="btn-primary" invisible="crate_status not in ('open','partially_filled')"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
+                        <hr/>
+                        <field name="crate_status" widget="statusbar" statusbar_visible="partially_filled,fully_filled,close"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="pallet_barcode" invisible="1"/>
+                            <field name="hu_barcode" invisible="1"/>
+                            <field name="license_plate_ids" widget="many2many_tags"
+                                   placeholder="Scan License Plate Barcode here"
+                                   options="{'no_create':True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                        </group>
+                        <group>
+                            <field name="crate_barcode"
+                                   placeholder="Scan Crate Barcode here"/>
+                            <field name="container_id"
+                                   options="{'no_create':True, 'no_open': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                            <field name="container_partition"/>
+                            <field name="container_code"/>
+                        </group>
+                    </group>
+                    <hr/>
+                    <group string="Customer Information">
+                        <group>
+                            <field name="picking_id"
+                                   options="{'no_create':True, 'no_open': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                            <field name="location_dest_id" options="{'no_open':True}"/>
+                            <field name="partner_id" options="{'no_open':True}"/>
+                        </group>
+                        <group>
+                            <field name="tenant_code_id" options="{'no_open':True}"/>
+                            <field name="site_code_id" options="{'no_open':True}"/>
+                            <field name="source_document" options="{'no_open':True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Items">
+                            <field name="automation_decanting_process_line_ids">
+                                <tree editable="bottom" create="0" edit="0">
+                                    <field name="product_id"/>
+                                    <field name="sku_code"/>
+                                    <field name="quantity"/>
+                                    <field name="available_quantity"/>
+                                    <field name="remaining_quantity"/>
+                                    <field name="partition_code" readonly="True"/>
+                                    <field name="bin_code" readonly="True"/>
+                                    <field name="picking_id" column_invisible="True"/>
+                                    <field name="location_dest_id" column_invisible="True"/>
+                                    <field name="available_product_ids" column_invisible="1"/>
+<!--                                    <button name="action_open_update_quantity_wizard" string="Update Quantity" type="object" class="btn-primary"/>-->
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--    Tree view for automation decanting process-->
+    <record id="view_automation_decanting_orders_process" model="ir.ui.view">
+        <field name="name">automation.decanting.orders.process.tree</field>
+        <field name="model">automation.decanting.orders.process</field>
+        <field name="arch" type="xml">
+            <tree string="Automation Decanting Orders Process">
+                <field name="name"/>
+                <field name="license_plate_ids" widget="many2many_tags"/>
+                <field name="partner_id"/>
+                <field name="crate_barcode"/>
+                <field name="container_id"/>
+                <field name="picking_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search view for Automation Decanting Orders Process -->
+    <record id="view_automation_decanting_process_search" model="ir.ui.view">
+        <field name="name">automation.decanting.orders.process.search</field>
+        <field name="model">automation.decanting.orders.process</field>
+        <field name="arch" type="xml">
+            <search string="Automation Decanting Orders Process">
+                <field name="name" string="Automation Decanting Number"/>
+                <field name="picking_id" string="Receipt Number"/>
+                <field name="crate_barcode" string="Crate Barcode"/>
+                <field name="license_plate_ids" string="License Plate Barcode"/>
+                <field name="picking_id" string="Receipt Number"/>
+                <!-- Filters -->
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]"/>
+                <filter name="filter_open_crate" string="Open Crate" domain="[('crate_status', '=', 'open')]"/>
+                <filter name="filter_partially_filled" string="Partially Filled" domain="[('crate_status', '=', 'partially_filled')]"/>
+                <filter name="filter_fully_filled" string="Fully Filled" domain="[('crate_status', '=', 'fully_filled')]"/>
+
+                <!-- Group By Options -->
+                <group expand="1" string="Group By">
+                    <filter name="group_by_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_by_container" string="Container" context="{'group_by': 'container_id'}"/>
+                    <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_crate_status" string="Crate Status" context="{'group_by': 'crate_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <!--    Action for automation decanting process-->
+    <record id="action_automation_decanting_orders_process" model="ir.actions.act_window">
+        <field name="name">Automation Decanting Orders Process</field>
+        <field name="res_model">automation.decanting.orders.process</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

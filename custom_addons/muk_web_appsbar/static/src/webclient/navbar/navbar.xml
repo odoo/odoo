@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+
+	<t 
+		t-name="muk_web_appsbar.NavBar"
+		t-inherit="web.NavBar" 
+		t-inherit-mode="extension" 
+	>
+	    <xpath expr="//nav" position="inside">
+	    	<AppsBar apps="this.getAppsMenuItems()"/>
+	    </xpath>
+	</t>
+	
+</templates>

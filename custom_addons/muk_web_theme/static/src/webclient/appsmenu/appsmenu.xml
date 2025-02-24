@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+
+	<t 
+		t-name="muk_web_theme.AppsMenu" 
+		t-inherit="web.Dropdown" 
+		t-inherit-mode="primary"
+	>
+		<xpath expr="//div[@t-ref='menuRef']" position="attributes">
+			<attribute name="t-attf-style">
+	        	background-image: url("{{ backgroundImageUrl }}");
+		    </attribute>
+	    </xpath>
+	</t>
+	
+</templates>
