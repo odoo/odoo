@@ -1,3 +1,5 @@
+/* global Carousel */
+
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -242,6 +244,9 @@ export class AddSnippetDialog extends Component {
                 // the tours here.
                 snippetPreviewWrapEl.dataset.snippetId = snippet.data.oeSnippetKey;
                 snippetPreviewWrapEl.dataset.snippetKey = snippet.key;
+                if (snippet.label) {
+                    snippetPreviewWrapEl.dataset.label = snippet.label;
+                }
                 snippetPreviewWrapEl.appendChild(clonedSnippetEl);
                 this.__onSnippetPreviewClick = this._onSnippetPreviewClick.bind(this);
                 snippetPreviewWrapEl.addEventListener("click", this.__onSnippetPreviewClick);
@@ -310,6 +315,82 @@ export class AddSnippetDialog extends Component {
                 // Will be sorted in the right columns after
                 containerEl.classList.add("invisible");
                 leftColEl.appendChild(containerEl);
+
+                // Snippet preview animations and effects
+                if (containerEl.dataset.label === "Carousel") {
+                    // Auto-slide carousel snippets on hover
+                    const carouselEl = containerEl.querySelector(".carousel");
+                    if (carouselEl) {
+                        carouselEl.dataset.bsInterval = 500;
+                        const bsCarousel = Carousel.getOrCreateInstance(carouselEl);
+                        bsCarousel.pause(); // Stop cycling on load
+
+                        containerEl.addEventListener("mouseenter", () => {
+                            bsCarousel.cycle();
+                        });
+
+                        containerEl.addEventListener("mouseleave", () => {
+                            bsCarousel.pause();
+                            bsCarousel.to(0); // Reset to the first slide
+                        });
+                    }
+                } else if (containerEl.dataset.label === "Parallax") {
+                    // Manual parallax implementation is needed because snippet
+                    // previews are transformed to scale them down and
+                    // `background-attachment: fixed` doesn't work with
+                    // transformed elements.
+                    const parallaxSnippetEl = containerEl.querySelector(".parallax");
+                    const backgroundEl = parallaxSnippetEl.querySelector(".s_parallax_bg");
+                    const iframeBody = this.iframeDocument.body;
+
+                    const SCALE = 3;
+                    const PARALLAX_RATE = 2;
+
+                    // Set up initial styles
+                    parallaxSnippetEl.style.overflow = "hidden";
+                    parallaxSnippetEl.style.position = "relative";
+                    backgroundEl.style.top = "-50%";
+                    backgroundEl.style.left = "-50%";
+                    backgroundEl.style.willChange = "transform";
+
+                    const updateParallaxPosition = () => {
+                        const containerRect = parallaxSnippetEl.getBoundingClientRect();
+                        const viewportHeight = window.innerHeight;
+                        const containerCenter = containerRect.top + containerRect.height / 2;
+                        const viewportCenter = viewportHeight / 2;
+                        const distanceFromCenter = containerCenter - viewportCenter;
+
+                        backgroundEl.style.transform = `
+                            translate(50%, calc(50% + ${distanceFromCenter * PARALLAX_RATE}px))
+                            scale(${SCALE})
+                        `;
+                    };
+
+                    const handleScroll = () => {
+                        const containerRect = parallaxSnippetEl.getBoundingClientRect();
+                        const viewportHeight = window.innerHeight;
+
+                        if (containerRect.top < viewportHeight && containerRect.bottom > 0) {
+                            updateParallaxPosition();
+                        }
+                    };
+
+                    // Apply parallax only when the element is in the view
+                    const observer = new IntersectionObserver(
+                        (entries) => {
+                            entries.forEach((entry) => {
+                                if (entry.isIntersecting) {
+                                    updateParallaxPosition();
+                                    iframeBody.addEventListener("scroll", handleScroll);
+                                } else {
+                                    iframeBody.removeEventListener("scroll", handleScroll);
+                                }
+                            });
+                        },
+                        { threshold: 0 }
+                    );
+                    observer.observe(parallaxSnippetEl);
+                }
 
                 // Await images.
                 const imageEls = snippetPreviewWrapEl.querySelectorAll("img");
