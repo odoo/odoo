@@ -822,8 +822,8 @@ export class PosStore extends WithLazyGetterTrap {
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         const code = opts.code;
+        let pack_lot_ids = {};
         if (values.product_tmpl_id.isTracked() && (configure || code)) {
-            let pack_lot_ids = {};
             const packLotLinesToEdit =
                 (!values.product_tmpl_id.isAllowOnlyOneLot() &&
                     this.getOrder()
@@ -925,6 +925,14 @@ export class PosStore extends WithLazyGetterTrap {
             this.selectOrderLine(order, to_merge_orderline);
         } else if (!selectedOrderline) {
             this.selectOrderLine(order, order.getLastOrderline());
+        }
+
+        if (values.product_id.tracking === "serial") {
+            this.selectedOrder.getSelectedOrderline().setPackLotLines({
+                modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
+                newPackLotLines: pack_lot_ids.newPackLotLines ?? [],
+                setQuantity: true,
+            });
         }
 
         this.numberBuffer.reset();
