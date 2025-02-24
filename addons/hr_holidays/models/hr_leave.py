@@ -80,10 +80,12 @@ class HrLeave(models.Model):
 
         lt = self.env['hr.leave.type']
         if self.env.context.get('holiday_status_display_name', True) and 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
-            lt = self.env['hr.leave.type'].search(['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)], limit=1, order='sequence')
+            domain = ['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)]
+            if defaults.get('request_unit_hours'):
+                domain.append(('request_unit', '=', 'hour'))
+            lt = self.env['hr.leave.type'].search(domain, limit=1, order='sequence')
             if lt:
                 defaults['holiday_status_id'] = lt.id
-                defaults['request_unit_custom'] = False
 
         if 'request_date_from' in fields_list and 'request_date_from' not in defaults:
             defaults['request_date_from'] = fields.Date.today()
