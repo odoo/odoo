@@ -33,7 +33,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     active = fields.Boolean(default=True)
     id_client = fields.Char(required=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True,
+    company_id = fields.Many2one('res.company', string='Company', required=True, index=True,
         default=lambda self: self.env.company)
     edi_identification = fields.Char(required=True, help="The unique id that identifies this user, typically the vat")
     private_key_id = fields.Many2one(

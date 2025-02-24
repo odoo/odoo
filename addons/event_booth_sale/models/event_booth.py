@@ -17,10 +17,10 @@ class EventBooth(models.Model):
         groups='sales_team.group_sale_salesman', copy=False)
     sale_order_line_id = fields.Many2one(
         'sale.order.line', string='Final Sale Order Line', ondelete='set null',
-        readonly=False,
+        readonly=False, index='btree_not_null',
         groups='sales_team.group_sale_salesman', copy=False)
     sale_order_id = fields.Many2one(
-        related='sale_order_line_id.order_id', store='True', readonly=True,
+        related='sale_order_line_id.order_id', store='True', readonly=True, index='btree_not_null',
         groups='sales_team.group_sale_salesman')
     is_paid = fields.Boolean('Is Paid', copy=False)
 

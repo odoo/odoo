@@ -45,7 +45,7 @@ class LoyaltyReward(models.Model):
             reward.display_name = f"{reward.program_id.name} - {reward.description}"
 
     active = fields.Boolean(default=True)
-    program_id = fields.Many2one(comodel_name='loyalty.program', ondelete='cascade', required=True)
+    program_id = fields.Many2one(comodel_name='loyalty.program', ondelete='cascade', required=True, index=True)
     program_type = fields.Selection(related='program_id.program_type')
     # Stored for security rules
     company_id = fields.Many2one(related='program_id.company_id', store=True)

@@ -11,7 +11,7 @@ class ResCompany(models.Model):
         return self.env['mail.alias.domain'].search([], limit=1)
 
     alias_domain_id = fields.Many2one(
-        'mail.alias.domain', string='Email Domain',
+        'mail.alias.domain', string='Email Domain', index='btree_not_null',
         default=lambda self: self._default_alias_domain_id())
     bounce_email = fields.Char(string="Bounce Email", compute="_compute_bounce")
     bounce_formatted = fields.Char(string="Bounce", compute="_compute_bounce")

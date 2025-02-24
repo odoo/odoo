@@ -32,9 +32,9 @@ class EventRegistration(models.Model):
 
     # event
     event_id = fields.Many2one(
-        'event.event', string='Event', required=True, tracking=True)
+        'event.event', string='Event', required=True, tracking=True, index=True)
     event_ticket_id = fields.Many2one(
-        'event.event.ticket', string='Ticket Type', ondelete='restrict', tracking=True)
+        'event.event.ticket', string='Ticket Type', ondelete='restrict', tracking=True, index='btree_not_null')
     active = fields.Boolean(default=True)
     barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
     # utm informations
@@ -42,7 +42,7 @@ class EventRegistration(models.Model):
     utm_source_id = fields.Many2one('utm.source', 'Source', index=True, ondelete='set null')
     utm_medium_id = fields.Many2one('utm.medium', 'Medium', index=True, ondelete='set null')
     # attendee
-    partner_id = fields.Many2one('res.partner', string='Booked by', tracking=1)
+    partner_id = fields.Many2one('res.partner', string='Booked by', tracking=1, index='btree_not_null')
     name = fields.Char(
         string='Attendee Name', index='trigram',
         compute='_compute_name', readonly=False, store=True, tracking=2)

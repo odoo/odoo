@@ -14,7 +14,7 @@ class ResUsers(models.Model):
     gold_badge = fields.Integer('Gold badges count', compute="_get_user_badge_level")
     silver_badge = fields.Integer('Silver badges count', compute="_get_user_badge_level")
     bronze_badge = fields.Integer('Bronze badges count', compute="_get_user_badge_level")
-    rank_id = fields.Many2one('gamification.karma.rank', 'Rank')
+    rank_id = fields.Many2one('gamification.karma.rank', 'Rank', index='btree_not_null')
     next_rank_id = fields.Many2one('gamification.karma.rank', 'Next Rank')
 
     @api.depends('karma_tracking_ids.new_value')

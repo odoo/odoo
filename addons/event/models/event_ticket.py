@@ -20,7 +20,7 @@ class EventTypeTicket(models.Model):
         'Description', translate=True,
         help="A description of the ticket that you want to communicate to your customers.")
     event_type_id = fields.Many2one(
-        'event.type', string='Event Category', ondelete='cascade', required=True)
+        'event.type', string='Event Category', ondelete='cascade', required=True, index=True)
     # seats
     seats_limited = fields.Boolean(string='Limit Attendees', readonly=True, store=True,
                                    compute='_compute_seats_limited')
@@ -62,7 +62,7 @@ class EventEventTicket(models.Model):
     event_type_id = fields.Many2one(ondelete='set null', required=False)
     event_id = fields.Many2one(
         'event.event', string="Event",
-        ondelete='cascade', required=True)
+        ondelete='cascade', required=True, index=True)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     # sale
     start_sale_datetime = fields.Datetime(string="Registration Start")

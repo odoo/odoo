@@ -16,7 +16,7 @@ class EventBooth(models.Model):
 
     # owner
     event_type_id = fields.Many2one(ondelete='set null', required=False)
-    event_id = fields.Many2one('event.event', string='Event', ondelete='cascade', required=True)
+    event_id = fields.Many2one('event.event', string='Event', ondelete='cascade', required=True, index=True)
     # customer
     partner_id = fields.Many2one('res.partner', string='Renter', tracking=True, copy=False)
     contact_name = fields.Char('Renter Name', compute='_compute_contact_name', readonly=False, store=True, copy=False)
