@@ -745,7 +745,7 @@ def route(route=None, **routing):
 
             result = endpoint(self, *args, **params_ok)
             if routing['type'] == 'http':  # _generate_routing_rules() ensures type is set
-                return Response.load(result)
+                return Response.load(result, endpoint)
             return result
 
         route_wrapper.original_routing = routing
