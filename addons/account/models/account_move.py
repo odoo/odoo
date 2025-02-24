@@ -681,7 +681,7 @@ class AccountMove(models.Model):
         string='Cash Rounding Method',
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
-    sending_data = fields.Json(copy=False)
+    sending_data = fields.Json(copy=False, help="Set while sending the journal item")
     invoice_pdf_report_id = fields.Many2one(
         comodel_name='ir.attachment',
         string="PDF Attachment",
@@ -5754,26 +5754,7 @@ class AccountMove(models.Model):
         to_process = self.search(domain, limit=job_count).try_lock_for_update()
         if not to_process:
             return
-
-        # Collect moves by res.partner that executed the Send & Print wizard, must be done before the _process
-        # that modify sending_data.
-        moves_by_partner = to_process.grouped(lambda m: m.sending_data['author_partner_id'])
-
-        self.env['account.move.send']._generate_and_send_invoices(
-            to_process,
-            from_cron=True,
-        )
-
-        for partner_id, partner_moves in moves_by_partner.items():
-            partner = self.env['res.partner'].browse(partner_id)
-            partner_moves_error = partner_moves.filtered(lambda m: m.sending_data and m.sending_data.get('error'))
-            if partner_moves_error:
-                partner._bus_send(*get_account_notification(partner_moves_error, False))
-            partner_moves_success = partner_moves - partner_moves_error
-            if partner_moves_success:
-                partner._bus_send(*get_account_notification(partner_moves_success, True))
-            partner_moves_error.sending_data = False
-
+        self.env['account.move.send']._generate_and_send_invoices(to_process, allow_rising=False, notification=get_account_notification)
         self.env['ir.cron']._commit_progress(len(to_process), self.search_count(domain))
 
     # -------------------------------------------------------------------------
