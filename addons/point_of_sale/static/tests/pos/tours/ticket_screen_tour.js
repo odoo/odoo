@@ -283,3 +283,48 @@ registry.category("web_tour.tours").add("LotTour", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("OrderTimeTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            {
+                content: "Set test time zone to a non UTC time zone",
+                trigger: "body",
+                run: function () {
+                    const testTimeZone = "Asia/Tokyo";
+                    luxon.Settings.defaultZone = testTimeZone;
+                },
+            },
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+
+            Chrome.clickOrders(),
+            {
+                content: "Wait for the order time to appear",
+                trigger: ".orders .order-row:first .small.text-muted",
+            },
+            {
+                content: "Validate order time matches local timezone",
+                trigger: ".orders .order-row:first .small.text-muted",
+                run: function () {
+                    const displayedTimeElement = document.querySelector(
+                        ".orders .order-row:first-child .small.text-muted"
+                    );
+                    const displayedTimeText = displayedTimeElement.textContent.trim();
+
+                    const currentOrder = window.posmodel.getOrder();
+                    const orderDateUTC = currentOrder.date_order;
+                    let orderDateTime = luxon.DateTime.fromSQL(orderDateUTC, { zone: "UTC" });
+                    orderDateTime = orderDateTime.setZone(luxon.DateTime.local().zoneName);
+                    const convertedOrderTime = orderDateTime.toFormat("HH:mm");
+
+                    if (convertedOrderTime !== displayedTimeText) {
+                        throw new Error("Order time does not match local timezone");
+                    }
+                },
+            },
+        ].flat(),
+});
