@@ -13,6 +13,16 @@ import { UomAutoComplete } from "@uom/components/uom_autocomplete/uom_autocomple
 import { roundPrecision } from "@web/core/utils/numbers";
 import { onWillUpdateProps } from "@odoo/owl";
 
+function _getProductRelatedModel() {
+    const field = this.props.record.fields[this.props.productField];
+    // The widget is either used alongisde a product related field or either used in a product view.
+    let resModel = field?.relation || this.props.record.resModel;
+    if (!["product.product", "product.template"].includes(resModel)) {
+        throw new Error(`The widget '${this.constructor.name}' (field '${this.props.name}') needs a 'product.product' or 'product.template' field. '${this.props.productField}' is used but is related to '${field?.relation}' model.`);
+    }
+    return resModel;
+}
+
 export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
     static components = {
         ...Many2XAutocomplete.components,
@@ -97,6 +107,11 @@ export class Many2ManyUomTagsField extends Many2ManyTagsFieldColorEditable {
         productField: "product_id",
         quantityField: "product_uom_qty",
     }
+
+    async setup() {
+        super.setup();
+        this.productModel = _getProductRelatedModel.call(this);
+    }
 }
 
 export class Many2OneUomField extends Many2OneField {
@@ -115,7 +130,12 @@ export class Many2OneUomField extends Many2OneField {
         productField: "product_id",
         quantityField: "product_uom_qty",
     }
-}   
+
+    async setup() {
+        super.setup();
+        this.productModel = _getProductRelatedModel.call(this);
+    }
+}
 
 export const many2ManyUomTagsField = {
     ...many2ManyTagsFieldColorEditable,
