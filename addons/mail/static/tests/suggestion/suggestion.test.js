@@ -56,7 +56,7 @@ test('display partner mention suggestions on typing "@"', async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion strong", { count: 3 });
+    await contains(".o-mail-Suggestion", { count: 3 });
 });
 
 test("can @user in restricted (group_public_id) channels", async () => {
@@ -84,7 +84,7 @@ test("can @user in restricted (group_public_id) channels", async () => {
         text: 'Access restricted to group "Custom Channel Group"',
     });
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion strong", { count: 2 });
+    await contains(".o-mail-Suggestion", { count: 2 });
 });
 
 test('post a first message then display partner mention suggestions on typing "@"', async () => {
@@ -113,7 +113,7 @@ test('post a first message then display partner mention suggestions on typing "@
     await press("Enter");
     await contains(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion strong", { count: 3 });
+    await contains(".o-mail-Suggestion", { count: 3 });
 });
 
 test('display partner mention suggestions on typing "@" in chatter', async () => {
@@ -122,7 +122,7 @@ test('display partner mention suggestions on typing "@" in chatter', async () =>
     await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion strong", { text: "Mitchell Admin" });
+    await contains(".o-mail-Suggestion", { text: "Mitchell Admin" });
 });
 
 test("Do not fetch if search more specific and fetch had no result", async () => {
@@ -134,11 +134,11 @@ test("Do not fetch if search more specific and fetch had no result", async () =>
     await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion", { count: 3 }); // Mitchell Admin, Hermit, Public user
-    await contains(".o-mail-Composer-suggestion", { text: "Mitchell Admin" });
+    await contains(".o-mail-Suggestion", { count: 3 }); // Mitchell Admin, Hermit, Public user
+    await contains(".o-mail-Suggestion", { text: "Mitchell Admin" });
     await waitForSteps(["get_mention_suggestions"]);
     await insertText(".o-mail-Composer-input", "x");
-    await contains(".o-mail-Composer-suggestion", { count: 0 });
+    await contains(".o-mail-Suggestion", { count: 0 });
     await waitForSteps(["get_mention_suggestions"]);
     await insertText(".o-mail-Composer-input", "x");
     await waitForSteps([]);
@@ -160,7 +160,7 @@ test("show other channel member in @ mention", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
+    await contains(".o-mail-Suggestion", { text: "TestPartner" });
 });
 
 test("select @ mention insert mention text in composer", async () => {
@@ -179,8 +179,8 @@ test("select @ mention insert mention text in composer", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
-    await contains(".o-mail-Composer-input", { value: "@TestPartner " });
+    await click(".o-mail-Suggestion", { text: "TestPartner" });
+    await contains(".o-mail-Composer-input", { text: "@TestPartner" });
 });
 
 test("select @ mention closes suggestions", async () => {
@@ -199,8 +199,8 @@ test("select @ mention closes suggestions", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
-    await contains(".o-mail-Composer-suggestion strong", { count: 0 });
+    await click(".o-mail-Suggestion", { text: "TestPartner" });
+    await contains(".o-mail-Suggestion", { count: 0 });
 });
 
 test('display channel mention suggestions on typing "#"', async () => {
@@ -211,10 +211,8 @@ test('display channel mention suggestions on typing "#"', async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await insertText(".o-mail-Composer-input", "#");
-    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-SuggestionList");
 });
 
 test("mention a channel", async () => {
@@ -225,12 +223,10 @@ test("mention a channel", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
-    await contains(".o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Composer-input", { text: "" });
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General " });
+    await click(".o-mail-Suggestion");
+    await contains(".o-mail-Composer-input", { text: "#General" });
 });
 
 test("mention a channel thread", async () => {
@@ -245,17 +241,16 @@ test("mention a channel thread", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
-    await contains(".o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Composer-input", { text: "" });
     await insertText(".o-mail-Composer-input", "#");
-    await contains(".o-mail-Composer-suggestion", { count: 2 });
-    await contains(".o-mail-Composer-suggestion:eq(0):has(i.fa-hashtag)", { text: "General" });
-    await contains(".o-mail-Composer-suggestion:eq(1):has(i.fa-comments-o)", {
+    await contains(".o-mail-Suggestion", { count: 2 });
+    await contains(".o-mail-Suggestion:eq(0)", { text: "General" });
+    await contains(".o-mail-Suggestion:eq(1)", {
         text: "GeneralThreadOne",
     });
-    await click(".o-mail-Composer-suggestion:eq(1)");
-    await contains(".o-mail-Composer-input", { value: "#General > ThreadOne " });
+    await click(".o-mail-Suggestion:eq(1)");
+    await contains(".o-mail-Composer-input", { text: "#General > ThreadOne" });
+    await contains(".o-mail-SuggestionList", { count: 0 });
     await press("Enter");
     await contains(".o-mail-Message a.o_channel_redirect:has(i.fa-comments-o)", {
         text: "General > ThreadOne",
@@ -288,11 +283,11 @@ test("Suggestions are shown after delimiter was used in text (@)", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Suggestion");
     await insertText(".o-mail-Composer-input", "NonExistingUser");
-    await contains(".o-mail-Composer-suggestion strong", { count: 0 });
+    await contains(".o-mail-Suggestion", { count: 0 });
     await insertText(".o-mail-Composer-input", " @");
-    await contains(".o-mail-Composer-suggestion strong", { text: "Mitchell Admin" });
+    await contains(".o-mail-Suggestion", { text: "Mitchell Admin" });
 });
 
 test("Suggestions are shown after delimiter was used in text (#)", async () => {
@@ -301,11 +296,11 @@ test("Suggestions are shown after delimiter was used in text (#)", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
-    await contains(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Suggestion");
     await insertText(".o-mail-Composer-input", "NonExistingChannel");
-    await contains(".o-mail-Composer-suggestion strong", { count: 0 });
+    await contains(".o-mail-Suggestion", { count: 0 });
     await insertText(".o-mail-Composer-input", " #");
-    await contains(".o-mail-Composer-suggestion strong", { text: "General" });
+    await contains(".o-mail-Suggestion", { text: "General" });
 });
 
 test("display partner mention when typing more than 2 words if they match", async () => {
@@ -328,12 +323,12 @@ test("display partner mention when typing more than 2 words if they match", asyn
     await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@My ");
-    await contains(".o-mail-Composer-suggestion strong", { count: 3 });
+    await contains(".o-mail-Suggestion", { count: 3 });
     await insertText(".o-mail-Composer-input", "Test ");
-    await contains(".o-mail-Composer-suggestion strong", { count: 2 });
+    await contains(".o-mail-Suggestion", { count: 2 });
     await insertText(".o-mail-Composer-input", "Partner");
-    await contains(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion strong", { text: "My Test Partner" });
+    await contains(".o-mail-Suggestion");
+    await contains(".o-mail-Suggestion", { text: "My Test Partner" });
 });
 
 test("Internal user should be displayed first", async () => {
@@ -363,10 +358,10 @@ test("Internal user should be displayed first", async () => {
     await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@Person ");
-    await contains(":nth-child(1 of .o-mail-Composer-suggestion) strong", { text: "Person D" });
-    await contains(":nth-child(2 of .o-mail-Composer-suggestion) strong", { text: "Person C" });
-    await contains(":nth-child(3 of .o-mail-Composer-suggestion) strong", { text: "Person B" });
-    await contains(":nth-child(4 of .o-mail-Composer-suggestion) strong", { text: "Person A" });
+    await contains(":nth-child(1 of .o-mail-Suggestion)", { text: "Person D" });
+    await contains(":nth-child(2 of .o-mail-Suggestion)", { text: "Person C" });
+    await contains(":nth-child(3 of .o-mail-Suggestion)", { text: "Person B" });
+    await contains(":nth-child(4 of .o-mail-Suggestion)", { text: "Person A" });
 });
 
 test("Current user that is a follower should be considered as such", async () => {
@@ -388,14 +383,14 @@ test("Current user that is a follower should be considered as such", async () =>
     await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion", { count: 5 }); // FIXME: should be 3, but +2 extra with Hermit / Public User
-    await contains(".o-mail-Composer-suggestion", {
+    await contains(".o-mail-Suggestion", { count: 5 }); // FIXME: should be 3, but +2 extra with Hermit / Public User
+    await contains(".o-mail-Suggestion", {
         text: "Mitchell Admin",
-        before: [".o-mail-Composer-suggestion", { text: "Person B(b@test.com)" }],
+        before: [".o-mail-Suggestion", { text: "Person B" }],
     });
-    await contains(".o-mail-Composer-suggestion", {
-        text: "Person B(b@test.com)",
-        before: [".o-mail-Composer-suggestion", { text: "Person A(a@test.com)" }],
+    await contains(".o-mail-Suggestion", {
+        text: "Person B",
+        before: [".o-mail-Suggestion", { text: "Person A" }],
     });
 });
 
@@ -407,13 +402,11 @@ test("Mention with @everyone", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
-    await contains(".o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Composer-input", { text: "" });
     await insertText(".o-mail-Composer-input", "@ever");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "@everyone " });
-    await press("Enter");
+    await click(".o-mail-Suggestion");
+    await contains(".o-mail-Composer-input", { text: "@everyone" });
+    await click("button[title='Send']");
     await contains(".o-mail-Message-bubble.o-orange");
 });
 
@@ -424,13 +417,13 @@ test("Suggestions that begin with the search term should have priority", async (
     await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion", {
+    await contains(".o-mail-Suggestion", {
         text: "Best Partner",
-        before: [".o-mail-Composer-suggestion", { text: "Party Partner" }],
+        before: [".o-mail-Suggestion", { text: "Party Partner" }],
     });
     await insertText(".o-mail-Composer-input", "part");
-    await contains(".o-mail-Composer-suggestion", {
+    await contains(".o-mail-Suggestion", {
         text: "Party Partner",
-        before: [".o-mail-Composer-suggestion", { text: "Best Partner" }],
+        before: [".o-mail-Suggestion", { text: "Best Partner" }],
     });
 });

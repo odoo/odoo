@@ -58,32 +58,8 @@
                         </Dropdown>
                     </div>
                     <div class="position-relative flex-grow-1">
-                        <t t-set="inputClasses" t-value="{'o-mail-Composer-inputStyle form-control border-0 rounded-3': true, 'ps-2': partitionedActions.other.length === 0}"/>
-                        <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto"
-                            t-att-class="inputClasses"
-                            t-ref="textarea"
-                            t-on-keydown="onKeydown"
-                            t-on-focusin="onFocusin"
-                            t-on-focusout="onFocusout"
-                            t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
-                            t-on-paste="onPaste"
-                            t-model="props.composer.text"
-                            t-att-placeholder="placeholder"
-                            t-att-readOnly="!state.active"
-                            tabindex="0"
-                        />
-                        <!--
-                             This is an invisible textarea used to compute the composer
-                             height based on the text content. We need it to downsize
-                             the textarea properly without flicker.
-                        -->
-                        <textarea
-                            class="o-mail-Composer-fake position-absolute overflow-hidden"
-                            t-att-class="inputClasses"
-                            t-model="props.composer.text"
-                            t-ref="fakeTextarea"
-                            disabled="1"
-                        />
+                        <Wysiwyg t-if="state.active" class="'w-100 p-2 text-break overflow-auto'" config="wysiwyg.config" onLoad.bind="onLoadWysiwyg" onBlur.bind="onBlurWysiwyg"/>
+                        <div t-else="" class="o-mail-Composer-input-disabled w-100 p-2 text-break overflow-auto"/>
                     </div>
                     <t t-call="mail.Composer.quickActions"/>
                 </div>
@@ -116,7 +92,6 @@
             </div>
         </div>
     </div>
-    <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
 </t>
 
 <t t-name="mail.Composer.sendButton">
@@ -190,58 +165,4 @@
     </div>
 </t>
 
-    <t t-name="mail.Composer.suggestionSpecial">
-        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="option.displayName"/>
-        </strong>
-        <em class="text-600 text-truncate align-self-center">
-            <t t-esc="option.description"/>
-        </em>
-    </t>
-
-    <t t-name="mail.Composer.suggestionPartner">
-        <t t-set="partner" t-value="option.partner"/>
-        <ImStatus t-if="partner" persona="partner"/>
-        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="partner.name"/>
-        </strong>
-        <span t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</span>
-    </t>
-
-    <t t-name="mail.Composer.suggestionThread">
-        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <i t-attf-class="fa #{option.thread.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>
-            <t t-if="option.thread.parent_channel_id">
-                <t t-esc="option.thread.parent_channel_id.displayName"/>
-                <i class="oi oi-chevron-right o-xsmaller mx-1"/>
-            </t>
-            <t t-esc="option.thread.displayName"/>
-        </strong>
-    </t>
-
-    <t t-name="mail.Composer.suggestionChannelCommand">
-        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="option.label"/>
-        </strong>
-        <span class="text-600 text-truncate align-self-center">
-            <t t-esc="option.help"/>
-        </span>
-    </t>
-
-    <t t-name="mail.Composer.suggestionCannedResponse">
-        <strong class="px-2 py-1 align-self-center flex-shrink-1 text-truncate">
-            <t t-esc="option.source"/>
-        </strong>
-        <span class="text-600 text-truncate align-self-center" style="flex-basis: 20%;">
-            <t t-esc="option.label"/>
-        </span>
-    </t>
-    <t t-name="mail.Composer.suggestionEmoji">
-        <strong class="px-2 align-self-center flex-shrink-1 fs-3">
-            <t t-esc="option.emoji.codepoints"/>
-        </strong>
-        <em class="text-600 text-truncate align-self-center">
-            <t t-esc="option.emoji.shortcodes.join(' ')"/>
-        </em>
-    </t>
 </templates>

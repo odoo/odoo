@@ -12,7 +12,7 @@ const chatRequest = [
     {
         content: "Answer the chat request!",
         trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-        run: "edit Hi ! What a coincidence! I need your help indeed.",
+        run: "composer Hi ! What a coincidence! I need your help indeed.",
     },
     {
         content: "Send the message",

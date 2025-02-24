@@ -4,7 +4,7 @@ import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 import { dispatchClean } from "./_helpers/dispatch";
 
 const config = { Plugins: [...MAIN_PLUGINS, QWebPlugin] };

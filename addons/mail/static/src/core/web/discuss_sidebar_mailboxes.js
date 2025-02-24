@@ -7,7 +7,6 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 import { useService } from "@web/core/utils/hooks";
-import { markEventHandled } from "@web/core/utils/misc";
 
 export class Mailbox extends Component {
     static template = "mail.Mailbox";
@@ -32,7 +31,6 @@ export class Mailbox extends Component {
 
     /** @param {MouseEvent} ev */
     openThread(ev) {
-        markEventHandled(ev, "sidebar.openThread");
         this.mailbox.setAsDiscussThread();
     }
 }

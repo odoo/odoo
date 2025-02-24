@@ -7,7 +7,7 @@ import { insertText } from "./_helpers/user_actions";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 
 describe.tags("desktop");
 describe("visibility", () => {
@@ -94,18 +94,16 @@ describe("buttons", () => {
     });
 
     test("should open image selector using power buttons", async () => {
-        onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-            return [
-                {
-                    id: 1,
-                    name: "logo",
-                    mimetype: "image/png",
-                    image_src: "/web/static/img/logo2.png",
-                    access_token: false,
-                    public: true,
-                },
-            ];
-        });
+        onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+            {
+                id: 1,
+                name: "logo",
+                mimetype: "image/png",
+                image_src: "/web/static/img/logo2.png",
+                access_token: false,
+                public: true,
+            },
+        ]);
         await setupEditor("<p>[]<br></p>");
         click(".o_we_power_buttons .power_button.fa-file-image-o");
         await animationFrame();

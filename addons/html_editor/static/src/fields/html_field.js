@@ -1,12 +1,12 @@
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { stripVersion } from "@html_editor/html_migrations/html_migrations_utils";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 import {
     COLLABORATION_PLUGINS,
     DYNAMIC_PLACEHOLDER_PLUGINS,
     EMBEDDED_COMPONENT_PLUGINS,
-    MAIN_PLUGINS,
-} from "@html_editor/plugin_sets";
+} from "@html_editor/plugin_sets_others";
 import {
     MAIN_EMBEDDINGS,
     READONLY_MAIN_EMBEDDINGS,

@@ -87,6 +87,24 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'im_livechat.assets_embed_core': [
             ('remove', 'web/static/src/core/browser/title_service.js'),
+
+            'web_editor/static/src/scss/**/*',
+            'web/static/lib/dompurify/DOMpurify.js',
+            'web/static/src/core/commands/command_service.js',
+
+            'html_editor/static/src/utils/**/*',
+            'html_editor/static/src/html_migrations/html_migrations_utils.js',
+            'html_editor/static/src/plugin_sets_core_main.js',
+            'html_editor/static/src/plugin.js',
+            'html_editor/static/src/position_hook.js',
+            'html_editor/static/src/core/**/*',
+            'html_editor/static/src/main/**/*',
+            'html_editor/static/src/local_overlay_container.xml',
+            'html_editor/static/src/local_overlay_container.js',
+            'html_editor/static/src/wysiwyg.xml',
+            'html_editor/static/src/wysiwyg.js',
+            'html_editor/static/src/editor.js',
+
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/discuss/core/common/*',

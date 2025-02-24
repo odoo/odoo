@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "./_helpers/editor";
-import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
+import { EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets_others";
 import { insertText } from "./_helpers/user_actions";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";

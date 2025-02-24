@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "edit Hello!",
+            run: "composer Hello!",
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Composer-input",

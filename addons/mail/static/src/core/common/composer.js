@@ -4,19 +4,16 @@ import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
-import { useSuggestion } from "@mail/core/common/suggestion_hook";
-import { prettifyMessageContent } from "@mail/utils/common/format";
-import { useSelection } from "@mail/utils/common/hooks";
+import { prettifyMessageContent, isEmpty } from "@mail/utils/common/format";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
-import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
+import { Wysiwyg } from "@html_editor/wysiwyg";
 
 import {
     Component,
     markup,
-    onMounted,
     useChildSubEnv,
     useEffect,
     useRef,
@@ -34,6 +31,9 @@ import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/featur
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "./composer_actions";
+import { fixInvalidHTML } from "@html_editor/utils/sanitize";
+import { markEventHandled } from "@web/core/utils/misc";
+import { MAIL_PLUGINS } from "./plugins/plugin_sets";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -62,6 +62,7 @@ export class Composer extends Component {
         DropdownItem,
         FileUploader,
         NavigableList,
+        Wysiwyg,
     };
     static defaultProps = {
         mode: "normal",
@@ -107,34 +108,12 @@ export class Composer extends Component {
             { composer: this.props.composer }
         );
         this.ui = useService("ui");
-        this.ref = useRef("textarea");
-        this.fakeTextarea = useRef("fakeTextarea");
-        this.inputContainerRef = useRef("input-container");
         this.pickerContainerRef = useRef("picker-container");
         this.state = useState({
             active: true,
             isFullComposerOpen: false,
         });
         this.fullComposerBus = new EventBus();
-        this.selection = useSelection({
-            refName: "textarea",
-            model: this.props.composer.selection,
-            preserveOnClickAwayPredicate: async (ev) => {
-                // Let event be handled by bubbling handlers first.
-                await new Promise(setTimeout);
-                return (
-                    !this.isEventTrusted(ev) ||
-                    isEventHandled(ev, "sidebar.openThread") ||
-                    isEventHandled(ev, "emoji.selectEmoji") ||
-                    isEventHandled(ev, "Composer.onClickAddEmoji") ||
-                    isEventHandled(ev, "composer.clickOnAddAttachment") ||
-                    isEventHandled(ev, "composer.selectSuggestion") ||
-                    isEventHandled(ev, "composer.clickInsertCannedResponse")
-                );
-            },
-        });
-        this.suggestion = useSuggestion();
-        this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
         this.saveContentDebounced = useDebounced(this.saveContent, 5000, {
             execBeforeUnmount: true,
@@ -173,9 +152,12 @@ export class Composer extends Component {
         useChildSubEnv({ inComposer: true });
         useEffect(
             (focus) => {
-                if (focus && this.ref.el) {
-                    this.selection.restore();
-                    this.ref.el.focus();
+                if (focus && this.wysiwyg.editor) {
+                    this.wysiwyg.editor.shared.selection.setCursorEnd(
+                        this.wysiwyg.editor.editable.lastChild
+                    );
+                    this.wysiwyg.editor.shared.selection.focusEditable();
+                    this.wysiwyg.editor.editable.focus();
                 }
             },
             () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
@@ -188,31 +170,45 @@ export class Composer extends Component {
             },
             () => [this.props.messageToReplyTo?.thread, this.props.composer.thread]
         );
-        useEffect(
-            () => {
-                if (this.fakeTextarea.el.scrollHeight) {
-                    this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+        this.wysiwyg = {
+            config: this.wysiwygConfigs,
+            editor: undefined,
+        };
+    }
+
+    get wysiwygConfigs() {
+        return {
+            content: fixInvalidHTML(this.props.composer.htmlBody) || "<p><br></p>",
+            placeholder: this.placeholder,
+            disableVideo: true,
+            Plugins: MAIL_PLUGINS,
+            classList: ["o-mail-Composer-input", "o-mail-Composer-inputStyle"],
+            onChange: this.onChange.bind(this),
+            onBlur: this.onBlurWysiwyg.bind(this),
+            onEditorReady: () => {
+                if (this.props.composer.htmlBody) {
+                    const content = fixInvalidHTML(this.props.composer.htmlBody);
+                    if (!isEmpty(content)) {
+                        this.wysiwyg.editor.shared.selection.setCursorEnd(
+                            this.wysiwyg.editor.editable.lastChild
+                        );
+                        this.wysiwyg.editor.shared.history.addStep();
+                    }
                 }
-                this.saveContentDebounced();
             },
-            () => [this.props.composer.text, this.ref.el]
-        );
-        useEffect(
-            () => {
-                if (!this.props.composer.forceCursorMove) {
-                    return;
-                }
-                this.selection.restore();
-                this.props.composer.forceCursorMove = false;
+            suggestionPLuginDependencies: {
+                composer: this.props.composer,
+                suggestionService: useService("mail.suggestion"),
             },
-            () => [this.props.composer.forceCursorMove]
-        );
-        onMounted(() => {
-            this.ref.el.scrollTo({ top: 0, behavior: "instant" });
-            if (!this.props.composer.text) {
-                this.restoreContent();
-            }
-        });
+            composerPLuginDependencies: {
+                placeholder: this.placeholder,
+                onBeforePaste: this.onBeforePaste.bind(this),
+                onFocusin: this.onFocusin.bind(this),
+                onFocusout: this.onFocusout.bind(this),
+                onInput: this.onInput.bind(this),
+                onKeydown: this.onKeydown.bind(this),
+            },
+        };
     }
 
     get areAllActionsDisabled() {
@@ -334,97 +330,30 @@ export class Composer extends Component {
         const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (!this.props.composer.text && attachments.length === 0) ||
+            (isEmpty(this.props.composer.htmlBody) && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
 
     get hasSuggestions() {
-        return Boolean(this.suggestion?.state.items);
+        return Boolean(document.querySelector(".o-mail-Suggestion"));
     }
 
-    get navigableListProps() {
-        const props = {
-            anchorRef: this.inputContainerRef.el,
-            position: this.env.inChatter ? "bottom-fit" : "top-fit",
-            onSelect: (ev, option) => {
-                this.suggestion.insert(option);
-                markEventHandled(ev, "composer.selectSuggestion");
-            },
-            isLoading: !!this.suggestion.search.term && this.suggestion.state.isFetching,
-            options: [],
-        };
-        if (!this.hasSuggestions) {
-            return props;
-        }
-        const suggestions = this.suggestion.state.items.suggestions;
-        switch (this.suggestion.state.items.type) {
-            case "Partner":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionPartner",
-                    options: suggestions.map((suggestion) => {
-                        if (suggestion.isSpecial) {
-                            return {
-                                ...suggestion,
-                                group: 1,
-                                optionTemplate: "mail.Composer.suggestionSpecial",
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        } else {
-                            return {
-                                label: suggestion.name,
-                                partner: suggestion,
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        }
-                    }),
-                };
-            case "Thread":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionThread",
-                    options: suggestions.map((suggestion) => ({
-                        label: suggestion.parent_channel_id
-                            ? `${suggestion.parent_channel_id.displayName} > ${suggestion.displayName}`
-                            : suggestion.displayName,
-                        thread: suggestion,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "ChannelCommand":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionChannelCommand",
-                    options: suggestions.map((suggestion) => ({
-                        label: suggestion.name,
-                        help: suggestion.help,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "mail.canned.response":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionCannedResponse",
-                    options: suggestions.map((suggestion) => ({
-                        cannedResponse: suggestion,
-                        source: suggestion.source,
-                        label: suggestion.substitution,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "emoji":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionEmoji",
-                    options: suggestions.map((suggestion) => ({
-                        emoji: suggestion,
-                        label: suggestion.codepoints,
-                    })),
-                };
-            default:
-                return props;
-        }
+    onInput() {}
+
+    onChange() {
+        this.props.composer.htmlBody = this.wysiwyg.editor.getContent();
+    }
+
+    onBlurWysiwyg() {
+        this.props.composer.htmlBody = this.wysiwyg.editor.getContent();
+    }
+
+    /**
+     * @param {Editor} editor
+     */
+    onLoadWysiwyg(editor) {
+        this.wysiwyg.editor = editor;
     }
 
     onDropFile(ev) {
@@ -446,18 +375,21 @@ export class Composer extends Component {
     /**
      * This doesn't work on firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1699743
      */
-    onPaste(ev) {
+    onBeforePaste(selection, ev) {
         if (!this.allowUpload) {
             return;
         }
         if (!ev.clipboardData?.items) {
             return;
         }
-        if (ev.clipboardData.files.length === 0) {
+        const nonImgFiles = [...ev.clipboardData.items]
+            .filter((item) => item.kind === "file" && !item.type.includes("image/"))
+            .map((item) => item.getAsFile());
+        if (nonImgFiles === 0) {
             return;
         }
         ev.preventDefault();
-        for (const file of ev.clipboardData.files) {
+        for (const file of nonImgFiles) {
             this.attachmentUploader.uploadFile(file);
         }
     }
@@ -466,7 +398,7 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         switch (ev.key) {
             case "ArrowUp":
-                if (this.props.messageEdition && composer.text === "") {
+                if (this.props.messageEdition && isEmpty(composer.htmlBody)) {
                     const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         this.props.messageEdition.editingMessage = messageToEdit;
@@ -474,7 +406,7 @@ export class Composer extends Component {
                 }
                 break;
             case "Enter": {
-                if (isEventHandled(ev, "NavigableList.select") || !this.state.active) {
+                if (document.querySelector(".o-mail-SuggestionList")) {
                     ev.preventDefault();
                     return;
                 }
@@ -491,7 +423,7 @@ export class Composer extends Component {
                 break;
             }
             case "Escape":
-                if (isEventHandled(ev, "NavigableList.close")) {
+                if (document.querySelector(".o-mail-SuggestionList")) {
                     return;
                 }
                 if (this.props.onDiscardCallback) {
@@ -528,12 +460,8 @@ export class Composer extends Component {
             }
         }
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
-        const body = this.props.composer.text;
-        const validMentions = this.store.getMentionsFromText(body, {
-            mentionedChannels: this.props.composer.mentionedChannels,
-            mentionedPartners: this.props.composer.mentionedPartners,
-        });
-        let default_body = await prettifyMessageContent(body, validMentions);
+        const body = this.props.composer.htmlBody;
+        let default_body = await prettifyMessageContent(body);
         if (!default_body) {
             const composer = toRaw(this.props.composer);
             // Reset signature when recovering an empty body.
@@ -542,9 +470,9 @@ export class Composer extends Component {
         let signature = this.store.self.signature;
         if (signature) {
             const parser = new DOMParser();
-            const doc = parser.parseFromString(signature, 'text/html');
-            const divElement = document.createElement('div');
-            divElement.setAttribute('data-o-mail-quote', '1');
+            const doc = parser.parseFromString(signature, "text/html");
+            const divElement = document.createElement("div");
+            divElement.setAttribute("data-o-mail-quote", "1");
             const br = document.createElement("br");
             const textNode = document.createTextNode("-- ");
             divElement.append(textNode, br, ...doc.body.childNodes);
@@ -623,7 +551,13 @@ export class Composer extends Component {
 
     clear() {
         this.props.composer.clear();
-        browser.localStorage.removeItem(this.props.composer.localId);
+        if (this.wysiwyg.editor?.editable) {
+            this.wysiwyg.editor.editable.innerHTML = "<p><br/></p>";
+            this.wysiwyg.editor.shared.selection.setCursorEnd(
+                this.wysiwyg.editor.editable.lastChild
+            );
+            this.wysiwyg.editor.shared.history.addStep();
+        }
     }
 
     notifySendFromMailbox() {
@@ -638,14 +572,13 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        const el = this.ref.el;
         const attachments = this.props.composer.attachments;
         if (attachments.some(({ uploading }) => uploading)) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
         } else if (
-            this.props.composer.text.trim() ||
+            !isEmpty(this.props.composer.htmlBody) ||
             attachments.length > 0 ||
             (this.message && this.message.attachment_ids.length > 0)
         ) {
@@ -653,13 +586,12 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(this.props.composer.text);
+            await cb(this.props.composer.htmlBody);
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
             this.clear();
             this.state.active = true;
-            el.focus();
         }
     }
 
@@ -715,8 +647,6 @@ export class Composer extends Component {
         if (thread.model === "mail.box") {
             this.notifySendFromMailbox();
         }
-        this.suggestion?.clearRawMentions();
-        this.suggestion?.clearCannedResponses();
         this.props.messageToReplyTo?.cancel();
         this.props.composer.emailAddSignature = true;
         this.props.composer.thread.additionalRecipients = [];
@@ -724,7 +654,9 @@ export class Composer extends Component {
 
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.text || composer.message.attachment_ids.length > 0) {
+        const textContent = new DOMParser().parseFromString(composer.htmlBody, "text/html").body
+            .textContent;
+        if (textContent || composer.message.attachment_ids.length > 0) {
             await this.processMessage(async (value) =>
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
@@ -738,34 +670,31 @@ export class Composer extends Component {
                 prompt: _t("Are you sure you want to delete this message?"),
             });
         }
-        this.suggestion?.clearRawMentions();
     }
 
-    onClickInsertCannedResponse(ev) {
-        markEventHandled(ev, "composer.clickInsertCannedResponse");
+    onClickInsertCannedResponse() {
         const composer = toRaw(this.props.composer);
-        const text = composer.text;
-        const firstPart = text.slice(0, composer.selection.start);
-        const secondPart = text.slice(composer.selection.end, text.length);
-        const toInsertPart = firstPart.length === 0 || firstPart.at(-1) === " " ? "::" : " ::";
-        composer.text = firstPart + toInsertPart + secondPart;
-        this.selection.moveCursor((firstPart + toInsertPart).length);
+        if (!isEmpty(this.props.composer.htmlBody)) {
+            this.wysiwyg.editor.shared.dom.insert("\u00A0");
+        }
+        this.wysiwyg.editor.shared.dom.insert("::");
+        this.wysiwyg.editor.shared.history.addStep();
+        this.wysiwyg.editor.shared.suggestion.start({
+            delimiter: "::",
+            search: "",
+        });
         if (!this.ui.isSmall || !this.env.inChatter) {
             composer.autofocus++;
         }
     }
 
     addEmoji(str) {
-        const composer = toRaw(this.props.composer);
-        const text = composer.text;
-        const firstPart = text.slice(0, composer.selection.start);
-        const secondPart = text.slice(composer.selection.end, text.length);
-        composer.text = firstPart + str + secondPart;
-        this.selection.moveCursor((firstPart + str).length);
+        this.wysiwyg.editor.shared.dom.insert(str + "\u00A0");
+        this.wysiwyg.editor.shared.history.addStep();
         if (this.ui.isSmall && !this.env.inChatter) {
             return false;
         } else {
-            composer.autofocus++;
+            this.wysiwyg.editor.shared.selection.focusEditable();
         }
     }
 
@@ -787,10 +716,10 @@ export class Composer extends Component {
 
     saveContent() {
         const composer = toRaw(this.props.composer);
-        const saveContentToLocalStorage = (text, emailAddSignature) => {
+        const saveContentToLocalStorage = (htmlBody, emailAddSignature) => {
             const config = {
                 emailAddSignature,
-                text,
+                htmlBody,
             };
             browser.localStorage.setItem(composer.localId, JSON.stringify(config));
         };
@@ -799,7 +728,7 @@ export class Composer extends Component {
                 onSaveContent: saveContentToLocalStorage,
             });
         } else {
-            saveContentToLocalStorage(composer.text, true);
+            saveContentToLocalStorage(composer.htmlBody, true);
         }
     }
 
@@ -807,9 +736,9 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         try {
             const config = JSON.parse(browser.localStorage.getItem(composer.localId));
-            if (config.text) {
+            if (config.htmlBody) {
                 composer.emailAddSignature = config.emailAddSignature;
-                composer.text = config.text;
+                composer.htmlBody = config.htmlBody;
             }
         } catch {
             browser.localStorage.removeItem(composer.localId);

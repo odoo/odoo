@@ -22,7 +22,7 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { defineMailModels, mailModels } from "../mail_test_helpers";
+import { click, defineMailModels, mailModels } from "../mail_test_helpers";
 
 // Need this hack to use the arch in mountView(...)
 mailModels.MailComposeMessage._views = {};
@@ -86,9 +86,9 @@ test("media dialog: upload", async function () {
         return attachment;
     });
 
-    onRpc("/web/dataset/call_kw/ir.attachment/generate_access_token", () => {
-        return ["129a52e1-6bf2-470a-830e-8e368b022e13"];
-    });
+    onRpc("/web/dataset/call_kw/ir.attachment/generate_access_token", () => [
+        "129a52e1-6bf2-470a-830e-8e368b022e13",
+    ]);
     await mountView({
         type: "form",
         resId,
@@ -152,28 +152,23 @@ test("mention a partner", async () => {
 
     const anchorNode = queryOne(`[name='body'] .odoo-editor-editable div.o-paragraph`);
     setSelection({ anchorNode, anchorOffset: 0 });
-    await insertText(htmlEditor, "@");
-    await animationFrame();
-    expect(".overlay .search input[placeholder='Search for a user...']").toBeFocused();
-    expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
-
-    await press("a");
-    await waitFor(".overlay .o-mail-NavigableList .o-mail-NavigableList-item");
-    expect(queryAllTexts(".overlay .o-mail-NavigableList .o-mail-NavigableList-item")).toEqual([
-        "Mitchell Admin",
-    ]);
+    await insertText(htmlEditor, "@a");
+    await waitFor(".o-mail-Suggestion", { timeout: 500 });
+    expect(queryAllTexts(".o-mail-Suggestion")).toEqual(["Mitchell Admin"]);
     expect.verifySteps(["get_mention_suggestions: a"]);
 
-    await press("enter");
+    await click(".o-mail-Suggestion");
     expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
     <div class="o-paragraph">
-        <a target="_blank" data-oe-protected="true" contenteditable="false" href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner">
-            @Mitchell Admin
-        </a>
+        <a data-oe-model="res.partner" target="_blank" contenteditable="false" draggable="false" class="o_mail_redirect" href="/odoo/res.partner/17" data-oe-id="17">@Mitchell Admin</a>&nbsp;
     </div>`);
 });
 
 test("mention a channel", async () => {
+    const { env } = await makeMockServer();
+    env["discuss.channel"].create({
+        name: "public channel",
+    });
     onRpc("discuss.channel", "get_mention_suggestions", ({ kwargs }) => {
         expect.step(`get_mention_suggestions: ${kwargs.search}`);
     });
@@ -187,12 +182,8 @@ test("mention a channel", async () => {
     });
     const anchorNode = queryOne(`[name='body'] .odoo-editor-editable div.o-paragraph`);
     setSelection({ anchorNode, anchorOffset: 0 });
-    await insertText(htmlEditor, "#");
-    await animationFrame();
-    expect(".overlay .search input[placeholder='Search for a channel...']").toBeFocused();
-    expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
-
-    await press("a");
-    await animationFrame();
+    await insertText(htmlEditor, "#a");
+    await waitFor(".o-mail-Suggestion", { timeout: 500 });
+    expect(queryAllTexts(".o-mail-Suggestion")).toEqual(["public channel"]);
     expect.verifySteps(["get_mention_suggestions: a"]);
 });

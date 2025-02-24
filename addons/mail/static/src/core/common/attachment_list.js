@@ -32,7 +32,13 @@ class ImageActions extends Component {
  */
 export class AttachmentList extends Component {
     static components = { ImageActions };
-    static props = ["attachments", "unlinkAttachment", "imagesHeight", "messageSearch?"];
+    static props = [
+        "attachments",
+        "unlinkAttachment",
+        "imagesHeight",
+        "messageSearch?",
+        "displayAllImg?",
+    ];
     static template = "mail.AttachmentList";
 
     setup() {
@@ -61,7 +67,20 @@ export class AttachmentList extends Component {
     }
 
     get images() {
-        return this.props.attachments.filter((a) => a.isImage);
+        // Exclude images already displayed in the message body unless props.displayAllImg is true.
+        return this.props.attachments.filter((a) => {
+            if (!a.isImage) {
+                return false;
+            }
+            if (this.props.displayAllImg) {
+                return true;
+            }
+            if (a.message && a.message.body) {
+                const pattern = new RegExp(`src="/web/image/${a.id}\\?access_token=[^"]*"`);
+                return !pattern.test(a.message.body);
+            }
+            return true;
+        });
     }
 
     get cards() {

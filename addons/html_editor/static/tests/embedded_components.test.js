@@ -14,7 +14,7 @@ import {
     getEditableDescendants,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 import { parseHTML } from "@html_editor/utils/html";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { click, queryFirst } from "@odoo/hoot-dom";
@@ -447,9 +447,9 @@ describe("Mount and Destroy embedded components", () => {
         // the editable element, before being removed again.
         const fixture = getFixture();
         expect(
-            [...fixture.querySelectorAll("[data-embedded]")].filter((elem) => {
-                return !elem.closest(".odoo-editor-editable");
-            })
+            [...fixture.querySelectorAll("[data-embedded]")].filter(
+                (elem) => !elem.closest(".odoo-editor-editable")
+            )
         ).toEqual([]);
     });
 
@@ -476,9 +476,9 @@ describe("Mount and Destroy embedded components", () => {
         // the editable element, before being removed again.
         const fixture = getFixture();
         expect(
-            [...fixture.querySelectorAll("[data-embedded]")].filter((elem) => {
-                return !elem.closest(".odoo-editor-editable");
-            })
+            [...fixture.querySelectorAll("[data-embedded]")].filter(
+                (elem) => !elem.closest(".odoo-editor-editable")
+            )
         ).toEqual([]);
     });
 
@@ -507,9 +507,9 @@ describe("Mount and Destroy embedded components", () => {
         // the editable element, before being removed again.
         const fixture = getFixture();
         expect(
-            [...fixture.querySelectorAll("[data-embedded]")].filter((elem) => {
-                return !elem.closest(".odoo-editor-editable");
-            })
+            [...fixture.querySelectorAll("[data-embedded]")].filter(
+                (elem) => !elem.closest(".odoo-editor-editable")
+            )
         ).toEqual([]);
         expect(editor.editable.contains(parent)).toBe(false);
         expect(parent.contains(hostElement)).toBe(true);

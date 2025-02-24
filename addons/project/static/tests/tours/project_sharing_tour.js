@@ -68,7 +68,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }, {
     trigger: '.o-mail-Composer-input',
     content: 'Write a message in the chatter of the task',
-    run: "edit I create a new task for testing purpose.",
+    run: "composer I create a new task for testing purpose.",
 }, {
     trigger: '.o-mail-Composer-send:enabled',
     content: 'Send the message',

@@ -29,6 +29,10 @@ patch(Composer.prototype, {
             this.stopTyping();
         });
     },
+    onInput(ev) {
+        super.onInput(ev);
+        this.detectTyping();
+    },
     /**
      * Notify the server of the current typing status
      *
@@ -47,12 +51,15 @@ patch(Composer.prototype, {
         }
     },
     detectTyping() {
-        const value = this.props.composer.text;
-        if (this.thread?.model === "discuss.channel" && value.startsWith("/")) {
-            const [firstWord] = value.substring(1).split(/\s/);
+        const textContent = new DOMParser().parseFromString(
+            this.props.composer.htmlBody,
+            "text/html"
+        ).body.textContent;
+        if (this.thread?.model === "discuss.channel" && textContent.startsWith("/")) {
+            const [firstWord] = textContent.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
             if (
-                value === "/" || // suggestions not yet started
+                textContent === "/" || // suggestions not yet started
                 this.hasSuggestions ||
                 (command &&
                     (!command.channel_types ||
@@ -62,7 +69,7 @@ patch(Composer.prototype, {
                 return;
             }
         }
-        if (!this.typingNotified && value) {
+        if (!this.typingNotified && textContent) {
             this.typingNotified = true;
             this.notifyIsTyping();
             browser.setTimeout(() => (this.typingNotified = false), LONG_TYPING);

@@ -1,6 +1,6 @@
 import { Editor } from "@html_editor/editor";
 import { Plugin } from "@html_editor/plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";

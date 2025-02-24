@@ -4,7 +4,7 @@ import { tick } from "@odoo/hoot-mock";
 import { testEditor } from "../_helpers/editor";
 import { insertText, splitBlock } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets_core_main";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { findInSelection } from "@html_editor/utils/selection";
 

@@ -1,5 +1,3 @@
-import { markEventHandled } from "@web/core/utils/misc";
-
 import {
     App,
     Component,
@@ -303,10 +301,6 @@ export class EmojiPicker extends Component {
 
     onMouseleaveEmoji(ev, emoji) {
         this.state.hoveredEmoji = this.activeEmoji;
-    }
-
-    onClick(ev) {
-        markEventHandled(ev, "emoji.selectEmoji");
     }
 
     onClickToNextCategories() {
