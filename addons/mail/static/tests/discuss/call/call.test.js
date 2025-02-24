@@ -477,6 +477,9 @@ test("expand call participants when joining a call", async () => {
         { name: "David" },
         { name: "Eric" },
         { name: "Frank" },
+        { name: "Grace" },
+        { name: "Henry" },
+        { name: "Ivy" },
     ]);
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (const partner of partners) {
@@ -491,14 +494,14 @@ test("expand call participants when joining a call", async () => {
     }
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussSidebarCallParticipants img", { count: 4 });
+    await contains(".o-mail-DiscussSidebarCallParticipants img", { count: 7 });
     await contains("img[title='Alice']");
     await contains("img[title='Bob']");
     await contains("img[title='Cathy']");
     await contains("img[title='David']");
     await contains(".o-mail-DiscussSidebarCallParticipants span", { text: "+2" });
     await click("[title='Join Call']");
-    await contains(".o-mail-DiscussSidebarCallParticipants img", { count: 7 });
+    await contains(".o-mail-DiscussSidebarCallParticipants img", { count: 10 });
     await contains("img[title='Alice']");
     await contains("img[title='Bob']");
     await contains("img[title='Cathy']");
