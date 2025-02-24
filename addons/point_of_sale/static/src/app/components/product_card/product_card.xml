@@ -20,7 +20,7 @@
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
                 <h1 t-if="props.productCartQty"
-                    t-out="props.productCartQty"
+                    t-out="this.productQty"
                     class="product-cart-qty position-absolute bottom-0 end-0 fw-bolder mb-0 px-1 text-muted" />
             </div>
             <div class="w-100 d-flex justify-content-between align-items-center px-2">
