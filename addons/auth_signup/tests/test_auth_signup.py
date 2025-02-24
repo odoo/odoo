@@ -8,6 +8,7 @@ from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 from odoo.exceptions import AccessError
 
+from datetime import datetime, timedelta
 
 class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
@@ -76,3 +77,12 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             self.env['res.users'].search_count([]),
             initial_user_count + len(users)
         )
+
+    def test_notify_unregistered(self):
+        users = self.env['res.users'].create([
+            {'login': 'testuser1', 'name': 'Test User 1', 'email': 'test1@odoo.com'},
+            {'login': 'testuser2', 'name': 'Test User 2', 'email': 'test2@odoo.com'},
+        ])
+        for u in users:
+            u.create_date = datetime.now() - timedelta(days=5, minutes=10)
+        users.send_unregistered_user_reminder(after_days=5, batch_size=100)
