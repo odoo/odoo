@@ -141,6 +141,7 @@ class PrivacyLookupWizard(models.TransientModel):
                 if field.ondelete != 'cascade'
             )
 
+            # TODO: and should be stored. Or use field_to_sql
             if conditions:
                 query = SQL("""
                     %s
@@ -154,7 +155,7 @@ class PrivacyLookupWizard(models.TransientModel):
                 """,
                     query,
                     self.env['ir.model'].search([('model', '=', model_name)]).id,
-                    SQL.identifier('active') if 'active' in model else True,
+                    SQL.identifier('active') if model._active_name in model else True,
                     table_name,
                     SQL(" OR ").join(conditions),
                 )
