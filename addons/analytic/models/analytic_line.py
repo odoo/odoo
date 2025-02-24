@@ -205,3 +205,18 @@ class AccountAnalyticLine(models.Model):
             fiscalyear_date_range = self.env.company.compute_fiscalyear_dates(fields.Date.today())
             value = fiscalyear_date_range['date_from'] - relativedelta(years=1)
         return super()._condition_to_sql(alias, fname, operator, value, query)
+    
+    def write(self, vals):
+        res = super().write(vals)
+        if 'amount' in vals or 'account_id' in vals:
+            for line in self:
+                move_line = self.env['account.move.line'].browse(line.move_line_id)
+                move_line._create_analytic_lines()
+        return res
+    
+    def unlink(self):
+        move_lines = self.mapped('move_line_id')
+        res = super().unlink()
+        for move_line in move_lines:
+            move_line._create_analytic_lines()
+        return res
