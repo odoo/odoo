@@ -2,29 +2,21 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.LayoutOption">
-    <BuilderRow label="'Layout'">
+    <BuilderRow label.translate="Layout">
        <BuilderButtonGroup>
-            <Button label="'Grid'" onClick.bind="setGridLayout" isActive="state.elementLayout === 'grid'" />
-            <Button label="'Column'" onClick.bind="setColumnLayout"  isActive="state.elementLayout === 'column'" />
+            <BuilderButton action="'setGridLayout'" id="'grid'">Grid</BuilderButton>
+            <BuilderButton action="'setColumnLayout'" id="'column'">Column</BuilderButton>
         </BuilderButtonGroup>
-        <t t-if="state.elementLayout === 'column'">
-            <Dropdown>
-                <button class="btn btn-primary mx-1" t-att-title="props.title">
-                    <t class="px-1" t-out="state.columnCount"/>
-                </button>
-                <t t-set-slot="content">
-                    <t t-foreach="[1, 2, 3, 4, 5, 6]" t-as="column" t-key="column_index">
-                        <DropdownItem onSelected="() => this.changeColumnCount(column)">
-                            <div class="user-select-none">
-                                <t t-out="column"/>
-                            </div>
-                        </DropdownItem>
-                    </t>
+        <t t-if="isActiveItem('column')">
+            <BuilderSelect action="'changeColumnCount'" >
+               <t t-foreach="[1, 2, 3, 4, 5, 6]" t-as="column" t-key="column_index">
+                    <BuilderSelectItem actionValue="column" t-esc="column"/>
                 </t>
-            </Dropdown>
+                <BuilderSelectItem t-if="this.state.isCustomColumn" actionValue="'custom'">Custom</BuilderSelectItem>
+            </BuilderSelect>
         </t>
     </BuilderRow>
-    <t t-if="state.elementLayout === 'grid'">
+    <t t-if="isActiveItem('grid')">
         <AddElementOption />
         <SpacingOption />
     </t>
