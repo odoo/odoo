@@ -709,9 +709,9 @@ class Website(Home):
         groups_html = View._render_template("website.new_page_template_groups")
         groups_el = etree.fromstring(f'<data>{groups_html}</data>')
 
-        website = request.env['website'].get_current_website()
+        website = self.env['website'].get_current_website()
         param_key = f'website.untouched_configurator_pages.{website.id}'
-        untouched_configurator_pages = json.loads(request.env['ir.config_parameter'].sudo().get_param(param_key, '{}'))
+        untouched_configurator_pages = json.loads(self.env['ir.config_parameter'].sudo().get_param(param_key, '{}'))
         page_ids = list(untouched_configurator_pages.values())
 
         current_webiste_page_ids = self.env['website.page'].search([
