@@ -2490,14 +2490,12 @@ export class Wysiwyg extends Component {
                     [$(x).data('oe-translation-source-sha')]: this._getEscapedElement($(x)).html()
                 })
             ));
-            return this.orm.call(
-                $els.data('oe-model'),
-                'web_update_field_translations',
-                [
-                    [+$els.data('oe-id')],
-                    $els.data('oe-field'),
-                    translations,
-                ], { context });
+            return rpc('/web_editor/field/translation/update', {
+                model: $els.data('oe-model'),
+                record_id: [+$els.data('oe-id')],  
+                field_name: $els.data('oe-field'),
+                translations,                
+            });
         } else {
             var viewID = $el.data('oe-id');
             if (!viewID) {
