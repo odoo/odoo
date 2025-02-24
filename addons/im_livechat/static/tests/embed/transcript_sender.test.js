@@ -29,7 +29,7 @@ test("send", async () => {
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await contains(".o-mail-Thread:not([data-transient])");
     await click(".o-mail-ChatWindow-command[title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
     await contains(".form-text", { text: "Receive a copy of this conversation." });
@@ -51,7 +51,7 @@ test("send failed", async () => {
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await contains(".o-mail-Thread:not([data-transient])");
     await click(".o-mail-ChatWindow-command[title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
     await insertText("input[placeholder='mail@example.com']", "odoobot@odoo.com");

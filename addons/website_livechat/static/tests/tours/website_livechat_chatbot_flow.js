@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 },
             },
             {
-                trigger: '.o-livechat-root:shadow li:contains("I\'d like to buy the software")',
+                trigger: '.o-livechat-root:shadow button:contains("I\'d like to buy the software")',
                 run: "click",
             },
             {
@@ -204,7 +204,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 trigger: messagesContain("How can I help you?"),
             },
             {
-                trigger: '.o-livechat-root:shadow li:contains("Pricing Question")',
+                trigger: '.o-livechat-root:shadow button:contains("Pricing Question")',
                 run: "click",
             },
             {
@@ -253,7 +253,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 run: "click",
             },
             {
-                trigger: ".o-livechat-root:shadow li:contains(I want to speak with an operator)",
+                trigger:
+                    ".o-livechat-root:shadow button:contains(I want to speak with an operator)",
                 run: "click",
             },
             {

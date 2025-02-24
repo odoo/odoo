@@ -3,6 +3,8 @@ import { imageUrl } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
 
+const TRANSPARENT_AVATAR =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAQAAABpN6lAAAAAqElEQVR42u3QMQEAAAwCoNm/9GJ4CBHIjYsAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBDQ9+KgAIHd5IbMAAAAAElFTkSuQmCC";
 const { DateTime } = luxon;
 
 /**
@@ -127,6 +129,9 @@ export class Persona extends Record {
             });
         }
         if (this.type === "guest") {
+            if (this.id === -1) {
+                return TRANSPARENT_AVATAR;
+            }
             return imageUrl("mail.guest", this.id, "avatar_128", {
                 ...accessTokenParam,
                 unique: this.write_date,

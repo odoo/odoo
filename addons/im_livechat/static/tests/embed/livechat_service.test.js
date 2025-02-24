@@ -115,19 +115,6 @@ test("Only necessary requests are made when creating a new chat", async () => {
             previous_operator_id: operatorPartnerId,
             persisted: true,
         })}`,
-        `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures", // called because mail/core/web is loaded in test bundle
-                "systray_get_activities", // called because mail/core/web is loaded in test bundle
-                "init_messaging",
-            ],
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: [1],
-            },
-        })}`,
         `/mail/message/post - ${JSON.stringify({
             post_data: {
                 body: "Hello!",
@@ -142,7 +129,20 @@ test("Only necessary requests are made when creating a new chat", async () => {
                 tz: "taht",
                 uid: serverState.userId,
                 allowed_company_ids: [1],
-                temporary_id: 0.81,
+                temporary_id: 0.8200000000000001,
+            },
+        })}`,
+        `/mail/data - ${JSON.stringify({
+            fetch_params: [
+                "failures", // called because mail/core/web is loaded in test bundle
+                "systray_get_activities", // called because mail/core/web is loaded in test bundle
+                "init_messaging",
+            ],
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: serverState.userId,
+                allowed_company_ids: [1],
             },
         })}`,
     ]);
