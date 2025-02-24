@@ -28,10 +28,7 @@ Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
         'data/tax_reports/form_551_v3_tax_report_data.xml',
         'data/tax_reports/form_570_v2_tax_report_data.xml',
         'data/tax_reports/form_604_v3_tax_report_data.xml',
-        'data/country_data.xml',
-        'data/state_data.xml',
         'data/contact_bank_data.xml',
-        'data/language_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
