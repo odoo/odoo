@@ -169,7 +169,7 @@ export class Base {
     }
 
     setupState(vals) {
-        this.uiState = vals;
+        this.uiState = { ...this.uiState, ...vals };
     }
 
     serializeState() {
