@@ -173,6 +173,7 @@ class SaleOrder(models.Model):
         store=True, readonly=False, required=True, precompute=True,
         check_company=True,
         index='btree_not_null')
+    partner_country = fields.Many2one(string='Partner Country', related='partner_id.country_id')
 
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
