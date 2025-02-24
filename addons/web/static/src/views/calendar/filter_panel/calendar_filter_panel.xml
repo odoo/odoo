@@ -87,6 +87,7 @@
                     class="o_cw_filter_title flex-grow-1 text-truncate lh-base"
                     t-esc="filter.label"
                 />
+                <span t-if="props.model.hasQuick and filter.count">(<t t-esc="filter.count"/>)</span>
             </label>
             <t t-if="filter.canRemove">
                 <button
