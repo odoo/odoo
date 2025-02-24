@@ -360,7 +360,7 @@ class ProjectTask(models.Model):
             elif task.display_in_project and task.project_id == task.parent_id.project_id:
                 task.display_in_project = False
 
-    @api.depends('stage_id', 'depend_on_ids.state', 'project_id.allow_task_dependencies')
+    @api.depends('stage_id', 'depend_on_ids.state')
     def _compute_state(self):
         for task in self:
             dependent_open_tasks = []
