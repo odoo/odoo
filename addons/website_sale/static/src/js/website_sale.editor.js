@@ -16,6 +16,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
         const gridEl = this.$target[0].querySelector('#o_wsale_products_grid');
         this.ppg = parseInt(gridEl.dataset.ppg);
         this.ppr = parseInt(gridEl.dataset.ppr);
+        this.gap = this.$target[0].style.getPropertyValue('--o-wsale-products-grid-gap');
         this.default_sort = gridEl.dataset.defaultSort;
         return this._super.apply(this, arguments);
     },
@@ -60,6 +61,14 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
+    setDefaultGap: function (previewMode, widgetValue, params) {
+        this.gap = widgetValue + "px";
+        this.$target[0].style.setProperty('--o-wsale-products-grid-gap', this.gap);
+        return rpc('/shop/config/website', { 'shop_gap':  this.gap });
+    },
+    /**
+     * @see this.selectClass for params
+     */
     setDefaultSort: function (previewMode, widgetValue, params) {
         this.default_sort = widgetValue;
         return rpc('/shop/config/website', { 'shop_default_sort': this.default_sort });
@@ -92,6 +101,9 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
             }
             case 'setPpr': {
                 return this.ppr;
+            }
+            case 'setGap': {
+                return this.gap;
             }
             case 'setDefaultSort': {
                 return this.default_sort;
