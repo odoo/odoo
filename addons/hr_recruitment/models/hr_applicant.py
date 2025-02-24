@@ -525,21 +525,26 @@ class HrApplicant(models.Model):
         if not all(v in valid_statuses or v is False for v in value):
             raise UserError(_('Some values do not exist in the application status'))
 
+        positive_operator = True
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            positive_operator = False
+        
         # Map statuses to domain filters
+        domain = Domain([])
         for status in value:
             if status == 'refused':
-                domain = [('refuse_reason_id', '!=', None)]
+                refused_domain = Domain('refuse_reason_id', '!=', None)
+                domain &= refused_domain if positive_operator else ~refused_domain
             elif status == 'hired':
-                domain = [('date_closed', '!=', False)]
+                hired_domain = Domain('date_closed', '!=', False)
+                domain &= hired_domain if positive_operator else ~hired_domain
             elif status == 'archived' or status is False:
-                domain = [('active', '=', False)]
+                archived_domain = Domain('active', '=', False) 
+                domain &= archived_domain if positive_operator else ~archived_domain
             elif status == 'ongoing':
-                domain = ['&', ('active', '=', True), ('date_closed', '=', False)]
+                ongoing_domain = Domain(['&', ('active', '=', True), ('date_closed', '=', False)])
+                domain &= ongoing_domain if positive_operator else ~ongoing_domain
 
-        # Invert the domain for '!=' and 'not in' operators
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain.insert(0, expression.NOT_OPERATOR)
-            domain = expression.distribute_not(domain)
         return domain
 
     def _get_attachment_number(self):
