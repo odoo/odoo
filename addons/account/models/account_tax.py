@@ -1244,6 +1244,7 @@ class AccountTax(models.Model):
 
             # Basic fields:
             'product_id': load('product_id', self.env['product.product']),
+            'product_uom_id': load('product_uom_id', self.env['uom.uom']),
             'tax_ids': load('tax_ids', self.env['account.tax']),
             'price_unit': load('price_unit', 0.0),
             'quantity': load('quantity', 0.0),
