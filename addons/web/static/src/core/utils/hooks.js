@@ -1,6 +1,15 @@
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, useComponent, useEffect, useRef, onWillUnmount, useState, toRaw } from "@odoo/owl";
+import {
+    status,
+    useComponent,
+    useEffect,
+    useRef,
+    onWillUnmount,
+    useState,
+    toRaw,
+    onWillStart,
+} from "@odoo/owl";
 
 /**
  * This file contains various custom hooks.
@@ -132,20 +141,7 @@ function _protectMethod(component, fn) {
 
 export const SERVICES_METADATA = {};
 
-/**
- * Import a service into a component
- *
- * @template {keyof import("services").ServiceFactories} K
- * @param {K} serviceName
- * @returns {import("services").ServiceFactories[K]}
- */
-export function useService(serviceName) {
-    const component = useComponent();
-    const { services } = component.env;
-    if (!(serviceName in services)) {
-        throw new Error(`Service ${serviceName} is not available`);
-    }
-    const service = services[serviceName];
+function decorateService(serviceName, service, component, { autoUseState = true } = {}) {
     if (SERVICES_METADATA[serviceName]) {
         if (service instanceof Function) {
             return _protectMethod(component, service);
@@ -158,10 +154,49 @@ export function useService(serviceName) {
             return result;
         }
     }
-    if (toRaw(service) !== service) {
+    if (toRaw(service) !== service && autoUseState) {
         return useState(service);
     }
     return service;
+}
+
+/**
+ * Import a service into a component
+ *
+ * @template {keyof import("services").ServiceFactories} K
+ * @param {K} serviceName
+ * @param {Function} [onDelayedServiceReady] - To be called when a delayed stateful service is available
+ * @returns {import("services").ServiceFactories[K]}
+ */
+export function useService(serviceName, onDelayedServiceReady) {
+    const component = useComponent();
+    const { services } = component.env;
+    if (serviceName in services) {
+        return decorateService(serviceName, services[serviceName], component);
+    }
+    const tempState = useState({});
+    onWillStart(async () => {
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!(serviceName in services)) {
+                    reject(
+                        new Error(
+                            `Service ${serviceName} is not available in "${component.constructor.name}".`
+                        )
+                    );
+                } else {
+                    resolve();
+                }
+            }, 0);
+        });
+        if (typeof onDelayedServiceReady === "function") {
+            tempState.service = services[serviceName];
+            const decoratedService = decorateService(serviceName, tempState.service, component, {
+                autoUseState: false,
+            });
+            onDelayedServiceReady(decoratedService);
+        }
+    });
 }
 
 // -----------------------------------------------------------------------------

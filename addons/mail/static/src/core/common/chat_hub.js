@@ -16,12 +16,12 @@ export class ChatHub extends Component {
     static template = "mail.ChatHub";
 
     get chatHub() {
-        return this.store.chatHub;
+        return this.store && this.store.chatHub;
     }
 
     setup() {
         super.setup();
-        this.store = useService("mail.store");
+        this.store = useService("mail.store", (useStateService) => (this.store = useStateService));
         this.ui = useService("ui");
         this.busMonitoring = useService("bus.monitoring_service");
         this.bubblesHover = useHover("bubbles");
@@ -37,13 +37,19 @@ export class ChatHub extends Component {
             isDragging: false,
             top: "unset",
             left: "unset",
-            bottom: `${this.chatHub.BUBBLE_OUTER}px;`,
-            right: `${this.chatHub.BUBBLE_OUTER + this.chatHub.BUBBLE_START}px;`,
+            bottom: `${this.chatHub ? this.chatHub.BUBBLE_OUTER : 10}px;`,
+            right: `${
+                this.chatHub ? this.chatHub.BUBBLE_OUTER + this.chatHub.BUBBLE_START : 25
+            }px;`,
         });
         this.onResize();
         useExternalListener(browser, "resize", this.onResize);
         useEffect(() => {
-            if (this.chatHub.folded.length && this.store.channels?.status === "not_fetched") {
+            if (
+                this.chatHub &&
+                this.chatHub.folded.length &&
+                this.store.channels?.status === "not_fetched"
+            ) {
                 this.store.channels.fetch();
             }
         });
@@ -74,7 +80,7 @@ export class ChatHub extends Component {
     }
 
     onResize() {
-        this.chatHub.onRecompute();
+        this.chatHub && this.chatHub.onRecompute();
     }
 
     resetPosition() {
