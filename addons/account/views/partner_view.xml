@@ -10,14 +10,17 @@
                          class="alert alert-info"
                          role="alert"
                          invisible="not foreign_vat_header_mode">
-                        <div invisible="foreign_vat_header_mode not in ('templates_found', 'no_template')">
+                        <div
+                            invisible="foreign_vat_header_mode not in ('templates_found', 'no_template')"
+                            class="d-flex align-items-center"
+                        >
                             Click
                             <button
                                 string="here"
                                 type="object"
                                 name="action_create_foreign_taxes"
                                 class="oe_link"
-                                style="padding: 0; vertical-align: baseline;"/>
+                            />
                             to create the taxes for this country.
                         </div>
                     </div>
