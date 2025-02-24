@@ -277,13 +277,15 @@ export class Rtc extends Record {
             sendCamera: false,
             sendScreen: false,
             updateAndBroadcastDebounce: undefined,
+            micAudioTrack: undefined,
+            screenAudioTrack: undefined,
             audioTrack: undefined,
             cameraTrack: undefined,
             screenTrack: undefined,
             /**
              * callback to properly end the audio monitoring.
              * If set it indicates that we are currently monitoring the local
-             * audioTrack for the voice activation feature.
+             * micAudioTrack for the voice activation feature.
              */
             disconnectAudioMonitor: undefined,
             pttReleaseTimeout: undefined,
@@ -548,7 +550,7 @@ export class Rtc extends Record {
     }
 
     async unmute() {
-        if (this.state.audioTrack) {
+        if (this.state.micAudioTrack) {
             await this.setMute(false);
         } else {
             await this.resetAudioTrack({ force: true });
@@ -1038,8 +1040,11 @@ export class Rtc extends Record {
         browser.clearTimeout(this.sfuTimeout);
         this.sfuClient = undefined;
         this.network = undefined;
+        this.audioContext?.close();
         this.state.updateAndBroadcastDebounce?.cancel();
         this.state.disconnectAudioMonitor?.();
+        this.state.micAudioTrack?.stop();
+        this.state.screenAudioTrack?.stop();
         this.state.audioTrack?.stop();
         this.state.cameraTrack?.stop();
         this.state.screenTrack?.stop();
@@ -1062,6 +1067,8 @@ export class Rtc extends Record {
             disconnectAudioMonitor: undefined,
             cameraTrack: undefined,
             screenTrack: undefined,
+            screenAudioTrack: undefined,
+            micAudioTrack: undefined,
             audioTrack: undefined,
             sendCamera: false,
             sendScreen: false,
@@ -1194,14 +1201,14 @@ export class Rtc extends Record {
     }
 
     /**
-     * Sets the enabled property of the local audio track based on the
+     * Sets the enabled property of the local microphone audio track based on the
      * current session state. And notifies peers of the new audio state.
      */
     async refreshAudioStatus() {
-        if (!this.state.audioTrack) {
+        if (!this.state.micAudioTrack) {
             return;
         }
-        this.state.audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
+        this.state.micAudioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
         this.network?.updateInfo(this.formatInfo());
     }
 
@@ -1256,6 +1263,7 @@ export class Rtc extends Record {
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getDisplayMedia({
                         video: SCREEN_CONFIG,
+                        audio: true,
                     });
                 }
                 this.soundEffectsService.play("screen-sharing");
@@ -1270,6 +1278,7 @@ export class Rtc extends Record {
             return;
         }
         let outputTrack = sourceStream ? sourceStream.getVideoTracks()[0] : undefined;
+        const screenAudioTrack = sourceStream ? sourceStream.getAudioTracks()[0] : undefined;
         if (outputTrack) {
             outputTrack.addEventListener("ended", async () => {
                 await this.toggleVideo(type, false);
@@ -1305,18 +1314,48 @@ export class Rtc extends Record {
                 Object.assign(this.state, {
                     sourceScreenStream: sourceStream,
                     screenTrack: outputTrack,
+                    screenAudioTrack: screenAudioTrack,
                     sendScreen: Boolean(outputTrack),
                 });
                 break;
             }
         }
+        if (this.state.screenAudioTrack) {
+            this.updateAudioTrack();
+        }
+    }
+
+    async updateAudioTrack() {
+        const { micAudioTrack, screenAudioTrack } = this.state;
+        if (!micAudioTrack && !screenAudioTrack) {
+            return;
+        }
+        if (micAudioTrack && screenAudioTrack) {
+            await this.audioContext?.close();
+            this.audioContext = new AudioContext();
+            const micSource = this.audioContext.createMediaStreamSource(
+                new MediaStream([micAudioTrack])
+            );
+            const screenSource = this.audioContext.createMediaStreamSource(
+                new MediaStream([screenAudioTrack])
+            );
+            const destination = this.audioContext.createMediaStreamDestination();
+            micSource.connect(destination);
+            screenSource.connect(destination);
+            this.state.audioTrack = destination.stream.getAudioTracks()[0];
+        } else {
+            this.state.audioTrack = micAudioTrack ?? screenAudioTrack;
+        }
+        await this.network?.updateUpload("audio", this.state.audioTrack);
     }
 
     async resetAudioTrack({ force = false }) {
-        if (this.state.audioTrack) {
-            this.state.audioTrack.stop();
-            this.state.audioTrack = undefined;
-        }
+        this.state.micAudioTrack?.stop();
+        this.state.micAudioTrack = undefined;
+        this.state.screenAudioTrack?.stop();
+        this.state.screenAudioTrack = undefined;
+        this.state.audioTrack?.stop();
+        this.state.audioTrack = undefined;
         if (!this.state.channel) {
             return;
         }
@@ -1324,12 +1363,12 @@ export class Rtc extends Record {
             this.setMute(true);
         }
         if (force) {
-            let audioTrack;
+            let micAudioTrack;
             try {
                 const audioStream = await browser.navigator.mediaDevices.getUserMedia({
                     audio: this.store.settings.audioConstraints,
                 });
-                audioTrack = audioStream.getAudioTracks()[0];
+                micAudioTrack = audioStream.getAudioTracks()[0];
                 if (this.selfSession) {
                     this.setMute(false);
                 }
@@ -1345,18 +1384,18 @@ export class Rtc extends Record {
             if (!this.selfSession) {
                 // The getUserMedia promise could resolve when the call is ended
                 // in which case the track is no longer relevant.
-                audioTrack.stop();
+                micAudioTrack.stop();
                 return;
             }
-            audioTrack.addEventListener("ended", async () => {
+            micAudioTrack.addEventListener("ended", async () => {
                 // this mostly happens when the user retracts microphone permission.
                 await this.resetAudioTrack({ force: false });
                 this.setMute(true);
             });
-            audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
-            this.state.audioTrack = audioTrack;
+            micAudioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
+            this.state.micAudioTrack = micAudioTrack;
             this.linkVoiceActivationDebounce();
-            await this.network?.updateUpload("audio", this.state.audioTrack);
+            this.updateAudioTrack();
         }
     }
 
@@ -1369,13 +1408,17 @@ export class Rtc extends Record {
         if (!this.selfSession) {
             return;
         }
-        if (this.store.settings.use_push_to_talk || !this.state.channel || !this.state.audioTrack) {
+        if (
+            this.store.settings.use_push_to_talk ||
+            !this.state.channel ||
+            !this.state.micAudioTrack
+        ) {
             this.selfSession.isTalking = false;
             await this.refreshAudioStatus();
             return;
         }
         try {
-            this.state.disconnectAudioMonitor = await monitorAudio(this.state.audioTrack, {
+            this.state.disconnectAudioMonitor = await monitorAudio(this.state.micAudioTrack, {
                 onThreshold: async (isAboveThreshold) => {
                     this.setTalking(isAboveThreshold);
                 },
