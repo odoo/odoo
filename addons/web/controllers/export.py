@@ -378,7 +378,9 @@ class Export(http.Controller):
 
         fields['id']['string'] = request.env._('External ID')
 
-        if parent_field:
+        if not Model._is_an_ordinary_table():
+            fields.pop("id", None)
+        elif parent_field:
             parent_field['string'] = request.env._('External ID')
             fields['id'] = parent_field
 
