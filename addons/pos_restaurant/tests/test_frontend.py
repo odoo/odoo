@@ -494,3 +494,7 @@ class TestFrontend(TestFrontendCommon):
         line_2 = self.env['pos.order.line'].search([('full_product_name', '=', 'product_2')])
         self.assertEqual(line_1.tax_ids, self.tax_sale_a)
         self.assertEqual(line_2.tax_ids, self.tax_sale_a)
+
+    def test_15_pos_refund_qty(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('RefundQtyTour')
