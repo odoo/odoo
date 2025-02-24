@@ -1403,6 +1403,11 @@ class Response(werkzeug.wrappers.Response):
             mentioned type.
         """
         if isinstance(result, Response):
+            if HTTPException_ := werkzeug_default_exceptions.get(result.status_code):
+                warnings.warn(
+                    f"{fname} returns Response(status={result.status_code}) "
+                    f"instead of raising {HTTPException_}")
+                raise HTTPException_(response=result)
             return result
 
         if isinstance(result, werkzeug.exceptions.HTTPException):
