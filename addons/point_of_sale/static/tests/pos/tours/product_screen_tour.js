@@ -490,6 +490,7 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             ProductScreen.productIsDisplayed("Test Product 2"),
         ].flat(),
 });
+<<<<<<< saas-18.1:addons/point_of_sale/static/tests/pos/tours/product_screen_tour.js
 registry.category("web_tour.tours").add("SortOrderlinesByCategories", {
     steps: () =>
         [
@@ -534,5 +535,44 @@ registry.category("web_tour.tours").add("test_pricelist_multi_items_different_qt
             ProductScreen.clickDisplayedProduct("tpmcapi product"),
             ProductScreen.clickPayButton(),
             PaymentScreen.totalIs("30"),
+||||||| 40b819ded20f769b0a63b73abfefebbdaca390df:addons/point_of_sale/static/tests/tours/product_screen_tour.js
+=======
+
+registry.category("web_tour.tours").add("ProductCardUoMPrecision", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
+            ProductConfiguratorPopup.pickRadio("Leather"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("."),
+                Numpad.click("1"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "0.1",
+                }),
+            ]),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
+            ProductConfiguratorPopup.pickRadio("wool"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("."),
+                Numpad.click("7"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "0.7",
+                }),
+            ]),
+            ProductScreen.productCardQtyIs("Configurable Chair", "0.8"),
+            {
+                content:
+                    "Check the cart button if it shows the quantity in correct format/precision",
+                isActive: ["mobile"],
+                trigger: ".review-button:contains('0.8')",
+            },
+>>>>>>> 0507f1568463f0902b9ee320f685f72a62d81759:addons/point_of_sale/static/tests/tours/product_screen_tour.js
         ].flat(),
 });
