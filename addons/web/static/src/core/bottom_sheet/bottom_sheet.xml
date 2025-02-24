@@ -5,17 +5,13 @@
             t-att-id="id"
             t-att-class="{ o_inactive_bottom_sheet: !data.isActive, o_bottom_sheet_ready: this.state.isPositionedReady }"
             t-ref="bottomSheetRootRef"
-            t-on-scroll="onScrollDebounced"
+            t-on-scroll="onScroll"
             >
             <div class="o_bottom_sheet_backdrop" t-on-click="dismiss"/>
             <div class="o_bottom_sheet_dismiss"/>
             <div class="o_bottom_sheet_spacer"/>
 
-            <div
-                t-attf-class="o_bottom_sheet_sheet offcanvas position-relative {{ props.sheetClasses }}"
-            >
-                <!-- tabindex="-1" -->
-                <!-- t-ref="autofocus" -->
+            <div t-attf-class="o_bottom_sheet_sheet offcanvas position-relative {{ props.sheetClasses }}">
                 <div class="o_bottom_sheet_handle text-center d-flex align-items-center justify-content-center py-1">
                     <div class="o_bottom_sheet_handle_bar pt-1 mx-auto rounded-pill d-inline-block px-4 opacity-25"/>
                 </div>
@@ -48,7 +44,7 @@
                     class="offcanvas-body"
                     t-attf-class="{{ props.bodyClass }} {{ !props.withBodyPadding ? 'p-0': '' }}"
                     >
-                    <t t-slot="default" close="() => this.data.close()" />
+                    <t t-slot="default" close="() => this.data.close()"/>
                 </div>
 
                 <t t-if="props.footer">

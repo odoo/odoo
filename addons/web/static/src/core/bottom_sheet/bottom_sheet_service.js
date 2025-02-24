@@ -23,14 +23,14 @@ export const bottomSheetService = {
 
         const add = (bottomSheetClass, props, options = {}) => {
             const id = nextId++;
-            const closeFn = () => close(id);
+            const closeFn = () => remove(id);
             
             deactivate();
             
             const subEnv = reactive({
                 id,
-                close: closeFn,
-                dismiss: closeFn,
+                close: closeFn,  // Used when clicking buttons/backdrop
+                dismiss: closeFn, // Used when pull-to-dismiss reaches threshold
                 isActive: true,
             });
 
@@ -64,20 +64,14 @@ export const bottomSheetService = {
             return closeFn;
         };
 
-        function close(id) {
+        function remove(id) {
             if (sheets[id]) {
                 const sheet = sheets[id];
                 sheet.remove();
             }
         }
 
-        function closeAll() {
-            for (const id in sheets) {
-                close(id);
-            }
-        }
-
-        return { add, closeAll };
+        return { add };
     },
 };
 

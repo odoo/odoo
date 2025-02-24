@@ -1,7 +1,7 @@
 import { Component, useChildSubEnv, useState, useExternalListener, onMounted } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { useActiveElement } from "../ui/ui_service";
-import { useThrottleForAnimation, useDebounced } from "@web/core/utils/timing";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 /**
  * BottomSheet
@@ -89,7 +89,7 @@ export class BottomSheet extends Component {
             useExternalListener(window.visualViewport, "resize", this.viewportResizeHandler);
         }
 
-        this.onScrollDebounced = useThrottleForAnimation(this._onScroll);
+        this.onScroll = useThrottleForAnimation(this._onScroll);
 
         onMounted(() => {
             this._computeDimensions();
@@ -208,33 +208,25 @@ export class BottomSheet extends Component {
     }
 
     /**
-     * Dismiss the bottom sheet
+     * Trigger smooth scroll to dismiss point
      */
     dismiss() {
-        this.bottomSheetRootRef.el.scroll({ top: 0, behavior: "smooth" });
+       this.bottomSheetRootRef.el.scroll({ top: 0, behavior: "smooth" });
     }
 
     /**
      * Remove the bottom sheet
      */
     async remove() {
-        // Set progress null to indicate removal is underway
         this._setProgress(null);
-    
-        // Call dismiss handlers
-        try {
-            if (this.data.close) {
-                await this.data.close();
-            }
-            if (this.data.dismiss) {
-                await this.data.dismiss();
-            }
-        } catch (error) {
-            console.error("Error during bottom sheet dismiss:", error);
-            // Still try to remove the sheet even if handlers fail
-            if (this.props.close) {
-                this.props.close();
-            }
+
+        if (this.data.close) {
+            await this.data.close();
+            return;
+        }
+        if (this.data.dismiss) {
+            await this.data.dismiss();
+            return;
         }
     }
 

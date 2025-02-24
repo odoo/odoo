@@ -505,7 +505,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
     const targets = [];
     const state = useState({ isOpen: false });
     const ui = useService("ui");
-    const dialog = useService("dialog");
+    const bottomSheet = useService("bottomSheet");
     let remove;
     const newOptions = {
         ...options,
@@ -571,10 +571,11 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     app.destroy();
                 };
             } else {
-                remove = dialog.add(PickerMobileInDialog, pickerMobileProps, {
+                remove = bottomSheet.add(PickerMobileInDialog, pickerMobileProps, {
                     context: component,
                     onClose: () => {
                         state.isOpen = false;
+                        props.onClose?.();
                         return def.resolve(false);
                     },
                 });
@@ -650,7 +651,12 @@ class PickerMobileInDialog extends PickerMobile {
     static components = { BottomSheet };
     static props = [...PICKER_PROPS, "onClose?"];
     static template = xml`
-        <BottomSheet showBackBtn="true" visibleInitialMax="70" forceExtendedFullHeight="true">
+        <BottomSheet
+            showBackBtn="true"
+            visibleInitialMax="70"
+            forceExtendedFullHeight="true"
+            close="() => this.props.close?.()"
+        >
             <div class="h-100" t-ref="root">
                 <t t-component="props.PickerComponent" t-props="pickerProps"/>
             </div>
@@ -660,16 +666,11 @@ class PickerMobileInDialog extends PickerMobile {
     setup() {
         super.setup();
         this.root = useRef("root");
-        useExternalListener(
-            window,
-            "click",
-            (ev) => {
-                if (ev.target !== this.root.el && !this.root.el.contains(ev.target)) {
-                    this.props.close?.();
-                }
-            },
-            { capture: true }
-        );
+        useExternalListener(window, "click", (ev) => {
+            if (ev.target !== this.root.el && !this.root.el.contains(ev.target)) {
+                this.props.close?.();
+            }
+        }, { capture: true });
     }
 }
 
