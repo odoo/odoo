@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.BillScreen">
         <Dialog title.translate="Bill Printing" bodyClass="'text-center'">
-            <div class="d-inline-block m-3 p-3 border rounded bg-view">
+            <div class="d-inline-block m-3 p-3 border rounded bg-view pos-receipt-container">
                 <OrderReceipt order="pos.getOrder()" />
             </div>
             <t t-set-slot="footer">
