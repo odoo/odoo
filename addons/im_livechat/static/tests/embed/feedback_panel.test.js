@@ -51,7 +51,7 @@ test("Close without feedback", async () => {
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await contains(".o-mail-Thread:not([data-transient])");
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
     await click("button", { text: "Close" });
@@ -101,7 +101,7 @@ test("Feedback with rating and comment", async () => {
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await contains(".o-mail-Thread:not([data-transient])");
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
     await waitForSteps(["/im_livechat/visitor_leave_session"]);
@@ -120,7 +120,7 @@ test("Closing folded chat window should open it with feedback", async () => {
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await contains(".o-mail-Thread:not([data-transient])");
     await click("[title='Fold']");
     await click(".o-mail-ChatBubble");
     await click("[title*='Close Chat Window']");
@@ -138,7 +138,7 @@ test("Start new session from feedback panel", async () => {
     await contains(".o-mail-ChatWindow", { text: "Mitchell Admin" });
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await contains(".o-mail-Thread:not([data-transient])");
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
     pyEnv["im_livechat.channel"].write([channelId], {

@@ -4,6 +4,8 @@ import "@mail/discuss/core/common/thread_model_patch";
 
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
+import { Deferred } from "@web/core/utils/concurrency";
+import { prettifyMessageContent } from "@mail/utils/common/format";
 
 /** @type {typeof Thread} */
 const threadStaticPatch = {
@@ -42,6 +44,14 @@ patch(Thread.prototype, {
                 }
             },
         });
+        /**
+         * Deferred that resolves once a newly persisted thread is ready to swap
+         * with its temporary counterpart (i.e. when the actions following the
+         * persist call are done to avoid flickering).
+         *
+         * @type {Deferred}
+         */
+        this.readyToSwapDeferred = new Deferred();
         this.chatbot = Record.one("Chatbot");
         this.livechat_active;
         this._startChatbot = Record.attr(false, {
@@ -87,13 +97,34 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
     },
     /** @returns {Promise<import("models").Message} */
-    async post() {
+    async post(body, postData, extraData = {}) {
         if (this.channel_type === "livechat" && this.isTransient) {
+            // For smoother transition: post the temporary message and set the
+            // selected chat bot answer if any. Then, simulate the chat bot is
+            // typing (2 ** 31 - 1 is the greatest value supported by
+            // `setTimeout`).
+            if (this.chatbot && extraData.selected_answer_id) {
+                this.chatbot.currentStep.selectedAnswer = this.store["chatbot.script.answer"].get(
+                    extraData.selected_answer_id
+                );
+            }
+            const temporaryMsg = this.store["mail.message"].insert({
+                author: this.store.self,
+                body: await prettifyMessageContent(body, [], { allowEmojiLoading: false }),
+                id: this.store.getNextTemporaryId(),
+                model: "discuss.channel",
+                res_id: this.id,
+                thread: this,
+            });
+            this.messages.push(temporaryMsg);
+            this?.chatbot?._simulateTyping(2 ** 31 - 1);
             const thread = await this.store.env.services["im_livechat.livechat"].persist();
+            temporaryMsg.author = this.store.self; // Might have been created after persist.
             if (!thread) {
                 return;
             }
-            return thread.post(...arguments);
+            await thread.isLoadedDeferred;
+            return thread.post(...arguments).then(() => thread.readyToSwapDeferred.resolve());
         }
         const message = await super.post(...arguments);
         this.store.env.services["im_livechat.chatbot"].bus.trigger("MESSAGE_POST", message);
@@ -127,7 +158,7 @@ patch(Thread.prototype, {
         }
         if (
             this.chatbot.currentStep?.type === "question_selection" &&
-            !this.chatbot.currentStep.completed
+            !this.chatbot.currentStep.selectedAnswer
         ) {
             return _t("Select an option above");
         }

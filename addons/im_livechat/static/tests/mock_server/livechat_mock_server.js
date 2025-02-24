@@ -75,7 +75,6 @@ async function get_session(request) {
                 makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
             ),
             name: channelVals["name"],
-            open_chat_window: true,
             scrollUnread: false,
             state: "open",
         });
@@ -94,7 +93,6 @@ async function get_session(request) {
     store.add(DiscussChannel.browse(channelId));
     store.add(DiscussChannel.browse(channelId), {
         isLoaded: true,
-        open_chat_window: true,
         scrollUnread: false,
     });
     return store.get_result();

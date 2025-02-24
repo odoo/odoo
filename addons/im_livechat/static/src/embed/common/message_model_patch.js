@@ -4,6 +4,10 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Message} */
 const messagePatch = {
+    setup() {
+        super.setup(...arguments);
+        this.disableChatbotAnswers = false;
+    },
     canAddReaction(thread) {
         return (
             super.canAddReaction(thread) &&

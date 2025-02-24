@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_continue_tour"
             trigger: messagesContain("Hello, what can I do for you?"),
         },
         {
-            trigger: ".o-livechat-root:shadow li:contains(No, thank you for your time.)",
+            trigger: ".o-livechat-root:shadow button:contains(No, thank you for your time.)",
             run: "click",
         },
         {
