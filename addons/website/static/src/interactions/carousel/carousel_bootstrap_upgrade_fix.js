@@ -61,7 +61,7 @@ export class CarouselBootstrapUpgradeFix extends Interaction {
             // Wait for carousel to finish sliding.
             if (this.el.classList.contains("o_carousel_sliding")) {
                 await new Promise(resolve => {
-                    this.el.addEventListener("slid.bs.carousel", () => resolve(), { once: true });
+                    this.addListener(this.el, "slid.bs.carousel", () => resolve(), { once: true });
                 });
             }
             window.Carousel.getInstance(this.el)?.dispose();
