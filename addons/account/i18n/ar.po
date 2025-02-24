@@ -141,6 +141,7 @@ msgstr "%s (نسخة)"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
@@ -3591,7 +3592,7 @@ msgstr "لا يمكن إنشاء مستند مبيعات في دفتر يومي�
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
-msgstr ""
+msgstr "لا يمكن إنشاء قيد استحقاق بأوامر ذات عملات مختلفة. "
 
 #. module: account
 #. odoo-python
@@ -5703,6 +5704,13 @@ msgstr "أيام الخصم "
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_amount_currency
 msgid "Discount amount in Currency"
 msgstr "مبلغ الخصم بالعملة "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Discount of %(amount)s if paid %(when)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -9665,7 +9673,7 @@ msgstr "تنقل بسهولة عبر التقارير واقرأ ما بين ا�
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "Nearest"
-msgstr ""
+msgstr "الأقرب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -12853,7 +12861,7 @@ msgstr "حدد سعراً "
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
-msgstr ""
+msgstr "قم بتعيين قيمة أكبر من 0.0 لتفعيل التحقق من حد الائتمان "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13873,6 +13881,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
+"يجب ألا يتم تحديد قالب المخطط %sمباشرة. عوضاً عن ذلك، عليك تحديد قالب المخطط"
+" المتعلق بدولتك مباشرةً. "
 
 #. module: account
 #. odoo-python
@@ -15611,6 +15621,10 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"تشغيل التنبيهات عند إنشاء الفواتير وأوامر المبيعات للشركاء الذين يتجاوز "
+"إجمالي المبالغ المستحقة القبض حداً معيناً."
+"                                      قم بتعيين قيمة أكبر من 0.0 لتفعيل "
+"التحقق من حد الائتمان "
 
 #. module: account
 #. odoo-python
@@ -17732,6 +17746,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
 msgstr "مع فاتورة بصيغة PDF كمرفق. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "within %(days)s days"
+msgstr ""
 
 #. module: account
 #. odoo-python
