@@ -18,7 +18,7 @@ describe("button style", () => {
             unformat(`
                 <div contenteditable="false" data-embedded="clipboard">
                     <span class="o_embedded_toolbar">
-                        <button class="btn btn-link">I am a button</button>
+                        <button class="btn">I am a button</button>
                     </span>
                 </div>
             `)
