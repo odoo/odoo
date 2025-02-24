@@ -84,7 +84,10 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             const box = info.el.querySelector(`.fc-daygrid-day-top`);
             if (!box)
                 return;
-            const content = renderToString(this.constructor.ButtonWorklocationTemplate, this.headerTemplateProps(info.date));
+            const content = renderToString(this.constructor.ButtonWorklocationTemplate, {
+                ...this.headerTemplateProps(info.date),
+                isResourceBasedApppointment: this.props.model.isResourceBasedApppointment,
+            });
             box.insertAdjacentHTML("beforeend", content);
         }
     },
