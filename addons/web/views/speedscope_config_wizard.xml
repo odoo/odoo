@@ -54,7 +54,7 @@
                             <label class="form-check-label" for="sql_density_profile">SQL density</label>
                         </div>
                         <div class="form-check" t-if="any(profile.traces_async for profile in profiles)">
-                            <input type="checkbox" class="form-check-input" id="frames_profile" name="frames_profile" value="True"/>
+                            <input type="checkbox" class="form-check-input" id="frames_profile" name="frames_profile" value="True" t-att-checked="not any(profile.sql for profile in profiles)"/>
                             <label class="form-check-label" for="frames_profile">Frames</label>
                         </div>
 
