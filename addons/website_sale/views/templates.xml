@@ -582,6 +582,7 @@
                                                 <t t-set="col_height" t-value="td_product['y']"/>
                                                 <t t-set="col_width"
                                                    t-value="12 // ppr * td_product['x']"/>
+                                                <t t-set="col_class" t-valuef="g-col-6"/>
                                                 <t t-set="col_class_lg"
                                                    t-value="'g-col-lg-' + str(col_width)"/>
                                                 <t t-set="col_class_md"
@@ -591,7 +592,7 @@
                                                 <t t-set="col_is_custom_portrait"
                                                    t-value="not col_is_stretched and (col_height &gt; td_product['x'])"/>
                                                 <div
-                                                    t-attf-class="oe_product {{col_is_custom_portrait and 'oe_product_custom_portrait'}} g-col-6 {{col_class_md}} {{col_class_lg}} {{col_is_stretched and 'oe_product_size_stretch'}}"
+                                                    t-attf-class="oe_product {{col_is_custom_portrait and 'oe_product_custom_portrait'}} {{col_class}} {{col_class_md}} {{col_class_lg}} {{col_is_stretched and 'oe_product_size_stretch'}}"
                                                     t-attf-style="--o-wsale-products-grid-product-col-height: {{col_height}};"
                                                     t-att-data-ribbon-id="td_product['ribbon'].id"
                                                     t-att-data-colspan="td_product['x'] != 1 and td_product['x']"
@@ -665,6 +666,18 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <!-- (Option) Mobile: Show 1 product for row -->
+    <template
+        id="website_sale.products_mobile_cols_single"
+        active="False"
+        name="Mobile: Show 1 product for row"
+        inherit_id="website_sale.products"
+    >
+        <xpath expr="//t[@t-set='col_class']" position="attributes">
+            <attribute name="t-valuef">g-col-12</attribute>
+        </xpath>
     </template>
 
     <!-- (Option) Products: Enable "Card" or "Thumbnails" designs -->
