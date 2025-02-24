@@ -269,6 +269,7 @@ class TestMenuHttp(common.HttpCase):
             'url': self.page_url,
             'website_id': 1,
         })
+        self.headers = {"Content-Type": "application/json"}
 
     def simulate_rpc_save_menu(self, data, to_delete=None):
         self.authenticate("admin", "admin")
@@ -324,6 +325,7 @@ class TestMenuHttp(common.HttpCase):
 
     def test_03_mega_menu_translate(self):
         # Setup
+        self.authenticate('admin', 'admin')
         fr = self.env['res.lang']._activate_lang('fr_FR')
         Menu = self.env['website.menu']
         website = self.env['website'].browse(1)
@@ -344,7 +346,13 @@ class TestMenuHttp(common.HttpCase):
         root = html.fromstring(menu.mega_menu_content)
         to_translate = root.text_content()
         sha = sha256(to_translate.encode()).hexdigest()
-        menu.web_update_field_translations('mega_menu_content', {fr.code: {sha: 'french_mega_menu_content'}})
+        payload = self.build_rpc_payload({
+            'model': menu._name,
+            'record_id': menu.id,
+            'field_name': 'mega_menu_content',
+            'translations': {fr.code: {sha: 'french_mega_menu_content'}},
+        })
+        self.url_open('/web_editor/field/translation/update', data=json.dumps(payload), headers=self.headers)
         self.assertIn("french_mega_menu_content",
                       menu.with_context(lang=fr.code, website_id=website.id).mega_menu_content)
 
