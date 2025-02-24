@@ -5,15 +5,19 @@
     <div class="o-mail-ChatWindow"
         t-att-style="style"
         t-att-class="{
-                'w-100 h-100 o-mobile': ui.isSmall,
+                'o-mobile': ui.isSmall,
+                'w-100 h-100': ui.isSmall and !isMobileFoldedForLivechatVisitor,
                 'o-folded': props.chatWindow.folded or props.chatWindow.hidden,
-                'position-fixed bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
+                'position-fixed d-flex flex-column': !props.chatWindow.hidden,
+                'overflow-hidden bottom-0': !props.chatWindow.hidden and !isMobileFoldedForLivechatVisitor,
                 'rounded-top-3': !props.chatWindow.hidden and !ui.isSmall,
+                'o-isMobileFoldedForLivechatVisitor': isMobileFoldedForLivechatVisitor,
+                'o-moveUp': isMobileFoldedForLivechatVisitor and state.moveUp,
                 }"
         t-on-keydown="onKeydown"
         tabindex="1"
     >
-        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'border-bottom': !props.chatWindow.folded }">
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'border-bottom': !props.chatWindow.folded, 'position-relative rounded-circle': isMobileFoldedForLivechatVisitor }">
             <t t-if="threadActions.actions.length > 3">
                 <Dropdown position="'bottom-start'" onStateChanged="state => this.onActionsMenuStateChanged(state)" togglerClass="`o-mail-ChatWindow-command d-flex btn align-items-center text-truncate p-0 p-1 ${ !ui.isSmall ? 'ms-2' : '' } ${state.actionsMenuOpened ? 'o-active' : ''}`" menuClass="'d-flex flex-column py-0'" class="'d-flex text-truncate'" disabled="state.editingName" title="actionsMenuTitleText">
                     <t t-set-slot="toggler">
@@ -38,18 +42,20 @@
                 <t t-call="mail.ChatWindow.headerContent"/>
             </t>
             <div class="flex-grow-1"/>
-            <div t-if="thread and thread.needactionCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
+            <div t-if="thread and thread.needactionCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter" t-att-class="{
+                'position-absolute': isMobileFoldedForLivechatVisitor,
+            }" t-att-style="isMobileFoldedForLivechatVisitor ? 'top: -5px; right: -10px;' : ''">
                 <t t-out="thread.needactionCounter"/>
             </div>
-            <t t-if="threadActions.actions.length > 1" t-call="mail.ChatWindow.dropdownAction">
+            <t t-if="threadActions.actions.length > 1 and !isMobileFoldedForLivechatVisitor" t-call="mail.ChatWindow.dropdownAction">
                 <t t-set="action" t-value="threadActions.actions[0]"/>
             </t>
-            <t t-if="!ui.isSmall and threadActions.actions.length > 2">
+            <t t-if="!ui.isSmall and threadActions.actions.length > 2 and !isMobileFoldedForLivechatVisitor">
                 <t t-call="mail.ChatWindow.dropdownAction">
                     <t t-set="action" t-value="threadActions.actions.at(-2)"/>
                 </t>
             </t>
-            <t t-call="mail.ChatWindow.dropdownAction">
+            <t t-if="!isMobileFoldedForLivechatVisitor" t-call="mail.ChatWindow.dropdownAction">
                 <t t-set="action" t-value="threadActions.actions.at(-1)"/>
                 <t t-set="itemClass" t-value="'me-1'"/>
             </t>
@@ -78,10 +84,14 @@
 </t>
 
 <t t-name="mail.ChatWindow.headerContent">
-    <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-attf-class="{{ threadActions.actions.length > 4 ? 'ms-1' : 'ms-3' }} me-1">
-        <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
+    <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-att-class="{
+        'ms-1': threadActions.actions.length > 4 and !isMobileFoldedForLivechatVisitor,
+        'ms-3': threadActions.actions.length lte 4 and !isMobileFoldedForLivechatVisitor,
+        'me-1': !isMobileFoldedForLivechatVisitor,
+    }">
+        <img t-att-class="{ 'o-isMobileFoldedForLivechatVisitor rounded-circle': isMobileFoldedForLivechatVisitor, 'rounded': !isMobileFoldedForLivechatVisitor }" t-att-src="thread.imgUrl" alt="Thread Image"/>
     </div>
     <ThreadIcon t-if="thread and thread.type === 'chat' and thread.chatPartner" thread="thread"/>
-    <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="thread ? 'ms-1' : 'ms-3'"/>
+    <div t-if="!state.editingName and !isMobileFoldedForLivechatVisitor" class="text-truncate fw-bold border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="thread ? 'ms-1' : 'ms-3'"/>
 </t>
 </templates>
