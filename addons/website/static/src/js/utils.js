@@ -47,10 +47,10 @@ function loadAnchors(url, body) {
  *
  * @param {HTMLInputElement} input
  */
-function autocompleteWithPages(input, options= {}) {
+function autocompleteWithPages(input, options= {}, env = undefined) {
     const owlApp = new App(UrlAutoComplete, {
-        env: Component.env,
-        dev: Component.env.debug,
+        env: env || Component.env,
+        dev: env ? env.debug : Component.env.debug,
         getTemplate,
         props: {
             options,
