@@ -1,6 +1,14 @@
 .o-mail-ChatWindow {
     height: 480px;
     width: $o-mail-ChatWindow-width;
+    &.o-isMobileFoldedForLivechatVisitor {
+        width: $o-mail-Discuss-headerHeight;
+        bottom: 10px;
+
+        &.o-moveUp {
+            bottom: 40px;
+        }
+    }
     z-index: 999; // messaging menu is dropdown (1000)
     &.o-mobile {
         z-index: 1001; // above messaging menu (chat window takes whole screen)
@@ -35,6 +43,11 @@
     .o-mail-ChatWindow-threadAvatar img {
         height: 28px;
         width: 28px;
+
+        &.o-isMobileFoldedForLivechatVisitor {
+            height: $o-mail-Discuss-headerHeight;
+            width: $o-mail-Discuss-headerHeight;
+        }
     }
 }
 
