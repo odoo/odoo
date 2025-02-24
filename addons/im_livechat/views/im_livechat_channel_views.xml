@@ -149,16 +149,25 @@
                                     Save your Channel to get your configuration widget.
                                 </div>
                                 <div invisible="not web_page">
-                                    <separator string="How to use the Website Live Chat widget?"/>
                                     <p>
-                                        Copy and paste this code into your website, within the &lt;head&gt; tag:
+                                        Learn how to display a live chat bubble on your website and start chatting with visitors in a few easy steps.
                                     </p>
-                                    <field name="script_external" readonly="1" widget="CopyClipboardChar"/>
+                                    <separator string="FOR WEBSITES BUILT WITH ODOO" />
+                                    <ol>
+                                        <li>Go to <strong>Website</strong> > <strong>Configuration</strong> > <strong>Settings</strong> > <strong>Email</strong> &amp; <strong>Marketing.</strong></li>
+                                        <li>Turn on the <strong>Live Chat</strong> feature.</li>
+                                        <li>Choose the live chat channel you want to display on your website.</li>
+                                    </ol>
+                                    <separator string="FOR OTHER WEBSITES" />
                                     <p>
-                                        or copy this url and send it by email to your customers or suppliers:
+                                        Add the following code to the &lt;head&gt; section of your website:
                                     </p>
-                                    <field name="web_page" readonly="1" widget="CopyClipboardChar"/>
-                                    <p>For websites built with the Odoo CMS, go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add to your website.</p>
+                                    <field class="text-muted" name="script_external" readonly="1" widget="CopyClipboardChar"/>
+                                    <br/><br/>
+                                    <p>
+                                        Alternatively, share this URL with your customers or suppliers via email:
+                                    </p>
+                                    <field class="text-muted" name="web_page" readonly="1" widget="CopyClipboardChar"/>
                                 </div>
                             </page>
                         </notebook>
