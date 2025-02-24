@@ -130,7 +130,7 @@ test("compile a button with disabled", async () => {
     Partner._views = {
         form: /*xml*/ `
             <form>
-                <button string="ActionButton" class="demo" name="action_button" type="object" disabled="disabled"/>
+                <button id="action_button" string="ActionButton" name="action_button" type="object" disabled="disabled"/>
             </form>
         `,
     };
@@ -140,5 +140,5 @@ test("compile a button with disabled", async () => {
         type: "form",
         resId: 1,
     });
-    expect(`button[disabled='disabled']`).toHaveCount(1);
+    expect(`button[id=action_button]`).toHaveAttribute("disabled")
 });
