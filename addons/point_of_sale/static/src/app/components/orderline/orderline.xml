@@ -30,8 +30,42 @@
                 <ul class="info-list d-flex flex-column">
                     <li class="price-per-unit">
                         <t t-set="discount" t-value="line.getDiscountStr()" />
-                        <t t-if="!props.basic_receipt and line.price_unit !== 0 and discount and discount !== '0'">
-                            <i class="fa fa-tag pe-1"/><t t-esc="line.allPrices.priceWithTaxBeforeDiscount"/> With a <em><t t-esc="discount" />% </em> discount
+                        <t t-if="!line.combo_parent_id">
+                            <t t-if="!props.basic_receipt">
+                                <t t-if="line.price_unit !== 0 and !line.isPartOfCombo()">
+                                    <t t-esc="formatCurrency(line.getUnitDisplayBasePrice())" />
+                                    <t t-if="line.getUnit()">
+                                        / <t t-esc="line.getUnit().name" />
+                                    </t>
+                                    <t t-if="discount and discount !== '0'">
+                                        <br/>
+                                        <i class="fa fa-tag pe-1"/><t t-esc="formatCurrency(line.getUnitDisplayPriceBeforeDiscount())" /> With a <em><t t-esc="discount" />% </em> discount
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="discount" t-value="line.getComboDiscount()" />
+                                    <t t-esc="formatCurrency(line.getComboTotalDisplayPrice())" />
+                                    <t t-if="line.getUnit()">
+                                        / <t t-esc="line.getUnit().name" />
+                                    </t>
+                                    <t t-if="discount and discount !== '0'">
+                                        <br/>
+                                        <i class="fa fa-tag pe-1"/>
+                                        <t t-esc="formatCurrency(line.getComboTotalPriceBeforeDiscount())" />
+                                         With a <em><t t-esc="discount" />% </em> discount
+                                    </t>
+                                </t>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-if="discount and discount !== '0'">
+                                <i class="fa fa-tag pe-1"/>
+                                <t t-esc="formatCurrency(line.getUnitDisplayPriceBeforeDiscount())" />
+                                <t t-if="line.getUnit()">
+                                    / <t t-esc="line.getUnit().name" />
+                                </t>
+                                 With a <em><t t-esc="discount" />% </em> discount
+                            </t>
                         </t>
                     </li>
                     <li t-if="line.customer_note" class="customer-note w-100 rounded text-break bg-opacity-25" t-att-class="{'text-bg-warning p-2 mt-2': this.props.mode === 'display'}">

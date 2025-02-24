@@ -434,6 +434,16 @@ export class PosOrderline extends Base {
             return this.allUnitPrices.priceWithoutTaxBeforeDiscount;
         }
     }
+
+    getUnitDisplayBasePrice() {
+        const rounding = this.currency.rounding;
+
+        return roundPrecision(
+            this.getUnitDisplayPriceBeforeDiscount() * (1 - this.getDiscount() / 100),
+            rounding
+        );
+    }
+
     getBasePrice() {
         const rounding = this.currency.rounding;
 
@@ -628,6 +638,25 @@ export class PosOrderline extends Base {
         return Boolean(this.combo_parent_id || this.combo_line_ids?.length);
     }
 
+    getComboTotalDisplayPrice() {
+        if (this.config.iface_tax_included === "total") {
+            return this.getComboTotalPrice();
+        } else {
+            return this.getComboTotalPriceWithoutTax();
+        }
+    }
+
+    getComboDiscount() {
+        const rounding = this.currency.rounding;
+        const discountAmount =
+            this.getComboTotalPriceBeforeDiscount() - this.getComboTotalDisplayPrice();
+
+        return roundPrecision(
+            100 * (discountAmount / this.getComboTotalPriceBeforeDiscount()),
+            rounding
+        );
+    }
+
     getComboTotalPrice() {
         const allLines = this.getAllLinesInCombo();
         return allLines.reduce((total, line) => total + line.allUnitPrices.priceWithTax, 0);
@@ -635,6 +664,14 @@ export class PosOrderline extends Base {
     getComboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
         return allLines.reduce((total, line) => total + line.getBasePrice() / line.qty, 0);
+    }
+
+    getComboTotalPriceBeforeDiscount() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce(
+            (total, line) => total + line.getUnitDisplayPriceBeforeDiscount(),
+            0
+        );
     }
 
     getOldUnitDisplayPrice() {
