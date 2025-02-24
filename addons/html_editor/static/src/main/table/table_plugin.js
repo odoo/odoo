@@ -116,6 +116,7 @@ export class TablePlugin extends Plugin {
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
         this.addDomListener(this.editable, "mouseup", this.onMouseup);
         this.addDomListener(this.editable, "keydown", (ev) => {
+            this._isKeyDown = true;
             const arrowHandled = ["arrowup", "control+arrowup", "arrowdown", "control+arrowdown"];
             if (arrowHandled.includes(getActiveHotkey(ev))) {
                 this.navigateCell(ev);
@@ -727,7 +728,12 @@ export class TablePlugin extends Plugin {
             startTd === endTd &&
             startTd.classList.contains("o_selected_td") &&
             this.isShiftArrowKeyboardSelection;
-        this.deselectTable();
+        if (!(startTd && startTd === endTd) || this._isKeyDown) {
+            delete this._isKeyDown;
+            // Prevent deselecting single cell unless selection changes
+            // through keyboard.
+            this.deselectTable();
+        }
         delete this.isShiftArrowKeyboardSelection;
         const startTable = ancestors(selection.startContainer, this.editable)
             .filter((node) => node.nodeName === "TABLE")
