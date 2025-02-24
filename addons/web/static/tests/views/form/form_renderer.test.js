@@ -125,3 +125,20 @@ test("compile a button with id", async () => {
     });
     expect(`button[id=action_button]`).toHaveCount(1);
 });
+
+test("compile a button with disabled", async () => {
+    Partner._views = {
+        form: /*xml*/ `
+            <form>
+                <button string="ActionButton" class="demo" name="action_button" type="object" disabled="disabled"/>
+            </form>
+        `,
+    };
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        resId: 1,
+    });
+    expect(`button[disabled='disabled']`).toHaveCount(1);
+});
