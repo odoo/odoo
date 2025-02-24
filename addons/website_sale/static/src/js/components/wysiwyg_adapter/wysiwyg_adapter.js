@@ -22,10 +22,8 @@ patch(WysiwygAdapterComponent.prototype, {
         this.originalRibbons = Object.assign({}, this.ribbons);
         this.productTemplatesRibbons = [];
         this.deletedRibbonClasses = '';
-        this.PositionClasses = {
-            'ribbon': {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'},
-            'tag': {'left': 'o_tag_left', 'right': 'o_tag_right'},
-        };
+        this.PositionClasses = {'left': 'o_left', 'right': 'o_right'};
+        this.StyleClasses = {'ribbon': 'o_ribbon', 'tag': 'o_tag'};
     },
     /**
      * @override
@@ -120,7 +118,7 @@ patch(WysiwygAdapterComponent.prototype, {
         return Promise.all(setProductTemplateRibbons);
     },
     /**
-     * Checks whether the current page is the product list.
+     * Checks whether the current page is the product list or product page.
      *
      * @private
      */
@@ -148,9 +146,14 @@ patch(WysiwygAdapterComponent.prototype, {
      * @private
      */
     _onGetRibbonClasses(ev) {
-        const classes = Object.values(this.ribbons).reduce((classes, ribbon) => {
-            return classes + ` ${this.PositionClasses[ribbon.style][ribbon.position]}`;
-        }, '') + this.deletedRibbonClasses;
+        const classes =
+            Object.values(this.ribbons).reduce((classes, ribbon) => {
+                return (
+                    classes +
+                    ` ${this.StyleClasses[ribbon.style]} ${
+                        this.PositionClasses[ribbon.position]}`
+                );
+            }, "") + this.deletedRibbonClasses;
         ev.data.callback(classes);
     },
     /**
@@ -160,9 +163,8 @@ patch(WysiwygAdapterComponent.prototype, {
      */
     _onDeleteRibbon(ev) {
         const ribbon = this.ribbons[ev.data.id];
-        this.deletedRibbonClasses += ` ${
-            this.PositionClasses[ribbon.style][ribbon.position]
-        }`;
+        this.deletedRibbonClasses += ` ${this.StyleClasses[ribbon.style]} ${
+            this.PositionClasses[ribbon.position]}`;
         delete this.ribbons[ev.data.id];
     },
     /**
@@ -175,8 +177,8 @@ patch(WysiwygAdapterComponent.prototype, {
         const previousRibbon = this.ribbons[ribbon.id];
         if (previousRibbon) {
             this.deletedRibbonClasses += ` ${
-                this.PositionClasses[previousRibbon.style][previousRibbon.position]
-            }`;
+                this.StyleClasses[previousRibbon.style]
+            } ${this.PositionClasses[previousRibbon.position]}`;
         }
         this.ribbons[ribbon.id] = ribbon;
     },

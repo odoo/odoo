@@ -1,19 +1,17 @@
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { renderToElement } from "@web/core/utils/render";
-import { _t } from "@web/core/l10n/translation";
+import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
+import { renderToElement } from '@web/core/utils/render';
+import { _t } from '@web/core/l10n/translation';
 
 export function productRibbonMixin(component) {
   return component.extend({
     async willStart() {
         const _super = this._super.bind(this);
-        this.PositionClasses = {
-            'ribbon': {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'},
-            'tag': {'left': 'o_tag_left', 'right': 'o_tag_right'},
-        };
+        this.PositionClasses = {'left': 'o_left', 'right': 'o_right'};
+        this.StyleClasses = {'ribbon': 'o_ribbon', 'tag': 'o_tag'};
         this.ribbons = await new Promise((resolve) =>
             this.trigger_up('get_ribbons', { callback: resolve })
         );
-        this.ribbon = this.$target.find('.o_ribbon')[0];
+        this.ribbon = this.$target.find('.o_ribbons')[0];
         this.ribbonEditMode = false;
         return _super(...arguments);
     },
@@ -27,24 +25,16 @@ export function productRibbonMixin(component) {
     },
 
     _computeWidgetState(methodName, params){
-        const classes = this.ribbon.className;
+        const classes = this.ribbon.classList;
         switch(methodName){
             case 'setRibbon':
                 return this.ribbon.dataset.ribbonId || '';
             case 'setRibbonName':
                 return this.ribbon.textContent;
-            case 'setRibbonPosition': {
-                if (classes.includes('o_ribbon_left') || classes.includes('o_tag_left')){
-                    return 'left';
-                }
-                return 'right';
-            }
-            case 'setRibbonStyle': {
-                if (classes.includes('o_ribbon_right') || classes.includes('o_ribbon_left')){
-                    return 'ribbon';
-                }
-                return 'tag';
-            }
+            case 'setRibbonPosition':
+                return this.getPosition(classes);
+            case 'setRibbonStyle':
+                return this.getStyle(classes);
         }
         return this._super(...arguments);
     },
@@ -58,6 +48,7 @@ export function productRibbonMixin(component) {
                     this.ribbon.dataset.ribbonId
                     && this.ribbons.hasOwnProperty(this.ribbon.dataset.ribbonId)
                 ){
+                    // If ribbon is set and that ribbon is a manually set ribbon
                     return true;
                 }
                 return false;
@@ -65,23 +56,24 @@ export function productRibbonMixin(component) {
         return this._super(...arguments);
     },
 
-    getPosition(className){
-        return /(?:^|\s)(o_ribbon_left|o_tag_left)(?:\s|$)/.test(className)? 'left' : 'right';
+    getPosition(classList) {
+        return classList.contains('o_left') ? 'left' : 'right';
     },
 
-    getStyle(className){
-        return /(?:^|\s)(o_ribbon_left|o_ribbon_right)(?:\s|$)/.test(className)? 'ribbon' : 'tag';
+    getStyle(classList) {
+        return classList.contains('o_ribbon') ? 'ribbon' : 'tag';
     },
 
     async setRibbon(previewMode, widgetValue, params) {
         if (previewMode === 'reset') {
             widgetValue = this.prevRibbonId;
         } else {
+            const classList = this.ribbon.classList
             this.prevRibbonId = this.ribbon.dataset.ribbonId;
             this.prevRibbon = {
                 'name': this.ribbon.textContent,
-                'position': this.getPosition(this.ribbon.className),
-                'style': this.getStyle(this.ribbon.className),
+                'position': this.getPosition(classList),
+                'style': this.getStyle(classList),
                 'bg_color': this.ribbon.style.backgroundColor,
                 'text_color': this.ribbon.style.color,
             }
@@ -105,7 +97,7 @@ export function productRibbonMixin(component) {
     async createRibbon(previewMode, widgetValue, params) {
         await this._setRibbon(false);
         this.ribbon.textContent = _t('Ribbon Name');
-        this.ribbon.classList.add('o_ribbon_left');
+        this.ribbon.classList.add('o_ribbon', 'o_left');
         this.ribbonEditMode = true;
         await this._saveRibbon(true);
     },
@@ -147,17 +139,15 @@ export function productRibbonMixin(component) {
      */
 
     async setRibbonPosition(previewMode, widgetValue, params) {
-        const currentStyle = this.getStyle(this.ribbon.className);
         this.ribbon.className = this.ribbon.className.replace(
-            /o_(ribbon|tag)_(left|right)/, this.PositionClasses[currentStyle][widgetValue]
+            /o_(left|right)/, this.PositionClasses[widgetValue]
         );
         await this._saveRibbon();
     },
 
     async setRibbonStyle(previewMode, widgetValue, params) {
-        const currentPosition = this.getPosition(this.ribbon.className);
         this.ribbon.className = this.ribbon.className.replace(
-            /o_(ribbon|tag)_(left|right)/, this.PositionClasses[widgetValue][currentPosition]
+            /\bo_(ribbon|tag)\b/g, this.StyleClasses[widgetValue]
         );
         await this._saveRibbon();
     },
@@ -191,17 +181,18 @@ export function productRibbonMixin(component) {
      */
     async _saveRibbon(isNewRibbon = false) {
         const text = this.ribbon.textContent.trim();
+        const classList = this.ribbon.classList;
         const ribbon = {
             'name': text,
             'bg_color': this.ribbon.style.backgroundColor,
             'text_color': this.ribbon.style.color,
-            'position': this.getPosition(this.ribbon.className),
-            'style': this.getStyle(this.ribbon.className),
+            'position': this.getPosition(classList),
+            'style': this.getStyle(classList),
         };
         ribbon.id = isNewRibbon ? Date.now() : parseInt(this.ribbon.dataset.ribbonId);
         this.trigger_up('set_ribbon', {ribbon: ribbon});
         this.ribbons = await new Promise((resolve) =>
-            this.trigger_up("get_ribbons", { callback: resolve })
+            this.trigger_up('get_ribbons', { callback: resolve })
         );
         this.rerender = true;
         await this._setRibbon(ribbon.id);
@@ -212,6 +203,7 @@ export function productRibbonMixin(component) {
      *
      * @private
      * @param {integer|false} ribbonId
+     * @param {bool|false} del: indicates wether the ribbon was deleted
      */
     async _setRibbon(ribbonId, del = false) {
         this.ribbon.dataset.ribbonId = ribbonId;
@@ -235,11 +227,14 @@ export function productRibbonMixin(component) {
 
         ribbons.forEach(ribbonElement => {
             ribbonElement.textContent = ribbon.name;
-            const htmlClasses = ['o_tag_left', 'o_tag_right', 'o_ribbon_left', 'o_ribbon_right'];
+            const htmlClasses = ['o_tag', 'o_ribbon', 'o_right', 'o_left'];
             htmlClasses.forEach(cls => ribbonElement.classList.remove(cls));
 
             if (ribbon.style && ribbon.position) {
-                ribbonElement.classList.add(this.PositionClasses[ribbon.style][ribbon.position]);
+                ribbonElement.classList.add(
+                    this.StyleClasses[ribbon.style],
+                    this.PositionClasses[ribbon.position],
+                );
             }
 
             ribbonElement.style.backgroundColor = ribbon.bg_color;
