@@ -1,4 +1,4 @@
-import { createJobScopedGetter } from "@odoo/hoot";
+import { after, createJobScopedGetter } from "@odoo/hoot";
 import { Domain } from "@web/core/domain";
 import {
     deserializeDate,
@@ -75,20 +75,9 @@ const {
  *  order?: string;
  * }} SearchParams
  *
- * @typedef {"activity"
- *  | "calendar"
- *  | "cohort"
- *  | "form"
- *  | "gantt"
- *  | "graph"
- *  | "grid"
- *  | "hierarchy"
- *  | "kanban"
- *  | "list"
- *  | "map"
- *  | "pivot"
- *  | "search"
- * } ViewType
+ * @typedef {ViewType | `${ViewType},${number}`} ViewKey
+ *
+ * @typedef {import("@web/views/view").ViewType} ViewType
  */
 
 /**
@@ -254,21 +243,39 @@ const fieldNotFoundError = (modelName, fieldName, consequence) => {
 
 /**
  * @param {Model} model
- * @param {number | false} viewId
  * @param {ViewType} viewType
+ * @param {string | number | false} viewId
+ * @returns {[string, number | false]}
  */
-const findView = (model, viewId, viewType) => {
-    const key = model._getViewKey(viewType, viewId);
-    if (model._views[key]) {
-        return [model._views[key], viewId];
+const findView = (model, viewType, viewId) => {
+    /** @type {Record<ViewKey, string>} */
+    const availableViews = Object.create(null);
+    for (const [rawKey, arch] of Object.entries(model._views)) {
+        availableViews[getViewKey(...safeSplit(rawKey))] = arch;
     }
-    for (const [viewKey, viewArch] of Object.entries(model._views)) {
-        const [type, id] = safeSplit(viewKey);
-        if (type === viewType) {
-            return [viewArch, Number(id) || false];
+    for (const [id, arch] of Object.entries(inlineViewArchs[model._name] || {})) {
+        if (arch || !availableViews[id]) {
+            availableViews[id] = arch;
         }
     }
-    return ["", false];
+
+    let viewKey = getViewKey(viewType, viewId);
+    if (!(viewKey in availableViews)) {
+        if (typeof viewId === "number") {
+            // No direct match & explicit view ID:
+            // -> throw an error
+            throw viewNotFoundError(model._name, viewType, viewId);
+        }
+        // No direct match & falsy ID:
+        // -> no error, returns the first available view
+        viewKey = Object.keys(availableViews)
+            .filter((key) => key.startsWith(viewType))
+            .sort()[0];
+        viewId = safeSplit(viewKey)[1];
+    }
+    const arch = availableViews[viewKey] || `<${viewType} />`;
+    const actualViewId = Number(viewId) || false;
+    return [arch, actualViewId];
 };
 
 /**
@@ -416,19 +423,13 @@ const getView = (model, args, kwargs) => {
     // find the arch
     let [requestViewId, viewType] = args;
     if (!requestViewId) {
-        const contextKey = viewType + "_view_ref";
+        const contextKey = `${viewType}_view_ref`;
         if (contextKey in kwargs.context) {
             requestViewId = kwargs.context[contextKey];
         }
     }
-    const [arch, viewId] = findView(model, requestViewId, getTag(viewType));
-    if (!arch) {
-        throw viewNotFoundError(model._name, viewType, viewId);
-    }
-    const view = parseView(model, {
-        arch,
-        context: kwargs.context,
-    });
+    const [arch, viewId] = findView(model, viewType, requestViewId);
+    const view = parseView(model, { arch, context: kwargs.context });
     if (kwargs.options.toolbar) {
         view.toolbar = model._toolbar;
     }
@@ -487,6 +488,16 @@ const getViewFields = (model, viewType, models) => {
         }
     }
     return models;
+};
+
+/**
+ * @param {ViewType} viewType
+ * @param {string | number | false} [viewId]
+ * @returns {ViewKey}
+ */
+const getViewKey = (viewType, viewId) => {
+    const nViewId = viewId && !isNaN(viewId) ? Number(viewId) : viewId;
+    return [viewType, nViewId || false].join(",");
 };
 
 /**
@@ -864,10 +875,7 @@ const parseView = (model, params) => {
                 }
                 for (const type of missingViewtypes) {
                     // in a lot of tests, we don't need the form view, so it doesn't even exist
-                    let [arch] = findView(relModel, false, type);
-                    if (!arch) {
-                        arch = /* xml */ `<${type} />`;
-                    }
+                    const [arch] = findView(relModel, type, false);
                     node.appendChild(domParser.parseFromString(arch, "text/xml").documentElement);
                 }
             }
@@ -1213,7 +1221,9 @@ const updateComodelRelationalFields = (model, record, originalRecord) => {
  * @param {number | false} viewId
  */
 const viewNotFoundError = (modelName, viewType, viewId, consequence) => {
-    let message = `cannot find an arch for view "${viewType}" with ID ${viewId} in model "${modelName}"`;
+    let message = `cannot find an arch for view "${viewType}" with ID ${JSON.stringify(
+        viewId
+    )} in model "${modelName}"`;
     if (consequence) {
         message += `: ${consequence}`;
     }
@@ -1237,9 +1247,26 @@ const VALID_AGGREGATE_FUNCTIONS = [
     "sum",
 ];
 
+/** @type {Record<string, Record<ViewKey, string>>} */
+const inlineViewArchs = Object.create(null);
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
 let modelInstanceLock = false;
+
+/**
+ * @param {string} modelName
+ * @param {Record<ViewKey, string>} archs
+ */
+export function registerInlineViewArchs(modelName, archs) {
+    if (!inlineViewArchs[modelName]) {
+        inlineViewArchs[modelName] = Object.create(null);
+        after(() => delete inlineViewArchs[modelName]);
+    }
+    const modelViews = inlineViewArchs[modelName];
+    for (const [rawKey, arch] of Object.entries(archs)) {
+        modelViews[getViewKey(...safeSplit(rawKey))] = arch;
+    }
+}
 
 /**
  * Local model used by the {@link MockServer} to store the definition of a model.
@@ -1296,15 +1323,6 @@ export class Model extends Array {
                 }
                 if (!model._rec_name && "name" in model._fields) {
                     model._rec_name = "name";
-                }
-
-                // Views
-                for (const [key, value] of Object.entries(model._views)) {
-                    const [viewType, viewId] = safeSplit(key);
-                    const actualKey = model._getViewKey(viewType, viewId);
-
-                    delete model._views[key];
-                    model._views[actualKey] = value || `<${viewType} />`;
                 }
 
                 return model;
@@ -1427,7 +1445,7 @@ export class Model extends Array {
     _related = new Set();
     /** @type {Record<"print" | "action", ActionDefinition[]>} */
     _toolbar = {};
-    /** @type {Record<string, string>} */
+    /** @type {Record<ViewKey, string>} */
     _views = {};
 
     get env() {
@@ -2879,16 +2897,6 @@ export class Model extends Array {
             }
         }
         return null;
-    }
-
-    /**
-     * @param {ViewType} viewType
-     * @param {number | false} [viewId]
-     */
-    _getViewKey(viewType, viewId) {
-        const numId = Number(viewId);
-        const actualId = Number.isInteger(numId) && numId;
-        return `${viewType},${actualId || false}`;
     }
 
     /**
