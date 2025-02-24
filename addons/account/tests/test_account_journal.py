@@ -182,8 +182,8 @@ class TestAccountJournal(AccountTestInvoicingCommon):
             'payment_method_id': check_method.id,
             'journal_id': journal.id
             })
-        with self.assertRaises(ValidationError):
-            journal.action_archive()
+        journal.action_archive()
+        self.assertFalse(journal.active)
 
     def test_archive_multiple_journals(self):
         journals = self.env['account.journal'].create([{
