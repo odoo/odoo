@@ -81,7 +81,7 @@ patch(PosStore.prototype, {
                     orphanLine.qty
                 );
             } else {
-                const serializedLine = orphanLine.serialize({ orm: true });
+                const serializedLine = orphanLine.serialize();
                 serializedLine.order_id = destOrder.id;
                 delete serializedLine.uuid;
                 delete serializedLine.id;
