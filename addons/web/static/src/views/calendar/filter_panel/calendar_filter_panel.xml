@@ -103,8 +103,9 @@
     </t>
 
     <t t-name="web.CalendarFilterPanel.autocomplete.options">
-        <img t-if='option.value' t-attf-src="/web/image/{{option.model}}/{{option.value}}/avatar_128"
-                class="rounded me-1 o_avatar"
+        <img t-if='option.value and option.avatarField'
+            t-attf-src="/web/image/{{option.model}}/{{option.value}}/{{option.avatarField}}"
+            class="rounded me-1 o_avatar"
         />
         <t t-esc="option.label" />
     </t>
