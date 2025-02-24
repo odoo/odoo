@@ -128,7 +128,7 @@ class PosConfig(models.Model):
             'iface_splitbill': True,
             'module_pos_restaurant': True,
             'use_presets': True,
-            'default_preset_id': presets[0],
+            'default_preset_id': presets[0] if presets else False,
             'available_preset_ids': [(6, 0, presets[1:])],
         })
         self.env['ir.model.data']._update_xmlids([{
