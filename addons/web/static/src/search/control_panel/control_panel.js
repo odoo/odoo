@@ -347,7 +347,7 @@ export class ControlPanel extends Component {
      * Called when a view is clicked in the view switcher
      * and reset mobile search state on switch view.
      *
-     * @param {ViewType} viewType
+     * @param {import("@web/views/view").ViewType} viewType
      */
     switchView(viewType, newWindow) {
         this.resetSearchState();
