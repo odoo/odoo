@@ -4088,7 +4088,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         (valid_invoice + invalid_invoice_1 + invalid_invoice_2).auto_post = 'at_date'
 
-        self.env['account.move']._autopost_draft_entries()
+        with self.enter_registry_test_mode():
+            self.env['account.move']._autopost_draft_entries()
         self.assertEqual(valid_invoice.state, 'posted')
         self.assertEqual(invalid_invoice_1.state, 'draft')
 
