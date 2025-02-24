@@ -165,11 +165,13 @@ export class SnippetModel extends Reactive {
                     thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
                     isCustom: false,
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
+                    isDisabled: false, // TODO
                 };
                 const moduleId = snippetEl.dataset.moduleId;
                 if (moduleId) {
                     Object.assign(snippet, {
                         moduleId,
+                        isInstallable: !!moduleId,
                     });
                 } else {
                     Object.assign(snippet, {

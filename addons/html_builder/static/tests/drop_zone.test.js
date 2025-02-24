@@ -18,7 +18,7 @@ test("#wrap element has the 'DRAG BUILDING BLOCKS HERE' message", async () => {
 test("drop beside dropzone inserts the snippet", async () => {
     const { contentEl, snippetContent } = await setupHTMLBuilder();
     const { moveTo, drop } = await contains(
-        `.o-snippets-menu [data-category="snippet_groups"] div`
+        ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
     await moveTo(contentEl.ownerDocument.body);
     // The dropzone is not hovered, so not highlighted.
