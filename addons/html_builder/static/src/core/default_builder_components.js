@@ -14,6 +14,7 @@ import { BuilderRange } from "./building_blocks/builder_range";
 import { BuilderContext } from "./building_blocks/builder_context";
 import { BasicMany2Many } from "./building_blocks/basic_many2many";
 import { BuilderMany2Many } from "./building_blocks/builder_many2many";
+import { BuilderUrlPicker } from "./building_blocks/builder_urlpicker";
 import { ModelMany2Many } from "./building_blocks/model_many2many";
 
 export const defaultBuilderComponents = {
@@ -34,4 +35,5 @@ export const defaultBuilderComponents = {
     BuilderMany2Many,
     ModelMany2Many,
     BuilderDateTimePicker,
+    BuilderUrlPicker,
 };
