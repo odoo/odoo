@@ -47,11 +47,13 @@ test("display group snippet", async () => {
     await setupWebsiteBuilder("<div><p>Text</p></div>", {
         snippets,
     });
-    const snippetGroupsSelector = `.o-snippets-menu [data-category="snippet_groups"]`;
+    const snippetGroupsSelector = ".o-snippets-menu #snippet_groups .o_snippet";
     expect(snippetGroupsSelector).toHaveCount(3);
     expect(queryAllTexts(snippetGroupsSelector)).toEqual(["A", "B", "C"]);
-    const imgSrc = queryAll(`${snippetGroupsSelector} img`).map((img) => img.dataset.src);
-    expect(imgSrc).toEqual(["a.svg", "b.svg", "c.svg"]);
+    const thumbnailImgUrls = queryAll(`${snippetGroupsSelector} .o_snippet_thumbnail_img`).map(
+        (thumbnail) => thumbnail.style.backgroundImage
+    );
+    expect(thumbnailImgUrls).toEqual(['url("a.svg")', 'url("b.svg")', 'url("c.svg")']);
 });
 
 test("install an app from snippet group", async () => {
@@ -67,7 +69,7 @@ test("install an app from snippet group", async () => {
             ],
         },
     });
-    await click(`.o-snippets-menu [data-category="snippet_groups"] .btn:contains("Install")`);
+    await click(`.o-snippets-menu #snippet_groups .o_snippet .btn.o_install_btn`);
     await animationFrame();
     expect(".modal").toHaveCount(1);
     expect(".modal-body").toHaveText("Do you want to install A App?\nMore info about this app.");
@@ -109,9 +111,8 @@ test("open add snippet dialog + switch snippet category", async () => {
             ),
         },
     });
-    expect(queryAllTexts(`.o-snippets-menu [data-category="snippet_groups"]`)).toEqual(["A", "B"]);
-
-    await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
+    expect(queryAllTexts(".o-snippets-menu #snippet_groups .o_snippet")).toEqual(["A", "B"]);
+    await click(queryFirst(".o-snippets-menu #snippet_groups .o_snippet_thumbnail"));
     await waitFor(".o_add_snippet_dialog");
     expect(queryAllTexts(".o_add_snippet_dialog aside .list-group .list-group-item")).toEqual([
         "A",
@@ -185,7 +186,7 @@ test("search snippet in add snippet dialog", async () => {
             ),
         },
     });
-    await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
+    await click(queryFirst(".o-snippets-menu #snippet_groups .o_snippet_thumbnail"));
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 1000 });
     expect("aside .list-group .list-group-item").toHaveCount(2);
     const snippetsDescriptionProcessed = snippetsDescription(true);
@@ -261,7 +262,7 @@ test("add snippet dialog with imagePreview", async () => {
             ),
         },
     });
-    await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
+    await click(queryFirst(".o-snippets-menu #snippet_groups .o_snippet_thumbnail"));
     const previewSnippetIframeSelector =
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
@@ -305,7 +306,7 @@ test("insert snippet structure", async () => {
         `<section class="o_colored_level"><p>Text</p></section>`
     );
 
-    await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
+    await click(queryFirst(".o-snippets-menu #snippet_groups .o_snippet_thumbnail"));
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
     const previewSelector =
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
@@ -351,7 +352,7 @@ test("drag&drop snippet structure", async () => {
     );
 
     const { moveTo, drop } = await contains(
-        `.o-snippets-menu [data-category="snippet_groups"] div`
+        ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
     expect(":iframe .oe_drop_zone:nth-child(1)").toHaveCount(1);
     expect(":iframe .oe_drop_zone:nth-child(3)").toHaveCount(1);
@@ -383,7 +384,7 @@ test("cancel snippet drag & drop over sidebar", async () => {
     const editableContent = getEditableContent();
 
     const { moveTo, drop } = await contains(
-        `.o-snippets-menu [data-category="snippet_groups"] div`
+        ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
     expect(":iframe .oe_drop_zone").toHaveCount(1);
 
