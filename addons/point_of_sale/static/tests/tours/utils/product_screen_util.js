@@ -416,6 +416,30 @@ export function enterLastLotNumber(number) {
     ];
 }
 
+export function enterLotNumbers(numbers) {
+    return numbers
+        .map((number) => [
+            {
+                content: "enter lot number",
+                trigger: ".list-line-input:last()",
+                run: "edit " + number,
+            },
+            {
+                content: "Press Enter",
+                trigger: ".list-line-input:last()",
+                run: "press Enter",
+            },
+        ])
+        .flat()
+        .concat([
+            {
+                content: "click validate lot number",
+                trigger: ".modal-content button:contains(Ok)",
+                run: "click",
+            },
+        ]);
+}
+
 export function isShown() {
     return [
         {
