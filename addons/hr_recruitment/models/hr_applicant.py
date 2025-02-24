@@ -522,21 +522,28 @@ class HrApplicant(models.Model):
                 applicant.application_status = 'ongoing'
 
     def _search_application_status(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
+        supported_operators = ['=', '!=', 'in', 'not in']
+        if operator not in supported_operators:
+            raise UserError(_('Operation not supported'))
 
-        domains = []
-        # Map statuses to domain filters
-        if 'refused' in value:
-            domains.append([('refuse_reason_id', '!=', None)])
-        if 'hired' in value:
-            domains.append([('date_closed', '!=', False)])
-        if 'archived' in value or False in value:
-            domains.append([('active', '=', False)])
-        if 'ongoing' in value:
-            domains.append(['&', ('active', '=', True), ('date_closed', '=', False)])
+        # Normalize value to be a list to simplify processing
+        if isinstance(value, (str, bool)):
+            value = [value]
 
-        return expression.OR(domains)
+        valid_statuses_domain = {
+            'refused': Domain('refuse_reason_id', '!=', None),
+            'archived': Domain('active', '=', False),
+            'hired': Domain('date_closed', '!=', False),
+            'ongoing': Domain(['&', ('active', '=', True), ('date_closed', '=', False)]),
+        }
+        if not all(v in ([state for state in valid_statuses_domain] + [False]) for v in value):
+            raise UserError(_('Some values do not exist in the application status'))
+        positive_operator = operator not in expression.NEGATIVE_TERM_OPERATORS
+        domain = Domain([])
+        for status in value:
+            domain &= valid_statuses_domain[status] if positive_operator else ~valid_statuses_domain[status]
+
+        return domain
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment']._read_group(
