@@ -92,7 +92,13 @@ class TestSyncOdoo2Google(TestSyncGoogle):
 
             events._sync_odoo2google(self.google_service)
 
+<<<<<<< saas-18.1
         with self.assertQueryCount(__system__=23):
+||||||| 06627dce7193576dd948aba13dceb28c33506fc8
+        with self.assertQueryCount(__system__=28):
+=======
+        with self.assertQueryCount(__system__=29):
+>>>>>>> 3c77947e5284363191d3f596c38e756096286c0f
             events.unlink()
 
 
