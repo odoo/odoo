@@ -45,8 +45,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'l10n_bo_6130102',
                 'account_discount_expense_allocation_id':'l10n_bo_4140101',
                 'account_discount_income_allocation_id':'l10n_bo_5410102',
-                'account_journal_payment_debit_account_id': 'l10n_bo_2110402',
-                'account_journal_payment_credit_account_id': 'l10n_bo_1120502',
                 'account_journal_suspense_account_id': 'l10n_bo_1111101',
                 'transfer_account_id': 'l10n_bo_1111102',
                 # Deferred
