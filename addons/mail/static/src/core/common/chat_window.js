@@ -11,7 +11,13 @@ import {
 } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
+<<<<<<< saas-17.4
 import { Component, toRaw, useChildSubEnv, useRef, useState } from "@odoo/owl";
+||||||| a1969de6e6a292b14ad1d19c256ead04dc202528
+import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
+=======
+import { Component, useChildSubEnv, useExternalListener, useRef, useState } from "@odoo/owl";
+>>>>>>> 26fa82b07ca3df31017bf303fd864725dfc9f3d3
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -60,6 +66,15 @@ export class ChatWindow extends Component {
             inChatWindow: true,
             messageHighlight: this.messageHighlight,
         });
+
+        if (this.isMobileForLivechatVisitor) {
+            useExternalListener(document.body, "scroll", this._onScroll, { capture: true });
+        }
+    }
+
+    _onScroll(ev) {
+        const container = ev.target;
+        this.state.moveUp = container.scrollHeight - container.scrollTop === container.clientHeight;
     }
 
     get composerType() {
@@ -77,7 +92,10 @@ export class ChatWindow extends Component {
         const maxHeight = !this.ui.isSmall ? "max-height: 95vh;" : "";
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
-        const visibleOffset = this.ui.isSmall ? 0 : this.props.right;
+        let visibleOffset = this.ui.isSmall ? 0 : this.props.right;
+        if (this.isMobileFoldedForLivechatVisitor) {
+            visibleOffset = 10;
+        }
         const oppositeFrom = offsetFrom === "right" ? "left" : "right";
         return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto; ${maxHeight}`;
     }
@@ -120,15 +138,41 @@ export class ChatWindow extends Component {
     }
 
     onClickHeader() {
+<<<<<<< saas-17.4
         if (this.ui.isSmall || this.state.editingName) {
             return;
+||||||| a1969de6e6a292b14ad1d19c256ead04dc202528
+        if (!this.ui.isSmall && !this.state.editingName) {
+            this.toggleFold();
+=======
+        if ((!this.ui.isSmall || this.isMobileForLivechatVisitor) && !this.state.editingName) {
+            this.toggleFold();
+>>>>>>> 26fa82b07ca3df31017bf303fd864725dfc9f3d3
         }
         this.toggleFold();
     }
 
+    get isMobileFoldedForLivechatVisitor() {
+        return (
+            this.ui.isSmall &&
+            this.env.services["im_livechat.livechat"] &&
+            this.props.chatWindow.folded
+        );
+    }
+
+    get isMobileForLivechatVisitor() {
+        return this.ui.isSmall && this.env.services["im_livechat.livechat"];
+    }
+
     toggleFold() {
+<<<<<<< saas-17.4
         const chatWindow = toRaw(this.props.chatWindow);
         if (this.ui.isSmall || this.state.actionsMenuOpened) {
+||||||| a1969de6e6a292b14ad1d19c256ead04dc202528
+        if (this.ui.isSmall || this.state.actionsMenuOpened) {
+=======
+        if ((this.ui.isSmall && !this.isMobileForLivechatVisitor) || this.state.actionsMenuOpened) {
+>>>>>>> 26fa82b07ca3df31017bf303fd864725dfc9f3d3
             return;
         }
         chatWindow.fold();
