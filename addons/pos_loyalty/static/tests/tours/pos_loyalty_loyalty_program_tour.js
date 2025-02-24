@@ -4,6 +4,8 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
@@ -271,5 +273,23 @@ registry.category("web_tour.tours").add("PosCheapestProductTaxInclude", {
             ProductScreen.addOrderline("Desk Organizer", "1"),
             Order.hasLine({ productName: "10% on the cheapest product" }),
             PosLoyalty.orderTotalIs("6.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyMultipleOrders", {
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            // Order1: Add a product and leave the order in draft.
+            ProductScreen.addOrderline("Whiteboard Pen", "2"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+
+            // Order2: Finalize a different order.
+            Chrome.clickMenuOption("Orders"),
+            TicketScreen.clickNewTicket(),
+            ProductScreen.addOrderline("Desk Organizer", "1"),
+            PosLoyalty.finalizeOrder("Cash", "10"),
         ].flat(),
 });
