@@ -8,7 +8,7 @@ import {
     m2oSupportedOptions,
     Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
-import { Many2XUomTagsAutocomplete } from "../many2x_uom_tags/many2x_uom_tags";
+import { getProductRelatedModel, Many2XUomTagsAutocomplete } from "../many2x_uom_tags/many2x_uom_tags";
 
 // @todo: this extension will be removed in the future
 // when the autocomplete source generation come from a hook.
@@ -49,10 +49,9 @@ export class Many2OneUomField extends Component {
     };
 
     get m2oProps() {
-        let productModel = "product.product";
+        const productModel = getProductRelatedModel.call(this);
         let productId = this.props.record.data[this.props.productField]?.[0] || 0;
         if (["product.template", "product.product"].includes(this.props.record.resModel)) {
-            productModel = this.props.record.resModel;
             productId = this.props.record.resId || 0;
         }
         return {
