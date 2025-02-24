@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { formatDate, parseDateTime } from "@web/core/l10n/dates";
+import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -11,6 +11,7 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { localization } from "@web/core/l10n/localization";
 import { Component, onMounted, onWillStart, useState } from "@odoo/owl";
 import {
     BACKSPACE,
@@ -452,11 +453,29 @@ export class TicketScreen extends Component {
         if (order.date_order.startOf("day").ts === todayTs) {
             return _t("Today");
         } else {
+<<<<<<< saas-18.2
             return formatDate(order.date_order);
+||||||| 68d36880bc103b1fa95a005c7ef5e3cb5a0489ed
+            return formatDate(parseUTCString(order.date_order));
+=======
+            return formatDateTime(parseUTCString(order.date_order), {
+                format: localization.dateFormat,
+                tz: luxon.Settings.defaultZone.name,
+            });
+>>>>>>> 1e8bc2d16f1b852243cfc0e06d772f0dff4e89d2
         }
     }
     getTime(order) {
+<<<<<<< saas-18.2
         return order.date_order.toFormat("hh:mm");
+||||||| 68d36880bc103b1fa95a005c7ef5e3cb5a0489ed
+        return parseUTCString(order.date_order).toFormat("hh:mm");
+=======
+        return formatDateTime(parseUTCString(order.date_order), {
+            format: localization.timeFormat.replace(/:ss/, ""),
+            tz: luxon.Settings.defaultZone.name,
+        });
+>>>>>>> 1e8bc2d16f1b852243cfc0e06d772f0dff4e89d2
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.getTotalWithTax());

@@ -717,3 +717,13 @@ export function addDiscount(discount) {
             .flatMap((key) => Numpad.click(key)),
     ].flat();
 }
+
+export function setTimeZone(testTimeZone) {
+    return {
+        content: "Set test time zone to a non UTC time zone",
+        trigger: "body",
+        run: function () {
+            luxon.Settings.defaultZone = testTimeZone;
+        },
+    };
+}
