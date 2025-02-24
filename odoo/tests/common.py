@@ -59,7 +59,7 @@ from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.service import security
-from odoo.sql_db import BaseCursor, Cursor
+from odoo.sql_db import BaseCursor, Cursor, Savepoint
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
@@ -815,6 +815,36 @@ class Approx:  # noqa: PLW1641
         return self.cmp(self.value, other) == 0
 
 
+class RegistrySavepoint:
+    """
+    Helper class to store a snapshot of models/cache related attributes of a
+    registry, which can be used to rollback changes on the registry.
+    """
+
+    def __init__(self, registry: Registry):
+        self.registry = registry
+        self.registry_start_invalidated = registry.registry_invalidated
+        self.registry_start_sequence = registry.registry_sequence
+        self.registry_cache_sequences = dict(registry.cache_sequences)
+        # We only care to call setup_models if it was invalidated during the savepoint
+        registry.registry_invalidated = False
+
+    def reset(self, cr: BaseCursor | None = None):
+        if (self.registry_start_sequence != self.registry.registry_sequence) or\
+            self.registry.registry_invalidated:
+            with ExitStack() as stack:
+                if not cr:
+                    cr = self.registry.cursor()
+                    stack.enter_context(cr)
+                self.registry._setup_models__(cr)
+        self.registry.registry_invalidated = self.registry_start_invalidated
+        self.registry.registry_sequence = self.registry_start_sequence
+        with mute_logger(odoo.orm.registry._logger.name):
+            self.registry.clear_all_caches()
+        self.registry.cache_invalidated.clear()
+        self.registry.cache_sequences = self.registry_cache_sequences
+
+
 savepoint_seq = itertools.count()
 
 
@@ -850,25 +880,58 @@ class TransactionCase(BaseCase):
             gc_env['ir.attachment']._gc_file_store_unsafe()
 
     @classmethod
+    def _clean_cls(cls):
+        # cleanup class attributes
+        cls.cr = None
+        cls.registry = None
+        cls.env = None
+
+    @classmethod
+    def setUpCommonData(cls):
+        """
+        Sets up data that will persist between different classes.
+
+        The data will be kept as long as the call chain for this method is not changed.
+        :code:`super()` should NOT be used within this method.
+
+        You may define dependencies on this method to auto-magically override behavior:
+        ```
+        class BaseCommon(TransactionCase):
+
+            @classmethod
+            def _get_partner_name(cls)
+                return 'Goofy'
+
+            @tests.common.depends('_get_partner_name')
+            @classmethod
+            def setUpCommonData(cls):
+                cls.partner = cls.env['res.partner'].create({'name': cls._get_partner_name()})
+
+        class BaseTest(BaseCommon):
+            def test_partner_name(self):
+                self.assertEqual(self.partner.name, 'Goofy')
+
+        class MailTest(BaseCommon):
+            @classmethod
+            def _get_partner_name(cls):
+                return 'Mickey'
+
+            def test_partner_name(self):
+                self.assertEqual(self.partner.name, 'Mickey')
+        ```
+        NOTE: dependencies must be class attributes as this is evaluated on a class level.
+        """
+        pass
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.addClassCleanup(cls._gc_filestore)
-        cls.registry = Registry(get_db_name())
-        cls.registry_start_invalidated = cls.registry.registry_invalidated
-        cls.registry_start_sequence = cls.registry.registry_sequence
-        cls.registry_cache_sequences = dict(cls.registry.cache_sequences)
-
-        def reset_changes():
-            if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
-                with cls.registry.cursor() as cr:
-                    cls.registry._setup_models__(cr)
-            cls.registry.registry_invalidated = cls.registry_start_invalidated
-            cls.registry.registry_sequence = cls.registry_start_sequence
-            with cls.muted_registry_logger:
-                cls.registry.clear_all_caches()
-            cls.registry.cache_invalidated.clear()
-            cls.registry.cache_sequences = cls.registry_cache_sequences
-        cls.addClassCleanup(reset_changes)
+        cls.addClassCleanup(cls._clean_cls)
+        cls.registry = cls.registry or Registry(get_db_name())
+        if not cls.cr:
+            cls.addClassCleanup(cls._gc_filestore)
+            registry_savepoint = RegistrySavepoint(cls.registry)
+            cls.addClassCleanup(registry_savepoint.reset)
 
         def signal_changes():
             if not cls.registry.ready:
@@ -885,7 +948,7 @@ class TransactionCase(BaseCase):
         cls._signal_changes_patcher = patch.object(cls.registry, 'signal_changes', signal_changes)
         cls.startClassPatcher(cls._signal_changes_patcher)
 
-        cls.cr = cls.registry.cursor()
+        cls.cr = cls.cr or cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
 
         if cls.freeze_time:
@@ -902,7 +965,7 @@ class TransactionCase(BaseCase):
         cls.close_patcher = patch.object(cls.cr, 'close', forbidden)
         cls.startClassPatcher(cls.close_patcher)
 
-        cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
+        cls.env = cls.env or api.Environment(cls.cr, api.SUPERUSER_ID, {})
 
         # speedup CryptContext. Many user an password are done during tests, avoid spending time hasing password with many rounds
         def _crypt_context(self):  # noqa: ARG001
@@ -940,9 +1003,8 @@ class TransactionCase(BaseCase):
         # flush everything in setUpClass before introducing a savepoint
         self.env.flush_all()
 
-        self._savepoint_id = next(savepoint_seq)
-        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
-        self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+        self._savepoint = Savepoint(self.cr)
+        self.addCleanup(self._savepoint.close)
 
     @contextmanager
     def enter_registry_test_mode(self):
@@ -2247,11 +2309,11 @@ def warmup(func, *args, **kwargs):
     self.env.invalidate_all()
     # run once to warm up the caches
     self.warm = False
-    self.cr.execute('SAVEPOINT test_warmup')
+    savepoint = Savepoint(self.cr)
     func(*args, **kwargs)
     self.env.flush_all()
     # run once for real
-    self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
+    savepoint.close()
     self.env.invalidate_all()
     self.warm = True
     func(*args, **kwargs)
@@ -2297,6 +2359,17 @@ def tagged(*tags):
         return obj
     return tags_decorator
 
+def data_depends(*attrs):
+    """ A decorator to add class dependencies on :code:`:TransactionCase.setUpCommonData`
+
+    The dependencies should be either class attributes or class methods.
+    """
+    def depends_decorator(method):
+        assert method.__name__ == 'setUpCommonData', '@data_depends should only be used on setUpCommonData'
+        assert isinstance(method, classmethod), '@data_depends should be used before @classmethod'
+        method._data_depends = tuple(attrs)
+        return method
+    return depends_decorator
 
 class freeze_time:
     """ Object to replace the freezegun in Odoo test suites

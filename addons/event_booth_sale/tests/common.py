@@ -8,9 +8,7 @@ from odoo.addons.event_booth.tests.common import TestEventBoothCommon
 class TestEventBoothSaleCommon(TestEventBoothCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestEventBoothSaleCommon, cls).setUpClass()
-
+    def setUpCommonData(cls):
         cls.env['account.tax.group'].create(
             {'name': 'Test Account Tax Group', 'company_id': cls.env.company.id}
         )
