@@ -213,7 +213,7 @@ class ReturnPicking(models.TransientModel):
             proc_list.append(self.env["procurement.group"].Procurement(
                 line.product_id, line.quantity, line.uom_id,
                 line.move_id.location_dest_id or self.picking_id.location_dest_id,
-                line.product_id.display_name, self.picking_id.origin, self.picking_id.company_id,
+                line.product_id.display_name, self.picking_id.origin if self.picking_id.origin else '', self.picking_id.company_id,
                 proc_values,
             ))
         if proc_list:

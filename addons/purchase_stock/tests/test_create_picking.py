@@ -714,3 +714,55 @@ class TestCreatePicking(common.TestProductCommon):
 
         self.assertEqual(po.order_line.qty_received, 8)
         self.assertEqual(push_pick.partner_id, po.partner_id)
+
+    def test_stock_return_for_exchange_without_origin(self):
+        '''
+        Test the stock return exchange without origin
+        '''
+        stock_location = self.env.ref('stock.stock_location_stock')
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+
+        vendor = self.env['res.partner'].create({'name': 'Test Vendor'})
+        seller = self.env['product.supplierinfo'].create({
+            'partner_id': vendor.id,
+            'price': 12.0,
+        })
+
+        purchase_route = self.env.ref("purchase_stock.route_warehouse0_buy")
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'is_storable': True,
+            'route_ids': [(6, 0, purchase_route.ids)],
+            'seller_ids': [(6, 0, [seller.id])],
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'supplier_taxes_id': [(6, 0, [])],
+        })
+
+        # Create a stock picking with moves
+        picking = self.env['stock.picking'].create({
+            'partner_id': vendor.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_id': supplier_location.id,
+            'location_dest_id': stock_location.id,
+            'move_ids': [(0, 0, {
+                'name': self.product.name,
+                'product_id': product.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': stock_location.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+            })],
+        })
+        # validate picking
+        picking.action_confirm()
+        picking.button_validate()
+        # Create a return picking with the above respected picking
+        return_picking = self.env['stock.return.picking'].with_context(active_id=picking.id, active_ids=picking.ids, active_model='stock.picking').create({})
+        # Change the quantity of the product return move from 0 to 1
+        return_picking.product_return_moves.quantity = 1.0
+        # Create a return picking exchange
+        res = return_picking.action_create_exchanges()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        self.assertTrue(return_picking)
+        self.assertEqual(len(return_picking.move_ids), 1)
