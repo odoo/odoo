@@ -58,6 +58,11 @@ const STRING_EDITOR = {
     defaultValue: () => "",
 };
 
+const LENGTH = {
+    month_number: 12,
+    quarter_number: 4,
+};
+
 function makeSelectEditor(options, params = {}) {
     const getOption = (value) => options.find(([v]) => v === value) || null;
     return {
@@ -321,6 +326,24 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "selection": {
             const options = fieldDef.selection || [];
             return makeSelectEditor(options, params);
+        }
+        case "datetimeOption": {
+            if (fieldDef.name in LENGTH) {
+                const length = LENGTH[fieldDef.name];
+                const options = new Array(length).fill(1).map((_, index) => [index + 1, index + 1]);
+                return makeSelectEditor(options, params);
+            }
+            return {
+                component: Input,
+                extractProps: ({ value, update }) => ({
+                    value: String(value),
+                    update: (value) => update(parseValue("integer", value)),
+                    startEmpty: params.startEmpty,
+                }),
+                isSupported: () => true,
+                defaultValue: () => 1,
+                shouldResetValue: (value) => parseValue("integer", value) === value,
+            };
         }
         case undefined: {
             const options = [[1, "1"]];
