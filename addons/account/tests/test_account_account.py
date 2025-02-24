@@ -956,3 +956,25 @@ class TestAccountAccount(TestAccountMergeCommon):
             child_group,
             "group_id computation should work if company_id is not in self.env.companies"
         )
+
+    def test_compute_account(self):
+        account_sale = self.company_data['default_account_revenue'].copy()
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'account_id': account_sale.id,
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                })
+            ]
+        })
+
+        self.assertEqual(invoice.invoice_line_ids.account_id, account_sale)
+
+        invoice.line_ids._compute_account_id()
+
+        self.assertEqual(invoice.invoice_line_ids.account_id, self.company_data['default_account_revenue'])
