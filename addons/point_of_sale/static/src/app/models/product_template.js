@@ -191,7 +191,10 @@ export class ProductTemplate extends Base {
                 break;
             }
             if (rule.product_tmpl_id?.id === productTmpl.id) {
-                productTemplateRule = rule;
+                // Prefer the rule with the highest `min_quantity`
+                if (!productTemplateRule || productTemplateRule.min_quantity < rule.min_quantity) {
+                    productTemplateRule = rule;
+                }
             }
         }
 
