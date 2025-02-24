@@ -1667,6 +1667,8 @@ export class Model extends Array {
                 (!name ||
                     (operator === "="
                         ? record.display_name === name
+                        : operator === "=ilike"
+                        ? new RegExp(name.replaceAll("%", ".*")).test(record.display_name)
                         : record.display_name?.includes(name)))
             ) {
                 result.push(toIdDisplayName(record));
