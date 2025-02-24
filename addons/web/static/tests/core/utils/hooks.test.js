@@ -1,6 +1,6 @@
-import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { click, queryOne } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
+import { describe, destroy, expect, getFixture, test } from "@odoo/hoot";
+import { click, queryOne, waitFor } from "@odoo/hoot-dom";
+import { Deferred, animationFrame, mockTouch, tick } from "@odoo/hoot-mock";
 import {
     contains,
     getService,
@@ -310,10 +310,65 @@ describe("useService", () => {
                 useService("toy_service");
             }
         }
-
+        const originalHandleError = window.owl.App.prototype.handleError;
+        // Catch the error thrown by the owl and let the runner do its job
+        window.owl.App.prototype.handleError = function (...args) {
+            try {
+                patchWithCleanup(console, { warn: () => {} });
+                return originalHandleError(...args);
+            } catch (error) {
+                console.log(`This error is caught by the runner of the test: ${error.message}`);
+            }
+        };
         await expect(mountWithCleanup(MyComponent)).rejects.toThrow(
-            "Service toy_service is not available"
+            'Service toy_service is not available in "MyComponent".'
         );
+        window.owl.App.prototype.handleError = originalHandleError;
+    });
+
+    test("service becomes available after a delay", async () => {
+        // This test illustrates the case of lazy-loading a bundle that contains both main components and services.
+        // In non lazy-loading flow, services are available before (main) components on page load.
+        // In lazy-loading, there's no single flow to ensure that new services are deployed before (main) components.
+        // So a new (main) component can be set up very temporarily if the service is not yet deployed.
+        // `useService()` is a component hook, so it has to handle slightly asynchronous deployment of the service.
+        useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.original;
+        let myComponent;
+        class MyComponent extends Component {
+            static template = xml`<div class="o-MyComponent"><div t-if="myService" t-att-class="{
+                'o-MyComponent-serviceAvailable': myService.someAttr === 1,
+                'o-MyComponent-serviceReactivelyAvailable': myService.someAttr === 2,
+            }"/></div>`;
+            static props = ["*"];
+            setup() {
+                myComponent = this;
+                this.myService = useService("delayed_service", (s) => (this.myService = s));
+                def.resolve();
+            }
+        }
+
+        const def = new Deferred();
+        mountWithCleanup(MyComponent);
+        await tick();
+        registry.category("services").add("delayed_service", {
+            async: ["someMethod"],
+            name: "delayed_service",
+            start() {
+                return reactive({
+                    someAttr: 1,
+                    someMethod: async () => {},
+                });
+            },
+        });
+        await def;
+        await waitFor(".o-MyComponent");
+        expect(".o-MyComponent-serviceAvailable").toHaveCount(1);
+        getService("delayed_service").someAttr = 2;
+        await waitFor(".o-MyComponent-serviceReactivelyAvailable");
+        await tick();
+        destroy(myComponent);
+        await expect(myComponent.myService.someMethod()).rejects.toThrow("Component is destroyed");
+        useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked;
     });
 
     test("service that returns null", async () => {
