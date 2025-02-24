@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { bold, resetSize, setColor } from "../_helpers/user_actions";
@@ -358,7 +359,12 @@ describe("select a full table on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr></tbody></table>",
-                stepFunction: setColor("aquamarine", "color"),
+                stepFunction: async (editor) => {
+                    // Table selection happens on selectionchange
+                    // event which is fired in the next tick.
+                    await tick();
+                    setColor("aquamarine", "color")(editor);
+                },
                 contentAfterEdit: unformat(`
                     <p>
                         a<font style="color: aquamarine;">[bc</font>
