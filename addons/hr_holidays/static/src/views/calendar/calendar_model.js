@@ -48,6 +48,14 @@ export class TimeOffCalendarModel extends CalendarModel {
             // "YYYY-MM-DD".length == 10
             return str.length > 10 ? deserializeDateTime(str) : deserializeDate(str);
         }
+        if (["week", "day"].includes(this.scale)) {
+            context["default_request_unit_hours"] = true;
+            const hour_from = deserialize(context['default_date_from']??this.date);
+            const hour_to = deserialize(context['default_date_to']??this.date);
+            context['default_request_hour_from'] = hour_from.hour + hour_from.minute / 60;
+            context['default_request_hour_to'] = hour_to.hour + hour_to.minute / 60;
+        }
+
         if ("default_date_from" in context) {
             context["default_date_from"] = serializeDateTime(
                 deserialize(context["default_date_from"]).set({ hours: 7 })
