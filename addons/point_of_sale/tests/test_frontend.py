@@ -1689,6 +1689,38 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.main_pos_config.with_user(self.pos_user).open_ui()
             self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchMoreCustomer', login="pos_user")
 
+    def test_pricelist_multi_items_different_qty_thresholds(self):
+        """ Having multiple pricelist items for the same product tmpl with ascending `min_quantity`
+        values, prefer the "latest available"- that is, the one with greater `min_quantity`.
+        """
+        product = self.env['product.product'].create({
+            'name': 'tpmcapi product',
+            'list_price': 1.0,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        self.main_pos_config.pricelist_id.write({
+            'item_ids': [Command.create({
+                'display_applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'compute_price': 'fixed',
+                'fixed_price': 10.0,
+                'min_quantity': 3,
+            }), Command.create({
+                'display_applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'compute_price': 'fixed',
+                'fixed_price': 20.0,
+                'min_quantity': 2,
+            })],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f'/pos/ui?config_id={self.main_pos_config.id}',
+            'test_pricelist_multi_items_different_qty_thresholds',
+            login='pos_user'
+        )
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
