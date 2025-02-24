@@ -8,7 +8,7 @@ from odoo import Command
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import tagged
-from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
+from odoo.addons.account.tests.common import TestTaxCommon, AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
@@ -1776,3 +1776,31 @@ class MobileTestUi(TestUi):
     browser_size = '375x667'
     touch_enabled = True
     allow_inherited_tests_method = True
+
+
+class TestTaxCommonPOS(TestPointOfSaleHttpCommon, TestTaxCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner_a.name = "AAAAAA"  # The POS only load the first 100 partners
+
+    def create_base_line_product(self, base_line, **kwargs):
+        return self.env['product.product'].create({
+            **kwargs,
+            'available_in_pos': True,
+            'list_price': base_line['price_unit'],
+            'taxes_id': [Command.set(base_line['tax_ids'].ids)],
+            'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+        })
+
+    def ensure_products_on_document(self, document, product_prefix):
+        for i, base_line in enumerate(document['lines'], start=1):
+            base_line['product_id'] = self.create_base_line_product(base_line, name=f'{product_prefix}_{i}')
+
+    def assert_pos_order_totals(self, order, expected_values):
+        expected_amounts = {}
+        if 'tax_amount_currency' in expected_values:
+            expected_amounts['amount_tax'] = expected_values['tax_amount_currency']
+        if 'total_amount_currency' in expected_values:
+            expected_amounts['amount_total'] = expected_values['total_amount_currency']
+        self.assertRecordValues(order, [expected_amounts])
