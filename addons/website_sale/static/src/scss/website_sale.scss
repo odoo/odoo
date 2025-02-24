@@ -211,6 +211,16 @@ $input-border-color: $gray-400;
         }
     }
 
+    &.o_wsale_design_grid {
+        #o_wsale_products_header {
+            padding-right: 0;
+
+            .products_header, .o_wsale_filmstip > li:last-child {
+                padding-right: var(--o-wsale-topbar-padding-right);
+            }
+        }
+    }
+
     .activeDrag * {
         cursor: grabbing !important;
         cursor: -webkit-grabbing;
