@@ -35,7 +35,7 @@
             <field name="amount_tax">0.0</field>
             <field name="amount_paid">14.0</field>
             <field name="amount_return">0.0</field>
-            <field name="preset_id" ref="pos_takein_preset"/>
+            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
         </record>
 
         <record id="pos_closed_orderline_3_1_1" model="pos.order.line" forcecreate="False">
@@ -70,7 +70,7 @@
             <field name="amount_tax">0.0</field>
             <field name="amount_paid">7.0</field>
             <field name="amount_return">0.0</field>
-            <field name="preset_id" ref="pos_takein_preset"/>
+            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
         </record>
 
         <record id="pos_closed_orderline_3_2_1" model="pos.order.line" forcecreate="False">
@@ -109,7 +109,7 @@
             <field name="amount_tax">0.0</field>
             <field name="amount_paid">6.7</field>
             <field name="amount_return">0.0</field>
-            <field name="preset_id" ref="pos_takein_preset"/>
+            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
         </record>
 
         <record id="pos_closed_orderline_4_1_1" model="pos.order.line" forcecreate="False">
@@ -144,7 +144,7 @@
             <field name="amount_tax">0.0</field>
             <field name="amount_paid">28.0</field>
             <field name="amount_return">0.0</field>
-            <field name="preset_id" ref="pos_takein_preset"/>
+            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
         </record>
 
         <record id="pos_closed_orderline_4_2_1" model="pos.order.line" forcecreate="False">
@@ -499,7 +499,7 @@
             <field name="partner_id" ref="customer_1" />
             <field name="table_id" ref="table_01" />
             <field name="customer_count">8</field>
-            <field name="preset_id" ref="pos_takein_preset"/>
+            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
         </record>
 
         <record id="pos_orderline_2" model="pos.order.line" forcecreate="False">
@@ -533,7 +533,7 @@
             <field name="partner_id" ref="customer_1" />
             <field name="table_id" ref="table_02" />
             <field name="customer_count">3</field>
-            <field name="preset_id" ref="pos_takein_preset"/>
+            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
         </record>
 
         <record id="pos_orderline_4" model="pos.order.line" forcecreate="False">
@@ -567,7 +567,7 @@
             <field name="partner_id" ref="customer_1" />
             <field name="table_id" ref="table_04" />
             <field name="customer_count">5</field>
-            <field name="preset_id" ref="pos_takein_preset"/>
+            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
         </record>
 
         <record id="pos_orderline_6" model="pos.order.line" forcecreate="False">
@@ -601,7 +601,7 @@
             <field name="partner_id" ref="customer_1" />
             <field name="table_id" ref="table_06" />
             <field name="customer_count">1</field>
-            <field name="preset_id" ref="pos_takein_preset"/>
+            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
         </record>
 
         <record id="pos_orderline_8" model="pos.order.line" forcecreate="False">
