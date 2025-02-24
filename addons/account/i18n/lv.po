@@ -148,6 +148,7 @@ msgstr "%s (Kopija)"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -5794,6 +5795,13 @@ msgstr "Atlaižu dienas"
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_amount_currency
 msgid "Discount amount in Currency"
 msgstr "Atlaides apjoms valūtā"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Discount of %(amount)s if paid %(when)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -17970,6 +17978,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
 msgstr "ar pievienotu rēķinu pdf formātā."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "within %(days)s days"
+msgstr ""
 
 #. module: account
 #. odoo-python
