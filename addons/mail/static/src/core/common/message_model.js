@@ -111,6 +111,13 @@ export class Message extends Record {
         },
     });
     threadAsNewest = Record.one("Thread");
+    threadAsInEdition = Record.one("Thread", {
+        compute() {
+            if (this.composer) {
+                return this.thread;
+            }
+        },
+    });
     /** @type {DateTime} */
     scheduledDatetime = Record.attr(undefined, { type: "datetime" });
     onlyEmojis = Record.attr(false, {
