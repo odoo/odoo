@@ -3,7 +3,7 @@ import {
     ConfirmationDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -53,6 +53,16 @@ function useUniqueDialog() {
     };
 }
 
+export class CalendarQuickCreateForm extends FormRenderer {
+    setup() {
+        super.setup();
+
+        useBus(this.env.calendarModel.bus, "ASK_QUICK_CREATE_FIELD_CHANGES", ({ detail }) => {
+            this.props.record.model.bus.trigger("NEED_LOCAL_CHANGES", { proms: detail.proms });
+        });
+    }
+}
+
 export class CalendarController extends Component {
     static components = {
         DatePicker: DateTimePicker,
@@ -65,7 +75,7 @@ export class CalendarController extends Component {
         ViewScaleSelector,
         CogMenu,
         Record,
-        FormRenderer,
+        CalendarQuickCreateForm,
     };
     static template = "web.CalendarController";
     static props = {
