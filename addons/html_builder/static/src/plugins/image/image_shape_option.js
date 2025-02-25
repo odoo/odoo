@@ -1,6 +1,6 @@
 import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 import { Component } from "@odoo/owl";
-import { ImageShapeSelector } from "./image_shape_selector";
+import { ShapeSelector } from "../shape/shape_selector";
 
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
@@ -14,6 +14,7 @@ import {
     loadImage,
     loadImageInfo,
 } from "@html_editor/utils/image_processing";
+import { imageShapeDefinitions } from "./image_shapes_definition";
 
 class ImageShapePlugin extends Plugin {
     static id = "ImageShapeOption";
@@ -211,7 +212,20 @@ export class ImageShapeOption extends Component {
     static template = "html_builder.ImageShapeOption";
     static components = { ...defaultBuilderComponents };
     static props = {};
+    setup() {
+        this.customizeTabPlugin = this.env.editor.shared.customizeTab;
+    }
     showImageShapes() {
-        this.env.openCustomizeComponent(ImageShapeSelector, this.env.getEditingElements());
+        this.customizeTabPlugin.openCustomizeComponent(
+            ShapeSelector,
+            this.env.getEditingElements(),
+            {
+                shapeActionId: "setImageShape",
+                shapeGroups: this.getImageShapeGroups(),
+            }
+        );
+    }
+    getImageShapeGroups() {
+        return imageShapeDefinitions;
     }
 }
