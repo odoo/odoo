@@ -374,7 +374,7 @@ class PickingType(models.Model):
 class Picking(models.Model):
     _inherit = 'stock.picking'
 
-    _populate_sizes = {'small': 100, 'medium': 2_000, 'large': 50_000}
+    _populate_sizes = {'small': 10000, 'medium': 2_000, 'large': 50_000}
     _populate_dependencies = ['stock.location', 'stock.picking.type', 'res.partner']
 
     def _populate_factories(self):
@@ -459,7 +459,7 @@ class Picking(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    _populate_sizes = {'small': 1_000, 'medium': 20_000, 'large': 1_000_000}
+    _populate_sizes = {'small': 30_000, 'medium': 20_000, 'large': 1_000_000}
     _populate_dependencies = ['stock.picking', 'product.product']
 
     def _populate(self, size):
@@ -550,11 +550,11 @@ class StockMove(models.Model):
             picking_to_validate.with_context(skip_backorder=True, skip_sms=True).button_validate()
 
         # (Un)comment to test a DB with a lot of outgoing/incoming/internal confirmed moves, e.g. for testing of forecasted report
-        # pickings = confirm_pickings(0.8)
+        pickings = confirm_pickings(0.8)
 
         # (Un)comment to test a DB with a lot of outgoing/incoming/internal finished moves
-        # assign_picking(pickings)
-        # validate_pickings(pickings, 1)
+        assign_picking(pickings)
+        validate_pickings(pickings, 0.2)
 
         return moves.exists()  # Confirm picking can unlink some moves
 
