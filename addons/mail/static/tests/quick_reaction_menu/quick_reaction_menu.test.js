@@ -96,7 +96,7 @@ test("navigate quick reaction menu using arrow keys", async () => {
     }
     await contains(".o-mail-QuickReactionMenu-emojiPicker:focus");
     await press("ArrowLeft");
-    for (const emoji of QuickReactionMenu.DEFAULT_EMOJIS.reverse()) {
+    for (const emoji of [...QuickReactionMenu.DEFAULT_EMOJIS].reverse()) {
         await contains(".o-mail-QuickReactionMenu-emoji:focus", { text: emoji });
         await press("ArrowLeft");
     }
@@ -122,4 +122,41 @@ test("can quick search emoji from quick reaction", async () => {
     await animationFrame();
     await press("Enter");
     await contains(".o-mail-MessageReaction", { text: "🥦1" });
+});
+
+test.tags("focus required");
+test("return focus to thread composer on close", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Hello world!");
+    await press("Enter");
+    await contains(".o-mail-Composer-input:focus");
+    await click("[title='Add a Reaction']");
+    await contains(".o-mail-QuickReactionMenu-emoji:focus", { text: "👍" });
+    await press("Enter");
+    await contains(".o-mail-MessageReaction", { text: "👍1" });
+    await contains(".o-mail-Composer-input:focus");
+});
+
+test.tags("focus required");
+test("return focus to message edition composer on close", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Hello world!");
+    await press("Enter");
+    await contains(".o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Composer-input", "Goodbye world!!");
+    await press("Enter");
+    await click("[title='Expand']");
+    await click("[title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer-input:focus");
+    await click("[title='Add a Reaction']");
+    await contains(".o-mail-QuickReactionMenu-emoji:focus", { text: "👍" });
+    await press("Enter");
+    await contains(".o-mail-MessageReaction", { text: "👍1" });
+    await contains(".o-mail-Message .o-mail-Composer-input:focus");
 });
