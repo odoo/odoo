@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "@odoo/owl";
+import { onWillUnmount, useEffect, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
@@ -61,7 +61,7 @@ class NavigationItem {
     }
 }
 
-class Navigator {
+export class Navigator {
     /**
      * @param {*} containerRef
      * @param {NavigationOptions} options
@@ -297,6 +297,7 @@ export function useNavigation(containerRef, options = {}) {
         },
         () => [containerRef.el]
     );
+    onWillUnmount(() => navigator.disable());
 
     return {
         enable: () => navigator.enable(),
