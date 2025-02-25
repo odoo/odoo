@@ -21,7 +21,7 @@
             <form string="User Settings">
                 <sheet>
                     <div class="oe_title">
-                        <h1><field name="user_id"/></h1>
+                        <h1><field name="user_id" readonly="id != False"/></h1>
                     </div>
                     <group name="discuss_user_settings">
                         <group string="Discuss sidebar">
