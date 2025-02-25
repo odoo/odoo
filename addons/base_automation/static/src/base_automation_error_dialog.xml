@@ -5,32 +5,20 @@
         <xpath expr="//div[@role='alert']" position="attributes">
             <attribute name="class" add="o_base_automation_error" separator=" "/>
         </xpath>
-        <xpath expr="//div[@role='alert']" position="inside">
+        <xpath expr="//div[@role='alert']/p[1]" position="after">
             <p class="mt-2">
                 The error occurred during the execution of the automation rule
                 "<t t-esc="automationName"/>"
                 (ID: <t t-esc="automationId"/>).
-                <br/>
             </p>
-            <p t-if="isUserAdmin">
-                You can disable this automation rule or edit it to solve the issue.<br/>
-                Disabling this automation rule will enable you to continue your workflow
-                but any data created after this could potentially be corrupted,
-                as you are effectively disabling a customization that may set
-                important and/or required fields.
-            </p>
-            <p t-else="">
-                You can ask an administrator to disable or correct this automation rule.
+            <p t-if="!isUserAdmin">
+                You can ask an administrator to disable or fix this automation.
             </p>
         </xpath>
-        <xpath expr="//div[@role='alert']//button" position="after">
+        <xpath expr="//t[@t-set-slot='footer']" position="inside">
             <t t-if="isUserAdmin">
-                <button class="btn btn-secondary mt4 o_disable_action_button me-3" t-on-click.prevent="disableAutomation">
-                    <i class="fa fa-ban mr8"/>Disable Automation Rule
-                </button>
-                <button class="btn btn-secondary mt4 o_edit_action_button" t-on-click.prevent="editAutomation">
-                    <i class="fa fa-edit mr8"/>Edit Automation Rule
-                </button>
+                <button class="btn btn-secondary ms-auto ms-md-2 o_disable_action_button" t-on-click.prevent="disableAutomation">Disable</button>
+                <button class="btn btn-secondary ms-auto ms-md-2 o_edit_action_button" t-on-click.prevent="editAutomation">Edit</button>
             </t>
         </xpath>
     </t>
