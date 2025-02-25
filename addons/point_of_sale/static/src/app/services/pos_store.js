@@ -1536,19 +1536,21 @@ export class PosStore extends WithLazyGetterTrap {
                     !orderChange.noteUpdate.length &&
                     !orderChange.internal_note &&
                     !orderChange.general_customer_note &&
-                    order.uiState.lastPrint
+                    order.uiState.lastPrints
                 ) {
-                    orderChange = order.uiState.lastPrint;
+                    orderChange = !opts.reprintAll
+                        ? order.uiState.lastPrints.at(-1)
+                        : order.uiState.lastPrints;
                     reprint = true;
                 } else {
-                    order.uiState.lastPrint = orderChange;
+                    order.uiState.lastPrints.push(orderChange);
                 }
 
                 if (reprint && opts.orderDone) {
                     return;
                 }
 
-                this.printChanges(order, orderChange, reprint);
+                this.printChanges(order, orderChange, reprint, opts.reprintAll);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
             }
@@ -1593,70 +1595,81 @@ export class PosStore extends WithLazyGetterTrap {
         return { orderData, changes };
     }
 
-    async printChanges(order, orderChange, reprint = false) {
-        const unsuccedPrints = [];
+    async printChanges(order, orderChange, reprint = false, reprintAll = false) {
+        let unsuccedPrints = [];
 
         for (const printer of this.unwatched.printers) {
-            const { orderData, changes } = this.generateOrderChange(
-                order,
-                orderChange,
-                printer.config.product_categories_ids,
-                reprint
-            );
-
-            if (changes.new.length) {
-                orderData.changes = {
-                    title: _t("NEW"),
-                    data: changes.new,
-                };
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
+            if (reprintAll) {
+                for (const change of orderChange) {
+                    unsuccedPrints = await this.printTickets(order, change, printer, reprint);
                 }
-            }
-
-            if (changes.cancelled.length) {
-                orderData.changes = {
-                    title: _t("CANCELLED"),
-                    data: changes.cancelled,
-                };
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
-                }
-            }
-
-            if (changes.noteUpdate.length) {
-                const { noteUpdateTitle, printNoteUpdateData = true } = orderChange;
-                orderData.changes = {
-                    title: noteUpdateTitle || _t("NOTE UPDATE"),
-                    data: printNoteUpdateData ? changes.noteUpdate : [],
-                };
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
-                }
-                orderData.changes.noteUpdate = [];
-            }
-
-            if (orderChange.internal_note || orderChange.general_customer_note) {
-                orderData.changes = {};
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
-                }
+            } else {
+                unsuccedPrints = await this.printTickets(order, orderChange, printer, reprint);
             }
         }
 
         // printing errors
         if (unsuccedPrints.length) {
             const failedReceipts = unsuccedPrints.join(", ");
-            //debugger;
             this.dialog.add(AlertDialog, {
                 title: _t("Printing failed"),
                 body: _t("Failed in printing %s changes of the order", failedReceipts),
             });
         }
+    }
+
+    async printTickets(order, orderChange, printer, reprint) {
+        const unsuccedPrints = [];
+        const { orderData, changes } = this.generateOrderChange(
+            order,
+            orderChange,
+            printer.config.product_categories_ids,
+            reprint
+        );
+
+        if (changes.new.length) {
+            orderData.changes = {
+                title: _t("NEW"),
+                data: changes.new,
+            };
+            const result = await this.printOrderChanges(orderData, printer);
+            if (!result.successful) {
+                unsuccedPrints.push(printer.config.name);
+            }
+        }
+
+        if (changes.cancelled.length) {
+            orderData.changes = {
+                title: _t("CANCELLED"),
+                data: changes.cancelled,
+            };
+            const result = await this.printOrderChanges(orderData, printer);
+            if (!result.successful) {
+                unsuccedPrints.push(printer.config.name);
+            }
+        }
+
+        if (changes.noteUpdate.length) {
+            const { noteUpdateTitle, printNoteUpdateData = true } = orderChange;
+            orderData.changes = {
+                title: noteUpdateTitle || _t("NOTE UPDATE"),
+                data: printNoteUpdateData ? changes.noteUpdate : [],
+            };
+            const result = await this.printOrderChanges(orderData, printer);
+            if (!result.successful) {
+                unsuccedPrints.push(printer.config.name);
+            }
+            orderData.changes.noteUpdate = [];
+        }
+
+        if (orderChange.internal_note || orderChange.general_customer_note) {
+            orderData.changes = {};
+            const result = await this.printOrderChanges(orderData, printer);
+            if (!result.successful) {
+                unsuccedPrints.push(printer.config.name);
+            }
+        }
+        return unsuccedPrints;
     }
 
     async printOrderChanges(data, printer) {
