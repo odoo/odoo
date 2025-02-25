@@ -75,7 +75,7 @@ export class Persona extends Record {
     /** @type {number} */
     userId;
     /** @type {ImStatus} */
-    im_status = Record.attr(null, {
+    im_status = Record.attr("offline", {
         onUpdate() {
             if (this.eq(this.store.self) && this.im_status === "offline") {
                 this.store.env.services.im_status.updateBusPresence();

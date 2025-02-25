@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.UserStatusPanel">
+        <div class="mt-auto position-relative position-sticky bottom-0 bg-inherit p-2">
+            <Dropdown position="'top-middle'" menuClass="'o-mail-UserStatusPanelDropdown'">
+                <button class="o-mail-UserStatusPanel-button cursor-pointer border-0 rounded bg-inherit w-100 text-start d-flex align-items-center p-1" t-ref="root" t-att-class="{ 'justify-content-center': store.discuss.isSidebarCompact }">
+                    <div class="position-relative bg-inherit" t-att-class="{ 'ms-1': !store.discuss.isSidebarCompact }">
+                        <img class="o-mail-UserStatusPanel-avatar rounded o_avatar" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
+                        <ImStatus t-if="this.store.discuss.isSidebarCompact" persona="store.self" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
+                    </div>
+                    <div t-if="!this.store.discuss.isSidebarCompact" class="d-flex flex-column ps-2">
+                        <span class="fw-bolder opacity-75" t-esc="store.self.name"/>
+                        <div class="d-flex flex-row align-items-center gap-1" t-ref="status">
+                            <ImStatus persona="store.self" className="'w-auto'" />
+                            <span t-esc="readableImStatus[store.self.im_status]"/>
+                        </div>
+                    </div>
+                </button>
+                <t t-set-slot="content">
+                    <DropdownItem onSelected="() => this.forceImstatus('online')"><i class="fa fa-circle text-success me-1" title="Online" role="img"/> Online</DropdownItem>
+                    <hr class="my-1"/>
+                    <DropdownItem onSelected="() => this.forceImstatus('away')"><i class="fa fa-circle o-away me-1" title="Online" role="img"/> Away</DropdownItem>
+                    <DropdownItem onSelected="() => this.forceImstatus('busy')">
+                        <div class="d-flex flex-column text-wrap">
+                            <span><i class="fa fa-minus-circle text-danger me-1" title="Online" role="img"/> Do Not Disturb</span>
+                            <span class="ms-3 ps-1 text-muted">You will not receive any notifications and reject all incoming calls</span>
+                        </div>
+                    </DropdownItem>
+                    <DropdownItem onSelected="() => this.forceImstatus('offline')"><i class="fa fa-circle-o text-700 opacity-75 me-1" title="Online" role="img"/> Offline</DropdownItem>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+</templates>

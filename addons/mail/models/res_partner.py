@@ -39,12 +39,16 @@ class ResPartner(models.Model):
     @api.depends("user_ids.presence_ids.status")
     def _compute_im_status(self):
         for partner in self:
-            all_status = partner.user_ids.presence_ids.mapped("status")
+            all_status = partner.user_ids.presence_ids.mapped(
+                lambda p: p.user_id.forced_im_status or p.status
+            )
             partner.im_status = (
                 "online"
                 if "online" in all_status
                 else "away"
                 if "away" in all_status
+                else "busy"
+                if "busy" in all_status
                 else "offline"
                 if partner.user_ids
                 else "im_partner"
