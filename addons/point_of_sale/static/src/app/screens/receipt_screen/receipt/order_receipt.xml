@@ -96,13 +96,13 @@
                 </div>
 
                 <div t-if="useQrCode">
-                    <div class="pos-receipt-order-data">
+                    <div class="unique-code pos-receipt-order-data">
                         Unique Code: <t t-esc="order.ticket_code"/>
                     </div>
                 </div>
 
                 <div t-if="['url', 'qr_code_and_url'].includes(this.header.company.point_of_sale_ticket_portal_url_display_mode) and useQrCode">
-                    <div class="pos-receipt-order-data">
+                    <div class="portal-url pos-receipt-order-data">
                         Portal URL: <t t-esc="getPortalURL()"/>
                     </div>
                 </div>
