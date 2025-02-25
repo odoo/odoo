@@ -2214,6 +2214,7 @@ class AccountMoveLine(models.Model):
                                     This is usefull if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
         """
+        self = self.filtered(lambda aml: not aml.matching_number.startswith("P") if aml.matching_number else not aml.reconcile)
         if not self:
             return
 
