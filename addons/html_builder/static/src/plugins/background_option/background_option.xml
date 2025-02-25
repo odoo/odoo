@@ -17,7 +17,6 @@
             <t t-if="props.withShapes">
                 <BuilderButton
                     action="'toggleBgShape'"
-                    actionParam="showBackgroundShapes.bind(this)"
                     preview="false"
                     id="'toggle_bg_shape_id'"
                     iconImg="'/html_builder/static/img/options/bg_shape.svg'"
@@ -42,11 +41,7 @@
                             data-excluded="theme, common"
             />
         </div> -->
-        <BackgroundShape
-            getShapeData="props.getShapeData"
-            showBackgroundShapes="showBackgroundShapes.bind(this)"
-            allPossiblesShapes="this.props.shapesInfo.allPossiblesShapes"
-        />
+        <BackgroundShape />
     </t>
 </t>
 
