@@ -446,7 +446,7 @@ export class Store extends BaseStore {
             partner_ids.push(...recipientIds);
         }
         postData = {
-            body: await prettifyMessageContent(body, validMentions),
+            body: await prettifyMessageContent(body, { validMentions }),
             email_add_signature: emailAddSignature,
             message_type: "comment",
             subtype_xmlid: subtype,
