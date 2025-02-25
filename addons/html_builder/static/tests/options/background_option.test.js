@@ -15,58 +15,17 @@ test("show and leave the 'BackgroundShapeComponent'", async () => {
 });
 
 test("change the background shape of elements", async () => {
-    const shapesInfo = {
-        connectionShapes: [
-            {
-                shapeUrl: "web_editor/Connections/01",
-                label: "Connections 01",
-            },
-            {
-                shapeUrl: "web_editor/Connections/02",
-                label: "Connections 02",
-            },
-        ],
-        originShapes: [],
-        boldShapes: [],
-        blobShapes: [],
-        airyAndZigShapes: [],
-        wavyShapes: [],
-        blockAndRainyShapes: [],
-        floatingShapes: [],
-        allPossiblesShapes: [
-            {
-                shapeUrl: "",
-                label: "",
-            },
-            {
-                shapeUrl: "web_editor/Connections/01",
-                label: "Connections 01",
-            },
-            {
-                shapeUrl: "web_editor/Connections/02",
-                label: "Connections 02",
-            },
-        ],
-    };
     addOption({
         selector: ".selector",
         applyTo: ".applyTo",
         Component: BackgroundComponent,
         props: {
-            getShapeData: () => ({
-                shape: "web_editor/Connections/01",
-                flip: [],
-                showOnMobile: false,
-                shapeAnimationSpeed: "0",
-            }),
-            getShapeStyleUrl: () => "",
             withColors: true,
             withImages: true,
             // todo: handle with_videos
             withShapes: true,
             withGradient: false,
             withColorCombinations: false,
-            shapesInfo: shapesInfo,
         },
     });
     await setupWebsiteBuilder(`
@@ -81,7 +40,7 @@ test("change the background shape of elements", async () => {
     await contains(":iframe .selector").click();
     await contains("[data-label='Shape'] button").click();
     await contains(
-        ".o_pager_container .button_shape:nth-child(2) [data-action-id='applyShape']"
+        ".o_pager_container .button_shape:nth-child(2) [data-action-id='setBackgroundShape']"
     ).click();
     expect(":iframe .selector div#first").toHaveAttribute(
         "data-oe-shape-data",
@@ -99,9 +58,9 @@ test("remove background shape", async () => {
             AAAA
         </section>`);
     await contains(":iframe section").click();
-    await contains("button[data-action-id='applyShape']").click();
+    await contains("button[data-action-id='setBackgroundShape']").click();
     expect(":iframe section").not.toHaveAttribute("data-oe-shape-data");
-    expect("button[data-action-id='applyShape']").not.toBeVisible();
+    expect("button[data-action-id='setBackgroundShape']").not.toBeVisible();
 });
 
 test("toggle Show/Hide on mobile of the shape background", async () => {

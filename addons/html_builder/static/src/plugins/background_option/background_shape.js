@@ -1,4 +1,4 @@
-import { useIsActiveItem } from "@html_builder/core/building_blocks/utils";
+import { useDomState, useIsActiveItem } from "@html_builder/core/building_blocks/utils";
 import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 import { getValueFromVar, isMobileView } from "@html_builder/utils/utils";
 import {
@@ -10,6 +10,9 @@ import { Plugin } from "@html_editor/plugin";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
+import { backgroundShapesDefinition } from "./background_shapes_definition";
+import { ShapeSelector } from "../shape/shape_selector";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * Returns the default colors for the currently selected shape.
@@ -38,10 +41,16 @@ const getDefaultColors = function (editingElement) {
 
 class BackgroundShapePlugin extends Plugin {
     static id = "backgroundShape";
+    static dependencies = ["customizeTab"];
     resources = {
         builder_actions: this.getActions(),
     };
-    static shared = ["getShapeStyleUrl", "getShapeData"];
+    static shared = [
+        "getShapeStyleUrl",
+        "getShapeData",
+        "showBackgroundShapes",
+        "getBackgroundShapes",
+    ];
     setup() {
         // TODO: update shapeBackgroundImagePerClass if a stylesheet value
         // changes.
@@ -68,7 +77,7 @@ class BackgroundShapePlugin extends Plugin {
     }
     getActions() {
         return {
-            applyShape: {
+            setBackgroundShape: {
                 apply: ({ editingElement, param, value }) => {
                     param = param || {};
                     const shapeData = this.getShapeData(editingElement);
@@ -87,12 +96,10 @@ class BackgroundShapePlugin extends Plugin {
                 },
             },
             toggleBgShape: {
-                apply: ({ editingElement, param: showBackgroundShapes }) => {
+                apply: ({ editingElement }) => {
                     const previousSibling = editingElement.previousElementSibling;
                     let shapeToSelect;
-                    const allPossiblesShapesUrl = this.getResource("allPossiblesShapes").map(
-                        (possiblesShape) => possiblesShape.shapeUrl
-                    );
+                    const allPossiblesShapesUrl = Object.keys(this.getBackgroundShapes());
                     if (previousSibling) {
                         const previousShape = this.getShapeData(previousSibling).shape;
                         shapeToSelect = allPossiblesShapesUrl.find(
@@ -116,7 +123,7 @@ class BackgroundShapePlugin extends Plugin {
                         showOnMobile,
                     };
                     this.applyShape(editingElement, () => applyShapeParams);
-                    showBackgroundShapes();
+                    this.showBackgroundShapes([editingElement]);
                 },
                 clean: ({ editingElement }) => {
                     this.applyShape(editingElement, () => ({ shape: "" }));
@@ -353,10 +360,10 @@ class BackgroundShapePlugin extends Plugin {
     }
     /**
      *
-     * @param {String} shapeName
+     * @param {String} shapeId
      */
-    getShapeStyleUrl(shapeName) {
-        const shapeClassName = `o_${shapeName.replace(/\//g, "_")}`;
+    getShapeStyleUrl(shapeId) {
+        const shapeClassName = `o_${shapeId.replace(/\//g, "_")}`;
         // Match current palette
         return this.shapeBackgroundImagePerClass[`.o_we_shape.${shapeClassName}`];
     }
@@ -412,6 +419,28 @@ class BackgroundShapePlugin extends Plugin {
     removeShapeEl(shapeEl) {
         shapeEl.remove();
     }
+    showBackgroundShapes(editingElements) {
+        this.dependencies.customizeTab.openCustomizeComponent(ShapeSelector, editingElements, {
+            shapeActionId: "setBackgroundShape",
+            buttonWrapperClassName: "button_shape",
+            shapeGroups: this.getBackgroundShapeGroups(),
+            imgThroughDiv: true,
+            getShapeUrl: this.getShapeStyleUrl.bind(this),
+        });
+    }
+    getBackgroundShapeGroups() {
+        return backgroundShapesDefinition;
+    }
+    getBackgroundShapes() {
+        const entries = Object.values(this.getBackgroundShapeGroups())
+            .map((x) =>
+                Object.values(x.subgroups)
+                    .map((x) => Object.entries(x.shapes))
+                    .flat()
+            )
+            .flat();
+        return Object.fromEntries(entries);
+    }
 }
 
 registry.category("website-plugins").add(BackgroundShapePlugin.id, BackgroundShapePlugin);
@@ -421,26 +450,22 @@ export class BackgroundShape extends Component {
     static components = {
         ...defaultBuilderComponents,
     };
-    static props = {
-        getShapeData: { type: Function },
-        showBackgroundShapes: { type: Function },
-        allPossiblesShapes: { type: Array },
-    };
+    static props = {};
     setup() {
+        this.backgroundShapePlugin = this.env.editor.shared.backgroundShape;
         this.isActiveItem = useIsActiveItem();
+        this.state = useDomState((editingElement) => {
+            const shapeData = this.backgroundShapePlugin.getShapeData(editingElement);
+            const shapeInfo = this.backgroundShapePlugin.getBackgroundShapes()[shapeData.shape];
+            return {
+                currentShapeLabel: "Choose a shape",
+                shapeName: shapeInfo?.selectLabel || _t("None"),
+                isAnimated: shapeInfo?.animated,
+            };
+        });
     }
-    getCurrentBgShapeName() {
-        return this.getShapeInfo().label;
-    }
-    isShapeAnimated() {
-        return !!this.getShapeInfo().animated;
-    }
-    getShapeInfo() {
-        const editingEl = this.env.getEditingElement();
-        const currentShapeUrl = this.props.getShapeData(editingEl).shape;
-        return this.props.allPossiblesShapes.find(
-            (possiblesShape) => possiblesShape.shapeUrl === currentShapeUrl
-        );
+    showBackgroundShapes() {
+        this.backgroundShapePlugin.showBackgroundShapes(this.env.getEditingElements());
     }
     getBgAnimationSpeed(speed) {
         const inputValueAsNumber = Number(speed);

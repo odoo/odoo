@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.ImageShapeSelector">
+<t t-name="html_builder.shapeSelector">
     <header class="o_pager_nav d-flex flex-column flex-wrap flex-shrink-0 mh-100">
         <div class="d-flex align-items-center">
-            <button class="o_pager_nav_angle fa fa-angle-left btn btn-secondary bg-transparent border-0" t-on-click="closeComponent"/>
+            <button class="o_pager_nav_angle fa fa-angle-left btn btn-secondary bg-transparent border-0" t-on-click="this.props.onClose"/>
             <h5 class="mb-0 text-white">Background Shapes</h5>
         </div>
         <div class="d-flex">
-            <t t-foreach="Object.entries(this.shapeGroups)" t-as="group" t-key="group_index">
+            <t t-foreach="Object.entries(this.props.shapeGroups)" t-as="group" t-key="group_index">
                 <button type="button" class="p-0 text-uppercase active" t-on-click="() => this.scrollToShapes(group[0])">
                     <span class="w-100" t-out="group[1].label"/>
                 </button>
@@ -16,16 +16,21 @@
         </div>
     </header>
     <div class="o_pager_container" t-ref="root">
-        <t t-foreach="Object.entries(this.shapeGroups)" t-as="group" t-key="group_index">
+        <t t-foreach="Object.entries(this.props.shapeGroups)" t-as="group" t-key="group_index">
             <div t-att-data-shape-group-id="group[0]">
                 <t t-foreach="Object.entries(group[1].subgroups)" t-as="subgroup" t-key="subgroup_index">
                     <span t-out="subgroup[1].label"/>
                     <div class="builder_select_page">
                         <t t-foreach="Object.entries(subgroup[1].shapes)" t-as="shape" t-key="shape_index">
-                            <div class="" t-on-click="closeComponent">
-                                <BuilderButton style="''" action="'setImageShape'" actionValue="shape[0]">
+                            <div t-att-class="this.props.buttonWrapperClassName" t-on-click="this.props.onClose">
+                                <BuilderButton style="''" action="this.props.shapeActionId" actionValue="shape[0]">
                                     <div>
-                                        <img t-att-src="this.getShapeUrl(shape[0])" />
+                                        <t t-if="props.imgThroughDiv">
+                                            <div class="o_we_shape" t-attf-style="background-image: {{this.getShapeUrl(shape[0])}};"/>
+                                        </t>
+                                        <t t-else="" >
+                                            <img t-att-src="this.getShapeUrl(shape[0])" />
+                                        </t>
                                         <span t-if="shape[1].imgSize" class="o_we_shape_animated_label">
                                             <i class="fa fa-expand"></i>
                                             <span t-out="shape[1].imgSize"/>

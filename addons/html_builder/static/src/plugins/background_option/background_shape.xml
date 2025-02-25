@@ -3,14 +3,14 @@
 
 <t t-name="html_builder.BackgroundShape">
     <BuilderRow label.translate="Shape" level="1" t-if="isActiveItem('toggle_bg_shape_id')">
-        <button class="btn btn-primary" t-on-click="props.showBackgroundShapes" t-out="getCurrentBgShapeName()"/>
+        <button class="btn btn-primary" t-on-click="this.showBackgroundShapes" t-out="state.shapeName"/>
         <BuilderButton
             title.translate="Show/Hide on Mobile"
             preview="false"
             action="'showOnMobile'"
             iconImg="'/html_builder/static/img/options/mobile_invisible.svg'"
         />
-        <BuilderButton action="'applyShape'" actionValue="''" preview="false" icon="'fa-times'"/>
+        <BuilderButton action="'setBackgroundShape'" actionValue="''" preview="false" icon="'fa-times'"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Flip" level="2" t-if="isActiveItem('toggle_bg_shape_id')">
@@ -25,7 +25,7 @@
         <!-- TODO handle all the attributes -->
         <BuilderColorPicker styleAction="'background-color'" applyTo="':scope > .o_we_shape'"/>
     </BuilderRow>
-    <BuilderRow label.translate="Speed" level="2" t-if="isShapeAnimated()">
+    <BuilderRow label.translate="Speed" level="2" t-if="state.isAnimated">
         <BuilderRange
             preview="false"
             displayRangeValue="true"
