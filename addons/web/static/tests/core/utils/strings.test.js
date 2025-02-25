@@ -10,7 +10,14 @@ import {
     isNumeric,
     sprintf,
 } from "@web/core/utils/strings";
-import { _t } from "@web/core/l10n/translation";
+import { _t as basic_t } from "@web/core/l10n/translation";
+
+function _t() {
+    odoo.translationContext = "web";
+    const translatedTerm = basic_t(...arguments);
+    odoo.translationContext = null;
+    return translatedTerm;
+}
 
 describe.current.tags("headless");
 
@@ -94,7 +101,7 @@ describe("sprintf", () => {
     });
 
     test("supports lazy translated string", () => {
-        patchTranslations({ one: "en", two: "två" });
+        patchTranslations({ web: { one: "en", two: "två" } });
         expect(sprintf("Hello %s", _t("one"))).toBe("Hello en");
         expect(sprintf("Hello %s %s", _t("one"), _t("two"))).toBe("Hello en två");
 

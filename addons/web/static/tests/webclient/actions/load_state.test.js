@@ -25,9 +25,16 @@ import { WebClient } from "@web/webclient/webclient";
 import { router, routerBus, startRouter } from "@web/core/browser/router";
 import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { _t } from "@web/core/l10n/translation";
+import { _t as basic_t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { queryAllAttributes, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
+
+function _t() {
+    odoo.translationContext = "web";
+    const translatedTerm = basic_t(...arguments);
+    odoo.translationContext = null;
+    return translatedTerm;
+}
 
 describe.current.tags("desktop");
 

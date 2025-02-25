@@ -44,7 +44,7 @@ const Markup = markup().constructor;
  */
 export function _t(term, ...values) {
     if (translatedTerms[translationLoaded]) {
-        const translation = translatedTerms[term] ?? term;
+        const translation = _getTranslation(term);
         if (values.length === 0) {
             return translation;
         }
@@ -57,12 +57,13 @@ export function _t(term, ...values) {
 class LazyTranslatedString extends String {
     constructor(term, values) {
         super(term);
+        this.translationContext = odoo.translationContext;
         this.values = values;
     }
     valueOf() {
         const term = super.valueOf();
         if (translatedTerms[translationLoaded]) {
-            const translation = translatedTerms[term] ?? term;
+            const translation = _getTranslation(term);
             if (this.values.length === 0) {
                 return translation;
             }
@@ -109,6 +110,10 @@ export async function loadLanguages(orm) {
     return loadLanguages.installedLanguages;
 }
 
+function _getTranslation(sourceTerm) {
+    return translatedTerms[odoo.translationContext]?.[sourceTerm] ?? sourceTerm;
+}
+
 /**
  * Same behavior as sprintf, but doing two additional things:
  * - If any of the provided values is an iterable, it will format its items
@@ -140,4 +145,24 @@ function _safeFormatAndSprintf(str, ...values) {
         return htmlSprintf(str, ...values);
     }
     return sprintf(str, ...values);
+}
+
+/**
+ * This is a wrapper for _t that the transpiler injects in its place
+ * to provide the knowledge of the module from which it was called.
+ *
+ * Providing the context of the module is useful to avoid conflicting
+ * translations, e.g. "table" has a different meaning depending on the module:
+ * the table of a restaurant (POS module) vs. a spreadsheet table.
+ *
+ * @param {string} str The term to translate
+ * @param {string} moduleName The name of the module, used as a context key to
+ * retrieve the translation.
+ * @param  {...any} args The other arguments passed to _t.
+ */
+export function appTranslateFn(str, moduleName, ...args) {
+    odoo.translationContext = moduleName;
+    const translatedTerm = _t(str, ...args);
+    odoo.translationContext = null;
+    return translatedTerm;
 }

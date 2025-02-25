@@ -14,13 +14,22 @@ export function installLanguages(languages) {
     });
 }
 
-/**
- * @param {Record<string, string>} [terms]
- */
-export function patchTranslations(terms = {}) {
+export function allowTranslations() {
     translatedTerms[translationLoaded] = true;
     after(() => {
         translatedTerms[translationLoaded] = false;
     });
-    patchWithCleanup(translatedTerms, terms);
+}
+
+/**
+ * @param {Record<string, Record<string, string>>} [terms]
+ */
+export function patchTranslations(terms = {}) {
+    allowTranslations();
+    for (const addonName in terms) {
+        if (!(addonName in translatedTerms)) {
+            patchWithCleanup(translatedTerms, { [addonName]: {} });
+        }
+        patchWithCleanup(translatedTerms[addonName], terms[addonName]);
+    }
 }

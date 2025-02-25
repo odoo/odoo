@@ -53,10 +53,10 @@
 // Since JSON grammar is way simpler than JavaScript's grammar, it is actually
 // faster to parse the data as a JSON object than as a JavaScript object.
 
-import { _t as realT } from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
 
 // replace all double quotes with escaped double quotes
-const _t = (str) => realT(str).replace(/"/g, '\\"')
+const _t = (str) =>  appTranslateFn(str, "web").replace(/"/g, '\\"');
 
 const _getCategories = () => `[
     {

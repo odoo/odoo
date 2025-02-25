@@ -2,7 +2,7 @@ import { App, EventBus } from "@odoo/owl";
 import { SERVICES_METADATA } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
-import { _t } from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 import { isMacOS } from "@web/core/browser/feature_detection";
 
@@ -15,7 +15,6 @@ import { isMacOS } from "@web/core/browser/feature_detection";
  * @property {import("services").Services} services
  * @property {EventBus} bus
  * @property {string} debug
- * @property {(str: string) => string} _t
  * @property {boolean} [isSmall]
  */
 
@@ -237,7 +236,7 @@ export async function mountComponent(component, target, appConfig = {}) {
         warnIfNoStaticProps: !session.test_mode,
         name: component.constructor.name,
         translatableAttributes: ["data-tooltip"],
-        translateFn: _t,
+        translateFn: appTranslateFn,
         customDirectives,
         globalValues,
         ...appConfig,

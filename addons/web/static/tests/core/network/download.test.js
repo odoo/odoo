@@ -1,6 +1,6 @@
 import { after, describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockFetch } from "@odoo/hoot-mock";
-import { patchTranslations } from "@web/../tests/web_test_helpers";
+import { allowTranslations } from "@web/../tests/web_test_helpers";
 
 import { download } from "@web/core/network/download";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
@@ -68,7 +68,7 @@ test("handles arbitrary error", async () => {
 });
 
 test("handles success download", async () => {
-    patchTranslations();
+    allowTranslations();
     // This test relies on a implementation detail of the lowest layer of download
     // That is, a link will be created with the download attribute
 

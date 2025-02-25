@@ -14,7 +14,7 @@ import {
     getDateDomainDurationInDays,
     assertDateDomainEqual,
 } from "@spreadsheet/../tests/helpers/date_domain";
-import { makeMockEnv, patchTranslations } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, allowTranslations } from "@web/../tests/web_test_helpers";
 import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 
 import { defineSpreadsheetModels } from "../helpers/data";
@@ -28,7 +28,7 @@ const LAZY_TRANSLATED_NOT_SET = getOperatorLabel("not set");
 const LAZY_TRANSLATED_CONTAINS = getOperatorLabel("ilike");
 
 beforeEach(() => {
-    patchTranslations();
+    allowTranslations();
 });
 
 function getRelativeDateDomain(now, offset, period, fieldName, fieldType) {

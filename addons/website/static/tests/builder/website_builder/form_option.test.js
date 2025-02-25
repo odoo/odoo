@@ -8,7 +8,6 @@ import {
 } from "../website_helpers";
 import { patch } from "@web/core/utils/patch";
 import { IrModel } from "@web/../tests/_framework/mock_server/mock_models/ir_model";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { animationFrame } from "@odoo/hoot-dom";
 
@@ -53,15 +52,15 @@ test("change action of form changes available options", async () => {
         .category("website.form_editor_actions")
         .add("apply_job", {
             formFields: [
-                { type: "char", name: "partner_name", fillWith: "name", string: _t("Your Name") },
+                { type: "char", name: "partner_name", fillWith: "name", string: "Your Name" },
             ],
             fields: [
-                { name: "job_id", type: "many2one", relation: "hr.job", string: _t("Applied Job") },
+                { name: "job_id", type: "many2one", relation: "hr.job", string: "Applied Job" },
             ],
             successPage: "/job-thank-you",
         })
         .add("create_customer", {
-            formFields: [{ type: "char", name: "name", fillWith: "name", string: _t("Your Name") }],
+            formFields: [{ type: "char", name: "name", fillWith: "name", string: "Your Name" }],
         });
 
     await setupWebsiteBuilder(
