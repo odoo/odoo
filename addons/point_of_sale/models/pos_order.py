@@ -180,7 +180,7 @@ class PosOrder(models.Model):
         order.amount_paid = sum(order.payment_ids.mapped('amount'))
 
         if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
-            cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+            cash_payment_method = order.payment_ids.payment_method_id.filtered("is_cash_count")[:1] or pos_session.payment_method_ids.filtered('is_cash_count')[:1]
             if not cash_payment_method:
                 raise UserError(_("No cash statement found for this session. Unable to record returned cash."))
             return_payment_vals = {
