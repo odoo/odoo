@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarRadioField" t-inherit="web.RadioField" t-inherit-mode="primary">
+        <xpath expr="//label[contains(@class, 'o_form_label')]" position="replace">
+            <div class="d-flex align-items-center gap-1">
+                <label class="form-check-label o_form_label flex-grow-1 text-truncate" t-att-for="`${id}_${item[0]}`" t-esc="item[1]" />
+                <span t-if="counters[item[0]] || 0">(<t t-esc="counters[item[0]] || 0"/>)</span>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

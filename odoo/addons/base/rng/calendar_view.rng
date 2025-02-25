@@ -45,6 +45,7 @@
             </rng:zeroOrMore>
             <rng:optional>
                 <rng:element name="QuickCreate">
+                    <rng:optional><rng:attribute name="aggregate"/></rng:optional>
                     <rng:ref name="overload"/>
                     <rng:zeroOrMore>
                         <rng:ref name="field"/>

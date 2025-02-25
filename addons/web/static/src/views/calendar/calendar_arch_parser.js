@@ -42,6 +42,7 @@ export class CalendarArchParser {
         const popoverFieldNodes = {};
         const filtersInfo = {};
         const quickFields = {};
+        let aggregate;
 
         visitXML(arch, (node) => {
             switch (node.tagName) {
@@ -180,6 +181,7 @@ export class CalendarArchParser {
                     break;
                 }
                 case "QuickCreate": {
+                    aggregate = node.getAttribute("aggregate"); // FIXME: need to support the method? (sum, avg...)
                     for (const childNode of node.children) {
                         if (childNode.tagName === "field") {
                             if (childNode.hasAttribute("name")) {
@@ -196,8 +198,8 @@ export class CalendarArchParser {
                                     jsClass
                                 );
 
-                                if (parseFieldNode.type === "many2one") {
-                                    parseFieldNode.widget = "radio";
+                                if (["many2one", "selection"].includes(parseFieldNode.type)) {
+                                    parseFieldNode.widget = "calendar_radio";
                                 }
 
                                 quickFields[fieldName] = parseFieldNode;
@@ -210,6 +212,7 @@ export class CalendarArchParser {
         });
 
         return {
+            aggregate,
             canCreate,
             canDelete,
             canEdit,
