@@ -133,7 +133,7 @@ class PaymentProvider(models.Model):
         string="Pending Message",
         help="The message displayed if the order pending after the payment process",
         default=lambda self: _(
-            "Your payment has been successfully processed but is waiting for approval."
+            "Your payment has been processed but is waiting for approval."
         ), translate=True)
     auth_msg = fields.Html(
         string="Authorize Message", help="The message displayed if payment is authorized",
