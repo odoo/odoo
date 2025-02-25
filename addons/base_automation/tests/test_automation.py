@@ -198,3 +198,80 @@ class TestAutomation(TransactionCaseWithUserDemo):
 
         allowed_models = self.env['ir.model'].search(domain)
         self.assertTrue(base_model._name not in allowed_models.mapped('model'), "The base model should not be in the allowed models")
+
+    def test_scheduled_action_updates_for_timebased_automations(self):
+        cron = self.env.ref('base_automation.ir_cron_data_base_automation_check')
+        self.assertRecordValues(cron, [{
+            'active': False,
+            'interval_type': 'hours',
+            'interval_number': 4,
+        }])
+
+        # Create a time-based automation
+        automation1 = self.env['base.automation'].create({
+            'active': True,
+            'name': 'Automation 1',
+            'trigger': 'on_time_created',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'trg_date_range': 2,
+            'trg_date_range_type': 'hour',
+        })
+        self.assertRecordValues(cron, [{
+            'active': True,
+            'interval_type': 'minutes',
+            'interval_number': 12,  # 10% of automation1 delay
+        }])
+
+        automation2 = self.env['base.automation'].create({
+            'active': True,
+            'name': 'Automation 2',
+            'trigger': 'on_time_created',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'trg_date_range': 1,
+            'trg_date_range_type': 'hour',
+        })
+        self.assertRecordValues(cron, [{
+            'active': True,
+            'interval_type': 'minutes',
+            'interval_number': 6,  # 10% of automation2 delay
+        }])
+
+        # Disable automation2
+        automation2.active = False
+        self.assertRecordValues(cron, [{
+            'active': True,
+            'interval_type': 'minutes',
+            'interval_number': 12,  # 10% of automation1 delay
+        }])
+
+        # Disable automation1
+        automation1.active = False
+        self.assertRecordValues(cron, [{
+            'active': False,
+            'interval_type': 'minutes',
+            'interval_number': 240,  # same as 4 hours
+        }])
+
+        # Enable automation1 and automation2
+        automation1.active = True
+        automation2.active = True
+        self.assertRecordValues(cron, [{
+            'active': True,
+            'interval_type': 'minutes',
+            'interval_number': 6,  # 10% of least delay (automation2)
+        }])
+
+        # Create another automation with no delay
+        self.env['base.automation'].create({
+            'active': True,
+            'name': 'Automation 3',
+            'trigger': 'on_time_created',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'trg_date_range': 0,
+            'trg_date_range_type': 'hour',
+        })
+        self.assertRecordValues(cron, [{
+            'active': True,
+            'interval_type': 'minutes',
+            'interval_number': 6,  # should have not changed
+        }])
