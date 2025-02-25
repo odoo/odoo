@@ -16,7 +16,7 @@
                         <field name="model_name" invisible="1" force_save="True" />
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
                         <div class="oe_title">
-                            <h1><field name="name" placeholder="e.g. Support flow"/></h1>
+                            <h1><field name="name" placeholder="Set an explicit name"/></h1>
                         </div>
                         <group groups="!base.group_no_one" invisible="context.get('default_model_id')">
                             <group>
@@ -34,6 +34,11 @@
                                 <div>
                                     <div class="d-flex flex-row">
                                         <field name="trigger" widget="base_automation_trigger_selection" class="oe_inline me-3"/>
+                                        <field name="trg_date_id" class="oe_inline" placeholder="Select a date field..."
+                                            options="{'no_open': True, 'no_create': True}"
+                                            context="{'hide_model': 1}"
+                                            invisible="trigger != 'on_time'"
+                                            required="trigger == 'on_time'"/>
                                         <field name="trg_selection_field_id" placeholder="Select a value..." class="oe_inline"
                                             options="{'no_open': True, 'no_create': True}"
                                             invisible="trigger not in ['on_state_set', 'on_priority_set']"
@@ -59,25 +64,21 @@
                                 </div>
                                 <label for="trg_date_range" string="Delay" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"/>
                                 <div class="d-flex flex-row gap-2" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']">
-                                    <field name="trg_date_range" class="oe_inline" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
+                                    <field name="trg_date_range" class="oe_inline o_input_3ch" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
                                     <field name="trg_date_range_type" class="oe_inline" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
-                                    <span invisible="trigger != 'on_time_created'">after creation</span>
-                                    <span invisible="trigger != 'on_time_updated'">after last update</span>
-                                    <span invisible="trigger != 'on_time'">after</span>
-                                    <field name="trg_date_id" class="oe_inline" string="Date Field" placeholder="Select a date field..."
-                                        options="{'no_open': True, 'no_create': True}"
-                                        context="{'hide_model': 1}"
-                                        invisible="trigger != 'on_time'"
-                                        required="trigger in ['on_time', 'on_time_created', 'on_time_updated']"/>
+                                    <button
+                                        type="object"
+                                        name="action_open_scheduled_action"
+                                        string="Scheduled action"
+                                        icon="oi-arrow-right"
+                                        class="oe_inline btn-link mt-n1"
+                                        groups="base.group_no_one"
+                                    />
                                 </div>
                                 <field name="log_webhook_calls" widget="boolean_toggle" invisible="trigger != 'on_webhook'"/>
                                 <field name="trg_date_calendar_id" class="oe_inline"
                                     options="{'no_open': True, 'no_create': True}"
                                     invisible="not trg_date_id or trg_date_range_type != 'day'"/>
-                                <label for="least_delay_msg" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated'] or not least_delay_msg" string="" />
-                                <div class="alert alert-info" role="alert" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated'] or not least_delay_msg">
-                                    <field name="least_delay_msg"/>
-                                </div>
                                 <field name="filter_pre_domain" widget="domain" groups="base.group_no_one"
                                        options="{'model': 'model_name', 'in_dialog': True}"
                                        invisible="trigger in [
@@ -95,15 +96,7 @@
                                     options="{'model': 'model_name', 'in_dialog': True}"
                                     invisible="trigger in ['on_webhook']"
                                 />
-                                <label for="filter_domain" groups="!base.group_no_one"
-                                    invisible="trigger not in ['on_create', 'on_create_or_write', 'on_change', 'on_unlink']"
-                                />
-                                <label for="filter_domain" groups="!base.group_no_one"
-                                    string="Extra Conditions"
-                                    invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"
-                                />
-                                <field name="filter_domain" nolabel="1" widget="domain"
-                                    groups="!base.group_no_one"
+                                <field name="filter_domain" widget="domain" groups="!base.group_no_one"
                                     options="{'model': 'model_name', 'in_dialog': False, 'foldable': True}"
                                     invisible="trigger not in ['on_create', 'on_create_or_write', 'on_change', 'on_unlink', 'on_time', 'on_time_created', 'on_time_updated']"
                                 />
