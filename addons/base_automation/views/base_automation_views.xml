@@ -9,8 +9,13 @@
                 <form string="Automation Rule">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_webhook_logs" type="object" string="Logs" class="oe_stat_button" icon="fa-list" invisible="trigger != 'on_webhook'">
-                            </button>
+                            <button groups="base.group_no_one" invisible="trigger != 'on_webhook'"
+                                type="object"
+                                name="action_view_webhook_logs"
+                                string="Logs"
+                                class="oe_stat_button"
+                                icon="fa-list"
+                            />
                         </div>
                         <field name="active" invisible="1" />
                         <field name="model_name" invisible="1" force_save="True" />
@@ -53,15 +58,19 @@
                                     </div>
                                     <div class="text-muted" invisible="trigger != 'on_change'"><i class="fa fa-warning"/> Automation rules triggered by UI changes will be executed <em>every time</em> the watched fields change, <em>whether you save or not</em>.</div>
                                 </div>
-                                <label for="url" string="URL" invisible="trigger != 'on_webhook'"/>
-                                <div invisible="trigger != 'on_webhook'">
-                                    <field name="url" widget="CopyClipboardURL"  placeholder="URL will be created once the rule is saved."/>
-                                    <div class="alert alert-warning" role="status">
-                                        <strong><i class="fa fa-lock"/> Keep it secret, keep it safe.</strong>
-                                        <p>Your webhook URL contains a secret. Don't share it online or carelessly.</p>
-                                        <button class="btn btn-seconadry" type="object" name="action_rotate_webhook_uuid" string="Rotate Secret" icon="fa-refresh" help="Change the URL's secret if you think the URL is no longer secure. You will have to update any automated system that calls this webhook to the new URL."/>
-                                    </div>
+                                <label for="url" string="Secret URL" invisible="trigger != 'on_webhook'"/>
+                                <div class="d-flex flex-row" invisible="trigger != 'on_webhook'">
+                                    <field name="url" class="oe_inline mb-0" widget="CopyClipboardURL"/>
+                                    <button groups="base.group_no_one"
+                                        type="object"
+                                        name="action_rotate_webhook_uuid"
+                                        class="oe_inline btn btn-link flex-shrink-0 px-1 py-0"
+                                        icon="fa-refresh"
+                                        string="Renew"
+                                        help="If renewed, update the secret URL in the third-party app that calls this webhook."
+                                    />
                                 </div>
+                                <field name="log_webhook_calls" widget="boolean_toggle" invisible="trigger != 'on_webhook'" groups="base.group_no_one"/>
                                 <label for="trg_date_range" string="Delay" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"/>
                                 <div class="d-flex flex-row gap-2" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']">
                                     <field name="trg_date_range" class="oe_inline o_input_3ch" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
@@ -75,7 +84,6 @@
                                         groups="base.group_no_one"
                                     />
                                 </div>
-                                <field name="log_webhook_calls" widget="boolean_toggle" invisible="trigger != 'on_webhook'"/>
                                 <field name="trg_date_calendar_id" class="oe_inline"
                                     options="{'no_open': True, 'no_create': True}"
                                     invisible="not trg_date_id or trg_date_range_type != 'day'"/>
