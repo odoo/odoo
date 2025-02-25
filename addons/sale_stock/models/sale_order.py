@@ -185,7 +185,7 @@ class SaleOrder(models.Model):
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
         for order in self:
-            order.delivery_count = len(order.picking_ids)
+            order.delivery_count = len(order.order_line.move_ids.picking_id)
 
     @api.depends('user_id', 'company_id')
     def _compute_warehouse_id(self):
@@ -215,7 +215,7 @@ class SaleOrder(models.Model):
         return res
 
     def action_view_delivery(self):
-        return self._get_action_view_picking(self.picking_ids)
+        return self._get_action_view_picking(self.order_line.move_ids.picking_id)
 
     def _action_cancel(self):
         documents = None
