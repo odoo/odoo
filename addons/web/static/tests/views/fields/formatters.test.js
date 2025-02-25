@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { allowTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { markup } from "@odoo/owl";
 import { currencies } from "@web/core/currency";
@@ -22,7 +22,7 @@ import {
 describe.current.tags("headless");
 
 beforeEach(() => {
-    patchTranslations();
+    allowTranslations();
     patchWithCleanup(localization, {
         decimalPoint: ".",
         thousandsSep: ",",

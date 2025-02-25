@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
 import { Interaction } from "./interaction";
 import { getTemplate } from "@web/core/templates";
 import { PairSet } from "./utils";
@@ -65,7 +65,7 @@ class InteractionService {
                 getTemplate,
                 env: this.env,
                 dev: this.env.debug,
-                translateFn: _t,
+                translateFn: appTranslateFn,
                 warnIfNoStaticProps: this.env.debug,
                 translatableAttributes: ["data-tooltip"],
             };

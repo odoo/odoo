@@ -2,7 +2,7 @@ import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { mockFetch } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { clearRegistry, mountWithCleanup, patchTranslations } from "@web/../tests/web_test_helpers";
+import { clearRegistry, mountWithCleanup, allowTranslations } from "@web/../tests/web_test_helpers";
 import { renderService, htmlToCanvas } from "@point_of_sale/app/services/render_service";
 
 describe("RenderService", () => {
@@ -17,7 +17,7 @@ describe("RenderService", () => {
         clearRegistry(registry.category("main_components"));
         registry.category("services").add("render", renderService);
 
-        patchTranslations(); // this is needed because we are not loading the localization service
+        allowTranslations(); // this is needed because we are not loading the localization service
         const comp = await mountWithCleanup("none");
         const renderedComp = await comp.env.services.render.toHtml(ComponentToBeRendered, {
             name: "Mario",

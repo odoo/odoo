@@ -3,7 +3,7 @@ import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
 import { makeEnv, startServices } from "@web/env";
 import { getTemplate } from "@web/core/templates";
-import { _t } from "@web/core/l10n/translation";
+import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { rpc } from "@web/core/network/rpc";
 import { useService, useBus } from "@web/core/utils/hooks";
@@ -233,7 +233,7 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
                 fromTrialMode: kiosk_backend_info.from_trial_mode,
             },
         dev: env.debug,
-        translateFn: _t,
+        translateFn: appTranslateFn,
         translatableAttributes: ["data-tooltip"],
     });
     return app.mount(document.body);

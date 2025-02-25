@@ -132,7 +132,11 @@ export {
     validateSearch,
 } from "./_framework/search_test_helpers";
 export { swipeLeft, swipeRight } from "./_framework/touch_helpers";
-export { installLanguages, patchTranslations } from "./_framework/translation_test_helpers";
+export {
+    installLanguages,
+    patchTranslations,
+    allowTranslations,
+} from "./_framework/translation_test_helpers";
 export {
     clickButton,
     clickCancel,

@@ -3,7 +3,7 @@ import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import {
     defineParams,
     makeMockEnv,
-    patchTranslations,
+    allowTranslations,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
@@ -30,7 +30,7 @@ const dateFormat = strftimeToLuxonFormat(formats.date);
 const timeFormat = strftimeToLuxonFormat(formats.time);
 
 beforeEach(() => {
-    patchTranslations();
+    allowTranslations();
 });
 
 test("formatDate/formatDateTime specs", async () => {
