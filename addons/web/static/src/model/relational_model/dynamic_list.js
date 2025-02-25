@@ -247,15 +247,29 @@ export class DynamicList extends DataPoint {
             resIds = await this.getResIds(true);
         }
 
-        const duplicated = await this.model.orm.call(this.resModel, "copy", [resIds], {
-            context: this.context,
-        });
-        if (resIds.length > duplicated.length) {
-            this.model.notification.add(_t("Some records could not be duplicated"), {
-                title: _t("Warning"),
+        const copy = async (resIds) => {
+            const copiedRecords = await this.model.orm.call(this.resModel, "copy", [resIds], {
+                context: this.context,
             });
+
+            if (resIds.length > copiedRecords.length) {
+                this.model.notification.add(_t("Some records could not be duplicated"), {
+                    title: _t("Warning"),
+                });
+            }
+            return this.model.load();
+        };
+
+        if (resIds.length > 1) {
+            this.model.dialog.add(ConfirmationDialog, {
+                body: _t("Are you sure that you want to duplicate all the selected records?"),
+                confirm: () => copy(resIds),
+                cancel: () => {},
+                confirmLabel: _t("Confirm"),
+            });
+        } else {
+            await copy(resIds);
         }
-        return this.model.load();
     }
 
     async _deleteRecords(records) {
