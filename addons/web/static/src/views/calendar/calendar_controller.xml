@@ -72,7 +72,7 @@
                                     <div t-if="isMode(CALENDAR_MODE.quick_remove)" class="alert alert-danger mt-2">Clicking on a day or selecting an area will irrevocably delete its content</div>
                                     <div t-if="isMode(CALENDAR_MODE.quick_add)" class="o_form_view o_xxs_form_view mt-2">
                                         <Record fields="props.fields" fieldNames="Object.keys(quickCreateFields)" resModel="props.resModel" onRootLoaded.bind="onQuickCreateRootLoaded" context="props.context" t-slot-scope="data">
-                                            <FormRenderer record="data.record" archInfo="archInfo" class="'p-0'"/>
+                                            <CalendarQuickCreateForm record="data.record" archInfo="archInfo" class="'p-0'"/>
                                         </Record>
                                     </div>
                                 </div>

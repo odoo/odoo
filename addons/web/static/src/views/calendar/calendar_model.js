@@ -211,6 +211,9 @@ export class CalendarModel extends Model {
     }
 
     async createRecordNoInteraction(dates) {
+        const proms = [];
+        this.bus.trigger("ASK_QUICK_CREATE_FIELD_CHANGES", { proms });
+        await Promise.all(proms);
         const extraFields = this.data.quickCreateValuesCallback();
 
         const [section] = this.filterSections;
