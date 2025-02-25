@@ -7,6 +7,7 @@ patch(Store.prototype, {
     setup() {
         super.setup(...arguments);
         this.discuss = Record.one("DiscussApp");
+        /** @type {number|undefined} */
         this.action_discuss_id;
     },
     onStarted() {
