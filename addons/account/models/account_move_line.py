@@ -1069,6 +1069,11 @@ class AccountMoveLine(models.Model):
         cache = {}
         for line in self:
             if line.display_type == 'product' or not line.move_id.is_invoice(include_receipts=True):
+                related_distribution = line._related_analytic_distribution()
+                root_plans = self.env['account.analytic.account'].browse(
+                    list({int(account_id) for ids in related_distribution for account_id in ids.split(',')})
+                ).root_plan_id
+
                 arguments = frozendict({
                     "product_id": line.product_id.id,
                     "product_categ_id": line.product_id.categ_id.id,
@@ -1076,10 +1081,11 @@ class AccountMoveLine(models.Model):
                     "partner_category_id": line.partner_id.category_id.ids,
                     "account_prefix": line.account_id.code,
                     "company_id": line.company_id.id,
+                    "related_root_plan_ids": root_plans,
                 })
                 if arguments not in cache:
                     cache[arguments] = self.env['account.analytic.distribution.model']._get_distribution(arguments)
-                line.analytic_distribution = cache[arguments] or line.analytic_distribution
+                line.analytic_distribution = related_distribution | cache[arguments] or line.analytic_distribution
 
     @api.depends('discount_date', 'date_maturity')
     def _compute_payment_date(self):
@@ -3192,6 +3198,10 @@ class AccountMoveLine(models.Model):
             'company_id': self.company_id.id or self.env.company.id,
             'category': 'invoice' if self.move_id.is_sale_document() else 'vendor_bill' if self.move_id.is_purchase_document() else 'other',
         }
+
+    def _related_analytic_distribution(self):
+        """ Returns the analytic distribution set on the record which triggered the creation of this line. """
+        return {}
 
     # -------------------------------------------------------------------------
     # INSTALLMENTS
