@@ -76,6 +76,7 @@ test("invite button should be present on livechat", async () => {
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
+        livechat_active: true,
     });
     await start();
     await openDiscuss(channelId);
