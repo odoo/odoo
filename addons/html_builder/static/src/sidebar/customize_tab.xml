@@ -10,10 +10,10 @@
         </t>
         <t t-else="">
             <div t-ref="content" class="d-flex flex-column h-100">
-                <CustomizeComponent t-if="state.customizeComponent"
-                    editingElements="state.customizeComponent.editingEls"
-                    comp="state.customizeComponent.comp"
-                    compProps="state.customizeComponent.props"/>
+                <CustomizeComponent t-if="this.customizeComponent.component"
+                    editingElements="this.customizeComponent.editingEls"
+                    comp="this.customizeComponent.component"
+                    compProps="this.customizeComponent.props"/>
                 <t t-else="" t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                     <OptionsContainer
                         snippetModel="props.snippetModel"
