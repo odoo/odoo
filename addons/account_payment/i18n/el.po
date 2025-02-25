@@ -115,6 +115,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>Προσοχή!</strong> Υπάρχει εκκρεμής επιστροφή χρημάτων για αυτή την πληρωμή.\n"
+"                        Περιμένετε λίγο μέχρι να επεξεργαστεί. Αν η επιστροφή χρημάτων είναι ακόμα εκκρεμής σε\n"
+"                        λίγα λεπτά, παρακαλώ ελέγξτε τη ρύθμιση του παρόχου πληρωμών σας."
 
 #. module: account_payment
 #. odoo-python
@@ -133,18 +136,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Η συναλλαγή πληρωμής με αναφορά %sυπάρχει ήδη. "
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A token is required to create a new payment transaction."
 msgstr ""
+"Απαιτείται ένας κωδικός ασφαλείας για να δημιουργηθεί μια νέα συναλλαγή "
+"πληρωμής."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Activate Stripe"
-msgstr ""
+msgstr "Ενεργοποιήστε το Stripe"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -155,7 +160,7 @@ msgstr "Ποσό"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "Ποσό Διαθέσιμο για Επιστροφή Χρημάτων"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
@@ -166,7 +171,7 @@ msgstr "Οφειλόμενο Ποσό"
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "Ποσό που πληρώθηκε"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -174,12 +179,14 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Είστε σίγουροι ότι θέλετε να ακυρώσετε την εξουσιοδοτημένη συναλλαγή; Αυτή η"
+" ενέργεια δεν μπορεί να αναιρεθεί."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Εξουσιοδοτημένες Συναλλαγές"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -239,6 +246,8 @@ msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
 msgstr ""
+"Ολοκληρώθηκε, η διαδικτυακή σας πληρωμή έχει επεξεργαστεί επιτυχώς. "
+"Ευχαριστούμε για την παραγγελία σας"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
@@ -254,21 +263,23 @@ msgstr ""
 #: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Enable credit & debit card payments supported by Stripe."
 msgstr ""
+"Ενεργοποιήστε τις πληρωμές με πιστωτικές και χρεωστικές κάρτες που "
+"υποστηρίζονται από το Stripe."
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "Μόνο Πλήρες"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Δημιουργία Συνδέσμου Πληρωμής Πώλησης"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_invoice_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Δημιουργία Συνδέσμου Πληρωμής"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__has_eligible_epd
@@ -278,7 +289,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "Έχει εκκρεμή επιστροφή χρημάτων"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
@@ -299,16 +310,18 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"Στη λειτουργία δοκιμής, επεξεργάζεται μια ψεύτικη πληρωμή μέσω διεπαφής δοκιμής πληρωμής.\n"
+"Αυτή η λειτουργία συνιστάται κατά την ρύθμιση του παρόχου."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
 msgid "Invoice Online Payment"
-msgstr ""
+msgstr "Online Πληρωμή Τιμολογίου"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "Τιμολόγιο(α)"
 
 #. module: account_payment
 #. odoo-python
@@ -325,7 +338,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr ""
+msgstr "Αριθμός Τιμολογίων"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
@@ -355,7 +368,7 @@ msgstr "Τελευταία Ενημέρωση στις"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "Μέγιστη Επιτρεπόμενη Επιστροφή Χρημάτων"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_link_wizard__form_inherit_account_payment
@@ -368,6 +381,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"Σημειώστε ότι είναι διαθέσιμοι μόνο οι κωδικοί ασφαλείας από παρόχους που "
+"επιτρέπουν την καταγραφή του ποσού."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -375,21 +390,24 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Σημειώστε ότι οι κωδικοί ασφαλείας από παρόχους που είναι ρυθμισμένοι να "
+"εξουσιοδοτούν μόνο συναλλαγές (αντί να καταγράφουν το ποσό) δεν είναι "
+"διαθέσιμοι."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Onboarding Online Payments"
-msgstr ""
+msgstr "Εγγραφή για Διαδικτυακές Πληρωμές"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_onboarding_onboarding_step
 msgid "Onboarding Step"
-msgstr ""
+msgstr "Βήμα Εγγραφής"
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,title:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Online Payments"
-msgstr ""
+msgstr "Online Πληρωμές"
 
 #. module: account_payment
 #. odoo-python
@@ -428,7 +446,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
 msgid "Pay Invoices Online"
-msgstr ""
+msgstr "Πληρώστε Τα Τιμολόγια Online"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_docs_entry
@@ -439,7 +457,7 @@ msgstr "Εξόφληση Τώρα"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay now"
-msgstr ""
+msgstr "Πλήρωσε τώρα"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
@@ -478,12 +496,12 @@ msgstr "Πάροχος Πληρωμών"
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr ""
+msgstr "Πάροχοι Πληρωμών"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Οδηγός Επιστροφής Πληρωμής"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
@@ -538,12 +556,12 @@ msgstr "Επιστροφή"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "Ποσό Επιστροφής"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "Επιστρεφόμενο Ποσό"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
@@ -553,17 +571,17 @@ msgstr "Επιστροφές"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Αριθμός Επιστροφών"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "Διαμόρφωση"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Αποθηκευμένος Κωδικός Ασφαλείας Πληρωμής"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
@@ -573,7 +591,7 @@ msgstr "Αποθηκευμένο διακριτικό πληρωμής"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Πηγή Πληρωμής"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -583,19 +601,19 @@ msgstr "Νομός/Πολιτεία"
 #. module: account_payment
 #: model:onboarding.onboarding.step,done_text:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Step Completed!"
-msgstr ""
+msgstr "Βήμα Ολοκληρωμένο!"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Κατάλληλος Κωδικός Ασφαλείας Πληρωμής"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Ο κωδικός ασφαλείας πρόσβασης είναι άκυρος."
 
 #. module: account_payment
 #. odoo-python
@@ -603,11 +621,13 @@ msgstr ""
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
+"Το ποσό που πρέπει να επιστραφεί πρέπει να είναι θετικό και δεν μπορεί να "
+"υπερβαίνει το %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "Το ημερολόγιο στο οποίο καταχωρούνται οι επιτυχείς συναλλαγές."
 
 #. module: account_payment
 #. odoo-python
@@ -616,17 +636,19 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
+"Η πληρωμή που σχετίζεται με τη συναλλαγή με αναφορά %(ref)s έχει "
+"καταχωρηθεί: %(link)s"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "Οι παρεχόμενες παράμετροι είναι άκυρες."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "Η πηγή πληρωμής των σχετικών πληρωμών επιστροφής χρημάτων"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -684,7 +706,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Χρησιμοποιήστε Ηλεκτρονική Μέθοδο Πληρωμής"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -698,6 +720,9 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
+"Δεν μπορείτε να διαγράψετε μια μέθοδο πληρωμής που είναι συνδεδεμένη με έναν"
+" πάροχο στην ενεργοποιημένη ή δοκιμαστική κατάσταση. Συνδεδεμένος "
+"πάροχος(οι): %s"
 
 #. module: account_payment
 #. odoo-python
@@ -706,6 +731,8 @@ msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
 msgstr ""
+"Δεν μπορείτε να απεγκαταστήσετε αυτό το module καθώς υπάρχουν ήδη πληρωμές "
+"που χρησιμοποιούν αυτήν τη μέθοδο πληρωμής."
 
 #. module: account_payment
 #. odoo-python
@@ -714,6 +741,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Πρέπει πρώτα να απενεργοποιήσετε έναν πάροχο πληρωμών πριν διαγράψετε το ημερολόγιο του.\n"
+"Συνδεδεμένοι πάροχοι: %s"
 
 #. module: account_payment
 #. odoo-javascript

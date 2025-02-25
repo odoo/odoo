@@ -34,6 +34,31 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'paypal':
             return res
 
+        payload = self._paypal_prepare_order_payload()
+
+        _logger.info(
+            "Sending '/checkout/orders' request for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(payload)
+        )
+        idempotency_key = payment_utils.generate_idempotency_key(
+            self, scope='payment_request_order'
+        )
+        order_data = self.provider_id._paypal_make_request(
+            '/v2/checkout/orders', json_payload=payload, idempotency_key=idempotency_key
+        )
+        _logger.info(
+            "Response of '/checkout/orders' request for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(order_data)
+        )
+        return {'order_id': order_data['id']}
+
+    def _paypal_prepare_order_payload(self):
+        """ Prepare the payload for the Paypal create order request.
+
+        :return: The requested payload to create a Paypal order.
+        :rtype: dict
+        """
+        country_code = self.partner_country_id.code or self.company_id.country_id.code
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
         payload = {
             'intent': 'CAPTURE',
@@ -59,7 +84,6 @@ class PaymentTransaction(models.Model):
                     'experience_context': {
                         'shipping_preference': 'NO_SHIPPING',
                     },
-                    'email_address': self.partner_email,
                     'name': {
                         'given_name': partner_first_name,
                         'surname': partner_last_name,
@@ -69,26 +93,15 @@ class PaymentTransaction(models.Model):
                         'admin_area_1': self.partner_state_id.name,
                         'admin_area_2': self.partner_city,
                         'postal_code': self.partner_zip,
-                        'country_code': self.partner_country_id.code,
+                        'country_code': country_code,
                     },
                 },
             },
         }
-        _logger.info(
-            "Sending '/checkout/orders' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payload)
-        )
-        idempotency_key = payment_utils.generate_idempotency_key(
-            self, scope='payment_request_order'
-        )
-        order_data = self.provider_id._paypal_make_request(
-            '/v2/checkout/orders', json_payload=payload, idempotency_key=idempotency_key
-        )
-        _logger.info(
-            "Response of '/checkout/orders' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(order_data)
-        )
-        return {'order_id': order_data['id']}
+        if self.partner_email:
+            payload['payment_source']['paypal']['email_address'] = self.partner_email
+
+        return payload
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on Paypal data.
