@@ -140,11 +140,11 @@ export class CalendarController extends Component {
             .join("\n");
 
         const arch = `
-            <t>
-                <group>
+            <form>
+                <group class="mb-0">
                     ${archFields}
                 </group>
-            </t>
+            </form>
         `;
         console.log(arch);
         this.archInfo = new FormArchParser().parse(parseXML(arch), quickFormModels, resModel);
