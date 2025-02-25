@@ -1674,6 +1674,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (newOrder) {
             this.addNewOrder();
         }
+        return true;
     }
     async printReceipt({
         basic = false,
