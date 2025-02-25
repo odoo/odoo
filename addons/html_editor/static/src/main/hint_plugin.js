@@ -1,25 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
-import { selectElements } from "@html_editor/utils/dom_traversal";
+import { childNodes, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 function isMutationRecordSavable(record) {
     return !(record.type === "attributes" && record.attributeName === "placeholder");
-}
-
-/**
- * @param {SelectionData} selectionData
- * @param {HTMLElement} editable
- */
-function target(selectionData, editable) {
-    if (selectionData.documentSelectionIsInEditable || editable.childNodes.length !== 1) {
-        return;
-    }
-    const el = editable.firstChild;
-    if (el.tagName === "P" && isEmptyBlock(el)) {
-        return el;
-    }
 }
 
 export class HintPlugin extends Plugin {
@@ -39,7 +26,23 @@ export class HintPlugin extends Plugin {
         savable_mutation_record_predicates: isMutationRecordSavable,
         system_classes: ["o-we-hint"],
         ...(this.config.placeholder && {
-            hints: { text: this.config.placeholder, target },
+            hints: [
+                {
+                    text: this.config.placeholder,
+                    target: (selectionData, editable) => {
+                        if (
+                            selectionData.documentSelectionIsInEditable ||
+                            childNodes(editable).length !== 1
+                        ) {
+                            return;
+                        }
+                        const el = editable.firstChild;
+                        if (isEmptyBlock(el) && el.matches(baseContainerGlobalSelector)) {
+                            return el;
+                        }
+                    },
+                },
+            ],
         }),
     };
 

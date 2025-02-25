@@ -2983,7 +2983,19 @@ class BaseModel(metaclass=MetaModel):
             # the result of current sql_field might be 'null'::jsonb
             # ('null'::jsonb)::text == 'null'
             # ('null'::jsonb->>0)::text IS NULL
-            return SQL('(%s->>0)::%s', sql_field, SQL(field._column_type[1]))
+            sql_field = SQL('(%s->>0)::%s', sql_field, SQL(field._column_type[1]))
+
+            if field.type == 'many2one':
+                comodel = self.env[field.comodel_name]
+                sql_field = SQL(
+                    '''(SELECT %(cotable_alias)s.id
+                        FROM %(cotable)s AS %(cotable_alias)s
+                        WHERE %(cotable_alias)s.id = %(ref)s)''',
+                    cotable=SQL.identifier(comodel._table),
+                    cotable_alias=SQL.identifier(Query.make_alias(comodel._table, 'exists')),
+                    ref=sql_field,
+                )
+            return sql_field
 
         return sql_field
 
@@ -3576,7 +3588,7 @@ class BaseModel(metaclass=MetaModel):
         # registry classes; the purpose of this attribute is to behave as a
         # cache of [c for c in cls.mro() if not is_registry_class(c))], which
         # is heavily used in function fields.resolve_mro()
-        cls._model_classes = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
+        cls._model_classes__ = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
 
         # 1. determine the proper fields of the model: the fields defined on the
         # class and magic fields, not the inherited or custom ones
@@ -3589,7 +3601,7 @@ class BaseModel(metaclass=MetaModel):
 
         # collect the definitions of each field (base definition + overrides)
         definitions = defaultdict(list)
-        for klass in reversed(cls._model_classes):
+        for klass in reversed(cls._model_classes__):
             # this condition is an optimization of is_definition_class(klass)
             if isinstance(klass, MetaModel):
                 for field in klass._field_definitions:
@@ -4270,7 +4282,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if not companies:
             return [('company_id', '=', False)]
-        if isinstance(companies, str):
+        if isinstance(companies, unquote):
             return [('company_id', 'in', unquote(f'{companies} + [False]'))]
         return [('company_id', 'in', to_company_ids(companies) + [False])]
 
@@ -4319,26 +4331,26 @@ class BaseModel(metaclass=MetaModel):
                     _logger.warning(_(
                         "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
                         "but the model doesn't have a `company_id` or `company_ids` field!",
-                        model_name=self.model_name, field_names=regular_fields
+                        model_name=self._name, field_names=regular_fields
                     ))
                     continue
                 for name in regular_fields:
-                    corecord = record.sudo()[name]
-                    if corecord:
-                        domain = corecord._check_company_domain(companies)
-                        if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
-                            inconsistencies.append((record, name, corecord))
+                    corecords = record.sudo()[name]
+                    if corecords:
+                        domain = corecords._check_company_domain(companies) # pylint: disable=0601
+                        if domain and corecords != corecords.with_context(active_test=False).filtered_domain(domain):
+                            inconsistencies.append((record, name, corecords))
             # The second part of the check (for property / company-dependent fields) verifies that the records
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
             # the company for which the value is being assigned, i.e:
             #      `self.property_account_payable_id.company_id == self.env.company
             company = self.env.company
             for name in property_fields:
-                corecord = record.sudo()[name]
-                if corecord:
-                    domain = corecord._check_company_domain(company)
-                    if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
-                        inconsistencies.append((record, name, corecord))
+                corecords = record.sudo()[name]
+                if corecords:
+                    domain = corecords._check_company_domain(company)
+                    if domain and corecords != corecords.with_context(active_test=False).filtered_domain(domain):
+                        inconsistencies.append((record, name, corecords))
 
         if inconsistencies:
             lines = [_("Incompatible companies on records:")]

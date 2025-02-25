@@ -17,7 +17,6 @@ import { Orderline } from "@point_of_sale/app/generic_components/orderline/order
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 import { ProductInfoPopup } from "./product_info_popup/product_info_popup";
-import { fuzzyLookup } from "@web/core/utils/search";
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import {
     ControlButtons,
@@ -55,6 +54,7 @@ export class ProductScreen extends Component {
             currentOffset: 0,
             quantityByProductTmplId: {},
         });
+        this._searchTriggered = false;
         onMounted(() => {
             this.pos.openOpeningControl();
             this.pos.addPendingOrder([this.currentOrder.id]);
@@ -342,11 +342,18 @@ export class ProductScreen extends Component {
         let list = [];
 
         if (this.searchWord !== "") {
+            if (!this._searchTriggered) {
+                this.pos.setSelectedCategory(0);
+                this._searchTriggered = true;
+            }
             list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
-        } else if (this.pos.selectedCategory?.id) {
-            list = this.getProductsByCategory(this.pos.selectedCategory);
         } else {
-            list = this.products;
+            this._searchTriggered = false;
+            if (this.pos.selectedCategory?.id) {
+                list = this.getProductsByCategory(this.pos.selectedCategory);
+            } else {
+                list = this.products;
+            }
         }
 
         if (!list || list.length === 0) {
@@ -364,7 +371,7 @@ export class ProductScreen extends Component {
             if (filteredList.length >= 100) {
                 break;
             }
-            if (!excludedProductIds.includes(product.id) && product.available_in_pos) {
+            if (!excludedProductIds.includes(product.id) && product.canBeDisplayed) {
                 filteredList.push(product);
             }
         }
@@ -375,17 +382,22 @@ export class ProductScreen extends Component {
     }
 
     getProductsBySearchWord(searchWord) {
-        const exactMatches = this.products.filter((product) => product.exactMatch(searchWord));
+        const words = unaccent(searchWord.toLowerCase(), false);
+        const products = this.pos.selectedCategory?.id
+            ? this.getProductsByCategory(this.pos.selectedCategory)
+            : this.products;
 
-        if (exactMatches.length > 0 && searchWord.length > 2) {
+        const exactMatches = products.filter((product) => product.exactMatch(words));
+
+        if (exactMatches.length > 0 && words.length > 2) {
             return exactMatches;
         }
 
-        const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), this.products, (product) =>
-            unaccent(product.searchString, false)
+        const matches = products.filter((p) =>
+            unaccent(p.searchString, false).toLowerCase().includes(words)
         );
 
-        return Array.from(new Set([...exactMatches, ...fuzzyMatches]));
+        return Array.from(new Set([...exactMatches, ...matches]));
     }
 
     addMainProductsToDisplay(products) {

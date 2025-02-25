@@ -2,7 +2,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
     fill,
-    getActiveElement,
     press,
     queryAllTexts,
     queryFirst,
@@ -10,7 +9,7 @@ import {
     queryText,
     select,
     waitFor,
-    waitUntil,
+    waitForNone,
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
@@ -34,7 +33,7 @@ describe("should open a popover", () => {
         expect(".o-we-linkpopover").toHaveCount(1);
         // selection outside a link
         setContent(el, "<p>this []is a <a>link</a></p>");
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(".o-we-linkpopover").toHaveCount(0);
     });
     test("link popover should have input field for href when the link doesn't have href", async () => {
@@ -124,7 +123,7 @@ describe("popover should edit,copy,remove the link", () => {
         const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
         await waitFor(".o-we-linkpopover");
         await click(".o_we_remove_link");
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(getContent(el)).toBe("<p>this is a li[]nk</p>");
     });
     test("after edit the label, the text of the link should be updated", async () => {
@@ -191,12 +190,12 @@ describe("Incorrect URL should be corrected", () => {
             '<p>this is a <a href="mailto:test@test.com">li[]nk</a></p>'
         );
     });
-    test("when a link's URL is an phonenumber, the link's URL should start with tel://:", async () => {
+    test("when a link's URL is an phonenumber, the link's URL should start with tel:", async () => {
         const { el } = await setupEditor("<p>this is a <a>li[]nk</a></p>");
 
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("+1234567890");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p>this is a <a href="tel://+1234567890">li[]nk</a></p>'
+            '<p>this is a <a href="tel:+1234567890">li[]nk</a></p>'
         );
     });
 });
@@ -208,7 +207,7 @@ describe("Link creation", () => {
             await insertText(editor, "http://google.co.in");
             await insertText(editor, " ");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p><a href="http://google.co.in">http://google.co.in</a> []</p>'
+                '<p><a href="http://google.co.in">http://google.co.in</a>&nbsp;[]</p>'
             );
         });
         test("typing invalid URL + space should not convert to link", async () => {
@@ -229,9 +228,23 @@ describe("Link creation", () => {
             expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a>[]</a></p>");
             await waitFor(".o-we-linkpopover");
             expect(".o-we-linkpopover").toHaveCount(1);
-            expect(getActiveElement()).toBe(queryOne(".o-we-linkpopover input.o_we_label_link"), {
+            expect(".o-we-linkpopover input.o_we_label_link").toBeFocused({
                 message: "should focus label input by default, when we don't have a label",
             });
+        });
+
+        test("creating link in an empty block using link command should not contain trailing br", async () => {
+            const { editor, el } = await setupEditor("<p>[]<br></p>");
+            await insertText(editor, "/link");
+            await animationFrame();
+            expect(".active .o-we-command-name").toHaveText("Link");
+            await click(".o-we-command-name:first");
+            await waitFor(".o-we-linkpopover");
+            await fill("test.com");
+            await click(".o_we_apply_link");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><a href="https://test.com">test.com[]</a></p>'
+            );
         });
 
         test("when create a new link by powerbox and not input anything, the link should be removed", async () => {
@@ -370,9 +383,7 @@ describe("Link creation", () => {
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
             await waitFor(".o-we-linkpopover", { timeout: 1500 });
-            expect(getActiveElement()).toBe(
-                queryOne(".o-we-linkpopover input.o_we_href_input_link")
-            );
+            expect(".o-we-linkpopover input.o_we_href_input_link").toBeFocused();
 
             await fill("test.com");
             await click(".o_we_apply_link");
@@ -719,7 +730,7 @@ describe("link preview", () => {
             focusNode: pNode,
             focusOffset: 1,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
 
         const linkNode = queryOne("a");
         setSelection({
@@ -760,7 +771,7 @@ describe("link preview", () => {
             focusNode: pNode,
             focusOffset: 1,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
 
         const linkNode = queryOne("a");
         setSelection({
@@ -787,7 +798,7 @@ describe("link in templates", () => {
             focusNode: pNode,
             focusOffset: 0,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>[]test<a t-attf-href="/test/1">link</a></p>'
         );
@@ -804,7 +815,7 @@ describe("link in templates", () => {
             focusNode: pNode,
             focusOffset: 0,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>[]test<a t-att-href="/test/1">link</a></p>'
         );
@@ -954,7 +965,7 @@ describe("upload file via link popover", () => {
         await animationFrame();
         // Created link has the correct href and label
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            `<p><a href="${expectedUrl}">file.txt[]</a><br></p>`
+            `<p><a href="${expectedUrl}">file.txt[]</a></p>`
         );
     });
 

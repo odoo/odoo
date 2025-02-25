@@ -3,9 +3,9 @@
 # 	* sale_stock
 # 
 # Translators:
-# Nurlan Farajov <coolinuxoid@gmail.com>, 2024
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # erpgo translator <jumshud@erpgo.az>, 2024
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2024\n"
+"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,6 +99,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Məhsulun konfiqurasiyasına uyğun olaraq, çatdırılan miqdar avtomatik olaraq mexanizmlə hesablana bilər:\n"
+"  - Manual: kəmiyyət sətirdə əl ilə təyin edilir\n"
+"  - Xərclərdən analitik: kəmiyyət dərc edilmiş xərclərdən alınan kəmiyyət məbləğidir\n"
+"  - Vaxt cədvəli: kəmiyyət bu satış sətiri ilə əlaqəli tapşırıqlar üzrə qeydə alınan saatların cəmidir\n"
+"  - Anbar hərəkətləri: miqdar təsdiq edilmiş qəbullardan gəlir\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -205,6 +210,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Müştəriyə vəd edə biləcəyiniz çatdırılma tarixi, Xidmət məhsulları halında "
+"sifariş xətlərinin minimum çatdırılma müddətindən hesablanır. Göndərmə "
+"halında, sifariş xətlərinin minimum və ya maksimum çatdırılma müddətindən "
+"istifadə etmək üçün sifarişin göndərmə siyasəti nəzərə alınacaqdır."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -253,7 +262,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Expected:"
-msgstr ""
+msgstr "Gözlənilir:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
@@ -364,7 +373,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr ""
+msgstr "Göndərmə vaxtı"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_lot
@@ -397,7 +406,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Çatdırılan miqdarı yeniləmək üsulu"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -432,6 +441,8 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
+"Sifarişin təsdiqi ilə məhsulların müştəriyə göndərilməsi arasındakı günlərin"
+" sayı"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -473,7 +484,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "Çatdırılma Miqdarı"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -560,7 +571,7 @@ msgstr "Satış Sifarişi"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr ""
+msgstr "Satış Sifarişini Ləğv et"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -570,13 +581,13 @@ msgstr "Satış Sifarişi Sətri"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
-msgstr ""
+msgstr "Satış Sifariş Sətirləri"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_ids
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "Sales Orders"
-msgstr ""
+msgstr "Satış Sifarişləri"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead

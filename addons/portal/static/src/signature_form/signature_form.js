@@ -45,8 +45,13 @@ class SignatureForm extends Component {
         onMounted(() => {
             this.rootRef.el.closest('.modal').addEventListener('shown.bs.modal', () => {
                 this.signature.resetSignature();
+                this.toggleSignatureFormVisibility();
             });
         });
+    }
+
+    toggleSignatureFormVisibility() {
+        this.rootRef.el.classList.toggle('d-none', document.querySelector('.editor_enable'));
     }
 
     get sendLabel() {

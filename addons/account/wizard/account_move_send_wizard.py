@@ -58,7 +58,7 @@ class AccountMoveSendWizard(models.TransientModel):
     mail_lang = fields.Char(compute='_compute_mail_lang')
     mail_partner_ids = fields.Many2many(
         comodel_name='res.partner',
-        string="Recipients",
+        string="To",
         compute='_compute_mail_subject_body_partners',
         store=True,
         readonly=False,

@@ -5,16 +5,16 @@
 # Translators:
 # Tereza Mokrá, 2024
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
-# Wil Odoo, 2024
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Wil Odoo, 2025
+# Aleš Fiala <f.ales1@seznam.cz>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +30,9 @@ msgid ""
 "\n"
 "Transfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s."
 msgstr ""
+"\n"
+"\n"
+"Převody %(transfer_list)s: U výrobků je třeba uvést výrobní číslo / sériové číslo %(product_list)s."
 
 #. module: stock
 #. odoo-python
@@ -38,6 +41,8 @@ msgid ""
 "\n"
 "(%(serial_number)s) exists in location %(location)s"
 msgstr ""
+"\n"
+"(%(serial_number)s) existuje v místě %(location)s"
 
 #. module: stock
 #. odoo-python
@@ -47,6 +52,8 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"Množství provedené pro produkt %(product)s nerespektuje přesnost zaokrouhlení definovanou v měrné jednotce %(unit)s. Změňte prosím provedené množství nebo přesnost zaokrouhlení vaší měrné jednotky."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -184,6 +191,8 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
+"%(warehouse)s může poskytnout pouze %(free_qty)s %(uom)s, zatímco množství "
+"na objednávku je %(qty_to_order)s %(uom)s."
 
 #. module: stock
 #. odoo-python
@@ -446,11 +455,6 @@ msgstr "4 x 7 s cenou"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
 msgstr ""
 
 #. module: stock
@@ -4100,12 +4104,6 @@ msgid "Immediate Transfer"
 msgstr "Okamžitý přesun"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Import"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -5658,6 +5656,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"Nebylo nalezeno žádné pravidlo pro doplnění \"%(product)s\" v \"%(location)s\".\n"
+"Ověřte konfiguraci tras produktu."
 
 #. module: stock
 #. odoo-python
@@ -6538,11 +6538,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Stisknutím tlačítka VYTVOŘIT definujte množství pro každý produkt na skladě "
-"nebo je importujte z tabulky v Oblíbených"
 
 #. module: stock
 #. odoo-javascript
@@ -7588,7 +7586,7 @@ msgstr "Informace o doplnění"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
+msgstr "Informace o doplnění pro %(product)s v %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -7734,6 +7732,11 @@ msgid "Return"
 msgstr "Navrácení"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Vratkový přesun"
@@ -7762,7 +7765,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
-msgstr ""
+msgstr "Návrat %(picking_name)s"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
@@ -7875,6 +7878,8 @@ msgid ""
 "Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
 "%(route_company)s."
 msgstr ""
+"Pravidlo %(rule)s patří k %(rule_company)s, zatímco trasa patří k "
+"%(route_company)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8186,6 +8191,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): "
 "%(location_list)s. Please correct the serial number encoded."
 msgstr ""
+"Sériové číslo (%(serial_number)s) již existuje v lokacích: "
+"%(location_list)s. Opravte zakódované sériové číslo."
 
 #. module: stock
 #. odoo-python
@@ -8195,6 +8202,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"Sériové číslo (%(serial_number)s) není umístěné v %(source_location)s, ale je umístěné v lokacích: %(other_locations)s\n"
+"\n"
+"Opravte to, abyste předešli nekonzistentním údajům."
 
 #. module: stock
 #. odoo-python
@@ -8204,6 +8214,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"Sériové číslo (%(serial_number)s) není umístěné v %(source_location)s, ale je umístěné v lokacích: %(other_locations)s\n"
+"\n"
+"Zdrojové umístění tohoto přesunu bude změněno na %(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -9162,6 +9175,9 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"Množství provedené pro produkt \"%(product)s\" nerespektuje přesnost "
+"zaokrouhlení definovanou v měrné jednotce \"%(unit)s\". Změňte prosím "
+"provedené množství nebo přesnost zaokrouhlení vaší měrné jednotky."
 
 #. module: stock
 #. odoo-python
@@ -9184,7 +9200,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "Vyhledávání nepodporuje operátor %(operator)s nebo hodnotu %(value)s."
 
 #. module: stock
 #. odoo-python
@@ -9203,6 +9219,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"Sériové číslo bylo již přiřazeno:\n"
+" Produkt: %(product)s, sériové číslo: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -10557,7 +10575,7 @@ msgstr "Kdy produkt dorazí do"
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> "
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need."
+"the need. %(suffix)s"
 msgstr ""
 
 #. module: stock

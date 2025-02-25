@@ -191,6 +191,9 @@ registerWebsitePreviewTour('test_html_editor_scss_2', {
 
         // 4. Open Html Editor and select a scss file
         {
+            trigger: "[is-ready=true]:iframe #wrapwrap",
+        },
+        {
             content: "open site menu",
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
             run: "click",
@@ -261,13 +264,16 @@ registerWebsitePreviewTour(
     },
     () => [
         {
+            trigger: ":iframe #wrapwrap",
+        },
+        {
             content: "Open Site menu",
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
             run: "click",
         },
         {
             content: "Open HTML / CSS Editor",
-            trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+            trigger: '.o_popover a[data-menu-xmlid="website.menu_ace_editor"]:contains(/^HTML/)',
             run: "click",
         },
         {

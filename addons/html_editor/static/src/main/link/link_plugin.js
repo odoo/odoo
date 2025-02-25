@@ -1,17 +1,18 @@
 import { Plugin } from "@html_editor/plugin";
-import { unwrapContents } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { cleanTrailingBR, unwrapContents } from "@html_editor/utils/dom";
+import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
-import { isVisible } from "@html_editor/utils/dom_info";
+import { isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
+import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -124,7 +125,16 @@ async function fetchAttachmentMetaData(url, ormService) {
 
 export class LinkPlugin extends Plugin {
     static id = "link";
-    static dependencies = ["dom", "history", "input", "selection", "split", "lineBreak", "overlay"];
+    static dependencies = [
+        "dom",
+        "history",
+        "input",
+        "selection",
+        "split",
+        "lineBreak",
+        "overlay",
+        "color",
+    ];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
     resources = {
@@ -218,6 +228,12 @@ export class LinkPlugin extends Plugin {
                 ev.preventDefault();
                 this.toggleLinkTools({ link: target });
             }
+        });
+        this.addDomListener(this.editable, "mousedown", () => {
+            this._isNavigatingByMouse = true;
+        });
+        this.addDomListener(this.editable, "keydown", () => {
+            delete this._isNavigatingByMouse;
         });
         // link creation is added to the command service because of a shortcut conflict,
         // as ctrl+k is used for invoking the command palette
@@ -316,7 +332,7 @@ export class LinkPlugin extends Plugin {
         this.type = type;
     }
 
-    normalizeLink() {
+    normalizeLink(root) {
         const { anchorNode } = this.dependencies.selection.getEditableSelection();
         const linkEl = closestElement(anchorNode, "a");
         if (linkEl && linkEl.isContentEditable) {
@@ -324,6 +340,26 @@ export class LinkPlugin extends Plugin {
             const url = deduceURLfromText(label, linkEl);
             if (url) {
                 linkEl.setAttribute("href", url);
+            }
+        }
+        for (const anchorEl of selectElements(root, "a")) {
+            const { color } = anchorEl.style;
+            const childNodes = [...anchorEl.childNodes];
+            // For each anchor element, if it has an inline color style,
+            // (converted from an external style), remove it from the anchor,
+            // create a font tag inside it, and move the color to the font tag.
+            // This ensures the color is applied to the font element instead of
+            // the anchor element itself.
+            if (color && childNodes.every((n) => !isBlock(n))) {
+                anchorEl.style.removeProperty("color");
+                const font = selectElements(anchorEl, "font").next().value;
+                if (font && anchorEl.textContent === font.textContent) {
+                    continue;
+                }
+                const newFont = this.document.createElement("font");
+                newFont.append(...childNodes);
+                anchorEl.appendChild(newFont);
+                this.dependencies.color.colorElement(newFont, color, "color");
             }
         }
     }
@@ -348,6 +384,46 @@ export class LinkPlugin extends Plugin {
             recordInfo: this.config.getRecordInfo?.() || {},
             type: this.type || "",
         };
+        if (
+            this._isNavigatingByMouse &&
+            selection.isCollapsed &&
+            selectionData.documentSelectionIsInEditable
+        ) {
+            delete this._isNavigatingByMouse;
+            const { startContainer, startOffset, endContainer, endOffset } = selection;
+            const linkElement = closestElement(startContainer, "a");
+            if (
+                linkElement &&
+                linkElement.textContent.startsWith("\uFEFF") &&
+                linkElement.textContent.endsWith("\uFEFF")
+            ) {
+                const linkDescendants = descendants(linkElement);
+
+                // Check if the cursor is positioned at the begining of link.
+                const isCursorAtStartOfLink = isZwnbsp(startContainer)
+                    ? linkDescendants.indexOf(startContainer) === 0
+                    : startContainer.nodeType === Node.TEXT_NODE &&
+                      linkDescendants.indexOf(startContainer) === 1 &&
+                      startOffset === 0;
+
+                // Check if the cursor is positioned at the end of link.
+                const isCursorAtEndOfLink = isZwnbsp(endContainer)
+                    ? linkDescendants.indexOf(endContainer) === linkDescendants.length - 1
+                    : endContainer.nodeType === Node.TEXT_NODE &&
+                      linkDescendants.indexOf(endContainer) === linkDescendants.length - 2 &&
+                      endOffset === nodeSize(endContainer);
+
+                // Handle selection movement.
+                if (isCursorAtStartOfLink || isCursorAtEndOfLink) {
+                    const block = closestBlock(linkElement);
+                    const linkIndex = [...block.childNodes].indexOf(linkElement);
+                    this.dependencies.selection.setSelection({
+                        anchorNode: block,
+                        anchorOffset: isCursorAtStartOfLink ? linkIndex - 1 : linkIndex + 2,
+                    });
+                }
+            }
+        }
         if (!selectionData.documentSelectionIsInEditable) {
             // note that data-prevent-closing-overlay also used in color picker but link popover
             // and color picker don't open at the same time so it's ok to query like this
@@ -430,6 +506,7 @@ export class LinkPlugin extends Plugin {
                     } else {
                         this.linkElement.removeAttribute("class");
                     }
+                    cleanTrailingBR(closestBlock(this.linkElement));
                     this.dependencies.selection.focusEditable();
                     this.removeCurrentLinkIfEmtpy();
                     this.dependencies.history.addStep();
@@ -628,12 +705,34 @@ export class LinkPlugin extends Plugin {
     }
 
     onBeforeInput(ev) {
-        if (
-            ev.inputType === "insertParagraph" ||
-            ev.inputType === "insertLineBreak" ||
-            (ev.inputType === "insertText" && ev.data === " ")
-        ) {
-            this.handleAutomaticLinkInsertion();
+        if (ev.inputType === "insertParagraph" || ev.inputType === "insertLineBreak") {
+            const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
+            if (nodeForSelectionRestore) {
+                this.dependencies.selection.setCursorStart(nodeForSelectionRestore);
+                this.dependencies.history.addStep();
+            }
+        }
+        if (ev.inputType === "insertText" && ev.data === " ") {
+            const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
+            if (nodeForSelectionRestore) {
+                // Since we manually insert a space here, we will be adding a history step
+                // after link creation with selection at the end of the link and another
+                // after inserting the space. So first undo will remove the space, and the
+                // second will undo the link creation.
+                this.dependencies.selection.setSelection({
+                    anchorNode: nodeForSelectionRestore,
+                    anchorOffset: 0,
+                });
+                this.dependencies.history.addStep();
+                nodeForSelectionRestore.textContent =
+                    "\u00A0" + nodeForSelectionRestore.textContent;
+                this.dependencies.selection.setSelection({
+                    anchorNode: nodeForSelectionRestore,
+                    anchorOffset: 1,
+                });
+                this.dependencies.history.addStep();
+                ev.preventDefault();
+            }
         }
     }
     /**
@@ -671,8 +770,7 @@ export class LinkPlugin extends Plugin {
                 const textNodeToReplace = selection.anchorNode.splitText(startOffset);
                 textNodeToReplace.splitText(match[0].length);
                 selection.anchorNode.parentElement.replaceChild(link, textNodeToReplace);
-                this.dependencies.selection.setCursorStart(nodeForSelectionRestore);
-                this.dependencies.history.addStep();
+                return nodeForSelectionRestore;
             }
         }
     }

@@ -12,37 +12,37 @@
 # ericrolo, 2024
 # Albert Parera, 2024
 # Pere Martínez, 2024
-# Noemi Pla, 2024
 # Iván Infantes Castarnado, 2024
 # CristianCruzParra, 2024
 # Sandra Franch <sandra.franch@upc.edu>, 2024
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2024
 # martioodo hola, 2024
-# Josep Sànchez <papapep@gmx.com>, 2024
+# Josep Sànchez <papapep@pinatell.net>, 2024
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2024
-# Ivan Espinola, 2024
 # Martin Trigaux, 2024
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
 # Josep Anton Belchi, 2024
 # Óscar Fonseca <tecnico@pyming.com>, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
-# Arnau Ros, 2024
 # marcescu, 2024
-# jabiri7, 2024
 # eriiikgt, 2024
-# Jonatan Gk, 2024
 # Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Xavier, 2024
+# Noemi Pla, 2025
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
+# Ivan Espinola, 2025
+# Arnau Ros, 2025
+# jabiri7, 2025
+# Jonatan Gk, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025\n"
+"Last-Translator: Jonatan Gk, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +69,8 @@ msgid ""
 "\n"
 "(%(serial_number)s) exists in location %(location)s"
 msgstr ""
+"\n"
+"(%(serial_number)s) existeix a la ubicació %(location)s"
 
 #. module: stock
 #. odoo-python
@@ -219,6 +221,8 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
+"%(warehouse)s només pot proporcionar %(free_qty)s %(uom)s, mentre que la "
+"quantitat a ordenar és %(qty_to_order)s %(uom)s."
 
 #. module: stock
 #. odoo-python
@@ -486,11 +490,6 @@ msgid "54326786758"
 msgstr "54326786758"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid ""
 "<br/>\n"
@@ -592,7 +591,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Late</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Tard</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -602,7 +601,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Waiting</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Esperant</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -702,7 +701,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Traçabilitat</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -4146,12 +4145,6 @@ msgid "Immediate Transfer"
 msgstr "Transferència immediata"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Importar"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -5712,6 +5705,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"No s'ha trobat cap regla que es replenish \"%(product)s\" a \"%(location)s.\"\n"
+"Verifiqueu la configuració de les rutes en el producte."
 
 #. module: stock
 #. odoo-python
@@ -6594,11 +6589,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Premeu el botó CREA per definir la quantitat per a cada producte en el "
-"vostre estoc o importar-los des d'un full de càlcul a través dels preferits"
 
 #. module: stock
 #. odoo-javascript
@@ -7379,7 +7372,7 @@ msgstr "Quantitat real"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "Reason"
-msgstr "Raó"
+msgstr "Motiu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__message
@@ -7650,7 +7643,7 @@ msgstr "Informació de reposició"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
+msgstr "Informació de registre per a %(product)s en %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -7796,6 +7789,11 @@ msgid "Return"
 msgstr "Retorna"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Retorna albarà"
@@ -7824,7 +7822,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
-msgstr ""
+msgstr "Retorn de %(picking_name)s"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
@@ -8233,7 +8231,7 @@ msgstr "Seqüència"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Sequence %(code)s"
-msgstr ""
+msgstr "Seqüència %(code)s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -8252,6 +8250,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): "
 "%(location_list)s. Please correct the serial number encoded."
 msgstr ""
+"El número de sèrie (%(serial_number)s) ja existeix a la ubicació(s): "
+"%(location_list)s. Si us plau corregiu el número de sèrie codificat."
 
 #. module: stock
 #. odoo-python
@@ -8261,6 +8261,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"El número de sèrie (%(serial_number)s) no està localitzat a %(source_location)s, però està situat a la ubicació(s): %(other_locations)s.\n"
+"\n"
+"Si us plau, corregiu això per a prevenir les dades inconsistents."
 
 #. module: stock
 #. odoo-python
@@ -8270,12 +8273,15 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"El número de sèrie (%(serial_number)s) no està localitzat a %(source_location)s, però està situat a la ubicació(s): %(other_locations)s.\n"
+"\n"
+"La ubicació de la font d'aquest moviment es canviarà a %(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Serial numbers"
-msgstr ""
+msgstr "Números de sèrie"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -9237,6 +9243,10 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"La quantitat feta pel producte \"%(product)s\" no respecta la precisió d' "
+"arrodoniment definida a la unitat de mesurar \"%(unit)s.\" Si us plau, "
+"canvieu la quantitat feta o la precisió d' arrodoniment de la vostra unitat "
+"de mesura."
 
 #. module: stock
 #. odoo-python
@@ -9260,7 +9270,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "La cerca no admet l'operador %(operator)s o el valor %(value)s."
 
 #. module: stock
 #. odoo-python
@@ -9279,6 +9289,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"El número de sèrie ja s' ha assignat: \n"
+" Producte: %(product)s, Número sèrie: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -10644,7 +10656,7 @@ msgstr "Quan arriba el producte"
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> "
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need."
+"the need. %(suffix)s"
 msgstr ""
 
 #. module: stock

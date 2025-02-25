@@ -11,7 +11,7 @@
     }
 
     .o-mail-Composer-sidebarMain {
-        padding-top: 0.1875rem; // avatar centered with composer text input: 36px (avatar) + 2*3px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
+        padding-top: 0.4375rem; // avatar centered with composer text input: 36px (avatar) + 2*7px (this value) = 20px + 2 * { 10px (padding) + 1px (border) + 4px (margin) }
         width: 48px;
     }
 
@@ -34,16 +34,27 @@
     &.o-chatWindow .o-mail-Composer-mainActions {
         margin-top: map-get($spacers, 1) / 2;
     }
+
+    &:not(.o-focused) {
+        .o-mail-Composer-input::placeholder {
+            opacity: 50%;
+        }
+
+        .o-mail-Composer-actions button:not(:hover):not(.o-active):not(.show) {
+            opacity: 25%;
+        }
+    }
 }
 
 .o-mail-Composer-actions {
 
     button {
-        opacity: 75%;
+        opacity: 35%;
         @media (hover: hover) {
             &:hover {
-                background-color: $gray-200;
                 opacity: 100%;
+                color: var(--mail-Composer-actionHoverColor, black);
+                backdrop-filter: invert(.025);
 
                 .o-mail-Message.o-editing & {
                     background-color: rgba(0, 0, 0, 0.05);
@@ -53,13 +64,24 @@
         &:disabled {
             --btn-active-color: var(--btn-disabled-color);
             --btn-hover-color: var(--btn-disabled-color);
-            opacity: var(--btn-disabled-opacity);
+            opacity: 25%;
+        }
+        &.o-mail-Composer-send.btn-link:not(:disabled) {
+            background-color: rgba($o-action, .75);
+            opacity: 100% !important;
+            &:focus-visible {
+                outline: darken($o-action, 15%) solid 1px;
+            }
+            i.fa-paper-plane-o {
+                color: #FFF;
+                transform: translate(-1px);
+                scale: .85;
+            }
+        }
+        &.rounded-circle {
+            aspect-ratio: 1;
         }
     }
-}
-
-.o-mail-Composer-quickActions .o-mail-Composer-mainActions {
-    margin-top: map-get($spacers, 2) - map-get($spacers, 1) / 2;
 }
 
 .o-mail-Composer-bg {
@@ -122,7 +144,7 @@
     top: -10000px;
 }
 
-.o-mail-Composer-compactContainer {
+.o-mail-Composer-bg {
 
     &.o-iosPwa:not(:focus-within) {
         margin-bottom: map-get($spacers, 5) !important;

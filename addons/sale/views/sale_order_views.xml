@@ -544,7 +544,7 @@
                                     widget="sol_product_many2one"/>
                                 <field name="product_template_id"
                                     string="Product"
-                                    readonly="not product_updatable"
+                                    readonly="id and not product_updatable"
                                     required="not display_type and not is_downpayment"
                                     context="{
                                         'partner_id': parent.partner_id,

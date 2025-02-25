@@ -25,19 +25,19 @@
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2024
 # hish, 2024
 # Otgonbayar.A <gobi.mn@gmail.com>, 2024
-# Munkhbaatar g <muuguu17@gmail.com>, 2024
 # Насан-Очир <nasaaskii@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Гүррагчаа Ууганбаяр, 2024
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
+# Munkhbaatar g <muuguu17@gmail.com>, 2025
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +53,9 @@ msgid ""
 "\n"
 "Transfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s."
 msgstr ""
+"\n"
+"\n"
+"Шилжүүлэг %(transfer_list)s: Та %(product_list)s барааны цувралын дугаарыг бөглөж өгнө үү."
 
 #. module: stock
 #. odoo-python
@@ -61,6 +64,8 @@ msgid ""
 "\n"
 "(%(serial_number)s) exists in location %(location)s"
 msgstr ""
+"\n"
+"(%(serial_number)s) %(location)s байрлал дээр байна"
 
 #. module: stock
 #. odoo-python
@@ -70,6 +75,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"%(product)s барааны боловсруулсан тоо хэмжээ утга нь %(unit)sхэмжих нэгжийн бүхэлчлэх утгатай нийцэхгүй байна.\n"
+"Боловсруулсан тоо хэмжээг өөрчлөх эсвэл хэмжих нэгж дээрх бүхэлчлэн утгыг солино уу."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -471,11 +479,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
 msgstr ""
 
 #. module: stock
@@ -1102,7 +1105,7 @@ msgstr "Бүх ангилал"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "All Companies"
-msgstr ""
+msgstr "Бүх компани"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -4097,12 +4100,6 @@ msgid "Immediate Transfer"
 msgstr "Даруй шилжүүлэх"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Импортлох"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -5637,6 +5634,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"\"%(product)s\" байрлалд \"%(location)s\" барааны хэрэгцээг хангах ямар нэг дүрэм тодорхойлогдоогүй байна.\n"
+"Чиглэлийн тохиргоог шалгана уу."
 
 #. module: stock
 #. odoo-python
@@ -5737,7 +5736,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Үйлдэл шаардсан зурвасын тоо"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error_counter
@@ -6506,8 +6505,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
 
 #. module: stock
@@ -7701,6 +7700,11 @@ msgid "Return"
 msgstr "Буцаалт"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Буцаалтын баримт"
@@ -7729,7 +7733,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
-msgstr ""
+msgstr "%(picking_name)s -ын буцаалт"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
@@ -10472,7 +10476,7 @@ msgstr "Бараа энэ байрлалд ирвэл"
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> "
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need."
+"the need. %(suffix)s"
 msgstr ""
 
 #. module: stock

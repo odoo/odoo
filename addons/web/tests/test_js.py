@@ -12,7 +12,7 @@ RE_ONLY = re.compile(r'QUnit\.(only|debug)\(')
 
 
 def unit_test_error_checker(message):
-    return '[HOOT]' not in message or message == '[HOOT] test failed (see above for details)'
+    return '[HOOT]' not in message
 
 
 def qunit_error_checker(message):

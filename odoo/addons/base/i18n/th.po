@@ -5,16 +5,16 @@
 # Translators:
 # Ped, 2024
 # Tana Chan, 2024
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-19 13:06+0000\n"
+"POT-Creation-Date: 2025-02-10 16:32+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3122,6 +3122,8 @@ msgid ""
 "\n"
 "Base module containing core functionalities required by other Nilvera modules.\n"
 msgstr ""
+"\n"
+"โมดูลฐานประกอบด้วยฟังก์ชันการทำงานหลักที่จำเป็นสำหรับโมดูล Nilvera อื่นๆ\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo_reports
@@ -3512,6 +3514,15 @@ msgstr ""
 "EDI บัญชีของประเทศบราซิลสำหรับอีคอมเมิร์ซ\n"
 "=========================================\n"
 "อนุญาตให้คำนวณภาษีและ EDI สำหรับผู้ใช้อีคอมเมิร์ซ\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_br_edi_stock
+msgid ""
+"\n"
+"Brazilian Accounting EDI for stock\n"
+"==================================\n"
+"Adds delivery-related information to the NF-e.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
@@ -4605,6 +4616,20 @@ msgstr ""
 "นอกจากนี้ โมดูลนี้ยังทำเครื่องหมายใบแจ้งหนี้ว่า 'ออกแล้ว' ในสถานะการชำระเงิน\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock_batch
+msgid ""
+"\n"
+"E-Transport implementation for Batch Pickings in Romania\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock
+msgid ""
+"\n"
+"E-Transport implementation for Romania\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
 msgid ""
 "\n"
@@ -5136,12 +5161,22 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_post_wizard
+#: model:ir.module.module,description:base.module_l10n_nl_reports_vat_pay_wizard
 msgid ""
 "\n"
 "Enable the VAT wizard when posting a tax return journal entry\n"
 msgstr ""
 "\n"
 "เปิดใช้งานตัวช่วย VAT เมื่อผ่านรายการบัญชีรายการภาษี\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_enhancements
+msgid ""
+"\n"
+"Enhancements for the Point of Sale UrbanPiper module. Includes features such as store timing configuration, scheduled order handling, and improved toggle options.\n"
+msgstr ""
+"\n"
+"การปรับปรุงสำหรับโมดูลระบบขายหน้าร้าน UrbanPiper ประกอบด้วยฟีเจอร์ต่างๆ เช่น การกำหนดเวลาร้านค้า การจัดการคำสั่งซื้อตามกำหนดเวลา และตัวเลือกการสลับที่ปรับปรุงดีขึ้น\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -5287,6 +5322,8 @@ msgid ""
 "\n"
 "For sending and receiving electronic invoices to Nilvera.\n"
 msgstr ""
+"\n"
+"สำหรับการส่งและรับใบแจ้งหนี้ทางอิเล็กทรอนิกส์ไปยัง Nilvera\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -6151,6 +6188,33 @@ msgstr ""
 "* รองรับทั้ง Fulfilment by Amazon (FBA) และ Fulfilment by Merchant (FBM):\n"
 "    * FBA: ตำแหน่งสต็อกและการเคลื่อนย้ายสต็อกช่วยให้สามารถตรวจสอบสต็อกของคุณในศูนย์ปฏิบัติการของ Amazon\n"
 "    * FBM: การแจ้งเตือนการจัดส่งถูกส่งให้ Amazon สำหรับการเบิกของที่ยืนยันแต่ละครั้ง (เหมาะสำหรับการจัดส่งบางส่วน)\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_shopee
+msgid ""
+"\n"
+"Import your Shopee orders in Odoo and synchronize deliveries\n"
+"============================================================\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Import orders from multiple accounts and shops\n"
+"* Orders are matched with Odoo products based on their internal reference (item_id or model_id in Shopee)\n"
+"* Support for both Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) and Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: Importing the completed orders\n"
+"* FBM/Hybrid: Delivery information is fetched from Shopee, track and synchronize the stock level to Shopee\n"
+msgstr ""
+"\n"
+"นำเข้าคำสั่งซื้อ Shopee ของคุณใน Odoo และซิงค์การจัดส่ง\n"
+"===================================================================\n"
+"\n"
+"ฟีเจอร์หลัก\n"
+"------------\n"
+"* นำเข้าคำสั่งซื้อจากหลายบัญชีและร้านค้า\n"
+"* คำสั่งซื้อจะถูกจับคู่กับผลิตภัณฑ์ Odoo ตามการอ้างอิงภายใน (item_id หรือ model_id ใน Shopee)\n"
+"* รองรับทั้ง Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) และ Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: นำเข้าคำสั่งซื้อที่เสร็จสมบูรณ์\n"
+"* FBM/Hybrid: ข้อมูลการจัดส่งจะถูกดึงมาจาก Shopee ติดตามและซิงโครไนซ์ระดับสต็อกไปยัง Shopee\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -8337,6 +8401,33 @@ msgstr ""
 "ซ่อมแซมผลิตภัณฑ์จากทิกเก็ต Helpdesk\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_it_riba
+msgid ""
+"\n"
+"Ri.Ba. Export for Batch Payment\n"
+"================================\n"
+"\n"
+"This module enables the generation of Ri.Ba. (Ricevute Bancarie) files from batch payments in Odoo.  \n"
+"It facilitates compliance with the Italian banking standard for managing receivables.\n"
+"\n"
+"- Group multiple receivables into a single batch for streamlined management and reconciliation.\n"
+"- Export batch payments as RIBA-compliant files to be submitted to your homebanking for processing.\n"
+"\n"
+"For more information about RIBA standards, refer to the guidelines issued by the Italian Bankers Association (CBI).\n"
+msgstr ""
+"\n"
+"การส่งออก Ri.Ba สำหรับการชำระเงินแบบแบตช์\n"
+"=================================\n"
+"\n"
+"โมดูลนี้ช่วยให้สามารถสร้างไฟล์ Ri.Ba. (Ricevute Bancarie) จากการชำระเงินแบบแบตช์ใน Odoo ได้\n"
+"โมดูลนี้ช่วยให้ปฏิบัติตามมาตรฐานการธนาคารของประเทศอิตาลีในการจัดการลูกหนี้ได้ง่ายขึ้น\n"
+"\n"
+"- จัดกลุ่มลูกหนี้หลายรายการเป็นชุดเดียวเพื่อการจัดการและการกระทบยอดที่คล่องตัว\n"
+"- การส่งออกการชำระเงินแบบชุดเป็นไฟล์ที่สอดคล้องกับ RIBA เพื่อส่งไปยังโฮมแบงก์กิ้งของคุณเพื่อดำเนินการ\n"
+"\n"
+"สำหรับข้อมูลเพิ่มเติมเกี่ยวกับมาตรฐาน RIBA โปรดดูแนวทางที่ออกโดยสมาคมธนาคารอิตาลี (CBI)\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_rw
 msgid ""
 "\n"
@@ -8501,6 +8592,19 @@ msgstr ""
 "\n"
 "ส่งสรุป KPI เป็นระยะๆ\n"
 "=============================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_envia
+msgid ""
+"\n"
+"Send your shippings through Envia and track them online\n"
+"=======================================================\n"
+"\n"
+"Envia is a provider of integrated shipping and tracking solutions for growing e-commerce businesses.\n"
+"Seamlessly integrating with a large range of couriers and platforms,\n"
+"you can streamline every step of your fulfilment process,\n"
+"reduce handling time and improve customer experience.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_starshipit
@@ -9036,6 +9140,7 @@ msgstr ""
 "สร้างคู่มือการจัดส่งได้\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ec_edi_stock
 #: model:ir.module.module,description:base.module_l10n_pe_edi_stock
 msgid ""
 "\n"
@@ -10303,6 +10408,19 @@ msgstr ""
 "==================================================================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_cz_reports_2025
+msgid ""
+"\n"
+"This module adds the following reports for the Czech Republic:\n"
+"==============================================================\n"
+"1. VAT Control Statement (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
 msgid ""
 "\n"
@@ -10869,6 +10987,7 @@ msgstr ""
 "จะทดสอบรหัส QR โค้ดที่รองรับทั้งหมด: SEPA, Swiss QR และ EMV QR (โดยใช้การดำเนินการ hk และ br)\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_restaurant_loyalty
 #: model:ir.module.module,description:base.module_pos_sale_loyalty
 msgid ""
 "\n"
@@ -11414,6 +11533,16 @@ msgstr ""
 "\n"
 "ผังบัญชีมาจาก SYSCOHADA\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_my_edi_extended
+msgid ""
+"\n"
+"This module improves the MyInvois E-invoicing feature by adding proper support for self billing, rendering the MyInvois\n"
+"QR code in the invoice PDF file and allows better management of foreign customer TIN.\n"
+msgstr ""
+"\n"
+"โมดูลนี้ช่วยปรับปรุงฟีเจอร์การออกใบแจ้งหนี้ทางอิเล็กทรอนิกส์ของ MyInvois โดยเพิ่มการรองรับที่เหมาะสมสำหรับการเรียกเก็บเงินด้วยตนเอง การแสดงรหัส QR ของ MyInvois ในไฟล์ PDF ของใบแจ้งหนี้ และช่วยให้สามารถจัดการ TIN ของลูกค้าต่างประเทศได้ดีขึ้น\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -12590,6 +12719,7 @@ msgstr "%s (เซิร์ฟเวอร์เมลขาออกเฉพ�
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_actions.py:0
 #: code:addons/base/models/ir_filters.py:0
 #: code:addons/base/models/res_lang.py:0
 #: code:addons/base/models/res_partner.py:0
@@ -14550,6 +14680,11 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_mass_mailing_crm_sms
 msgid "Add lead / opportunities info on mass mailing sms"
 msgstr "เพิ่มข้อมูลลูกค้าเป้าหมาย/ผู้ที่มีโอกาสจะซื้อในการส่ง SMS กลุ่ม"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_localisation
+msgid "Add models and fields for complete mexican localisation"
+msgstr "เพิ่มโมเดลและฟิลด์สำหรับการประยุกต์ใช้สำหรับประเทศเม็กซิโกโดยสมบูรณ์"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -17930,14 +18065,14 @@ msgid "Bahamas"
 msgstr "บาฮามาส"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_bh
-msgid "Bahrain - Accounting"
-msgstr "ประเทศบาห์เรน - ระบบบัญชี"
-
-#. module: base
 #: model:res.country,name:base.bh
 msgid "Bahrain"
 msgstr "บาห์เรน"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bh
+msgid "Bahrain - Accounting"
+msgstr "ประเทศบาห์เรน - ระบบบัญชี"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.THB
@@ -18272,6 +18407,11 @@ msgstr "เบลารุส"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Belgian Intrastat Declaration"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_pos_restaurant
+msgid "Belgian POS Restaurant Localization"
+msgstr "การประยุกต์ใช้ของร้านอาหาร POS สำหรับประเทศเบลเยียม"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_attendance
@@ -18625,6 +18765,11 @@ msgstr "ระบบบัญชี EDI สำหรับประเทศบ�
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_website_sale
 msgid "Brazilian Accounting EDI for eCommerce"
 msgstr "ระบบบัญชี EDI สำหรับประเทศบราซิลของอีคอมเมิร์ซ"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_stock
+msgid "Brazilian Accounting EDI for stock"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
@@ -21339,6 +21484,11 @@ msgid "Czech Republic"
 msgstr "สาธารณรัฐเช็ก"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cz_reports_2025
+msgid "Czech Republic - Accounting Reports 2025"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz_reports
 msgid "Czech Republic- Accounting Reports"
 msgstr "สาธารณรัฐเช็ก- รายงานการบัญชี"
@@ -22756,6 +22906,11 @@ msgid "Ecuadorian Accounting Reports"
 msgstr "รายงานด้านบัญชีสำหรับประเทศเอกวาดอร์"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ec_edi_stock
+msgid "Ecuadorian Delivery Guide"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_edi_pos
 msgid "Ecuadorian Point of Sale"
 msgstr "ระบบขายหน้าร้านของประเทศเอกวาดอร์"
@@ -23165,6 +23320,11 @@ msgstr "บันเทิง"
 #: model:ir.model.fields,field_description:base.field_ir_profile__entry_count
 msgid "Entry count"
 msgstr "จำนวนการเข้า"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_envia
+msgid "Envia Shipping"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
@@ -24168,6 +24328,11 @@ msgstr "ตัวสั่งงาน"
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
 msgstr "ตัวกรองเพิ่มเติม"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_my_edi_extended
+msgid "Extended features for the E-invoicing using MyInvois"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
@@ -25311,6 +25476,16 @@ msgstr "มุมมองแกนต์สำหรับการเข้า
 #: model:ir.module.module,summary:base.module_hr_holidays_gantt
 msgid "Gantt view for Time Off Dashboard"
 msgstr "มุมมองแกนต์สำหรับแดชบอร์ดระบบการลา"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato
+msgid "Gelato"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato_stock
+msgid "Gelato/Stock bridge"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -26954,6 +27129,11 @@ msgid "Import QIF Bank Statement"
 msgstr "รายการเดินบัญชีธนาคาร"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_shopee
+msgid "Import Shopee orders and sync deliveries"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Import Template for Customers"
@@ -28091,6 +28271,11 @@ msgid "Italy - Accounting Reports"
 msgstr "ประเทศอิตาลี - รายงานการบัญชี"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_riba
+msgid "Italy - Bank Receipts (Ri.Ba.)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_doi
 msgid "Italy - Declaration of Intent"
 msgstr "ประเทศอิตาลี - คำประกาศเจตนา"
@@ -28305,6 +28490,11 @@ msgstr "ประเทศเคนยา - บัญชีเงินเดื
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_account
 msgid "Kenya - Payroll with Accounting"
 msgstr "ประเทศเคนยา - บัญชีเงินเดือนพร้อมระบบบัญชี"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_pos
+msgid "Kenya - Point of Sale"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_mrp
@@ -29104,6 +29294,11 @@ msgid "Link module between pos_hr and pos_restaurant"
 msgstr "โมดูลเชื่อมโยงระหว่าง pos_hr และ pos_restaurant"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_restaurant_loyalty
+msgid "Link module between pos_restaurant and pos_loyalty"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
 msgid "Link module between pos_sale and l10n_be"
 msgstr "เชื่อมโยงโมดูลระหว่าง pos_sale และ l10n_be"
@@ -29591,6 +29786,11 @@ msgstr "ประเทศมาเลเซีย - รายงานการ
 #: model:ir.module.module,shortdesc:base.module_l10n_my_edi
 msgid "Malaysia - E-invoicing"
 msgstr "ประเทศมาเลเซีย - ใบแจ้งหนี้อิเล็กทรอนิกส์"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_my_edi_extended
+msgid "Malaysia - E-invoicing Extended Features"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_ubl_pint
@@ -30308,6 +30508,11 @@ msgstr "ประเทศเม็กซิโก - เดือนที่ 13
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll
 msgid "Mexico - Payroll"
 msgstr "ประเทศเม็กซิโก - บัญชีเงินเดือน"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_localisation
+msgid "Mexico - Payroll - Localisation"
+msgstr "เม็กซิโก - บัญชีเงินเดือน - การประยุกต์ใช้"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_account
@@ -31195,6 +31400,11 @@ msgstr "ประเทศเนเธอร์แลนด์ - ระบบบ
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports
 msgid "Netherlands - Accounting Reports"
 msgstr "ประเทศเนเธอร์แลนด์ - รายงานด้านบัญชี"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_vat_pay_wizard
+msgid "Netherlands - Accounting Reports (post wizard)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_hr_payroll
@@ -34189,6 +34399,11 @@ msgid "POS - HR"
 msgstr "POS - HR"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_restaurant_loyalty
+msgid "POS - Restaurant Loyality"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sms
 msgid "POS - SMS"
 msgstr "POS - SMS"
@@ -35250,6 +35465,11 @@ msgid "Pivot"
 msgstr "หมุน"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_gelato
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Plan your resources on project tasks"
 msgstr "วางแผนทรัพยากรของคุณเกี่ยวกับงานโปรเจ็กต์"
@@ -35352,6 +35572,7 @@ msgstr "ร้านอาหารแสดงการเตรียม PoS"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
+#: model:ir.module.category,name:base.module_category_localization_point_of_sale
 #: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
@@ -35367,6 +35588,11 @@ msgstr "การขายหน้าร้าน - คูปองและส
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper
 msgid "Point of Sale - UrbanPiper"
 msgstr "Point of Sale - UrbanPiper"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_enhancements
+msgid "Point of Sale - UrbanPiper Enhancements"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -36579,7 +36805,8 @@ msgid "RTN"
 msgstr "RTN"
 
 #. module: base
-#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pe
+#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pa
+#: model:res.country,vat_label:base.pe
 msgid "RUC"
 msgstr "RUC"
 
@@ -37247,6 +37474,16 @@ msgid "Romania - Accounting Reports"
 msgstr "ประเทศโรมาเนีย - รายงานการบัญชี"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
+msgid "Romania - E-Transport"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock_batch
+msgid "Romania - E-Transport Batch Pickings"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi
 msgid "Romania - E-invoicing"
 msgstr "ประเทศโรมาเนีย - ใบแจ้งหนี้อิเล็กทรอนิกส์"
@@ -37596,6 +37833,11 @@ msgid "Salary Configurator (Belgium)"
 msgstr "ตัวกำหนดเงินเดือน (ประเทศเบลเยียม)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary_mobility_budget
+msgid "Salary Configurator (Belgium) - Mobility Budget"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_holidays
 msgid "Salary Configurator - Holidays"
 msgstr "ตัวกำหนดค่าเงินเดือน - วันหยุด"
@@ -37607,6 +37849,7 @@ msgstr "ตัวกำหนดค่าเงินเดือน - บัญ
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
+#: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary_mobility_budget
 msgid "Salary Package Configurator"
 msgstr "ตัวกำหนดค่าแพ็คเกจเงินเดือน"
 
@@ -37614,6 +37857,12 @@ msgstr "ตัวกำหนดค่าแพ็คเกจเงินเด
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sale
 msgid "Sale"
 msgstr "การขาย"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_test_sale_purchase_edi_ubl
+msgid "Sale & Purchase Order EDI Tests: Ensure Flow Robustness"
+msgstr ""
+"การทดสอบ EDI สำหรับใบสั่งซื้อและการขาย: รับรองประสิทธิภาพของขั้นตอนการทำงาน"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_sms
@@ -38377,7 +38626,7 @@ msgid "Send your shippings through UPS and track them online"
 msgstr "ส่งการจัดส่งของคุณผ่าน UPS และติดตามทางออนไลน์"
 
 #. module: base
-#: model:ir.module.module,description:base.module_delivery_usps
+#: model:ir.module.module,description:base.module_delivery_usps_rest
 msgid "Send your shippings through USPS and track them online"
 msgstr "ส่งการจัดส่งของคุณผ่าน USPS และติดตามทางออนไลน์"
 
@@ -38692,6 +38941,11 @@ msgstr "การจัดส่ง Shiprocket"
 #: model:ir.module.module,shortdesc:base.module_website_sale_shiprocket
 msgid "Shiprocket: Cash on Delivery"
 msgstr "Shiprocket: ชำระเงินปลายทาง"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_shopee
+msgid "Shopee Connector"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -40181,6 +40435,11 @@ msgid "Test - Resource"
 msgstr "ทดสอบ - แหล่งข้อมูล"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_sale_purchase_edi_ubl
+msgid "Test - Sale & Purchase Order EDI"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_html_field_history
 msgid "Test - html_field_history"
 msgstr "ทดสอบ - html_field_history"
@@ -41473,6 +41732,14 @@ msgstr ""
 " 2024"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_usps
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_no
 msgid ""
 "This is the module to manage the accounting chart for Norway in Odoo.\n"
@@ -41663,6 +41930,17 @@ msgstr ""
 "โมดูลนี้ประกอบด้วยการทดสอบที่เกี่ยวข้องกับการส่งจดหมายกลุ่ม สิ่งเหล่านั้น\n"
 "มีอยู่ในโมดูลแยกต่างหากเพื่อใช้โมเดลการทดสอบเฉพาะที่กำหนดไว้ใน\n"
 " test_mail"
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_sale_purchase_edi_ubl
+msgid ""
+"This module contains tests related to sale and purchase order edi.\n"
+"    Ensure export and import of order working properly and filling details properly from\n"
+"    order XML file."
+msgstr ""
+"โมดูลนี้ประกอบด้วยการทดสอบที่เกี่ยวข้องกับการขายและการแก้ไขใบสั่งซื้อ\n"
+"    ตรวจสอบให้แน่ใจว่าการส่งออกและนำเข้าคำสั่งซื้อทำงานอย่างถูกต้องและกรอกรายละเอียดอย่างถูกต้องจาก\n"
+"    ไฟล์ XML ของคำสั่งซื้อ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_spreadsheet_edition
@@ -42357,16 +42635,6 @@ msgid "Turkey"
 msgstr "ตุรกี"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
-msgid "Türkiye - Nilvera"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
-msgid "Türkiye - Nilvera E-Invoice"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
 msgstr "เติรกเมนิสถาน"
@@ -42471,6 +42739,16 @@ msgstr "ประเทศตุรกี - ระบบบัญชี"
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
 msgid "Türkiye - Accounting Reports"
 msgstr "ประเทศตุรกี - รายงานด้านบัญชี"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
+msgid "Türkiye - Nilvera"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
+msgid "Türkiye - Nilvera E-Invoice"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
@@ -42893,9 +43171,14 @@ msgid "United States - Payroll with Accounting"
 msgstr "สหรัฐอเมริกา - บัญชีเงินเดือนพร้อมระบบบัญชี"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_delivery_usps
+#: model:ir.module.module,shortdesc:base.module_delivery_usps_rest
 msgid "United States Postal Service (USPS) Shipping"
 msgstr "บริการจัดส่งไปรษณีย์ของสหรัฐอเมริกา (USPS)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_usps
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -45268,6 +45551,11 @@ msgstr "การสมัครสมาชิกอีคอมเมิร์
 #: model:ir.module.module,summary:base.module_website_appointment_sale
 msgid "eCommerce on appointments"
 msgstr "อีคอมเมิร์ซเกี่ยวกับการนัดหมาย"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_gelato
+msgid "eCommerce/Gelato bridge"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning

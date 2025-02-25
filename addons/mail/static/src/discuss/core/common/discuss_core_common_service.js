@@ -43,9 +43,13 @@ export class DiscussCoreCommon {
             });
             this._handleNotificationChannelDelete(thread, metadata);
         });
-        this.busService.subscribe("discuss.channel/new_message", (payload, metadata) =>
-            this._handleNotificationNewMessage(payload, metadata)
-        );
+        this.busService.subscribe("discuss.channel/new_message", (payload, metadata) => {
+            // Insert should always be done before any async operation. Indeed,
+            // awaiting before the insertion could lead to overwritting newer
+            // state coming from more recent `mail.record/insert` notifications.
+            this.store.insert(payload.data, { html: true });
+            this._handleNotificationNewMessage(payload, metadata);
+        });
         this.busService.subscribe("discuss.channel/transient_message", (payload) => {
             const { body, thread } = payload;
             const lastMessageId = this.store.getLastMessageId();
@@ -149,8 +153,10 @@ export class DiscussCoreCommon {
         if (!channel) {
             return;
         }
-        const { Message: messages = [] } = this.store.insert(data, { html: true });
-        const message = messages[0];
+        const message = this.store.Message.get(data["mail.message"][0]);
+        if (!message) {
+            return;
+        }
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
                 channel.addOrReplaceMessage(message, this.store.Message.get(temporary_id));

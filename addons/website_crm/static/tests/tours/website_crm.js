@@ -69,7 +69,12 @@ registry.category("web_tour.tours").add('website_crm_tour', {
 
 registry.category("web_tour.tours").add('website_crm_catch_logged_partner_info_tour', {
     url: '/contactus',
-    steps: () => [{
+    steps: () => [
+{
+    content: "Wait the form is patched with values before continue to edit it",
+    trigger: "form#contactus_form input[name=partner_name]:value(yourcompany)",
+},
+{
     content: "Complete Subject",
     trigger: "input[name=name]",
     run: "edit Useless subject",

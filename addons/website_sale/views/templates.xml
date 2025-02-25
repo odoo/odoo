@@ -1725,6 +1725,9 @@
                     </bdi>
                 </del>
             </h3>
+            <small t-if="combination_info.get('tax_disclaimer')" class="text-muted">
+                <t t-out="combination_info['tax_disclaimer']"/>
+            </small>
         </div>
         <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
             <h3 class="fst-italic" t-field="website.prevent_zero_price_sale_text"/>
@@ -2906,6 +2909,19 @@
                     </h5>
                 </div>
             </t>
+            <t t-if="tx_sudo.state != 'done'">
+                <div class="mb-4">
+                    <h5>
+                        <em>
+                            <span>Order</span>
+                            <span t-field="order.name" />
+                            <t t-if="order.state == 'sale'">
+                                <i class="fa fa-check-circle ms-1"/>
+                            </t>
+                        </em>
+                    </h5>
+                </div>
+            </t>
             <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
                 <p class="alert alert-info mt-3" role="status">
                     <a role="button" t-att-href="order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()" class="btn btn-primary">Sign Up</a>
@@ -2947,20 +2963,23 @@
         <div id="cart_total" t-if="website_sale_order and website_sale_order.website_order_line" t-att-class="_cart_total_classes">
             <table class="table mb-0">
                 <tr
-                    t-if="website_sale_order._has_deliverable_products() and website_sale_order.carrier_id"
+                    t-if="website_sale_order._has_deliverable_products()"
                     id="order_delivery"
                 >
-                    <td
-                        class="ps-0 pt-0 pb-2 border-0 text-muted"
-                        colspan="2"
-                        title="Delivery will be updated after choosing a new delivery method"
-                    >
+                    <td class="ps-0 pt-0 pb-2 border-0 text-muted" colspan="2">
                         Delivery
                     </td>
                     <td class="text-end pe-0 pt-0 pb-2 border-0">
                         <span
+                            id="message_no_dm_set"
+                            t-att-class="'d-none' if website_sale_order.carrier_id else ''"
+                            title="Price will be updated after choosing a delivery method"
+                        >
+                            -
+                        </span>
+                        <span
                             t-out="website_sale_order.amount_delivery"
-                            class="monetary_field"
+                            t-att-class="'monetary_field' + ('' if website_sale_order.carrier_id else ' d-none')"
                             style="white-space: nowrap;"
                             t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
                         />

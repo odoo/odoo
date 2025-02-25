@@ -65,7 +65,7 @@ test("should not display hint in paragraph with media content", async () => {
 });
 
 test("should not lose track of temporary hints on split block", async () => {
-    const { el, editor } = await setupEditor("<p>[]</p>", {});
+    const { el, editor, plugins } = await setupEditor("<p>[]</p>", {});
     expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
     editor.shared.split.splitBlock();
     editor.shared.history.addStep();
@@ -93,6 +93,8 @@ test("should not lose track of temporary hints on split block", async () => {
             <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
+    // Changing the selection should not generate mutations for the next step
+    expect(plugins.get("history").currentStep.mutations.length).toBe(0);
 });
 
 test("hint should only Be display for focused empty block element", async () => {

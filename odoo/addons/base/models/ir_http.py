@@ -426,3 +426,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):
         return True if cookie_type == 'required' else bool(request.env.user)
+
+    @api.model
+    def _verify_request_recaptcha_token(self, action):
+        return True

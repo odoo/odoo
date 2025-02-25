@@ -28,9 +28,19 @@ xlib = ctypes.cdll.LoadLibrary('libX11.so.6')
 
 
 class KeyboardUSBDriver(Driver):
+    # The list of devices can be found in /proc/bus/input/devices
+    # or "ls -l /dev/input/by-path"
+    # Note: the user running "evdev" commands must be inside the "input" group
+    # Each device's input will correspond to a file in /dev/input/event*
+    # The exact file can be found by looking at the "Handlers" line in /proc/bus/input/devices
+    # Example: "H: Handlers=sysrq kbd leds event0" -> The file used is /dev/input/event0
+    # If you read the file "/dev/input/event0" you will get the input from the device in real time
+    # One usb device can have multiple associated event files (like a foot pedal which has 3 event files)
+
     connection_type = 'usb'
     keyboard_layout_groups = []
     available_layouts = []
+    input_devices = []
 
     def __init__(self, identifier, device):
         if not hasattr(KeyboardUSBDriver, 'display'):
@@ -63,7 +73,7 @@ class KeyboardUSBDriver(Driver):
 
         for evdev_device in [evdev.InputDevice(path) for path in evdev.list_devices()]:
             if (device.idVendor == evdev_device.info.vendor) and (device.idProduct == evdev_device.info.product):
-                self.input_device = evdev_device
+                self.input_devices.append(evdev_device)
 
         self._set_device_type('scanner') if self._is_scanner() else self._set_device_type()
 
@@ -126,21 +136,22 @@ class KeyboardUSBDriver(Driver):
 
     def run(self):
         try:
-            for event in self.input_device.read_loop():
-                if self._stopped.is_set():
-                    break
-                if event.type == evdev.ecodes.EV_KEY:
-                    data = evdev.categorize(event)
+            for device in self.input_devices:
+                for event in device.read_loop():
+                    if self._stopped.is_set():
+                        break
+                    if event.type == evdev.ecodes.EV_KEY:
+                        data = evdev.categorize(event)
 
-                    modifier_name = self._scancode_to_modifier.get(data.scancode)
-                    if modifier_name:
-                        if modifier_name in ('caps_lock', 'num_lock'):
-                            if data.keystate == 1:
-                                self._tracked_modifiers[modifier_name] = not self._tracked_modifiers[modifier_name]
-                        else:
-                            self._tracked_modifiers[modifier_name] = bool(data.keystate)  # 1 for keydown, 0 for keyup
-                    elif data.keystate == 1:
-                        self.key_input(data.scancode)
+                        modifier_name = self._scancode_to_modifier.get(data.scancode)
+                        if modifier_name:
+                            if modifier_name in ('caps_lock', 'num_lock'):
+                                if data.keystate == 1:
+                                    self._tracked_modifiers[modifier_name] = not self._tracked_modifiers[modifier_name]
+                            else:
+                                self._tracked_modifiers[modifier_name] = bool(data.keystate)  # 1 for keydown, 0 for keyup
+                        elif data.keystate == 1:
+                            self.key_input(data.scancode)
 
         except Exception as err:
             _logger.warning(err)
@@ -284,7 +295,8 @@ class KeyboardUSBDriver(Driver):
             self.key_input = self._barcode_scanner_input
             self._barcodes = Queue()
             self._current_barcode = ''
-            self.input_device.grab()
+            for device in self.input_devices:
+                device.grab()
             self.read_barcode_lock = Lock()
         else:
             self.device_type = 'keyboard'

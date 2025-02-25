@@ -32,21 +32,21 @@
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2024
 # Marko Happonen <marko.happonen@sprintit.fi>, 2024
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
 # Martin Trigaux, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -367,7 +367,7 @@ msgid ""
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
 "* Uusi: Varastosiirto on luotu, mutta sitä ei ole vahvistettu.\n"
-"* Odottaa toista siirtoa: Linkitetty varastosiirto olisi tehtävä ennen tätä siirtoa.\n"
+"* Odottaa toista siirtoa: Linkitetty varastosiirto on tehtävä ennen tätä siirtoa.\n"
 "* Odottaa saatavuutta: Varastosiirto on vahvistettu, mutta tuotetta ei voi varata.\n"
 "* Saatavilla: Varastosiirron tuote on varattu.\n"
 "* Valmis: Tuote on siirretty ja siirto on vahvistettu."
@@ -509,11 +509,6 @@ msgid "54326786758"
 msgstr "54326786758"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid ""
 "<br/>\n"
@@ -596,6 +591,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hyvä <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        Meillä on ilo ilmoittaa, että tilauksesi on lähetetty.\n"
+"       <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"            Seurantaviitteesi on\n"
+"           <strong>\n"
+"           <t t-if=\"object.carrier_tracking_url\">\n"
+"               <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"               <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"               <t t-else=\"\">\n"
+"                   <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"               </t>\n"
+"           </t>\n"
+"           <t t-else=\"\">\n"
+"               <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"           </t>\n"
+"           </strong>\n"
+"       </t>\n"
+"       <br/><br/>\n"
+"        Lisätietoja saat liitteenä olevasta toimitustilauksesta.<br/><br/>\n"
+"        Kiitos,\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -1478,7 +1506,7 @@ msgstr "Saatavilla oleva määrä"
 msgid ""
 "Available quantity should be set to zero before changing inventory tracking"
 msgstr ""
-"Käytettävissä oleva määrä olisi asetettava nollaan ennen varastoseurannan "
+"Käytettävissä oleva määrä on asetettava nollaan ennen varastoseurannan "
 "muuttamista"
 
 #. module: stock
@@ -1625,7 +1653,7 @@ msgstr ""
 "passiivisesti saatavuutta. Toinen mahdollisuus antaa sinulle mahdollisuuden "
 "hankkia suoraan hankinta lähdeasemasta (ja sivuuttaa sen nykyisen varaston) "
 "tuotteiden keräämiseksi. Jos haluamme ketjun siirtää ja odottaa tätä "
-"edellistä, tämä toinen vaihtoehto olisi valittava."
+"edellistä, tämä toinen vaihtoehto on valittava."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -2566,8 +2594,7 @@ msgstr "Varattava päivämäärä"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Day and month that annual inventory counts should occur."
 msgstr ""
-"Päivä ja kuukausi, jolloin vuotuiset inventaariolaskennat olisi "
-"suoritettava."
+"Päivä ja kuukausi, jolloin vuotuiset inventaariolaskennat on suoritettava."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_day
@@ -4192,12 +4219,6 @@ msgstr "Jos sitä ei ole valittu, voit piilottaa säännön poistamatta sitä."
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
 msgstr "Välitön siirto"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Tuo"
 
 #. module: stock
 #. odoo-javascript
@@ -6650,11 +6671,9 @@ msgstr "Läsnäolo riippuu operaation tyypistä."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Paina LUO painiketta määrittääksesi kunkin varastossa olevan tuotteen määrän"
-" tai tuoda ne taulukkolaskentaohjelmasta koko Suosikit"
 
 #. module: stock
 #. odoo-javascript
@@ -7848,6 +7867,11 @@ msgstr "Täydennysreitit"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
 msgstr "Palauta"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr "Palauta kaikki"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -10738,10 +10762,8 @@ msgstr "Kun tuote saapuu sisään"
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> "
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need."
+"the need. %(suffix)s"
 msgstr ""
-"Kun tuotteita tarvitaan <b>%(destination)s</b>, <br/> <b>%(operation)s</b> "
-"luodaan <b>%(source_location)s</b> täyttämään tarve."
 
 #. module: stock
 #. odoo-python
@@ -11631,7 +11653,7 @@ msgstr "varattu"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "should be replenished"
-msgstr "olisi täydennettävä"
+msgstr "on täydennettävä"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.click_dashboard_graph

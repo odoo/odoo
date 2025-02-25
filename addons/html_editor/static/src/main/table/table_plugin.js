@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import { removeClass, splitTextNode } from "@html_editor/utils/dom";
+import { fillShrunkPhrasingParent, removeClass, splitTextNode } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -46,7 +47,15 @@ function isUnremovableTableComponent(node, root) {
  */
 export class TablePlugin extends Plugin {
     static id = "table";
-    static dependencies = ["dom", "history", "selection", "delete", "split", "color"];
+    static dependencies = [
+        "baseContainer",
+        "dom",
+        "history",
+        "selection",
+        "delete",
+        "split",
+        "color",
+    ];
     static shared = [
         "insertTable",
         "addColumn",
@@ -90,6 +99,9 @@ export class TablePlugin extends Plugin {
     setup() {
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
         this.addDomListener(this.editable, "mouseup", this.onMouseup);
+        this.addDomListener(this.editable, "keydown", (ev) => {
+            this._isKeyDown = true;
+        });
         this.onMousemove = this.onMousemove.bind(this);
     }
 
@@ -119,7 +131,10 @@ export class TablePlugin extends Plugin {
     }
 
     createTable({ rows = 2, cols = 2 } = {}) {
-        const tdsHtml = new Array(cols).fill("<td><p><br></p></td>").join("");
+        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+        fillShrunkPhrasingParent(baseContainer);
+        const baseContainerHtml = baseContainer.outerHTML;
+        const tdsHtml = new Array(cols).fill(`<td>${baseContainerHtml}</td>`).join("");
         const trsHtml = new Array(rows).fill(`<tr>${tdsHtml}</tr>`).join("");
         const tableHtml = `<table class="table table-bordered o_table"><tbody>${trsHtml}</tbody></table>`;
         return parseHTML(this.document, tableHtml);
@@ -148,7 +163,9 @@ export class TablePlugin extends Plugin {
     }
     insertTable({ rows = 2, cols = 2 } = {}) {
         const table = this._insertTable({ rows, cols });
-        this.dependencies.selection.setCursorStart(table.querySelector("p"));
+        this.dependencies.selection.setCursorStart(
+            table.querySelector(baseContainerGlobalSelector)
+        );
         this.dependencies.history.addStep();
     }
     /**
@@ -185,9 +202,9 @@ export class TablePlugin extends Plugin {
         }
         referenceColumn.forEach((cell, rowIndex) => {
             const newCell = this.document.createElement("td");
-            const p = this.document.createElement("p");
-            p.append(this.document.createElement("br"));
-            newCell.append(p);
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.append(this.document.createElement("br"));
+            newCell.append(baseContainer);
             cell[position](newCell);
             if (rowIndex === 0 && tableWidth) {
                 newCell.style.width = cell.style.width;
@@ -221,9 +238,9 @@ export class TablePlugin extends Plugin {
         newRow.append(
             ...Array.from(Array(cells.length)).map(() => {
                 const td = this.document.createElement("td");
-                const p = this.document.createElement("p");
-                p.append(this.document.createElement("br"));
-                td.append(p);
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                baseContainer.append(this.document.createElement("br"));
+                td.append(baseContainer);
                 return td;
             })
         );
@@ -338,11 +355,11 @@ export class TablePlugin extends Plugin {
         if (!table) {
             return;
         }
-        const p = this.document.createElement("p");
-        p.appendChild(this.document.createElement("br"));
-        table.before(p);
+        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+        baseContainer.appendChild(this.document.createElement("br"));
+        table.before(baseContainer);
         table.remove();
-        this.dependencies.selection.setCursorStart(p);
+        this.dependencies.selection.setCursorStart(baseContainer);
     }
 
     // @todo @phoenix: handle deleteBackward on table cells
@@ -528,10 +545,15 @@ export class TablePlugin extends Plugin {
             // It will be retriggered with selectionchange
             return;
         }
-        this.deselectTable();
         const selection = selectionData.editableSelection;
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
+        if (!(startTd && startTd === endTd) || this._isKeyDown) {
+            delete this._isKeyDown;
+            // Prevent deselecting single cell unless selection changes
+            // through keyboard.
+            this.deselectTable();
+        }
         const startTable = ancestors(selection.startContainer, this.editable)
             .filter((node) => node.nodeName === "TABLE")
             .pop();

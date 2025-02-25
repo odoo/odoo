@@ -567,41 +567,6 @@ class SaleOrder(models.Model):
                     })
             return [reward_line_values]
 
-        if reward_applies_on == 'order' and reward.discount_mode in ['per_point', 'per_order']:
-            reward_line_values = {
-                **base_reward_line_values,
-                'price_unit': -min(max_discount, discountable),
-                'points_cost': point_cost,
-            }
-
-            reward_taxes = reward.tax_ids._filter_taxes_by_company(self.company_id)
-            if reward_taxes:
-                mapped_taxes = self.fiscal_position_id.map_tax(reward_taxes)
-
-                # Check for any order line where its taxes exactly match reward_taxes
-                matching_lines = [
-                    line for line in self.order_line
-                    if not line._is_delivery() and set(line.tax_id) == set(mapped_taxes)
-                ]
-
-                if not matching_lines:
-                    raise ValidationError(_("No product is compatible with this promotion."))
-
-                untaxed_amount = sum(line.price_subtotal for line in matching_lines)
-                # Discount amount should not exceed total untaxed amount of the matching lines
-                reward_line_values['price_unit'] = max(
-                    -untaxed_amount,
-                    reward_line_values['price_unit']
-                )
-
-                reward_line_values['tax_id'] = [Command.set(mapped_taxes.ids)]
-
-            # Discount amount should not exceed the untaxed amount on the order
-            if abs(reward_line_values['price_unit']) > self.amount_untaxed:
-                reward_line_values['price_unit'] = -self.amount_untaxed
-
-            return [reward_line_values]
-
         discount_factor = min(1, (max_discount / discountable)) if discountable else 1
         reward_dict = {}
         for tax, price in discountable_per_tax.items():
@@ -1005,6 +970,9 @@ class SaleOrder(models.Model):
         )
         point_ids_per_program = defaultdict(lambda: self.env['sale.order.coupon.points'])
         for pe in self.coupon_point_ids:
+            # Update coupons that were created for Public User
+            if pe.coupon_id.partner_id.is_public and not self.partner_id.is_public:
+                pe.coupon_id.partner_id = self.partner_id
             # Remove any point entry for a coupon that does not belong to the customer
             if pe.coupon_id.partner_id and pe.coupon_id.partner_id != self.partner_id:
                 pe.points = 0
@@ -1046,10 +1014,12 @@ class SaleOrder(models.Model):
                     pe.points = points
                 if len(program_point_entries) < len(all_point_changes):
                     new_coupon_points = all_point_changes[len(program_point_entries):]
+                    # next_order_coupons should be linked to the order's partner
+                    partner_id = program.program_type == 'next_order_coupons' and self.partner_id.id
                     # NOTE: Maybe we could batch the creation of coupons across multiple programs but this really only applies to gift cards
                     new_coupons = self.env['loyalty.card'].with_context(loyalty_no_mail=True, tracking_disable=True).create([{
                         'program_id': program.id,
-                        'partner_id': False,
+                        'partner_id': partner_id,
                         'points': 0,
                         'order_id': self.id,
                     } for _ in new_coupon_points])

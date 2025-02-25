@@ -10,7 +10,7 @@ def migrate(cr, version):
                AND d.name = 'fr'
                AND d.res_id = bank.country
              WHERE bank.active
-               AND bank.bic IS NOT NULL
+               AND bank.bic ~ '^[A-Z0-9]+$'
         )
         INSERT INTO ir_model_data(
                         model,
@@ -21,7 +21,7 @@ def migrate(cr, version):
                     )
              SELECT 'res.bank',
                     'l10n_fr_account',
-                    CONCAT('bank_fr_', REPLACE(banks.bic, ' ', '')),
+                    CONCAT('bank_fr_', banks.bic),
                     banks.id,
                     True
                FROM banks

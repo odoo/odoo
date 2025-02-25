@@ -304,7 +304,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
                 'discount_applicability': 'order',
             })],
         })
-        order = self.empty_order.copy()
+        order = self.empty_order
         order.write({'order_line': [
             Command.create({
                 'product_id': self.product_A.id,
@@ -317,6 +317,50 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertTrue(generated_coupons, "A coupon should have been generated")
         self.assertEqual(generated_coupons.partner_id, order.partner_id,
             "The partner should be set on the coupon with program type 'next_order_coupons'"
+        )
+
+    def test_public_partner_updated_in_next_order_coupon(self):
+        """ Test the update of a partner on coupons with program type `next_order_coupons`.
+
+        1. Create a loyalty program of type `next_order_coupons`.
+        2. Create a sale order for a public user and add a product to it.
+        3. Apply the loyalty program to the sale order.
+        4. Verify that the generated coupon is assigned to the public user.
+        5. Change the partner.
+        6. Verify that the generated coupon was updated to this new user.
+        """
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': "10% Discount on Next Order",
+            'program_type': 'next_order_coupons',
+            'applies_on': 'future',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({})],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+        order = self.empty_order
+        order.write({
+            'partner_id': self.env.ref('base.public_partner').id,
+            'order_line': [Command.create({'product_id': self.product_A.id})],
+        })
+        generated_coupons = order._try_apply_program(loyalty_program).get('coupon')
+        self.assertTrue(generated_coupons, "A coupon should have been generated")
+        self.assertEqual(
+            generated_coupons.partner_id, order.partner_id,
+            "The partner should be set on the coupon with program type 'next_order_coupons'",
+        )
+        self.assertTrue(generated_coupons.partner_id.is_public)
+
+        # Change partner from Public User to a known customer (e.g. a portal user logging in)
+        order.partner_id = self.partner
+        order._update_programs_and_rewards()
+        self.assertEqual(
+            generated_coupons.partner_id, self.partner,
+            "The coupon's partner_id should be updated if it was created for a Public User",
         )
 
     def test_edit_and_reapply_promotion_program(self):

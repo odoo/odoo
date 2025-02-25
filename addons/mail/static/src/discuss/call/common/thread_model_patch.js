@@ -50,6 +50,7 @@ const ThreadPatch = {
                 }
                 if ([...this.lastSessionIds].some((id) => !lastSessionIds.has(id))) {
                     this.store.env.services["mail.sound_effects"].play("channel-join");
+                    this.store.rtc.call({ asFallback: true });
                 }
                 if ([...lastSessionIds].some((id) => !this.lastSessionIds.has(id))) {
                     this.store.env.services["mail.sound_effects"].play("member-leave");

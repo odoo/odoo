@@ -30,7 +30,7 @@ publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.ex
     async willStart() {
         const choices = await rpc("/event/track_tag/search_read", {
             fields: ["id", "name", "category_id"],
-            domain: [],
+            domain: [["color", "!=", 0]],
         });
         this.choices = choices.map(({ id, category_id, name }) => {
             return {

@@ -6,6 +6,7 @@ import { cookie } from "@web/core/browser/cookie";
 
 import { markup } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
+import { waitForStable } from "@web/core/macro";
 
 export function addMedia(position = "right") {
     return {
@@ -192,11 +193,10 @@ export function clickOnElement(elementName, selector) {
 export function clickOnEditAndWaitEditMode(position = "bottom") {
     return [{
         content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
-        trigger: ".o_menu_systray .o_edit_website_container a",
+        trigger: "body:not(.editor_has_snippets) .o_menu_systray .o_edit_website_container a",
         tooltipPosition: position,
         run: "click",
     }, {
-        isActive: ["auto"], // Checking step only for automated tests
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     }];
@@ -220,7 +220,6 @@ export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") 
         tooltipPosition: position,
         run: "click",
     }, {
-        isActive: ["auto"], // Checking step only for automated tests
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     }];
@@ -247,7 +246,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
     ];
 }
 
-export function clickOnSave(position = "bottom", timeout) {
+export function clickOnSave(position = "bottom", timeout = 50000) {
     return [
         {
             trigger: "#oe_snippets:not(:has(.o_we_ongoing_insertion))",
@@ -257,8 +256,7 @@ export function clickOnSave(position = "bottom", timeout) {
             noPrepend: true,
         },
         {
-            trigger:
-                'div:not(.o_loading_dummy) > #oe_snippets button[data-action="save"]:not([disabled])',
+            trigger: "button[data-action=save]:enabled:contains(save)",
             // TODO this should not be needed but for now it better simulates what
             // an human does. By the time this was added, it's technically possible
             // to drag and drop a snippet then immediately click on save and have
@@ -268,14 +266,17 @@ export function clickOnSave(position = "bottom", timeout) {
             // in related commit message.
         content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
             tooltipPosition: position,
-            timeout: timeout,
-            run: "click",
+            async run(actions) {
+                await waitForStable(document, 1000);
+                await actions.click();
+            },
+            timeout,
         },
         {
-            isActive: ["auto"], // Just making sure save is finished in automatic tests
-            trigger: ":iframe body:not(.editor_enable)",
+            trigger:
+                "body:not(.editor_has_dummy_snippets):not(.o_website_navbar_hide):not(.editor_has_snippets):not(:has(.o_notification_bar))",
             noPrepend: true,
-            timeout: timeout,
+            timeout,
         },
     ];
 }
@@ -406,17 +407,23 @@ export function getClientActionUrl(path, edition) {
 }
 
 export function clickOnExtraMenuItem(stepOptions, backend = false) {
-    return Object.assign({
-        content: "Click on the extra menu dropdown toggle if it is there",
-        trigger: `${backend ? ":iframe" : ""} .top_menu`,
-        async run(actions) {
-            const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
-            // Don't click on the extra menu button if it's already visible.
-            if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
-                await actions.click(extraMenuButton);
-            }
+    return Object.assign(
+        {
+            content: "Click on the extra menu dropdown toggle if it is there and not shown",
+            trigger: `${
+                backend ? ":iframe" : ""
+            } ul.top_menu`,
+            run(actions) {
+                // Note: the button might not exist (it only appear if there is many menu items)
+                const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
+                // Don't click on the extra menu button if it's already visible.
+                if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
+                    actions.click(extraMenuButton);
+                }
+            },
         },
-    }, stepOptions);
+        stepOptions
+    );
 }
 
 /**
@@ -445,7 +452,6 @@ export function registerWebsitePreviewTour(name, options, steps) {
             // of course.
             if (options.edition) {
                 tourSteps.unshift({
-                    isActive: ["auto"],
                     content: "Wait for the edit mode to be started",
                     trigger: ".o_website_preview.editor_enable.editor_has_snippets",
                     timeout: 30000,

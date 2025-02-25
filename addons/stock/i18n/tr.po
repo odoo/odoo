@@ -32,20 +32,21 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2024
 # Martin Trigaux, 2024
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2024
-# Umur Akın <umura@projetgrup.com>, 2024
 # Murat Kaplan <muratk@projetgrup.com>, 2024
-# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2024
-# Tugay Hatıl <tugayh@projetgrup.com>, 2024
-# Deniz Guvener, 2024
+# Deniz Guvener, 2025
+# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2025
+# Umur Akın <umura@projetgrup.com>, 2025
+# Tugay Hatıl <tugayh@projetgrup.com>, 2025
 # Ediz Duman <neps1192@gmail.com>, 2025
+# Cengiz Cokay Global Nonwoven, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2025\n"
+"Last-Translator: Cengiz Cokay Global Nonwoven, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,6 +73,8 @@ msgid ""
 "\n"
 "(%(serial_number)s) exists in location %(location)s"
 msgstr ""
+"\n"
+"(%(serial_number)s) %(location)s konumunda var"
 
 #. module: stock
 #. odoo-python
@@ -221,6 +224,8 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
+"%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
+"order is %(qty_to_order)s %(uom)s."
 
 #. module: stock
 #. odoo-python
@@ -484,11 +489,6 @@ msgstr "4 x 7 fiyat ile"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
 msgstr ""
 
 #. module: stock
@@ -2706,7 +2706,7 @@ msgstr "%s'de gecikme"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
 msgid "Deliver (1 step)"
-msgstr "Teslimat (1 step)"
+msgstr "Teslimat (1 Adım)"
 
 #. module: stock
 #. odoo-python
@@ -3399,7 +3399,7 @@ msgstr "İlk Giren İlk Çıkar (FIFO)"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Lot Number"
-msgstr ""
+msgstr "İlk lot Numarası"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
@@ -3670,7 +3670,7 @@ msgstr "Oluştur"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Lot numbers"
-msgstr ""
+msgstr "Lot Numaraları oluştur"
 
 #. module: stock
 #. odoo-javascript
@@ -4136,12 +4136,6 @@ msgid "Immediate Transfer"
 msgstr "Acil Transfer"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "İçe Aktar"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -4173,7 +4167,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
-msgstr "Türü"
+msgstr "Giriş Türü"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date_deadline
@@ -5689,6 +5683,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"\"%(product)s\" içinde \"%(location)s\" ikmal için hiçbir kural bulunamadı.\n"
+"Üründeki rota yapılandırmasını doğrulayın."
 
 #. module: stock
 #. odoo-python
@@ -6449,7 +6445,7 @@ msgstr "Topla"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quant_id
 msgid "Pick From"
-msgstr ""
+msgstr "Seçim Yap"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
@@ -6459,12 +6455,12 @@ msgstr "Toplama Türü"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
 msgid "Pick then Deliver (2 steps)"
-msgstr ""
+msgstr "Topla, sonra Teslimat (2 Adım)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pick, Pack, then Deliver (3 steps)"
-msgstr ""
+msgstr "Topla, Paketler, sonra Teslimat (3 Adım)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
@@ -6569,11 +6565,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Stokunuzdaki her ürün için miktar tanımlamak veya Favoriler'deki bir "
-"elektronik tablodan bunları içe aktarmak için OLUŞTUR düğmesine basın"
 
 #. module: stock
 #. odoo-javascript
@@ -7175,7 +7169,7 @@ msgstr "Stok Miktarı"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity Received"
-msgstr ""
+msgstr "Alınan Miktar"
 
 #. module: stock
 #. odoo-python
@@ -7271,7 +7265,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity per Lot"
-msgstr ""
+msgstr "Lot Başına Miktar"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
@@ -7384,7 +7378,7 @@ msgstr "Alım Yapılan"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
 msgid "Receive and Store (1 step)"
-msgstr ""
+msgstr "Teslim alın ve Stoklayın (1 Adım)"
 
 #. module: stock
 #. odoo-python
@@ -7407,12 +7401,12 @@ msgstr "3 adımda mal kabul (giriş + kalite + stok)"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__two_steps
 msgid "Receive then Store (2 steps)"
-msgstr ""
+msgstr "Teslim alın ve Stoklayın (2 Adım)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive, Quality Control, then Store (3 steps)"
-msgstr ""
+msgstr "Teslim alın, Kalite Kontrol yapın, sonra Stoklayın (3 Adım)"
 
 #. module: stock
 #. odoo-python
@@ -7618,7 +7612,7 @@ msgstr "İkmal Bilgisi"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
+msgstr "%(product)s de %(warehouse)s için İkmal Bilgisi"
 
 #. module: stock
 #. odoo-python
@@ -7764,6 +7758,11 @@ msgid "Return"
 msgstr "İade"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Ters Transfer"
@@ -7792,7 +7791,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
-msgstr ""
+msgstr "İade edilen %(picking_name)s"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
@@ -8213,6 +8212,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): "
 "%(location_list)s. Please correct the serial number encoded."
 msgstr ""
+"Seri numarası (%(serial_number)s) zaten konum %(location_list)s'de "
+"mevcuttur. Lütfen kodlanan seri numarasını düzeltiniz."
 
 #. module: stock
 #. odoo-python
@@ -8222,6 +8223,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"Seri numarası (%(serial_number)s) %(source_location)skonumunda bulunmuyor ama şu konumlarda bulunur: %(other_locations)s.\n"
+"\n"
+"Tutarsız verileri önlemek için lütfen bunu düzeltin."
 
 #. module: stock
 #. odoo-python
@@ -8231,6 +8235,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"Seri numarası (%(serial_number)s) %(source_location)s konumunda bulunmuyor ama şu konumlarda bulunur: %(other_locations)s.\n"
+"\n"
+"Bu hareket için kaynak konumu %(recommended_location)s olarak değiştirilecek."
 
 #. module: stock
 #. odoo-javascript
@@ -8917,7 +8924,7 @@ msgstr "Etiket adı zaten mevcut!"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_stock
 msgid "Take From Stock"
-msgstr "Stoktan Alma"
+msgstr "Stoktan Al"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__mts_else_mto
@@ -9190,6 +9197,9 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\"%(product)s\" ürünü için yapılan miktar, \"%(unit)s\" ölçü biriminde "
+"tanımlanan yuvarlama hassasiyetine uymuyor. Lütfen ölçü biriminizin yapılan "
+"miktarını veya yuvarlama hassasiyetini değiştirin."
 
 #. module: stock
 #. odoo-python
@@ -9213,6 +9223,7 @@ msgstr ""
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
 msgstr ""
+"Arama, %(operator)s operatörünü veya %(value)s değerini desteklemiyor."
 
 #. module: stock
 #. odoo-python
@@ -9229,6 +9240,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"Seri numarası kullanılmaktadır: \n"
+" Ürün: %(product)s, Seri No: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -10028,7 +10041,7 @@ msgstr "Ölçü Birim Adı"
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Units"
-msgstr "Birimler"
+msgstr "Adet"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10573,7 +10586,7 @@ msgstr "Ürün Geldiğinde"
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> "
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need."
+"the need. %(suffix)s"
 msgstr ""
 
 #. module: stock
@@ -11141,6 +11154,8 @@ msgid ""
 "You need to supply a Lot/Serial Number for product:\n"
 "%(products)s"
 msgstr ""
+"Bu ürün için bir Lot/Seri Numarası seçmeniz gerekiyor:\n"
+"%(products)s"
 
 #. module: stock
 #. odoo-python

@@ -684,3 +684,53 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             create_statement_line_and_reconcile(payment=payment, amount=invoice.amount_total / 2)
             payment = register_payment(invoice, line_without_outstanding, invoice.amount_total / 2)
             create_statement_line_and_reconcile(invoice=invoice, amount=invoice.amount_total / 2)
+
+    def test_resequence_change_payment_name(self):
+        """
+        Test that when resequencing the journal entry corresponding to a payment, the payment is also renamed
+        """
+        invoice = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2024-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'test',
+                'quantity': 1,
+                'price_unit': 100.0,
+            })],
+        }])
+        invoice.action_post()
+
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({})\
+            ._create_payments()
+
+        payment.action_post()
+
+        wizard = self.env['account.resequence.wizard'].with_context({
+            'active_ids': payment.move_id.ids,
+            'active_model': 'account.move',
+        }).create({
+            'first_name': 'PBNK1/2025/00002',
+        })
+        wizard.resequence()
+
+        self.assertEqual(payment.move_id.name, 'PBNK1/2025/00002')
+        self.assertEqual(payment.name, 'PBNK1/2025/00002')
+
+    def test_vendor_payment_save_user_selected_journal_id(self):
+        journal_bank = self.env['account.journal'].search([('name', '=', 'Bank')])
+        journal_cash = self.env['account.journal'].search([('name', '=', 'Cash')])
+
+        self.partner.property_outbound_payment_method_line_id = journal_cash.outbound_payment_method_line_ids
+        payment = self.env['account.payment'].create({
+            'payment_type': 'outbound',
+            'partner_id': self.partner.id,
+            'journal_id': journal_cash.id,
+        })
+        self.assertEqual(payment.journal_id, journal_cash)
+        payment.journal_id = journal_bank
+
+        self.assertEqual(payment.payment_method_line_id.journal_id, payment.journal_id)
+        self.assertEqual(payment.journal_id, journal_bank)

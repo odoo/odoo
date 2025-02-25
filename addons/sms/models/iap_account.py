@@ -27,3 +27,9 @@ class IapAccount(models.Model):
             'res_model': 'sms.account.sender',
             'context': {'default_account_id': self.id},
         }
+
+    def _get_account_info(self, account_id, balance, information):
+        res = super()._get_account_info(account_id, balance, information)
+        if account_id.service_name == 'sms':
+            res['sender_name'] = information.get('sender_name')
+        return res

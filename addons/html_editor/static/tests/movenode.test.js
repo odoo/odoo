@@ -5,7 +5,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 
-describe.current.tags("desktop")
+describe.current.tags("desktop");
 
 const styles = `
 .odoo-editor-editable {
@@ -38,8 +38,8 @@ test("should show the hook when hovering the second P", async () => {
     expect(elementRect.top).toBe(37);
     expect(elementRect.left).toBe(5);
 });
-test("should not show the hook when hovering a DIV", async () => {
-    const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p>", {
+test("should not show the hook when hovering a DIV which is not a baseContainer", async () => {
+    const { el } = await setupEditor(`<p>a[]</p><div class="oe_unbreakable"><br></div><p>b</p>`, {
         styleContent: styles,
     });
     await hover(el.querySelector("div"));
@@ -48,9 +48,12 @@ test("should not show the hook when hovering a DIV", async () => {
 });
 describe("drag", () => {
     test("should drop at the same place before the same element", async () => {
-        const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
-            styleContent: styles,
-        });
+        const { el } = await setupEditor(
+            `<p>a[]</p><div class="oe_unbreakable"><br></div><div>d</div><p>b</p><p>c</p>`,
+            {
+                styleContent: styles,
+            }
+        );
         await animationFrame();
         const firstP = el.querySelector("p");
         await hover(firstP);
@@ -60,15 +63,20 @@ describe("drag", () => {
         await tick();
         const handle = await contains(moveElement).drag();
         dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
-        expect(dropzones).toHaveLength(6);
+        expect(dropzones).toHaveLength(8);
         await handle.moveTo(dropzones[0]);
         await handle.drop();
-        expect(getContent(el)).toBe(`<p>a[]</p><div><br></div><p>b</p><p>c</p>`);
+        expect(getContent(el)).toBe(
+            `<p>a[]</p><div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>b</p><p>c</p>`
+        );
     });
     test("should drop at the same place after the same element", async () => {
-        const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
-            styleContent: styles,
-        });
+        const { el } = await setupEditor(
+            `<p>a[]</p><div class="oe_unbreakable"><br></div><div>d</div><p>b</p><p>c</p>`,
+            {
+                styleContent: styles,
+            }
+        );
         await animationFrame();
         const firstP = el.querySelector("p");
         await hover(firstP);
@@ -78,15 +86,20 @@ describe("drag", () => {
         await tick();
         const handle = await contains(moveElement).drag();
         dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
-        expect(dropzones).toHaveLength(6);
+        expect(dropzones).toHaveLength(8);
         await handle.moveTo(dropzones[1]);
         await handle.drop();
-        expect(getContent(el)).toBe(`<p>a[]</p><div><br></div><p>b</p><p>c</p>`);
+        expect(getContent(el)).toBe(
+            `<p>a[]</p><div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>b</p><p>c</p>`
+        );
     });
-    test("should drop before the next P", async () => {
-        const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
-            styleContent: styles,
-        });
+    test("should drop before the next baseContainer", async () => {
+        const { el } = await setupEditor(
+            `<p>a[]</p><div class="oe_unbreakable"><br></div><div>d</div><p>b</p><p>c</p>`,
+            {
+                styleContent: styles,
+            }
+        );
         await animationFrame();
         const firstP = el.querySelector("p");
         await hover(firstP);
@@ -96,15 +109,20 @@ describe("drag", () => {
         await tick();
         const handle = await contains(moveElement).drag();
         dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
-        expect(dropzones).toHaveLength(6);
+        expect(dropzones).toHaveLength(8);
         await handle.moveTo(dropzones[2]);
         await handle.drop();
-        expect(getContent(el)).toBe(`<div><br></div><p>a[]</p><p>b</p><p>c</p>`);
+        expect(getContent(el)).toBe(
+            `<div class="oe_unbreakable"><br></div><p>a[]</p><div class="o-paragraph">d</div><p>b</p><p>c</p>`
+        );
     });
-    test("should drop after the next P", async () => {
-        const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
-            styleContent: styles,
-        });
+    test("should drop after the next baseContainer", async () => {
+        const { el } = await setupEditor(
+            `<p>a[]</p><div class="oe_unbreakable"><br></div><div>d</div><p>b</p><p>c</p>`,
+            {
+                styleContent: styles,
+            }
+        );
         await animationFrame();
         const firstP = el.querySelector("p");
         await hover(firstP);
@@ -114,15 +132,20 @@ describe("drag", () => {
         await tick();
         const handle = await contains(moveElement).drag();
         dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
-        expect(dropzones).toHaveLength(6);
+        expect(dropzones).toHaveLength(8);
         await handle.moveTo(dropzones[3]);
         await handle.drop();
-        expect(getContent(el)).toBe(`<div><br></div><p>b</p><p>a[]</p><p>c</p>`);
+        expect(getContent(el)).toBe(
+            `<div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>a[]</p><p>b</p><p>c</p>`
+        );
     });
     test("should do nothing when dropping outside the editable", async () => {
-        const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
-            styleContent: styles,
-        });
+        const { el } = await setupEditor(
+            `<p>a[]</p><div class="oe_unbreakable"><br></div><div>d</div><p>b</p><p>c</p>`,
+            {
+                styleContent: styles,
+            }
+        );
         await animationFrame();
         const firstP = el.querySelector("p");
         await hover(firstP);
@@ -132,17 +155,22 @@ describe("drag", () => {
         await tick();
         const handle = await contains(moveElement).drag();
         dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
-        expect(dropzones).toHaveLength(6);
+        expect(dropzones).toHaveLength(8);
         const outsideArea = document.createElement("div");
         getFixture().appendChild(outsideArea);
         await handle.moveTo(outsideArea);
         await handle.drop();
-        expect(getContent(el)).toBe(`<p>a[]</p><div><br></div><p>b</p><p>c</p>`);
+        expect(getContent(el)).toBe(
+            `<p>a[]</p><div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>b</p><p>c</p>`
+        );
     });
     test("should do nothing when dropping outside the editable and after hovering a hook", async () => {
-        const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
-            styleContent: styles,
-        });
+        const { el } = await setupEditor(
+            `<p>a[]</p><div class="oe_unbreakable"><br></div><div>d</div><p>b</p><p>c</p>`,
+            {
+                styleContent: styles,
+            }
+        );
         await animationFrame();
         const firstP = el.querySelector("p");
         await hover(firstP);
@@ -152,12 +180,14 @@ describe("drag", () => {
         await tick();
         const handle = await contains(moveElement).drag();
         dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
-        expect(dropzones).toHaveLength(6);
+        expect(dropzones).toHaveLength(8);
         handle.moveTo(dropzones[3]);
         const outsideArea = document.createElement("div");
         getFixture().appendChild(outsideArea);
         await handle.moveTo(outsideArea);
         await handle.drop();
-        expect(getContent(el)).toBe(`<p>a[]</p><div><br></div><p>b</p><p>c</p>`);
+        expect(getContent(el)).toBe(
+            `<p>a[]</p><div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>b</p><p>c</p>`
+        );
     });
 });

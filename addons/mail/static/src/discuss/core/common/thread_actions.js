@@ -50,6 +50,7 @@ threadActionsRegistry
                 : "fa fa-fw fa-lg fa-bell";
         },
         name: _t("Notification Settings"),
+        panelOuterClass: "bg-100 border border-secondary",
         sequence: 10,
         sequenceGroup: 30,
         toggle: true,
@@ -81,7 +82,9 @@ threadActionsRegistry
             );
         },
         panelOuterClass(component) {
-            return `o-discuss-ChannelInvitation ${component.props.chatWindow ? "bg-inherit" : ""}`;
+            return `o-discuss-ChannelInvitation ${
+                component.props.chatWindow ? "bg-inherit" : ""
+            } bg-100 border border-secondary`;
         },
         icon: "fa fa-fw fa-user-plus",
         iconLarge: "fa fa-fw fa-lg fa-user-plus",

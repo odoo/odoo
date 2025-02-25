@@ -307,17 +307,17 @@ describe("deleteForward", () => {
             test("should not delete a fontawesome after multiple deleteForward with spaces inside a <span>", async () => {
                 await testEditor({
                     contentBefore:
-                        '<div><span class="a">ab[]c </span><i class="fa fa-star"></i> def</div>',
+                        '<p><span class="a">ab[]c </span><i class="fa fa-star"></i> def</p>',
                     contentBeforeEdit:
-                        '<div><span class="a">ab[]c </span><i class="fa fa-star" contenteditable="false">\u200b</i> def</div>',
+                        '<p><span class="a">ab[]c </span><i class="fa fa-star" contenteditable="false">\u200b</i> def</p>',
                     stepFunction: async (editor) => {
                         deleteForward(editor);
                         deleteForward(editor);
                     },
                     contentAfterEdit:
-                        '<div><span class="a">ab[]</span><i class="fa fa-star" contenteditable="false">\u200b</i> def</div>',
+                        '<p><span class="a">ab[]</span><i class="fa fa-star" contenteditable="false">\u200b</i> def</p>',
                     contentAfter:
-                        '<div><span class="a">ab[]</span><i class="fa fa-star"></i> def</div>',
+                        '<p><span class="a">ab[]</span><i class="fa fa-star"></i> def</p>',
                 });
             });
         });

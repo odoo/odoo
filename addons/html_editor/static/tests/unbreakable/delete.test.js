@@ -8,16 +8,16 @@ describe("backward", () => {
         describe("start empty", () => {
             test("should delete empty p after an unbreakable (backward)", async () => {
                 await testEditor({
-                    contentBefore: `<div>a</div><p>[]<br></p>`,
+                    contentBefore: `<div class="oe_unbreakable">a</div><p>[]<br></p>`,
                     stepFunction: deleteBackward,
-                    contentAfter: `<div>a[]</div>`,
+                    contentAfter: `<div class="oe_unbreakable">a[]</div>`,
                 });
             });
             test("should delete empty p/br after an unbreakable (backward)", async () => {
                 await testEditor({
-                    contentBefore: `<div>a</div><p>[]<br></p>`,
+                    contentBefore: `<div class="oe_unbreakable">a</div><p>[]<br></p>`,
                     stepFunction: deleteBackward,
-                    contentAfter: `<div>a[]</div>`,
+                    contentAfter: `<div class="oe_unbreakable">a[]</div>`,
                 });
             });
             test("should delete empty unbreakable (backward)", async () => {
@@ -25,7 +25,7 @@ describe("backward", () => {
                     contentBefore: unformat(`
                     <div>
                         <div><p>a</p></div>
-                        <div>[]</div>
+                        <div class="oe_unbreakable">[]</div>
                     </div>`),
                     stepFunction: deleteBackward,
                     contentAfter: unformat(`
@@ -40,14 +40,14 @@ describe("backward", () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
-                            <div>[]<br></div>
-                            <div>a</div>
+                            <div class="oe_unbreakable">[]<br></div>
+                            <p>a</p>
                         </div>`),
                     stepFunction: deleteBackward,
                     contentAfter: unformat(`
                         <div>
-                            <div>[]<br></div>
-                            <div>a</div>
+                            <div class="oe_unbreakable">[]<br></div>
+                            <p>a</p>
                         </div>`),
                 });
             });
@@ -56,23 +56,23 @@ describe("backward", () => {
         describe("start text", () => {
             test("should not merge p with an unbreakable (backward)", async () => {
                 await testEditor({
-                    contentBefore: `<div>b</div><p>[]a</p>`,
+                    contentBefore: `<div class="oe_unbreakable">b</div><p>[]a</p>`,
                     stepFunction: deleteBackward,
-                    contentAfter: `<div>b</div><p>[]a</p>`,
+                    contentAfter: `<div class="oe_unbreakable">b</div><p>[]a</p>`,
                 });
             });
             test("should not merge unbreakable before an unbreakable (backward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
-                            <div>a</div>
-                            <div>[]b</div>
+                            <div class="oe_unbreakable">a</div>
+                            <div class="oe_unbreakable">[]b</div>
                         </div>`),
                     stepFunction: deleteBackward,
                     contentAfter: unformat(`
                         <div>
-                            <div>a</div>
-                            <div>[]b</div>
+                            <div class="oe_unbreakable">a</div>
+                            <div class="oe_unbreakable">[]b</div>
                         </div>`),
                 });
             });
@@ -81,13 +81,13 @@ describe("backward", () => {
                     contentBefore: unformat(`
                         <div>
                             <p>a</p>
-                            <div>[]b</div>
+                            <div class="oe_unbreakable">[]b</div>
                         </div>`),
                     stepFunction: deleteBackward,
                     contentAfter: unformat(`
                         <div>
                             <p>a</p>
-                            <div>[]b</div>
+                            <div class="oe_unbreakable">[]b</div>
                         </div>`),
                 });
             });
@@ -95,14 +95,14 @@ describe("backward", () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
-                            <div><br></div>
-                            <div>[]b</div>
+                            <div class="oe_unbreakable"><br></div>
+                            <div class="oe_unbreakable">[]b</div>
                         </div>`),
                     stepFunction: deleteBackward,
                     contentAfter: unformat(`
                         <div>
-                            <div><br></div>
-                            <div>[]b</div>
+                            <div class="oe_unbreakable"><br></div>
+                            <div class="oe_unbreakable">[]b</div>
                         </div>`),
                 });
             });
@@ -111,13 +111,13 @@ describe("backward", () => {
                     contentBefore: unformat(`
                         <div>
                             <p><br></p>
-                            <div>[]b</div>
+                            <div class="oe_unbreakable">[]b</div>
                         </div>`),
                     stepFunction: deleteBackward,
                     contentAfter: unformat(`
                         <div>
                             <p><br></p>
-                            <div>[]b</div>
+                            <div class="oe_unbreakable">[]b</div>
                         </div>`),
                 });
             });
@@ -130,14 +130,14 @@ describe("backward", () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
-                                <div>[ab</div>
-                                <div>cd</div>
-                                <div>ef]</div>
+                                <div class="oe_unbreakable">[ab</div>
+                                <div class="oe_unbreakable">cd</div>
+                                <div class="oe_unbreakable">ef]</div>
                             </div>`),
                         stepFunction: deleteBackward,
                         contentAfter: unformat(`
                             <div>
-                                <div>[]<br></div>
+                                <div class="oe_unbreakable">[]<br></div>
                             </div>`),
                     });
                 });
@@ -145,14 +145,14 @@ describe("backward", () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
-                                <div>[ab</div>
-                                <div>cd</div>
-                                <div>e]f</div>
+                                <div class="oe_unbreakable">[ab</div>
+                                <div class="oe_unbreakable">cd</div>
+                                <div class="oe_unbreakable">e]f</div>
                             </div>`),
                         stepFunction: deleteBackward,
                         contentAfter: unformat(`
                             <div>
-                                <div>[]f</div>
+                                <div class="oe_unbreakable">[]f</div>
                             </div>`),
                     });
                 });
@@ -163,15 +163,15 @@ describe("backward", () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
-                                <div>a[b</div>
-                                <div>cd</div>
-                                <div>e]f</div>
+                                <div class="oe_unbreakable">a[b</div>
+                                <div class="oe_unbreakable">cd</div>
+                                <div class="oe_unbreakable">e]f</div>
                             </div>`),
                         stepFunction: deleteBackward,
                         contentAfter: unformat(`
                             <div>
-                                <div>a[]</div>
-                                <div>f</div>
+                                <div class="oe_unbreakable">a[]</div>
+                                <div class="oe_unbreakable">f</div>
                             </div>`),
                     });
                 });
@@ -179,14 +179,14 @@ describe("backward", () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
-                                <div>a[b</div>
-                                <div>cd</div>
-                                <div>ef]</div>
+                                <div class="oe_unbreakable">a[b</div>
+                                <div class="oe_unbreakable">cd</div>
+                                <div class="oe_unbreakable">ef]</div>
                             </div>`),
                         stepFunction: deleteBackward,
                         contentAfter: unformat(`
                             <div>
-                                <div>a[]</div>
+                                <div class="oe_unbreakable">a[]</div>
                             </div>`),
                     });
                 });
@@ -199,19 +199,19 @@ describe("backward", () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
-                                <div>[ab</div>
-                                <div>cd</div>
-                                <div>ef</div>
+                                <div class="oe_unbreakable">[ab</div>
+                                <div class="oe_unbreakable">cd</div>
+                                <div class="oe_unbreakable">ef</div>
                             </div>
                             <div>
-                                <div>gh</div>
-                                <div>ij</div>
-                                <div>k]l</div>
+                                <div class="oe_unbreakable">gh</div>
+                                <div class="oe_unbreakable">ij</div>
+                                <div class="oe_unbreakable">k]l</div>
                             </div>`),
                         stepFunction: deleteBackward,
                         contentAfter: unformat(`
                             <div>
-                                <div>[]l</div>
+                                <div class="oe_unbreakable">[]l</div>
                             </div>`),
                     });
                 });
@@ -221,22 +221,22 @@ describe("backward", () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
-                                <div>a[b</div>
-                                <div>cd</div>
-                                <div>ef</div>
+                                <div class="oe_unbreakable">a[b</div>
+                                <div class="oe_unbreakable">cd</div>
+                                <div class="oe_unbreakable">ef</div>
                             </div>
                             <div>
-                                <div>gh</div>
-                                <div>ij</div>
-                                <div>k]l</div>
+                                <div class="oe_unbreakable">gh</div>
+                                <div class="oe_unbreakable">ij</div>
+                                <div class="oe_unbreakable">k]l</div>
                             </div>`),
                         stepFunction: deleteBackward,
                         contentAfter: unformat(`
                             <div>
-                                <div>a[]</div>
+                                <div class="oe_unbreakable">a[]</div>
                             </div>
                             <div>
-                                <div>l</div>
+                                <div class="oe_unbreakable">l</div>
                             </div>`),
                     });
                 });
@@ -244,19 +244,19 @@ describe("backward", () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
-                                <div>a[b</div>
-                                <div>cd</div>
-                                <div>ef</div>
+                                <div class="oe_unbreakable">a[b</div>
+                                <div class="oe_unbreakable">cd</div>
+                                <div class="oe_unbreakable">ef</div>
                             </div>
                             <div>
-                                <div>gh</div>
-                                <div>ij</div>
-                                <div>kl]</div>
+                                <div class="oe_unbreakable">gh</div>
+                                <div class="oe_unbreakable">ij</div>
+                                <div class="oe_unbreakable">kl]</div>
                             </div>`),
                         stepFunction: (editor) => deleteBackward(editor),
                         contentAfter: unformat(`
                             <div>
-                                <div>a[]</div>
+                                <div class="oe_unbreakable">a[]</div>
                             </div>`),
                     });
                 });
@@ -293,16 +293,16 @@ describe("forward", () => {
         describe("start empty", () => {
             test("should delete empty p just before an unbreakable (forward)", async () => {
                 await testEditor({
-                    contentBefore: `<p>[]</p><div>a</div>`,
+                    contentBefore: `<p>[]</p><div class="oe_unbreakable">a</div>`,
                     stepFunction: deleteForward,
-                    contentAfter: `<div>[]a</div>`,
+                    contentAfter: `<div class="oe_unbreakable">[]a</div>`,
                 });
             });
             test("should delete empty p/br just before an unbreakable (forward)", async () => {
                 await testEditor({
-                    contentBefore: `<p><br>[]</p><div>a</div>`,
+                    contentBefore: `<p><br>[]</p><div class="oe_unbreakable">a</div>`,
                     stepFunction: deleteForward,
-                    contentAfter: `<div>[]a</div>`,
+                    contentAfter: `<div class="oe_unbreakable">[]a</div>`,
                 });
             });
             test("should delete empty unbreakables (forward)", async () => {
@@ -323,14 +323,14 @@ describe("forward", () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
-                            <div>a</div>
-                            <div>[]<br></div>
+                            <p>a</p>
+                            <div class="oe_unbreakable">[]<br></div>
                         </div>`),
                     stepFunction: deleteForward,
                     contentAfter: unformat(`
                         <div>
-                            <div>a</div>
-                            <div>[]<br></div>
+                            <p>a</p>
+                            <div class="oe_unbreakable">[]<br></div>
                         </div>`),
                 });
             });
@@ -339,23 +339,23 @@ describe("forward", () => {
         describe("start text", () => {
             test("should not merge p with an unbreakable (forward)", async () => {
                 await testEditor({
-                    contentBefore: `<p>a[]</p><div>b</div>`,
+                    contentBefore: `<p>a[]</p><div class="oe_unbreakable">b</div>`,
                     stepFunction: deleteForward,
-                    contentAfter: `<p>a[]</p><div>b</div>`,
+                    contentAfter: `<p>a[]</p><div class="oe_unbreakable">b</div>`,
                 });
             });
             test("should not remove unbreakable after an unbreakable (forward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
-                            <div>b[]</div>
-                            <div>a</div>
+                            <div class="oe_unbreakable">b[]</div>
+                            <div class="oe_unbreakable">a</div>
                         </div>`),
                     stepFunction: deleteForward,
                     contentAfter: unformat(`
                         <div>
-                            <div>b[]</div>
-                            <div>a</div>
+                            <div class="oe_unbreakable">b[]</div>
+                            <div class="oe_unbreakable">a</div>
                         </div>`),
                 });
             });
@@ -363,13 +363,13 @@ describe("forward", () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
-                            <div>b[]</div>
+                            <div class="oe_unbreakable">b[]</div>
                             <p>a</p>
                         </div>`),
                     stepFunction: deleteForward,
                     contentAfter: unformat(`
                         <div>
-                            <div>b[]</div>
+                            <div class="oe_unbreakable">b[]</div>
                             <p>a</p>
                         </div>`),
                 });
@@ -378,14 +378,14 @@ describe("forward", () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
-                            <div>b[]</div>
-                            <div><br></div>
+                            <div class="oe_unbreakable">b[]</div>
+                            <div class="oe_unbreakable"><br></div>
                         </div>`),
                     stepFunction: deleteForward,
                     contentAfter: unformat(`
                         <div>
-                            <div>b[]</div>
-                            <div><br></div>
+                            <div class="oe_unbreakable">b[]</div>
+                            <div class="oe_unbreakable"><br></div>
                         </div>`),
                 });
             });
@@ -393,13 +393,13 @@ describe("forward", () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
-                            <div>b[]</div>
+                            <div class="oe_unbreakable">b[]</div>
                             <p><br></p>
                         </div>`),
                     stepFunction: deleteForward,
                     contentAfter: unformat(`
                         <div>
-                            <div>b[]</div>
+                            <div class="oe_unbreakable">b[]</div>
                             <p><br></p>
                         </div>`),
                 });
@@ -413,14 +413,14 @@ describe("forward", () => {
             await testEditor({
                 contentBefore: unformat(`
                         <div>
-                            <div>a[bc</div>
-                            <div>de]f</div>
+                            <div class="oe_unbreakable">a[bc</div>
+                            <div class="oe_unbreakable">de]f</div>
                         </div>`),
                 stepFunction: deleteForward,
                 contentAfter: unformat(`
                         <div>
-                            <div>a[]</div>
-                            <div>f</div>
+                            <div class="oe_unbreakable">a[]</div>
+                            <div class="oe_unbreakable">f</div>
                         </div>`),
             });
         });
@@ -568,7 +568,7 @@ describe("list", () => {
         test("shoud not merge list item in the previous unbreakable sibling (2)", async () => {
             await testEditor({
                 contentBefore: unformat(`
-                        <div>
+                        <div class="oe_unbreakable">
                             <p>a[bc</p>
                         </div>
                         <ol>
@@ -577,7 +577,7 @@ describe("list", () => {
                         </ol>`),
                 stepFunction: deleteBackward,
                 contentAfter: unformat(`
-                        <div>
+                        <div class="oe_unbreakable">
                             <p>a[]</p>
                         </div>
                         <ol>

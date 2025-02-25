@@ -15,8 +15,8 @@
                             <span t-if="changeCount > 0" class="badge rounded-pill text-bg-danger ms-2 py-1 smaller fw-bolder" t-esc="changeCount"/>
                         </button>
                     </t>
-                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" >
-                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" title="Add Floor" t-on-click="addFloor"/>
+                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor" >
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" title="Add Floor" />
                     </button>
                 </div>
                 <!-- Right Side Div -->
@@ -150,7 +150,7 @@
                                     <t t-set="data" t-value="getChangeCount(table)"/>
                                     <div
                                         t-if="data.changes > 0 || data.skip > 0"
-                                        t-esc="data.changes > 0 ? data.changes : data.skip"
+                                        t-esc="this.env.utils.formatProductQty(data.changes > 0 ? data.changes : data.skip, false)"
                                         t-att-class="{
                                             'text-bg-danger': data.changes,
                                             'text-bg-info'  : !data.changes and data.skip,

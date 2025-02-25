@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -475,11 +475,6 @@ msgstr "4 x 7 mit Preis"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -4246,12 +4241,6 @@ msgid "Immediate Transfer"
 msgstr "Sofortiger Transfer"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Importieren"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -4390,7 +4379,7 @@ msgstr "Barcode installieren"
 #. odoo-python
 #: code:addons/stock/models/res_company.py:0
 msgid "Inter-warehouse transit"
-msgstr "Transit zwischen Lagerhäusern"
+msgstr "Lagerübergreifender Transit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
@@ -5699,7 +5688,7 @@ msgstr "Nächster Aktivitätstyp"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected"
-msgstr "Als nächstes erwartet"
+msgstr "Nächste erwartete Inventur"
 
 #. module: stock
 #. odoo-python
@@ -6714,12 +6703,12 @@ msgstr "Anwesenheit hängt von der Art des Vorgangs ab."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Drücken Sie auf die Schaltfläche ERSTELLEN, um die Mengen für jedes Produkt "
-"in Ihrem Lager zu definieren oder importieren Sie sie über Favoriten aus "
-"einer Tabellenkalkulation"
+"Drücken Sie auf die Schaltfläche „Neu“, um die Mengen für ein Produkt in "
+"Ihrem Lager zu definieren oder importieren Sie Mengen über eine "
+"Tabellenkalkulation über das Aktionsmenü."
 
 #. module: stock
 #. odoo-javascript
@@ -7124,7 +7113,7 @@ msgstr "Übertragung der Beschaffungsgruppe"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_carrier
 msgid "Propagation of carrier"
-msgstr "Übertragung des Transportunternehmens"
+msgstr "Übertragung des Zustellers"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__lot_properties
@@ -7925,6 +7914,11 @@ msgid "Return"
 msgstr "Retoure ausführen"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr "Alle retournieren"
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Rücksendung"
@@ -8533,9 +8527,9 @@ msgid ""
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
 "Mithilfe von Versandkonnektoren können Sie genaue Versandkosten berechnen, "
-"Versandaufkleber ausdrucken und die Abholung durch das Transportunternehmen "
-"in Ihrem Lagerhaus beantragen, um die Ware an den Kunden zu versenden. "
-"Wenden Sie den Versandkonnektor über Liefermethoden an."
+"Versandaufkleber ausdrucken und die Abholung durch den Zusteller in Ihrem "
+"Lagerhaus beantragen, um die Ware an den Kunden zu versenden. Wenden Sie den"
+" Versandkonnektor über Liefermethoden an."
 
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
@@ -10534,7 +10528,7 @@ msgstr "Diagramm ansehen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
 msgid "View Location"
-msgstr "Lagerort ansehen"
+msgstr "Ansichtslagerort"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10856,11 +10850,11 @@ msgstr "Bei Produkteingang in"
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> "
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need."
+"the need. %(suffix)s"
 msgstr ""
 "Wenn Produkte in <b>%(destination)s</b> benötigt werden, <br> "
 "werden<b>%(operation)s</b> aus <b>%(source_location)s</b> erstellt, um den "
-"Bedarf zu decken."
+"Bedarf zu decken. %(suffix)s"
 
 #. module: stock
 #. odoo-python

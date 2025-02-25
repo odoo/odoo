@@ -18,6 +18,7 @@ $o-discuss-talkingColor: lighten($success, 10%);
     background-color: var(--o-discuss-badge-bg) !important;
     align-items: center;
     justify-content: center;
+    padding: 3px 4px;
 
     &.o-muted {
         --o-discuss-badge-bg: #{$gray-400};
@@ -46,6 +47,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
 .o-min-width-0 {
     min-width: 0;
+}
+
+.o-opacity-35 {
+    opacity: 35%;
 }
 
 .o-gap-0_5 {
@@ -77,9 +82,9 @@ $o-discuss-talkingColor: lighten($success, 10%);
     color: $yellow;
 }
 
-@mixin o-mail-call-bordered() {
-    outline: 2px solid rgba($o-action, 0.5) !important;
-    background-color: mix($white, $o-action, 95%) !important;
+@mixin o-mail-call-bordered($opacity) {
+    border: 1px solid rgba($o-action, $opacity) !important;
+    background-color: mix(mix($white, $gray-100, 15%), $o-action, 97.5%) !important;
 }
 
 // see `@mixin button-variant`, this is the implementation without requiring `.btn` classname
@@ -136,6 +141,10 @@ a.o_mail_redirect, a.o_channel_redirect {
 a.o-discuss-mention {
     @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .15), rgba($primary, .25), darken($primary, 10%));
     cursor: default !important;
+}
+
+.o-discuss-inCallIconColor {
+    color: $o-action;
 }
 
 .o-mail-DiscussSystray {

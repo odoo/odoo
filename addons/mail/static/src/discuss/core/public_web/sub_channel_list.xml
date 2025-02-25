@@ -30,7 +30,7 @@
                         <t t-set="message" t-value="thread.newestPersistentNotEmptyOfAllMessage ?? thread.from_message_id"/>
                         <button class="o-mail-SubChannelList-thread btn btn-light d-flex flex-column border border-secondary mx-1 px-2 py-1" t-on-click="() => this.onClickSubThread(thread)">
                             <div class="d-flex w-100">
-                                <span class="fw-bolder text-truncate small" t-esc="thread.displayName"/>
+                                <span class="fw-bold text-truncate small" t-esc="thread.displayName"/>
                                 <span class="flex-grow-1"/>
                                 <span t-if="message" class="text-muted smaller" t-esc="dateText(message)"/>
                             </div>

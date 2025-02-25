@@ -27,7 +27,7 @@ class AccountCashRounding(models.Model):
         string='Profit Account',
         company_dependent=True,
         check_company=True,
-        domain="[('deprecated', '=', False)]",
+        domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         ondelete='restrict',
     )
     loss_account_id = fields.Many2one(
@@ -35,7 +35,7 @@ class AccountCashRounding(models.Model):
         string='Loss Account',
         company_dependent=True,
         check_company=True,
-        domain="[('deprecated', '=', False)]",
+        domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         ondelete='restrict',
     )
     rounding_method = fields.Selection(string='Rounding Method', required=True,

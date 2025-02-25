@@ -206,7 +206,7 @@ export class ProductProduct extends Base {
     }
 
     get searchString() {
-        const fields = ["display_name", "description_sale", "description"];
+        const fields = ["display_name", "default_code"];
         return fields
             .map((field) => this[field] || "")
             .filter(Boolean)
@@ -214,8 +214,8 @@ export class ProductProduct extends Base {
     }
 
     exactMatch(searchWord) {
-        const fields = ["barcode", "default_code"];
-        return fields.some((field) => this[field] && this[field].includes(searchWord));
+        const fields = ["barcode"];
+        return fields.some((field) => this[field] && this[field].toLowerCase() == searchWord);
     }
 
     _isArchivedCombination(attributeValueIds) {
@@ -252,6 +252,9 @@ export class ProductProduct extends Base {
 
     get productDisplayName() {
         return this.default_code ? `[${this.default_code}] ${this.name}` : this.name;
+    }
+    get canBeDisplayed() {
+        return this.active && this.available_in_pos;
     }
 }
 registry.category("pos_available_models").add(ProductProduct.pythonModel, ProductProduct);

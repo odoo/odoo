@@ -401,16 +401,24 @@ class Meeting(models.Model):
                 # because fullcalendar just drops times for full day events.
                 # i.e. Christmas is on 25/12 for everyone
                 # even if people don't celebrate it simultaneously
-                enddate = fields.Datetime.from_string(meeting.stop_date)
+                enddate = fields.Datetime.from_string(meeting.stop_date or meeting.stop)
                 enddate = enddate.replace(hour=18)
 
-                startdate = fields.Datetime.from_string(meeting.start_date)
+                startdate = fields.Datetime.from_string(meeting.start_date or meeting.start)
                 startdate = startdate.replace(hour=8)  # Set 8 AM
 
-                meeting.write({
-                    'start': startdate.replace(tzinfo=None),
-                    'stop': enddate.replace(tzinfo=None)
-                })
+                if meeting.start_date and meeting.stop_date:
+                    # If start_date or stop_date is set, use start_date and stop_date;
+                    # otherwise, use start and stop.
+                    meeting.write({
+                        'start': startdate.replace(tzinfo=None),
+                        'stop': enddate.replace(tzinfo=None)
+                    })
+                else:
+                    meeting.write({
+                        'start_date': startdate.replace(tzinfo=None),
+                        'stop_date': enddate.replace(tzinfo=None)
+                    })
 
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
     def _check_closing_date(self):

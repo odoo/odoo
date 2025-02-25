@@ -147,3 +147,42 @@ class TestRecruitment(TransactionCase):
             self.env['hr.applicant'].search([('email_from', 'ilike', 'mitchell_admin@example.com')]),
             no_dup
         )
+
+    def test_other_applications_count(self):
+        """ Test that the other_applications_count field does not change
+            when archiving or refusing an application.
+        """
+        candidate = self.env['hr.candidate'].create({'partner_name': 'Test'})
+        application1 = self.env['hr.applicant'].create({'candidate_id': candidate.id})
+        application2 = self.env['hr.applicant'].create({'candidate_id': candidate.id})
+        application3 = self.env['hr.applicant'].create({'candidate_id': candidate.id})
+        self.assertEqual(application1.other_applications_count, 2)
+        application2.action_archive()
+        self.env.invalidate_all()
+        self.assertEqual(application1.other_applications_count, 2, 'The other_applications_count should not change when archiving an application')
+        # refuse application3
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create([{'name': 'Fired'}])
+        applicant_get_refuse_reason = self.env['applicant.get.refuse.reason'].create([{
+            'refuse_reason_id': refuse_reason.id,
+            'applicant_ids': [application3.id],
+        }])
+        applicant_get_refuse_reason.action_refuse_reason_apply()
+        self.env.invalidate_all()
+        self.assertEqual(application1.other_applications_count, 2, 'The other_applications_count should not change when refusing an application')
+
+    def test_open_other_applications_count(self):
+        """
+            The smart button labeled 'Other Applications N' (where N represents the number of
+            other job applications for the same candidate) should, when clicked, open a list view
+            displaying all related applications.
+
+            This list should include both the N other applications and the current one,
+            resulting in a total of N + 1 records.
+        """
+
+        candidate = self.env['hr.candidate'].create({'partner_name': 'Test'})
+        application1 = self.env['hr.applicant'].create({'candidate_id': candidate.id})
+        application2 = self.env['hr.applicant'].create({'candidate_id': candidate.id})
+        application3 = self.env['hr.applicant'].create({'candidate_id': candidate.id})
+        res = application1.action_open_other_applications()
+        self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")

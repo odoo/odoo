@@ -5,7 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# Junko Augias, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -322,7 +322,7 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"全ての入荷在庫移動の相手仕訳項目は、移動元に特定の評価勘定が設定されていない限り、この勘定に計上されます。\n"
+"全ての入荷在庫移動の相手仕訳明細は、移動元に特定の評価勘定が設定されていない限り、この勘定に計上されます。\n"
 "　　　　これは、このカテゴリの全プロダクトのデフォルト値です。各プロダクトに直接設定することもできます。"
 
 #. module: stock_account
@@ -441,7 +441,7 @@ msgstr "チェックを入れた場合、評価はロット/シリアル番号�
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Incoming"
-msgstr "入荷"
+msgstr "入荷予定"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -485,7 +485,7 @@ msgstr "仕訳"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "仕訳項目"
+msgstr "仕訳明細"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -513,9 +513,11 @@ msgstr "以下に関連した"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Lot %(lot)s has a negative quantity in stock. Correct this"
-"                         quantity before enabling lot valuation"
-msgstr "ロット%(lot)s在庫量がマイナスです。ロット評価を有効にする前に、この数量を修正して下さい。 "
+"Lot %(lot)s has a negative quantity in stock.\n"
+"Correct this quantity before enabling/disabling lot valuation."
+msgstr ""
+"ロット%(lot)sの在庫数量がマイナスです。\n"
+"ロット評価を有効化/無効化する前に、この数量を修正して下さい。"
 
 #. module: stock_account
 #. odoo-python
@@ -607,6 +609,16 @@ msgstr "出庫"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "プロダクト"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Please assign lots to all your quantities before enabling lot valuation."
+msgstr ""
+"プロダクト%(product)s は、ロットなしで評価対象のロケーション %(location)s に数量があります。.\n"
+"ロット評価を有効にする前に、全ての数量にロットを割当てて下さい。"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -709,7 +721,7 @@ msgstr "残数量"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
 msgid "Remaining Value"
-msgstr "残額"
+msgstr "残在庫価値"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
@@ -961,7 +973,7 @@ msgstr "残数量合計"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Remaining Value"
-msgstr "残価合計"
+msgstr "残在庫価値合計"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
@@ -1077,7 +1089,7 @@ msgstr "日付指定評価"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 msgid "Valuation by Lot/Serial number"
-msgstr "ロット/シリアル番号ごとの評価"
+msgstr "評価 ロット/シリアル番号ごと"
 
 #. module: stock_account
 #. odoo-python

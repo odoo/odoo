@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.analytic.tests.common import AnalyticCommon
 from odoo.tests import tagged, Form
@@ -340,3 +339,66 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
 
         invoice.invoice_line_ids.account_id = accounts_by_code.get('641000')
         self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_4.id): 100})
+
+    def test_analytic_applicability_multiple_prefixes(self):
+        # This applicability should block all invoices with lines having account_code who starts with '40' or '41'
+        self.env['account.analytic.applicability'].create([
+            {
+                'business_domain': 'invoice',
+                'applicability': 'mandatory',
+                'analytic_plan_id': self.analytic_plan_2.id,
+                'company_id': self.env.company.id,
+                'account_prefix': '40, 41',
+            }
+        ])
+
+        account_analytic = self.env['account.analytic.account'].search([('plan_id', '=', self.analytic_plan_2.id)], limit=1)
+
+        account_invoice_1, account_invoice_2 = self.env['account.account'].create([
+            {
+                'code': '400300',
+                'name': 'My first invoice Account',
+            },
+            {
+                'code': '410300',
+                'name': 'My second invoice Account',
+            },
+        ])
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_b.id,
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 200.0,
+                    'account_id': account_invoice_1.id,
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 200.0,
+                    'account_id': account_invoice_2.id,
+                })
+            ]
+        })
+
+        # This invoice should be blocked as there is no analytic plans on lines
+        with self.assertRaisesRegex(ValidationError, '100% analytic distribution.'):
+            invoice.with_context({'validate_analytic': True}).action_post()
+
+        invoice.line_ids.filtered(lambda line: line.account_id.code.startswith('40'))[0].write({
+            'analytic_distribution': {account_analytic.id: 100}
+        })
+
+        # This invoice should be blocked because one line is missing plans
+        with self.assertRaisesRegex(ValidationError, '100% analytic distribution.'):
+            invoice.with_context({'validate_analytic': True}).action_post()
+
+        invoice.line_ids.filtered(lambda line: line.account_id.code.startswith('41'))[0].write({
+            'analytic_distribution': {account_analytic.id: 100}
+        })
+
+        # This invoice should not be blocked, as all lines have plans
+        invoice.with_context({'validate_analytic': True}).action_post()

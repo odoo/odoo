@@ -1,7 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.tools import formatLang, float_is_zero
 from odoo.exceptions import ValidationError
-from uuid import uuid4
 
 
 class PosPayment(models.Model):
@@ -41,7 +40,7 @@ class PosPayment(models.Model):
     ticket = fields.Char(string='Payment Receipt Info')
     is_change = fields.Boolean(string='Is this payment change?', default=False)
     account_move_id = fields.Many2one('account.move', index='btree_not_null')
-    uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
+    uuid = fields.Char(string='Uuid', readonly=True, copy=False)
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -60,8 +59,6 @@ class PosPayment(models.Model):
         for payment in self:
             if payment.pos_order_id.state in ['invoiced', 'done']:
                 raise ValidationError(_('You cannot edit a payment for a posted order.'))
-            elif payment.pos_order_id.nb_print > 0:
-                raise ValidationError(_('You cannot edit a payment for a printed order.'))
 
     @api.constrains('payment_method_id')
     def _check_payment_method_id(self):

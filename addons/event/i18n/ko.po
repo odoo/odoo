@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Tiffany Chang, 2024
-# Sarah Park, 2024
-# Wil Odoo, 2024
-# Daye Jeong, 2024
+# Daye Jeong, 2025
+# Wil Odoo, 2025
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-01-27 13:03+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2506,6 +2506,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "행사 페이지에 후원사 및 전시업체 표시"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "시간대 표시"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "표시 순서"
@@ -3243,9 +3248,22 @@ msgid "In Progress"
 msgstr "진행 중"
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr "행사 날짜/시간이 웹사이트에 표시될 시간대를 나타냅니다."
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
 msgstr "이메일 서식에 동적 Google 지도 삽입"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_barcode.xml:0
+msgid "Install"
+msgstr "설치하기"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -4686,7 +4704,6 @@ msgid "Tickets with Sale"
 msgstr "판매 중인 티켓"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "시간대"
@@ -4932,6 +4949,14 @@ msgstr "환영합니다"
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
 msgstr "새로운 소식"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr "행사가 예약되면, 양식 보기에 현지 시간대로 표시됩니다."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing

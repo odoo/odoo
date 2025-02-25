@@ -1,9 +1,13 @@
 import { closestBlock, isBlock } from "./blocks";
-import { isShrunkBlock, isVisible, paragraphRelatedElements } from "./dom_info";
+import { isParagraphRelatedElement, isShrunkBlock, isVisible } from "./dom_info";
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
 import { childNodes } from "./dom_traversal";
 import { childNodeIndex, DIRECTIONS } from "./position";
+import {
+    baseContainerGlobalSelector,
+    createBaseContainer,
+} from "@html_editor/utils/base_container";
 
 /** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
 
@@ -19,7 +23,7 @@ export function makeContentsInline(node) {
     let childIndex = 0;
     for (const child of node.childNodes) {
         if (isBlock(child)) {
-            if (childIndex && paragraphRelatedElements.includes(child.nodeName)) {
+            if (childIndex && isParagraphRelatedElement(child)) {
                 child.before(document.createElement("br"));
             }
             for (const grandChild of child.childNodes) {
@@ -40,24 +44,35 @@ export function makeContentsInline(node) {
  * @param {HTMLElement} element - block element
  * @param {Cursors} [cursors]
  */
-export function wrapInlinesInBlocks(element, cursors = { update: () => {} }) {
+export function wrapInlinesInBlocks(
+    element,
+    { baseContainerNodeName = "P", cursors = { update: () => {} } } = {}
+) {
     // Helpers to manipulate preserving selection.
     const wrapInBlock = (node, cursors) => {
         const block = isPhrasingContent(node)
-            ? node.ownerDocument.createElement("P")
+            ? createBaseContainer(baseContainerNodeName, node.ownerDocument)
             : node.ownerDocument.createElement("DIV");
-        cursors.update(callbacksForCursorUpdate.before(node, block));
-        node.before(block);
         cursors.update(callbacksForCursorUpdate.append(block, node));
+        cursors.update(callbacksForCursorUpdate.before(node, block));
+        if (node.nextSibling) {
+            const sibling = node.nextSibling;
+            node.remove();
+            sibling.before(block);
+        } else {
+            const parent = node.parentElement;
+            node.remove();
+            parent.append(block);
+        }
         block.append(node);
         return block;
     };
     const appendToCurrentBlock = (currentBlock, node, cursors) => {
-        if (currentBlock.tagName === "P" && !isPhrasingContent(node)) {
-            const block = document.createElement("DIV");
+        if (currentBlock.matches(baseContainerGlobalSelector) && !isPhrasingContent(node)) {
+            const block = currentBlock.ownerDocument.createElement("DIV");
             cursors.update(callbacksForCursorUpdate.before(currentBlock, block));
             currentBlock.before(block);
-            for (const child of [...currentBlock.childNodes]) {
+            for (const child of childNodes(currentBlock)) {
                 cursors.update(callbacksForCursorUpdate.append(block, child));
                 block.append(child);
             }
@@ -115,6 +130,7 @@ export function unwrapContents(node) {
 // This utils seem to handle a particular case of LI element.
 // If only relevant to the list plugin, a specific util should be created
 // that plugin instead.
+// TODO: deprecated, use the DomPlugin shared function instead.
 export function setTagName(el, newTagName) {
     const document = el.ownerDocument;
     if (el.tagName === newTagName) {
@@ -143,9 +159,11 @@ export function setTagName(el, newTagName) {
  * @param {...string} classNames - The class names to be removed.
  */
 export function removeClass(element, ...classNames) {
-    element.classList.remove(...classNames);
-    if (!element.classList.length) {
+    const classNamesSet = new Set(classNames);
+    if ([...element.classList].every((className) => classNamesSet.has(className))) {
         element.removeAttribute("class");
+    } else {
+        element.classList.remove(...classNames);
     }
 }
 
@@ -200,14 +218,16 @@ export function fillShrunkPhrasingParent(el) {
  * is not a BR, remove the BR.
  *
  * @param {HTMLElement} el
+ * @param {Array} predicates exceptions where a trailing BR should not be removed
  * @returns {HTMLElement|undefined} the removed br, if any
  */
-export function cleanTrailingBR(el) {
+export function cleanTrailingBR(el, predicates = []) {
     const candidate = el?.lastChild;
     if (
         candidate?.nodeName === "BR" &&
         candidate.previousSibling?.nodeName !== "BR" &&
-        !isEmptyBlock(el)
+        !isEmptyBlock(el) &&
+        !predicates.some((predicate) => predicate(candidate))
     ) {
         candidate.remove();
         return candidate;

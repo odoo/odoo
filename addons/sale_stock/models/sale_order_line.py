@@ -227,7 +227,7 @@ class SaleOrderLine(models.Model):
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
         if lines:
-            lines._action_launch_stock_rule(previous_product_uom_qty)
+            lines._action_launch_stock_rule(previous_product_uom_qty=previous_product_uom_qty)
         return res
 
     @api.depends('move_ids')

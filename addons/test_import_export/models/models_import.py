@@ -126,3 +126,11 @@ class Property(models.Model):
 
     properties = fields.Properties(definition='record_definition_id.properties_definition')
     record_definition_id = fields.Many2one('import.properties.definition')
+
+
+class PropertyInherits(models.Model):
+    _name = _description = 'import.properties.inherits'
+    _inherits = {'import.properties': 'parent_id'}
+
+    parent_id = fields.Many2one('import.properties', required=True, ondelete="cascade")
+

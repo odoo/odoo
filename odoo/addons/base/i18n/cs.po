@@ -4,19 +4,19 @@
 # 
 # Translators:
 # Tomáš Píšek, 2024
-# Jiří Podhorecký <jirka.p@volny.cz>, 2024
 # Tereza Mokrá, 2024
 # Marta Wacławek, 2024
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
-# Wil Odoo, 2024
+# Jiří Podhorecký <jirka.p@volny.cz>, 2025
+# Wil Odoo, 2025
+# Aleš Fiala <f.ales1@seznam.cz>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-19 13:06+0000\n"
+"POT-Creation-Date: 2025-02-10 16:32+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3096,6 +3096,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_br_edi_stock
+msgid ""
+"\n"
+"Brazilian Accounting EDI for stock\n"
+"==================================\n"
+"Adds delivery-related information to the NF-e.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
 msgid ""
 "\n"
@@ -4123,6 +4132,20 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock_batch
+msgid ""
+"\n"
+"E-Transport implementation for Batch Pickings in Romania\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock
+msgid ""
+"\n"
+"E-Transport implementation for Romania\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
 msgid ""
 "\n"
@@ -4564,12 +4587,20 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_post_wizard
+#: model:ir.module.module,description:base.module_l10n_nl_reports_vat_pay_wizard
 msgid ""
 "\n"
 "Enable the VAT wizard when posting a tax return journal entry\n"
 msgstr ""
 "\n"
 "Povolí průvodce DPH při zaúčtování vratky daně.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_enhancements
+msgid ""
+"\n"
+"Enhancements for the Point of Sale UrbanPiper module. Includes features such as store timing configuration, scheduled order handling, and improved toggle options.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -4986,6 +5017,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Funkční\n"
+"----------\n"
+"\n"
+"Tento modul přidává účetní funkce pro argentinskou lokalizaci, které představují minimální konfiguraci potřebnou pro fungování společnosti v Argentině a podle předpisů a směrnic AFIP (Administración Federal de Ingresos Públicos).\n"
+"\n"
+"Postupujte podle dalších kroků konfigurace pro výrobu:\n"
+"\n"
+"1. Přejděte do své společnosti a nakonfigurujte své DIČ a typ odpovědnosti AFIP.\n"
+"2. Přejděte do Účetnictví / Nastavení a nastavte účtový rozvrh, který budete chtít používat.\n"
+"3. Vytvořte si prodejní deníky s přihlédnutím k informacím o AFIP pokladně.\n"
+"\n"
+"Ukázková data pro testování:\n"
+"\n"
+"* Byly vytvořeny 3 společnosti, jedna pro každý typ odpovědnosti AFIP s nainstalovanou příslušnou účtovou osnovou. Vyberte si společnost, která vás opravňuje, abyste mohli provést testy:\n"
+"\n"
+"  * (AR) Responsable Inscripto\n"
+"  * (AR) Exento\n"
+"  * (AR) Monotributo\n"
+"\n"
+"* Deník prodejů nastavený na Předtištěné faktury a faktury Expo ve všech společnostech\n"
+"* Příklady faktur a dalších dokladů již ověřených ve společnosti “(AR) Responsable Inscripto”.\n"
+"* Příklad partnerů pro různé typy odpovědnosti:\n"
+"\n"
+"  * ADHOC (IVA Responsable Inscripto)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
+"  * Gritti (Monotributo)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Cliente del Exterior)\n"
+"  * Odoo (Proveedor del Exterior)\n"
+"\n"
+"Nejdůležitější informace:\n"
+"\n"
+"* Účtová osnova nebude nainstalována automaticky, každá šablona CoA závisí na AFIP Odpovědnost společnosti, budete muset nainstalovat CoA pro vaše potřeby.\n"
+"* Při instalaci CoA se nebudou generovat žádné prodejní deníky, deníky si budete muset nastavit ručně.\n"
+"* Při vytváření faktury bude správně předvolen typ dokladu v závislosti na fiskální odpovědnosti vystavitele a příjemce dokladu a souvisejícího deníku.\n"
+"* Byl přidán typ účtu CBU a také ověření platnosti CBU.\n"
+"\n"
+"\n"
+"Technická stránka\n"
+"---------\n"
+"\n"
+"Tento modul přidává vzory i pole, které budou nakonec použity pro modul elektronické faktury. Zde je shrnutí hlavních funkcí:\n"
+"\n"
+"Kmenová data:\n"
+"\n"
+"* Účetní osnova: jedna pro každou odpovědnost AFIP, která se vztahuje k právnické osobě:\n"
+"\n"
+"  * Responsable Inscripto (RI)\n"
+"  * Exento (EX)\n"
+"  * Monotributo (Mono)\n"
+"\n"
+"* Argentinské daně a skupiny účtů (daně z přidané hodnoty s existujícími alikvotními částmi a dalšími typy).\n"
+"* Typy odpovědnosti AFIP\n"
+"* Daňové pozice (pro mapování daní)\n"
+"* Typy právních dokladů v Argentině\n"
+"* Typy identifikačních dokladů platné v Argentině.\n"
+"* Kódy AFIP zemí a kódy DPH zemí pro právnické osoby, fyzické osoby a další.\n"
+"* Kódy měny AFIP\n"
+"* Kódy měrných jednotek AFIP\n"
+"* Partneři: a AFIP, které jsou uvedeny v příloze č. 1.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -5468,6 +5560,22 @@ msgstr ""
 "* Podpora jak Fulfillment by Amazon (FBA), tak Fulfillment by Merchant (FBM):\n"
 "* FBA: Umístění akcií a pohyby akcií umožňují sledovat vaše akcie v Amazon Fulfillment Centers.\n"
 "* FBM: Oznámení o doručení jsou odesílána do Amazonu pro každé potvrzené vyzvednutí (částečné doručení).\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_shopee
+msgid ""
+"\n"
+"Import your Shopee orders in Odoo and synchronize deliveries\n"
+"============================================================\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Import orders from multiple accounts and shops\n"
+"* Orders are matched with Odoo products based on their internal reference (item_id or model_id in Shopee)\n"
+"* Support for both Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) and Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: Importing the completed orders\n"
+"* FBM/Hybrid: Delivery information is fetched from Shopee, track and synchronize the stock level to Shopee\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -7228,6 +7336,22 @@ msgstr ""
 "Oprava produktů z požadavků helpdesku\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_it_riba
+msgid ""
+"\n"
+"Ri.Ba. Export for Batch Payment\n"
+"================================\n"
+"\n"
+"This module enables the generation of Ri.Ba. (Ricevute Bancarie) files from batch payments in Odoo.  \n"
+"It facilitates compliance with the Italian banking standard for managing receivables.\n"
+"\n"
+"- Group multiple receivables into a single batch for streamlined management and reconciliation.\n"
+"- Export batch payments as RIBA-compliant files to be submitted to your homebanking for processing.\n"
+"\n"
+"For more information about RIBA standards, refer to the guidelines issued by the Italian Bankers Association (CBI).\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_rw
 msgid ""
 "\n"
@@ -7352,6 +7476,19 @@ msgstr ""
 "\n"
 "Pravidelně odesílejte přehledy KPI\n"
 "=============================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_envia
+msgid ""
+"\n"
+"Send your shippings through Envia and track them online\n"
+"=======================================================\n"
+"\n"
+"Envia is a provider of integrated shipping and tracking solutions for growing e-commerce businesses.\n"
+"Seamlessly integrating with a large range of couriers and platforms,\n"
+"you can streamline every step of your fulfilment process,\n"
+"reduce handling time and improve customer experience.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_starshipit
@@ -7481,6 +7618,20 @@ msgid ""
 "\n"
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"Španělské účetní tabulky (PGCE 2008).\n"
+"=======================================\n"
+"\n"
+"* Definuje následující tabulku šablon účtů:\n"
+"* Španělská obecná účtová osnova 2008\n"
+"* Španělská obecná účtová osnova 2008 pro malé a střední společnosti\n"
+"* Španělská obecná účetní závěrka za rok 2008 pro sdružení\n"
+"* Definuje šablony DPH pro prodej a nákup \n"
+"* Definuje daňové šablony\n"
+"* Definuje fiskální pozice pro španělskou fiskální legislativu\n"
+"* Definuje daňové přiznání mod 111, 115 a 303\n"
+"\n"
+"5.3: Aktualizujte daně od 4. čtvrtletí 2024 podle BOE-A-2024-12944 (královský dekret 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -7722,6 +7873,7 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ec_edi_stock
 #: model:ir.module.module,description:base.module_l10n_pe_edi_stock
 msgid ""
 "\n"
@@ -8627,6 +8779,19 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_cz_reports_2025
+msgid ""
+"\n"
+"This module adds the following reports for the Czech Republic:\n"
+"==============================================================\n"
+"1. VAT Control Statement (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
 msgid ""
 "\n"
@@ -9029,6 +9194,7 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_restaurant_loyalty
 #: model:ir.module.module,description:base.module_pos_sale_loyalty
 msgid ""
 "\n"
@@ -9397,6 +9563,14 @@ msgid ""
 "\n"
 "The Chart of Accounts is from SYSCOHADA.\n"
 "\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_my_edi_extended
+msgid ""
+"\n"
+"This module improves the MyInvois E-invoicing feature by adding proper support for self billing, rendering the MyInvois\n"
+"QR code in the invoice PDF file and allows better management of foreign customer TIN.\n"
 msgstr ""
 
 #. module: base
@@ -10200,7 +10374,7 @@ msgstr "%(company_currency_name)s na %(rate_currency_name)s"
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "%(integral_amount)s %(currency_unit)s"
-msgstr ""
+msgstr "%(integral_amount)s %(currency_unit)s"
 
 #. module: base
 #. odoo-python
@@ -10316,6 +10490,7 @@ msgstr "%s (Vyhrazený odchozí e-mail server):"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_actions.py:0
 #: code:addons/base/models/ir_filters.py:0
 #: code:addons/base/models/res_lang.py:0
 #: code:addons/base/models/res_partner.py:0
@@ -10437,7 +10612,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/fields.py:0
 msgid "(Record: %(record)s, User: %(user)s)"
-msgstr ""
+msgstr "(Záznam: %(record)s, Uživatel: %(user)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -10463,7 +10638,7 @@ msgstr ", vyžadovaný"
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "- %(description)s (%(model)s)"
-msgstr ""
+msgstr "- %(description)s (%(model)s)"
 
 #. module: base
 #. odoo-python
@@ -11659,7 +11834,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/fields.py:0
 msgid "ASCII characters are required for %(value)s in %(field)s"
-msgstr ""
+msgstr "ASCII znaky jsou vyžadovány pro %(value)s v %(field)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_title__shortcut
@@ -12249,6 +12424,11 @@ msgstr "Přidat potenciály / příležitosti UTM na hromadné zprávy"
 #: model:ir.module.module,summary:base.module_mass_mailing_crm_sms
 msgid "Add lead / opportunities info on mass mailing sms"
 msgstr "Přidat prospekty / příležitosti na hromadné zprávy sms"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_localisation
+msgid "Add models and fields for complete mexican localisation"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -15633,14 +15813,14 @@ msgid "Bahamas"
 msgstr "Bahamy"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_bh
-msgid "Bahrain - Accounting"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.bh
 msgid "Bahrain"
 msgstr "Bahrajn"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bh
+msgid "Bahrain - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.THB
@@ -15975,6 +16155,11 @@ msgstr "Bělorusko"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Belgická deklarace pro Intrastat"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_pos_restaurant
+msgid "Belgian POS Restaurant Localization"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_attendance
@@ -16327,6 +16512,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_website_sale
 msgid "Brazilian Accounting EDI for eCommerce"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_stock
+msgid "Brazilian Accounting EDI for stock"
 msgstr ""
 
 #. module: base
@@ -16911,6 +17101,9 @@ msgid ""
 "Fields: %(fields)s\n"
 "View: %(view)s"
 msgstr ""
+"Nelze přejmenovat/smazat pole, která se stále používají v pohledech:\n"
+"Pole: %(fields)s\n"
+"Pohledy: %(view)s"
 
 #. module: base
 #. odoo-python
@@ -19024,6 +19217,11 @@ msgid "Czech Republic"
 msgstr "Česká republika"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cz_reports_2025
+msgid "Czech Republic - Accounting Reports 2025"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz_reports
 msgid "Czech Republic- Accounting Reports"
 msgstr "Česká republika - Účetní výkazy"
@@ -20448,6 +20646,11 @@ msgid "Ecuadorian Accounting Reports"
 msgstr "Ekvádorské účetní výkazy"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ec_edi_stock
+msgid "Ecuadorian Delivery Guide"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_edi_pos
 msgid "Ecuadorian Point of Sale"
 msgstr ""
@@ -20858,6 +21061,11 @@ msgstr "Zábava"
 #: model:ir.model.fields,field_description:base.field_ir_profile__entry_count
 msgid "Entry count"
 msgstr "Počet záznamů"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_envia
+msgid "Envia Shipping"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
@@ -21860,6 +22068,11 @@ msgstr "Vzorec"
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
 msgstr "Rozšířené adresy"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_my_edi_extended
+msgid "Extended features for the E-invoicing using MyInvois"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
@@ -22990,6 +23203,16 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_hr_holidays_gantt
 msgid "Gantt view for Time Off Dashboard"
 msgstr "Ganttův pohled pro nástěnku volných dnů"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato
+msgid "Gelato"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato_stock
+msgid "Gelato/Stock bridge"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -24631,6 +24854,11 @@ msgid "Import QIF Bank Statement"
 msgstr "Import QIF bankovní prohlášení"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_shopee
+msgid "Import Shopee orders and sync deliveries"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Import Template for Customers"
@@ -25394,7 +25622,7 @@ msgstr "Neplatná doména: %s"
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid field %(model)s.%(field)s"
-msgstr ""
+msgstr "Neplatné pole %(model)s.%(field)s"
 
 #. module: base
 #. odoo-python
@@ -25493,7 +25721,7 @@ msgstr "Neplatný uživatel šablony. Vypadá to, že je smazaný."
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid value for %(model)s.%(field)s: %(value)s"
-msgstr ""
+msgstr "Neplatná hodnota pro %(model)s.%(field)s: %(value)s"
 
 #. module: base
 #. odoo-python
@@ -25502,6 +25730,8 @@ msgid ""
 "Invalid value for %(model)s.%(field)s: %(value)s is out of bounds (integers "
 "should be between -2,147,483,648 and 2,147,483,647)"
 msgstr ""
+"Neplatná hodnota pro %(model)s.%(field)s: %(value)s je mimo rozsah (celé "
+"čísla by měly být mezi -2 147 483 648 a 2 147 483 647)"
 
 #. module: base
 #. odoo-python
@@ -25752,6 +25982,11 @@ msgid "Italy - Accounting Reports"
 msgstr "Itálie - Účetní výkazy"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_riba
+msgid "Italy - Bank Receipts (Ri.Ba.)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_doi
 msgid "Italy - Declaration of Intent"
 msgstr ""
@@ -25965,6 +26200,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_account
 msgid "Kenya - Payroll with Accounting"
 msgstr "Keňa - Účtování mezd"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_pos
+msgid "Kenya - Point of Sale"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_mrp
@@ -26762,6 +27002,11 @@ msgid "Link module between pos_hr and pos_restaurant"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_restaurant_loyalty
+msgid "Link module between pos_restaurant and pos_loyalty"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
 msgid "Link module between pos_sale and l10n_be"
 msgstr "Propojovací modul mezi pos_sale a l10n_be"
@@ -27173,6 +27418,8 @@ msgid ""
 "Mail delivery failed via SMTP server '%(server)s'.\n"
 "%(exception_name)s: %(message)s"
 msgstr ""
+"Doručení pošty přes server SMTP '%(server)s' selhalo.\n"
+"%(exception_name)s: %(message)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_module_tree
@@ -27244,6 +27491,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_edi
 msgid "Malaysia - E-invoicing"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_my_edi_extended
+msgid "Malaysia - E-invoicing Extended Features"
 msgstr ""
 
 #. module: base
@@ -27673,7 +27925,7 @@ msgstr "Many2many Operace"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Many2one %(field)s on model %(model)s does not exist!"
-msgstr ""
+msgstr "Many2one %(field)s na modelu %(model)s neexistuje!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -27973,6 +28225,11 @@ msgid "Mexico - Payroll"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_localisation
+msgid "Mexico - Payroll - Localisation"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_account
 msgid "Mexico - Payroll with Accounting"
 msgstr ""
@@ -28139,7 +28396,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Missing required value for the field '%(name)s' (%(technical_name)s)"
-msgstr ""
+msgstr "Chybí požadovaná hodnota pro pole '%(name)s' (%(technical_name)s)"
 
 #. module: base
 #. odoo-python
@@ -28446,7 +28703,7 @@ msgstr "Moduly"
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
 msgid "Modules \"%(module)s\" and \"%(incompatible_module)s\" are incompatible."
-msgstr ""
+msgstr "Moduly \"%(module)s\" a \"%(incompatible_module)s\" jsou nekompatibilní."
 
 #. module: base
 #: model:res.country,name:base.md
@@ -28784,6 +29041,11 @@ msgstr "Holandsko - účetnictví"
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports
 msgid "Netherlands - Accounting Reports"
 msgstr "Holandsko - účetní zprávy"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_vat_pay_wizard
+msgid "Netherlands - Accounting Reports (post wizard)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_hr_payroll
@@ -31107,6 +31369,8 @@ msgid ""
 "Odoo is unable to merge the generated PDFs because of %(num_errors)s "
 "corrupted file(s)"
 msgstr ""
+"Odoo nemohlo sloučit vygenerované PDF kvůli %(num_errors)s poškozeným "
+"souborům"
 
 #. module: base
 #. odoo-python
@@ -31957,6 +32221,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_pos_hr
 msgid "POS - HR"
 msgstr "POS - HR"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_restaurant_loyalty
+msgid "POS - Restaurant Loyality"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sms
@@ -33020,6 +33289,11 @@ msgid "Pivot"
 msgstr "Pivot"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_gelato
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Plan your resources on project tasks"
 msgstr "Naplánujte si zdroje na projektové úkoly"
@@ -33126,6 +33400,7 @@ msgstr "PoS Přípravný display v restauraci"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
+#: model:ir.module.category,name:base.module_category_localization_point_of_sale
 #: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
@@ -33140,6 +33415,11 @@ msgstr "Místo prodeje - Kupóny a věrnostní programy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper
 msgid "Point of Sale - UrbanPiper"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_enhancements
+msgid "Point of Sale - UrbanPiper Enhancements"
 msgstr ""
 
 #. module: base
@@ -34373,7 +34653,8 @@ msgid "RTN"
 msgstr "RTN"
 
 #. module: base
-#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pe
+#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pa
+#: model:res.country,vat_label:base.pe
 msgid "RUC"
 msgstr "RUC"
 
@@ -35036,6 +35317,16 @@ msgid "Romania - Accounting Reports"
 msgstr "Rumunsko - Účetní výkazy"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
+msgid "Romania - E-Transport"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock_batch
+msgid "Romania - E-Transport Batch Pickings"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi
 msgid "Romania - E-invoicing"
 msgstr "Rumunsko - E-fakturace"
@@ -35384,6 +35675,11 @@ msgid "Salary Configurator (Belgium)"
 msgstr "Konfigurátor platů (Belgie)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary_mobility_budget
+msgid "Salary Configurator (Belgium) - Mobility Budget"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_holidays
 msgid "Salary Configurator - Holidays"
 msgstr "Konfigurátor platů - Dovolená"
@@ -35395,6 +35691,7 @@ msgstr "Konfigurátor platů - mzdy"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
+#: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary_mobility_budget
 msgid "Salary Package Configurator"
 msgstr "Konfigurátor platového balíčku"
 
@@ -35402,6 +35699,11 @@ msgstr "Konfigurátor platového balíčku"
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sale
 msgid "Sale"
 msgstr "Prodej"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_test_sale_purchase_edi_ubl
+msgid "Sale & Purchase Order EDI Tests: Ensure Flow Robustness"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_sms
@@ -36164,7 +36466,7 @@ msgid "Send your shippings through UPS and track them online"
 msgstr "Pošlete své zásilky prostřednictvím UPS a sledujte je online"
 
 #. module: base
-#: model:ir.module.module,description:base.module_delivery_usps
+#: model:ir.module.module,description:base.module_delivery_usps_rest
 msgid "Send your shippings through USPS and track them online"
 msgstr "Pošlete své zásilky přes USPS a sledujte je online"
 
@@ -36479,6 +36781,11 @@ msgstr "Shiprocket přeprava"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_shiprocket
 msgid "Shiprocket: Cash on Delivery"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_shopee
+msgid "Shopee Connector"
 msgstr ""
 
 #. module: base
@@ -37967,6 +38274,11 @@ msgid "Test - Resource"
 msgstr "Test - Zdroj"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_sale_purchase_edi_ubl
+msgid "Test - Sale & Purchase Order EDI"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_html_field_history
 msgid "Test - html_field_history"
 msgstr "Testy - html_field_history"
@@ -38454,6 +38766,8 @@ msgid ""
 "The field '%(field)s' cannot be removed because the field '%(other_field)s' "
 "depends on it."
 msgstr ""
+"Pole '%(field)s' nelze odstranit, protože pole '%(other_field)s' na něm "
+"závisí."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -38519,6 +38833,9 @@ msgid ""
 "privileges previously modified it, and you are therefore not able to modify "
 "it yourself while preserving the content."
 msgstr ""
+"Hodnota pole, které ukládáte (%(model)s %(field)s), zahrnuje obsah, který je"
+" z bezpečnostních důvodů omezen. Je možné, že jej již dříve upravil někdo s "
+"vyššími právy, a proto jej nemůžete sami upravovat při zachování obsahu."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
@@ -39026,6 +39343,8 @@ msgid ""
 "The value for the field '%(field)s' already exists (this is probably "
 "'%(other_field)s' in the current model)."
 msgstr ""
+"Hodnota pro pole '%(field)s' již existuje (toto je pravděpodobně "
+"'%(other_field)s' v aktuálním modelu)."
 
 #. module: base
 #. odoo-python
@@ -39040,6 +39359,8 @@ msgid ""
 "The values for the fields '%(fields)s' already exist (they are probably "
 "'%(other_fields)s' in the current model)."
 msgstr ""
+"Hodnoty pro pole '%(fields)s' již existují (pravděpodobně jsou "
+"'%(other_fields)s' v aktuálním modelu)."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.BWP
@@ -39248,6 +39569,14 @@ msgstr ""
 "nejdříve. Tato integrace přestane fungovat v roce 2024."
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_usps
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_no
 msgid ""
 "This is the module to manage the accounting chart for Norway in Odoo.\n"
@@ -39434,6 +39763,14 @@ msgstr ""
 "Tento modul obsahuje testy týkající se hromadné pošty. Ty jsou přítomny v "
 "samostatném modulu pro použití konkrétních testovacích modelů definovaných v"
 " test_mail."
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_sale_purchase_edi_ubl
+msgid ""
+"This module contains tests related to sale and purchase order edi.\n"
+"    Ensure export and import of order working properly and filling details properly from\n"
+"    order XML file."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_spreadsheet_edition
@@ -40111,16 +40448,6 @@ msgid "Turkey"
 msgstr "Turecko"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
-msgid "Türkiye - Nilvera"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
-msgid "Türkiye - Nilvera E-Invoice"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
 msgstr "Turkmenistán"
@@ -40228,6 +40555,16 @@ msgstr "Turecko - účetnictví"
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
 msgid "Türkiye - Accounting Reports"
 msgstr "Turecko - Účetní výkazy"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
+msgid "Türkiye - Nilvera"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
+msgid "Türkiye - Nilvera E-Invoice"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
@@ -40458,6 +40795,9 @@ msgid ""
 "\n"
 "Sorry, %(user)s doesn't have '%(operation)s' access to:"
 msgstr ""
+"Ach-och! Vypadá to, že jste zakopli o nějaký přísně tajný záznam.\n"
+"\n"
+"Prominňte, %(user)s nemá přístup pro '%(operation)s' k:"
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -40498,6 +40838,8 @@ msgid ""
 "Unable to install module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Nelze instalovat modul \"%(module)s\", protože nevyhovuje vnější závislost: "
+"%(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -40516,6 +40858,8 @@ msgid ""
 "Unable to process module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Nelze zpracovat modul \"%(module)s\", protože nevyhovuje vnější závislost: "
+"%(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -40524,6 +40868,8 @@ msgid ""
 "Unable to upgrade module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Modul \"%(module)s\" nelze povýšit, protože nevyhovuje vnější závislost: "
+"%(dependency)s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -40639,9 +40985,14 @@ msgid "United States - Payroll with Accounting"
 msgstr "Spojené státy - Účtování mezd"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_delivery_usps
+#: model:ir.module.module,shortdesc:base.module_delivery_usps_rest
 msgid "United States Postal Service (USPS) Shipping"
 msgstr "Poštovní služba Spojených států amerických (USPS)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_usps
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -42069,12 +42420,14 @@ msgid ""
 "Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or "
 "maximum file number of subprocess reached. Message : %(message)s"
 msgstr ""
+"Wkhtmltopdf selhal (chybový kód: %(error_code)s). Příliš nízký limit paměti "
+"nebo dosažen maximální počet souborů podprocesu. Zpráva : %(message)s"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s"
-msgstr ""
+msgstr "Wkhtmltopdf selhal (kód chyby: %(error_code)s). Zpráva: %(message)s"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.KPW
@@ -42381,6 +42734,8 @@ msgid ""
 "You cannot archive these Outgoing Mail Servers (%(server_usage)s) because they are still used in the following case(s):\n"
 "%(usage_details)s"
 msgstr ""
+"Nemůžete archivovat tyto odchozí poštovní servery (%(server_usage)s), protože se stále používají pro:\n"
+"%(usage_details)s"
 
 #. module: base
 #. odoo-python
@@ -42389,6 +42744,8 @@ msgid ""
 "You cannot archive this Outgoing Mail Server (%(server_usage)s) because it is still used in the following case(s):\n"
 "%(usage_details)s"
 msgstr ""
+"Nemůžete archivovat tento odchozí poštovní server (%(server_usage)s), protože se stále používá pro:\n"
+"%(usage_details)s"
 
 #. module: base
 #. odoo-python
@@ -42586,6 +42943,8 @@ msgid ""
 "You try to upgrade the module %(module)s that depends on the module: %(dependency)s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Pokusíte se upgradovat modul %(module)s, který závisí na modulu:. %(dependency)s\n"
+"Tento modul však není ve vašem systému k dispozici."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -42980,6 +43339,11 @@ msgid "eCommerce on appointments"
 msgstr "E-shop a schůzky"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_gelato
+msgid "eCommerce/Gelato bridge"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
@@ -43104,12 +43468,6 @@ msgstr "l10n_be_pos_sale"
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
 msgstr "many2many"
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_actions.py:0
-msgid "many2many fields cannot be evaluated by reference"
-msgstr "many2many pole nemohou být vyhodnoceny pomocí reference"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one

@@ -92,7 +92,7 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         );
 
         if (!pinMatchEmployees.length && !pin) {
-            await ask(this.dialog, {
+            await ask(dialog, {
                 title: _t("No Cashiers"),
                 body: _t("There is no cashier available."),
             });

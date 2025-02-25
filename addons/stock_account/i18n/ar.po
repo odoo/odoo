@@ -55,6 +55,7 @@ msgstr ""
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(record)s"
 msgstr ""
+"قام %(user)s بتغيير التكلفة من %(previous)s إلى %(new_price)s - %(record)s "
 
 #. module: stock_account
 #. odoo-python
@@ -63,6 +64,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
 "%(reason)s"
 msgstr ""
+"قام %(user)s بتغيير تقييم المخزون من %(previous)s إلى %(new_value)s - %(product)s\n"
+"%(reason)s "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -448,6 +451,7 @@ msgstr "المُعرف"
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr ""
+"إذا تم تحديده، فسيكون التقييم محدداً حسب رقم المجموعة/الرقم التسلسلي. "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -524,8 +528,8 @@ msgstr "مرتبط بـ"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Lot %(lot)s has a negative quantity in stock. Correct this"
-"                         quantity before enabling lot valuation"
+"Lot %(lot)s has a negative quantity in stock.\n"
+"Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
 
 #. module: stock_account
@@ -556,6 +560,7 @@ msgstr "إعاجة تقييم رقم المجموعة/الرقم التسلسل�
 #: code:addons/stock_account/models/stock_move_line.py:0
 msgid "Lot/Serial number is mandatory for product valuated by lot"
 msgstr ""
+"رقم المجموعة/الرقم التسلسلي إلزامي للمنتج الذي يتم تقييمه حسب المجموعة "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -619,6 +624,14 @@ msgstr "الصادرة "
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "المنتج"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Please assign lots to all your quantities before enabling lot valuation."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -1196,7 +1209,7 @@ msgstr "نموذج المعالج لإعادة تقييم بضاعة المخز�
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
-msgstr ""
+msgstr "لا يمكنك ضبط تقييم طبقة ذات كمية تساوي صفر "
 
 #. module: stock_account
 #. odoo-python

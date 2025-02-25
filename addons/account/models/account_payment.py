@@ -118,7 +118,7 @@ class AccountPayment(models.Model):
         string="Customer/Vendor",
         store=True, readonly=False, ondelete='restrict',
         compute='_compute_partner_id',
-        inverse='_inverse_partner_id',
+        precompute=True,
         domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
         tracking=True,
         check_company=True)
@@ -370,7 +370,7 @@ class AccountPayment(models.Model):
     @api.depends('move_id.name', 'state')
     def _compute_name(self):
         for payment in self:
-            if payment.id and not payment.name and payment.state in ('in_process', 'paid'):
+            if payment.id and (not payment.name or payment.move_id and payment.name != payment.move_id.name) and payment.state in ('in_process', 'paid'):
                 payment.name = (
                     payment.move_id.name
                     or self.env['ir.sequence'].with_company(payment.company_id).next_by_code(
@@ -379,10 +379,21 @@ class AccountPayment(models.Model):
                     )
                 )
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'partner_id')
     def _compute_journal_id(self):
         for payment in self:
-            company = self.company_id or self.env.company
+            # default customer payment method logic
+            partner = payment.partner_id
+            payment_type = payment.payment_type if payment.payment_type in ('inbound', 'outbound') else None
+            if partner or payment_type:
+                field_name = f'property_{payment_type}_payment_method_line_id'
+                default_payment_method_line = payment.partner_id.with_company(payment.company_id)[field_name]
+                journal = default_payment_method_line.journal_id
+                if journal:
+                    payment.journal_id = journal
+                    continue
+
+            company = payment.company_id or self.env.company
             payment.journal_id = self.env['account.journal'].search([
                 *self.env['account.journal']._check_company_domain(company),
                 ('type', 'in', ['bank', 'cash', 'credit']),
@@ -799,24 +810,10 @@ class AccountPayment(models.Model):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
-    @api.onchange('partner_id')
     def _inverse_partner_id(self):
-        """
-            The goal of this inverse is that when changing the partner, the payment method line is recomputed, and it can
-            happen that the journal that was set doesn't have that particular payment method line, so we have to change
-            the journal otherwise the user will have an UserError.
-        """
-        for payment in self:
-            partner = payment.partner_id
-            payment_type = payment.payment_type if payment.payment_type in ('inbound', 'outbound') else None
-            if not partner or not payment_type:
-                continue
+        # todo: remove in master
+        pass
 
-            field_name = f'property_{payment_type}_payment_method_line_id'
-            default_payment_method_line = payment.partner_id.with_company(payment.company_id)[field_name]
-            journal = default_payment_method_line.journal_id
-            if journal:
-                payment.journal_id = journal
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -1049,7 +1046,11 @@ class AccountPayment(models.Model):
         ''' draft -> posted '''
         # Do not allow posting if the account is required but not trusted
         for payment in self:
-            if payment.require_partner_bank_account and not payment.partner_bank_id.allow_out_payment:
+            if (
+                payment.require_partner_bank_account
+                and not payment.partner_bank_id.allow_out_payment
+                and payment.payment_type == 'outbound'
+            ):
                 raise UserError(_(
                     "To record payments with %(method_name)s, the recipient bank account must be manually validated. "
                     "You should go on the partner bank account of %(partner)s in order to validate it.",

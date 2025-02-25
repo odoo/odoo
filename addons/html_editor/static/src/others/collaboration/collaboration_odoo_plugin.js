@@ -43,7 +43,7 @@ let ICE_SERVERS = null;
 
 export class CollaborationOdooPlugin extends Plugin {
     static id = "collaborationOdoo";
-    static dependencies = ["history", "collaboration", "selection"];
+    static dependencies = ["baseContainer", "history", "collaboration", "selection"];
     static shared = ["getPeerMetadata"];
     resources = {
         selectionchange_handlers: debounce(() => {
@@ -580,7 +580,8 @@ export class CollaborationOdooPlugin extends Plugin {
             return;
         }
 
-        let content = record[this.config.collaboration.collaborationChannel.collaborationFieldName];
+        const content =
+            record[this.config.collaboration.collaborationChannel.collaborationFieldName];
         const lastHistoryId = content && this.getLastHistoryStepId(content);
         // If a change was made in the document while retrieving it, the
         // lastHistoryId will be different if the odoo bus did not have time to
@@ -593,9 +594,12 @@ export class CollaborationOdooPlugin extends Plugin {
         }
 
         this.isDocumentStale = false;
-        content = content || "<p><br></p>";
-        // content here is trusted
-        this.editable.innerHTML = content;
+        if (content) {
+            // content here is trusted
+            this.editable.innerHTML = content;
+        } else {
+            this.editable.replaceChildren(this.dependencies.baseContainer.createBaseContainer());
+        }
         stripHistoryIds(this.editable);
         this.dispatchTo("normalize_handlers", this.editable);
 

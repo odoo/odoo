@@ -14,7 +14,12 @@
 
     <template id="payment_submit_button_inherit" inherit_id="payment.submit_button">
         <button name="o_payment_submit_button" position="before">
-            <div id="o_paypal_button" class="d-none"/>
+            <div
+                id="o_paypal_button_container" name="o_payment_submit_button" data-is-paypal="true"
+            >
+                <div id="o_paypal_enabled_button" class="d-none"/>
+                <div id="o_paypal_disabled_button"/>
+            </div>
             <div id="o_paypal_loading" class="d-flex justify-content-center d-none">
                 <div class="spinner-border"/>
             </div>

@@ -161,7 +161,8 @@ export class KanbanArchParser {
         const cardClassName = (!isLegacyArch && cardDoc.getAttribute("class")) || "";
 
         if (!defaultOrder.length && handleField) {
-            defaultOrder = stringToOrderBy(handleField);
+            const handleFieldSort = `${handleField}, id`;
+            defaultOrder = stringToOrderBy(handleFieldSort);
         }
 
         return {

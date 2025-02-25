@@ -335,7 +335,9 @@ class MergePartnerAutomatic(models.TransientModel):
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
-                        if column in summable_fields and values.get(column):
+                        if field.type == 'reference':
+                            values[column] = item[column]
+                        elif column in summable_fields and values.get(column):
                             values[column] += write_serializer(item[column])
                         else:
                             values[column] = write_serializer(item[column])

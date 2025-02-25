@@ -2,10 +2,13 @@
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.test_mail.models.mail_test_lead import MailTestTLead
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Datetime as FieldDatetime
 from odoo.tests import tagged, users
+from odoo.tools import mute_logger
+from unittest.mock import patch
 
 
 @tagged('mail_scheduled_message')
@@ -125,10 +128,14 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
             scheduled_message.write({'res_id': 2})
         with self.assertRaises(UserError):
             scheduled_message.write({'model': 'mail.test.track'})
+        # unlink the test record should also unlink the test message
+        self.test_record.sudo().unlink()
+        self.assertFalse(scheduled_message.exists())
 
     @users('employee')
     def test_scheduled_message_posting(self):
         schedule_cron_id = self.env.ref('mail.ir_cron_post_scheduled_message').id
+        test_lead = self.env["mail.test.lead"].create({})
         with self.mock_mail_gateway(), \
             self.mock_mail_app(), \
             self.capture_triggers(schedule_cron_id) as capt:
@@ -136,6 +143,7 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
                 self.test_record,
                 scheduled_date='2022-12-24 14:00:00',
                 partner_ids=self.test_record.customer_id,
+                body="success",
             ).id
             # cron should be triggered at scheduled date
             self.assertEqual(capt.records['call_at'], FieldDatetime.to_datetime('2022-12-24 14:00:00'))
@@ -143,11 +151,58 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
             self.assertFalse(self.test_record.message_ids)
             self.assertFalse(self._new_mails)
 
-            with self.mock_datetime_and_now('2022-12-24 14:00:00'):
-                self.env['mail.scheduled.message'].sudo()._post_messages_cron()
-            # message should be posted and mail should be sent
-            self.assertEqual(len(self.test_record.message_ids), 1)
+            # add a scheduled message that will fail to check that it won't block the cron
+            failing_schedueld_message_id = self.schedule_message(
+                test_lead,
+                scheduled_date='2022-12-24 14:00:00',
+                partner_ids=self.test_record.customer_id,
+                body="fail",
+            ).id
+
+            def _message_post_after_hook(self, message, values):
+                raise Exception("Boum!")
+
+            with self.mock_datetime_and_now('2022-12-24 14:00:00'),\
+                patch.object(MailTestTLead, '_message_post_after_hook', _message_post_after_hook),\
+                mute_logger('odoo.addons.mail.models.mail_scheduled_message'):
+                self.env['mail.scheduled.message'].with_user(self.user_root)._post_messages_cron()
+            # one scheduled message failed, only one mail should be sent
             self.assertEqual(len(self._new_mails), 1)
+            # user should be notified about the failed posting
+            self.assertMailNotifications(
+                self._new_msgs.filtered(lambda m: not m.model),
+                [{
+                    'content': f"<p>The message scheduled on {test_lead._name}({test_lead.id}) with"
+                    " the following content could not be sent:<br>-----<br></p><p>fail</p><br>-----<br>",
+                    'message_type': 'user_notification',
+                    'subtype': 'mail.mt_note',
+                    'message_values': {
+                        'author_id': self.partner_root,
+                        'model': False,
+                        'res_id': False,
+                        'subject': "A scheduled message could not be sent",
+                    },
+                    'notif': [
+                        {'partner': self.partner_employee, 'type': 'inbox'}
+                    ]
+                }])
+            # other message should be posted and mail should be sent
+            self.assertMailNotifications(
+                self._new_msgs.filtered(lambda m: m.model == self.test_record._name),
+                [{
+                    'content': "<p>success</p>",
+                    'message_type': 'notification',
+                    'message_values': {
+                        'author_id': self.partner_employee,
+                        'model': self.test_record._name,
+                        'res_id': self.test_record.id,
+                        'subject': self.test_record._message_compute_subject(),
+                    },
+                    'notif': [
+                        {'partner': self.test_record.customer_id, 'type': 'email'}
+                    ]
+                }]
+            )
             self.assertEqual(self._new_mails[0].state, 'sent')
-            # scheduled message shouldn't exist anymore
-            self.assertFalse(self.env['mail.scheduled.message'].search([['id', '=', scheduled_message_id]]))
+            # scheduled messages shouldn't exist anymore
+            self.assertFalse(self.env['mail.scheduled.message'].search([['id', 'in', [scheduled_message_id, failing_schedueld_message_id]]]))

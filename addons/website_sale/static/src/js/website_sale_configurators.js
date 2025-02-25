@@ -90,7 +90,10 @@ WebsiteSale.include({
             soDate: serializeDateTime(DateTime.now()),
             edit: false,
             isFrontend: true,
-            options: { isMainProductConfigurable: !isOnProductPage },
+            options: {
+                isMainProductConfigurable: !isOnProductPage,
+                showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
+            },
             save: async (mainProduct, optionalProducts, options) => {
                 this._trackProducts([mainProduct, ...optionalProducts]);
 
@@ -119,6 +122,9 @@ WebsiteSale.include({
             date: serializeDateTime(DateTime.now()),
             edit: false,
             isFrontend: true,
+            options: {
+                showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
+            },
             save: (comboProductData, selectedComboItems, options) =>
                 this.addComboProductToCart(
                     comboProductData, selectedComboItems, remainingData, options

@@ -230,17 +230,17 @@ patch(PaymentScreen.prototype, {
         }
 
         if (isInvoiceRequested) {
-            if (!orderJSON[0].account_move) {
+            if (!orderJSON[0].raw.account_move) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Invoice could not be generated"),
                     body: _t("The invoice could not be generated."),
                 });
             } else {
-                await this.invoiceService.downloadPdf(orderJSON[0].account_move);
+                await this.invoiceService.downloadPdf(orderJSON[0].raw.account_move);
             }
         }
 
-        await this.postPushOrderResolve([this.currentOrder.server_id]);
+        await this.postPushOrderResolve([this.currentOrder.id]);
 
         this.afterOrderValidation(true);
     },

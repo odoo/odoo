@@ -1001,7 +1001,7 @@ QUnit.module('convert_inline', {}, function () {
         $iframeEditable.append(`<div class="o_layout" style="padding: 50px;"></div>`);
         convertInline.classToStyle($iframeEditable, convertInline.getCSSRules($iframeEditable[0].ownerDocument));
         assert.strictEqual($iframeEditable.html(),
-            `<div class="o_layout" style="border-radius:0px;border-style:none;margin:0px;box-sizing:border-box;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
+            `<div class="o_layout" style="border-radius:0px;border-style:none;margin:0px;box-sizing:border-box;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size:50px;color:white;background-color:red;padding:50px"></div>`,
             "should have given all styles of body to .o_layout");
         styleSheet.deleteRule(0);
 
@@ -1079,6 +1079,52 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual(convertInline.createMso('<div>ef<!--[if !mso]><div>abcd</div><![endif]-->gh</div>').nodeValue,
             '[if mso]><div>efgh</div><![endif]',
             "Should remove nested mso hide condition");
+    });
+
+    QUnit.test('Correct border attributes for outlook', async function (assert) {
+        assert.expect(2);
+
+        const $styleSheet = $('<style type="text/css" title="test-stylesheet"/>');
+        document.head.appendChild($styleSheet[0])
+        const styleSheet = [...document.styleSheets].find(sheet => sheet.title === 'test-stylesheet');
+
+        styleSheet.insertRule(`
+            .test-border-zero {
+                border-bottom-width: 0px;
+                border-left-width: 0px;
+                border-right-width: 0px;
+                border-top-width: 0px;
+                border-style: solid;
+            }
+        `, 0);
+
+        styleSheet.insertRule(`
+            .test-border-one {
+                border-bottom-width: 1px;
+                border-left-width: 1px;
+                border-right-width: 1px;
+                border-top-width: 1px;
+                border-style: solid;
+            }
+        `, 1);
+
+        let $editable = $(`<div><div class="test-border-zero"></div></div>`);
+        convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
+        assert.strictEqual($editable.html(),
+            `<div class="test-border-zero" style="border-style:none;box-sizing:border-box;border-top-width:0px;border-right-width:0px;border-left-width:0px;border-bottom-width:0px"></div>`,
+            "Should change border-style to none",
+        );
+
+        $editable = $(`<div><div class="test-border-one"></div></div>`);
+        convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
+        assert.strictEqual($editable.html(),
+            `<div class="test-border-one" style="border-style:solid;box-sizing:border-box;border-top-width:1px;border-right-width:1px;border-left-width:1px;border-bottom-width:1px"></div>`,
+            "Should keep border style solid"
+        );
+
+        styleSheet.deleteRule(0);
+        styleSheet.deleteRule(0);
+        $styleSheet.remove();
     });
 });
 

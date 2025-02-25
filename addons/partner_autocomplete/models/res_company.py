@@ -5,6 +5,8 @@ import json
 import logging
 import threading
 
+from lxml.builder import E
+
 from odoo.addons.iap.tools import iap_tools
 from odoo import api, fields, models, _
 from odoo.tools.mail import email_domain_extract, url_domain_extract
@@ -37,7 +39,10 @@ class ResCompany(models.Model):
         arch, view = super()._get_view(view_id, view_type, **options)
 
         if view_type == 'form':
-            for node in arch.xpath("//field[@name='name' or @name='vat']"):
+            for i, node in enumerate(arch.xpath("//field[@name='name' or @name='vat']")):
+                if i == 0:
+                    node.addnext(E.field(name='partner_gid', invisible='1'))
+
                 node.set('widget', 'field_partner_autocomplete')
 
         return arch, view

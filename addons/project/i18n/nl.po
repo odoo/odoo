@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Steven, 2025
+# Manon Rondou, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
@@ -597,7 +599,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Contact\" title=\"Contact\"/>"
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -1274,7 +1276,7 @@ msgstr "Gefactureerd"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__dependent_ids
 msgid "Block"
-msgstr "Blok"
+msgstr "Blokkeer"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1473,7 +1475,7 @@ msgstr "Bedrijf"
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -2265,7 +2267,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Contacten)"
+msgstr "Volgers (Partners)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_type_icon
@@ -3461,7 +3463,7 @@ msgstr ""
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
 msgstr ""
-"Het bedrijf van het contact mag niet anders zijn dan het bedrijf van de "
+"Het bedrijf van de partner mag niet anders zijn dan het bedrijf van de "
 "toegewezen projecten"
 
 #. module: project
@@ -3469,13 +3471,13 @@ msgstr ""
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned tasks' company"
 msgstr ""
-"Het bedrijf van het contact mag niet anders zijn dan het bedrijf van de "
+"Het bedrijf van de partner mag niet anders zijn dan het bedrijf van de "
 "toegewezen taken"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr "Taken van contacten"
+msgstr "Taken van partners"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3575,7 +3577,7 @@ msgid ""
 msgstr ""
 "Beleid om een bericht te versturen bij een document door gebruik te maken van de mail gateway.\n"
 "-iedereen: iedereen mag posten\n"
-"-contacten: alleen geautoriseerde contacten\n"
+"-partners: alleen geautoriseerde partners\n"
 "-volgers: alleen volgers van een bijbehorend document of leden van gevolgde kanalen\n"
 
 #. module: project
@@ -4449,7 +4451,7 @@ msgstr ""
 "Sorteer je taken per sprint met behulp van mijlpalen, labels of een speciale"
 " eigenschap. Aan het einde van elke sprint kies je gewoon de resterende "
 "taken in je lijst en verplaats je ze allemaal in één keer naar de volgende "
-"sprint door de mijlpaal, tag of eigenschap te bewerken."
+"sprint door de mijlpaal, label of eigenschap te bewerken."
 
 #. module: project
 #. odoo-javascript
@@ -4921,7 +4923,7 @@ msgstr ""
 msgid ""
 "The project and the associated partner must be linked to the same company."
 msgstr ""
-"Het project en het contact moeten aan hetzelfde bedrijf zijn gerelateerd."
+"Het project en de partner moeten aan hetzelfde bedrijf zijn gerelateerd."
 
 #. module: project
 #. odoo-python
@@ -4964,7 +4966,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 msgid ""
 "The task and the associated partner must be linked to the same company."
-msgstr "De taak en het contact moeten aan hetzelfde bedrijf zijn gerelateerd."
+msgstr "De taak en de partner moeten aan hetzelfde bedrijf zijn gerelateerd."
 
 #. module: project
 #. odoo-python
@@ -6038,7 +6040,7 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
-"{{ object.project_id.company_id.name of user.env.company.name }}: "
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Tevredenheidsonderzoek"
 
 #. module: project

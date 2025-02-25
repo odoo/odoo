@@ -1,11 +1,12 @@
 import { describe, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { press, waitFor } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import { testEditor } from "../_helpers/editor";
 import { insertText, splitBlock } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
+import { findInSelection } from "@html_editor/utils/selection";
 
 describe("Selection collapsed", () => {
     describe("Basic", () => {
@@ -179,6 +180,20 @@ describe("Selection collapsed", () => {
                 contentAfter: "<pre><p>abc</p><p>def</p></pre><p>[]<br></p>",
             });
         });
+        test("should insert a new paragraph after a pre tag with rtl direction", async () => {
+            await testEditor({
+                contentBefore: `<pre dir="rtl">ab[]</pre>`,
+                stepFunction: splitBlock,
+                contentAfter: `<pre dir="rtl">ab</pre><p dir="rtl">[]<br></p>`,
+            });
+        });
+        test("should insert a new paragraph after a pre tag with rtl direction (2)", async () => {
+            await testEditor({
+                contentBefore: `<pre><p dir="rtl">abc</p><p dir="rtl">[]<br></p></pre>`,
+                stepFunction: splitBlock,
+                contentAfter: `<pre><p dir="rtl">abc</p></pre><p dir="rtl">[]<br></p>`,
+            });
+        });
     });
 
     describe("Blockquote", () => {
@@ -215,6 +230,20 @@ describe("Selection collapsed", () => {
                 contentBefore: "<blockquote><p>abc</p><p>def</p><p>[]<br></p></blockquote>",
                 stepFunction: splitBlock,
                 contentAfter: "<blockquote><p>abc</p><p>def</p></blockquote><p>[]<br></p>",
+            });
+        });
+        test("should insert a new paragraph after a blockquote tag with rtl direction", async () => {
+            await testEditor({
+                contentBefore: `<blockquote dir="rtl">ab[]</blockquote>`,
+                stepFunction: splitBlock,
+                contentAfter: `<blockquote dir="rtl">ab</blockquote><p dir="rtl">[]<br></p>`,
+            });
+        });
+        test("should insert a new paragraph after a blockquote tag with rtl direction (2)", async () => {
+            await testEditor({
+                contentBefore: `<blockquote><p dir="rtl">abc</p><p dir="rtl">[]<br></p></blockquote>`,
+                stepFunction: splitBlock,
+                contentAfter: `<blockquote><p dir="rtl">abc</p></blockquote><p dir="rtl">[]<br></p>`,
             });
         });
     });
@@ -422,10 +451,13 @@ describe("Selection collapsed", () => {
 
         async function splitBlockA(editor) {
             // splitBlock in an <a> tag will open the linkPopover which will take the focus.
-            // So we need to put the selection back into the editor
+            // So we need to wait for it to open and put the selection back into the editor.
             splitBlock(editor);
+            const editableSelection = editor.shared.selection.getSelectionData().editableSelection;
+            if (findInSelection(editableSelection, "a:not([href])")) {
+                await waitFor(".o-we-linkpopover");
+            }
             editor.shared.selection.focusEditable();
-            await tick();
         }
 
         // @todo: re-evaluate this possibly outdated comment:
@@ -434,33 +466,33 @@ describe("Selection collapsed", () => {
         // see `anchor.nodeName === "A" && brEls.includes(anchor.firstChild)` in line_break_plugin.js
         test("should insert line breaks outside the edges of an anchor in unbreakable", async () => {
             await testEditor({
-                contentBefore: "<div>ab<a>[]cd</a></div>",
+                contentBefore: `<div class="oe_unbreakable">ab<a>[]cd</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div>ab<br><a>[]cd</a></div>",
+                contentAfter: `<div class="oe_unbreakable">ab<br><a>[]cd</a></div>`,
             });
             await testEditor({
-                contentBefore: "<div><a>a[]b</a></div>",
+                contentBefore: `<div class="oe_unbreakable"><a>a[]b</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div><a>a<br>[]b</a></div>",
+                contentAfter: `<div class="oe_unbreakable"><a>a<br>[]b</a></div>`,
             });
             await testEditor({
-                contentBefore: "<div><a>ab[]</a></div>",
+                contentBefore: `<div class="oe_unbreakable"><a>ab[]</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div><a>ab</a><br><br>[]</div>",
+                contentAfter: `<div class="oe_unbreakable"><a>ab</a><br><br>[]</div>`,
             });
             await testEditor({
-                contentBefore: "<div><a>ab[]</a>cd</div>",
+                contentBefore: `<div class="oe_unbreakable"><a>ab[]</a>cd</div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div><a>ab</a><br>[]cd</div>",
+                contentAfter: `<div class="oe_unbreakable"><a>ab</a><br>[]cd</div>`,
             });
             await testEditor({
-                contentBefore: '<div><a style="display: block;">ab[]</a></div>',
+                contentBefore: `<div class="oe_unbreakable"><a style="display: block;">ab[]</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: '<div><a style="display: block;">ab</a>[]<br></div>',
+                contentAfter: `<div class="oe_unbreakable"><a style="display: block;">ab</a>[]<br></div>`,
             });
         });
 
-        test("should insert a paragraph break outside the starting edge of an anchor", async () => {
+        test("should insert a paragraph break outside the starting edge of an anchor at start of block", async () => {
             await testEditor({
                 contentBefore: "<p><a>[]ab</a></p>",
                 stepFunction: splitBlockA,
@@ -468,6 +500,8 @@ describe("Selection collapsed", () => {
                     '<p><br></p><p>\ufeff<a class="o_link_in_selection">\ufeff[]ab\ufeff</a>\ufeff</p>',
                 contentAfter: "<p><br></p><p><a>[]ab</a></p>",
             });
+        });
+        test("should insert a paragraph break outside the starting edge of an anchor after some text", async () => {
             await testEditor({
                 contentBefore: "<p>ab<a>[]cd</a></p>",
                 stepFunction: splitBlockA,
@@ -557,6 +591,13 @@ describe("Selection collapsed", () => {
                 contentBefore: `<h1 style="color: red">ab[]</h1>`,
                 stepFunction: splitBlock,
                 contentAfter: `<h1 style="color: red">ab</h1><p>[]<br></p>`,
+            });
+        });
+        test("should insert a new paragraph after a heading tag with rtl direction", async () => {
+            await testEditor({
+                contentBefore: `<h1 dir="rtl">ab[]</h1>`,
+                stepFunction: splitBlock,
+                contentAfter: `<h1 dir="rtl">ab</h1><p dir="rtl">[]<br></p>`,
             });
         });
     });

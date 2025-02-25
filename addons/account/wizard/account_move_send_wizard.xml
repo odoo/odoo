@@ -31,13 +31,13 @@
                 <!-- Mail composer -->
                 <div invisible="'email' not in sending_methods">
                     <group>
-                        <label for="mail_partner_ids" string="Recipients"/>
+                        <label for="mail_partner_ids" string="To"/>
                         <div>
-                            <span>Followers of the document and</span>
                             <field name="mail_partner_ids"
-                                   widget="many2many_tags"
+                                   widget="many2many_tags_email"
                                    placeholder="Add contacts to notify..."
                                    options="{'no_quick_create': True}"
+                                   required="'email' in sending_methods"
                                    context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         </div>
                         <field name="mail_subject"
@@ -64,7 +64,7 @@
                 </div>
 
                 <footer>
-                    <button string="Print &amp; Send"
+                    <button string="Send"
                             data-hotkey="q"
                             name="action_send_and_print"
                             type="object"

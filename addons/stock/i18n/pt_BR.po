@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -474,11 +474,6 @@ msgstr "4 x 7 com preço"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -4218,12 +4213,6 @@ msgid "Immediate Transfer"
 msgstr "Transferir imediatamente"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Importar"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -5447,7 +5436,7 @@ msgstr "Detalhe da movimentação"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_entire_packs
 msgid "Move Entire Packages"
-msgstr "Mover embalagens inteiras"
+msgstr "Mover pacotes inteiros"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__move_line_ids
@@ -6685,11 +6674,11 @@ msgstr "A presença depende do tipo de operação."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Clique no botão CRIAR para definir a quantidade de cada produto em seu "
-"estoque ou importe-as de uma planilha de favoritos"
+"Pressione o botão \"Novo\" para definir a quantidade de um produto em seu "
+"estoque ou importar quantidades de uma planilha por meio do menu Ações"
 
 #. module: stock
 #. odoo-javascript
@@ -7890,6 +7879,11 @@ msgstr "Rotas de reposição"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
 msgstr "Devolução"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr "Devolver tudo"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -10800,11 +10794,8 @@ msgstr "Quando o produto chega em"
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> "
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need."
+"the need. %(suffix)s"
 msgstr ""
-"Quando há necessidade de produtos em <b>%(destination)s</b>, <br> "
-"<b>%(operation)s</b> são criadas de <b>%(source_location)s</b> para atender "
-"à necessidade."
 
 #. module: stock
 #. odoo-python

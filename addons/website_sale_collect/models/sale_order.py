@@ -11,17 +11,22 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     def set_delivery_line(self, carrier, amount):
-        """ Override of `website_sale` to recompute warehouse when a new delivery method
-        is not in-store anymore. """
-        self.filtered(
+        """ Override of `website_sale` to recompute warehouse and fiscal position when a new
+        delivery method is not in-store anymore. """
+        in_store_orders = self.filtered(
             lambda so: (
                 so.carrier_id.delivery_type == 'in_store' and carrier.delivery_type != 'in_store'
             )
-        )._compute_warehouse_id()
+        )
+        in_store_orders._compute_warehouse_id()
+        in_store_orders._compute_fiscal_position_id()
         return super().set_delivery_line(carrier, amount)
 
     def _set_pickup_location(self, pickup_location_data):
-        """ Override `website_sale` to set the pickup location for in-store delivery methods. """
+        """ Override `website_sale` to set the pickup location for in-store delivery methods.
+        Set account fiscal position depending on selected pickup location to correctly calculate
+        taxes.
+        """
         res = super()._set_pickup_location(pickup_location_data)
         if self.carrier_id.delivery_type != 'in_store':
             return res
@@ -29,6 +34,10 @@ class SaleOrder(models.Model):
         self.pickup_location_data = json.loads(pickup_location_data)
         if self.pickup_location_data:
             self.warehouse_id = self.pickup_location_data['id']
+            AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
+            self.fiscal_position_id = AccountFiscalPosition._get_fiscal_position(
+                self.partner_id, delivery=self.warehouse_id.partner_id
+            )
         else:
             self._compute_warehouse_id()
 
@@ -49,6 +58,20 @@ class SaleOrder(models.Model):
             if not country:
                 zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
         return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
+
+    def _get_cart_and_free_qty(self, product, line=None):
+        """ Override of `website_sale_stock` to get free_qty of the product from the warehouse that
+        was chosen rather than website's one.
+
+        :param product.product product: The product
+        :param sale.order.line line: The optional line
+        """
+        cart_qty, free_qty = super()._get_cart_and_free_qty(product, line=line)
+        if self.carrier_id.delivery_type == 'in_store':
+            free_qty = (product or line.product_id).with_context(
+                warehouse_id=self.warehouse_id.id
+            ).free_qty
+        return cart_qty, free_qty
 
     def _check_cart_is_ready_to_be_paid(self):
         """ Override of `website_sale` to check if all products are in stock in the selected

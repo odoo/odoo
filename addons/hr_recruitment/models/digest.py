@@ -22,5 +22,5 @@ class Digest(models.Model):
 
     def _compute_kpis_actions(self, company, user):
         res = super()._compute_kpis_actions(company, user)
-        res['kpi_hr_recruitment_new_colleagues'] = f"hr.open_view_employee_list_my&menu_id={self.env.ref('hr.menu_hr_root').id}"
+        res['kpi_hr_recruitment_new_colleagues'] = f"hr.open_view_employee_list_my?menu_id={self.env.ref('hr.menu_hr_root').id}"
         return res

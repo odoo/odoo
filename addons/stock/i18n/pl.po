@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -474,11 +474,6 @@ msgstr "4 x 7 z ceną"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -4213,12 +4208,6 @@ msgid "Immediate Transfer"
 msgstr "Natychmiastowe pobranie"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Importuj"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -6674,11 +6663,9 @@ msgstr "Obecność zależy od typu operacji."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Naciśnij przycisk UTWÓRZ, aby zdefiniować ilości dla każdego produktu w "
-"magazynie lub zaimportuj ilość z arkusza kalkulacyjnego przez Ulubione "
 
 #. module: stock
 #. odoo-javascript
@@ -6721,7 +6708,7 @@ msgstr "Wydrukuj etykietę jako:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print on \"Put in Pack\""
-msgstr ""
+msgstr "Wydrukuj na \"Umieść w paczce\""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -7876,6 +7863,11 @@ msgstr "Ścieżki zasilania"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
 msgstr "Zwrot"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr "Zwróć wszystko"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -9272,11 +9264,13 @@ msgid ""
 "The operation brings the products to the intermediate location.But this "
 "operation is part of a chain of operations targeting the final location."
 msgstr ""
+"Operacja przenosi produkty do lokalizacji pośredniej, ale ta operacja jest "
+"częścią łańcucha operacji ukierunkowanych na lokalizację końcową."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr ""
+msgstr "Ta operacja pobiera i sugeruje produkty z tej lokalizacji."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -9294,7 +9288,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr ""
+msgstr "Ta operacja przenosi produkty do tej lokalizacji"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -9333,6 +9327,8 @@ msgid ""
 "The quantities selected do not all belong to the same location.\n"
 "                    You may not assign them a package without moving them to a common location."
 msgstr ""
+"Wybrane ilości nie należą do tej samej lokalizacji.\n"
+"                    Nie możesz przypisać im opakowania bez przemieszczania ich do wspólnej lokalizacji."
 
 #. module: stock
 #. odoo-python
@@ -9342,12 +9338,15 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"Ilość wykonana dla produktu \"%(product)s\" nie jest zgodna z precyzją "
+"zaokrąglania zdefiniowaną w jednostce miary \"%(unit)s\". Zmień ilość "
+"wykonaną lub precyzję zaokrąglania jednostki miary."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "Ilość na partię powinna być zawsze wartością dodatnią."
 
 #. module: stock
 #. odoo-python
@@ -9444,6 +9443,8 @@ msgid ""
 "There is nothing eligible to put in a pack. Either there are no quantities "
 "to put in a pack or all products are already in a pack."
 msgstr ""
+"Nie ma nic kwalifikującego się do umieszczenia w paczce. Albo nie ma ilości "
+"do umieszczenia w paczce, albo wszystkie produkty są już w paczce."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -9484,6 +9485,8 @@ msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
 msgstr ""
+"To pole wyboru ma charakter wyłącznie orientacyjny, nie zatwierdza ani nie "
+"generuje żadnych ruchów produktowych."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -9499,6 +9502,9 @@ msgid ""
 "created. However, it is possible to change it afterwards or that the routes "
 "use another one by default."
 msgstr ""
+"To jest domyślna lokalizacja docelowa, gdy ta operacja jest tworzona "
+"ręcznie. Jednakże możliwe jest zmienienie jej później lub ustawienie, aby "
+"trasy używały innej lokalizacji domyślnie."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9507,6 +9513,9 @@ msgid ""
 " However, it is possible to change it afterwards or that the routes use "
 "another one by default."
 msgstr ""
+"To jest domyślna lokalizacja źródłowa, gdy ta operacja jest tworzona "
+"ręcznie. Jednakże możliwe jest zmienienie jej później lub ustawienie, aby "
+"trasy używały innej lokalizacji domyślnie."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -9520,6 +9529,10 @@ msgid ""
 "quantity does not generate a backorder.Changing this quantity on assigned "
 "moves affects the product reservation, and should be done with care."
 msgstr ""
+"Jest to ilość produktu, która jest planowana do przemieszczenia. Obniżenie "
+"tej ilości nie generuje oczekującego zamówienia. Zmiana tej ilości w "
+"przypisanych ruchach wpływa na rezerwację produktu i powinna być wykonana "
+"ostrożnie."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__child_internal_location_ids
@@ -9657,6 +9670,10 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"Ten prefiks sekwencji jest już używany przez inny typ operacji. Zaleca się "
+"wybranie unikalnego prefiksu, aby uniknąć problemów i/lub powtórzonych "
+"wartości referencyjnych, lub przypisanie istniejącej sekwencji referencyjnej"
+" do tego typu operacji."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9707,7 +9724,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 msgid "Time Horizon"
-msgstr ""
+msgstr "Horyzont czasowy"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -9935,7 +9952,7 @@ msgstr "Raport śledzenia"
 #: model:ir.model.fields,field_description:stock.field_product_template__is_storable
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Śledź magazyn"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry
@@ -10060,6 +10077,8 @@ msgstr "Strefa tranzytowa"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Transport management: organize packs in your fleet, or carriers."
 msgstr ""
+"Zarządzanie transportem: organizuj paczki w swojej flocie, lub u "
+"przewoźników."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
@@ -10749,11 +10768,8 @@ msgstr "Gdy produkt dotrze do"
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> "
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need."
+"the need. %(suffix)s"
 msgstr ""
-"Jeśli produkty są potrzebne w <b>%(destination)s</b>, <br> "
-"<b>%(operation)s</b> są tworzone z <b>%(source_location)s</b>, aby spełnić "
-"zapotrzebowanie."
 
 #. module: stock
 #. odoo-python

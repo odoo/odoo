@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallParticipantCard">
-        <div class="o-discuss-CallParticipantCard position-relative cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-1"
+        <div class="o-discuss-CallParticipantCard position-relative cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 rounded-1"
             t-att-class="{
                 'o-isTalking': !props.minimized and isTalking,
                 'o-isInvitation opacity-50': !rtcSession,
@@ -49,9 +49,6 @@
                         <i t-else="" class="fa fa-exclamation-triangle text-danger"/>
                     </span>
                     <span t-if="showConnectionState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-title="rtcSession.connectionState">
-                        <i class="fa fa-exclamation-triangle text-warning"/>
-                    </span>
-                    <span t-if="showServerState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-title="rtc.state.serverState">
                         <i class="fa fa-exclamation-triangle text-warning"/>
                     </span>
                     <span t-if="rtcSession.isScreenSharingOn and !props.minimized and !isOfActiveCall" class="user-select-none rounded text-bg-danger d-flex align-items-center me-1 fw-bolder p-1" title="live" aria-label="live">

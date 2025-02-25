@@ -20,7 +20,7 @@ registry
                 ProductScreen.clickCustomer("AAAAAA"),
                 ProductScreen.clickPayButton(),
 
-                PaymentScreen.totalIs("15.70"),
+                PaymentScreen.totalIs("15.72"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
 
@@ -42,7 +42,7 @@ registry
 
                 ProductScreen.clickPayButton(),
 
-                PaymentScreen.totalIs("15.70"),
+                PaymentScreen.totalIs("-15.72"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
 
@@ -73,11 +73,11 @@ registry
                     ProductScreen.clickCustomer("AAAAAA"),
                     ProductScreen.clickPayButton(),
 
-                    PaymentScreen.totalIs("15.70"),
+                    PaymentScreen.totalIs("15.72"),
                     PaymentScreen.clickPaymentMethod("Bank"),
                     PaymentScreen.clickNumpad(". 6 8"),
                     PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.68"),
-                    PaymentScreen.remainingIs("15.02"),
+                    PaymentScreen.remainingIs("15.04"),
                     PaymentScreen.clickPaymentMethod("Cash"),
                     PaymentScreen.remainingIs("0.0"),
 
@@ -99,11 +99,11 @@ registry
 
                     ProductScreen.clickPayButton(),
 
-                    PaymentScreen.totalIs("-15.70"),
+                    PaymentScreen.totalIs("-15.72"),
                     PaymentScreen.clickPaymentMethod("Bank"),
-                    PaymentScreen.clickNumpad("+/- . 6 8"),
-                    PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.68"),
-                    PaymentScreen.remainingIs("-15.02"),
+                    PaymentScreen.clickNumpad(". 6 8 +/-"),
+                    PaymentScreen.fillPaymentLineAmountMobile("Bank", "-0.68"),
+                    PaymentScreen.remainingIs("-15.04"),
                     PaymentScreen.clickPaymentMethod("Cash"),
                     PaymentScreen.remainingIs("0.0"),
 
@@ -133,11 +133,11 @@ registry
                 ProductScreen.clickCustomer("AAAAAA"),
                 ProductScreen.clickPayButton(),
 
-                PaymentScreen.totalIs("15.70"),
+                PaymentScreen.totalIs("15.72"),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickNumpad(". 6 7"),
                 PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.67"),
-                PaymentScreen.remainingIs("15.03"),
+                PaymentScreen.remainingIs("15.05"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
 
@@ -159,11 +159,11 @@ registry
 
                 ProductScreen.clickPayButton(),
 
-                PaymentScreen.totalIs("-15.70"),
+                PaymentScreen.totalIs("-15.72"),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickNumpad("+/- . 6 7"),
                 PaymentScreen.fillPaymentLineAmountMobile("Bank", "-0.67"),
-                PaymentScreen.remainingIs("-15.03"),
+                PaymentScreen.remainingIs("-15.05"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
 
@@ -194,11 +194,11 @@ registry
                     ProductScreen.clickCustomer("AAAAAA"),
                     ProductScreen.clickPayButton(),
 
-                    PaymentScreen.totalIs("15.70"),
+                    PaymentScreen.totalIs("15.72"),
                     PaymentScreen.clickPaymentMethod("Bank"),
                     PaymentScreen.clickNumpad(". 6 8"),
                     PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.68"),
-                    PaymentScreen.remainingIs("15.02"),
+                    PaymentScreen.remainingIs("15.04"),
                     PaymentScreen.clickPaymentMethod("Cash"),
                     PaymentScreen.remainingIs("0.0"),
 
@@ -220,11 +220,11 @@ registry
 
                     ProductScreen.clickPayButton(),
 
-                    PaymentScreen.totalIs("-15.70"),
+                    PaymentScreen.totalIs("-15.72"),
                     PaymentScreen.clickPaymentMethod("Bank"),
                     PaymentScreen.clickNumpad("+/- . 6 8"),
                     PaymentScreen.fillPaymentLineAmountMobile("Bank", "-0.68"),
-                    PaymentScreen.remainingIs("-15.02"),
+                    PaymentScreen.remainingIs("-15.04"),
                     PaymentScreen.clickPaymentMethod("Cash"),
                     PaymentScreen.remainingIs("0.0"),
 
@@ -254,11 +254,11 @@ registry
                 ProductScreen.clickCustomer("AAAAAA"),
                 ProductScreen.clickPayButton(),
 
-                PaymentScreen.totalIs("15.75"),
+                PaymentScreen.totalIs("15.72"),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickNumpad(". 6 4"),
                 PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.64"),
-                PaymentScreen.remainingIs("15.11"),
+                PaymentScreen.remainingIs("15.08"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
 
@@ -280,11 +280,11 @@ registry
 
                 ProductScreen.clickPayButton(),
 
-                PaymentScreen.totalIs("-15.75"),
+                PaymentScreen.totalIs("-15.72"),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickNumpad("+/- . 6 4"),
                 PaymentScreen.fillPaymentLineAmountMobile("Bank", "-0.64"),
-                PaymentScreen.remainingIs("-15.11"),
+                PaymentScreen.remainingIs("-15.08"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
 
@@ -638,10 +638,38 @@ registry.category("web_tour.tours").add("test_cash_rounding_with_change", {
             ProductScreen.clickCustomer("AAAAAA"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.totalIs("15.70"),
+            PaymentScreen.totalIs("15.72"),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickNumpad("2 0"),
             PaymentScreen.fillPaymentLineAmountMobile("Bank", "20.00"),
+            PaymentScreen.changeIs("4.30"),
+
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+
+            ReceiptScreen.receiptAmountTotalIs("15.72"),
+            ReceiptScreen.receiptRoundingAmountIs("-0.02"),
+            ReceiptScreen.receiptToPayAmountIs("15.70"),
+            ReceiptScreen.receiptChangeAmountIs("4.30"),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cash_rounding_only_cash_method_with_change", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.addOrderline("random_product", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAAAA"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("15.72"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("+20"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "20.00"),
             PaymentScreen.changeIs("4.30"),
 
             PaymentScreen.clickInvoiceButton(),

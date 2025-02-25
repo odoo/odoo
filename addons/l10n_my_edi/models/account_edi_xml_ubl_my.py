@@ -321,7 +321,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             for classified_tax_category_vals in vals['classified_tax_category_vals']:
                 if tax_category_vals['id'] == classified_tax_category_vals['id']:
                     classified_tax_category_vals['name'] = tax_category_vals['name']
-                    classified_tax_category_vals['tax_exemption_reason'] = tax_category_vals['name']
+                    classified_tax_category_vals['tax_exemption_reason'] = tax_category_vals['tax_exemption_reason']
 
         return vals
 
@@ -332,6 +332,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         tax = tax_data['tax']
         invoice = base_line['record'].move_id
         grouping_key['_tax_category_vals_']['name'] = invoice.l10n_my_edi_exemption_reason if tax.l10n_my_tax_type == 'E' else None
+        grouping_key['_tax_category_vals_']['tax_exemption_reason'] = invoice.l10n_my_edi_exemption_reason if tax.l10n_my_tax_type == 'E' else None
         return grouping_key
 
     def _get_invoice_line_vals(self, line, line_id, taxes_vals):

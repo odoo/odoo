@@ -9,7 +9,6 @@
 # tanerhasret <tanerhasret@gmail.com>, 2024
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2024
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2024
-# Melih Melik Sonmez, 2024
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2024
 # Erdem Keskin <erdemkeskines@gmail.com>, 2024
 # Sinem Cil, 2024
@@ -27,21 +26,23 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2024
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Martin Trigaux, 2024
-# Tugay Hatıl <tugayh@projetgrup.com>, 2024
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2024
 # emre oktem, 2024
-# Murat Durmuş <muratd@projetgrup.com>, 2024
 # Hasan Turk, 2024
 # Levent Karakaş <levent@mektup.at>, 2024
 # Ediz Duman <neps1192@gmail.com>, 2025
+# samet biskin, 2025
+# Melih Melik Sonmez, 2025
+# Murat Durmuş <muratd@projetgrup.com>, 2025
+# Tugay Hatıl <tugayh@projetgrup.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2025\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -718,7 +719,7 @@ msgstr "<strong>Satış Temsilcisi</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping Address</strong>"
-msgstr ""
+msgstr "<strong>Teslimat adresi</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -738,7 +739,7 @@ msgstr "<strong>Bu teklifin süresi doldu!</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been cancelled.</strong>"
-msgstr ""
+msgstr "<strong>Bu teklif iptal edilmiştir.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1907,6 +1908,12 @@ msgid "Discount on lines"
 msgstr "Satış Satırında İndirim"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount- On products with the following taxes %(taxes)s"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
 msgstr "İndirim:"
@@ -1987,7 +1994,7 @@ msgstr "Peşinat Tutarı (Sabit)"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Peşinat: %(date)s (Taslak)"
 
 #. module: sale
 #. odoo-python
@@ -2117,12 +2124,6 @@ msgstr "Geçerlilik Tarihi"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
 msgstr "Geçerlilik Tarihi:"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Expires on %(date)s"
-msgstr "Sona eriyor %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4705,6 +4706,9 @@ msgid ""
 "%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Aşağıdaki ürünler, başka bir şirketteki tekliflerde veya satış siparişlerinde zaten kullanıldığından %(company)s şirketiyle sınırlandırılamaz:\n"
+"%(used_products)s\n"
+"Bu ürünleri arşivleyebilir ve bunun yerine şirket kısıtlamanızla yeniden oluşturabilir veya paylaşılan ürün olarak bırakabilirsiniz."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice

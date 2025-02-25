@@ -5,16 +5,16 @@
 # Translators:
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Manon Rondou, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1402,6 +1402,16 @@ msgid "Change Quantity To Produce"
 msgstr "Te produceren aantal wijzigen"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+msgid ""
+"Changing the product or variant will permanently reset all previously "
+"encoded variant-related data."
+msgstr ""
+"Het wijzigen van het product of de variant zal alle eerder ingevoerde "
+"variantgerelateerde gegevens permanent resetten."
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Check availability"
@@ -1555,7 +1565,7 @@ msgstr "Berekend op laatste"
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -2234,7 +2244,7 @@ msgstr "Storing apparatuur"
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 msgid "Estimated %s"
-msgstr "Geschatte %s"
+msgstr "Geschat %s"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -3849,13 +3859,13 @@ msgstr "Beschikbaar"
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
 msgstr ""
-"Alleen fabricageorders in concept- of bevestigde staat kunnen %s zijn."
+"Alleen productieorders in concept- of bevestigde staat kunnen %s zijn."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Only manufacturing orders with a Bill of Materials can be %s."
-msgstr "Alleen fabricageorders met een stuklijst kunnen %s zijn."
+msgstr "Alleen productieorders met een stuklijst kunnen %s zijn."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -6193,8 +6203,8 @@ msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
-"Gebruik productieorders (PO) om eindproducten te bouwen en onderdelen te "
-"verbruiken: bv. 1 tafel = 4 tafelpoten + 1 tafelblad"
+"Gebruik productieorders (PO) om eindproducten te produceren en onderdelen te"
+" verbruiken: bv. 1 tafel = 4 tafelpoten + 1 tafelblad"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
@@ -6750,7 +6760,7 @@ msgstr ""
 msgid ""
 "You can only merge manufacturing orders of identical products with same BoM."
 msgstr ""
-"Je kunt alleen fabricageorders van identieke producten met dezelfde "
+"Je kunt alleen productieorders van identieke producten met dezelfde "
 "stuklijst samenvoegen."
 
 #. module: mrp
@@ -6874,7 +6884,7 @@ msgid ""
 msgstr ""
 "Je hebt voor de volgende producten een ander aantal verbruikt dan verwacht.\n"
 "                        <b invisible=\"consumption == 'strict'\">\n"
-"                            Gelieve te bevestigen dat dit met opzet is gedaan.\n"
+"                            Graag te bevestigen dat dit met opzet is gedaan.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Controleer het verbruik van je onderdelen of vraag aan een manager om\n"

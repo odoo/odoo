@@ -6,6 +6,7 @@ import {
     edit,
     hover,
     leave,
+    on,
     pointerDown,
     press,
     queryAll,
@@ -14,6 +15,7 @@ import {
     queryOne,
     queryText,
     resize,
+    scroll,
     setInputFiles,
 } from "@odoo/hoot-dom";
 import { Deferred, advanceFrame, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
@@ -1353,7 +1355,10 @@ test("pager, ungrouped, with count limit reached, edit pager", async () => {
     ]);
 
     await contains("span.o_pager_value").click();
-    await contains("input.o_pager_value").edit("2-4");
+    // FIXME: we have to click out instead of confirming, because somehow if the
+    // web_search_read calls come back too fast when pressing "Enter", another
+    // RPC is triggered right after.
+    await contains("input.o_pager_value").edit("2-4", { confirm: "blur" });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(3);
     expect(".o_pager_value").toHaveText("2-4");
@@ -1361,7 +1366,7 @@ test("pager, ungrouped, with count limit reached, edit pager", async () => {
     expect.verifySteps(["web_search_read"]);
 
     await contains("span.o_pager_value").click();
-    await contains("input.o_pager_value").edit("2-14");
+    await contains("input.o_pager_value").edit("2-14", { confirm: "blur" });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
     expect(".o_pager_value").toHaveText("2-5");
@@ -10508,8 +10513,11 @@ test("unset cover image", async () => {
 
 test.tags("desktop");
 test("ungrouped kanban with handle field", async () => {
-    expect.assertions(3);
+    expect.assertions(4);
 
+    onRpc("web_search_read", ({ kwargs }) => {
+        expect.step(`web_search_read: order: ${kwargs.order}`);
+    });
     onRpc("/web/dataset/resequence", async (request) => {
         const { params } = await request.json();
         expect(params.ids).toEqual([2, 1, 3, 4], {
@@ -10537,6 +10545,7 @@ test("ungrouped kanban with handle field", async () => {
     await contains(".o_kanban_record").dragAndDrop(queryFirst(".o_kanban_record:nth-child(4)"));
 
     expect(getKanbanRecordTexts()).toEqual(["blip", "yop", "gnap", "blip"]);
+    expect.verifySteps(["web_search_read: order: int_field ASC, id ASC"]);
 });
 
 test("ungrouped kanban without handle field", async () => {
@@ -12833,26 +12842,26 @@ test("scroll on group unfold and progressbar click", async () => {
     });
 
     expect.verifySteps(["get_views", "read_progress_bar", "web_read_group", "web_search_read"]);
-    queryOne(".o_content").scrollTo = (params) => {
-        expect.step("scrolled");
-        expect(params.top).toBe(0);
-    };
+    queryOne(".o_content").style.maxHeight = "80px";
+    on(".o_content", "scroll", () => expect.step("scrolled"));
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanProgressBars(0)[0]).click();
 
     expect.verifySteps([
+        "scrolled",
         "web_read_group",
         "web_search_read",
         "read_progress_bar",
         "web_read_group",
         "web_read_group",
-        "scrolled",
     ]);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanColumn(1)).click();
 
-    expect.verifySteps(["web_search_read", "scrolled"]);
+    expect.verifySteps(["scrolled", "web_search_read"]);
 });
 
 test.tags("desktop");
@@ -13473,4 +13482,32 @@ test("click on empty kanban must shake the NEW button", async () => {
     await click(".o_kanban_renderer");
 
     expect("[data-bounce-button]").toHaveClass("o_catch_attention");
+});
+
+test("group by numeric field (with aggregator)", async () => {
+    onRpc("web_read_group", ({ kwargs }) => {
+        expect(kwargs.groupby).toEqual(["int_field"]);
+        expect(kwargs.fields).toEqual(["float_field:sum"], {
+            message: "Don't aggregate int_field since it is grouped by itself",
+        });
+        expect.step("web_read_group");
+    });
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban class="o_kanban_test">
+                <field name="int_field" />
+                <field name="float_field" />
+                <templates>
+                    <t t-name="card">
+                        <div>
+                            <field name="foo" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["int_field"],
+    });
+    expect.verifySteps(["web_read_group"]);
 });

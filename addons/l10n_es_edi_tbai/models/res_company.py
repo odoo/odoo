@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import markupsafe
+import re
+
 from odoo import api, fields, models, release
 from odoo.tools import LazyTranslate
 
@@ -158,3 +160,7 @@ class ResCompany(models.Model):
             ('company_id', '=', self.id)
         ]
         return self.env['l10n_es_edi_tbai.document'].search(domain, limit=1, order='chain_index desc')
+
+    def _l10n_es_freelancer(self):
+        self.ensure_one()
+        return self.vat and re.fullmatch(r"(ES)?\d{8}[A-Z]", self.vat) or False

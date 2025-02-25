@@ -37,12 +37,13 @@ export class Plugin {
 
     setup() {}
 
-    addDomListener(target, eventName, fn, capture) {
+    isValidTargetForDomListener(ev) {
+        return !isProtecting(ev.target) && (!isProtected(ev.target) || isUnprotecting(ev.target));
+    }
+
+    addDomListener(target, eventName, fn, capture = false) {
         const handler = (ev) => {
-            if (
-                !isProtecting(ev.target) &&
-                (!isProtected(ev.target) || isUnprotecting(ev.target))
-            ) {
+            if (this.isValidTargetForDomListener(ev)) {
                 fn?.call(this, ev);
             }
         };

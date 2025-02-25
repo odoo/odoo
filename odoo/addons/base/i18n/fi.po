@@ -38,19 +38,20 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Richard Mouthier (RMO) <rmo@odoo.com>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-19 13:06+0000\n"
+"POT-Creation-Date: 2025-02-10 16:32+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -632,7 +633,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Tämä näyttää olevan usean yrityksen ongelma. Sinulla ei kuitenkaan ole pääsyä oikeaan yritykseen, jotta voisit käyttää tietuetta."
+"Tämä on moniyritysongelma. Sinulla ei kuitenkaan ole pääsyä oikeaan yritykseen, jotta voisit käyttää tietuetta."
 
 #. module: base
 #. odoo-python
@@ -644,7 +645,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Tämä näyttää olevan usean yrityksen ongelma. Saatat päästä tietueeseen käsiksi vaihtamalla yritykseen: %s."
+"Tämä on moniyritysongelma. Saatat päästä tietueeseen käsiksi vaihtamalla yritykseen: %s."
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer
@@ -1437,6 +1438,10 @@ msgid ""
 "===========================================\n"
 "This provides a base chart of accounts and taxes template for use in Odoo.\n"
 msgstr ""
+"\n"
+"Korean tasavallan kirjanpitomoduuli\n"
+"===========================================\n"
+"Tämä tarjoaa peruskirjanpito- ja verokaavion mallin käytettäväksi Odoossa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports
@@ -2612,6 +2617,8 @@ msgid ""
 "\n"
 "Allows the users to integrate with JoFotara.\n"
 msgstr ""
+"\n"
+"Mahdollistaa käyttäjien integroinnin JoFotaran kanssa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_margin
@@ -3152,6 +3159,8 @@ msgid ""
 "\n"
 "Base module containing core functionalities required by other Nilvera modules.\n"
 msgstr ""
+"\n"
+"Perusmoduuli, joka sisältää muiden Nilvera-moduulien tarvitsemat ydintoiminnot.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo_reports
@@ -3312,6 +3321,8 @@ msgid ""
 "\n"
 "Base module for the Republic of Korea reports\n"
 msgstr ""
+"\n"
+"Korean tasavallan raporttien perusmoduuli\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cy
@@ -3543,6 +3554,19 @@ msgstr ""
 "Brasilialainen kirjanpito EDI sähköistä kaupankäyntiä varten\n"
 "======================================\n"
 "Mahdollistaa verolaskennan ja EDI:n sähköisen kaupankäynnin käyttäjille.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_br_edi_stock
+msgid ""
+"\n"
+"Brazilian Accounting EDI for stock\n"
+"==================================\n"
+"Adds delivery-related information to the NF-e.\n"
+msgstr ""
+"\n"
+"Brasilialainen kirjanpito EDI (organisaatioiden välinen tiedonsiirto) varastoa varten\n"
+"==================================\n"
+"Lisää toimitusta koskevat tiedot NF-e:hen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
@@ -4032,6 +4056,9 @@ msgid ""
 "Construction Industry Scheme for United Kingdom\n"
 "================================================\n"
 msgstr ""
+"\n"
+"Yhdistyneen kuningaskunnan rakennusalan verotusjärjestelmä\n"
+"================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_enterprise
@@ -4623,6 +4650,28 @@ msgid ""
 "It also creates an account entry to have the invoice paid-off and translate the credit to the factoring company.\n"
 "Additionally, it marks the invoice as 'yielded' in the payment state.\n"
 msgstr ""
+"\n"
+"E-laskujen factoring\n"
+"===================\n"
+"Tämä moduuli on chileläisen sähköisen laskutuksen laajennus.\n"
+"Se luo sähköisen tiedoston (Archivo Electrónico de Cesión de créditos - AEC), jonka avulla voidaan tuottaa luottoa\n"
+"laskut factoring-yhtiölle.\n"
+"Se luo myös tiliöinnin, jotta lasku voidaan maksaa ja kääntää luotto factoring-yhtiölle.\n"
+"Lisäksi se merkitsee laskun maksatustilaan \"luovutetuksi\".\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock_batch
+msgid ""
+"\n"
+"E-Transport implementation for Batch Pickings in Romania\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock
+msgid ""
+"\n"
+"E-Transport implementation for Romania\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
@@ -5166,12 +5215,22 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_post_wizard
+#: model:ir.module.module,description:base.module_l10n_nl_reports_vat_pay_wizard
 msgid ""
 "\n"
 "Enable the VAT wizard when posting a tax return journal entry\n"
 msgstr ""
 "\n"
 "Ota ohjattu ALV:n asetustoiminto käyttöön veroilmoituksen päiväkirjamerkintää kirjattaessa\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_enhancements
+msgid ""
+"\n"
+"Enhancements for the Point of Sale UrbanPiper module. Includes features such as store timing configuration, scheduled order handling, and improved toggle options.\n"
+msgstr ""
+"\n"
+"UrbanPiper-moduulin lisätoiminnot kassaan. Sisältää ominaisuuksia, kuten myymälän ajoituksen konfiguroinnin, ajastetun tilauksen käsittelyn ja parannetut vaihtoehtokytkimet.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -5320,6 +5379,8 @@ msgid ""
 "\n"
 "For sending and receiving electronic invoices to Nilvera.\n"
 msgstr ""
+"\n"
+"Sähköisten laskujen lähettäminen ja vastaanottaminen Nilveralle.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -6031,6 +6092,9 @@ msgid ""
 "HMRC API for the United Kingdom\n"
 "================================================\n"
 msgstr ""
+"\n"
+"HMRC API Yhdistyneessä kuningaskunnassa\n"
+"================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_drivers
@@ -6190,6 +6254,33 @@ msgstr ""
 "* Tuki sekä Fulfilment by Amazonille (FBA) että Fulfilment by Merchantille (FBM):\n"
 "    * FBA: Varaston sijainti ja varaston siirrot mahdollistavat varaston seuraamisen Amazonin Fulfilment-keskuksissa.\n"
 "    * FBM: Toimitusilmoitukset lähetetään Amazonille jokaisesta vahvistetusta poiminnasta (osatoimitusystävällinen).\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_shopee
+msgid ""
+"\n"
+"Import your Shopee orders in Odoo and synchronize deliveries\n"
+"============================================================\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Import orders from multiple accounts and shops\n"
+"* Orders are matched with Odoo products based on their internal reference (item_id or model_id in Shopee)\n"
+"* Support for both Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) and Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: Importing the completed orders\n"
+"* FBM/Hybrid: Delivery information is fetched from Shopee, track and synchronize the stock level to Shopee\n"
+msgstr ""
+"\n"
+"Tuo Shopee-tilauksesi Odoon ja synkronoi toimitukset\n"
+"============================================================\n"
+"\n"
+"Tärkeimmät ominaisuudet\n"
+"------------\n"
+"* Tuo tilauksia useilta tileiltä ja kaupoista\n"
+"* Tilaukset yhdistetään Odoo-tuotteisiin niiden sisäisen viitteen perusteella (item_id tai model_id Shopeessa)\n"
+"* Tuki sekä Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) että Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: Valmiiden tilausten tuonti\n"
+"* FBM/Hybridi: Toimitustiedot haetaan Shopeesta, seurataan ja synkronoidaan varastotaso Shopeen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -6564,6 +6655,10 @@ msgid ""
 "========================================\n"
 "This module is only temporary, its purpose is to make the transition from NHIF to SHIF in stables versions (17.0, 18.0).\n"
 msgstr ""
+"\n"
+"Kenian palkanlaskentasäännöt\n"
+"========================================\n"
+"Tämä moduuli on vain väliaikainen, ja sen tarkoituksena on tehdä siirtyminen NHIF:stä SHIF:iin vakiintuneissa versioissa (17.0, 18.0).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_hr_payroll
@@ -8436,6 +8531,33 @@ msgstr ""
 "Korjaa tuotteita helpdesk-tukipyynnöistä\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_it_riba
+msgid ""
+"\n"
+"Ri.Ba. Export for Batch Payment\n"
+"================================\n"
+"\n"
+"This module enables the generation of Ri.Ba. (Ricevute Bancarie) files from batch payments in Odoo.  \n"
+"It facilitates compliance with the Italian banking standard for managing receivables.\n"
+"\n"
+"- Group multiple receivables into a single batch for streamlined management and reconciliation.\n"
+"- Export batch payments as RIBA-compliant files to be submitted to your homebanking for processing.\n"
+"\n"
+"For more information about RIBA standards, refer to the guidelines issued by the Italian Bankers Association (CBI).\n"
+msgstr ""
+"\n"
+"Ri.Ba. Vienti erämaksua varten\n"
+"================================\n"
+"\n"
+"Tämä moduuli mahdollistaa Ri.Ba. (Ricevute Bancarie) -tiedostojen tuottaminen Odoon erämaksuista.  \n"
+"Se helpottaa italialaisen pankkistandardin noudattamista saatavien hallinnassa.\n"
+"\n"
+"- Ryhmittele useita saatavia yhdeksi eräksi, jotta hallinta ja täsmäytys sujuvat.\n"
+"- Vie erämaksut RIBA-yhteensopivina tiedostoina kotipankkiin käsiteltäväksi.\n"
+"\n"
+"Lisätietoja RIBA-standardeista saat Italian pankkiiriliiton (CBI) antamista ohjeista.\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_rw
 msgid ""
 "\n"
@@ -8601,6 +8723,27 @@ msgstr ""
 "\n"
 "Lähetä KPI-digestit säännöllisesti\n"
 "=============================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_envia
+msgid ""
+"\n"
+"Send your shippings through Envia and track them online\n"
+"=======================================================\n"
+"\n"
+"Envia is a provider of integrated shipping and tracking solutions for growing e-commerce businesses.\n"
+"Seamlessly integrating with a large range of couriers and platforms,\n"
+"you can streamline every step of your fulfilment process,\n"
+"reduce handling time and improve customer experience.\n"
+msgstr ""
+"\n"
+"Lähetä toimituksesi Envian kautta ja seuraa niitä verkossa\n"
+"=======================================================\n"
+"\n"
+"Envia tarjoaa integroituja lähetys- ja seurantaratkaisuja kasvaville verkkossa toimiville yrityksille.\n"
+"Se integroituu saumattomasti eri kuriiripalveluiden ja alustojen kanssa\n"
+"ja voit virtaviivaistaa jokaisen toimitusprosessisi vaiheen\n"
+"vähentäen käsittelyaikaa ja parantaen asiakaskokemusta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_starshipit
@@ -9142,6 +9285,7 @@ msgstr ""
 "opas.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ec_edi_stock
 #: model:ir.module.module,description:base.module_l10n_pe_edi_stock
 msgid ""
 "\n"
@@ -9311,6 +9455,8 @@ msgid ""
 "\n"
 "This bridge module adds the necessary fields to properly round the Tax Report for Estonia in the closing entries.\n"
 msgstr ""
+"\n"
+"Tämä siltamoduuli lisää tarvittavat kentät, jotta Viron veroraportti voidaan pyöristää oikein loppukirjauksissa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_dropshipping
@@ -9518,6 +9664,17 @@ msgid ""
 " - Fiscal Positions\n"
 " - States\n"
 msgstr ""
+"\n"
+"Tämä on perusmoduuli Bahrainin kirjanpitokaavion hallintaan Odoossa.\n"
+"===========================================================================\n"
+"Bahrainin kirjanpidon peruskaaviot ja lokalisointi.\n"
+"\n"
+"Aktivoidaan:\n"
+" - Tilikartta\n"
+" - Verot\n"
+" - Veroraportit\n"
+" - Verotukselliset positiot\n"
+" - Valtiot\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -9793,6 +9950,8 @@ msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Monaco.\n"
 msgstr ""
+"\n"
+"Tämä on perusmoduuli Monacon kirjanpitokaavion hallintaan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -10154,7 +10313,7 @@ msgstr ""
 "yritys myy palveluja Merentakaisissa departementeissa sijaitsevalle yritykselle. Voisimme hoitaa sen\n"
 "verotukselliset kannat, mutta se edellyttäisi, että erotettaisiin toisistaan \"tuote\"-alv-verot\n"
 "ja \"palveluiden\" arvonlisäverot. Mielestämme on liian \"raskasta\" ottaa tämä oletusarvoisesti käyttöön\n"
-"l10n_fr_accountissa; yritysten, jotka myyvät palveluja DOM:iin sijoittautuneille yrityksille, olisi päivitettävä veroilmoitus\n"
+"l10n_fr_accountissa; yritysten, jotka myyvät palveluja DOM:iin sijoittautuneille yrityksille, on päivitettävä veroilmoitus\n"
 "verojensa ja veropositioidensa konfiguraatioita manuaalisesti.\n"
 "\n"
 "**Krediitit:** Sistheo, Zeekom, CrysaLEAD, Akretion ja Camptocamp.\n"
@@ -10416,6 +10575,27 @@ msgstr ""
 "\n"
 "Tämä moduuli lisää eräsiirtovaihtoehdon varastonhallintaan\n"
 "==================================================================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_cz_reports_2025
+msgid ""
+"\n"
+"This module adds the following reports for the Czech Republic:\n"
+"==============================================================\n"
+"1. VAT Control Statement (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
+msgstr ""
+"\n"
+"Tämä moduuli lisää seuraavat raportit saataville Tšekkeihin:\n"
+"==============================================================\n"
+"1. ALV-valvontailmoitus (luonti ja XML-vienti). Löydät lisätietoja osoitteesta: https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES -raportti (luonti ja XML-vienti). Löydät lisätietoja osoitteesta:  https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Veroraportti (XML-vienti). Löydät lisätietoja osoitteesta:  https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
@@ -10992,6 +11172,7 @@ msgstr ""
 "Se testaa kaikki tuetut qr-koodit: (käyttäen hk ja br-toteutusta)\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_restaurant_loyalty
 #: model:ir.module.module,description:base.module_pos_sale_loyalty
 msgid ""
 "\n"
@@ -11112,6 +11293,9 @@ msgid ""
 "This module enables the generation of Zengin-compliant files to send to your bank in order to\n"
 "push a set of payments.\n"
 msgstr ""
+"\n"
+"Tämä moduuli mahdollistaa Zengin-yhteensopivien tiedostojen tuottamisen pankkiin lähetettäväksi, jotta voitte\n"
+"työntää maksuja.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_qr_code_bill_scan
@@ -11542,6 +11726,17 @@ msgstr ""
 "\n"
 "The Chart of Accounts is from SYSCOHADA.\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_my_edi_extended
+msgid ""
+"\n"
+"This module improves the MyInvois E-invoicing feature by adding proper support for self billing, rendering the MyInvois\n"
+"QR code in the invoice PDF file and allows better management of foreign customer TIN.\n"
+msgstr ""
+"\n"
+"Tämä moduuli parantaa MyInvois-verkkolaskutusominaisuutta lisäämällä asianmukaisen tuen itselaskutukselle, jolloin MyInvois\n"
+"QR-koodi laskun PDF-tiedostossa ja mahdollistaa ulkomaisen asiakkaan TIN-tunnuksen paremman hallinnan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -12043,6 +12238,8 @@ msgid ""
 "\n"
 "This modules allows the user to send their invoices to the MyInvois system.\n"
 msgstr ""
+"\n"
+"Tämän moduulin avulla käyttäjä voi lähettää laskunsa MyInvois-järjestelmään.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kz
@@ -12754,6 +12951,7 @@ msgstr "%s (Oma lähtevän postin palvelin):"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_actions.py:0
 #: code:addons/base/models/ir_filters.py:0
 #: code:addons/base/models/res_lang.py:0
 #: code:addons/base/models/res_partner.py:0
@@ -13985,7 +14183,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "A partner with the same"
-msgstr ""
+msgstr "Kumppani, jolla on sama"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_razorpay
@@ -14764,6 +14962,12 @@ msgstr ""
 msgid "Add lead / opportunities info on mass mailing sms"
 msgstr ""
 "Lisää liidin tai myyntimahdollisuuden info massapostituksen tekstiviesteihin"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_localisation
+msgid "Add models and fields for complete mexican localisation"
+msgstr ""
+"Lisää malleja ja kenttiä täydellistä meksikolaista lokalisointia varten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -18210,14 +18414,14 @@ msgid "Bahamas"
 msgstr "Bahama"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_bh
-msgid "Bahrain - Accounting"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.bh
 msgid "Bahrain"
 msgstr "Bahrain"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bh
+msgid "Bahrain - Accounting"
+msgstr "Bahrain - Kirjanpito"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.THB
@@ -18555,6 +18759,11 @@ msgstr "Valko-Venäjä"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Belgialainen Intrastat-ilmoitus"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_pos_restaurant
+msgid "Belgian POS Restaurant Localization"
+msgstr "Belgian ravintolan kassan lokalisointi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_attendance
@@ -18908,6 +19117,11 @@ msgid "Brazilian Accounting EDI for eCommerce"
 msgstr "Brasilialainen kirjanpito EDI sähköistä kaupankäyntiä varten"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_stock
+msgid "Brazilian Accounting EDI for stock"
+msgstr "Brasilialainen kirjanpito EDI varastoa varten"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
 msgid "Bridge Sign functionalities with the Rental application"
 msgstr "Yhdistä Sign -toiminnot Vuokrasovelluksen kanssa"
@@ -19230,7 +19444,7 @@ msgstr "CFDI 4.0 -kentät myyntitilauksia varten"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk_cis
 msgid "CIS"
-msgstr ""
+msgstr "CIS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca_payment_cpa005
@@ -19908,7 +20122,7 @@ msgstr "Chile - Sähköinen laskutus"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_factoring
 msgid "Chile - Localization: Factoring Extension"
-msgstr ""
+msgstr "Chile - Lokalisointi: Factoring-laajennus"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__chile/continental
@@ -20337,7 +20551,7 @@ msgstr "Yritystunnus"
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry_label
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry_label
 msgid "Company ID Label"
-msgstr ""
+msgstr "Yrityksen ID-tunnus"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo
@@ -21627,6 +21841,11 @@ msgstr "Tšekki - Kirjanpito"
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr "Tšekki"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cz_reports_2025
+msgid "Czech Republic - Accounting Reports 2025"
+msgstr "Tšekki - Kirjanpitoraportti 2025"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz_reports
@@ -22923,7 +23142,7 @@ msgstr "Sähköinen laskutus, Universal Business Language"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_my_edi
 msgid "E-invoicing using MyInvois"
-msgstr ""
+msgstr "Sähköinen laskutus MyInvois-palvelun avulla"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_vn_edi_viettel
@@ -23021,7 +23240,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_razorpay_oauth
 msgid "Easy Razorpay Onboarding With Oauth."
-msgstr ""
+msgstr "Helppo Razorpayn käyttöönotto Oauthilla."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_easypost
@@ -23042,7 +23261,7 @@ msgstr "Ecuador - ATS-raportti"
 #: model:ir.module.module,description:base.module_l10n_ec_stock
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_stock
 msgid "Ecuador - Stock"
-msgstr ""
+msgstr "Ecuador - Varasto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
@@ -23058,6 +23277,11 @@ msgstr "Ecuadorilainen kirjanpito EDI"
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_reports
 msgid "Ecuadorian Accounting Reports"
 msgstr "Ecuadorin kirjanpitoraportit"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ec_edi_stock
+msgid "Ecuadorian Delivery Guide"
+msgstr "Ecuadorin toimitusopas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_edi_pos
@@ -23140,7 +23364,7 @@ msgstr "Tavaroiden sähköinen vienti Chileen"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_jo_edi
 msgid "Electronic Invoicing for Jordan UBL 2.1"
-msgstr ""
+msgstr "Sähköinen laskutus Jordan UBL 2.1:lle 2.1"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi
@@ -23482,6 +23706,11 @@ msgid "Entry count"
 msgstr "Lukumäärä"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_envia
+msgid "Envia Shipping"
+msgstr "Envia-lähetys"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
 msgid "Epson ePOS Printers in PoS"
 msgstr "Epson ePOS-tulostimet kassassa"
@@ -23601,7 +23830,7 @@ msgstr "Viro - Kirjanpitoraportit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ee_rounding
 msgid "Estonia - Rounding"
-msgstr ""
+msgstr "Viro - Pyöristäminen"
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -24487,6 +24716,12 @@ msgstr "Ilmaisu"
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
 msgstr "Laajennetut osoitteet"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_my_edi_extended
+msgid "Extended features for the E-invoicing using MyInvois"
+msgstr ""
+"Laajennetut ominaisuudet sähköiseen laskutukseen MyInvois-palvelun avulla"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
@@ -25646,6 +25881,16 @@ msgid "Gantt view for Time Off Dashboard"
 msgstr "Gantt-näkymä vapaapäivien kojelaudassa"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato
+msgid "Gelato"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato_stock
+msgid "Gelato/Stock bridge"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "General"
 msgstr "Yleinen"
@@ -25711,7 +25956,7 @@ msgstr "Luo jäljitettäviä ja lyhyitä URL-osoitteita"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_intrastat
 msgid "Generates Intrastat XML report for declaration."
-msgstr ""
+msgstr "Luo Intrastat XML-raportin ilmoitusta varten."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import
@@ -25748,7 +25993,7 @@ msgstr "Georgia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_intrastat
 msgid "German Intrastat Declaration"
-msgstr ""
+msgstr "Saksan Intrastat-ilmoitus"
 
 #. module: base
 #: model:res.country,name:base.de
@@ -26173,7 +26418,7 @@ msgstr "H - KULJETUS JA VARASTOINTI"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk_hmrc
 msgid "HMRC"
-msgstr ""
+msgstr "HMRC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_livechat
@@ -27298,6 +27543,11 @@ msgid "Import QIF Bank Statement"
 msgstr "Sisäänlue QIF-tiliote"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_shopee
+msgid "Import Shopee orders and sync deliveries"
+msgstr "Tuo Shopee-tilauksia ja synkronoi toimitukset"
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Import Template for Customers"
@@ -27881,7 +28131,7 @@ msgstr "Palkanlaskennan ja kulkuneuvojen integrointi."
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_pos
 msgid "Integration of Odoo PoS with the Italian Fiscal Printer"
-msgstr ""
+msgstr "Odoo kassan integrointi Italian veroilmoittimen kanssa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_stock_inter_company_rules
@@ -28170,7 +28420,7 @@ msgstr "Siirrettyjen solmujen virheellinen määrittely: \"%s\""
 #. odoo-python
 #: code:addons/base/models/res_config.py:0
 msgid "Invalid template user. It seems it has been deleted."
-msgstr "Virheellinen mallin käyttäjä. Näyttää siltä, että se on poistettu."
+msgstr "Virheellinen käyttäjämalli. Se näyttäisi olevan poistettu."
 
 #. module: base
 #. odoo-python
@@ -28439,6 +28689,11 @@ msgid "Italy - Accounting Reports"
 msgstr "Italia - Kirjanpitoraportit"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_riba
+msgid "Italy - Bank Receipts (Ri.Ba.)"
+msgstr "Italia - Pankkisaamiset (Ri.Ba.)"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_doi
 msgid "Italy - Declaration of Intent"
 msgstr "Italia - Aiesopimus"
@@ -28465,7 +28720,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_pos
 msgid "Italy - Point of Sale"
-msgstr ""
+msgstr "Italia - Kassa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
@@ -28512,7 +28767,7 @@ msgstr "Japani - UBL PINT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp_zengin
 msgid "Japan - Zengin Payment"
-msgstr ""
+msgstr "Japani - Zengin Payment"
 
 #. module: base
 #: model:res.country,name:base.je
@@ -28548,7 +28803,7 @@ msgstr "Jordania - Palkanlaskenta ja kirjanpito"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jo_edi
 msgid "Jordan E-Invoicing"
-msgstr ""
+msgstr "Jordanian sähköinen laskutus"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
@@ -28649,12 +28904,17 @@ msgstr "Kenia - Palkanlaskenta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_shif
 msgid "Kenya - Payroll SHIF"
-msgstr ""
+msgstr "Kenia - Palkanlaskenta SHIF"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_account
 msgid "Kenya - Payroll with Accounting"
 msgstr "Kenia - Palkanlaskenta ja kirjanpito"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_pos
+msgid "Kenya - Point of Sale"
+msgstr "Kenia - Kassa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_mrp
@@ -29456,6 +29716,11 @@ msgid "Link module between pos_hr and pos_restaurant"
 msgstr "Linkkimoduuli pos_hr:n ja pos_restaurantin välillä"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_restaurant_loyalty
+msgid "Link module between pos_restaurant and pos_loyalty"
+msgstr "Linkkimoduuli pos_restaurant ja pos_loyalty välillä"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
 msgid "Link module between pos_sale and l10n_be"
 msgstr "Linkkimoduuli pos_sale ja l10n_be välillä"
@@ -29943,7 +30208,12 @@ msgstr "Malesia - Kirjanpitoraportit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_edi
 msgid "Malaysia - E-invoicing"
-msgstr ""
+msgstr "Malesia - Sähköinen laskutus"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_my_edi_extended
+msgid "Malaysia - E-invoicing Extended Features"
+msgstr "Malesia - Sähköisen laskutuksen laajennetut ominaisuudet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_ubl_pint
@@ -29983,12 +30253,12 @@ msgstr "Malta - Kirjanpitoraportit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mt_pos
 msgid "Malta - Point of Sale"
-msgstr ""
+msgstr "Malta - Kassa"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mt_pos
 msgid "Malta Compliance Letter for EXO Number"
-msgstr ""
+msgstr "Maltan vaatimustenmukaisuuskirje EXO-numeroa varten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_hr
@@ -30685,6 +30955,11 @@ msgid "Mexico - Payroll"
 msgstr "Meksiko - Palkanlaskenta"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_localisation
+msgid "Mexico - Payroll - Localisation"
+msgstr "Meksiko - Palkanlaskenta - Lokalisointi"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_account
 msgid "Mexico - Payroll with Accounting"
 msgstr "Meksiko - Palkanlaskenta ja kirjanpito"
@@ -31251,7 +31526,7 @@ msgstr "Monaco"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mc
 msgid "Monaco - Accounting"
-msgstr ""
+msgstr "Monaco - Kirjanpito"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__1
@@ -31435,7 +31710,7 @@ msgstr "NPWP"
 #. module: base
 #: model:res.country,vat_label:base.pk
 msgid "NTN"
-msgstr ""
+msgstr "NTN"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__nz
@@ -31575,6 +31850,11 @@ msgstr "Alankomaat - Kirjanpito"
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports
 msgid "Netherlands - Accounting Reports"
 msgstr "Alankomaat - Kirjanpitoraportit"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_vat_pay_wizard
+msgid "Netherlands - Accounting Reports (post wizard)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_hr_payroll
@@ -34767,6 +35047,11 @@ msgid "POS - HR"
 msgstr "Kassa - HR"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_restaurant_loyalty
+msgid "POS - Restaurant Loyality"
+msgstr "Kassa - Ravintolan kanta-asiakkuus"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sms
 msgid "POS - SMS"
 msgstr "Kassa - SMS"
@@ -35830,6 +36115,11 @@ msgid "Pivot"
 msgstr "Taulukko"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_gelato
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Plan your resources on project tasks"
 msgstr "Suunnittele resurssit projektin tehtäviin"
@@ -35935,6 +36225,7 @@ msgstr "Kassa Valmistelun näyttö ravintolassa"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
+#: model:ir.module.category,name:base.module_category_localization_point_of_sale
 #: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
@@ -35950,6 +36241,11 @@ msgstr "Kassa - Kupongit ja kanta-asiakkuus"
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper
 msgid "Point of Sale - UrbanPiper"
 msgstr "Kassa - UrbanPiper"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_enhancements
+msgid "Point of Sale - UrbanPiper Enhancements"
+msgstr "Kassa - UrbanPiper-lisäominaisuudet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -37182,7 +37478,8 @@ msgid "RTN"
 msgstr "RTN"
 
 #. module: base
-#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pe
+#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pa
+#: model:res.country,vat_label:base.pe
 msgid "RUC"
 msgstr "RUC"
 
@@ -37215,7 +37512,7 @@ msgstr "Suhteet"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_razorpay_oauth
 msgid "Razorpay OAuth Integration"
-msgstr ""
+msgstr "Razorpay OAuth integraatio"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_read
@@ -37667,12 +37964,12 @@ msgstr "Raportit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_kr
 msgid "Republic of Korea - Accounting"
-msgstr ""
+msgstr "Korean tasavalta - Kirjanpito"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_kr_reports
 msgid "Republic of Korea - Accounting Reports"
-msgstr ""
+msgstr "Korean tasavalta - Kirjanpitoraportit"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__request
@@ -37850,6 +38147,16 @@ msgstr "Romania - Kirjanpito"
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_reports
 msgid "Romania - Accounting Reports"
 msgstr "Romania - Kirjanpitoraportit"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
+msgid "Romania - E-Transport"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock_batch
+msgid "Romania - E-Transport Batch Pickings"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi
@@ -38201,6 +38508,11 @@ msgid "Salary Configurator (Belgium)"
 msgstr "Palkkakonfiguraattori (Belgia)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary_mobility_budget
+msgid "Salary Configurator (Belgium) - Mobility Budget"
+msgstr "Palkkakonfiguraattori (Belgia) - Liikkuvuusbudjetti"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_holidays
 msgid "Salary Configurator - Holidays"
 msgstr "Palkanmuodostin - Lomat"
@@ -38212,6 +38524,7 @@ msgstr "Palkanmuodostaja - Palkanlaskenta"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
+#: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary_mobility_budget
 msgid "Salary Package Configurator"
 msgstr "Palkkapaketin konfiguraattori"
 
@@ -38219,6 +38532,12 @@ msgstr "Palkkapaketin konfiguraattori"
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sale
 msgid "Sale"
 msgstr "Ale"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_test_sale_purchase_edi_ubl
+msgid "Sale & Purchase Order EDI Tests: Ensure Flow Robustness"
+msgstr ""
+"Myynti- ja ostotilausten EDI-testit: Varmista työnkulun iskunkestävyys"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_sms
@@ -38987,7 +39306,7 @@ msgid "Send your shippings through UPS and track them online"
 msgstr "Lähetä lähetyksesi UPSin kautta ja seuraa niitä verkossa"
 
 #. module: base
-#: model:ir.module.module,description:base.module_delivery_usps
+#: model:ir.module.module,description:base.module_delivery_usps_rest
 msgid "Send your shippings through USPS and track them online"
 msgstr "Lähetä lähetyksesi USPS:n kautta ja seuraa niitä verkossa"
 
@@ -39302,6 +39621,11 @@ msgstr "Shiprocket Shipping"
 #: model:ir.module.module,shortdesc:base.module_website_sale_shiprocket
 msgid "Shiprocket: Cash on Delivery"
 msgstr "Shiprocket: Postiennakko"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_shopee
+msgid "Shopee Connector"
+msgstr "Shopee-liitin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -40681,7 +41005,7 @@ msgstr "ALV-numero"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat_label
 #: model:ir.model.fields,field_description:base.field_res_users__vat_label
 msgid "Tax ID Label"
-msgstr ""
+msgstr "Verotunnusmerkki"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii_tax_extension
@@ -40794,6 +41118,11 @@ msgstr "Testi - tuonti ja vienti"
 #: model:ir.module.module,shortdesc:base.module_test_resource
 msgid "Test - Resource"
 msgstr "Testi - Resurssi"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_sale_purchase_edi_ubl
+msgid "Test - Sale & Purchase Order EDI"
+msgstr "Testi - Myynti- ja ostotilaus EDI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_html_field_history
@@ -42090,6 +42419,9 @@ msgid ""
 "         Please install the new \"Fedex Shipping\" module and uninstall this"
 " one as soon as possible. This integration will stop working in 2024."
 msgstr ""
+"Kyseessä on FedExin vanha integrointi, jota ei enää tueta.         Asenna "
+"uusi \"FedEx Shipping\" -moduuli ja poista tämä moduuli mahdollisimman pian."
+" Tämä integraatio lakkaa toimimasta vuonna 2024."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
@@ -42101,6 +42433,17 @@ msgstr ""
 "Tämä on UPS:n vanha integrointi, jota ei enää tueta. Asenna uusi \"UPS "
 "Shipping\" -moduuli ja poista tämä mahdollisimman pian. Tämä integraatio "
 "lakkaa toimimasta vuonna 2024."
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_usps
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
+"Tämä on vanhanmallinen integraatio USPS:n kanssa. Asenna uusi \"United "
+"States Postal Service (USPS) Shipping\" -moduuli ja poista tämä "
+"mahdollisimman pian."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -42303,6 +42646,17 @@ msgstr ""
 "Tämä moduuli sisältää massapostitukseen liittyviä testejä. Nämä\n"
 "ovat erillisessä moduulissa, jotta voidaan käyttää tiettyjä testimalleja, jotka on määritelty kohdassa\n"
 "test_mail. "
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_sale_purchase_edi_ubl
+msgid ""
+"This module contains tests related to sale and purchase order edi.\n"
+"    Ensure export and import of order working properly and filling details properly from\n"
+"    order XML file."
+msgstr ""
+"Tämä moduuli sisältää myynti- ja ostotilauksiin liittyviä testejä.\n"
+"    Varmista, että tilauksen vienti ja tuonti toimivat oikein ja että tiedot täytetään oikein osoitteesta\n"
+"    tilauksen XML-tiedostosta."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_spreadsheet_edition
@@ -43004,16 +43358,6 @@ msgid "Turkey"
 msgstr "Turkki"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
-msgid "Türkiye - Nilvera"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
-msgid "Türkiye - Nilvera E-Invoice"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
 msgstr "Turkmenistan"
@@ -43124,6 +43468,16 @@ msgid "Türkiye - Accounting Reports"
 msgstr "Turkki - Kirjanpitoraportit"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
+msgid "Türkiye - Nilvera"
+msgstr "Turkki - Nilvera"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
+msgid "Türkiye - Nilvera E-Invoice"
+msgstr "Turkki - Nilvera E-laskujen toimittaminen"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
 msgid "Türkiye - Payroll"
 msgstr "Turkki - Palkanlaskenta"
@@ -43156,7 +43510,7 @@ msgstr "UCT"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk
 msgid "UK"
-msgstr ""
+msgstr "UK"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_reports
@@ -43166,12 +43520,12 @@ msgstr "Yhdistynyt kuningaskunta - Kirjanpitoraportit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_reports_cis
 msgid "UK - Construction Industry Scheme"
-msgstr ""
+msgstr "Yhdistyneen kuningaskunnan rakennusalan verotusjärjestelmä"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_hmrc
 msgid "UK - HMRC API"
-msgstr ""
+msgstr "UK - HMRC API"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_bacs
@@ -43546,9 +43900,14 @@ msgid "United States - Payroll with Accounting"
 msgstr "Yhdysvallat - Palkanlaskenta ja kirjanpito"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_delivery_usps
+#: model:ir.module.module,shortdesc:base.module_delivery_usps_rest
 msgid "United States Postal Service (USPS) Shipping"
 msgstr "United States Postal Service (USPS) Toimitukset"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_usps
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr "Yhdysvaltain postipalvelu (USPS) Toimitus (Legacy)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -45666,7 +46025,7 @@ msgstr "sallittu ryhmille %s"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "already exists ("
-msgstr ""
+msgstr "on jo olemassa ("
 
 #. module: base
 #. odoo-python
@@ -45926,6 +46285,11 @@ msgid "eCommerce on appointments"
 msgstr "sähköinen kaupankäynti tapaamisissa"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_gelato
+msgid "eCommerce/Gelato bridge"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
@@ -46052,12 +46416,6 @@ msgstr "l10n_be_pos_sale"
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
 msgstr "many2many"
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_actions.py:0
-msgid "many2many fields cannot be evaluated by reference"
-msgstr "many2many kenttiä ei voi käsitellä annetun viitearvon mukaan"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one

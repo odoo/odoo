@@ -1369,6 +1369,65 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await nextTick();
         assert.containsN(editor.editable, "td span.display-3-fs", 4);
     });
+
+    QUnit.module("Image Delete");
+
+    QUnit.test("Image should delete without making any element", async (assert) => {
+        assert.expect(3);
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: `<p class="content"><br></p><p class="content"><img></p>`,
+        });
+        let htmlField;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                htmlField = this;
+                wysiwygPromise.resolve();
+            },
+            // To prevent saving when calling onWillUnmount
+            async commitChanges() { },
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html_legacy"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+        const paragraph = editor.editable.querySelectorAll(".content")[1];
+        setSelection(paragraph, 0, paragraph, 0);
+        await nextTick();
+
+        const img = editor.editable.querySelector("img");
+        setSelection(paragraph, 1, paragraph, 2);
+        await nextTick();
+
+        // Trigger mouseup manually to run `_updateEditorUI`.
+        const mouseUpEvent = new MouseEvent("mouseup", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        img.dispatchEvent(mouseUpEvent);
+        await nextTick();
+        document.querySelector("#image-delete").click();
+        await nextTick();
+        assert.equal(
+            editor.editable.innerHTML,
+            '<p class="content"><br></p><p class="content oe-hint oe-command-temporary-hint" placeholder="Type &quot;/&quot; for commands"></p>'
+        );
+        const selection = document.getSelection();
+        assert.equal(selection.anchorNode, paragraph);
+        assert.equal(selection.anchorOffset, 0);
+    });
 });
 
 export const mediaDialogServices = {

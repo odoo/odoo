@@ -24,15 +24,16 @@
 # JanaAvalah, 2024
 # Anna, 2024
 # Katrin Kampura, 2024
-# Siim Raasuke, 2024
+# Siim Raasuke, 2025
+# Birgit Vijar, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Siim Raasuke, 2024\n"
+"Last-Translator: Birgit Vijar, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -178,7 +179,7 @@ msgstr "1 aasta"
 #. module: product
 #: model:product.attribute.value,name:product.pav_warranty
 msgid "1 year warranty extension"
-msgstr ""
+msgstr "1 aasta garantii pikendust"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -369,7 +370,7 @@ msgid ""
 msgstr ""
 "Toote kirjeldus, mida soovite oma klientidele edastada. See kirjeldus "
 "kopeeritakse igale müügitellimusele, saatelehele ja "
-"kliendiarvele/krediidiarvele"
+"kliendiarvele/kreeditarvele"
 
 #. module: product
 #. odoo-python
@@ -638,6 +639,8 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Korraga saab kuvada kõige rohkem %s kogust. Eemalda valitud kogus, et lisada"
+" teisi."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -848,7 +851,7 @@ msgstr "Valige siltide printimiseks lehe paigutus"
 #. module: product
 #: model:product.attribute.value,name:product.pav_cleaning_kit
 msgid "Cleaning kit"
-msgstr ""
+msgstr "Puhastuskomplekt"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -914,8 +917,8 @@ msgstr "Kombinatsiooni hind"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
-msgid "Combo products can't have attributes"
-msgstr "Kombinatsioontoodetel ei saa olla atribuute"
+msgid "Combo products can't have attributes."
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -1202,7 +1205,7 @@ msgstr "Vaikimisi lisahind"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "Vaikimisi lisahind muutus"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1491,7 +1494,7 @@ msgstr "Lisavalikud"
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Extra Price"
-msgstr ""
+msgstr "Lisahind"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
@@ -2321,7 +2324,7 @@ msgstr "Must kontoritool"
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr ""
+msgstr "Kontori komplekt"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2358,6 +2361,7 @@ msgstr ""
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
 msgstr ""
+"Oih! '%(fileName)s' ei laadinud üles, kuna selle formaat ei ole lubatud."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2379,7 +2383,7 @@ msgstr "Muu hinnakiri"
 #. module: product
 #: model:product.template,name:product.product_template_dining_table
 msgid "Outdoor dining table"
-msgstr ""
+msgstr "Väline söögilaud"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -3555,6 +3559,13 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"This product is part of a combo, so its type can't be changed to \"combo\"."
+msgstr ""
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 msgid ""
 "This rounding precision is higher than the Decimal Accuracy (%(digits)s digits).\n"
@@ -4310,7 +4321,7 @@ msgstr "nt. 1234567890"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "Näiteks: Burgerite valik"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -4331,7 +4342,7 @@ msgstr "nt. Odoo ettevõtte tellimus"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Starter - Meal - Desert"
-msgstr ""
+msgstr "Näiteks: Eelroog - Pearoog - Magustoit"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view

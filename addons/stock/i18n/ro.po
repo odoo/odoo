@@ -4,20 +4,21 @@
 # 
 # Translators:
 # Alin Miclea, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
 # Larisa_nexterp, 2024
 # Larisa Pop, 2024
 # Lyall Kindmurr, 2024
-# Flavia0320, 2024
 # Wil Odoo, 2024
+# Flavia0320, 2025
+# Dorin Hongu <dhongu@gmail.com>, 2025
+# Foldi Robert <foldirobert@nexterp.ro>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,9 @@ msgid ""
 "\n"
 "Transfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s."
 msgstr ""
+"\n"
+"\n"
+"Transfer %(transfer_list)s: Este necesar să specificați un nr de Lot/Număr serial pentru produsul %(product_list)s."
 
 #. module: stock
 #. odoo-python
@@ -41,6 +45,8 @@ msgid ""
 "\n"
 "(%(serial_number)s) exists in location %(location)s"
 msgstr ""
+"\n"
+"(%(serial_number)s) există în locație %(location)s"
 
 #. module: stock
 #. odoo-python
@@ -50,6 +56,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"Cantitatea făcută pentru produsul %(product)s nu respectă precizia rotunjirii definite pe unitatea de măsură %(unit)s.\n"
+"Vă rugăm să schimbați cantitatea făcută sau precizia rotunjirii unității de măsură."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -173,6 +182,9 @@ msgid ""
 "(%(product_uom_category)s) - Move UoM is %(move_uom)s "
 "(%(move_uom_category)s)"
 msgstr ""
+"%(product_name)s --> Unitatea de măsură a produsului este %(product_uom)s "
+"(%(product_uom_category)s) - Unitatea de măsură a mișcării este %(move_uom)s"
+" (%(move_uom_category)s)"
 
 #. module: stock
 #. odoo-python
@@ -459,11 +471,6 @@ msgstr "4 x 7 cu preț"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -4138,12 +4145,6 @@ msgid "Immediate Transfer"
 msgstr "Transfer imediat"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Importă"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
@@ -5709,6 +5710,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"Nu a fost găsită nicio regulă care să se reumple \"%(product)s\" în \"%(location)s\".\n"
+"Verificați configurația fișelor tehnologice pe produs."
 
 #. module: stock
 #. odoo-python
@@ -6593,11 +6596,9 @@ msgstr "Prezenta depinde de tipul operațiunii."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Apăsați butonul CREEAZĂ pentru a defini cantitatea pentru fiecare produs din"
-" stoc sau importați-le dintr-o foaie de calcul prin intermediul Favoritelor"
 
 #. module: stock
 #. odoo-javascript
@@ -7652,7 +7653,7 @@ msgstr "Informații de reaprovizionare"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
+msgstr "Informații de reaprovizionare pentru %(product)s în %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -7798,6 +7799,11 @@ msgid "Return"
 msgstr "Retur"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Retur livrare"
@@ -7826,7 +7832,7 @@ msgstr "Retur al"
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
-msgstr ""
+msgstr "Retur al %(picking_name)s"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
@@ -7939,6 +7945,8 @@ msgid ""
 "Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
 "%(route_company)s."
 msgstr ""
+"Regula %(rule)s îi aparține %(rule_company)s în timp ce ruta îi aparține "
+"%(route_company)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8254,6 +8262,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): "
 "%(location_list)s. Please correct the serial number encoded."
 msgstr ""
+"Numărul de serie (%(serial_number)s) există deja în locație (locuri): "
+"%(location_list)s. Vă rugăm să corectați numărul de serie codificat."
 
 #. module: stock
 #. odoo-python
@@ -8263,6 +8273,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"Numărul de serie (%(serial_number)s) nu este localizat în "
+"%(source_location)s, dar este localizat în locație (locuri): "
+"%(other_locations)s.\n"
 
 #. module: stock
 #. odoo-python
@@ -8272,6 +8285,8 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"Numărul de serie (%(serial_number)s) nu este localizat în %(source_location)s, dar este localizat în locație (locuri): %(other_locations)s.\n"
+"Locația sursă pentru acest transfer va fi schimbată în %(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -9237,6 +9252,10 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"Cantitatea efectuată pentru produsul \"%(product)s\" nu respectă precizia de"
+" rotunjire definită pe unitatea de măsură \"%(unit)s\". Vă rugăm să "
+"modificați cantitatea efectuată sau precizia de rotunjire a unității de "
+"măsură."
 
 #. module: stock
 #. odoo-python
@@ -9278,6 +9297,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"Numărul de serie a fost deja atribuit:\n"
+"Produs:%(product)s, Serie Nr: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -10656,7 +10677,7 @@ msgstr "Când produsul ajunge în"
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> "
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need."
+"the need. %(suffix)s"
 msgstr ""
 
 #. module: stock

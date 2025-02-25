@@ -3,8 +3,7 @@
 # 	* sale
 # 
 # Translators:
-# Nathaniel Jacques, 2024
-# Larissa Manderfeld, 2024
+# Natalie Jacques, 2024
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2024
 # Robert Frykelius <robert.frykelius@linserv.se>, 2024
 # Björn Hayer, 2024
@@ -27,14 +26,15 @@
 # Claes-Johan Dahlin, 2024
 # Lasse L, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,8 +90,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state i ('draft', 'sent') och 'Quotation - %s' % (object.name)) "
-"eller 'Order - %s' % (object.name)"
+"(object.state in ('draft', 'sent') and 'Offert - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1924,6 +1924,12 @@ msgid "Discount on lines"
 msgstr "Rabatt på linjer"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount- On products with the following taxes %(taxes)s"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
 msgstr "Rabatt:"
@@ -2135,12 +2141,6 @@ msgstr "Offertens förfallodatum"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
 msgstr "Utgångsdatum:"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Expires on %(date)s"
-msgstr "Förfaller den %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search

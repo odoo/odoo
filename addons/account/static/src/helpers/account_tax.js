@@ -226,6 +226,7 @@ export const accountTaxHelpers = {
             // the type of involved fields and we don't have access to this information js-side.
             product = null,
             special_mode = null,
+            manual_tax_amounts = null,
         } = {}
     ) {
         const self = this;
@@ -253,12 +254,17 @@ export const accountTaxHelpers = {
                 return;
             }
 
-            const tax_amount = tax_amount_function(
-                tax,
-                taxes_data[tax.id].batch,
-                raw_base + taxes_data[tax.id].extra_base_for_tax,
-                evaluation_context
-            );
+            let tax_amount = null;
+            if (manual_tax_amounts && tax.id in manual_tax_amounts) {
+                tax_amount = manual_tax_amounts[tax.id].tax_amount_currency;
+            } else {
+                tax_amount = tax_amount_function(
+                    tax,
+                    taxes_data[tax.id].batch,
+                    raw_base + taxes_data[tax.id].extra_base_for_tax,
+                    evaluation_context
+                );
+            }
             if (tax_amount !== null) {
                 add_tax_amount_to_results(tax, tax_amount);
             }
@@ -344,24 +350,37 @@ export const accountTaxHelpers = {
         // Mark the base to be computed in the descending order. The order doesn't matter for no special mode or 'total_excluded' but
         // it must be in the reverse order when special_mode is 'total_included'.
         for (const tax of sorted_taxes.toReversed()) {
-            if (!("tax_amount" in taxes_data[tax.id])) {
+            const tax_data = taxes_data[tax.id];
+            if (!("tax_amount" in tax_data)) {
                 continue;
             }
 
-            const total_tax_amount = taxes_data[tax.id].batch.reduce(
-                (sum, other_tax) => sum + taxes_data[other_tax.id].tax_amount,
-                0
-            );
-            let base = raw_base + taxes_data[tax.id].extra_base_for_base;
-            if (
-                taxes_data[tax.id].price_include &&
-                (!special_mode || special_mode === "total_included")
-            ) {
-                base -= total_tax_amount;
+            // Base amount.
+            let base = null;
+            if (manual_tax_amounts && "base_amount_currency" in manual_tax_amounts[tax.id]) {
+                base = manual_tax_amounts[tax.id].base_amount_currency;
+            } else {
+                let total_tax_amount = taxes_data[tax.id].batch.reduce(
+                    (sum, other_tax) => sum + taxes_data[other_tax.id].tax_amount,
+                    0
+                );
+                total_tax_amount += Object.values(taxes_data[tax.id].batch)
+                    .filter(other_tax => other_tax.has_negative_factor)
+                    .reduce((sum, other_tax) => sum + reverse_charge_taxes_data[other_tax.id].tax_amount, 0);
+                base = raw_base + taxes_data[tax.id].extra_base_for_base;
+                if (
+                    tax_data.price_include &&
+                    (!special_mode || special_mode === "total_included")
+                ) {
+                    base -= total_tax_amount;
+                }
             }
-            taxes_data[tax.id].base = base;
-            if(tax.has_negative_factor){
-                reverse_charge_taxes_data[tax.id].base = base;
+            tax_data.base = base;
+
+            // Reverse charge.
+            if (tax.has_negative_factor) {
+                const reverse_charge_tax_data = reverse_charge_taxes_data[tax.id];
+                reverse_charge_tax_data.base = base;
             }
         }
 
@@ -476,6 +495,8 @@ export const accountTaxHelpers = {
             sign: load('sign', 1.0),
             special_mode: kwargs.special_mode || null,
             special_type: kwargs.special_type || null,
+            rate: load("rate", 1.0),
+            manual_tax_amounts: kwargs.manual_tax_amounts || null,
         }
     },
 
@@ -491,7 +512,8 @@ export const accountTaxHelpers = {
                 precision_rounding: currency_pd,
                 rounding_method: company.tax_calculation_rounding_method,
                 product: base_line.product_id,
-                special_mode: base_line.special_mode
+                special_mode: base_line.special_mode,
+                manual_tax_amounts: base_line.manual_tax_amounts
             }
         );
 
@@ -855,35 +877,10 @@ export const accountTaxHelpers = {
             tax_totals_summary.tax_amount += values.tax_amount;
         }
 
-        // Subtotals.
+        // Tax groups.
         const untaxed_amount_subtotal_label = _t("Untaxed Amount");
         const subtotals = {};
 
-        const subtotal_grouping_function = (base_line, tax_data) =>
-            tax_data.tax.tax_group_id.preceding_subtotal || untaxed_amount_subtotal_label;
-
-        base_lines_aggregated_values = this.aggregate_base_lines_tax_details(base_lines, subtotal_grouping_function);
-        values_per_grouping_key = this.aggregate_base_lines_aggregated_values(base_lines_aggregated_values);
-
-        for (const values of Object.values(values_per_grouping_key)) {
-            const subtotal_label = values.grouping_key || untaxed_amount_subtotal_label;
-            if (!(subtotal_label in subtotals)) {
-                subtotals[subtotal_label] = {
-                    tax_groups: [],
-                    tax_amount_currency: 0.0,
-                    tax_amount: 0.0,
-                    base_amount_currency: 0.0,
-                    base_amount: 0.0,
-                };
-            }
-            const subtotal = subtotals[subtotal_label];
-            subtotal.base_amount_currency += values.total_excluded_currency;
-            subtotal.base_amount += values.total_excluded;
-            subtotal.tax_amount_currency += values.tax_amount_currency;
-            subtotal.tax_amount += values.tax_amount;
-        }
-
-        // Tax groups.
         const tax_group_grouping_function = (base_line, tax_data) => {
             return {
                 grouping_key: tax_data.tax.tax_group_id.id,
@@ -945,6 +942,15 @@ export const accountTaxHelpers = {
 
             // Order of the subtotals.
             const preceding_subtotal = tax_group.preceding_subtotal || untaxed_amount_subtotal_label;
+            if (!(preceding_subtotal in subtotals)) {
+                subtotals[preceding_subtotal] = {
+                    tax_groups: [],
+                    tax_amount_currency: 0.0,
+                    tax_amount: 0.0,
+                    base_amount_currency: 0.0,
+                    base_amount: 0.0,
+                };
+            }
             if (!(preceding_subtotal in subtotals_order)) {
                 subtotals_order[preceding_subtotal] = order;
             }
@@ -961,6 +967,34 @@ export const accountTaxHelpers = {
                 group_name: tax_group.name,
                 group_label: tax_group.pos_receipt_label,
             });
+        }
+
+        // Subtotals.
+        if (!Object.keys(subtotals).length) {
+            subtotals[untaxed_amount_subtotal_label] = {
+                tax_groups: [],
+                tax_amount_currency: 0.0,
+                tax_amount: 0.0,
+                base_amount_currency: 0.0,
+                base_amount: 0.0,
+            };
+        }
+
+        const ordered_subtotals = Array.from(Object.entries(subtotals))
+            .sort((a, b) => (subtotals_order[a[0]] || 0) - (subtotals_order[b[0]] || 0));
+        let accumulated_tax_amount_currency = 0.0;
+        let accumulated_tax_amount = 0.0;
+        for (const [subtotal_label, subtotal] of ordered_subtotals) {
+            subtotal.name = subtotal_label;
+            subtotal.base_amount_currency = tax_totals_summary.base_amount_currency + accumulated_tax_amount_currency;
+            subtotal.base_amount = tax_totals_summary.base_amount + accumulated_tax_amount;
+            for (const tax_group of subtotal.tax_groups) {
+                subtotal.tax_amount_currency += tax_group.tax_amount_currency;
+                subtotal.tax_amount += tax_group.tax_amount;
+                accumulated_tax_amount_currency += tax_group.tax_amount_currency;
+                accumulated_tax_amount += tax_group.tax_amount;
+            }
+            tax_totals_summary.subtotals.push(subtotal);
         }
 
         // Cash rounding
@@ -992,7 +1026,7 @@ export const accountTaxHelpers = {
                     subtotals[untaxed_amount_subtotal_label].base_amount_currency += cash_rounding_base_amount_currency;
                     subtotals[untaxed_amount_subtotal_label].base_amount += cash_rounding_base_amount;
                 } else if (strategy === 'biggest_tax') {
-                    const [max_subtotal, max_tax_group] = Array.from(Object.values(subtotals))
+                    const [max_subtotal, max_tax_group] = tax_totals_summary.subtotals
                         .flatMap(subtotal => subtotal.tax_groups.map(tax_group => [subtotal, tax_group]))
                         .reduce((a, b) => (b[1].tax_amount_currency > a[1].tax_amount_currency ? b : a));
 
@@ -1005,14 +1039,6 @@ export const accountTaxHelpers = {
                 }
             }
         }
-
-        // Flat the subtotals.
-        const ordered_subtotals = Array.from(Object.entries(subtotals))
-            .sort((a, b) => (subtotals_order[a[0]] || 0) - (subtotals_order[b[0]] || 0));
-        ordered_subtotals.forEach(([subtotal_label, subtotal]) => {
-            subtotal.name = subtotal_label;
-            tax_totals_summary.subtotals.push(subtotal);
-        });
 
         // Subtract the cash rounding from the untaxed amounts.
         const cash_rounding_base_amount_currency = tax_totals_summary.cash_rounding_base_amount_currency || 0.0;

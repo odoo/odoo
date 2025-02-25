@@ -12,7 +12,7 @@ from shutil import copyfileobj
 from types import CodeType
 
 from werkzeug import urls
-from werkzeug.datastructures import FileStorage
+from werkzeug.datastructures import FileStorage, MultiDict
 from werkzeug.routing import Rule
 from werkzeug.urls import _decode_idna
 from werkzeug.wrappers import Request, Response
@@ -1045,6 +1045,12 @@ def patch_werkzeug():
     Request.json_module = Response.json_module = scriptsafe
 
     FileStorage.save = lambda self, dst, buffer_size=(1 << 20): copyfileobj(self.stream, dst, buffer_size)
+
+    def _multidict_deepcopy(self, memo=None):
+        return orig_deepcopy(self)
+
+    orig_deepcopy = MultiDict.deepcopy
+    MultiDict.deepcopy = _multidict_deepcopy
 
     if Rule_get_func_code:
         @staticmethod

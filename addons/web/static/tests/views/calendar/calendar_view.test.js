@@ -26,7 +26,6 @@ import {
     defineActions,
     defineModels,
     defineParams,
-    defineStyle,
     fields,
     getMockEnv,
     getService,
@@ -274,13 +273,6 @@ beforeEach(() => {
     });
     patchWithCleanup(CalendarYearRenderer.prototype, patchFullCalendarOptions());
     patchWithCleanup(CalendarCommonRenderer.prototype, patchFullCalendarOptions());
-
-    // Disable action swiper transitions
-    defineStyle(/* css */ `
-        .o_actionswiper_target_container {
-            transition: none !important;
-        }
-    `);
 });
 
 onRpc("has_group", () => true);
@@ -3490,8 +3482,9 @@ test(`timezone does not affect drag and drop on desktop`, async () => {
     expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
     expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00:00");
 });
-// TODO JUM
-test.tags("mobile").skip(`timezone does not affect drag and drop on mobile`, async () => {
+
+test.tags("mobile");
+test(`timezone does not affect drag and drop on mobile`, async () => {
     mockTimeZone(-40);
     patchWithCleanup(CalendarRenderer.prototype, {
         get actionSwiperProps() {
@@ -3516,25 +3509,26 @@ test.tags("mobile").skip(`timezone does not affect drag and drop on mobile`, asy
             </calendar>
         `,
     });
+
     await clickEvent(1);
-    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00event 1");
+    expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
     expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00:00");
     await closeCwPopOver();
 
     await clickEvent(6);
-    expect(`.o_event[data-event-id="6"]`).toHaveText("16:00event 6");
+    expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
     expect(`.o_field_widget[name="start"]`).toHaveText("12/16/2016 16:00:00");
     await closeCwPopOver();
 
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
-    expect(`.o_event[data-event-id="6"]`).toHaveText("16:00event 6");
+    expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
     expect(`.o_field_widget[name="start"]`).toHaveText("11/27/2016 16:00:00");
     await closeCwPopOver();
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
-    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00event 1");
+    expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
     expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00:00");
 });
 
@@ -5183,6 +5177,25 @@ test("update time while drag and drop on month mode", async () => {
 
     expect(".o_field_widget[name='start'] input").toHaveValue("12/26/2016 08:00:00");
     expect(".o_field_widget[name='stop'] input").toHaveValue("12/29/2016 10:00:00");
+});
+
+test("html field on calendar shouldn't have a tooltip", async () => {
+    Event._fields.description = fields.Html();
+    Event._records[0].description = "<p>test html field</p>";
+    await mountView({
+        type: "calendar",
+        resModel: "event",
+        arch: `
+            <calendar date_start="start">
+                <field name="description"/>
+            </calendar>
+        `,
+    });
+
+    await clickEvent(Event._records[0].id);
+    const descriptionField = queryFirst('.o_cw_popover_field .o_field_widget[name="description"]');
+    const parentLi = descriptionField.closest("li");
+    expect(parentLi).toHaveAttribute("data-tooltip", "");
 });
 
 test.tags("mobile");

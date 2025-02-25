@@ -1,3 +1,4 @@
+import { withSequence } from "@html_editor/utils/resource";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
@@ -11,11 +12,10 @@ import {
     queryAllTexts,
     waitFor,
     waitForNone,
-    waitUntil,
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import { contains, patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { fontSizeItems, fontItems } from "../src/main/font/font_plugin";
+import { fontItems, fontSizeItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { convertNumericToUnit, getCSSVariableValue, getHtmlStyle } from "../src/utils/formatting";
@@ -27,7 +27,6 @@ import {
     setContent,
     setSelection,
 } from "./_helpers/selection";
-import { withSequence } from "@html_editor/utils/resource";
 import { strong } from "./_helpers/tags";
 
 test.tags("desktop");
@@ -42,7 +41,7 @@ test("toolbar is only visible when selection is not collapsed in desktop", async
 
     // set a collapsed selection to close toolbar
     setContent(el, "<p>test[]</p>");
-    await waitUntil(() => !document.querySelector(".o-we-toolbar"));
+    await waitForNone(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
@@ -200,6 +199,17 @@ test("toolbar link buttons react to selection change", async () => {
     expect(".btn[name='unlink']").toHaveCount(1);
 });
 
+test("toolbar format buttons should react to format change", async () => {
+    await setupEditor(
+        `<div class="o-paragraph">[\ufeff<a href="http://test.com">\ufefftest.com\ufeff</a>\ufeff&nbsp;]</div>`
+    );
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='bold']").not.toHaveClass("active");
+    await contains(".btn[name='bold']").click();
+    await animationFrame();
+    expect(".btn[name='bold']").toHaveClass("active");
+});
+
 test("toolbar works: can select font", async () => {
     const { el } = await setupEditor("<p>test</p>");
     expect(getContent(el)).toBe("<p>test</p>");
@@ -208,7 +218,7 @@ test("toolbar works: can select font", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
     setContent(el, "<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar [name='font']").toHaveText("Normal");
+    expect(".o-we-toolbar [name='font']").toHaveText("Paragraph");
 
     await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
     await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
@@ -219,12 +229,13 @@ test("toolbar works: can select font", async () => {
 test("toolbar works: show the right font name", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    for (const item of fontItems) {
+    const items = fontItems;
+    for (const item of items) {
         await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
         await animationFrame();
         const name = item.name.toString();
         let selector = `.o_font_selector_menu .dropdown-item:contains('${name}')`;
-        for (const tempItem of fontItems) {
+        for (const tempItem of items) {
             // we need to exclude the font names which have the current name as a substring.
             if (tempItem === item) {
                 continue;
@@ -243,7 +254,7 @@ test("toolbar works: show the right font name", async () => {
 test("toolbar works: show the right font name after undo", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar [name='font']").toHaveText("Normal");
+    expect(".o-we-toolbar [name='font']").toHaveText("Paragraph");
 
     await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
     await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
@@ -252,7 +263,7 @@ test("toolbar works: show the right font name after undo", async () => {
     await press(["ctrl", "z"]);
     await animationFrame();
     expect(getContent(el)).toBe("<p>[test]</p>");
-    expect(".o-we-toolbar [name='font']").toHaveText("Normal");
+    expect(".o-we-toolbar [name='font']").toHaveText("Paragraph");
     await press(["ctrl", "y"]);
     await animationFrame();
     expect(getContent(el)).toBe("<h2>[test]</h2>");
@@ -443,7 +454,7 @@ test("toolbar behave properly if selection has no range", async () => {
     selection.removeAllRanges();
 
     setContent(el, "<p>abc</p>");
-    await waitUntil(() => !document.querySelector(".o-we-toolbar"));
+    await waitForNone(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(0);
 });
 

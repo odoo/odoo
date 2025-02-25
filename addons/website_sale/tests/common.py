@@ -76,11 +76,12 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
 
     @classmethod
     def _prepare_carrier(cls, product, website_published=True, **values):
-        # Publish carriers by default
+        """ Override of `delivery` to auto-publish test delivery methods. """
         return super()._prepare_carrier(product, website_published=website_published, **values)
 
     @classmethod
     def _create_product(cls, **kwargs):
+        """ Override of `product` to auto-publish test products by default. """
         if 'website_published' not in kwargs:
             kwargs['website_published'] = True
         return super()._create_product(**kwargs)

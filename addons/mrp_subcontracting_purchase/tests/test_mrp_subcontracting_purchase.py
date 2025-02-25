@@ -960,7 +960,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
     @freeze_time('2000-05-01')
     def test_mrp_subcontract_modify_date(self):
         """ Ensure consistent results when modifying date fields of a weakly-linked reception and
-        manufacturing order.
+        manufacturing order. Additionally, modifying `date_start` directly on an MO has a
+        well-defined result.
         """
         self.bom_finished2.produce_delay = 35
         po = self.env['purchase.order'].create({
@@ -981,5 +982,11 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertEqual(mo.date_start, datetime(year=2000, month=6, day=1) - timedelta(days=self.bom_finished2.produce_delay))
         with Form(po.picking_ids[0]) as receipt_form:
             receipt_form.scheduled_date = '2000-05-01'
-        new_mo_start_date = mo.date_start
-        self.assertEqual(original_mo_start_date, new_mo_start_date, f'{original_mo_start_date} != {new_mo_start_date}')
+        self.assertEqual(mo.date_start, original_mo_start_date)
+
+        with Form(mo) as production_form:
+            production_form.date_start = '2000-03-20'
+        self.assertEqual(mo.date_start.date(), Date.to_date('2000-03-20'))
+        with Form(mo) as production_form:
+            production_form.date_start = original_mo_start_date
+        self.assertEqual(mo.date_start, original_mo_start_date)

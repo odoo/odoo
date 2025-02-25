@@ -3,9 +3,9 @@
 # 	* auth_signup
 # 
 # Translators:
-# Wil Odoo, 2024
-# Odoo哥 <vnsoft.he@gmail.com>, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
 # 稀饭~~ <wangwhai@qq.com>, 2024
+# Wil Odoo, 2025
 # Chloe Wang, 2025
 # 
 msgid ""
@@ -46,8 +46,8 @@ msgid ""
 "                        Here are some details about the connection:<br/>"
 msgstr ""
 ",<br/><br/>\n"
-"                        使用了新设备登录您的账户。<br/><br/>\n"
-"                        以下是有关连接的一些详细信息：<br/>"
+"                        检测到有新设备登录您的账户。<br/><br/>\n"
+"                        登录详细信息如下：<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -839,7 +839,7 @@ msgstr "发送给自己注册的门户用户"
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New Portal Sign Up"
-msgstr ""
+msgstr "设置：新建门户注册"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
@@ -896,6 +896,14 @@ msgstr "注册：没有为新用户指定名称或合作伙伴"
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
 msgstr "状态"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Google reCaptcha 检测到可疑活动。"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id

@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Manon Rondou, 2024
+# Fabien Pinckaers <fp@openerp.com>, 2025
+# Manon Rondou, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -682,7 +683,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"       <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"       <t t-set=\"doc_name\" t-value=\"'offerte' if object.state in ('draft', 'sent') else 'order'\"/>\n"
 "        Hallo,\n"
 "       <br/><br/>\n"
 "        Je\n"
@@ -1763,7 +1764,7 @@ msgstr "Bereken verzendkosten op orders"
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
@@ -2016,7 +2017,7 @@ msgstr "Handtekening klant"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
-msgstr "Staat klant"
+msgstr "Provincie / Staat klant"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
@@ -2238,6 +2239,12 @@ msgid "Discount on lines"
 msgstr "Korting op regels"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount- On products with the following taxes %(taxes)s"
+msgstr "Korting - Op producten met de volgende belastingen %(taxes)s"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
 msgstr "Korting:"
@@ -2453,12 +2460,6 @@ msgid "Expiration Date:"
 msgstr "Vervaldatum:"
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Expires on %(date)s"
-msgstr "Verloopt op %(date)s"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
 msgstr "Uitgebreide filters"
@@ -2513,7 +2514,7 @@ msgstr "Volgers"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Contacten)"
+msgstr "Volgers (Partners)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
@@ -2823,8 +2824,7 @@ msgstr "Factuurstatus"
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
-msgstr ""
-"Factuur na levering, op basis van geleverde hoeveelheden, niet besteld."
+msgstr "Factuur na levering, op basis van geleverde, niet bestelde aantal."
 
 #. module: sale
 #. odoo-python
@@ -3676,7 +3676,7 @@ msgstr "Verpakkingsaantal"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr "Kredietwaarschuwing contact"
+msgstr "Kredietwaarschuwing partner"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3804,7 +3804,7 @@ msgstr "Gereduceerde prijs excl. btw"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr "Prijs Verlaag btw incl"
+msgstr "Gereduceerde prijs incl. btw"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -4331,7 +4331,7 @@ msgstr "Verkoopwaarschuwingen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr "Verkoop onboarding geselecteerde betalinsgmethode"
+msgstr "Verkoop onboarding geselecteerde betalingsmethode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
@@ -4959,7 +4959,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr "Technische prijs Eenheid"
+msgstr "Technische prijseenheid"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5312,7 +5312,7 @@ msgid ""
 msgstr ""
 "Dit overzicht voert een analyse uit op je offertes en verkooporders. "
 "Analyseer je omzet en sorteer het op verschillende groepeer criteria "
-"(verkoper, contact, product, etc.) Gebruik dit overzicht op nog niet "
+"(verkoper, partner, product, etc.) Gebruik dit overzicht op nog niet "
 "gefactureerde verkopen. Als je je omzet wilt analyseren, moet je de "
 "factuuranalyse gebruiken in de financiële applicatie."
 
@@ -5326,7 +5326,7 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Dit overzicht voert een analyse uit op je offertes. Analyseer je omzet en "
-"sorteer het op verschillende groepeer criteria (verkoper, contact, product, "
+"sorteer het op verschillende groepeer criteria (verkoper, partner, product, "
 "etc.) Gebruik dit overzicht op nog niet gefactureerde verkopen. Als je je "
 "omzet wilt analyseren, moet je de factuuranalyse gebruiken in de financiële "
 "applicatie."
@@ -5341,7 +5341,7 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Dit overzicht voert een analyse uit op je verkooporders. Analyseer je omzet "
-"en sorteer het op verschillende groepeer criteria (verkoper, contact, "
+"en sorteer het op verschillende groepeer criteria (verkoper, partner, "
 "product, etc.) Gebruik dit overzicht op nog niet gefactureerde verkopen. Als"
 " je je omzet wilt analyseren, moet je de factuuranalyse gebruiken in de "
 "financiële applicatie."

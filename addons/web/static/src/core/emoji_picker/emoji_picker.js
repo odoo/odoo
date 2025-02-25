@@ -39,7 +39,11 @@ export function useEmojiPicker(ref, props, options = {}) {
             options.onClose?.();
         },
     };
-    const popover = usePopover(EmojiPicker, { ...newOptions, animation: false });
+    const popover = usePopover(EmojiPicker, {
+        ...newOptions,
+        animation: false,
+        popoverClass: "border-secondary",
+    });
     props.storeScroll = {
         scrollValue: 0,
         set: (value) => {
@@ -491,7 +495,7 @@ export class EmojiPicker extends Component {
         if (recentEmojis.length > 0 && this.searchTerm) {
             emojisToDisplay = emojisToDisplay.filter((emoji) => !recentEmojis.includes(emoji));
         }
-        if (this.searchTerm.length > 1) {
+        if (this.searchTerm.length > 0) {
             return fuzzyLookup(this.searchTerm, emojisToDisplay, (emoji) => [
                 emoji.name,
                 ...emoji.keywords,

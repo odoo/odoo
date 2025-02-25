@@ -3,7 +3,7 @@
     <t t-name="pos_restaurant.BillScreen">
         <Dialog title.translate="Bill Printing" bodyClass="'text-center'">
             <div class="d-inline-block m-3 p-3 border rounded bg-view">
-                <OrderReceipt data="{...pos.orderExportForPrinting(pos.get_order()), isBill: true}" formatCurrency="env.utils.formatCurrency" />
+                <OrderReceipt data="{...pos.orderExportForPrinting(pos.get_order()), isBill: true, show_change: false }" formatCurrency="env.utils.formatCurrency" />
             </div>
             <t t-set-slot="footer">
                 <div class="d-flex w-100 justify-content-start gap-2">

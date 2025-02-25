@@ -33,10 +33,10 @@ class SaleOrder(models.Model):
     def _compute_available_product_document_ids(self):
         for order in self:
             order.available_product_document_ids = self.env['quotation.document'].search(
-                self.env['quotation.document']._check_company_domain(self.company_id),
+                self.env['quotation.document']._check_company_domain(order.company_id),
                 order='sequence',
             ).filtered(lambda doc:
-                self.sale_order_template_id in doc.quotation_template_ids
+                order.sale_order_template_id in doc.quotation_template_ids
                 or not doc.quotation_template_ids
             )
 

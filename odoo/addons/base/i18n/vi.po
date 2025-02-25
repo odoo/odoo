@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-19 13:06+0000\n"
+"POT-Creation-Date: 2025-02-10 16:32+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -2772,7 +2772,7 @@ msgstr ""
 "\n"
 "* Báo cáo cơ cấu chi phí\n"
 "\n"
-"Ngoài ra, cho phép tính toán giá thành của sản phẩm dựa trên Hoá đơn Nguyên vật liệu, sử dụng chi phí của các bộ phận và hoạt động của khu vực sản xuất.\n"
+"Ngoài ra, cho phép tính toán giá thành của sản phẩm dựa trên danh mục vật tư, sử dụng chi phí của các bộ phận và hoạt động của khu vực sản xuất.\n"
 "Một nút đã được thêm vào sản phẩm cùng với một hoạt động trong chế độ xem danh sách của sản phẩm.\n"
 "Nếu tính năng định giá tồn kho tự động đang hoạt động, các bút toán kế toán cần thiết sẽ được tạo.\n"
 "\n"
@@ -3124,6 +3124,8 @@ msgid ""
 "\n"
 "Base module containing core functionalities required by other Nilvera modules.\n"
 msgstr ""
+"\n"
+"Phân hệ cơ sở chứa những chức năng cốt lõi cần cho các phân hệ Nilvera khác.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo_reports
@@ -3517,6 +3519,15 @@ msgstr ""
 "Kế toán EDI của Brazil dành cho Thương mại điện tử\n"
 "=====================================\n"
 "Cho phép tính thuế và EDI cho người dùng Thương mại điện tử.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_br_edi_stock
+msgid ""
+"\n"
+"Brazilian Accounting EDI for stock\n"
+"==================================\n"
+"Adds delivery-related information to the NF-e.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
@@ -4609,6 +4620,20 @@ msgstr ""
 "Ngoài ra, nó đánh dấu hóa đơn là 'đã chuyển' trong phần trạng thái thanh toán.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock_batch
+msgid ""
+"\n"
+"E-Transport implementation for Batch Pickings in Romania\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock
+msgid ""
+"\n"
+"E-Transport implementation for Romania\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
 msgid ""
 "\n"
@@ -5147,12 +5172,22 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_post_wizard
+#: model:ir.module.module,description:base.module_l10n_nl_reports_vat_pay_wizard
 msgid ""
 "\n"
 "Enable the VAT wizard when posting a tax return journal entry\n"
 msgstr ""
 "\n"
 "Kích hoạt Công cụ thuế GTGT khi nhập một bút toán khai thuế\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_enhancements
+msgid ""
+"\n"
+"Enhancements for the Point of Sale UrbanPiper module. Includes features such as store timing configuration, scheduled order handling, and improved toggle options.\n"
+msgstr ""
+"\n"
+"Cải tiến cho phân hệ Điểm bán hàng UrbanPiper. Bao gồm các tính năng như cấu hình thời gian lưu trữ, xử lý đơn hàng đã lên lịch và cải thiện tùy chọn bật/tắt.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -5301,6 +5336,8 @@ msgid ""
 "\n"
 "For sending and receiving electronic invoices to Nilvera.\n"
 msgstr ""
+"\n"
+"Để gửi và nhận hóa đơn điện tử tới Nilvera.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -6173,6 +6210,33 @@ msgstr ""
 "* Hỗ trợ cho cả tuỳ chọn Xử lý bởi Amazon (FBA) và Xử lý bởi Người bán (FBM):\n"
 "* FBA: Vị trí tồn kho và việc dịch chuyển tồn kho cho phép theo dõi tồn kho của bạn tại Trung tâm Xử lý Đơn hàng Amazon.\n"
 "* FBM: Thông báo giao hàng được gửi tới Amazon cho mỗi lần lấy hàng được xác nhận (có thể giao hàng từng phần).\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_shopee
+msgid ""
+"\n"
+"Import your Shopee orders in Odoo and synchronize deliveries\n"
+"============================================================\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Import orders from multiple accounts and shops\n"
+"* Orders are matched with Odoo products based on their internal reference (item_id or model_id in Shopee)\n"
+"* Support for both Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) and Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: Importing the completed orders\n"
+"* FBM/Hybrid: Delivery information is fetched from Shopee, track and synchronize the stock level to Shopee\n"
+msgstr ""
+"\n"
+"Nhập đơn hàng Shopee của bạn vào Odoo và đồng bộ giao hàng\n"
+"===========================================================\n"
+"\n"
+"Các tính năng chính\n"
+"------------\n"
+"* Nhập đơn hàng từ nhiều tài khoản và cửa hàng\n"
+"* Đơn hàng được khớp với sản phẩm Odoo dựa trên tham chiếu nội bộ của chúng (item_id hoặc model_id trong Shopee)\n"
+"* Hỗ trợ cả phương thức Xử lý bởi Shopee (FBS), Xử lý bởi Người bán (FBM) và Xử lý bởi Người bán xuyên biên giới (Hỗn hợp):\n"
+"* FBS: Nhập các đơn hàng đã hoàn tất\n"
+"* FBM/Hỗn hợp: Thông tin giao hàng được lấy từ Shopee, theo dõi và đồng bộ mức tồn kho với Shopee\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -7088,7 +7152,7 @@ msgid ""
 "Manage your mailing lists from Odoo.\n"
 msgstr ""
 "\n"
-"Quản lý danh sách gửi thư của bạn từ Odoo.\n"
+"Quản lý danh sách liên hệ của bạn từ Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_slides
@@ -7157,7 +7221,7 @@ msgstr ""
 "Kế hoạch Sản xuất Tổng thể\n"
 "==========================\n"
 "\n"
-"Đôi khi bạn cần tạo đơn mua hàng cho các nguyên liệu của\n"
+"Đôi khi bạn cần tạo đơn mua hàng cho các thành phần của\n"
 "lệnh sản xuất mà sau này mới được tạo ra, hoặc cho lệnh sản xuất\n"
 "mà sau này bạn mới tạo đơn bán hàng. Giải pháp là \n"
 "dự báo doanh số và dựa vào đó bạn sẽ tạo ra một số lệnh sản xuất\n"
@@ -8419,6 +8483,33 @@ msgstr ""
 "Sửa Sản phẩm từ phiếu hỗ trợ\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_it_riba
+msgid ""
+"\n"
+"Ri.Ba. Export for Batch Payment\n"
+"================================\n"
+"\n"
+"This module enables the generation of Ri.Ba. (Ricevute Bancarie) files from batch payments in Odoo.  \n"
+"It facilitates compliance with the Italian banking standard for managing receivables.\n"
+"\n"
+"- Group multiple receivables into a single batch for streamlined management and reconciliation.\n"
+"- Export batch payments as RIBA-compliant files to be submitted to your homebanking for processing.\n"
+"\n"
+"For more information about RIBA standards, refer to the guidelines issued by the Italian Bankers Association (CBI).\n"
+msgstr ""
+"\n"
+"Ri.Ba. Xuất để thanh toán hàng loạt\n"
+"==============================\n"
+"\n"
+"Phân hệ này cho phép tạo tệp Ri.Ba. (Ricevute Bancarie) từ các khoản thanh toán hàng loạt trong Odoo.\n"
+"Nó hỗ trợ khả năng tuân thủ tiêu chuẩn ngân hàng Ý để quản lý các khoản phải thu.\n"
+"\n"
+"- Nhóm nhiều khoản phải thu thành một loạt duy nhất để quản lý và đối chiếu hợp lý.\n"
+"- Xuất các khoản thanh toán hàng loạt dưới dạng tệp tuân thủ RIBA để gửi đến ngân hàng của bạn xử lý.\n"
+"\n"
+"Để biết thêm thông tin về các tiêu chuẩn RIBA, hãy tham khảo hướng dẫn do Hiệp hội Ngân hàng Ý (CBI) ban hành.\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_rw
 msgid ""
 "\n"
@@ -8583,6 +8674,19 @@ msgstr ""
 "\n"
 "Gửi Bảng thông tin KPI định kỳ\n"
 "=============================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_envia
+msgid ""
+"\n"
+"Send your shippings through Envia and track them online\n"
+"=======================================================\n"
+"\n"
+"Envia is a provider of integrated shipping and tracking solutions for growing e-commerce businesses.\n"
+"Seamlessly integrating with a large range of couriers and platforms,\n"
+"you can streamline every step of your fulfilment process,\n"
+"reduce handling time and improve customer experience.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_starshipit
@@ -9122,6 +9226,7 @@ msgstr ""
 "giao hàng.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ec_edi_stock
 #: model:ir.module.module,description:base.module_l10n_pe_edi_stock
 msgid ""
 "\n"
@@ -10417,6 +10522,19 @@ msgstr ""
 "==================================================================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_cz_reports_2025
+msgid ""
+"\n"
+"This module adds the following reports for the Czech Republic:\n"
+"==============================================================\n"
+"1. VAT Control Statement (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
 msgid ""
 "\n"
@@ -10906,8 +11024,8 @@ msgid ""
 "On a simple click, your visitors can subscribe to mailing lists managed in the Email Marketing app.\n"
 msgstr ""
 "\n"
-"Phân hệ này mang đến một khối dựng mới với tiện ích danh sách gửi thư để thả lên bất kỳ trang nào trên trang web của bạn.\n"
-"Chỉ với một cú nhấp chuột đơn giản, khách truy cập có thể đăng ký danh sách gửi thư được quản lý trong ứng dụng Marketing qua Email.\n"
+"Phân hệ này mang đến một khối dựng mới với tiện ích danh sách liên hệ để thả lên bất kỳ trang nào trên trang web của bạn.\n"
+"Chỉ với một cú nhấp chuột đơn giản, khách truy cập có thể đăng ký danh sách liên hệ được quản lý trong ứng dụng Marketing qua Email.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_pos
@@ -10990,6 +11108,7 @@ msgstr ""
 "Nó kiểm thử tất cả các mã qr được hỗ trợ: SEPA, Swiss QR và EMV QR (sử dụng triển khai hk và br)\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_restaurant_loyalty
 #: model:ir.module.module,description:base.module_pos_sale_loyalty
 msgid ""
 "\n"
@@ -11540,6 +11659,17 @@ msgstr ""
 "\n"
 "Hệ thống tài khoản xuất phát từ SYSCOHADA.\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_my_edi_extended
+msgid ""
+"\n"
+"This module improves the MyInvois E-invoicing feature by adding proper support for self billing, rendering the MyInvois\n"
+"QR code in the invoice PDF file and allows better management of foreign customer TIN.\n"
+msgstr ""
+"\n"
+"Phân hệ này cải thiện tính năng Hóa đơn điện tử MyInvois bằng cách bổ sung hỗ trợ phù hợp cho việc tự lập hóa đơn, hiển thị mã QR MyInvois\n"
+"trong tệp hóa đơn PDF và cho phép quản lý tốt hơn mã số thuế của khách hàng nước ngoài.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -12749,6 +12879,7 @@ msgstr "%s (Máy chủ Gửi Thư Đi Chuyên dụng):"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_actions.py:0
 #: code:addons/base/models/ir_filters.py:0
 #: code:addons/base/models/res_lang.py:0
 #: code:addons/base/models/res_partner.py:0
@@ -14765,6 +14896,11 @@ msgstr "Thêm thông tin UTM lead/cơ hội vào gửi thư hàng loạt"
 #: model:ir.module.module,summary:base.module_mass_mailing_crm_sms
 msgid "Add lead / opportunities info on mass mailing sms"
 msgstr "Thêm thông tin lead/cơ hội vào gửi sms hàng loạt"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_localisation
+msgid "Add models and fields for complete mexican localisation"
+msgstr "Thêm mô hình và trường để bản địa hóa toàn diện cho Mexico"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -17728,7 +17864,7 @@ msgstr "Chấm công - Kế hoạch"
 #: model:ir.module.module,summary:base.module_website_mass_mailing
 #: model:ir.module.module,summary:base.module_website_mass_mailing_sms
 msgid "Attract visitors to subscribe to mailing lists"
-msgstr "Thu hút khách truy cập đăng ký vào danh sách gửi thư"
+msgstr "Thu hút khách truy cập đăng ký vào danh sách liên hệ"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.ISK
@@ -18195,14 +18331,14 @@ msgid "Bahamas"
 msgstr "Bahamas"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_bh
-msgid "Bahrain - Accounting"
-msgstr "Bahrain - Kế toán"
-
-#. module: base
 #: model:res.country,name:base.bh
 msgid "Bahrain"
 msgstr "Bahrain"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bh
+msgid "Bahrain - Accounting"
+msgstr "Bahrain - Kế toán"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.THB
@@ -18543,6 +18679,11 @@ msgstr "Belarus"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Kê khai Intrastat của Bỉ"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_pos_restaurant
+msgid "Belgian POS Restaurant Localization"
+msgstr "Bản địa hóa POS Nhà hàng cho Bỉ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_attendance
@@ -18896,6 +19037,11 @@ msgstr "EDI Kế toán của Brazil dành cho Bán hàng"
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_website_sale
 msgid "Brazilian Accounting EDI for eCommerce"
 msgstr "EDI Kế toán của Brazil dành cho Thương mại điện tử"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_stock
+msgid "Brazilian Accounting EDI for stock"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
@@ -21623,6 +21769,11 @@ msgid "Czech Republic"
 msgstr "Cộng hoà Séc"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cz_reports_2025
+msgid "Czech Republic - Accounting Reports 2025"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz_reports
 msgid "Czech Republic- Accounting Reports"
 msgstr "Cộng hòa Séc - Báo cáo kế toán"
@@ -22278,7 +22429,7 @@ msgstr "Số hóa và trích xuất dữ liệu từ tài liệu."
 #. module: base
 #: model:ir.model.fields,field_description:base.field_decimal_precision__digits
 msgid "Digits"
-msgstr "Chữ số"
+msgstr "Số chữ số"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.BHD
@@ -23052,6 +23203,11 @@ msgid "Ecuadorian Accounting Reports"
 msgstr "Báo cáo kế toán của Ecuador"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ec_edi_stock
+msgid "Ecuadorian Delivery Guide"
+msgstr "Hướng dẫn xuất kho của Ecuador"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_edi_pos
 msgid "Ecuadorian Point of Sale"
 msgstr "Điểm bán hàng của Ecuador"
@@ -23464,6 +23620,11 @@ msgstr "Giải trí"
 #: model:ir.model.fields,field_description:base.field_ir_profile__entry_count
 msgid "Entry count"
 msgstr "Số lượt đăng ký"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_envia
+msgid "Envia Shipping"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
@@ -24473,6 +24634,11 @@ msgstr "Expression"
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
 msgstr "Địa chỉ Mở rộng"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_my_edi_extended
+msgid "Extended features for the E-invoicing using MyInvois"
+msgstr "Tính năng bổ sung cho Hóa đơn điện tử sử dụng MyInvois"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
@@ -25628,6 +25794,16 @@ msgstr "Chế độ xem Gantt cho Chấm công"
 #: model:ir.module.module,summary:base.module_hr_holidays_gantt
 msgid "Gantt view for Time Off Dashboard"
 msgstr "Chế độ Gantt cho Trang chủ Nghỉ phép"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato
+msgid "Gelato"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato_stock
+msgid "Gelato/Stock bridge"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -27274,6 +27450,11 @@ msgid "Import QIF Bank Statement"
 msgstr "Nhập Sao kê Ngân hàng QIF"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_shopee
+msgid "Import Shopee orders and sync deliveries"
+msgstr "Nhập đơn hàng từ Shopee và đồng bộ giao hàng"
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Import Template for Customers"
@@ -28417,6 +28598,11 @@ msgid "Italy - Accounting Reports"
 msgstr "Ý - Báo cáo Kế toán"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_riba
+msgid "Italy - Bank Receipts (Ri.Ba.)"
+msgstr "Ý - Biên lai ngân hàng (Ri.Ba.)"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_doi
 msgid "Italy - Declaration of Intent"
 msgstr "Ý - Tuyên bố Ý định"
@@ -28633,6 +28819,11 @@ msgid "Kenya - Payroll with Accounting"
 msgstr "Kenya - Bảng lương với Kế toán"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_pos
+msgid "Kenya - Point of Sale"
+msgstr "Kenya - Điểm bán hàng"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_mrp
 msgid "Kenya ETIMS EDI Manufacturing Integration"
 msgstr "Tích hợp EDI eTIMS của Kenya với Sản xuất"
@@ -28690,7 +28881,7 @@ msgstr "Kiribati"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_mrp_renting
 msgid "Kits rental"
-msgstr "Cho thuê bộ kít"
+msgstr "Cho thuê kit"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_knowledge
@@ -29435,6 +29626,11 @@ msgid "Link module between pos_hr and pos_restaurant"
 msgstr "Phân hệ liên kết giữa pos_hr và pos_restaurant"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_restaurant_loyalty
+msgid "Link module between pos_restaurant and pos_loyalty"
+msgstr "Phân hệ liên kết giữa pos_restaurant và pos_loyalty"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
 msgid "Link module between pos_sale and l10n_be"
 msgstr "Phân hệ liên kết giữa pos_sale và l10n_be"
@@ -29925,6 +30121,11 @@ msgid "Malaysia - E-invoicing"
 msgstr "Malaysia - Hóa đơn điện tử"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_my_edi_extended
+msgid "Malaysia - E-invoicing Extended Features"
+msgstr "Malaysia - Tính năng bổ sung cho hóa đơn điện tử"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_ubl_pint
 msgid "Malaysia - UBL PINT"
 msgstr "Malaysia - UBL PINT"
@@ -30293,7 +30494,7 @@ msgstr "Quản lý phương tiện của bạn và theo dõi chi phí vận hàn
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_group
 msgid "Manage your mailing lists"
-msgstr "Quản lý danh sách gửi thư của bạn"
+msgstr "Quản lý danh sách liên hệ của bạn"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
@@ -30349,7 +30550,7 @@ msgstr "Hạn Sản xuất"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
 msgid "Manufacturing Orders & BOMs"
-msgstr "Lệnh Sản xuất & Hoá đơn Nguyên vật liệu"
+msgstr "Lệnh sản xuất & BoM"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_m2m_operation
@@ -30661,6 +30862,11 @@ msgstr "Mexico - Bảng cân đối thử tháng 13"
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll
 msgid "Mexico - Payroll"
 msgstr "Mexico - Bảng lương"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_localisation
+msgid "Mexico - Payroll - Localisation"
+msgstr "Mexico - Bảng lương - Bản địa hoá"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_account
@@ -31553,6 +31759,11 @@ msgstr "Hà Lan - Kế toán"
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports
 msgid "Netherlands - Accounting Reports"
 msgstr "Hà Lan - Báo cáo kế toán"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_vat_pay_wizard
+msgid "Netherlands - Accounting Reports (post wizard)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_hr_payroll
@@ -32700,7 +32911,7 @@ msgstr ""
 "theo kế hoạch.\n"
 "\n"
 "\n"
-"Giao diện Người dùng Hiệu quả\n"
+"Giao diện Người sử dụng Hiệu quả\n"
 "---------------------------\n"
 "\n"
 "Sắp xếp các lệnh sản xuất và lệnh việc theo cách bạn muốn. Xử lý các lệnh tiếp theo\n"
@@ -33726,7 +33937,7 @@ msgstr ""
 "của Odoo được định cấu hình theo mặc định để theo dõi mọi sự kiện liên quan đến \n"
 "giỏ hàng, kêu gọi hành động,...\n"
 "\n"
-"Vì các công cụ marketing của Odoo (gửi thư hàng loạt, chiến dịch,...) cũng được liên kết với \n"
+"Vì các công cụ marketing của Odoo (liên hệ hàng loạt, chiến dịch,...) cũng được liên kết với \n"
 "Google Analytics, nên bạn sẽ có được cái nhìn toàn diện về doanh nghiệp của mình.\n"
 "\n"
 "Nhắm Mục tiêu tới Thị trường Mới\n"
@@ -34729,6 +34940,11 @@ msgstr "POS - Sự kiện"
 #: model:ir.module.module,shortdesc:base.module_pos_hr
 msgid "POS - HR"
 msgstr "POS - HR"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_restaurant_loyalty
+msgid "POS - Restaurant Loyality"
+msgstr "Chương trình khách hàng thân thiết POS - Nhà hàng"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sms
@@ -35793,6 +36009,11 @@ msgid "Pivot"
 msgstr "Pivot"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_gelato
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Plan your resources on project tasks"
 msgstr "Lên kế hoạch tài nguyên của bạn với các công việc trong dự án"
@@ -35899,6 +36120,7 @@ msgstr "Màn hình khâu chuẩn bị POS Nhà hàng"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
+#: model:ir.module.category,name:base.module_category_localization_point_of_sale
 #: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
@@ -35914,6 +36136,11 @@ msgstr "Điểm bán hàng - Phiếu thưởng & Khách hàng thân thiết"
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper
 msgid "Point of Sale - UrbanPiper"
 msgstr "Điểm bán hàng - UrbanPiper"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_enhancements
+msgid "Point of Sale - UrbanPiper Enhancements"
+msgstr "Cải tiến Điểm bán hàng - UrbanPiper"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -36061,7 +36288,7 @@ msgstr "Pound"
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Precision Digits"
-msgstr "Độ chính xác chữ số"
+msgstr "Số chữ số thập phân"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -37147,7 +37374,8 @@ msgid "RTN"
 msgstr "RTN"
 
 #. module: base
-#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pe
+#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pa
+#: model:res.country,vat_label:base.pe
 msgid "RUC"
 msgstr "RUC"
 
@@ -37813,6 +38041,16 @@ msgid "Romania - Accounting Reports"
 msgstr "Romania - Báo cáo Kế toán"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
+msgid "Romania - E-Transport"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock_batch
+msgid "Romania - E-Transport Batch Pickings"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi
 msgid "Romania - E-invoicing"
 msgstr "Romania - Hóa đơn Điện tử"
@@ -38164,6 +38402,11 @@ msgid "Salary Configurator (Belgium)"
 msgstr "Trình cấu hình lương (Bỉ)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary_mobility_budget
+msgid "Salary Configurator (Belgium) - Mobility Budget"
+msgstr "Trình cấu hình lương (Bỉ) - Ngân sách đi lại"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_holidays
 msgid "Salary Configurator - Holidays"
 msgstr "Trình cấu hình lương - Ngày nghỉ"
@@ -38175,6 +38418,7 @@ msgstr "Trình cấu hình tiền lương - Bảng lương"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
+#: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary_mobility_budget
 msgid "Salary Package Configurator"
 msgstr "Trình cấu hình gói lương"
 
@@ -38182,6 +38426,11 @@ msgstr "Trình cấu hình gói lương"
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sale
 msgid "Sale"
 msgstr "Bán"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_test_sale_purchase_edi_ubl
+msgid "Sale & Purchase Order EDI Tests: Ensure Flow Robustness"
+msgstr "Kiểm thử EDI đơn mua & bán hàng: Đảm bảo độ bền của quy trình"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_sms
@@ -38952,7 +39201,7 @@ msgid "Send your shippings through UPS and track them online"
 msgstr "Gửi hàng của bạn qua UPS và theo dõi chúng online"
 
 #. module: base
-#: model:ir.module.module,description:base.module_delivery_usps
+#: model:ir.module.module,description:base.module_delivery_usps_rest
 msgid "Send your shippings through USPS and track them online"
 msgstr "Gửi hàng của bạn qua USPS và theo dõi chúng online"
 
@@ -39268,6 +39517,11 @@ msgstr "Vận chuyển Shiprocket"
 #: model:ir.module.module,shortdesc:base.module_website_sale_shiprocket
 msgid "Shiprocket: Cash on Delivery"
 msgstr "Shiprocket: Thanh toán khi nhận hàng"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_shopee
+msgid "Shopee Connector"
+msgstr "Liên kết Shopee"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -40762,6 +41016,11 @@ msgid "Test - Resource"
 msgstr "Test - Nguồn lực"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_sale_purchase_edi_ubl
+msgid "Test - Sale & Purchase Order EDI"
+msgstr "Kiểm thử - EDI đơn mua & bán hàng"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_html_field_history
 msgid "Test - html_field_history"
 msgstr "Kiểm thử - html_field_history"
@@ -42073,6 +42332,14 @@ msgstr ""
 "này sẽ ngừng hoạt động vào năm 2024."
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_usps
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_no
 msgid ""
 "This is the module to manage the accounting chart for Norway in Odoo.\n"
@@ -42269,6 +42536,17 @@ msgstr ""
 "Phân hệ này bao gồm các bản kiểm thử liên quan đến gửi thư hàng loạt. Chúng \n"
 "xuất hiện trong một phân hệ riêng biệt để sử dụng các mô hình kiểm thử cụ thể được xác định trong \n"
 "test_mail."
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_sale_purchase_edi_ubl
+msgid ""
+"This module contains tests related to sale and purchase order edi.\n"
+"    Ensure export and import of order working properly and filling details properly from\n"
+"    order XML file."
+msgstr ""
+"Phân hệ này bao gồm các kiểm thử liên quan đến EDI đơn mua và bán hàng.\n"
+"Đảm bảo xuất và nhập đơn hàng hoạt động bình thường và điền thông tin chính xác từ\n"
+"tệp đơn hàng XML."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_spreadsheet_edition
@@ -42664,7 +42942,7 @@ msgstr "Múi giờ"
 #: model:ir.model.fields,field_description:base.field_res_partner__tz_offset
 #: model:ir.model.fields,field_description:base.field_res_users__tz_offset
 msgid "Timezone offset"
-msgstr "Múi giờ chênh lệch"
+msgstr "Chênh lệch múi giờ"
 
 #. module: base
 #: model:res.country,name:base.tl
@@ -42968,16 +43246,6 @@ msgid "Turkey"
 msgstr "Thổ Nhĩ Kỳ"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
-msgid "Türkiye - Nilvera"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
-msgid "Türkiye - Nilvera E-Invoice"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
 msgstr "Turkmenistan"
@@ -43084,6 +43352,16 @@ msgstr "Thổ Nhĩ Kỳ - Kế toán"
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
 msgid "Türkiye - Accounting Reports"
 msgstr "Thổ Nhĩ Kỳ - Báo cáo kế toán"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
+msgid "Türkiye - Nilvera"
+msgstr "Thổ Nhĩ Kỳ - Nilvera"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
+msgid "Türkiye - Nilvera E-Invoice"
+msgstr "Thổ Nhĩ Kỳ - Hoá đơn điện tử Nilvera"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
@@ -43507,9 +43785,14 @@ msgid "United States - Payroll with Accounting"
 msgstr "Hoa Kỳ - Bảng lương với Kế toán"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_delivery_usps
+#: model:ir.module.module,shortdesc:base.module_delivery_usps_rest
 msgid "United States Postal Service (USPS) Shipping"
 msgstr "Công ty Dịch Vụ Bưu Chính Hoa Kỳ (USPS)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_usps
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -44495,7 +44778,7 @@ msgstr "Kiểm thử Cohort Trang web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_editor
 msgid "Web Editor"
-msgstr "Điều chỉnh Web"
+msgstr "Trình chỉnh sửa web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_enterprise
@@ -45900,6 +46183,11 @@ msgid "eCommerce on appointments"
 msgstr "Thương mại điện tử trên lịch hẹn"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_gelato
+msgid "eCommerce/Gelato bridge"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
@@ -46026,12 +46314,6 @@ msgstr "l10n_be_pos_sale"
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
 msgstr "many2many"
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_actions.py:0
-msgid "many2many fields cannot be evaluated by reference"
-msgstr "many2many các trường không thể được đánh giá bằng tham chiếu"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one

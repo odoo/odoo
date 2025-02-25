@@ -12,12 +12,13 @@ import {
     isShrunkBlock,
     isTangible,
     isTextNode,
+    isVisibleTextNode,
     isWhitespace,
     isZWS,
     nextLeaf,
     previousLeaf,
 } from "../utils/dom_info";
-import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
+import { getState, isFakeLineBreak, observeMutations, prepareUpdate } from "../utils/dom_state";
 import {
     childNodes,
     closestElement,
@@ -40,6 +41,7 @@ import {
 import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
 import { compareListTypes } from "@html_editor/main/list/utils";
+import { hasTouch, isBrowserChrome } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {Object} RangeLike
@@ -59,7 +61,7 @@ import { compareListTypes } from "@html_editor/main/list/utils";
  */
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["selection", "history", "input"];
+    static dependencies = ["baseContainer", "selection", "history", "input"];
     static id = "delete";
     static shared = ["deleteRange", "deleteSelection", "delete"];
     resources = {
@@ -84,6 +86,8 @@ export class DeletePlugin extends Plugin {
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
+        input_handlers: (ev) => this.onAndroidChromeInput?.(ev),
+        selectionchange_handlers: withSequence(5, () => this.onAndroidChromeSelectionChange?.()),
         /** Overrides */
         delete_backward_overrides: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
         delete_backward_word_overrides: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
@@ -95,11 +99,10 @@ export class DeletePlugin extends Plugin {
         // @todo @phoenix: move these predicates to different plugins
         unremovable_node_predicates: [
             (node) => node.classList?.contains("oe_unremovable"),
-            // Website stuff?
-            (node) => node.classList?.contains("o_editable"),
             // Monetary field
             (node) => node.matches?.("[data-oe-type='monetary'] > span"),
         ],
+        invalid_for_base_container_predicates: (node) => this.isUnremovable(node, this.editable),
     };
 
     setup() {
@@ -429,9 +432,9 @@ export class DeletePlugin extends Plugin {
                 !block.parentElement.isContentEditable
             ) {
                 // @todo: not sure we want this when allowInlineAtRoot is true
-                const p = this.document.createElement("p");
-                p.appendChild(this.document.createElement("br"));
-                block.appendChild(p);
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                baseContainer.appendChild(this.document.createElement("br"));
+                block.appendChild(baseContainer);
             } else {
                 block.appendChild(this.document.createElement("br"));
             }
@@ -594,7 +597,7 @@ export class DeletePlugin extends Plugin {
             // The joinable in this case is its sibling (previous for the start
             // side, next for the end side), but only if inline.
             const sibling = childNodes(commonAncestor)[side === "start" ? offset - 1 : offset];
-            if (sibling && !isBlock(sibling)) {
+            if (sibling && !isBlock(sibling) && !(sibling.nodeType === Node.TEXT_NODE && !isVisibleTextNode(sibling))) {
                 return { node: sibling, type: "inline" };
             }
             // No fragment to join.
@@ -1158,8 +1161,11 @@ export class DeletePlugin extends Plugin {
         };
         const argsForDelete = handledInputTypes[ev.inputType];
         if (argsForDelete) {
-            ev.preventDefault();
             this.delete(...argsForDelete);
+            ev.preventDefault();
+            if (isBrowserChrome() && hasTouch()) {
+                this.preventDefaultDeleteAndroidChrome(ev);
+            }
         }
     }
 
@@ -1171,6 +1177,39 @@ export class DeletePlugin extends Plugin {
             }
             // Default behavior: insert text and trigger input event
         }
+    }
+
+    /**
+     * Beforeinput event of type deleteContentBackward cannot be default
+     * prevented in Android Chrome. So we need to revert:
+     * - eventual mutations between beforeinput and input events
+     * - eventual selection change after input event
+     *
+     * @param {InputEvent} beforeInputEvent
+     */
+    preventDefaultDeleteAndroidChrome(beforeInputEvent) {
+        const restoreDOM = this.dependencies.history.makeSavePoint();
+        this.onAndroidChromeInput = (ev) => {
+            if (ev.inputType !== beforeInputEvent.inputType) {
+                return;
+            }
+            // Revert DOM changes that occurred between beforeinput and input.
+            restoreDOM();
+
+            // Revert selection changes after input event, within the same tick.
+            // If further mutations occurred, consider selection change legit
+            // (e.g. dictionary input) and do not revert it.
+            const { restore: restoreSelection } = this.dependencies.selection.preserveSelection();
+            const observerOptions = { childList: true, subtree: true, characterData: true };
+            const getMutationRecords = observeMutations(this.editable, observerOptions);
+            this.onAndroidChromeSelectionChange = () => {
+                const shouldRevertSelectionChanges = !getMutationRecords().length;
+                if (shouldRevertSelectionChanges) {
+                    restoreSelection();
+                }
+            };
+            setTimeout(() => delete this.onAndroidChromeSelectionChange);
+        };
     }
 
     // ======== AD-HOC STUFF ========
@@ -1199,7 +1238,11 @@ export class DeletePlugin extends Plugin {
             return;
         }
 
-        if (isEmpty(closestUnmergeable) && !this.isUnremovable(closestUnmergeable)) {
+        if (
+            (isEmpty(closestUnmergeable) ||
+                this.delegateTo("is_empty_predicates", closestUnmergeable)) &&
+            !this.isUnremovable(closestUnmergeable)
+        ) {
             closestUnmergeable.remove();
             this.dependencies.selection.setSelection({
                 anchorNode: destContainer,

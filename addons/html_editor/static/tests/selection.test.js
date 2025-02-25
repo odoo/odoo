@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { getActiveElement, press, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { press, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -66,11 +66,11 @@ test("correct selection after triple click with bold", async () => {
 
 test("fix selection P in the beggining being a direct child of the editable p after selection", async () => {
     const { el } = await setupEditor("<div>a</div>[]<p>b</p>");
-    expect(getContent(el)).toBe(`<div>a</div><p>[]b</p>`);
+    expect(getContent(el)).toBe(`<div class="o-paragraph">a</div><p>[]b</p>`);
 });
-test("fix selection P in the beggining being a direct child of the editable p before selection", async () => {
+test("fix selection P in the beginning being a direct child of the editable p before selection", async () => {
     const { el } = await setupEditor("<p>a</p>[]<div>b</div>");
-    expect(getContent(el)).toBe(`<p>a[]</p><div>b</div>`);
+    expect(getContent(el)).toBe(`<p>a</p><div class="o-paragraph">[]b</div>`);
 });
 
 describe("documentSelectionIsInEditable", () => {
@@ -210,12 +210,12 @@ test("restore a selection when you are not in the editable shouldn't move the fo
     await insertText(editor, "/test");
     await press("enter");
     await animationFrame();
-    expect(getActiveElement()).toBe(queryOne("input.test"));
+    expect("input.test").toBeFocused();
 
     // Something trigger restore
     const cursors = editor.shared.selection.preserveSelection();
     cursors.restore();
-    expect(getActiveElement()).toBe(queryOne("input.test"));
+    expect("input.test").toBeFocused();
 });
 
 test("set a collapse selection in a contenteditable false should move it after this node", async () => {

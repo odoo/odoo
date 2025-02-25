@@ -5,7 +5,7 @@
 # Translators:
 # Chris Egal <sodaswed@web.de>, 2024
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2741,6 +2741,17 @@ msgstr "Nur"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+"Nur der Abwesenheitsgenehmiger von %s, ein "
+".Abwesenheitsbeauftragter/-verantwortlicher oder Administrator kann Anträge "
+"auf Urlaubsanspruch genehmigen oder ablehnen."
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr ""
@@ -2779,18 +2790,19 @@ msgstr "Nur ein Manager kann einen stornierten Urlaub ändern."
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "Nur Abwesenheitsmanager können eigene Anträge genehmigen."
+msgid "Only a time off Administrator can approve their own requests."
+msgstr ""
+"Nur Abwesenheitsadministratoren können ihre eigenen Anträge genehmigen."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"Nur Abwesenheitsbeauftragte/-verantwortliche oder -manager können "
-"Abwesenheitsanträge genehmigen oder ablehnen."
+"Nur ein .Abwesenheitsbeauftragter/-verantwortlicher oder Administrator kann "
+"Anträge auf Urlaubsanspruch genehmigen oder ablehnen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4477,6 +4489,17 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "Sie müssen der Manager von %s sein, um diesen Urlaub zu genehmigen"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
+"Sie müssen entweder Abwesenheitsgenehmiger von %s oder "
+"Abwesenheitsadministrator sein, um diesen Antrag auf Urlaubsanspruch zu "
+"genehmigen."
 
 #. module: hr_holidays
 #. odoo-python

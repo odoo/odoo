@@ -33,7 +33,6 @@ export class PosData extends Reactive {
         this.records = {};
         this.opts = new DataServiceOptions();
         this.channels = [];
-        this.onNotified = getOnNotified(this.bus, odoo.access_token);
 
         this.network = {
             warningTriggered: false,
@@ -42,6 +41,7 @@ export class PosData extends Reactive {
             unsyncData: [],
         };
 
+        this.intializeWebsocket();
         this.initIndexedDB();
         await this.initData();
 
@@ -68,8 +68,12 @@ export class PosData extends Reactive {
         this.bus.addEventListener("connect", this.reconnectWebSocket.bind(this));
     }
 
-    reconnectWebSocket() {
+    intializeWebsocket() {
         this.onNotified = getOnNotified(this.bus, odoo.access_token);
+    }
+
+    reconnectWebSocket() {
+        this.intializeWebsocket();
 
         const channels = [...this.channels];
         this.channels = [];
@@ -92,26 +96,6 @@ export class PosData extends Reactive {
 
     async resetIndexedDB() {
         await this.indexedDB.reset();
-    }
-
-    dispatchData(data) {
-        let hasChanges = false;
-        const recordIds = Object.entries(data).reduce((acc, [model, records]) => {
-            acc[model] = records.map((record) => record.id);
-            hasChanges = hasChanges || acc[model].length > 0;
-            return acc;
-        }, {});
-
-        if (!hasChanges) {
-            return;
-        }
-
-        return this.call("pos.config", "dispatch_record_ids", [
-            odoo.pos_config_id,
-            odoo.pos_session_id,
-            recordIds,
-            odoo.login_number,
-        ]);
     }
 
     get databaseName() {
@@ -307,20 +291,6 @@ export class PosData extends Reactive {
         this.models.loadData(data, this.modelToLoad);
         this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
         const dbData = await this.loadIndexedDBData();
-        if (dbData && dbData["pos.order"]?.length) {
-            const ids = dbData["pos.order"].map((o) => o.id).filter((id) => typeof id === "number");
-
-            if (ids.length) {
-                const result = await this.read("pos.order", ids);
-                const serverIds = result.map((r) => r.id);
-
-                for (const id of ids) {
-                    if (!serverIds.includes(id)) {
-                        this.localDeleteCascade(this.models["pos.order"].get(id));
-                    }
-                }
-            }
-        }
         this.loadedIndexedDBProducts = dbData ? dbData["product.product"] : [];
         this.network.loading = false;
     }
@@ -638,7 +608,7 @@ export class PosData extends Reactive {
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
-        this.dispatchData(data);
+        this.deviceSync.dispatch(data);
         const results = this.models.loadData(data, [], true);
         return results;
     }
@@ -649,7 +619,7 @@ export class PosData extends Reactive {
 
     async ormWrite(model, ids, values, queue = true) {
         const result = await this.execute({ type: "write", model, ids, values, queue });
-        this.dispatchData({ [model]: ids.map((id) => ({ id })) });
+        this.deviceSync.dispatch({ [model]: ids.map((id) => ({ id })) });
         return result;
     }
 

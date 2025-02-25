@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_document_form" model="ir.ui.view">
+        <field name="name">Product Document Form</field>
+        <field name="model">product.document</field>
+        <field name="priority" eval="1000"/>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="datas" widget="image" nolabel="True"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

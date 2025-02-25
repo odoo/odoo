@@ -3,16 +3,16 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2024
-# Rasareeyar Lappiam, 2024
+# Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,6 +140,49 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
+"        สวัสดี\n"
+"        <br/><br/>\n"
+"        การชำระเงินแบบมีเลขที่อ้างอิง\n"
+"        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
+"        เป็นจำนวน\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"        สำหรับคำสั่งซื้อ\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> ของคุณ\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
+"            อยู่ระหว่างดำเนินการ\n"
+"            <br/>\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ('draft', 'sent')\">\n"
+"                คำสั่งซื้อของคุณจะได้รับการยืนยันเมื่อการชำระเงินได้รับการยืนยันแล้ว\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                เมื่อได้รับการยืนยันแล้ว\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                จะยังคงค้างชำระ\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            ได้รับการยืนยันแล้ว\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, object.amount_total) &lt; 0\">\n"
+"                <br/>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ 10.00</span>\n"
+"                จะยังคงค้างชำระ\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"       ขอบคุณสำหรับความไว้วางใจ!\n"
+"        <br/>\n"
+"        โปรดติดต่อเราหากคุณมีคำถามใดๆ\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -636,6 +679,54 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        สวัสดี\n"
+"        <br/><br/>\n"
+"        \n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            ใบแจ้งหนี้ Pro Forma สำหรับ <t t-out=\"doc_name or ''\">ใบเสนอราคา</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span> ของคุณ\n"
+"            <t t-if=\"object.origin\">\n"
+"                (เลขที่อ้างอิง: <t t-out=\"object.origin or ''\"/> )\n"
+"            </t>\n"
+"            เป็นจำนวน <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>  ที่ใช้งานได้\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">ใบเสนอราคา</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (เลขที่อ้างอิง: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            </t>\n"
+"            เป็นจำนวน <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> พร้อมสำหรับการตรวจสอบแล้ว\n"
+"        </t>\n"
+"        <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
+"        <t t-if=\"documents\">\n"
+"            <br/> \n"
+"            <t t-if=\"len(documents)&gt;1\">\n"
+"                นี่คือเอกสารเพิ่มเติมบางส่วนที่คุณอาจสนใจ:\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                นี่คือเอกสารเพิ่มเติมบางส่วนที่คุณอาจสนใจ:\n"
+"            </t>\n"
+"            <ul style=\"margin-bottom: 0;\">\n"
+"                <t t-foreach=\"documents\" t-as=\"document\">\n"
+"                    <li style=\"font-size: 13px;\">\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
+"                    </li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </t>\n"
+"        <br/>\n"
+"        โปรดติดต่อเราหากคุณมีคำถามใดๆ\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -659,6 +750,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
+"        เรียน<t t-out=\"object.partner_id.name or ''\">ผู้ใช้</t>\n"
+"        <br/><br/>\n"
+"        โปรดทราบว่า\n"
+"        <t t-out=\"doc_name or ''\">ใบเสนอราคา</t> <strong t-out=\"object.name or ''\">S00052</strong> ของคุณ\n"
+"        <t t-if=\"object.origin\">\n"
+"            (อ้างอิง: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        ถูกยกเลิก ดังนั้น คุณจะไม่ถูกเรียกเก็บเงินเพิ่มเติมสำหรับคำสั่งซื้อนี้\n"
+"        หากจำเป็นต้องมีการคืนเงิน เราจะดำเนินการตามความสะดวกที่สุด\n"
+"        <br/><br/>\n"
+"        โปรดติดต่อเราหากคุณมีคำถาม\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -730,6 +839,8 @@ msgid ""
 "<i class=\"fa fa-usd me-1\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
+"<i class=\"fa fa-usd me-1\" role=\"img\" aria-label=\"คำสั่งขาย\" "
+"title=\"คำสั่งขาย\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -805,6 +916,9 @@ msgid ""
 "                            <i class=\"fa fa-warning\"/>\n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"1\" class=\"oe_inline text-danger\" title=\"เงินดาวน์มีจำนวนมากกว่ายอดเงินคงเหลือที่ต้องชำระใบแจ้งหนี้\">\n"
+"                            <i class=\"fa fa-warning\"/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -865,7 +979,7 @@ msgstr "<span>คำเตือน: ใบเสนอราคานี้ �
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>คำเตือน: คำสั่งนี้อาจซ้ำซ้อนกับ</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1261,7 +1375,7 @@ msgstr "คุณแน่ใจหรือไม่ว่าต้องกา
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected item?"
-msgstr ""
+msgstr "คุณแน่ใจว่าต้องการยกเลิกรายการที่เลือกใช่ไหม?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2072,7 +2186,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "ส่วนลด %(percent)s%%- สำหรับสินค้าที่มีภาษีดังต่อไปนี้ %(taxes)s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -2103,6 +2217,12 @@ msgstr "โปรแกรมสร้างส่วนลด"
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
 msgstr "ส่วนลดทางรายการ"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount- On products with the following taxes %(taxes)s"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2315,12 +2435,6 @@ msgstr "สิ้นสุด"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
 msgstr "วันหมดอายุ:"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Expires on %(date)s"
-msgstr "หมดอายุวันที่ %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2976,7 +3090,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, Coupons, Loyalty cards, Gift cards & eWallet"
-msgstr ""
+msgstr "จัดการโปรโมชั่น คูปอง บัตรสะสมแต้ม บัตรของขวัญ และ eWallet"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4644,7 +4758,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Some orders are not in a state requiring confirmation."
-msgstr ""
+msgstr "คำสั่งซื้อบางรายการไม่ได้อยู่ในสถานะที่ต้องได้รับการยืนยัน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -5000,7 +5114,7 @@ msgstr "เปอร์เซ็นต์ของจำนวนเงินท
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "สินค้า (%(product)s) มีค่าที่ไม่สามารถเข้ากันได้: %(value_list)s"
 
 #. module: sale
 #. odoo-python
@@ -5043,7 +5157,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_downpayment_categ_id
 msgid "This account will be used on Downpayment invoices."
-msgstr ""
+msgstr "บัญชีนี้จะใช้ในใบแจ้งหนี้เงินดาวน์"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5524,7 +5638,7 @@ msgstr "ประวัติการสื่อสารของเว็บ
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "You can invoice goods before they are delivered."
-msgstr ""
+msgstr "คุณสามารถออกใบแจ้งหนี้สินค้าได้ก่อนที่จะได้รับการส่งมอบ"
 
 #. module: sale
 #. odoo-python

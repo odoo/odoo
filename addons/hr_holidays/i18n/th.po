@@ -2707,6 +2707,16 @@ msgstr "เท่านั้น"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+"เฉพาะผู้อนุมัติการลางานของ %s เท่านั้น "
+"เจ้าหน้าที่/ผู้รับผิดชอบการลางานหรือผู้ดูแลระบบสามารถอนุมัติหรือปฏิเสธคำขอจัดสรรเวลาได้"
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "มีเพียงผู้จัดการการลาเท่านั้นที่สามารถรีเซ็ตการลาที่ถูกปฏิเสธได้"
@@ -2740,17 +2750,17 @@ msgstr "มีเพียงผู้จัดการเท่านั้น
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "ผู้จัดการการลาเท่านั้นที่สามารถอนุมัติคำขอของตนเองได้"
+msgid "Only a time off Administrator can approve their own requests."
+msgstr "ผู้ดูแลระบบจะสามารถอนุมัติคำขอของตนเองได้เฉพาะช่วงเวลาว่างเท่านั้น"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"เฉพาะเจ้าหน้าที่/ผู้รับผิดชอบหรือผู้จัดการเท่านั้นที่สามารถอนุมัติหรือปฏิเสธคำขอลาหยุดได้"
+"เจ้าหน้าที่/ผู้รับผิดชอบหรือผู้ดูแลระบบจะสามารถอนุมัติหรือปฏิเสธคำขอจัดสรรได้เฉพาะในช่วงเวลาว่างเท่านั้น"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4378,6 +4388,16 @@ msgstr "คุณไม่มีสิทธิ์ขอการอนุมั
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "คุณต้องเป็นผู้จัดการของ %s จึงจะอนุมัติการลานี้ได้"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
+"คุณต้องเป็นผู้อนุมัติการลางานหรือผู้ดูแลการลางานของ %s "
+"จึงจะตรวจสอบคำขอการจัดสรรนี้ได้"
 
 #. module: hr_holidays
 #. odoo-python

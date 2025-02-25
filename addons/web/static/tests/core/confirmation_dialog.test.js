@@ -291,5 +291,6 @@ test("Focus is correctly restored after confirmation", async () => {
     await contains(".modal-footer .btn-primary").click();
     expect(document.body).toBeFocused();
     destroy(dialog);
+    await Promise.resolve();
     expect(".my-input").toBeFocused();
 });

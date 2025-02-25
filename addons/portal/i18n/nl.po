@@ -3,17 +3,18 @@
 # 	* portal
 # 
 # Translators:
-# Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Dylan Kiss, 2025
 # Manon Rondou, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2025-02-10 13:25+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +56,7 @@ msgid ""
 "emphasis\"/> My Account"
 msgstr ""
 "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary text-primary-"
-"emphasis\"/> Mijn Account"
+"emphasis\"/> Mijn account"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -64,7 +65,7 @@ msgid ""
 "emphasis\"/> Logout"
 msgstr ""
 "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary text-primary-"
-"emphasis\"/> Logout"
+"emphasis\"/> Uitloggen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -468,7 +469,7 @@ msgstr "Bedrijfsnaam"
 #. module: portal
 #: model:ir.model,name:portal.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
@@ -645,10 +646,21 @@ msgid "Enter a description of and purpose for the key."
 msgstr "Voer een beschrijving en het doel van de sleutel in."
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Expiration Date"
+msgstr "Vervaldatum"
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Forgot password?"
 msgstr "Wachtwoord vergeten?"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "Give a duration for the key's validity"
+msgstr "Geef een geldigheidsduur op voor de sleutel"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -890,7 +902,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
 msgid "Partners"
-msgstr "Contacten"
+msgstr "Partners"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1174,6 +1186,12 @@ msgid "The key cannot be retrieved later and provides"
 msgstr "De sleutel kan later niet worden opgehaald en biedt"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "The key will be deleted once this period has elapsed."
+msgstr "De sleutel wordt verwijderd zodra deze periode is verstreken."
+
+#. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The new password and its confirmation must be identical."
@@ -1192,13 +1210,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The partner \"%s\" already has the portal access."
-msgstr "De contact \"%s\" heeft al toegang tot het portaal."
+msgstr "De partner \"%s\" heeft al toegang tot het portaal."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr "De contact \"%s\" heeft geen toegang tot de portal of is intern."
+msgstr "De partner \"%s\" heeft geen toegang tot het portaal of is intern."
 
 #. module: portal
 #. odoo-python
@@ -1227,7 +1245,7 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
-"Deze contact is gekoppeld aan een interne Gebruiker en heeft al toegang tot "
+"Deze partner is gekoppeld aan een interne Gebruiker en heeft al toegang tot "
 "het portaal."
 
 #. module: portal
@@ -1408,7 +1426,7 @@ msgstr "Je moet invoeren \""
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr "Je moet eerst portaaltoegang verlenen aan het contact \"%s\"."
+msgstr "Je moet eerst portaaltoegang verlenen aan de partner \"%s\"."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome

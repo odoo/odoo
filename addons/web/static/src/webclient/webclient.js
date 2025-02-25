@@ -44,6 +44,7 @@ export class WebClient extends Component {
                 this.state.fullscreen = mode === "fullscreen";
             }
         });
+        useBus(this.env.bus, "WEBCLIENT:LOAD_DEFAULT_APP", this._loadDefaultApp);
         onMounted(() => {
             this.loadRouterState();
             // the chat window and dialog services listen to 'web_client_ready' event in
@@ -87,6 +88,10 @@ export class WebClient extends Component {
             const currentController = this.actionService.currentController;
             const actionId = currentController && currentController.action.id;
             menuId = this.menuService.getAll().find((m) => m.actionID === actionId)?.appID;
+            if (!menuId) {
+                // Setting the menu based on the session storage if no other menu was found
+                menuId = Number(browser.sessionStorage.getItem("menu_id"));
+            }
             if (menuId) {
                 // Sets the menu according to the current action
                 this.menuService.setCurrentMenu(menuId);

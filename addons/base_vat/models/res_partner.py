@@ -48,6 +48,7 @@ _ref_vat = {
     'gr': 'EL123456783',
     'hu': _lt('HU12345676 or 12345678-1-11 or 8071592153'),
     'hr': 'HR01234567896',  # Croatia, contributed by Milan Tribuson
+    'id': '1234567890123456',
     'ie': 'IE1234567FA',
     'il': _lt('XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum'),
     'in': "12AAAAA1234AAZA",
@@ -57,6 +58,7 @@ _ref_vat = {
     'lt': 'LT123456715',
     'lu': 'LU12345613',
     'lv': 'LV41234567891',
+    'ma': '12345678',
     'mc': 'FR53000004605',
     'mt': 'MT12345634',
     'mx': _lt('MXGODE561231GR8 or GODE561231GR8'),
@@ -697,6 +699,9 @@ class ResPartner(models.Model):
     def check_vat_il(self, vat):
         check_func = stdnum.util.get_cc_module('il', 'idnr').is_valid
         return check_func(vat)
+
+    def check_vat_ma(self, vat):
+        return vat.isdigit() and len(vat) == 8
 
     def format_vat_sm(self, vat):
         stdnum_vat_format = stdnum.util.get_cc_module('sm', 'vat').compact

@@ -568,6 +568,16 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         self.assertTrue(bool(mail))
         if content:
             self.assertIn(content, mail.body_html)
+
+        # specific check for message_id being in references: we don't care about
+        # actual value, just that they are set and message_id present in references
+        references_message_id_check = (email_values or {}).pop('references_message_id_check', False)
+        if references_message_id_check:
+            message_id = mail['message_id']
+            self.assertTrue(message_id, 'Mail: expected value set for message_id')
+            self.assertIn(message_id, mail.references, 'Mail: expected message_id to be part of references')
+            email_values = dict({'message_id': message_id, 'references': mail.references}, **(email_values or {}))
+
         for fname, expected_fvalue in (fields_values or {}).items():
             with self.subTest(fname=fname, expected_fvalue=expected_fvalue):
                 if fname == 'headers':
@@ -772,7 +782,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
           either a partner record;
         :param values: dictionary of additional values to check email content;
         """
-        direct_check = ['body_alternative', 'email_from', 'references', 'reply_to', 'subject']
+        direct_check = ['body_alternative', 'email_from', 'message_id', 'references', 'reply_to', 'subject']
         content_check = ['body_alternative_content', 'body_content', 'references_content']
         email_list_check = ['email_bcc', 'email_cc', 'email_to']
         other_check = ['attachments', 'attachments_info', 'body', 'headers']

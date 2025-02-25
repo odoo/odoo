@@ -387,6 +387,7 @@
         <field name="tag">hr_attendance_greeting_message</field>
     </record>
 
+    <!-- not used anymore, will be removed in master -->
     <record id="hr_attendance_action_install_kiosk_pwa" model="ir.actions.client">
         <field name="name">Attendance Kiosk</field>
         <field name="target">new</field>
@@ -395,11 +396,23 @@
         <field name="context">{'app_id': 'hr_attendance', 'footer': false}</field>
     </record>
 
+    <record model="ir.actions.server" id="open_kiosk_url">
+        <field name="name">Open Kiosk Url</field>
+        <field name="model_id" ref="hr_attendance.model_res_company"/>
+        <field name="path">attendance-kiosk</field>
+        <field name="binding_model_id" ref="hr_attendance.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model._action_open_kiosk_mode()
+        </field>
+        <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+    </record>
+
     <!-- Menus -->
 
     <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="205" groups="hr_attendance.group_hr_attendance_officer" web_icon="hr_attendance,static/description/icon.png"/>
 
-    <menuitem id="menu_action_open_form" name="Kiosk Mode" action="hr_attendance_action_install_kiosk_pwa" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_manager" />
+    <menuitem id="menu_action_open_form" name="Kiosk Mode" action="open_kiosk_url" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_manager"/>
 
     <menuitem id="menu_hr_attendance_reporting" name="Reporting" action="hr_attendance_reporting" parent="menu_hr_attendance_root" sequence="15" groups="hr_attendance.group_hr_attendance_officer"/>
 

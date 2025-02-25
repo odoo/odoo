@@ -4,19 +4,19 @@
 # 
 # Translators:
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
-# Corina Calin, 2024
 # Lyall Kindmurr, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
-# Wil Odoo, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
+# Corina Calin, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1896,6 +1896,12 @@ msgid "Discount on lines"
 msgstr "Reduceri pe linii"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount- On products with the following taxes %(taxes)s"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
 msgstr "Reducere:"
@@ -2106,12 +2112,6 @@ msgstr "Expirare"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
 msgstr "Data expirării:"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Expires on %(date)s"
-msgstr "Expiră la %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4716,6 +4716,9 @@ msgid ""
 "%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Următoarele produse nu pot fi restricționate la companie%(company)s deoarece au fost deja utilizate în oferte sau comenzi de vânzare în altă companie:\n"
+"%(used_products)s\n"
+"Puteți arhiva aceste produse și le puteți recrea cu restricția companiei dvs. sau le puteți lăsa ca produs comun."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4803,7 +4806,7 @@ msgstr "Procentul din suma care trebuie plătită pentru confirmarea ofertelor."
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "Produsul (%(product)s) are valori incompatibile: %(value_list)s"
 
 #. module: sale
 #. odoo-python
@@ -5047,7 +5050,7 @@ msgstr "Total taxe incluse"
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.js:0
 #: code:addons/sale/static/src/js/product_list/product_list.js:0
 msgid "Total: %s"
-msgstr ""
+msgstr "Total: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type

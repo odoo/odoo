@@ -4,9 +4,8 @@ import { registry } from "@web/core/registry";
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
-    getClientActionUrl,
     registerWebsitePreviewTour,
-} from '@website/js/tours/tour_utils';
+} from "@website/js/tours/tour_utils";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 function applyForAJob(jobName, application) {
@@ -109,11 +108,13 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
 },
 ...clickOnSave(),
 {
+    content: "wait for the form values are patched",
+    trigger: ":iframe form input[name=partner_name]:value(admin)",
+},
+{
     content: 'Go back to /jobs page after save',
-    trigger: ':iframe body',
-    run() {
-        window.location.href = getClientActionUrl('/jobs');
-    }
+    trigger: ":iframe nav a[href='/jobs']",
+    run: "click",
 }, {
     content: 'Go to the Internship job page',
     trigger: ':iframe a[href*="internship"]',

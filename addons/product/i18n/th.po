@@ -5,16 +5,16 @@
 # Translators:
 # Wichanon Jamwutthipreecha, 2024
 # Tiffany Chang, 2024
-# Rasareeyar Lappiam, 2024
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,6 +73,8 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date "
 "(%(start_date)s)"
 msgstr ""
+"%(item_name)s: วันที่สิ้นสุด (%(end_date)s) ควรอยู่หลังวันที่เริ่มต้น "
+"(%(start_date)s)"
 
 #. module: product
 #. odoo-python
@@ -136,7 +138,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
-msgstr ""
+msgstr "- บาร์โค้ด \"%(barcode)s\" ถูกกำหนดให้กับผลิตภัณฑ์แล้ว: %(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -326,19 +328,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "ตัวเลือกแบบคอมโบไม่สามารถมีผลิตภัณฑ์ประเภท \"คอมโบ\" ได้"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "ตัวเลือกคอมโบต้องมีผลิตภัณฑ์อย่างน้อย 1 รายการ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "สินค้าคอมโบจะต้องมีตัวเลือกคอมโบอย่างน้อย 1 รายการ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -377,7 +379,7 @@ msgstr "สินค้าใช้บาร์โค้ดอยู่แล้
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "สินค้าคอมโบที่ขายได้นั้นจะต้องมีเฉพาะสินค้าที่ขายได้เท่านั้น"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -897,7 +899,7 @@ msgstr "ราคาคอมโบ"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
-msgid "Combo products can't have attributes"
+msgid "Combo products can't have attributes."
 msgstr ""
 
 #. module: product
@@ -2337,6 +2339,7 @@ msgstr ""
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
 msgstr ""
+"อุ๊ย! '%(fileName)s' ไม่สามารถอัปโหลดได้ เนื่องจากรูปแบบไม่ได้รับอนุญาต"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -3525,6 +3528,15 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"This product is part of a combo, so its type can't be changed to \"combo\"."
+msgstr ""
+"ผลิตภัณฑ์นี้เป็นส่วนหนึ่งของคอมโบ "
+"ดังนั้นจึงไม่สามารถเปลี่ยนประเภทของผลิตภัณฑ์เป็น \"คอมโบ\" ได้"
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 msgid ""
 "This rounding precision is higher than the Decimal Accuracy (%(digits)s digits).\n"
@@ -3894,7 +3906,7 @@ msgstr "การออกแบบตกแต่งภายในเสมื
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Visible to all"
-msgstr ""
+msgstr "มองเห็นได้ทุกคน"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__voice_ids
@@ -4022,7 +4034,7 @@ msgstr "คุณสามารถใช้ส่วนเพิ่มได้
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
 msgid "You can apply a mark-up on the cost"
-msgstr ""
+msgstr "คุณสามารถทำการบวกกำไรจากต้นทุนได้"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -4345,7 +4357,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "round off to 10.00 and set an extra at -0.01"
-msgstr ""
+msgstr "ปัดเศษเป็น 10.00 และตั้งค่าพิเศษที่ -0.01"
 
 #. module: product
 #. odoo-python

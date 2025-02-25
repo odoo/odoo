@@ -2727,6 +2727,16 @@ msgstr "Nog"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+"Alleen de verlofgoedkeurder van %s, een verlofbeheerder/verantwoordelijke of"
+" een manager kan toewijzingsverzoeken goedkeuren of weigeren."
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "Alleen een verlof manager kan een afgewezen verlofaanvraag resetten."
@@ -2761,18 +2771,19 @@ msgstr "Enkel een manager kan een geannuleerd verlof wijzingen."
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "Alleen een verlof manager kan zijn eigen verzoeken goedkeuren."
+msgid "Only a time off Administrator can approve their own requests."
+msgstr ""
+"Alleen een verlofbeheerder kan zijn of haar eigen verzoeken goedkeuren."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"Alleen een verlofbeheerder of managers kunnen verlofaanvragen goedkeuren of "
-"afwijzen."
+"Alleen een verlofbeheerder/verantwoordelijke kan toewijzingsverzoeken "
+"goedkeuren of weigeren"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4010,7 +4021,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training
 msgid "Training Time Off"
-msgstr "Trainingstijd uit"
+msgstr "Opleidingsverlof"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
@@ -4449,6 +4460,16 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "Je moet de manager van %s zijn om dit verlof goed te keuren"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
+"Je moet de verlofgoedkeurder of verlofbeheerder van %s zijn om dit "
+"toewijzingsverzoek te valideren."
 
 #. module: hr_holidays
 #. odoo-python

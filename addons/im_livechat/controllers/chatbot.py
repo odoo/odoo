@@ -59,6 +59,9 @@ class LivechatChatbotScriptController(http.Controller):
                 next_step = chatbot.script_step_ids[:1]
 
         if not next_step:
+            # sudo: visitor cannot write on channel otherwise. Just writing a
+            # boolean is safe
+            discuss_channel.sudo().livechat_active = False
             return None
 
         posted_message = next_step._process_step(discuss_channel)
@@ -67,7 +70,7 @@ class LivechatChatbotScriptController(http.Controller):
         store.add(
             "ChatbotStep",
             {
-                "id": (next_step.id, discuss_channel.id),
+                "id": (next_step.id, posted_message.id),
                 "isLast": next_step._is_last_step(discuss_channel),
                 "message": Store.one(posted_message, only_id=True),
                 "operatorFound": next_step.step_type == "forward_operator"

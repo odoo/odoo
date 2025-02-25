@@ -7,6 +7,7 @@ import typing
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.urls
+import urllib.parse
 from werkzeug.exceptions import HTTPException, NotFound
 
 import odoo
@@ -172,9 +173,9 @@ class IrHttp(models.AbstractModel):
         location = path_or_uri.strip()
         force_lang = lang_code is not None
         try:
-            url = werkzeug.urls.url_parse(location)
+            url = urllib.parse.urlparse(location)
         except ValueError:
-            # e.g. Invalid IPv6 URL, `werkzeug.urls.url_parse('http://]')`
+            # e.g. Invalid IPv6 URL, `urllib.parse.urlparse('http://]')`
             url = False
         # relative URL with either a path or a force_lang
         if url and not url.netloc and not url.scheme and (url.path or force_lang):

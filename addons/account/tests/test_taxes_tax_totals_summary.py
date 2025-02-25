@@ -1969,7 +1969,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             'subtotals': [
                 {
                     'name': "Untaxed Amount",
-                    'base_amount_currency': 1300.0,
+                    'base_amount_currency': 3300.0,
                     'tax_amount_currency': 126.0,
                     'tax_groups': [
                         {
@@ -1982,7 +1982,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 1",
-                    'base_amount_currency': 1200.0,
+                    'base_amount_currency': 3426.0,
                     'tax_amount_currency': 120.0,
                     'tax_groups': [
                         {
@@ -1995,7 +1995,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 2",
-                    'base_amount_currency': 1200.0,
+                    'base_amount_currency': 3546.0,
                     'tax_amount_currency': 300.0,
                     'tax_groups': [
                         {
@@ -2033,7 +2033,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             'subtotals': [
                 {
                     'name': "Untaxed Amount",
-                    'base_amount_currency': 1200.0,
+                    'base_amount_currency': 1500.0,
                     'tax_amount_currency': 360.0,
                     'tax_groups': [
                         {
@@ -2046,7 +2046,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 1",
-                    'base_amount_currency': 500.0,
+                    'base_amount_currency': 1860.0,
                     'tax_amount_currency': 82.0,
                     'tax_groups': [
                         {
@@ -2065,7 +2065,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 2",
-                    'base_amount_currency': 300.0,
+                    'base_amount_currency': 1942.0,
                     'tax_amount_currency': -75.0,
                     'tax_groups': [
                         {
@@ -2124,7 +2124,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "Tax withholding",
-                    'base_amount_currency': 100.0,
+                    'base_amount_currency': 110.0,
                     'tax_amount_currency': -47.0,
                     'tax_groups': [
                         {
@@ -2150,6 +2150,64 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             with self.subTest(test_index=test_index):
                 invoice = self.convert_document_to_invoice(document)
                 self.assert_invoice_tax_totals_summary(invoice, expected_values)
+
+    def _test_preceding_subtotal_with_include_base_amount(self):
+        self.tax_groups[1].preceding_subtotal = "PRE GROUP 1"
+        self.tax_groups[2].preceding_subtotal = "PRE GROUP 2"
+        tax_1 = self.percent_tax(10.0, include_base_amount=True, tax_group_id=self.tax_groups[1].id)
+        tax_2 = self.percent_tax(20.0, include_base_amount=True, tax_group_id=self.tax_groups[1].id)
+        tax_3 = self.percent_tax(30.0, include_base_amount=True, tax_group_id=self.tax_groups[1].id)
+        tax_4 = self.percent_tax(50.0, tax_group_id=self.tax_groups[2].id)
+
+        document = self.populate_document(self.init_document([
+            {'price_unit': 1000.0, 'tax_ids': tax_1 + tax_2 + tax_3 + tax_4},
+        ]))
+        expected_values = {
+            'same_tax_base': False,
+            'currency_id': self.currency.id,
+            'base_amount_currency': 1000.0,
+            'tax_amount_currency': 1574.0,
+            'total_amount_currency': 2574.0,
+            'subtotals': [
+                {
+                    'name': "PRE GROUP 1",
+                    'base_amount_currency': 1000.0,
+                    'tax_amount_currency': 716.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[1].id,
+                            'base_amount_currency': 1000.0,
+                            'tax_amount_currency': 716.0,
+                            'display_base_amount_currency': 1000.0,
+                        },
+                    ],
+                },
+                {
+                    'name': "PRE GROUP 2",
+                    'base_amount_currency': 1716.0,
+                    'tax_amount_currency': 858.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[2].id,
+                            'base_amount_currency': 1716.0,
+                            'tax_amount_currency': 858.0,
+                            'display_base_amount_currency': 1716.0,
+                        },
+                    ],
+                },
+            ],
+        }
+        return document, expected_values
+
+    def test_preceding_subtotal_with_include_base_amount_generic_helpers(self):
+        document, expected_values = self._test_preceding_subtotal_with_include_base_amount()
+        self.assert_tax_totals_summary(document, expected_values)
+        self._run_js_tests()
+
+    def test_preceding_subtotal_with_include_base_amount_invoices(self):
+        document, expected_values = self._test_preceding_subtotal_with_include_base_amount()
+        invoice = self.convert_document_to_invoice(document)
+        self.assert_invoice_tax_totals_summary(invoice, expected_values)
 
     def _test_reverse_charge_percent_tax(self):
         tax = self.percent_tax(
@@ -2202,20 +2260,20 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
         expected_values = {
             'same_tax_base': True,
             'currency_id': self.currency.id,
-            'base_amount_currency': 100.0,
+            'base_amount_currency': 121.0,
             'tax_amount_currency': 0.0,
-            'total_amount_currency': 100.0,
+            'total_amount_currency': 121.0,
             'subtotals': [
                 {
                     'name': "Untaxed Amount",
-                    'base_amount_currency': 100.0,
+                    'base_amount_currency': 121.0,
                     'tax_amount_currency': 0.0,
                     'tax_groups': [
                         {
                             'id': self.tax_groups[0].id,
-                            'base_amount_currency': 100.0,
+                            'base_amount_currency': 121.0,
                             'tax_amount_currency': 0.0,
-                            'display_base_amount_currency': 100.0,
+                            'display_base_amount_currency': 121.0,
                         },
                     ],
                 },
@@ -2235,8 +2293,8 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 invoice = self.convert_document_to_invoice(document)
                 self.assert_invoice_tax_totals_summary(invoice, expected_values)
                 self.assertRecordValues(invoice.invoice_line_ids, [{
-                    'price_subtotal': 100.0,
-                    'price_total': 100.0,
+                    'price_subtotal': expected_values['total_amount_currency'],
+                    'price_total': expected_values['total_amount_currency'],
                 }])
 
     def _test_reverse_charge_division_tax(self):
@@ -2290,20 +2348,20 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
         expected_values = {
             'same_tax_base': True,
             'currency_id': self.currency.id,
-            'base_amount_currency': 79.0,
+            'base_amount_currency': 100.0,
             'tax_amount_currency': 0.0,
-            'total_amount_currency': 79.0,
+            'total_amount_currency': 100.0,
             'subtotals': [
                 {
                     'name': "Untaxed Amount",
-                    'base_amount_currency': 79.0,
+                    'base_amount_currency': 100.0,
                     'tax_amount_currency': 0.0,
                     'tax_groups': [
                         {
                             'id': self.tax_groups[0].id,
-                            'base_amount_currency': 79.0,
+                            'base_amount_currency': 100.0,
                             'tax_amount_currency': 0.0,
-                            'display_base_amount_currency': 79.0,
+                            'display_base_amount_currency': 100.0,
                         },
                     ],
                 },
@@ -2323,8 +2381,8 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 invoice = self.convert_document_to_invoice(document)
                 self.assert_invoice_tax_totals_summary(invoice, expected_values)
                 self.assertRecordValues(invoice.invoice_line_ids, [{
-                    'price_subtotal': 79.0,
-                    'price_total': 79.0,
+                    'price_subtotal': expected_values['total_amount_currency'],
+                    'price_total': expected_values['total_amount_currency'],
                 }])
 
     def _test_discount_with_round_globally(self):

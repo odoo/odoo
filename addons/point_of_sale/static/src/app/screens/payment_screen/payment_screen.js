@@ -260,6 +260,14 @@ export class PaymentScreen extends Component {
         if (!this.check_cash_rounding_has_been_well_applied()) {
             return;
         }
+        const linesToRemove = this.currentOrder.lines.filter((line) => {
+            const rounding = line.product_id.uom_id.rounding;
+            const decimals = Math.max(0, Math.ceil(-Math.log10(rounding)));
+            return floatIsZero(line.qty, decimals);
+        });
+        for (const line of linesToRemove) {
+            this.currentOrder.removeOrderline(line);
+        }
         if (await this._isOrderValid(isForceValidate)) {
             // remove pending payments before finalizing the validation
             const toRemove = [];
@@ -272,12 +280,6 @@ export class PaymentScreen extends Component {
             for (const line of toRemove) {
                 this.currentOrder.remove_paymentline(line);
             }
-
-            const cash = this.payment_methods_from_config.find((pm) => pm.is_cash_count);
-            if (this.currentOrder.get_due() > 0 && this.pos.config.cash_rounding && cash) {
-                this.currentOrder.add_paymentline(cash, 0);
-            }
-
             await this._finalizeValidation();
         }
     }
@@ -307,8 +309,8 @@ export class PaymentScreen extends Component {
 
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
-                if (this.currentOrder.account_move) {
-                    await this.invoiceService.downloadPdf(this.currentOrder.account_move);
+                if (this.currentOrder.raw.account_move) {
+                    await this.invoiceService.downloadPdf(this.currentOrder.raw.account_move);
                 } else {
                     throw {
                         code: 401,
@@ -475,7 +477,10 @@ export class PaymentScreen extends Component {
         }
 
         if (
-            this.currentOrder.get_total_with_tax() != 0 &&
+            !floatIsZero(
+                this.currentOrder.get_total_with_tax(),
+                this.pos.currency.decimal_places
+            ) &&
             this.currentOrder.payment_ids.length === 0
         ) {
             this.notification.add(_t("Select a payment method to validate the order."));

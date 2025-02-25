@@ -6,10 +6,13 @@ import { patch } from "@web/core/utils/patch";
 patch(PosOrder.prototype, {
     setup() {
         super.setup(...arguments);
-        this.uiState = {
-            ...this.uiState,
-            lineChanges: {},
-        };
+
+        if (!this.uiState.lineChanges) {
+            this.uiState = {
+                ...this.uiState,
+                lineChanges: {},
+            };
+        }
     },
     get unsentLines() {
         return this.lines.filter(
@@ -35,6 +38,10 @@ patch(PosOrder.prototype, {
     recomputeChanges() {
         const lines = this.lines;
         for (const line of lines) {
+            if (typeof line.id === "string") {
+                continue;
+            }
+
             this.uiState.lineChanges[line.uuid] = {
                 qty: line.qty,
                 customer_note: line.customer_note,

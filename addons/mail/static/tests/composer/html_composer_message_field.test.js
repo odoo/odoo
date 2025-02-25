@@ -100,7 +100,7 @@ test("media dialog: upload", async function () {
         </form>`,
     });
 
-    const anchorNode = queryOne(".odoo-editor-editable p");
+    const anchorNode = queryOne(".odoo-editor-editable div.o-paragraph");
     setSelection({ anchorNode, anchorOffset: 0 });
 
     // Open media dialog
@@ -150,7 +150,7 @@ test("mention a partner", async () => {
         </form>`,
     });
 
-    const anchorNode = queryOne(`[name='body'] .odoo-editor-editable p`);
+    const anchorNode = queryOne(`[name='body'] .odoo-editor-editable div.o-paragraph`);
     setSelection({ anchorNode, anchorOffset: 0 });
     await insertText(htmlEditor, "@");
     await animationFrame();
@@ -166,11 +166,11 @@ test("mention a partner", async () => {
 
     await press("enter");
     expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
-    <p>
+    <div class="o-paragraph">
         <a target="_blank" data-oe-protected="true" contenteditable="false" href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner">
             @Mitchell Admin
         </a>
-    </p>`);
+    </div>`);
 });
 
 test("mention a channel", async () => {
@@ -185,7 +185,7 @@ test("mention a channel", async () => {
             <field name="body" type="html" widget="html_composer_message"/>
         </form>`,
     });
-    const anchorNode = queryOne(`[name='body'] .odoo-editor-editable p`);
+    const anchorNode = queryOne(`[name='body'] .odoo-editor-editable div.o-paragraph`);
     setSelection({ anchorNode, anchorOffset: 0 });
     await insertText(htmlEditor, "#");
     await animationFrame();

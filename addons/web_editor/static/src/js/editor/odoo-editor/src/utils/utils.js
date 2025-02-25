@@ -1014,7 +1014,7 @@ export function getAdjacentCharacter(editable, side) {
     return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
 }
 
-function isZwnbsp(node) {
+export function isZwnbsp(node) {
     return node.nodeType === Node.TEXT_NODE && node.textContent === '\ufeff';
 }
 
@@ -1207,12 +1207,20 @@ const removeStyle = (node, styleName, item) => {
 };
 const getOrCreateSpan = (node, ancestors) => {
     const span = ancestors.find((element) => element.tagName === 'SPAN' && element.isConnected);
+    const lastInlineAncestor = ancestors.findLast((element) => !isBlock(element) && element.isConnected);
     if (span) {
         return span;
     } else {
         const span = document.createElement('span');
-        node.after(span);
-        span.append(node);
+        // Apply font span above current inline top ancestor so that 
+        // the font style applies to the other style tags as well.
+        if (lastInlineAncestor) {
+            lastInlineAncestor.after(span);
+            span.append(lastInlineAncestor);
+        } else {
+            node.after(span);
+            span.append(node);
+        }
         return span;
     }
 }
@@ -1374,7 +1382,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
     }
 }
 export const isLinkEligibleForZwnbsp = (editable, link) => {
-    return link.isContentEditable && editable.contains(link) && !(
+    return link.parentElement.isContentEditable && link.isContentEditable && editable.contains(link) && !(
         [link, ...link.querySelectorAll('*')].some(el => el.nodeName === 'IMG' || isBlock(el)) ||
         link.matches('nav a, a.nav-link')
     );
@@ -1672,7 +1680,7 @@ export function isUnbreakable(node) {
                 node.getAttribute('t-out') ||
                 node.getAttribute('t-raw')) ||
                 node.getAttribute('t-field')) ||
-        node.matches(".oe_unbreakable, a.btn, a[role='tab'], a[role='button']")
+        node.matches(".oe_unbreakable, a.btn, a[role='tab'], a[role='button'], li.nav-item")
     );
 }
 
@@ -2440,7 +2448,7 @@ export function fillEmpty(el) {
         blockEl.appendChild(br);
         fillers.br = br;
     }
-    if (!isTangible(el) && !el.hasAttribute("data-oe-zws-empty-inline") && !el.hasChildNodes()) {
+    if (!isTangible(el) && !el.hasAttribute("data-oe-zws-empty-inline") && isEmptyBlock(el)) {
         // As soon as there is actual content in the node, the zero-width space
         // is removed by the sanitize function.
         const zws = document.createTextNode('\u200B');
@@ -3307,5 +3315,12 @@ export function isMacOS() {
 export function cleanZWS(node) {
     [node, ...descendants(node)]
         .filter(node => node.nodeType === Node.TEXT_NODE && node.nodeValue.includes('\u200B'))
-        .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
+        .forEach((node) => {
+            node.nodeValue = node.nodeValue.replace(/\u200B/g, "");
+
+            // If a node becomes empty after removing ZWS, remove it.
+            if (node.nodeValue === "") {
+                node.remove();
+            }
+        });
 }

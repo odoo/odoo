@@ -97,6 +97,9 @@ patch(PaymentScreen.prototype, {
             ) {
                 agg[pe.coupon_id].partner_id = partner.id;
             }
+            if (program.program_type != "loyalty") {
+                agg[pe.coupon_id].expiration_date = program.date_to;
+            }
             return agg;
         }, {});
         for (const line of rewardLines) {
@@ -109,6 +112,9 @@ patch(PaymentScreen.prototype, {
                     coupon_id: couponId,
                     barcode: false,
                 };
+                if (reward.program_type != "loyalty") {
+                    couponData[couponId].expiration_date = reward.program_id.date_to;
+                }
             }
             if (!couponData[couponId].line_codes) {
                 couponData[couponId].line_codes = [];
@@ -176,13 +182,14 @@ patch(PaymentScreen.prototype, {
                     }
                 }
             }
-            const loyaltyPoints = await this.currentOrder.getLoyaltyPoints().map((item) => ({
-                order_id: this.currentOrder.id,
-                card_id: item.couponId,
-                spent: item.points.spent,
-                won: item.points.won,
-                total: item.points.total,
+
+            const loyaltyPoints = Object.keys(couponData).map((coupon_id) => ({
+                order_id: order.id,
+                card_id: coupon_id,
+                spent: couponData[coupon_id].points < 0 ? -couponData[coupon_id].points : 0,
+                won: couponData[coupon_id].points > 0 ? couponData[coupon_id].points : 0,
             }));
+
             const couponUpdates = payload.coupon_updates.map((item) => ({
                 id: item.id,
                 old_id: item.old_id,

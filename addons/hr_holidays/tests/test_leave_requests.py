@@ -388,6 +388,111 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave2.action_validate()
         self.assertEqual(leave2.number_of_hours, 4)
 
+    def test_number_of_hours_display_flexible_calendar(self):
+        # Test that the field number_of_hours_dispay do change for flexible calendars
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Full Time 24h/8day',
+            'hours_per_day': 24,
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 0, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 24, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 0, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 24, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 0, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 24, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 0, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 24, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 0, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 24, 'day_period': 'afternoon'})
+            ],
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+        self.env.user.company_id.resource_calendar_id = calendar
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'request_unit': 'hour',
+            'leave_validation_type': 'both',
+        })
+        self.env['hr.leave.allocation'].create({
+            'name': '20 days allocation',
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 20,
+            'employee_id': employee.id,
+            'state': 'confirm',
+            'date_from': time.strftime('2018-1-1'),
+            'date_to': time.strftime('%Y-1-1'),
+        })
+
+        leave0 = self.env['hr.leave'].create({
+            'name': 'Holiday 1 day',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': fields.Date.from_string('2019-12-9'),
+            'request_date_to': fields.Date.from_string('2019-12-9'),
+        })
+
+        self.assertAlmostEqual(leave0.number_of_hours, 24, 2)
+
+        calendar.write({
+            'flexible_hours': True,
+            'hours_per_day': 8.0
+        })
+
+        leave1 = self.env['hr.leave'].create({
+            'name': 'Holiday 1 week',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': fields.Date.from_string('2019-12-16'),
+            'request_date_to': fields.Date.from_string('2019-12-20'),
+        })
+
+        self.assertEqual(leave1.number_of_hours, 5 * 8)
+
+        leave2 = self.env['hr.leave'].create({
+            'name': 'Holiday 1 Day',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': fields.Datetime.from_string('2019-12-23'),
+            'request_date_to': fields.Datetime.from_string('2019-12-23'),
+        })
+
+        self.assertEqual(leave2.number_of_hours, 8)
+
+        leave3 = self.env['hr.leave'].create({
+            'name': 'Holiday 1/2 Day',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': fields.Datetime.from_string('2019-12-24'),
+            'request_unit_half': True,
+        })
+
+        self.assertEqual(leave3.number_of_hours, 4)
+
+        leave4 = self.env['hr.leave'].create({
+            'name': 'Holiday 3 Hours',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': fields.Datetime.from_string('2019-12-25'),
+            'request_unit_hours': True,
+            'request_hour_from': 7,
+            'request_hour_to': 10,
+        })
+
+        self.assertEqual(leave4.number_of_hours, 3)
+
+        leave5 = self.env['hr.leave'].create({
+            'name': 'Holiday 10 hours',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': fields.Datetime.from_string('2019-12-26'),
+            'request_unit_hours': True,
+            'request_hour_from': 7,
+            'request_hour_to': 17,
+        })
+
+        self.assertEqual(leave5.number_of_hours, 8)
+
     def test_number_of_hours_display_global_leave(self):
         # Check that the field number_of_hours
         # takes the global leaves into account, even
@@ -1133,7 +1238,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_to': '2024-12-31',
         })
         allocation.action_validate()
-        self.env['hr.leave'].with_user(self.user_employee_id).create({
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Holiday Request',
             'employee_id': employee.id,
             'holiday_status_id': self.holidays_type_4.id,
@@ -1141,7 +1246,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': '2024-01-27',
         })
         holiday_status = self.holidays_type_4.with_user(self.user_employee_id)
-        self._check_holidays_status(holiday_status, employee, 20.0, 0.0, 20.0, 16.0)
+        self._check_holidays_status(holiday_status, employee, 20.0, 0.0, 20.0, 15.0)
+        self.assertEqual(leave.duration_display, '5 days')
 
     def test_default_request_date_timezone(self):
         """

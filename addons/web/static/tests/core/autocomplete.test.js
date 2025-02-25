@@ -1,17 +1,49 @@
 import { expect, test } from "@odoo/hoot";
 import {
+    isInViewPort,
+    isScrollable,
     pointerDown,
     pointerUp,
+    press,
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
     queryOne,
+    queryRect,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+
+/**
+ * Helper needed until `isInViewPort` also checks intermediate parent elements.
+ * This is to make sure an element is actually visible, not just "within
+ * viewport boundaries" but below or above a parent's scroll point.
+ *
+ * @param {import("@odoo/hoot-dom").Target} target
+ * @returns {boolean}
+ */
+function isInViewWithinScrollableY(target) {
+    const element = queryFirst(target);
+    let container = element.parentElement;
+    while (
+        container
+        && (
+            container.scrollHeight <= container.clientHeight
+            || !["auto", "scroll"].includes(getComputedStyle(container).overflowY)
+        )
+    ) {
+        container = container.parentElement;
+    }
+    if (!container) {
+        return isInViewPort(element);
+    }
+    const { x, y } = queryRect(element);
+    const { height: containerHeight, width: containerWidth } = queryRect(container);
+    return y > 0 && y < containerHeight && x > 0 && x < containerWidth;
+}
 
 test("can be rendered", async () => {
     class Parent extends Component {
@@ -672,4 +704,106 @@ test("autocomplete trim spaces for search", async () => {
     await mountWithCleanup(Parent);
     await contains(`.o-autocomplete input`).click();
     expect(queryAllTexts(`.o-autocomplete--dropdown-item`)).toEqual(["World", "Hello"]);
+});
+
+test("tab and shift+tab close the dropdown", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <AutoComplete value="state.value" sources="sources" onSelect="() => {}"/>
+        `;
+        static props = ["*"];
+        static components = { AutoComplete };
+        setup() {
+            this.state = useState({ value: "" });
+        }
+        get sources() {
+            return [
+                {
+                    options: [{ label: "World" }, { label: "Hello" }],
+                },
+            ];
+        }
+    }
+    await mountWithCleanup(Parent);
+    const input = ".o-autocomplete input";
+    const dropdown = ".o-autocomplete--dropdown-menu";
+    expect(input).toHaveCount(1);
+    // Tab
+    await contains(input).click();
+    expect(dropdown).toBeVisible();
+    await press("Tab");
+    await animationFrame();
+    expect(dropdown).not.toBeVisible();
+    // Shift + Tab
+    await contains(input).click();
+    expect(dropdown).toBeVisible();
+    await press("Tab", { shiftKey: true });
+    await animationFrame();
+    expect(dropdown).not.toBeVisible();
+});
+
+test("autocomplete scrolls when moving with arrows", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <style>
+                .o-autocomplete--dropdown-menu {
+                    max-height: 100px;
+                }
+            </style>
+            <AutoComplete
+                value="state.value"
+                sources="sources"
+                onSelect="() => {}"
+                autoSelect="true"
+            />
+        `;
+        static props = ["*"];
+        static components = { AutoComplete };
+        setup() {
+            this.state = useState({
+                value: "",
+            });
+        }
+        get sources() {
+            return [
+                {
+                    options: [
+                        { label: "Never" },
+                        { label: "Gonna" },
+                        { label: "Give" },
+                        { label: "You" },
+                        { label: "Up" },
+                    ],
+                },
+            ];
+        }
+    }
+    const dropdownSelector = ".o-autocomplete--dropdown-menu";
+    const activeItemSelector = ".o-autocomplete--dropdown-item .ui-state-active";
+    const msgInView = "active item should be in view within dropdown";
+    const msgNotInView = "item should not be in view within dropdown";
+    await mountWithCleanup(Parent);
+    expect(".o-autocomplete input").toHaveCount(1);
+    // Open with arrow key.
+    await contains(".o-autocomplete input").focus();
+    await contains(".o-autocomplete input").press("ArrowDown");
+    expect(".o-autocomplete--dropdown-item").toHaveCount(5);
+    expect(isScrollable(dropdownSelector)).toBe(true, { message: "dropdown should be scrollable" });
+    // First element focused and visible (dropdown is not scrolled yet).
+    expect(".o-autocomplete--dropdown-item:first-child a").toHaveClass("ui-state-active");
+    expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
+    // Navigate with the arrow keys. Go to the last item.
+    expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:contains('Up')")).toBe(false, { message: "'Up' " + msgNotInView });
+    await contains(".o-autocomplete--input").press("ArrowUp");
+    await contains(".o-autocomplete--input").press("ArrowUp");
+    expect(activeItemSelector).toHaveText("Up");
+    expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
+    // Navigate to an item that is not currently visible.
+    expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:contains('Never')")).toBe(false, { message: "'Never' " + msgNotInView });
+    for (let i=0; i < 4; i++) {
+        await contains(".o-autocomplete--input").press("ArrowUp");
+    }
+    expect(activeItemSelector).toHaveText("Never");
+    expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
+    expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:last")).toBe(false, { message: "last " + msgNotInView });
 });
