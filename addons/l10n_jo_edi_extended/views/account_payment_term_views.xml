@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_payment_term_form" model="ir.ui.view">
+            <field name="name">account.payment.term.form</field>
+            <field name="model">account.payment.term</field>
+            <field name="inherit_id" ref="account.view_payment_term_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]" position="inside">
+                    <field name="enable_l10n_jo_edi_cash_payment_method" invisible="1"/>
+                    <field name="l10n_jo_edi_cash_payment_method" 
+                           invisible="'JO' not in fiscal_country_codes or not enable_l10n_jo_edi_cash_payment_method"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

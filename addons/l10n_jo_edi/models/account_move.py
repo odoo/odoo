@@ -78,6 +78,25 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.company_id.l10n_jo_edi_taxpayer_type == 'sales' and self.move_type == 'out_refund'
 
+    def _get_invoice_trade_type_code(self):
+        "Invoices in this module are always local invoices"
+        return '0'
+
+    def _get_invoice_payment_method_code(self):
+        "Invoices in this module are always receivable invoices"
+        return '2'
+
+    def _get_invoice_tax_payer_type_code(self):
+        return {
+            'income': '1',
+            'sales': '2',
+            'special': '3',
+        }[self.company_id.l10n_jo_edi_taxpayer_type]
+
+    def _get_invoice_type_code(self):
+        self.ensure_one()
+        return self._get_invoice_trade_type_code() + self._get_invoice_payment_method_code() + self._get_invoice_tax_payer_type_code()
+
     def button_draft(self):
         # EXTENDS 'account'
         self.write(
