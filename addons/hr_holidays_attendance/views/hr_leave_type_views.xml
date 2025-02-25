@@ -5,9 +5,12 @@
         <field name="model">hr.leave.type</field>
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='configuration']" position="inside">
-                <field name="overtime_deductible" nolabel="1"/>
-                <label for="overtime_deductible"/>
+            <xpath expr="/form/sheet/div[2]" position="before">
+                <div class="oe_inline" invisible="not warning_multiple_types_based_on_extra_hours">
+                    <div class="alert alert-danger oe_text_center" role="alert">
+                        There are multiple time off types with allocation based on extra hours.
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>
