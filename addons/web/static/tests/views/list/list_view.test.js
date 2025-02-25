@@ -5314,6 +5314,13 @@ test(`duplicate all records`, async () => {
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Duplicate");
 
+    // A confirmation dialog should appear when duplicating multiple records.
+    expect(`.modal`).toHaveCount(1);
+    expect(`.modal-body`).toHaveText(
+        "Are you sure that you want to duplicate all the selected records?"
+    );
+    await contains(`.modal footer button.btn-primary`).click();
+
     // Final state: there should be 8 records
     expect(`tbody tr`).toHaveCount(8, { message: "should have 8 rows" });
 });
