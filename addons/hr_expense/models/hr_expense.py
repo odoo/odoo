@@ -806,7 +806,7 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot edit the security fields of an expense manually"))
 
         if any(field in vals for field in {'tax_ids', 'analytic_distribution', 'account_id', 'manager_id'}):
-            if any(not expense.is_editable for expense in self):
+            if any((not expense.is_editable and not self.env.su) for expense in self):
                 raise UserError(_('You are not authorized to edit this expense.'))
 
         res = super().write(vals)
@@ -1109,7 +1109,7 @@ class HrExpense(models.Model):
             if not expense.product_id:
                 raise UserError(_("You can not submit an expense without a category."))
             if not expense.manager_id:
-                expense.manager_id = expense._get_default_responsible_for_approval()
+                expense.sudo().manager_id = expense._get_default_responsible_for_approval()
         expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id and not expense.employee_id.expense_manager_id)
         (self - expenses_autovalidated).approval_state = 'submitted'
         if expenses_autovalidated:  # Note, this will and should bypass the duplicate check. May be changed later
