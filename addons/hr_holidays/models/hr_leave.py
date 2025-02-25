@@ -1146,6 +1146,8 @@ class HolidaysRequest(models.Model):
         work_days_data = employees._get_work_days_data_batch(date_from, date_to)
 
         for employee in employees:
+            date_from_tz = date_from.astimezone(timezone(employee.tz)).replace(tzinfo=None)
+            date_to_tz = date_to.astimezone(timezone(employee.tz)).replace(tzinfo=None)
             if self.request_unit_hours:
                 hour_from = self.date_from.time()
                 hour_to = self.date_to.time()
@@ -1153,12 +1155,12 @@ class HolidaysRequest(models.Model):
                 day_period = False
                 if self.request_unit_half:
                     day_period = 'morning' if self.request_date_from_period == 'am' else 'afternoon'
-                attendance_from, attendance_to = self.with_context(day_period=day_period)._get_attendances(employee, date_from.date(), date_to.date())
+                attendance_from, attendance_to = self.with_context(day_period=day_period)._get_attendances(employee, date_from_tz.date(), date_to_tz.date())
                 hour_from = float_to_time(attendance_from.hour_from)
                 hour_to = float_to_time(attendance_to.hour_to)
 
-            work_days_data[employee.id]['date_from'] = datetime.combine(date_from, hour_from)
-            work_days_data[employee.id]['date_to'] = datetime.combine(date_to, hour_to)
+            work_days_data[employee.id]['date_from'] = datetime.combine(date_from_tz, hour_from)
+            work_days_data[employee.id]['date_to'] = datetime.combine(date_to_tz, hour_to)
 
         return [{
             'name': self.name,
