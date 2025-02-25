@@ -11643,10 +11643,14 @@ test("open a one2many record containing a one2many", async () => {
 
     patchWithCleanup(browser.localStorage, {
         setItem(args) {
-            expect.step(`localStorage setItem ${args}`);
+            if (["optional_fields", "debug_open_view"].some((word) => args.startsWith(word))) {
+                expect.step(`localStorage setItem ${args}`);
+            }
         },
         getItem(args) {
-            expect.step(`localStorage getItem ${args}`);
+            if (["optional_fields", "debug_open_view"].some((word) => args.startsWith(word))) {
+                expect.step(`localStorage getItem ${args}`);
+            }
             return null;
         },
     });
@@ -11665,8 +11669,6 @@ test("open a one2many record containing a one2many", async () => {
     });
 
     expect.verifySteps([
-        "localStorage getItem web.emoji.frequent",
-        "localStorage getItem pwaService.installationState",
         "localStorage getItem optional_fields,partner,form,123456789,p,list,name",
         "localStorage getItem debug_open_view,partner,form,123456789,p,list,name",
     ]);
