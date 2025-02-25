@@ -448,9 +448,9 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
 
     def test_purchase_order_to_invoice_analytic_rule_with_account_prefix(self):
         """
-        Test whether, when an analytic plan is set within the scope (applicability) of purchase
-        and with an account prefix set in the distribution model,
-        the default analytic account is correctly set during the conversion from po to invoice
+        Test whether, when an analytic plan is set within the scope (applicability) of purchase and with an account
+        prefix set in the distribution model, the default analytic account is correctly set during the conversion from
+        po to invoice. An additional analytic account set manually in another plan is also passed to the invoice.
         """
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
         analytic_plan_default = self.env['account.analytic.plan'].create({
@@ -461,6 +461,9 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             })]
         })
         analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan_default.id})
+        analytic_plan_other = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
+        analytic_account_manual = self.env['account.analytic.account'].create({'name': 'manual', 'plan_id': analytic_plan_other.id})
+        analytic_distribution_manual = {str(analytic_account_manual.id): 100}
 
         analytic_distribution_model = self.env['account.analytic.distribution.model'].create({
             'account_prefix': '600',
@@ -475,13 +478,50 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'product_id': self.product_a.id
         })
         self.assertFalse(po.order_line.analytic_distribution, "There should be no analytic set.")
+        po.order_line.analytic_distribution = analytic_distribution_manual
         po.button_confirm()
         po.order_line.qty_received = 1
         po.action_create_invoice()
-        self.assertRecordValues(po.invoice_ids.invoice_line_ids,
-                                [{'analytic_distribution': analytic_distribution_model.analytic_distribution}])
+        self.assertRecordValues(
+            po.invoice_ids.invoice_line_ids,
+            [{'analytic_distribution': analytic_distribution_model.analytic_distribution | analytic_distribution_manual}],
+        )
 
     def test_sequence_invoice_lines_from_multiple_purchases(self):
+        """Test if the invoice lines are sequenced by purchase order when creating an invoice
+           from multiple selected po's"""
+        purchase_orders = self.env['purchase.order']
+
+        for _ in range(3):
+            pol_vals = [
+                (0, 0, {
+                    'name': self.product_order.name,
+                    'product_id': self.product_order.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product_order.uom_id.id,
+                    'price_unit': self.product_order.list_price,
+                    'taxes_id': False,
+                    'sequence': sequence_number,
+                }) for sequence_number in range(10, 13)]
+            purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+                'partner_id': self.partner_a.id,
+                'order_line': pol_vals,
+            })
+            purchase_order.button_confirm()
+            purchase_orders |= purchase_order
+
+        action = purchase_orders.action_create_invoice()
+        invoice = self.env['account.move'].browse(action['res_id'])
+
+        expected_purchase = [
+            purchase_orders[0], purchase_orders[0], purchase_orders[0],
+            purchase_orders[1], purchase_orders[1], purchase_orders[1],
+            purchase_orders[2], purchase_orders[2], purchase_orders[2],
+        ]
+        for line in invoice.invoice_line_ids.sorted('sequence'):
+            self.assertEqual(line.purchase_order_id, expected_purchase.pop(0))
+
+    def test_analytic_distribution_invoice_lines_from_multiple_purchases(self):
         """Test if the invoice lines are sequenced by purchase order when creating an invoice
            from multiple selected po's"""
         purchase_orders = self.env['purchase.order']
