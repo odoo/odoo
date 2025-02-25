@@ -134,7 +134,7 @@
       this._interval = setInterval(() => this.nextWhenVisible(), this._config.interval);
     }
     _maybeEnableCycle() {
-      if (!this._config.ride) {
+      if (!this._config.ride || this._config.ride === "noAutoSlide") {
         return;
       }
       if (this._isSliding) {
