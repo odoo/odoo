@@ -26,7 +26,7 @@ class AccountAnalyticAccount(models.Model):
             limit=1,
         )
         if has_tasks:
-            raise UserError(_('Please remove existing tasks in the project linked to the accounts you want to delete.'))
+            raise UserError(_("Before we can bid farewell to these accounts, you need to tidy up the projects linked to them by removing their existing tasks!"))
 
     def action_view_projects(self):
         kanban_view_id = self.env.ref('project.view_project_kanban').id

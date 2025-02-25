@@ -836,7 +836,7 @@ class HrLeave(models.Model):
                 if hol.state not in ['confirm', 'validate1', 'cancel']:
                     raise UserError(error_message % {'state': state_description_values.get(self[:1].state)})
                 if hol.date_from.date() < now:
-                    raise UserError(_('You cannot delete a time off which is in the past'))
+                    raise UserError(_("You can't delete a time off request that is in the past."))
         elif not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
             for holiday in self.filtered(lambda holiday: holiday.state not in ['cancel', 'confirm']):
                 error_message = self.env._('Oops! %(state)s Time-Off requests can only be deleted by Administrators.')

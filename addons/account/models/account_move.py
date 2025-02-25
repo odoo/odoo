@@ -2433,10 +2433,9 @@ class AccountMove(models.Model):
                 move = self.browse(move_id)
                 error_msg += _(
                     "\n\n"
-                    "The move (%(move)s) is not balanced.\n"
-                    "The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-                    "You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move.",
-                    move=move.display_name,
+                    "The journal entry is not balanced,"
+                    "with %(debit_total)s on the debit side and %(credit_total)s on the credit side, there needs to be an equilibrium!\n\n"
+                    "Consider adding a default account on the journal \"%(journal)s\" to automatically balance each journal entry and restore order to the accounting universe!",
                     debit_total=format_amount(self.env, sum_debit, move.company_id.currency_id),
                     credit_total=format_amount(self.env, sum_credit, move.company_id.currency_id),
                     journal=move.journal_id.name)
@@ -5118,7 +5117,10 @@ class AccountMove(models.Model):
 
             if not invoice.partner_id:
                 if invoice.is_sale_document():
-                    validation_msgs.add(_("The field 'Customer' is required, please complete it to validate the Customer Invoice."))
+                    validation_msgs.add(_(
+                        "The 'Customer' field is required to validate the invoice.\n"
+                        "You probably don't want to explain to your auditor that you invoiced an invisible man :)"
+                    ))
                 elif invoice.is_purchase_document():
                     validation_msgs.add(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
 
@@ -5131,7 +5133,7 @@ class AccountMove(models.Model):
             if move.state in ['posted', 'cancel']:
                 validation_msgs.add(_('The entry %(name)s (id %(id)s) must be in draft.', name=move.name, id=move.id))
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
-                validation_msgs.add(_('You need to add a line before posting.'))
+                validation_msgs.add(_("Even magicians can't post nothing!"))
             if not soft and move.auto_post != 'no' and move.date > fields.Date.context_today(self):
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
                 validation_msgs.add(_("This move is configured to be auto-posted on %(date)s", date=date_msg))
@@ -5414,7 +5416,7 @@ class AccountMove(models.Model):
 
     def action_switch_move_type(self):
         if any(move.posted_before for move in self):
-            raise ValidationError(_("You cannot switch the type of a document which has been posted once."))
+            raise ValidationError(_("Once a document has been posted once, its type is set in stone and you can't change it anymore."))
         if any(move.move_type == "entry" for move in self):
             raise ValidationError(_("This action isn't available for this document."))
 
