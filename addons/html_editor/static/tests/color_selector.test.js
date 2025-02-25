@@ -41,8 +41,40 @@ test("can set background color", async () => {
     expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(
-        `<p><font style="background-color: rgb(107, 173, 222);">[test]</font></p>`
+        `<p><font style="background-color: rgba(107, 173, 222, 0.6);">[test]</font></p>`
     );
+});
+
+test("should add opacity to custom background colors but not to theme colors", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await contains(".o-select-color-background").click();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await contains(".o_color_button[data-color='#FF0000']").click(); // Select a custom color.
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveCount(1);
+    expect(".o_font_color_selector").toHaveCount(0);
+    // Verify custom color applies RGBA with 0.6 opacity.
+    expect(getContent(el)).toBe(
+        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[test]</font></p>`
+    );
+    // Verify paintbrush border bottom color has no opacity.
+    expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+
+    await contains(".o-select-color-background").click();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".o_color_button[data-color='#FF0000']").toHaveClass("selected");
+
+    await contains(".o_color_button[data-color='o-color-1']").click(); // Select a theme color
+    await waitFor(".o-we-toolbar");
+    expect(getContent(el)).toBe(`<p><font style="" class="bg-o-color-1">[test]</font></p>`);
+    // Verify computed background color has no opacity.
+    const backgroundColor = getComputedStyle(el.querySelector("p font")).backgroundColor;
+    expect(backgroundColor).toBe("rgb(113, 75, 103)");
 });
 
 test("can render and apply color theme", async () => {
