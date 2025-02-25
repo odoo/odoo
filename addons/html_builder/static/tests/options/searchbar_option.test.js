@@ -20,7 +20,7 @@ const searchbarHTML = (orderBy) => `
     `;
 
 class SearchbarTestPlugin extends Plugin {
-    static id = "SearchbarTestPlugin";
+    static id = "searchbarTestPlugin";
     resources = {
         searchbar_option_order_by_items: [
             {

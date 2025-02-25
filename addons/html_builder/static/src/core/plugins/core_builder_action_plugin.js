@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { CSS_SHORTHANDS, areCssValuesEqual } from "@html_builder/utils/utils_css";
 
 export class CoreBuilderActionPlugin extends Plugin {
-    static id = "CoreBuilderAction";
+    static id = "coreBuilderAction";
     resources = {
         builder_actions: this.getActions(),
         builder_style_actions: this.getStyleActions(),
