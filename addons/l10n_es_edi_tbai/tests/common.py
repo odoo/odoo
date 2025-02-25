@@ -58,20 +58,20 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
             cert_name = 'araba_1234.p12'
             cert_password = '1234'
         elif agency == 'bizkaia':
-            cert_name = 'bizkaia_111111.p12'
-            cert_password = '111111'
+            cert_name = 'Bizkaia-IZDesa2021.p12'
+            cert_password = 'IZDesa2021'
         elif agency == 'gipuzkoa':
             cert_name = 'gipuzkoa_IZDesa2021.p12'
             cert_password = 'IZDesa2021'
         else:
             raise ValueError("Unknown tax agency: " + agency)
 
-        cls.certificate = cls.env['l10n_es_edi.certificate'].create({
+        cls.certificate = cls.env['l10n_es_edi.certificate'].sudo().create({
             'content': base64.encodebytes(
                 misc.file_open("l10n_es_edi_tbai/demo/certificates/" + cert_name, 'rb').read()),
             'password': cert_password,
         })
-        cls.company_data['company'].write({
+        cls.company_data['company'].sudo().write({
             'l10n_es_tbai_tax_agency': agency,
             'l10n_es_edi_certificate_id': cls.certificate.id,
         })
