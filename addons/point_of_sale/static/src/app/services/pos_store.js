@@ -1504,6 +1504,22 @@ export class PosStore extends WithLazyGetterTrap {
         if (newOrder) {
             this.addNewOrder();
         }
+<<<<<<< 25ad79ea6b84dd33dccd31134b8e1fea36a3a930:addons/point_of_sale/static/src/app/services/pos_store.js
+||||||| 3354866530e9525c2c794dee24e857bce5c75945:addons/point_of_sale/static/src/app/store/pos_store.js
+    }
+    orderExportForPrinting(order) {
+        const headerData = this.getReceiptHeaderData(order);
+        const baseUrl = this.session._base_url;
+        return order.export_for_printing(baseUrl, headerData);
+=======
+
+        return true;
+    }
+    orderExportForPrinting(order) {
+        const headerData = this.getReceiptHeaderData(order);
+        const baseUrl = this.session._base_url;
+        return order.export_for_printing(baseUrl, headerData);
+>>>>>>> f4ae5ece644d4a5aaa74353c6125561607195b1e:addons/point_of_sale/static/src/app/store/pos_store.js
     }
     async printReceipt({
         basic = false,
