@@ -63,10 +63,7 @@ export class LunchOrderLine extends Component {
 
 export class LunchAlert extends Component {
     static props = ["message"];
-    static template = xml`<t t-out="message"/>`;
-    get message() {
-        return markup(this.props.message);
-    }
+    static template = xml`<t t-out="props.message"/>`;
 }
 
 export class LunchAlerts extends Component {
@@ -134,6 +131,7 @@ export class LunchDashboard extends Component {
 
     async _fetchLunchInfos() {
         this.state.infos = await this.lunchRpc('/lunch/infos');
+        this.state.infos.alerts?.forEach((alert) => (alert.message = markup(alert.message)));
     }
 
     async emptyCart() {

@@ -28,7 +28,7 @@ import {
     runAllTimers,
     tick,
 } from "@odoo/hoot-mock";
-import { Component, markup, onRendered, onWillStart, useRef, xml } from "@odoo/owl";
+import { Component, onRendered, onWillStart, useRef, xml } from "@odoo/owl";
 import {
     getPickerApplyButton,
     getPickerCell,
@@ -82,6 +82,7 @@ import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useBus } from "@web/core/utils/hooks";
+import { htmlMarkup } from "@web/core/utils/html";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { session } from "@web/session";
 import { floatField } from "@web/views/fields/float/float_field";
@@ -5187,7 +5188,7 @@ test(`custom delete confirmation dialog`, async () => {
     class CautiousController extends listView.Controller {
         get deleteConfirmationDialogProps() {
             const props = super.deleteConfirmationDialogProps;
-            props.body = markup(`<span class="text-danger">These are the consequences</span>`);
+            props.body = htmlMarkup`<span class="text-danger">These are the consequences</span>`;
             return props;
         }
     }

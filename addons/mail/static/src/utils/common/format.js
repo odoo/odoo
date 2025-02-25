@@ -1,39 +1,21 @@
-import {
-    createDocumentFragmentFromContent,
-    htmlJoin,
-    htmlReplace,
-    htmlTrim,
-} from "@mail/utils/common/html";
+import { createDocumentFragmentFromContent, htmlReplace, htmlTrim } from "@mail/utils/common/html";
 
 import { markup } from "@odoo/owl";
 
 import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
-import { createElementWithContent, htmlEscape, setElementContent } from "@web/core/utils/html";
+import {
+    createElementWithContent,
+    htmlEscape,
+    htmlJoin,
+    htmlMarkup,
+    setElementContent,
+} from "@web/core/utils/html";
 import { escapeRegExp, unaccent } from "@web/core/utils/strings";
 import { setAttributes } from "@web/core/utils/xml";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
-
-/**
- * Escape < > & as html entities
- *
- * @param {string}
- * @return {string}
- */
-const _escapeEntities = (function () {
-    const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;" };
-    const escaper = function (match) {
-        return map[match];
-    };
-    const testRegexp = RegExp("(?:&|<|>)");
-    const replaceRegexp = RegExp("(?:&|<|>)", "g");
-    return function (string) {
-        string = string == null ? "" : "" + string;
-        return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
-    };
-})();
 
 /**
  * @param rawBody {string|ReturnType<markup>}
@@ -91,7 +73,7 @@ function _parseAndTransform(nodes, transformFunction) {
         return;
     }
     return htmlJoin(
-        ...Object.values(nodes).map((node) =>
+        Object.values(nodes).map((node) =>
             transformFunction(node, function () {
                 return _parseAndTransform(node.childNodes, transformFunction);
             })
@@ -108,21 +90,17 @@ function linkify(text) {
     let result = "";
     let match;
     while ((match = urlRegexp.exec(text)) !== null) {
-        result = htmlJoin(result, text.slice(curIndex, match.index));
+        result = htmlJoin([result, text.slice(curIndex, match.index)]);
         // Decode the url first, in case it's already an encoded url
         const url = decodeURI(match[0]);
         const href = encodeURI(!/^https?:\/\//i.test(url) ? "http://" + url : url);
-        result = htmlJoin(
+        result = htmlJoin([
             result,
-            markup(
-                `<a target="_blank" rel="noreferrer noopener" href="${href}">${_escapeEntities(
-                    url
-                )}</a>`
-            )
-        );
+            htmlMarkup`<a target="_blank" rel="noreferrer noopener" href="${href}">${url}</a>`,
+        ]);
         curIndex = match.index + match[0].length;
     }
-    return htmlJoin(result, text.slice(curIndex));
+    return htmlJoin([result, text.slice(curIndex)]);
 }
 
 /**
@@ -160,12 +138,12 @@ export function addLink(node, transformChildren) {
 export function escapeAndCompactTextContent(content) {
     //Removing unwanted extra spaces from message
     let value = htmlTrim(content);
-    value = htmlReplace(value, /(\r|\n){2,}/g, markup("<br/><br/>"));
-    value = htmlReplace(value, /(\r|\n)/g, markup("<br/>"));
+    value = htmlReplace(value, /(\r|\n){2,}/g, htmlMarkup`<br/><br/>`);
+    value = htmlReplace(value, /(\r|\n)/g, htmlMarkup`<br/>`);
 
     // prevent html space collapsing
-    value = htmlReplace(value, / /g, markup("&nbsp;"));
-    value = htmlReplace(value, /([^>])&nbsp;([^<])/g, markup("$1 $2"));
+    value = htmlReplace(value, / /g, htmlMarkup`&nbsp;`);
+    value = htmlReplace(value, /([^>])&nbsp;([^<])/g, htmlMarkup`$1 $2`);
     return value;
 }
 
@@ -173,7 +151,7 @@ export function escapeAndCompactTextContent(content) {
  * @param body {string|ReturnType<markup>}
  * @param validRecords {Object}
  * @param validRecords.partners {Array}
- * @return {ReturnType<markup>}
+ * @return {string|ReturnType<markup>}
  */
 function generateMentionsLinks(body, { partners = [], threads = [], specialMentions = [] }) {
     const mentions = [];
@@ -212,7 +190,7 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
         body = htmlReplace(
             body,
             `@${special}`,
-            markup(`<a href="#" class="o-discuss-mention">@${htmlEscape(special)}</a>`)
+            htmlMarkup`<a href="#" class="o-discuss-mention">@${special}</a>`
         );
     }
     for (const mention of mentions) {
@@ -228,13 +206,13 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
         link.textContent = mention.text;
         body = htmlReplace(body, mention.placeholder, markup(link.outerHTML));
     }
-    return htmlEscape(body);
+    return body;
 }
 
 /**
  * @private
  * @param {string|ReturnType<markup>} htmlString
- * @returns {ReturnType<markup>}
+ * @returns {Promise<string|ReturnType<markup>>}
  */
 async function _generateEmojisOnHtml(htmlString) {
     const { emojis } = await loadEmoji();
@@ -245,7 +223,7 @@ async function _generateEmojisOnHtml(htmlString) {
             htmlString = htmlReplace(htmlString, regexp, "$1" + emoji.codepoints);
         }
     }
-    return htmlEscape(htmlString);
+    return htmlString;
 }
 
 /**

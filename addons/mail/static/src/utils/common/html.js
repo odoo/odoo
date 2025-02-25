@@ -13,16 +13,6 @@ export function createDocumentFragmentFromContent(content) {
 }
 
 /**
- * Applies list join on content and returns a markup result built for HTML.
- *
- * @param {Array<string|ReturnType<markup>>} args
- * @returns {ReturnType<markup>}
- */
-export function htmlJoin(...args) {
-    return markup(args.map((arg) => htmlEscape(arg)).join(""));
-}
-
-/**
  * Applies string replace on content and returns a markup result built for HTML.
  *
  * @param {string|ReturnType<markup>} content
@@ -37,6 +27,23 @@ export function htmlReplace(content, search, replacement) {
     }
     replacement = htmlEscape(replacement);
     return markup(content.replace(search, replacement));
+}
+
+/**
+ * Applies string replaceAll on content and returns a markup result built for HTML.
+ *
+ * @param {string|ReturnType<markup>} content
+ * @param {string | RegExp} search
+ * @param {string} replacement
+ * @returns {ReturnType<markup>}
+ */
+export function htmlReplaceAll(content, search, replacement) {
+    content = htmlEscape(content);
+    if (typeof search === "string" || search instanceof String) {
+        search = htmlEscape(search);
+    }
+    replacement = htmlEscape(replacement);
+    return markup(content.replaceAll(search, replacement));
 }
 
 /**
