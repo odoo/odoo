@@ -1,6 +1,8 @@
 .o_calendar_renderer {
     --o-circle-padding: calc(#{map-get($spacers, 1 )} / 2);
     --o-cw-border-color: #{$border-color};
+    --o-cw-bg: #{$o-cw-color-today-accent};
+    --fc-now-indicator-color: var(--o-cw-bg);
 
     background-color: $o-view-background-color;
 
@@ -126,9 +128,16 @@
     }
 
     .o_calendar_widget {
-        // Remove background today color
         .fc-day-today:not(.o_calendar_disabled) {
+            // Remove background today color
             --fc-today-bg-color: none;
+
+            position: relative;
+        }
+
+        // Remove time indicator arrow
+        .fc-timegrid-now-indicator-arrow {
+            display: none;
         }
 
         // ===  Adapt calendar table borders and general layout ===
@@ -240,7 +249,6 @@
 
                 &.fc-day-today {
                     --o-cw-color: #{color-contrast($o-cw-color-today-accent)};
-                    --o-cw-bg: #{$o-cw-color-today-accent};
 
                     .o_cw_day_number {
                         z-index: 0;
@@ -284,6 +292,25 @@
                         position: relative;
                         display: block;
                     }
+                }
+            }
+
+            .o_calendar_time_indicator_today {
+                position: absolute;
+                height: 1px;
+                width: 100%;
+                background-color: var(--o-cw-bg);
+                z-index: $zindex-dropdown;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    height: .75rem;
+                    width: .75rem;
+                    border: $border-width solid $o-view-background-color;
+                    border-radius: $border-radius-pill;
+                    background-color: var(--o-cw-bg);
+                    transform: translate(calc(-50% - (#{$border-width} / 2)), calc(-50% + (#{$border-width} / 2)));
                 }
             }
 
@@ -355,8 +382,9 @@
                 }
             }
 
-            // Avoid pointer event on the "Now Indicator" (red line)
+            // Avoid pointer event on the "Now Indicator" (red line) and make it more subtle
             .fc-timegrid-now-indicator-line {
+                opacity: .3;
                 pointer-events: none;
             }
         }
