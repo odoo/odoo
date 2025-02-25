@@ -977,30 +977,6 @@ export function lookup(pattern, items, property = "key") {
 }
 
 /**
- * @param {EventTarget} target
- * @param {string[]} types
- */
-export function makePublicListeners(target, types) {
-    for (const type of types) {
-        let listener = null;
-        $defineProperty(target, `on${type}`, {
-            get() {
-                return listener;
-            },
-            set(value) {
-                if (listener) {
-                    target.removeEventListener(type, listener);
-                }
-                listener = value;
-                if (listener) {
-                    target.addEventListener(type, listener);
-                }
-            },
-        });
-    }
-}
-
-/**
  * @template {keyof Runner} T
  * @param {T} name
  * @returns {Runner[T]}
@@ -1464,6 +1440,36 @@ export class Markup {
      */
     static text(content, options) {
         return new this({ ...options, content });
+    }
+}
+
+/**
+ * Centralized version of {@link EventTarget} to make cleanups more streamlined.
+ */
+export class MockEventTarget extends EventTarget {
+    /** @type {string[]} */
+    static publicListeners = [];
+
+    constructor() {
+        super(...arguments);
+
+        for (const type of this.constructor.publicListeners) {
+            let listener = null;
+            $defineProperty(this, `on${type}`, {
+                get() {
+                    return listener;
+                },
+                set(value) {
+                    if (listener) {
+                        this.removeEventListener(type, listener);
+                    }
+                    listener = value;
+                    if (listener) {
+                        this.addEventListener(type, listener);
+                    }
+                },
+            });
+        }
     }
 }
 

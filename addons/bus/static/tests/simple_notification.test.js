@@ -4,8 +4,8 @@ import {
     asyncStep,
     makeMockEnv,
     MockServer,
+    mockService,
     mountWithCleanup,
-    patchWithCleanup,
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
@@ -17,7 +17,7 @@ describe.current.tags("desktop");
 
 test("receive and display simple notification", async () => {
     await mountWithCleanup(WebClient);
-    MockServer.current.env["bus.bus"]._sendone(serverState.partnerId, "simple_notification", {
+    MockServer.env["bus.bus"]._sendone(serverState.partnerId, "simple_notification", {
         message: "simple notification",
         title: "simple title",
     });
@@ -28,7 +28,7 @@ test("receive and display simple notification", async () => {
 
 test("receive and display simple notification with specific type", async () => {
     await mountWithCleanup(WebClient);
-    MockServer.current.env["bus.bus"]._sendone(serverState.partnerId, "simple_notification", {
+    MockServer.env["bus.bus"]._sendone(serverState.partnerId, "simple_notification", {
         message: "simple notification",
         title: "simple title",
         type: "info",
@@ -38,14 +38,14 @@ test("receive and display simple notification with specific type", async () => {
 });
 
 test("receive and display simple notification as sticky", async () => {
-    const env = await makeMockEnv();
-    patchWithCleanup(env.services.notification, {
-        add: (_, options) => {
+    mockService("notification", {
+        add(_, options) {
             expect(options.sticky).toBe(true);
             asyncStep("add notification");
         },
     });
-    MockServer.current.env["bus.bus"]._sendone(serverState.partnerId, "simple_notification", {
+    await makeMockEnv();
+    MockServer.env["bus.bus"]._sendone(serverState.partnerId, "simple_notification", {
         message: "simple notification",
         sticky: true,
     });

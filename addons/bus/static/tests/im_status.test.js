@@ -4,7 +4,7 @@ import { advanceTime, freezeTime } from "@odoo/hoot-dom";
 import {
     asyncStep,
     makeMockEnv,
-    makeMockServer,
+    MockServer,
     mockService,
     serverState,
     waitForSteps,
@@ -20,10 +20,9 @@ describe.current.tags("headless");
 test("update presence if IM status changes to offline while this device is online", async () => {
     mockService("bus_service", { send: (type) => asyncStep(type) });
 
-    const { env } = await makeMockServer();
     await makeMockEnv();
     await waitForSteps(["update_presence"]);
-    env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+    MockServer.env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
         im_status: "offline",
         partner_id: serverState.partnerId,
     });
@@ -35,10 +34,9 @@ test("update presence if IM status changes to away while this device is online",
 
     localStorage.setItem("presence.lastPresence", Date.now());
 
-    const { env } = await makeMockServer();
     await makeMockEnv();
     await waitForSteps(["update_presence"]);
-    env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+    MockServer.env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
         im_status: "away",
         partner_id: serverState.partnerId,
     });
@@ -50,10 +48,9 @@ test("do not update presence if IM status changes to away while this device is a
 
     localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
 
-    const { env } = await makeMockServer();
     await makeMockEnv();
     await waitForSteps(["update_presence"]);
-    env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+    MockServer.env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
         im_status: "away",
         partner_id: serverState.partnerId,
     });
@@ -65,10 +62,9 @@ test("do not update presence if other user's IM status changes to away", async (
 
     localStorage.setItem("presence.lastPresence", Date.now());
 
-    const { env } = await makeMockServer();
     await makeMockEnv();
     await waitForSteps(["update_presence"]);
-    env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+    MockServer.env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
         im_status: "away",
         partner_id: serverState.publicPartnerId,
     });

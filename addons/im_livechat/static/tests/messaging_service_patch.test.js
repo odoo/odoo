@@ -4,7 +4,6 @@ import { describe, test } from "@odoo/hoot";
 import {
     asyncStep,
     Command,
-    mockService,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -47,7 +46,6 @@ test("push notifications are Odoo toaster on Android", async () => {
             asyncStep(`/mail/data - ${JSON.stringify(params)}`);
         }
     });
-    mockService("presence", { isOdooFocused: () => false });
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({

@@ -1,3 +1,4 @@
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import {
     click,
     contains,
@@ -11,11 +12,11 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { animationFrame, press } from "@odoo/hoot-dom";
 import { describe, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { defineLivechatModels } from "./livechat_test_helpers";
 import { rpc } from "@web/core/network/rpc";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -96,6 +97,7 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 12" });
 });
 
+test.tags("focus required");
 test("Tab livechat picks ended livechats last", async () => {
     const pyEnv = await startServer();
     const guestIds = pyEnv["mail.guest"].create([
@@ -177,6 +179,7 @@ test("Tab livechat picks ended livechats last", async () => {
     await press("Tab");
     await contains(".o-mail-ChatWindow", { count: 3 });
     await contains(".o-mail-ChatWindow", { text: "Visitor 0" });
+    await contains(".o-mail-Composer-input[placeholder='Message Visitor 0…']:focus");
     await withGuest(guestIds[2], () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -189,9 +192,11 @@ test("Tab livechat picks ended livechats last", async () => {
         })
     );
     await contains(".o-mail-ChatBubble-counter", { text: "1", count: 2 });
+    await waitNotifications(["mail.record/insert"]);
     await press("Tab");
     await contains(".o-mail-ChatWindow", { text: "Visitor 2" });
-    await animationFrame();
+    await contains(".o-mail-Composer-input[placeholder='Message Visitor 2…']:focus");
+    await waitNotifications(["mail.record/insert"], ["mail.record/insert"]);
     await press("Tab");
     // Ensure the last tab selection is an ended livechat
     await contains(".o-mail-ChatWindow", { text: "Visitor 1" });

@@ -21,5 +21,7 @@ mockTimeZone.onCall = (tz) => {
 
 /** @type {typeof patch} */
 export function patchWithCleanup(obj, patchValue) {
-    after(patch(obj, patchValue));
+    const unpatch = patch(obj, patchValue);
+    after(unpatch);
+    return unpatch;
 }
