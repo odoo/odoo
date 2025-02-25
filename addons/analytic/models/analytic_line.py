@@ -198,3 +198,18 @@ class AccountAnalyticLine(models.Model):
         [('other', 'Other')],
         default='other',
     )
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'amount' in vals or 'account_id' in vals:
+            for line in self:
+                move_line = self.env['account.move.line'].browse(line.move_line_id)
+                move_line._compute_analytic_distribution()
+        return res
+    
+    def unlink(self):
+        move_lines = self.mapped('move_line_id')
+        res = super().unlink()
+        for move_line in move_lines:
+            move_line._compute_analytic_distribution()
+        return res
