@@ -155,6 +155,7 @@ export class Chatbot extends Record {
         } else {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
             this.currentStep = this.steps[nextStepIndex];
+            this.currentStep.selectedAnswer = null;
         }
     }
 
@@ -180,13 +181,13 @@ export class Chatbot extends Record {
     /**
      * Simulate the typing of the chatbot.
      */
-    async _simulateTyping() {
+    async _simulateTyping(duration = Chatbot.MESSAGE_DELAY) {
         this.isTyping = true;
         await new Promise((res) =>
             setTimeout(() => {
                 this.isTyping = false;
                 res();
-            }, Chatbot.MESSAGE_DELAY)
+            }, duration)
         );
     }
 

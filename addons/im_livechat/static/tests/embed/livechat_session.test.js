@@ -54,7 +54,7 @@ test("Fold state is saved", async () => {
     await contains(".o-mail-Thread");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message", { text: "Hello World!" });
+    await contains(".o-mail-Thread:not([data-transient])");
     assertChatHub({ opened: [1] });
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-Thread", { count: 0 });

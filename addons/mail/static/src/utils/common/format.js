@@ -36,11 +36,14 @@ const _escapeEntities = (function () {
 })();
 
 /**
- * @param rawBody {string|ReturnType<markup>}
- * @param validRecords {Object}
- * @param validRecords.partners {Partner}
+ * @param {string|ReturnType<markup>} rawBody
+ * @param {Object} validMentions
+ * @param {import("models").Persona[]} validMentions.partners
  */
-export async function prettifyMessageContent(rawBody, validRecords = []) {
+export async function prettifyMessageContent(
+    rawBody,
+    { validMentions = [], allowEmojiLoading = true } = {}
+) {
     // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
     // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
     // And further extended to include Latin-1 Supplement, Latin Extended-A, Latin Extended-B and Latin Extended Additional.
@@ -53,8 +56,10 @@ export async function prettifyMessageContent(rawBody, validRecords = []) {
     // linkification a bit everywhere. Ideally we want to keep the content
     // as text internally and only make html enrichment at display time but
     // the current design makes this quite hard to do.
-    body = generateMentionsLinks(body, validRecords);
-    body = await _generateEmojisOnHtml(body);
+    body = generateMentionsLinks(body, validMentions);
+    if (allowEmojiLoading || odoo.loader.modules.get("@web/core/emoji_picker/emoji_data")) {
+        body = await _generateEmojisOnHtml(body);
+    }
     body = parseAndTransform(body, addLink);
     return body;
 }

@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("chatbot_fw_operator_matching_lang", {
             trigger: ".o-livechat-root:shadow .o-mail-Message:contains('Hello! I'm a bot!')",
         },
         {
-            trigger: ".o-livechat-root:shadow li:contains(I want to speak with an operator)",
+            trigger: ".o-livechat-root:shadow button:contains(I want to speak with an operator)",
             run: "click",
         },
         {

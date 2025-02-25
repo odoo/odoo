@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Thread">
-    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto" t-att-class="{ 'pb-5': env.inChatter?.aside, 'pb-4': !env.inChatter?.aside, 'px-3': !env.inChatter and !props.isInChatWindow }" t-ref="messages" tabindex="-1">
+    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto" t-att-class="{ 'pb-5': env.inChatter?.aside, 'pb-4': !env.inChatter?.aside, 'px-3': !env.inChatter and !props.isInChatWindow }" t-att-data-transient="props.thread.isTransient" t-ref="messages" tabindex="-1">
         <t t-if="!props.thread.isEmpty or props.thread.loadOlder or props.thread.hasLoadingFailed" name="content">
             <div class="d-flex flex-column position-relative flex-grow-1" t-att-class="{'justify-content-end': !env.inChatter and props.thread.model !== 'mail.box'}">
                 <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
