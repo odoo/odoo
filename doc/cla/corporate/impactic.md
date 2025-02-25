@@ -8,13 +8,13 @@ declaration.
 
 Signed,
 
-Tõnu Kaare tonu.kaare@impactic.ee https://github.com/tonu-kaare
+Tõnu Kaare tonu.kaare@outlook.com https://github.com/tonu-kaare
 
 
 List of contributors:
 
-Tõnu Kaare tonu.kaare@impactic.ee https://github.com/tonu-kaare
+Tõnu Kaare tonu.kaare@outlook.com https://github.com/tonu-kaare
 Madis Harjo madis.harjo@impactic.ee https://github.com/Tagzor
-Andri Poolakese andri.poolakese@impactic.ee https://github.com/AndriPoolakese
-Kristjan Tehu kristjan.tehu@impactic.ee https://github.com/KristjanTehu
+Andri Poolakese andri.poola@gmail.com https://github.com/AndriPoolakese
+Kristjan Tehu kristjan.tehu@estpos.ee https://github.com/KristjanTehu
 
