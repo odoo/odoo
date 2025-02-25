@@ -3,7 +3,7 @@ import { animationFrame } from "@odoo/hoot-dom";
 import { Component, onWillRender, reactive, useState, xml } from "@odoo/owl";
 import {
     mountWithCleanup,
-    patchTranslations,
+    allowTranslations,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
@@ -44,7 +44,7 @@ function verifyUnorderedSteps(expectedSteps, stepOrders = []) {
 
 let unorderedSteps = [];
 
-patchTranslations();
+allowTranslations();
 afterEach(clearGettersCache);
 
 class AppStore extends WithLazyGetterTrap {

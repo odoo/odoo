@@ -25,7 +25,6 @@ import {
     toggleSaveFavorite,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { PivotController } from "@web/views/pivot/pivot_controller";
 import { WebClient } from "@web/webclient/webclient";
@@ -220,7 +219,7 @@ test('pivot view without "string" attribute', async () => {
 
     const model = findComponent(view, (c) => c instanceof PivotController).model;
     // this is important for export functionality.
-    expect(model.metaData.title.toString()).toBe(_t("Untitled"));
+    expect(model.metaData.title.toString()).toBe("Untitled");
 });
 
 test('pivot view with "class" attribute', async () => {

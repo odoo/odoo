@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 
 import { getFirstListFunction, getNumberOfListFormulas } from "@spreadsheet/list/list_helpers";
 import { constants, tokenize, helpers } from "@odoo/o-spreadsheet";
-import { patchTranslations } from "@web/../tests/web_test_helpers";
+import { allowTranslations } from "@web/../tests/web_test_helpers";
 const {
     getFirstPivotFunction,
     getNumberOfPivotFunctions,
@@ -22,7 +22,7 @@ function stringArg(value, tokenIndex) {
 }
 
 beforeEach(() => {
-    patchTranslations();
+    allowTranslations();
 });
 
 describe.current.tags("headless");
