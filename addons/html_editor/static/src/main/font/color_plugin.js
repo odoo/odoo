@@ -16,8 +16,11 @@ import {
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { isColorGradient, isCSSColor, rgbToHex } from "@web/core/utils/colors";
+import { isColorGradient, isCSSColor, RGBA_REGEX, rgbToHex } from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
+
+const RGBA_OPACITY = 0.6;
+const HEX_OPACITY = "99";
 
 /**
  * @typedef { Object } ColorShared
@@ -105,12 +108,25 @@ export class ColorPlugin extends Plugin {
         const hasGradient = isColorGradient(backgroundImage);
         const hasTextGradientClass = el.classList.contains("text-gradient");
 
+        let backgroundColor = elStyle.backgroundColor;
+        const activeTab = document
+            .querySelector(".o_font_color_selector button.active")
+            ?.innerHTML.trim();
+        if (backgroundColor.startsWith("rgba") && activeTab === "Solid") {
+            // Buttons in the solid tab of color selector have no
+            // opacity, hence to match selected color correctly,
+            // we need to remove applied 0.6 opacity.
+            const values = backgroundColor.match(RGBA_REGEX) || [];
+            const alpha = parseFloat(values.pop()); // Extract alpha value
+            if (alpha === RGBA_OPACITY) {
+                backgroundColor = `rgb(${values.slice(0, 3).join(", ")})`; // Remove alpha
+            }
+        }
+
         this.selectedColors.color =
             hasGradient && hasTextGradientClass ? backgroundImage : rgbToHex(elStyle.color);
         this.selectedColors.backgroundColor =
-            hasGradient && !hasTextGradientClass
-                ? backgroundImage
-                : rgbToHex(elStyle.backgroundColor);
+            hasGradient && !hasTextGradientClass ? backgroundImage : rgbToHex(backgroundColor);
     }
 
     /**
@@ -181,6 +197,14 @@ export class ColorPlugin extends Plugin {
     _applyColor(color, mode, previewMode = false) {
         if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
             return;
+        }
+        const activeTab = document
+            .querySelector(".o_font_color_selector button.active")
+            ?.innerHTML.trim();
+        if (mode === "backgroundColor" && activeTab === "Solid" && color.startsWith("#")) {
+            // Apply default transparency to selected solid tab colors in background
+            // mode to make text highlighting more usable between light and dark modes.
+            color += HEX_OPACITY;
         }
         let selection = this.dependencies.selection.getEditableSelection();
         let selectionNodes;
