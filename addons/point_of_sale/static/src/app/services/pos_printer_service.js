@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { PrinterService } from "@point_of_sale/app/services/printer_service";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-const posPrinterService = {
+export const posPrinterService = {
     dependencies: ["hardware_proxy", "dialog", "renderer"],
     start(env, { hardware_proxy, dialog, renderer }) {
         return new PosPrinterService(env, { hardware_proxy, dialog, renderer });
