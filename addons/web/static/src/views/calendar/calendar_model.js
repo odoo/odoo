@@ -414,16 +414,10 @@ export class CalendarModel extends Model {
 
         // Compute filter counts
         if (this.hasQuick) {
-            const records = Object.values(data.records);
             for (const [fieldName, { filters }] of Object.entries(data.filterSections)) {
-                const groups = groupBy(records, ({ rawRecord }) => {
-                    const rawValue = rawRecord[fieldName];
-                    const fieldType = this.meta.fields[fieldName].type;
-                    // FIXME: make this robust
-                    return fieldType === "many2one" ? rawValue?.[0] : rawValue;
-                });
+                const counters = this.computeCounters(fieldName, data);
                 for (const filter of filters) {
-                    filter.count = groups[filter.value]?.length || 0;
+                    filter.count = counters[filter.value] || 0;
                 }
             }
         }
@@ -459,6 +453,25 @@ export class CalendarModel extends Model {
     }
 
     //--------------------------------------------------------------------------
+
+    computeCounters(fieldName, data = this.data) {
+        const records = Object.values(data.records);
+        const groups = groupBy(records, ({ rawRecord }) => {
+            const rawValue = rawRecord[fieldName];
+            const fieldType = this.meta.fields[fieldName].type;
+            // FIXME: make this robust
+            return fieldType === "many2one" ? rawValue?.[0] : rawValue;
+        });
+        const counters = {};
+        for (const group in groups) {
+            if (this.meta.aggregate) {
+                counters[group] = groups[group].reduce((acc, r) => r[this.meta.aggregate] + acc, 0);
+            } else {
+                counters[group] = groups[group].length;
+            }
+        }
+        return counters;
+    }
 
     /**
      * @protected

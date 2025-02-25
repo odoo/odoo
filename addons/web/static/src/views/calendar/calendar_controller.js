@@ -20,7 +20,7 @@ import { browser } from "@web/core/browser/browser";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useChildSubEnv, useState } from "@odoo/owl";
 
 import { parseXML } from "@web/core/utils/xml";
 import { Record } from "@web/model/record";
@@ -123,7 +123,9 @@ export class CalendarController extends Component {
         };
 
         // Quick Month
-
+        useChildSubEnv({
+            calendarModel: this.model,
+        });
         this.CALENDAR_MODE = CALENDAR_MODE;
 
         const resModel = this.props.resModel;
