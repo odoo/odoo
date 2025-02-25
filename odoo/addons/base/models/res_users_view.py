@@ -1,14 +1,43 @@
+from odoo import api, fields, models, tools, _
 
-from odoo import api, fields, models, tools
+
+class ResGroupsSection(models.Model):
+    _name = 'res.groups.section'
+    _description = "Sections"
+    _order = 'sequence,name'
+
+    name = fields.Char(string='Name', required=True, translate=True)
+    sequence = fields.Integer(string='Sequence', default=100)
+    privilege_ids = fields.One2many('res.groups.privilege', 'section_id', string='Categories')
+
+
+class ResGroupsPrivilege(models.Model):
+    _name = 'res.groups.privilege'
+    _description = "Privileges"
+    _order = 'sequence,name'
+
+    name = fields.Char(string='Name', required=True, translate=True)
+    description = fields.Text(string='Description', compute="_compute_description")
+    placeholder = fields.Char(string='Placeholder', default="No", help="Text that is displayed as placeholder in the selection field of the user form.")
+    sequence = fields.Integer(string='Sequence', default=100)
+    section_id = fields.Many2one('res.groups.section', string='Group Section')
+    group_ids = fields.One2many('res.groups', 'privilege_id', string='Groups')
+
+    @api.depends('group_ids')
+    def _compute_description(self):
+        for privilege in self:
+            privilege.description = '\n'.join(f'{g.name}: {g.comment}' for g in privilege.group_ids if g.comment)
 
 
 class ResGroups(models.Model):
     _inherit = 'res.groups'
-    _order = 'category_id,sequence,name'
+    _order = 'privilege_id,sequence,name'
 
     sequence = fields.Integer(string='Sequence')
-    visible = fields.Boolean(related='category_id.visible', readonly=True)
-    color = fields.Integer(string='Color Index')
+    privilege_id = fields.Many2one('res.groups.privilege', string='Category', index=True)
+
+    _name_uniq = models.Constraint("UNIQUE (privilege_id, name)",
+        'The name of the group must be unique within a group privilege!')
 
     @api.model
     @tools.ormcache()
@@ -19,18 +48,40 @@ class ResGroups(models.Model):
                 'name': section.name,
                 'categories': [
                     {
-                        'id': category.id,
-                        'name': category.name,
-                        'description': category.description,
-                        'groups': [[group.id, group.name] for group in category.group_ids]
-                    } for category in section.child_ids.sorted(lambda c: c.sequence) if category.group_ids
+                        'id': privilege.id,
+                        'name': privilege.name,
+                        'description': privilege.description,
+                        'placeholder': privilege.placeholder,
+                        'groups': [[group.id, group.name] for group in privilege.group_ids]
+                    } for privilege in section.privilege_ids.sorted(lambda c: c.sequence) if privilege.group_ids
                 ]
-            } for section in self.env['ir.module.category'].search([('parent_id', '=', False), ('child_ids.group_ids', '!=', False)], order="sequence")
+            } for section in self.env['res.groups.section'].search([('privilege_ids.group_ids', '!=', False)])
         ]
 
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
+
+    role = fields.Selection([('member', 'Member'), ('admin', 'Administrator')], compute='_compute_role_id', readonly=False, string="Role")
+
+    @api.depends('group_ids')
+    def _compute_role_id(self):
+        for user in self:
+            if user.has_group('base.group_system'):
+                user.role = 'admin'
+            elif user.has_group('base.group_user'):
+                user.role = 'member'
+            else:
+                user.role = False
+
+    @api.onchange('role')
+    def _set_role_id(self):
+        group_admin = self.env.ref('base.group_system')
+        group_user = self.env.ref('base.group_user')
+        for user in self:
+            if user.has_group('base.group_user'):
+                groups = user.group_ids.filtered(lambda g: g._origin.id not in (group_user.id, group_admin.id))
+                user.group_ids = groups + (group_admin if user.role == 'admin' else group_user)
 
     # For "classic" administrators
 
@@ -55,7 +106,7 @@ class ResUsers(models.Model):
             view_all_disjoint_group_ids = group_definitions.get_disjoint_ids(user.all_group_ids.ids)
             view_visible_implied_group_ids = user.group_ids.implied_ids.all_implied_ids
             if not user.view_show_technical_groups:
-                view_visible_implied_group_ids = view_visible_implied_group_ids.filtered(lambda g: g.category_id.visible)
+                view_visible_implied_group_ids = view_visible_implied_group_ids.filtered(lambda g: g.privilege_id)
 
             user.view_disjoint_group_ids = view_disjoint_group_ids
             user.view_all_disjoint_group_ids = view_all_disjoint_group_ids

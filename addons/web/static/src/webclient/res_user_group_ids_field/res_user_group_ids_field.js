@@ -40,7 +40,7 @@ export class ResUserGroupIdsField extends Component {
                     ${this.sections.map(
                         (section) => `
                         <group string="${section.name}">
-                            ${section.categories.map((cat) => `<field name="field_${cat.id}"/>`)}
+                            ${section.categories.map((cat) => `<field name="field_${cat.id}" placeholder="${cat.placeholder}"/>`)}
                         </group>`
                     )}
                 </group>
