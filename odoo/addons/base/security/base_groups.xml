@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
+        <record id="res_groups_section_master_data" model="res.groups.section">
+            <field name="name">Master Data</field>
+            <field name="sequence">1</field>
+        </record>
 
         <!--
             Users Groups
@@ -14,18 +18,19 @@
 
         <record model="res.groups" id="group_sanitize_override">
             <field name="name">Bypass HTML Field Sanitize</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
         </record>
 
         <record model="res.groups" id="group_system">
-            <field name="name">Settings</field>
+            <field name="name">Administrator</field>
             <field name="implied_ids" eval="[Command.link(ref('group_erp_manager')), Command.link(ref('group_sanitize_override'))]"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+            <field name="privilege_id" ref="res_groups_privilege_administration"/>
         </record>
 
         <record model="res.groups" id="group_user">
-            <field name="name">Internal User</field>
+            <field name="name">Member</field>
             <field name="api_key_duration">90.0</field>
+            <field name="privilege_id" ref="res_groups_privilege_administration"/>
         </record>
 
         <record model="res.groups" id="group_multi_company">
@@ -42,16 +47,17 @@
         </record>
 
         <record model="res.groups" id="group_allow_export">
-            <field name="name">Access to export feature</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="name">Allowed</field>
             <field name="user_ids" eval="[Command.link(ref('base.user_root'))]"/>
             <field name="implied_by_ids" eval="[Command.link(ref('group_system'))]"/>
+            <field name="privilege_id" ref="res_groups_privilege_export"/>
         </record>
 
         <record model="res.groups" id="group_partner_manager">
-            <field name="name">Contact Creation</field>
+            <field name="name">Creation</field>
             <field name="user_ids" eval="[Command.link(ref('base.user_root'))]"/>
             <field name="implied_by_ids" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="privilege_id" ref="res_groups_privilege_contact"/>
         </record>
         <!--
             A group dedicated to the portal users, making groups
@@ -95,7 +101,6 @@
     <data noupdate="1">
         <record id="default_user_group" model="res.groups">
             <field name="name">Default access for new users</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
         </record>
     </data>
 </odoo>

@@ -21,31 +21,35 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
 
         {
             trigger: 'a.nav-link[name="technical_access_rights"]',
-            content: "show Technical Access Rights",
+            content: "show Technical Administrator",
             run: "click",
         },
         {
-            trigger: '.o_notebook_content:not(.o_data_cell(:contains("Settings"))',
-            content: "check if demo user does not have 'Settings' access",
+            trigger: '.o_notebook_content:not(.o_data_cell(:contains("Administrator"))',
+            content: "check if demo user does not have 'Administrator' access",
+        },
+        {
+            trigger: '.o_notebook_content .o_data_cell:contains("Member")',
+            content: "check if demo user has a 'Member' access",
         },
         {
             trigger: 'a.nav-link[name="access_rights"]',
-            content: "show Access Rights",
+            content: "show Administrator",
             run: "click",
         },
         {
-            trigger: '.o_field_widget[name="group_ids"] .o_inner_group:has(label:contains("Administration")) select.o_input',
-            content: "Add 'Access Rights' access to demo user",
-            run: `select 2`,
+            trigger: '.o_field_radio[name="role"] input[data-value="admin"]',
+            content: "Add 'Administrator' access to demo user",
+            run: `click`,
         },
         {
             trigger: 'a.nav-link[name="technical_access_rights"]',
-            content: "show changes in Technical Access Rights",
+            content: "show changes in Technical Administrator",
             run: "click",
         },
         {
-            trigger: '.o_notebook_content .o_data_cell:contains("Access Rights")',
-            content: "check if demo user have 'Settings' with 'Access Rights' level",
+            trigger: '.o_notebook_content .o_data_cell:contains("Administrator")',
+            content: "check if demo user have 'Settings' with 'Administrator' level",
         },
 
         {
@@ -68,17 +72,17 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "click",
         },
         {
-            trigger: '.o_notebook_content select.o_input:has(option:contains("Access Rights"):selected)',
-            content: "check if demo user have 'Settings' with 'Access Rights' level",
+            trigger: '.o_field_radio[name="role"] input[data-value="admin"]:checked',
+            content: "check if demo user have 'Settings' with 'Administrator' level",
         },
         {
             trigger: 'a.nav-link[name="technical_access_rights"]',
-            content: "show Technical Access Rights",
+            content: "show Technical Administrator",
             run: "click",
         },
         {
-            trigger: '.o_notebook_content .o_data_cell:contains("Access Rights")',
-            content: "check if demo user have 'Settings' with 'Access Rights' level",
+            trigger: '.o_notebook_content .o_data_cell:contains("Administrator")',
+            content: "check if demo user have 'Settings' with 'Administrator' level",
         },
     ],
 });
