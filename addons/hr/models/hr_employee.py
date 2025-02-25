@@ -137,6 +137,10 @@ class HrEmployee(models.Model):
         ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
         help="Categorize your Employees by type. This field also has an impact on contracts. Only Employees, Students and Trainee will have contract history.")
 
+    activity_plans_ids = fields.Many2many('mail.activity.plan', string="Ongoing Activity Plans",
+        groups="hr.group_hr_user", ondelete="cascade",
+        compute='_compute_activity_plans_ids', store=True)
+
     job_id = fields.Many2one(tracking=True)
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
@@ -264,6 +268,14 @@ class HrEmployee(models.Model):
             name = employee.name.replace(' ', '_') + '_' if employee.name else ''
             permit_no = '_' + employee.permit_no if employee.permit_no else ''
             employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
+
+    @api.depends('activity_state', 'activity_ids')
+    def _compute_activity_plans_ids(self):
+        for employee in self:
+            if not employee.activity_state:
+                employee.activity_plans_ids = False
+                continue
+            employee.activity_plans_ids = employee.activity_ids.plan_id
 
     @api.depends('distance_home_work', 'distance_home_work_unit')
     def _compute_km_home_work(self):
