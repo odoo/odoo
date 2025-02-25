@@ -1,10 +1,15 @@
 import { Component, xml } from "@odoo/owl";
-import { useNavigation } from "@web/core/navigation/navigation";
+import { Navigator, useNavigation } from "@web/core/navigation/navigation";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, destroy, expect, test } from "@odoo/hoot";
 import { hover, press } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    mountWithCleanup,
+    patchWithCleanup,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 class BasicHookParent extends Component {
     static props = [];
@@ -186,4 +191,21 @@ test("hovering an item makes it active but doesn't focus", async () => {
     await animationFrame();
     expect(".four").toBeFocused();
     expect(".four").toHaveClass("focus");
+});
+
+test("navigation disabled when component is destroyed", async () => {
+    patchWithCleanup(Navigator.prototype, {
+        enable() {
+            asyncStep("enable");
+            super.enable();
+        },
+        disable() {
+            asyncStep("disable");
+            super.disable();
+        },
+    });
+    const component = await mountWithCleanup(BasicHookParent);
+    await waitForSteps(["enable"]);
+    destroy(component);
+    await waitForSteps(["disable"]);
 });
