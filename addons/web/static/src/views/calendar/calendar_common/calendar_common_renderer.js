@@ -280,6 +280,9 @@ export class CalendarCommonRenderer extends Component {
         this.props.editRecord(this.props.model.records[info.event.id]);
     }
     onEventClick(info) {
+        if (this.props.calendarMode !== CALENDAR_MODE.normal) {
+            return;
+        }
         this.click(info);
     }
     onEventContent({ event }) {
