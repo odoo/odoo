@@ -1214,6 +1214,7 @@ class PosOrder(models.Model):
             'access_token': order.access_token,
             'ticket_code': order.ticket_code,
             'last_order_preparation_change': order.last_order_preparation_change,
+            'tracking_number': order.tracking_number,
         }
 
     @api.model
