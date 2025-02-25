@@ -103,6 +103,13 @@ export class PosOrder extends Base {
             ? this.preset_time.toFormat("HH:mm")
             : false;
     }
+    get presetDateTime() {
+        return this.preset_time?.isValid
+            ? this.preset_time.hasSame(this.date_order, "day")
+                ? this.preset_time.toFormat("HH:mm")
+                : this.preset_time.toFormat("HH:mm dd/MM/yyyy")
+            : false;
+    }
 
     get presetRequirementsFilled() {
         return (
