@@ -265,7 +265,7 @@ patch(PosStore.prototype, {
         ) {
             this.removeOrder(order);
         }
-        super.showScreen(...arguments);
+        return super.showScreen(...arguments);
     },
     closeScreen() {
         if (this.config.module_pos_restaurant && !this.getOrder()) {

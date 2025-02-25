@@ -11,17 +11,15 @@ export function useIdleTimer(steps, onAlive) {
 
     const checkSteps = () => {
         for (const step of steps) {
-            if (step.timeout === state.time * 1000) {
-                state.idle = true;
-                step.action();
+            if (step.timeout === state.time * 1000 && !state.idle) {
+                state.idle = step.action();
             }
         }
     };
 
     const onMove = (ev) => {
         if (state.idle) {
-            state.idle = false;
-            onAlive(ev);
+            state.idle = onAlive(ev);
         }
         state.time = 0;
     };
