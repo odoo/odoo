@@ -1,4 +1,11 @@
+from __future__ import annotations
+
 import enum
+import typing
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Collection
+    from .types import ValuesType
 
 
 class Command(enum.IntEnum):
@@ -13,6 +20,7 @@ class Command(enum.IntEnum):
     element is either the ``values`` to write on the record (commands create
     and update) either the new ``ids`` list of related records (command set),
     either 0 (commands delete, unlink, link, and clear).
+    This triplet is aliased as ``CommandValue``.
 
     Via Python, we encourage developers craft new commands via the various
     functions of this namespace. We also encourage developers to use the
@@ -33,7 +41,7 @@ class Command(enum.IntEnum):
     SET = 6
 
     @classmethod
-    def create(cls, values: dict):
+    def create(cls, values: ValuesType) -> CommandValue:
         """
         Create new records in the comodel using ``values``, link the created
         records to ``self``.
@@ -51,7 +59,7 @@ class Command(enum.IntEnum):
         return (cls.CREATE, 0, values)
 
     @classmethod
-    def update(cls, id: int, values: dict):
+    def update(cls, id: int, values: ValuesType) -> CommandValue:
         """
         Write ``values`` on the related record.
 
@@ -60,7 +68,7 @@ class Command(enum.IntEnum):
         return (cls.UPDATE, id, values)
 
     @classmethod
-    def delete(cls, id: int):
+    def delete(cls, id: int) -> CommandValue:
         """
         Remove the related record from the database and remove its relation
         with ``self``.
@@ -74,7 +82,7 @@ class Command(enum.IntEnum):
         return (cls.DELETE, id, 0)
 
     @classmethod
-    def unlink(cls, id: int):
+    def unlink(cls, id: int) -> CommandValue:
         """
         Remove the relation between ``self`` and the related record.
 
@@ -88,7 +96,7 @@ class Command(enum.IntEnum):
         return (cls.UNLINK, id, 0)
 
     @classmethod
-    def link(cls, id: int):
+    def link(cls, id: int) -> CommandValue:
         """
         Add a relation between ``self`` and the related record.
 
@@ -97,7 +105,7 @@ class Command(enum.IntEnum):
         return (cls.LINK, id, 0)
 
     @classmethod
-    def clear(cls):
+    def clear(cls) -> CommandValue:
         """
         Remove all records from the relation with ``self``. It behaves like
         executing the `unlink` command on every record.
@@ -107,7 +115,7 @@ class Command(enum.IntEnum):
         return (cls.CLEAR, 0, 0)
 
     @classmethod
-    def set(cls, ids: list):
+    def set(cls, ids: Collection[int]) -> CommandValue:
         """
         Replace the current relations of ``self`` by the given ones. It behaves
         like executing the ``unlink`` command on every removed relation then
@@ -116,3 +124,7 @@ class Command(enum.IntEnum):
         Return the command triple :samp:`(SET, 0, {ids})`
         """
         return (cls.SET, 0, ids)
+
+
+if typing.TYPE_CHECKING:
+    CommandValue = tuple[Command, int, typing.Literal[0] | ValuesType | Collection[int]]
