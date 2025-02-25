@@ -271,4 +271,21 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
     );
 
     Tour.register('CashRoundingPayment', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.exec.addOrderline('Letter Tray', '5');
+    ProductScreen.check.selectedOrderlineHas('Letter Tray', '5.0');
+    ProductScreen.do.clickPartnerButton();
+    ProductScreen.do.clickCustomer('Nicole Ford');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.do.clickPaymentMethod('New Cash');
+    PaymentScreen.do.pressNumpad('5 5');
+    PaymentScreen.check.selectedPaymentlineHas('New Cash', '55');
+    PaymentScreen.do.clickInvoiceButton();
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.receiptIsThere();
+
+    Tour.register('MultipleCashPaymentMethod', { test: true, url: '/pos/ui' }, getSteps());
 });
