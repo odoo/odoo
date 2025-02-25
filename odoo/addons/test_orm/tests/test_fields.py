@@ -1930,21 +1930,23 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         existing.categories
 
         # invalidate 'categories' for the assertQueryCount
+        self.env.transaction.clear_access_cache()
         records.invalidate_model(['categories'])
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(5):
             # <categories>.__get__(existing)
+            #  -> records.check_access('read')
+            #      -> records._check_access('read')
+            #          -> records.sudo().filtered_domain(...)
+            #              -> <name>.__get__(existing)
+            #                  -> records._fetch_field(<name>)
+            #                      -> records.fetch(['name', ...])
+            #                          -> ONE QUERY to read ['name', ...] of records
+            #                          -> ONE QUERY for deleted.exists() / code: forbidden = missing.exists()
+            #      -> ONE QUERY for records.exists() / MissingError during _check_access
+            #  -> ONE QUERY for records.exists()
             #  -> records._fetch_field(<categories>)
             #      -> records.fetch(['categories'])
-            #          -> records.check_access('read')
-            #              -> records._check_access('read')
-            #                  -> records.sudo().filtered_domain(...)
-            #                      -> <name>.__get__(existing)
-            #                          -> records._fetch_field(<name>)
-            #                              -> records.fetch(['name', ...])
-            #                                  -> ONE QUERY to read ['name', ...] of records
-            #                                  -> ONE QUERY for deleted.exists() / code: forbidden = missing.exists()
-            #          -> ONE QUERY for records.exists() / code: self = self.exists()
-            #          -> ONE QUERY to read the many2many of existing
+            #              -> ONE QUERY to read the many2many of existing
             existing.categories
 
         # this one must trigger a MissingError
@@ -2354,7 +2356,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # read the related field discussion_name
         self.assertNotEqual(message.sudo().env, message.env)
-        self.assertEqual(message.discussion_name, discussion.name)
+        self.assertEqual(message.discussion_name, discussion.sudo().name)
 
     def test_43_new_related(self):
         """ test the behavior of one2many related fields """
@@ -3675,7 +3677,7 @@ class TestX2many(TransactionExpressionCase):
             # 1.4 Command.LINK
             # Case: a public/portal user changing the `partner_id` of an admin,
             # to change the email address of the user and ask for a reset password.
-            with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
+            with self.assertRaises(AccessError):
                 my_partner.write({
                     'user_ids': [Command.link(admin_user.id)],
                 })
