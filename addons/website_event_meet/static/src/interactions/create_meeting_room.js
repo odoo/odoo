@@ -9,6 +9,10 @@ export class CreateMeetingRoom extends Interaction {
         _root: { "t-on-click": this.onCreateRoomClick }
     };
 
+    assetLibs = [
+        "website_event_meet.assets_widget_xml",
+    ];
+
     async onCreateRoomClick() {
         if (!this.createModalEl) {
             const langs = await this.waitFor(rpc("/event/active_langs"));
