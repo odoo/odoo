@@ -536,7 +536,7 @@ test("Deleting parent message of a reply should adapt reply visual", async () =>
     triggerHotkey("Enter", false);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Delete']");
-    await click("button", { text: "Confirm" });
+    await click("button", { text: "Delete" });
     await contains(".o-mail-MessageInReply", { text: "Original message was deleted" });
 });
 
@@ -1099,7 +1099,9 @@ test("Editing a message to clear its composer opens message delete dialog.", asy
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message.o-editing .o-mail-Composer-input", "", { replace: true });
     triggerHotkey("Enter");
-    await contains(".modal-body p", { text: "Are you sure you want to delete this message?" });
+    await contains(".modal-body p", {
+        text: "Are you sure you want to bid farewell to this message forever?",
+    });
 });
 
 test("Clear message body should not open message delete dialog if it has attachments", async () => {
@@ -1127,7 +1129,7 @@ test("Clear message body should not open message delete dialog if it has attachm
     await contains(".o-mail-Message-textContent", { text: "" });
     // weak test, no guarantee that we waited long enough for the potential dialog to show
     await contains(".modal-body p", {
-        text: "Are you sure you want to delete this message?",
+        text: "Are you sure you want to bid farewell to this message forever?",
         count: 0,
     });
 });
@@ -1507,7 +1509,7 @@ test("delete all attachments of message without content should mark message as d
     await contains(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Delete']");
-    await click("button", { text: "Confirm" });
+    await click("button", { text: "Delete" });
     await contains(".o-mail-Message", { text: "This message has been removed" });
 });
 
