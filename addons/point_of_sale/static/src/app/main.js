@@ -1,7 +1,7 @@
 import { Loader } from "@point_of_sale/app/components/loader/loader";
 import { getTemplate } from "@web/core/templates";
 import { mount, reactive, whenReady } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
 import { user } from "@web/core/user";
@@ -13,7 +13,7 @@ const loader = reactive({ isShown: true });
 whenReady(() => {
     // Show loader as soon as the page is ready, do not wait for services to be started
     // as some services load data over RPC and this is why we want to show a loader.
-    mount(Loader, document.body, { getTemplate, translateFn: _t, props: { loader } });
+    mount(Loader, document.body, { getTemplate, translateFn: appTranslateFn, props: { loader } });
 });
 // The following is mostly a copy of startWebclient but without any of the legacy stuff
 (async function startPosApp() {

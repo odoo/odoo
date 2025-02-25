@@ -8,7 +8,7 @@ import {
 import {
     makeServerError,
     onRpc,
-    patchTranslations,
+    allowTranslations,
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
@@ -1745,7 +1745,7 @@ test("Cannot duplicate unknown pivot", async () => {
 });
 
 test("Spreadsheet pivot table ignored by global fiter plugin", () => {
-    patchTranslations();
+    allowTranslations();
 
     const model = new Model();
     model.selection.selectZone({ cell: { col: 0, row: 0 }, zone: toZone("A1:A4") });

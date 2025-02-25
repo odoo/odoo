@@ -12,12 +12,10 @@ the original source need to be supported by the browsers.
 """
 
 import re
-import logging
 from functools import partial
 
 from odoo.tools.misc import OrderedSet
 
-_logger = logging.getLogger(__name__)
 
 def transpile_javascript(url, content):
     """
@@ -50,6 +48,7 @@ def transpile_javascript(url, content):
         convert_default_export,
         partial(wrap_with_qunit_module, url),
         partial(wrap_with_odoo_define, module_path, dependencies),
+        partial(convert_t, url)
     ]
     for s in steps:
         content = s(content)
@@ -228,6 +227,45 @@ def convert_export_class_default(content):
     """
     repl = r"""\g<space>const \g<identifier> = __exports[Symbol.for("default")] = \g<type> \g<identifier>"""
     return EXPORT_CLASS_DEFAULT_RE.sub(repl, content)
+
+
+GETTEXT_RE = re.compile(r"""
+    ^
+    \s*const\s*{
+    (?:\s*\w*\s*,)*
+    \s*(_t)\s*
+    (?:,\s*\w*\s*)*,?\s*
+    }\s*=\s*require\("@web/core/l10n/translation"\);$
+""", re.MULTILINE | re.VERBOSE)
+
+
+T_FN_RE = re.compile(r"""
+    ^
+    \s*const\s*{
+    (?:\s*\w*\s*,)*
+    \s*(appTranslateFn)\s*
+    (?:,\s*\w*\s*)*,?\s*
+    }\s*=\s*require\("@web/core/l10n/translation"\);$
+""", re.MULTILINE | re.VERBOSE)
+
+
+def convert_t(url, content):
+    if url.endswith(".test.js"):
+        return content
+
+    module_name = URL_RE.match(url)["module"]
+    has_import_of_appTranslateFn = bool(T_FN_RE.search(content))
+
+    def rename_gettext(match_):
+        if has_import_of_appTranslateFn:
+            renamed_import = match_.group(0).replace("_t", "__not_defined__")
+        else:
+            renamed_import = match_.group(0).replace("_t", "appTranslateFn")
+        renamed_import += f"""\nconst _t = (str, ...args) => appTranslateFn(str, "{module_name}", ...args);"""
+        return renamed_import
+
+    return GETTEXT_RE.sub(rename_gettext, content)
+
 
 EXPORT_VAR_RE = re.compile(r"""
     ^

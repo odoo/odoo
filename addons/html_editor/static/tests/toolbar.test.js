@@ -1178,7 +1178,9 @@ test("toolbar buttons should have title attribute with translated text", async (
     editor.destroy();
 
     // Patch translations to return "Translated" for these terms
-    patchTranslations(Object.fromEntries(descriptions.map((title) => [title, "Translated"])));
+    patchTranslations({
+        html_editor: Object.fromEntries(descriptions.map((title) => [title, "Translated"])),
+    });
 
     // Instantiate a new editor.
     const { plugins: postPatchPlugins } = await setupEditor("<p>[abc]</p>");

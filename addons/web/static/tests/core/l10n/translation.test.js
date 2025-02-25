@@ -9,13 +9,20 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { _t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+import { _t as basic_t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 
 import { Component, markup, xml } from "@odoo/owl";
 const { DateTime } = luxon;
+
+function _t() {
+    odoo.translationContext = "web";
+    const translatedTerm = basic_t(...arguments);
+    odoo.translationContext = null;
+    return translatedTerm;
+}
 
 let id = 0;
 
@@ -84,7 +91,7 @@ test("url is given by the session", async () => {
 });
 
 test("can translate a text node", async () => {
-    TestComponent._template = `<div id="main">Hello</div>`;
+    TestComponent._template = `<div id="main" t-translation-context="web">Hello</div>`;
     defineParams({
         translations: frenchTerms,
     });
@@ -103,7 +110,7 @@ test("[cache] write into the cache", async () => {
     onRpc("/web/webclient/translations", (request) => {
         expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
     });
-    TestComponent._template = `<div id="main">Hello</div>`;
+    TestComponent._template = `<div id="main" t-translation-context="web">Hello</div>`;
     defineParams({
         translations: frenchTerms,
     });
@@ -157,7 +164,7 @@ test("[cache] read from cache, and don't wait to render", async () => {
         await def;
         expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
     });
-    TestComponent._template = `<div id="main">Hello</div>`;
+    TestComponent._template = `<div id="main" t-translation-context="web">Hello</div>`;
     defineParams({
         translations: frenchTerms,
     });
@@ -198,7 +205,7 @@ test("[cache] update the cache if hash are different - template", async () => {
         await def;
         expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
     });
-    TestComponent._template = `<div id="main">Hello</div>`;
+    TestComponent._template = `<div id="main" t-translation-context="web">Hello</div>`;
     defineParams({
         translations: frenchTerms,
     });
@@ -270,7 +277,7 @@ test("[cache] update the cache if hash are different - js", async () => {
         expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
     });
     class MyTestComponent extends Component {
-        static template = xml`<div id="main"><t t-esc="otherText"/></div>`;
+        static template = xml`<div id="main" t-translation-context="web"><t t-esc="otherText"/></div>`;
         static props = ["*"];
 
         get otherText() {
@@ -322,7 +329,7 @@ test("[cache] update the cache if hash are different - js", async () => {
 test("can lazy translate", async () => {
     // Can't use patchWithCleanup cause it doesn't support Symbol
     translatedTerms[translationLoaded] = false;
-    TestComponent._template = `<div id="main"><t t-esc="constructor.someLazyText" /></div>`;
+    TestComponent._template = `<div id="main" t-translation-context="web"><t t-esc="constructor.someLazyText" /></div>`;
     TestComponent.someLazyText = _t("Hello");
     expect(() => TestComponent.someLazyText.toString()).toThrow();
     expect(() => TestComponent.someLazyText.valueOf()).toThrow();
@@ -385,18 +392,23 @@ test("tamil has the correct numbering system", async () => {
 
 test("_t fills the format specifiers in translated terms with its extra arguments", async () => {
     patchTranslations({
-        "Due in %s days": "Échéance dans %s jours",
+        web: {
+            "Due in %s days": "Échéance dans %s jours",
+        },
     });
     const translatedStr = _t("Due in %s days", 513);
     expect(translatedStr).toBe("Échéance dans 513 jours");
 });
 
 test("_t fills the format specifiers in translated terms with formatted lists", async () => {
-    patchTranslations({
-        "Due in %s days": "Échéance dans %s jours",
-        "Due in %(due_dates)s days for %(user)s": "Échéance dans %(due_dates)s jours pour %(user)s",
-    });
     await mockLang("fr_FR");
+    patchTranslations({
+        web: {
+            "Due in %s days": "Échéance dans %s jours",
+            "Due in %(due_dates)s days for %(user)s":
+                "Échéance dans %(due_dates)s jours pour %(user)s",
+        },
+    });
     const translatedStr1 = _t("Due in %s days", ["30", "60", "90"]);
     const translatedStr2 = _t("Due in %(due_dates)s days for %(user)s", {
         due_dates: ["30", "60", "90"],
@@ -410,7 +422,9 @@ test("_t fills the format specifiers in lazy translated terms with its extra arg
     translatedTerms[translationLoaded] = false;
     const translatedStr = _t("Due in %s days", 513);
     patchTranslations({
-        "Due in %s days": "Échéance dans %s jours",
+        web: {
+            "Due in %s days": "Échéance dans %s jours",
+        },
     });
     expect(translatedStr.toString()).toBe("Échéance dans 513 jours");
 });
@@ -435,7 +449,11 @@ describe("_t with markups", () => {
     test("translations are escaped", () => {
         translatedTerms[translationLoaded] = true;
         const maliciousTranslation = "<script>document.write('pizza hawai')</script> %s";
-        patchTranslations({ "I love %s": maliciousTranslation });
+        patchTranslations({
+            web: {
+                "I love %s": maliciousTranslation,
+            },
+        });
         const translatedStr = _t("I love %s", markup`<blink>Mario Kart</blink>`);
         expect(translatedStr.valueOf()).toBe(
             "&lt;script&gt;document.write(&#x27;pizza hawai&#x27;)&lt;/script&gt; <blink>Mario Kart</blink>"
