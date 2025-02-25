@@ -451,7 +451,7 @@ patch(PosStore.prototype, {
         ) {
             this.removeOrder(order);
         }
-        super.navigate(routeName, routeParams);
+        return super.navigate(routeName, routeParams);
     },
     showDefault() {
         const page = this.defaultPage;
