@@ -381,6 +381,22 @@ def model(method):
     return method
 
 
+def private(method):
+    """ Decorate a record-style method to indicate that the method cannot be
+        called using RPC. Example::
+
+            @api.private
+            def method(self, args):
+                ...
+
+        If you have business methods that should not be called over RPC, you
+        should prefix them with "_". This decorator may be used in case of
+        existing public methods that become non-RPC callable or for ORM
+        methods.
+    """
+    method._api_private = True
+    return method
+
 _create_logger = logging.getLogger(__name__ + '.create')
 
 
