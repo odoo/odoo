@@ -316,3 +316,23 @@ registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
             ReceiptScreen.receiptIsThere(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.exec.addOrderline('Letter Tray', '5'),
+            ProductScreen.check.selectedOrderlineHas('Letter Tray', '5.0'),
+            ProductScreen.do.clickPartnerButton(),
+            ProductScreen.do.clickCustomer('Nicole Ford'),
+            ProductScreen.do.clickPayButton(),
+
+            PaymentScreen.do.clickPaymentMethod('New Cash'),
+            PaymentScreen.do.pressNumpad('5 5'),
+            PaymentScreen.check.selectedPaymentlineHas('New Cash', '55'),
+            PaymentScreen.do.clickInvoiceButton(),
+            PaymentScreen.do.clickValidate(),
+            ReceiptScreen.check.receiptIsThere(),
+        ].flat(),
+});

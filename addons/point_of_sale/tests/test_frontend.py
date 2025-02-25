@@ -86,7 +86,11 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Deco Addict',
         })
 
-        cash_journal = journal_obj.create({
+        env['res.partner'].create({
+            'name': 'Deco Addict',
+        })
+
+        cls.cash_journal = journal_obj.create({
             'name': 'Cash Test',
             'type': 'cash',
             'company_id': main_company.id,
@@ -505,7 +509,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
             'payment_method_ids': [(0, 0, { 'name': 'Cash',
-                                            'journal_id': cash_journal.id,
+                                            'journal_id': cls.cash_journal.id,
                                             'receivable_account_id': account_receivable.id,
             })],
             'use_pricelist': True,
@@ -1343,6 +1347,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         setup_pos_combo_items(self)
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_with_custom_attribute', login="pos_user")
+
+    def test_multiple_cash_payment_method(self):
+        cash_method = self.env['pos.payment.method'].create({
+            'name': 'New Cash',
+            'journal_id': self.cash_journal.id,
+        })
+        self.main_pos_config.payment_method_ids += cash_method
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'MultipleCashPaymentMethod', login="accountman")
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
