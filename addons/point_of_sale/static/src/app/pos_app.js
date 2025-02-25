@@ -25,6 +25,7 @@ export class Chrome extends Component {
                 ev.stopPropagation();
             }
             this.pos.showScreen(this.pos.firstScreen);
+            return false;
         });
         const reactivePos = reactive(this.pos);
         // TODO: Should we continue on exposing posmodel as global variable?
