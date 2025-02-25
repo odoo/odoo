@@ -487,7 +487,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
         test_template.write({'attachment_ids': [(5, 0)]})
 
-        with self.assertQueryCount(admin=34, employee=34):  # tm: 22/22
+        with self.assertQueryCount(admin=29, employee=29):  # tm: 22/22
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
