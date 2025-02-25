@@ -1,0 +1,27 @@
+<templates>
+    <t t-name="website_event.s_live_event_template">
+        <t t-if="event">
+            <div>
+                <div class="d-flex align-items-center justify-content-center m-2">
+                    <h4 class="text-white bg-danger rounded px-3 py-1 m-2">
+                        LIVE
+                    </h4>
+                    <h2 class="mt-2">
+                        <t t-out="event.name"/>
+                    </h2>
+                </div>
+                <t t-set="background_image" t-value="event.cover_properties.split('background-image')[1].split('url(')[1].split(')')[0].split('\'')[1]" />
+                <a t-attf-href="/event/{{event.id}}/get_live_event_track" target="_blank" class="d-flex justify-content-center">
+                    <div class="m-3 rounded overflow-hidden" style="width: 900px; height: 450px;">
+                        <img t-att-src="background_image" class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: cover;" />
+                    </div>
+                </a>
+            </div>
+        </t>
+        <t t-else="">
+            <h3 class="d-flex justify-content-center m-5">
+                No Live Events!
+            </h3>
+        </t>
+    </t>
+</templates>
