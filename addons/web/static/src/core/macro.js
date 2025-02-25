@@ -19,9 +19,7 @@ const macroSchema = {
                 trigger: { type: [Function, String], optional: true },
                 value: { type: [String, Number], optional: true },
             },
-            validate: (step) => {
-                return step.action || step.trigger;
-            },
+            validate: (step) => step.action || step.trigger,
         },
     },
     onComplete: { type: Function, optional: true },
@@ -44,7 +42,7 @@ export async function waitForStable(target = document, timeout = 1000 / 16) {
         let timer;
         const mutationList = [];
         function onMutation(mutations) {
-            mutationList.push(...mutations);
+            mutationList.push(...(mutations || []));
             clearTimeout(timer);
             timer = setTimeout(() => {
                 observer.disconnect();
