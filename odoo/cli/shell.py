@@ -55,8 +55,9 @@ class Console(code.InteractiveConsole):
 class Shell(Command):
     """Start odoo in an interactive shell"""
     supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
+    shellargs = None
 
-    def init(self, args):
+    def init(self, cmdargs):
         config.parser.prog = self.prog
 
         group = optparse.OptionGroup(config.parser, "Shell options")
@@ -71,7 +72,12 @@ class Shell(Command):
                  "Supported REPLs are: [ipython|ptpython|bpython|python]"
         )
         config.parser.add_option_group(group)
-        config.parse_config(args, setup_logging=True)
+
+        if '--' in cmdargs:
+            idx = cmdargs.index('--')
+            cmdargs, self.shellargs = cmdargs[:idx], " ".join(cmdargs[idx+1:])
+
+        config.parse_config(cmdargs, setup_logging=True)
         cli_server.report_configuration()
         server.start(preload=[], stop=True)
         signal.signal(signal.SIGINT, raise_keyboard_interrupt)
@@ -132,6 +138,8 @@ class Shell(Command):
             'openerp': odoo,
             'odoo': odoo,
         }
+        if self.shellargs:
+            local_vars["shellargs"] = self.shellargs
         if dbname:
             threading.current_thread().dbname = dbname
             registry = Registry(dbname)

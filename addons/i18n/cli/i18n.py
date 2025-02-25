@@ -41,77 +41,6 @@ def _get_language_files(env, module_names, language_codes, export_pot=False):
 # Subcommands
 # -------------------------------------------------------------------------------- 
 
-class I18nList(Subcommand):
-    """
-    List all modules that can be exported, given user constraints.
-
-    Example:
-    ./odoo-bin <addons> i18n list <db> --l10n=yes --delimiter=',' \
-         | xargs ./odoo-bin <addons> <db> server -i
-    """
-    description = "List i18n-exportable modules"
-    excluded = (r'%\_test', r'%\_tests', r'test\_%', r'hw\_%')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.parser.add_argument('--database', '-d', dest='db_name', required=True,
-            help="Specify the database name.")
-        self.parser.add_argument('--delimiter', '--del', default='\n',
-            help="Delimiter between modules, default='\n'")
-        self.parser.add_argument('--folder',
-            help="Filter modules by parent folder")
-        self.parser.add_argument('--l10n', choices=YES_NO_ONLY, default=True,
-            help="Include localization modules, yes/no/only, default=yes")
-
-    def run(self, cmdargs):
-        try:
-            # Ensure arguments are consistent
-            parsed_args, _unknown = self.parser.parse_known_args(args=cmdargs)
-        except ValueError as e:
-            self.parser.print_help()
-            Command.die(f'\n{e}\n')
-
-        # Start a new environment, create/init the database if needed
-        logging.disable(logging.CRITICAL)
-        try:
-            with self.build_env(parsed_args.db_name) as env:
-                logging.disable(logging.NOTSET)
-
-                # Look for modules
-                domain = [('name', 'not =ilike', pattern) for pattern in self.excluded]
-                match parsed_args.l10n:
-                    case x if x in BOOL_ONLY:
-                        domain += ['|',
-                            ('name', '=ilike', r'l10n\_%'),
-                            ('name', '=ilike', r'%l10n\_%'),
-                            ('name', '!=', 'l10n_multilang'),
-                        ]
-                    case x if x in BOOL_NO:
-                        domain += ['|',
-                            ('name', 'not =ilike', r'l10n\_%'),
-                            ('name', 'not =ilike', r'%l10n\_%'),
-                        ]
-
-                modules = env['ir.module.module'].search_fetch(domain, ['name'], order="name")
-                module_names = modules.mapped("name")
-
-                # Eventually filter by base folder
-                if parsed_args.folder:
-                    base_path = f"{Path(parsed_args.folder).resolve()}{sep}"
-                    to_filter, module_names = module_names, []
-                    for module_name in to_filter:
-                        if not (module_path := get_module_path(module_name, display_warning=False)):
-                            continue
-                        module_path = Path(module_path).resolve()
-                        if str(module_path).startswith(base_path):
-                            module_names.append(module_name)
-
-                # Print the list
-                print(parsed_args.delimiter.join(module_names))
-
-        except Exception as e:
-            Command.die(f"Error retrieving modules: {e}")
-
 
 class I18nLoadLang(Subcommand):
     """
@@ -289,4 +218,4 @@ class I18nExport(Subcommand):
 
 class I18n(Command, SubcommandsMixin):
     """ Import, export, setup languages and internationalization files """
-    subcommands = I18nExport, I18nImport, I18nLoadLang, I18nList
+    subcommands = I18nExport, I18nImport, I18nLoadLang
