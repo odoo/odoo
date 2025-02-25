@@ -52,16 +52,20 @@ class ResPartner(models.Model):
         remaining = self - recs_ar_vat
         remaining.l10n_ar_vat = False
 
-    @api.constrains('vat', 'l10n_latam_identification_type_id')
-    def check_vat(self):
+    def _run_check_identification(self, validation='error'):
         """ Since we validate more documents than the vat for Argentinean partners (CUIT - VAT AR, CUIL, DNI) we
         extend this method in order to process it. """
-        # NOTE by the moment we include the CUIT (VAT AR) validation also here because we extend the messages
-        # errors to be more friendly to the user. In a future when Odoo improve the base_vat message errors
-        # we can change this method and use the base_vat.check_vat_ar method.s
-        l10n_ar_partners = self.filtered(lambda p: p.l10n_latam_identification_type_id.l10n_ar_afip_code or p.country_code == 'AR')
-        l10n_ar_partners.l10n_ar_identification_validation()
-        return super(ResPartner, self - l10n_ar_partners).check_vat()
+        l10n_ar_partners = self.filtered(lambda p: p.vat and (
+            p.l10n_latam_identification_type_id.l10n_ar_afip_code
+            or p.country_code == 'AR'
+        ))
+        for partner in l10n_ar_partners:
+            if id_number := partner._get_id_number_sanitize():
+                partner.vat = str(id_number)
+            if validation == 'error':
+                partner._l10n_ar_identification_validation()
+
+        return super(ResPartner, self - l10n_ar_partners)._run_check_identification(validation=validation)
 
     @api.model
     def _commercial_fields(self):
@@ -92,7 +96,7 @@ class ResPartner(models.Model):
         elif self.l10n_latam_identification_type_id.l10n_ar_afip_code == '96':
             return stdnum.ar.dni
 
-    def l10n_ar_identification_validation(self):
+    def _l10n_ar_identification_validation(self):
         for rec in self.filtered('vat'):
             try:
                 module = rec._get_validation_module()
