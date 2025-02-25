@@ -8,9 +8,9 @@ import {
     useGetItemValue,
 } from "../core/building_blocks/utils";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { BorderConfigurator } from "@html_builder/plugins/border_configurator";
-import { ShadowOption } from "@html_builder/plugins/shadow_option";
+import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { useOperation } from "../core/plugins/operation_plugin";
+import { ShadowOption } from "@html_builder/plugins/shadow_option";
 
 export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";

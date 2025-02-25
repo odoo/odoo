@@ -1,7 +1,7 @@
 import { useEnv } from "@odoo/owl";
 
 export function useCachedModel() {
-    return useEnv().editor.shared.CachedModel;
+    return useEnv().editor.shared.cachedModel;
 }
 
 export class ModelEdit {

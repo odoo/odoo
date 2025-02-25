@@ -3,7 +3,7 @@ import { Cache } from "@web/core/utils/cache";
 import { ModelEdit } from "./cached_model_utils";
 
 export class CachedModelPlugin extends Plugin {
-    static id = "CachedModel";
+    static id = "cachedModel";
     static shared = ["ormRead", "ormSearchRead", "useModelEdit"];
     resources = {
         before_save_handlers: this.savePendingRecords.bind(this),

@@ -40,7 +40,7 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     );
 
     await contains(":iframe .test-options-target").click();
-    const modelEdit = getEditor().shared.CachedModel.useModelEdit({
+    const modelEdit = getEditor().shared.cachedModel.useModelEdit({
         model: "test.base",
         recordId: 1,
     });
