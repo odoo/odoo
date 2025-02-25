@@ -550,3 +550,23 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                 self.chatbot_script if expected_result else self.env["chatbot.script"],
                 f"Condition: {condition}, Operator available: {operator_available}, Expected result: {expected_result}",
             )
+
+    def test_end_session_step_flow(self):
+        end_step = self.env["chatbot.script.step"].create({
+            "step_type": "end_session",
+            "message": "Goodbye",
+            "sequence": 50,
+            "chatbot_script_id": self.chatbot_script.id,
+        })
+        data = self.make_jsonrpc_request("/im_livechat/get_session", {
+            "anonymous_name": "Test Visitor",
+            "channel_id": self.livechat_channel.id,
+            "chatbot_script_id": self.chatbot_script.id,
+        })
+        discuss_channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        discuss_channel.chatbot_current_step_id = self.chatbot_script.script_step_ids.filtered(lambda s: s.sequence < 50)[-1]
+        self.make_jsonrpc_request("/chatbot/step/trigger", {"channel_id": discuss_channel.id})
+        self.assertEqual(discuss_channel.chatbot_current_step_id, end_step)
+        self.make_jsonrpc_request("/chatbot/step/trigger", {"channel_id": discuss_channel.id})
+        self.assertEqual(discuss_channel.chatbot_current_step_id, end_step)
+
