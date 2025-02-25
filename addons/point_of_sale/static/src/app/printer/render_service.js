@@ -91,6 +91,29 @@ const applyWhenMounted = async ({ el, container, callback }) => {
     return res;
 };
 
+function removeControlCharacters(text) {
+    return Array.from(text)
+        .filter((char) => {
+            const code = char.charCodeAt(0);
+            return !(
+                (code >= 0x00 && code <= 0x08) ||
+                code === 0x0b ||
+                code === 0x0c ||
+                (code >= 0x0e && code <= 0x1f)
+            );
+        })
+        .join("");
+}
+
+const sanitizeNodeText = (element) => {
+    if (element.nodeType === Node.TEXT_NODE) {
+        element.textContent = removeControlCharacters(element.textContent);
+    }
+    for (const child of element.childNodes) {
+        sanitizeNodeText(child);
+    }
+};
+
 /**
  * This function assumes that the `renderer` service is available.
  */
@@ -101,6 +124,7 @@ export const htmlToCanvas = async (el, options) => {
     if (options.addEmailMargins === true) {
         $(".pos-receipt-print").css({ padding: "15px", "padding-bottom": "30px" });
     }
+    sanitizeNodeText(el);
     return await applyWhenMounted({
         el,
         container: document.querySelector(".render-container"),
