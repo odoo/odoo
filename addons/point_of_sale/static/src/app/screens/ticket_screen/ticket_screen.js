@@ -342,6 +342,11 @@ export class TicketScreen extends Component {
         this.closeTicketScreen();
     }
 
+    async onDeleteOrder(order) {
+        await this.pos.onDeleteOrder(order);
+        this.setSelectedOrder(this.pos.getOrder());
+    }
+
     postRefund(destinationOrder) {}
 
     setPartnerToRefundOrder(partner, destinationOrder) {
