@@ -20,7 +20,6 @@
         'security/stock_security.xml',
         'security/ir.model.access.csv',
 
-        'data/digest_data.xml',
         'data/mail_templates.xml',
         'data/default_barcode_patterns.xml',
         'data/stock_data.xml',
@@ -85,6 +84,9 @@
         'views/stock_package_type_view.xml',
         'views/stock_forecasted.xml',
         'views/uom_uom_views.xml',
+
+        'data/digest_kpi.xml',
+        'data/digest_data.xml',
     ],
     'installable': True,
     'application': True,
