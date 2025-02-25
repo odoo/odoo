@@ -5130,11 +5130,13 @@ test(`Scale: scale default is fetched from localStorage`, async () => {
             if (key.startsWith("scaleOf-viewId")) {
                 return "week";
             }
+            return super.getItem(key);
         },
         setItem(key, value) {
             if (key === "scaleOf-viewId-123456789") {
                 expect.step(`scale_${value}`);
             }
+            super.setItem(key, value);
         },
     });
 

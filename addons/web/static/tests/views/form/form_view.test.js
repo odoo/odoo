@@ -10094,6 +10094,10 @@ test(`form view with inline list view with optional fields and local storage moc
     expect.verifySteps([
         "getItem web.emoji.frequent",
         "getItem pwaService.installationState",
+        "getItem webclient_menus_data",
+        "getItem webclient_menus_version",
+        "setItem webclient_menus_version to 1.0",
+        'setItem webclient_menus_data to {"99999":{"id":99999,"appID":1,"children":[],"name":"App0"},"root":{"id":"root","children":[99999],"name":"root","appID":"root"}}',
         `getItem optional_fields,${localStorageKey}`,
         `getItem debug_open_view,${localStorageKey}`,
     ]);
@@ -10159,6 +10163,10 @@ test(`form view with list_view_ref with optional fields and local storage mock`,
     expect.verifySteps([
         "getItem web.emoji.frequent",
         "getItem pwaService.installationState",
+        "getItem webclient_menus_data",
+        "getItem webclient_menus_version",
+        "setItem webclient_menus_version to 1.0",
+        'setItem webclient_menus_data to {"99999":{"id":99999,"appID":1,"children":[],"name":"App0"},"root":{"id":"root","children":[99999],"name":"root","appID":"root"}}',
         `getItem optional_fields,${localStorageKey}`,
         `getItem debug_open_view,${localStorageKey}`,
     ]);

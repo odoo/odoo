@@ -11667,6 +11667,10 @@ test("open a one2many record containing a one2many", async () => {
     expect.verifySteps([
         "localStorage getItem web.emoji.frequent",
         "localStorage getItem pwaService.installationState",
+        "localStorage getItem webclient_menus_data",
+        "localStorage getItem webclient_menus_version",
+        "localStorage setItem webclient_menus_version",
+        "localStorage setItem webclient_menus_data",
         "localStorage getItem optional_fields,partner,form,123456789,p,list,name",
         "localStorage getItem debug_open_view,partner,form,123456789,p,list,name",
     ]);
