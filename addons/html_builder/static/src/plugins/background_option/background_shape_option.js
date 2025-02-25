@@ -1,0 +1,64 @@
+import { useDomState, useIsActiveItem } from "@html_builder/core/building_blocks/utils";
+import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
+import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+
+export class BackgroundShapeOption extends Component {
+    static template = "html_builder.BackgroundShapeOption";
+    static components = {
+        ...defaultBuilderComponents,
+    };
+    static props = {};
+    setup() {
+        this.backgroundShapePlugin = this.env.editor.shared.backgroundShapeOption;
+        this.isActiveItem = useIsActiveItem();
+        this.state = useDomState((editingElement) => {
+            const shapeData = this.backgroundShapePlugin.getShapeData(editingElement);
+            const shapeInfo = this.backgroundShapePlugin.getBackgroundShapes()[shapeData.shape];
+            return {
+                currentShapeLabel: "Choose a shape",
+                shapeName: shapeInfo?.selectLabel || _t("None"),
+                isAnimated: shapeInfo?.animated,
+            };
+        });
+    }
+    showBackgroundShapes() {
+        this.backgroundShapePlugin.showBackgroundShapes(this.env.getEditingElements());
+    }
+    getBgAnimationSpeed(speed) {
+        const inputValueAsNumber = Number(speed);
+        const ratio =
+            inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
+        return `${ratio.toFixed(2)}x`;
+    }
+    getDefaultColorNames() {
+        const editingEl = this.env.getEditingElement();
+        return Object.keys(getDefaultColors(editingEl));
+    }
+}
+
+/**
+ * Returns the default colors for the currently selected shape.
+ *
+ * @param {HTMLElement} editingElement the element on which to read the
+ * shape data.
+ */
+export function getDefaultColors(editingElement) {
+    const shapeContainerEl = editingElement.querySelector(":scope > .o_we_shape");
+    if (!shapeContainerEl) {
+        return {};
+    }
+    const shapeContainerClonedEl = shapeContainerEl.cloneNode(true);
+    shapeContainerClonedEl.classList.add("d-none");
+    // Needs to be in document for bg-image class to take effect
+    editingElement.ownerDocument.body.appendChild(shapeContainerClonedEl);
+    shapeContainerClonedEl.style.setProperty("background-image", "");
+    const shapeSrc = shapeContainerClonedEl && getBgImageURLFromEl(shapeContainerClonedEl);
+    shapeContainerClonedEl.remove();
+    if (!shapeSrc) {
+        return {};
+    }
+    const url = new URL(shapeSrc, window.location.origin);
+    return Object.fromEntries(url.searchParams.entries());
+}
