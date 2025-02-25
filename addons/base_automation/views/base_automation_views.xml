@@ -75,14 +75,15 @@
                                 <div class="d-flex flex-row gap-2" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']">
                                     <field name="trg_date_range" class="oe_inline o_input_3ch" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
                                     <field name="trg_date_range_type" class="oe_inline" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
+                                    <field name="least_delay_msg" class="oe_inline text-muted fst-italic" groups="base.group_no_one" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated'] or not least_delay_msg"/>
                                 </div>
                                 <field name="trg_date_calendar_id" class="oe_inline"
                                     options="{'no_open': True, 'no_create': True}"
                                     invisible="not trg_date_id or trg_date_range_type != 'day'"/>
-                                <label for="least_delay_msg" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated'] or not least_delay_msg" string="" />
+                                <!-- <label for="least_delay_msg" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated'] or not least_delay_msg" string="" />
                                 <div class="alert alert-info" role="alert" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated'] or not least_delay_msg">
                                     <field name="least_delay_msg"/>
-                                </div>
+                                </div> -->
                                 <field name="filter_pre_domain" widget="domain" groups="base.group_no_one"
                                        options="{'model': 'model_name', 'in_dialog': True}"
                                        invisible="trigger in [
