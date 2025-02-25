@@ -245,7 +245,9 @@ class PaymentTransaction(models.Model):
         if provider_code != 'worldline' or len(tx) == 1:
             return tx
 
-        payment_output = notification_data.get('payment', {}).get('paymentOutput', {})
+        # In case of failed payment, paymentResult could be given as a seperate key
+        payment_result = notification_data.get('paymentResult', notification_data)
+        payment_output = payment_result.get('payment', {}).get('paymentOutput', {})
         reference = payment_output.get('references', {}).get('merchantReference', '')
         if not reference:
             raise ValidationError(
@@ -273,8 +275,11 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'worldline':
             return
 
+        # In case of failed payment, paymentResult could be given as a seperate key
+        payment_result = notification_data.get('paymentResult', notification_data)
+        payment_data = payment_result.get('payment', {})
+
         # Update the provider reference.
-        payment_data = notification_data['payment']
         self.provider_reference = payment_data.get('id', '').rsplit('_', 1)[0]
 
         # Update the payment method.
