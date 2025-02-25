@@ -20,6 +20,9 @@ export class ResUserGroupIdsField extends Component {
     setup() {
         this.sections = this.props.record.data.view_group_hierarchy;
         this.categories = this.sections.map((section) => section.categories).flat();
+        this.groupIdsInCategories = Object.values(this.categories)
+            .map((c) => c.groups.map((g) => g[0]))
+            .flat();
 
         this.fields = {};
         for (const category of this.categories) {
@@ -61,7 +64,11 @@ export class ResUserGroupIdsField extends Component {
 
     onRecordChanged(_, values) {
         const groupIds = Object.values(values).filter((groupId) => groupId);
-        return this.props.record.update({ group_ids: [x2ManyCommands.set(groupIds)] });
+        const groupIdsNotInCategories = this.props.record.data.group_ids.currentIds.filter(
+            (id) => !this.groupIdsInCategories.includes(id)
+        );
+        const allGroupIds = groupIdsNotInCategories.concat(groupIds);
+        return this.props.record.update({ group_ids: [x2ManyCommands.set(allGroupIds)] });
     }
 }
 
