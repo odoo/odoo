@@ -1219,13 +1219,8 @@ export class PosStore extends WithLazyGetterTrap {
 
             for (const line of newData["pos.order.line"]) {
                 const refundedOrderLine = line.refunded_orderline_id;
-
-                if (refundedOrderLine && ["paid", "done"].includes(line.order_id.state)) {
-                    const order = refundedOrderLine.order_id;
-                    if (order) {
-                        delete order.uiState.lineToRefund[refundedOrderLine.uuid];
-                    }
-                    refundedOrderLine.refunded_qty += Math.abs(line.qty);
+                if (refundedOrderLine?.order_id && ["paid", "done"].includes(line.order_id.state)) {
+                    delete refundedOrderLine.order_id.uiState.lineToRefund[refundedOrderLine.uuid];
                 }
             }
 
