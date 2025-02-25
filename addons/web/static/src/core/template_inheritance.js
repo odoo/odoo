@@ -58,7 +58,7 @@ function getXpath(operation) {
             const templateName = parent.getAttribute("t-name") || parent.getAttribute("t-inherit");
             console.warn(
                 `Error-prone use of @class in template "${templateName}" (or one of its inheritors).` +
-                " Use the hasclass(*classes) function to filter elements by their classes"
+                    " Use the hasclass(*classes) function to filter elements by their classes"
             );
         }
     }
