@@ -139,7 +139,7 @@ class BarcodeNomenclature(models.Model):
         is only digits to keep the original barcode part only.
         """
         nomenclature = self.env.company.nomenclature_id
-        if nomenclature.is_gs1_nomenclature:
+        if nomenclature.is_gs1_nomenclature and not self.env.context.get('skip_gs1_pre'):
             for i, arg in enumerate(args):
                 if not isinstance(arg, (list, tuple)) or len(arg) != 3:
                     continue
