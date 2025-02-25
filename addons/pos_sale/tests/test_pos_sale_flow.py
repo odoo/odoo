@@ -989,3 +989,51 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentFixedTax', login="accountman")
+
+    def test_dropship_ship_later_route_on_order_form(self):
+        """
+        """
+        dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping', raise_if_not_found=False)
+        if not dropship_route:
+            self.skipTest('This test requires the following modules: stock_dropshipping')
+
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+                (4, self.env.ref('sales_team.group_sale_salesman_all_leads').id),
+            ]
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'tdslroof product',
+            'available_in_pos': True,
+            'type': 'product',
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_b.id,
+                'price': 8.0,
+            })],
+        })
+        self.partner_a.write({
+            'street': '1st Street',
+            'city': 'Ramillies',
+            'country_id': self.env.ref('base.be').id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'price_unit': 10.0,
+                'product_uom_qty': 1,
+                'route_id': dropship_route.id,
+            })],
+        })
+        self.main_pos_config.ship_later = True
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f'/pos/ui?config_id={self.main_pos_config.id}',
+            'test_dropship_ship_later_route_on_order_form',
+            login='pos_user',
+            timeout=1800,
+            watch=True,
+        )
+        pass

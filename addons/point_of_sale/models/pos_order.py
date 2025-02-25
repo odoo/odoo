@@ -1448,6 +1448,10 @@ class PosOrderLine(models.Model):
             'partner_id': self.order_id.partner_id.id,
         }
 
+    def _get_line_route(self):
+        self.ensure_one()
+        return self.order_id.config_id.route_id
+
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
         coming from a sale order line. This method could be override in order to add other custom key that could
@@ -1470,7 +1474,7 @@ class PosOrderLine(models.Model):
             'group_id': group_id,
             'date_planned': date_deadline,
             'date_deadline': date_deadline,
-            'route_ids': self.order_id.config_id.route_id,
+            'route_ids': self._get_line_route(),
             'warehouse_id': self.order_id.config_id.warehouse_id or False,
             'partner_id': self.order_id.partner_id.id,
             'product_description_variants': self.full_product_name,

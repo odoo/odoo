@@ -357,3 +357,18 @@ registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_dropship_ship_later_route_on_order_form", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
