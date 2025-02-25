@@ -8,7 +8,7 @@ import requests
 import uuid
 
 from odoo import exceptions, modules, _
-from odoo.tools import email_normalize
+from odoo.tools import email_normalize, exception_to_unicode
 
 _logger = logging.getLogger(__name__)
 
@@ -103,6 +103,10 @@ class InsufficientCreditError(Exception):
     pass
 
 
+class IAPServerError(Exception):
+    pass
+
+
 def iap_jsonrpc(url, method='call', params=None, timeout=15):
     """
     Calls the provided JSON-RPC endpoint, unwraps the result and
@@ -126,28 +130,20 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
         _logger.info("iap jsonrpc %s responded in %.3f seconds", url, req.elapsed.total_seconds())
         if 'error' in response:
             name = response['error']['data'].get('name').rpartition('.')[-1]
-            message = response['error']['data'].get('message')
             if name == 'InsufficientCreditError':
-                e_class = InsufficientCreditError
-            elif name == 'AccessError':
-                e_class = exceptions.AccessError
-            elif name == 'UserError':
-                e_class = exceptions.UserError
-            elif name == "ReadTimeout":
-                raise requests.exceptions.Timeout()
+                credit_error = InsufficientCreditError(response['error']['data'].get('message'))
+                credit_error.data = response['error']['data']
+                raise credit_error
             else:
-                raise requests.exceptions.ConnectionError()
-            e = e_class(message)
-            e.data = response['error']['data']
-            raise e
+                raise IAPServerError("An error occurred on the IAP server")
         return response.get('result')
     except requests.exceptions.Timeout:
-        _logger.warning('Request timeout with the URL: %s', url)
-        raise exceptions.ValidationError(
+        _logger.warning("iap jsonrpc %s timed out", url)
+        raise exceptions.AccessError(
             _('The request to the service timed out. Please contact the author of the app. The URL it tried to contact was %s', url)
         )
-    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.HTTPError):
-        _logger.exception("iap jsonrpc %s failed", url)
+    except (requests.exceptions.RequestException, IAPServerError) as e:
+        _logger.warning("iap jsonrpc %s failed, %s: %s", url, e.__class__.__name__, exception_to_unicode(e))
         raise exceptions.AccessError(
             _("An error occurred while reaching %s. Please contact Odoo support if this error persists.", url)
         )
