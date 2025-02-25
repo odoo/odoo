@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2012 (http://www.altova.com) by rdobrowolny (Sogei S.p.A.) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:www.agenziaentrate.gov.it:specificheTecniche:common" targetNamespace="urn:www.agenziaentrate.gov.it:specificheTecniche:common" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.0">
+	<xs:annotation>
+		<xs:documentation xml:lang="it"><![CDATA[
+		Versione 3.0 - 10/12/13
+		- modificato targetNamespace
+		Versione 2.0 - 15/02/12
+		- modificato targetNamespace
+		]]></xs:documentation>
+	</xs:annotation>
+	<xs:simpleType name="PR_Type">
+		<xs:annotation>
+			<xs:documentation>Tipo semplice costituito dalle sigle delle provincie italiane in vigore.</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="ProvincieItaliane"/>
+	</xs:simpleType>
+	<xs:simpleType name="PN_Type">
+		<xs:annotation>
+			<xs:documentation>Tipo semplice costituito dalle sigle delle provincie italiane in vigore,  dalle sigle delle provincie croate di Fiume, Pola e Zara e dalla sigla “EE” che indica un paese estero.</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="ProvincieItaliane ProvincieCroate Estero"/>
+	</xs:simpleType>
+	<xs:simpleType name="PE_Type">
+		<xs:annotation>
+			<xs:documentation>Tipo semplice costituito dalle sigle delle provincie italiane in vigore e dalla sigla “EE” che indica un paese estero.</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="ProvincieItaliane Estero"/>
+	</xs:simpleType>
+	<xs:simpleType name="ProvincieItaliane">
+		<xs:annotation>
+			<xs:documentation>
+			Elenco delle provincie italiane in vigore, valori ammessi:
+
+				Agrigento				AG
+				Alessandria				AL
+				Ancona					AN
+				Aosta   				AO
+				Ascoli Piceno			AP
+				L'Aquila				AQ
+				Arezzo					AR
+				Asti					AT
+				Avellino				AV
+				Bari					BA
+				Bergamo					BG
+				Biella					BI
+				Belluno					BL
+				Benevento				BN
+				Bologna					BO
+				Brindisi				BR
+				Brescia					BS
+				Barletta-Andria-Trani	BT
+				Bolzano					BZ
+				Cagliari				CA
+				Campobasso				CB
+				Caserta					CE
+				Chieti					CH
+				Carbonia-Iglessias		CI
+				Caltanissetta			CL
+				Cuneo					CN
+				Como					CO
+				Cremona					CR
+				Cosenza					CS
+				Catania					CT
+				Catanzaro				CZ
+				Enna					EN
+				Forlì-Cesena			FC
+				Ferrara					FE
+				Foggia					FG
+				Firenze					FI
+				Fermo					FM
+				Frosinone				FR
+				Genova					GE
+				Gorizia					GO
+				Grosseto				GR
+				Imperia					IM
+				Isernia					IS
+				Crotone					KR
+				Lecco					LC
+				Lecce					LE
+				Livorno					LI
+				Lodi					LO
+				Latina					LT
+				Lucca					LU
+				Monza e Brianza			MB
+				Macerata				MC
+				Messina					ME
+				Milano					MI
+				Mantova					MN
+				Modena					MO
+				Massa e Carrara			MS
+				Matera					MT
+				Napoli					NA
+				Novara					NO
+				Nuoro					NU
+				Ogliastra				OG
+				Oristano				OR
+				Olbia-Tempio			OT
+				Palermo					PA
+				Piacenza				PC
+				Padova					PD
+				Pescara					PE
+				Perugia					PG
+				Pisa					PI
+				Pordenone				PN
+				Prato					PO
+				Parma					PR
+				Pistoia					PT
+				Pesaro e Urbino			PU
+				Pavia					PV
+				Potenza					PZ
+				Ravenna					RA
+				Reggio Calabria			RC
+				Reggio Emilia			RE
+				Ragusa					RG
+				Rieti					RI
+				Roma					RM
+				Rimini					RN
+				Rovigo					RO
+				Salerno					SA
+				iena					SI
+				Sondrio					SO
+				La Spezia				SP
+				Siracusa				SR
+				Sassari					SS
+				Savona					SV
+				Taranto					TA
+				Teramo					TE
+				Trento 					TN
+				Torino					TO
+				Trapani					TP
+				Terni					TR
+				Trieste					TS
+				Treviso					TV
+				Udine					UD
+				Varese					VA
+				Verbano-Cusio-Ossola	VB
+				Vercelli				VC
+				Venezia					VE
+				Vicenza					VI
+				Verona					VR
+				Medio Campidano			VS
+				Viterbo					VT
+				Vibo Valentia			VV
+
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AG"/>
+			<xs:enumeration value="AL"/>
+			<xs:enumeration value="AN"/>
+			<xs:enumeration value="AO"/>
+			<xs:enumeration value="AP"/>
+			<xs:enumeration value="AQ"/>
+			<xs:enumeration value="AR"/>
+			<xs:enumeration value="AT"/>
+			<xs:enumeration value="AV"/>
+			<xs:enumeration value="BA"/>
+			<xs:enumeration value="BG"/>
+			<xs:enumeration value="BI"/>
+			<xs:enumeration value="BL"/>
+			<xs:enumeration value="BN"/>
+			<xs:enumeration value="BO"/>
+			<xs:enumeration value="BR"/>
+			<xs:enumeration value="BS"/>
+			<xs:enumeration value="BT"/>
+			<xs:enumeration value="BZ"/>
+			<xs:enumeration value="CA"/>
+			<xs:enumeration value="CB"/>
+			<xs:enumeration value="CE"/>
+			<xs:enumeration value="CH"/>
+			<xs:enumeration value="CI"/>
+			<xs:enumeration value="CL"/>
+			<xs:enumeration value="CN"/>
+			<xs:enumeration value="CO"/>
+			<xs:enumeration value="CR"/>
+			<xs:enumeration value="CS"/>
+			<xs:enumeration value="CT"/>
+			<xs:enumeration value="CZ"/>
+			<xs:enumeration value="EN"/>
+			<xs:enumeration value="FC"/>
+			<xs:enumeration value="FE"/>
+			<xs:enumeration value="FG"/>
+			<xs:enumeration value="FI"/>
+			<xs:enumeration value="FM"/>
+			<xs:enumeration value="FR"/>
+			<xs:enumeration value="GE"/>
+			<xs:enumeration value="GO"/>
+			<xs:enumeration value="GR"/>
+			<xs:enumeration value="IM"/>
+			<xs:enumeration value="IS"/>
+			<xs:enumeration value="KR"/>
+			<xs:enumeration value="LC"/>
+			<xs:enumeration value="LE"/>
+			<xs:enumeration value="LI"/>
+			<xs:enumeration value="LO"/>
+			<xs:enumeration value="LT"/>
+			<xs:enumeration value="LU"/>
+			<xs:enumeration value="MB"/>
+			<xs:enumeration value="MC"/>
+			<xs:enumeration value="ME"/>
+			<xs:enumeration value="MI"/>
+			<xs:enumeration value="MN"/>
+			<xs:enumeration value="MO"/>
+			<xs:enumeration value="MS"/>
+			<xs:enumeration value="MT"/>
+			<xs:enumeration value="NA"/>
+			<xs:enumeration value="NO"/>
+			<xs:enumeration value="NU"/>
+			<xs:enumeration value="OG"/>
+			<xs:enumeration value="OR"/>
+			<xs:enumeration value="OT"/>
+			<xs:enumeration value="PA"/>
+			<xs:enumeration value="PC"/>
+			<xs:enumeration value="PD"/>
+			<xs:enumeration value="PE"/>
+			<xs:enumeration value="PG"/>
+			<xs:enumeration value="PI"/>
+			<xs:enumeration value="PN"/>
+			<xs:enumeration value="PO"/>
+			<xs:enumeration value="PR"/>
+			<xs:enumeration value="PT"/>
+			<xs:enumeration value="PU"/>
+			<xs:enumeration value="PV"/>
+			<xs:enumeration value="PZ"/>
+			<xs:enumeration value="RA"/>
+			<xs:enumeration value="RC"/>
+			<xs:enumeration value="RE"/>
+			<xs:enumeration value="RG"/>
+			<xs:enumeration value="RI"/>
+			<xs:enumeration value="RM"/>
+			<xs:enumeration value="RN"/>
+			<xs:enumeration value="RO"/>
+			<xs:enumeration value="SA"/>
+			<xs:enumeration value="SI"/>
+			<xs:enumeration value="SO"/>
+			<xs:enumeration value="SP"/>
+			<xs:enumeration value="SR"/>
+			<xs:enumeration value="SS"/>
+			<xs:enumeration value="SV"/>
+			<xs:enumeration value="TA"/>
+			<xs:enumeration value="TE"/>
+			<xs:enumeration value="TN"/>
+			<xs:enumeration value="TO"/>
+			<xs:enumeration value="TP"/>
+			<xs:enumeration value="TR"/>
+			<xs:enumeration value="TS"/>
+			<xs:enumeration value="TV"/>
+			<xs:enumeration value="UD"/>
+			<xs:enumeration value="VA"/>
+			<xs:enumeration value="VB"/>
+			<xs:enumeration value="VC"/>
+			<xs:enumeration value="VE"/>
+			<xs:enumeration value="VI"/>
+			<xs:enumeration value="VR"/>
+			<xs:enumeration value="VS"/>
+			<xs:enumeration value="VT"/>
+			<xs:enumeration value="VV"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ProvincieCroate">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FU">
+				<xs:annotation>
+					<xs:documentation>Fiume</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PL">
+				<xs:annotation>
+					<xs:documentation>Pola</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ZA">
+				<xs:annotation>
+					<xs:documentation>Zara</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Estero">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EE"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
