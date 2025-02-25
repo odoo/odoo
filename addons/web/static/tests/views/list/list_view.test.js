@@ -10824,7 +10824,7 @@ test(`editable list view: multi edition`, async () => {
 
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
     await contains(`.o_data_row [name=int_field] input`).edit("666");
-    expect(queryOne(".modal-body").innerText.includes("those 2 records")).toBe(true, {
+    expect(queryOne(".modal-body").innerText.includes("update 2 records")).toBe(true, {
         message: "the number of records should be correctly displayed",
     });
 
@@ -11407,7 +11407,7 @@ test(`editable list view: multi edition with readonly modifiers`, async () => {
     await contains(`.o_data_row [name=int_field] input`).edit("666");
 
     expect(`.modal-body`).toHaveText(`Among the 4 selected records, 2 are valid for this update.
-Are you sure you want to perform the following update on those 2 records?
+Are you sure you want to update 2 records?
 
 Field: Int field
 Update to: 666`);
@@ -11768,7 +11768,7 @@ test(`non editable list view: multi edition`, async () => {
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
     await contains(`.o_data_row [name=int_field] input`).edit("666");
     expect(`.modal`).toHaveCount(1);
-    expect(queryOne(".modal").innerText.includes("those 2 records")).toBe(true, {
+    expect(queryOne(".modal").innerText.includes("update 2 records")).toBe(true, {
         message: "the number of records should be correctly displayed",
     });
 
