@@ -1323,11 +1323,11 @@ class PosSession(models.Model):
         for payment_method, lines in payment_method_to_receivable_lines.items():
             receivable_account = self._get_receivable_account(payment_method)
             if receivable_account.reconcile:
-                lines.filtered(lambda line: not line.reconciled).reconcile()
+                lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
 
         for payment, lines in payment_to_receivable_lines.items():
             if payment.partner_id.property_account_receivable_id.reconcile:
-                lines.filtered(lambda line: not line.reconciled).reconcile()
+                lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
 
         # Reconcile invoice payments' receivable lines. But we only do when the account is reconcilable.
         # Though `account_default_pos_receivable_account_id` should be of type receivable, there is currently
@@ -1335,11 +1335,11 @@ class PosSession(models.Model):
         if self.company_id.account_default_pos_receivable_account_id.reconcile:
             for payment_method in combine_inv_payment_receivable_lines:
                 lines = combine_inv_payment_receivable_lines[payment_method] | combine_invoice_receivable_lines.get(payment_method, self.env['account.move.line'])
-                lines.filtered(lambda line: not line.reconciled).reconcile()
+                lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
 
             for payment in split_inv_payment_receivable_lines:
                 lines = split_inv_payment_receivable_lines[payment] | split_invoice_receivable_lines.get(payment, self.env['account.move.line'])
-                lines.filtered(lambda line: not line.reconciled).reconcile()
+                lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
 
         # reconcile stock output lines
         pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
@@ -1349,7 +1349,7 @@ class PosSession(models.Model):
         for account_id in stock_output_lines:
             ( stock_output_lines[account_id]
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
-            ).filtered(lambda aml: not aml.reconciled).reconcile()
+            ).filtered(lambda aml: not aml.reconciled).with_context(no_cash_basis=True).reconcile()
         return data
 
     def _get_rounding_difference_vals(self, amount, amount_converted):
