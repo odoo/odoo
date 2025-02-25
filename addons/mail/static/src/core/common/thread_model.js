@@ -257,7 +257,10 @@ export class Thread extends Record {
     fetchMembersState = "not_fetched";
     /** @type {integer|null} */
     highlightMessage = Record.one("mail.message", {
-        onAdd(msg) {
+        async onAdd(msg) {
+            if (!msg) {
+                msg = this.store["mail.message"].get(msg.id);
+            }
             msg.thread = this;
         },
     });

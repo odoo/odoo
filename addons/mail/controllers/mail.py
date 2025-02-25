@@ -200,6 +200,10 @@ class MailController(http.Controller):
         if not message:
             if request.env.user._is_public():
                 return request.redirect(f'/web/login?redirect=/mail/message/{message_id}')
+            elif request.env.user._is_portal():
+                message = request.env['mail.message'].sudo().browse(message_id)
+                if message and message.check_access_rights('read', raise_exception=False):
+                    return self._mail_thread_message_redirect(message)
             raise Unauthorized()
         return self._mail_thread_message_redirect(message)
 
@@ -207,6 +211,8 @@ class MailController(http.Controller):
         if not request.env.user._is_internal():
             thread = request.env[message.model].search([('id', '=', message.res_id)])
             if hasattr(thread, "_get_share_url"):
+                if request.env.user._is_portal() and message.subtype_id.id in [self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")]:
+                    return request.redirect(f'{thread._get_share_url(share_token=False)}highlight_message_id={message.id}')
                 return request.redirect(thread._get_share_url(share_token=False))
             raise Unauthorized()
         # @see commit c63d14a0485a553b74a8457aee158384e9ae6d3f
