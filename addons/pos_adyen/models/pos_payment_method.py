@@ -21,11 +21,6 @@ class PosPaymentMethod(models.Model):
     def _get_payment_terminal_selection(self):
         return super(PosPaymentMethod, self)._get_payment_terminal_selection() + [('adyen', 'Adyen')]
 
-    # Adyen
-    adyen_api_key = fields.Char(string="Adyen API key", help='Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description', copy=False, groups='base.group_erp_manager')
-    adyen_terminal_identifier = fields.Char(help='[Terminal model]-[Serial number], for example: P400Plus-123456789', copy=False)
-    adyen_test_mode = fields.Boolean(help='Run transactions in the test environment.', groups='base.group_erp_manager')
-
     adyen_latest_response = fields.Char(copy=False, groups='base.group_erp_manager') # used to buffer the latest asynchronous notification from Adyen.
     adyen_event_url = fields.Char(
         string="Event URL",
@@ -35,28 +30,22 @@ class PosPaymentMethod(models.Model):
         default=lambda self: f"{self.get_base_url()}/pos_adyen/notification",
     )
 
-    @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
-        params += ['adyen_terminal_identifier']
-        return params
-
-    @api.constrains('adyen_terminal_identifier')
+    @api.constrains('terminal_identifier')
     def _check_adyen_terminal_identifier(self):
         for payment_method in self:
-            if not payment_method.adyen_terminal_identifier:
+            if payment_method.use_payment_terminal != 'adyen' or not payment_method.terminal_identifier:
                 continue
             # sudo() to search all companies
             existing_payment_method = self.sudo().search([('id', '!=', payment_method.id),
-                                                   ('adyen_terminal_identifier', '=', payment_method.adyen_terminal_identifier)],
+                                                   ('terminal_identifier', '=', payment_method.terminal_identifier)],
                                                   limit=1)
             if existing_payment_method:
                 if existing_payment_method.company_id == payment_method.company_id:
                     raise ValidationError(_('Terminal %(terminal)s is already used on payment method %(payment_method)s.',
-                                      terminal=payment_method.adyen_terminal_identifier, payment_method=existing_payment_method.display_name))
+                                      terminal=payment_method.terminal_identifier, payment_method=existing_payment_method.display_name))
                 else:
                     raise ValidationError(_('Terminal %(terminal)s is already used in company %(company)s on payment method %(payment_method)s.',
-                                             terminal=payment_method.adyen_terminal_identifier,
+                                             terminal=payment_method.terminal_identifier,
                                              company=existing_payment_method.company_id.name,
                                              payment_method=existing_payment_method.display_name))
 
@@ -93,22 +82,22 @@ class PosPaymentMethod(models.Model):
 
         # These checks are not optimal. This RPC method should be changed.
 
-        is_capture_data = operation == 'capture' and hasattr(self, 'adyen_merchant_account') and self._is_valid_adyen_request_data(data, {
+        is_capture_data = operation == 'capture' and hasattr(self, 'terminal_merchant_key') and self._is_valid_adyen_request_data(data, {
             'originalReference': UNPREDICTABLE_ADYEN_DATA,
             'modificationAmount': {
                 'value': UNPREDICTABLE_ADYEN_DATA,
                 'currency': UNPREDICTABLE_ADYEN_DATA,
             },
-            'merchantAccount': self.adyen_merchant_account,
+            'merchantAccount': self.terminal_merchant_key,
         })
 
-        is_adjust_data = operation == 'adjust' and hasattr(self, 'adyen_merchant_account') and self._is_valid_adyen_request_data(data, {
+        is_adjust_data = operation == 'adjust' and hasattr(self, 'terminal_merchant_key') and self._is_valid_adyen_request_data(data, {
             'originalReference': UNPREDICTABLE_ADYEN_DATA,
             'modificationAmount': {
                 'value': UNPREDICTABLE_ADYEN_DATA,
                 'currency': UNPREDICTABLE_ADYEN_DATA,
             },
-            'merchantAccount': self.adyen_merchant_account,
+            'merchantAccount': self.terminal_merchant_key,
             'additionalData': {
                 'industryUsage': 'DelayedCharge',
             },
@@ -186,7 +175,7 @@ class PosPaymentMethod(models.Model):
             'MessageCategory': expected_message_category,
             'SaleID': UNPREDICTABLE_ADYEN_DATA,
             'ServiceID': UNPREDICTABLE_ADYEN_DATA,
-            'POIID': self.adyen_terminal_identifier,
+            'POIID': self.terminal_identifier,
         }
 
     def _get_expected_payment_request(self, with_acquirer_data):
@@ -235,10 +224,10 @@ class PosPaymentMethod(models.Model):
 
         _logger.info('Request to Adyen by user #%d:\n%s', self.env.uid, pprint.pformat(data))
 
-        environment = 'test' if self.sudo().adyen_test_mode else 'live'
+        environment = 'test' if self.sudo().test_mode else 'live'
         endpoint = self._get_adyen_endpoints()[operation] % environment
         headers = {
-            'x-api-key': self.sudo().adyen_api_key,
+            'x-api-key': self.sudo().terminal_api_key,
         }
         req = requests.post(endpoint, json=data, headers=headers, timeout=TIMEOUT)
 
