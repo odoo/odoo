@@ -335,8 +335,11 @@ export class CalendarModel extends Model {
      */
     async updateData(data) {
         data.range = this.computeRange();
+        let unusualDaysProm;
         if (this.meta.showUnusualDays) {
-            data.unusualDays = await this.loadUnusualDays(data);
+            unusualDaysProm = this.loadUnusualDays(data).then((unusualDays) => {
+                data.unusualDays = unusualDays;
+            });
         }
 
         const { sections, dynamicFiltersInfo } = await this.loadFilters(data);
@@ -361,6 +364,8 @@ export class CalendarModel extends Model {
                 }
             }
         }
+
+        await unusualDaysProm;
     }
 
     //--------------------------------------------------------------------------
