@@ -63,8 +63,10 @@ class AccountAnalyticDistributionModel(models.Model):
             This method should be called to prefill analytic distribution field on several models """
         applicable_models = self._get_applicable_models(vals)
 
-        res = {}
-        applied_plans = self.env['account.analytic.plan']
+        res = vals.get('analytic_distribution', {}) or {}
+        applied_plans = self.env['account.analytic.account'].browse(
+            list({int(account_id) for ids in res.keys() for account_id in ids.split(",")})
+        ).mapped('root_plan_id')
         for model in applicable_models:
             # ignore model if it contains an account having a root plan that was already applied
             if not applied_plans & model.distribution_analytic_account_ids.root_plan_id:
@@ -85,6 +87,8 @@ class AccountAnalyticDistributionModel(models.Model):
         vals = self._get_default_search_domain_vals() | vals
         domain = []
         for fname, value in vals.items():
+            if fname == 'analytic_distribution':
+                continue
             domain += self._create_domain(fname, value)
         return self.search(domain)
 
