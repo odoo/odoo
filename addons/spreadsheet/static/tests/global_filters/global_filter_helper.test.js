@@ -14,14 +14,14 @@ import {
     getDateDomainDurationInDays,
     assertDateDomainEqual,
 } from "@spreadsheet/../tests/helpers/date_domain";
-import { patchTranslations } from "@web/../tests/web_test_helpers";
+import { allowTranslations } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
 
 const { DateTime } = luxon;
 
 beforeEach(() => {
-    patchTranslations();
+    allowTranslations();
 });
 
 function getRelativeDateDomain(now, offset, period, fieldName, fieldType) {

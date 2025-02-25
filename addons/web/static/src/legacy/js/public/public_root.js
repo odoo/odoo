@@ -7,7 +7,7 @@ import { makeEnv, startServices } from "@web/env";
 import { getTemplate } from '@web/core/templates';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
-import { _t } from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
 import { jsToPyLocale, pyToJsLocale } from "@web/core/l10n/utils";
 import { App, Component, whenReady } from "@odoo/owl";
 import { RPCError } from '@web/core/network/rpc';
@@ -381,7 +381,7 @@ export async function createPublicRoot(RootWidget) {
         getTemplate,
         env,
         dev: env.debug,
-        translateFn: _t,
+        translateFn: appTranslateFn,
         translatableAttributes: ["data-tooltip"],
     });
     const locale = pyToJsLocale(lang) || browser.navigator.language;
