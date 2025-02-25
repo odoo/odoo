@@ -1,5 +1,6 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import {
+    click,
     getNextFocusableElement,
     press,
     queryAll,
@@ -4753,14 +4754,14 @@ test("one2many with CREATE _onChanges correctly refreshed", async () => {
     _onChangestep = 1;
     await contains('[name="turtle_int"] input').edit("10", { confirm: "blur" });
     // put the list back in non edit mode
-    contains('[name="foo"] input').click();
+    await click('[name="foo"] input');
     expect(queryAllTexts(".o_data_row")).toEqual(["first 10", "second -10"]);
 
     // trigger the second onchange
     _onChangestep = 2;
     await contains(".o_field_x2many_list tbody tr td").click();
     await contains('[name="turtle_int"] input').edit("20", { confirm: "blur" });
-    contains('[name="foo"] input').click();
+    await click('[name="foo"] input');
     expect(queryAllTexts(".o_data_row")).toEqual(["first 20", "second -20"]);
     expect(".o_field_widget").toHaveCount(delta);
 

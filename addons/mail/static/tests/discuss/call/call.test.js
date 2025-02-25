@@ -14,9 +14,8 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { hover, queryFirst } from "@odoo/hoot-dom";
-import { mockUserAgent } from "@odoo/hoot-mock";
-import { EventBus } from "@odoo/owl";
+import { hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
+import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -26,7 +25,6 @@ import {
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 describe.current.tags("desktop");
@@ -122,23 +120,20 @@ test("should disconnect when closing page while in call", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            sendBeacon: async (route, data) => {
-                if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
-                    const blobText = await data.text();
-                    const blobData = JSON.parse(blobText);
-                    asyncStep(`sendBeacon_leave_call:${blobData.params.channel_id}`);
-                }
-            },
-            serviceWorker: {
-                controller: {
-                    postMessage(data) {
-                        if (data.name === "UNEXPECTED_CALL_TERMINATION") {
-                            asyncStep(`postMessage:${data.name}:${data.channelId}`);
-                        }
-                    },
+    mockSendBeacon(async (route, data) => {
+        if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
+            const blobText = await data.text();
+            const blobData = JSON.parse(blobText);
+            asyncStep(`sendBeacon_leave_call:${blobData.params.channel_id}`);
+        }
+    });
+    patchWithCleanup(navigator, {
+        serviceWorker: {
+            controller: {
+                postMessage(data) {
+                    if (data.name === "UNEXPECTED_CALL_TERMINATION") {
+                        asyncStep(`postMessage:${data.name}:${data.channelId}`);
+                    }
                 },
             },
         },
@@ -147,7 +142,7 @@ test("should disconnect when closing page while in call", async () => {
     await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
     // simulate page close
-    window.dispatchEvent(new Event("pagehide"), { bubble: true });
+    await manuallyDispatchProgrammaticEvent(window, "pagehide");
     await waitForSteps([
         `postMessage:UNEXPECTED_CALL_TERMINATION:${channelId}`,
         `sendBeacon_leave_call:${channelId}`,
@@ -512,15 +507,16 @@ test("expand call participants when joining a call", async () => {
 });
 
 test("start call when accepting from push notification", async () => {
-    patchWithCleanup(window.navigator, {
-        serviceWorker: Object.assign(new EventBus(), { register: () => Promise.resolve() }),
+    const serviceWorker = Object.assign(new EventTarget(), {
+        register: () => Promise.resolve(),
     });
+    patchWithCleanup(window.navigator, { serviceWorker });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss();
     await contains(".o-mail-Discuss-threadName[title=Inbox]");
-    browser.navigator.serviceWorker.dispatchEvent(
+    serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: channelId, joinCall: true } },
         })

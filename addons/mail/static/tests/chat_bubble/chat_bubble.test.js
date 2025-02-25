@@ -1,3 +1,6 @@
+import { describe, expect, test } from "@odoo/hoot";
+import { leave, runAllTimers } from "@odoo/hoot-dom";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import {
     assertChatHub,
     click,
@@ -11,12 +14,7 @@ import {
     startServer,
 } from "../mail_test_helpers";
 
-import { describe, expect, test } from "@odoo/hoot";
-import { leave } from "@odoo/hoot-dom";
-
 import { rpc } from "@web/core/network/rpc";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -219,6 +217,7 @@ test("chat bubbles are synced between tabs", async () => {
     const tab2 = await start({ asTab: true });
     await contains(".o-mail-ChatBubble", { target: tab1 });
     await contains(".o-mail-ChatBubble", { target: tab2 });
+    await runAllTimers(); // Wait for bus service to fully load
     await click(".o-mail-ChatBubble[name='Marc']", { target: tab1 });
     await contains(".o-mail-ChatWindow", { target: tab2 }); // open sync
     await click(".o-mail-ChatWindow-command[title='Fold']", { target: tab2 });
