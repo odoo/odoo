@@ -34,11 +34,13 @@ class MailGuest(models.Model):
     presence_ids = fields.One2many("mail.presence", "guest_id", groups="base.group_system")
     # sudo: mail.guest - can access presence of accessible guest
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+    last_poll = fields.Datetime("Last Poll", compute="_compute_im_status", compute_sudo=True)
 
     @api.depends("presence_ids.status")
     def _compute_im_status(self):
         for guest in self:
             guest.im_status = guest.presence_ids.status or "offline"
+            guest.last_poll = guest.presence_ids.last_poll
 
     def _get_guest_from_token(self, token=""):
         """Returns the guest record for the given token, if applicable."""
