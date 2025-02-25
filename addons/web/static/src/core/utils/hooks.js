@@ -1,6 +1,15 @@
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, useComponent, useEffect, useRef, onWillUnmount, useState, toRaw } from "@odoo/owl";
+import {
+    status,
+    useComponent,
+    useEffect,
+    useRef,
+    onWillUnmount,
+    useState,
+    toRaw,
+    onWillStart,
+} from "@odoo/owl";
 
 /**
  * This file contains various custom hooks.
@@ -140,13 +149,25 @@ export const SERVICES_METADATA = {};
  * @returns {import("services").ServiceFactories[K]}
  */
 export function useService(serviceName) {
+    onWillStart(async () => {
+        if (!(serviceName in services)) {
+            await new Promise((_, reject) => {
+                setTimeout(() => {
+                    if (!(serviceName in services)) {
+                        reject(
+                            new Error(
+                                `Service ${serviceName} is not available in "${component.constructor.name}".`
+                            )
+                        );
+                    }
+                }, 0);
+            }).catch((error) => {
+                throw error;
+            });
+        }
+    });
     const component = useComponent();
     const { services } = component.env;
-    setTimeout(() => {
-        if (!(serviceName in services)) {
-            throw new Error(`Service ${serviceName} is not available`);
-        }
-    }, 0);
     const service = services[serviceName];
     if (SERVICES_METADATA[serviceName]) {
         if (service instanceof Function) {
