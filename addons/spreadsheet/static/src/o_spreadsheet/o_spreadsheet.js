@@ -2396,11 +2396,12 @@
             if (this.isFastIdStrategy) {
                 this.fastIdStart++;
                 return String(this.fastIdStart);
-                //@ts-ignore
             }
-            else if (window.crypto && window.crypto.getRandomValues) {
-                //@ts-ignore
-                return ([1e7] + -1e3).replace(/[018]/g, (c) => (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16));
+            else if (window.crypto) {
+                return "10000000-1000".replace(/[01]/g, (c) => {
+                    const n = Number(c);
+                    return (n ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (n / 4)))).toString(16);
+                });
             }
             else {
                 // mainly for jest and other browsers that do not have the crypto functionality
@@ -2418,11 +2419,12 @@
             if (this.isFastIdStrategy) {
                 this.fastIdStart++;
                 return String(this.fastIdStart);
-                //@ts-ignore
             }
-            else if (window.crypto && window.crypto.getRandomValues) {
-                //@ts-ignore
-                return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) => (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16));
+            else if (window.crypto) {
+                return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) => {
+                    const n = Number(c);
+                    return (n ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (n / 4)))).toString(16);
+                });
             }
             else {
                 // mainly for jest and other browsers that do not have the crypto functionality
@@ -43688,9 +43690,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.62';
-    __info__.date = '2025-02-14T08:45:17.303Z';
-    __info__.hash = '34f2802';
+    __info__.version = '16.0.63';
+    __info__.date = '2025-02-25T06:04:07.007Z';
+    __info__.hash = 'b01aca6';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
