@@ -175,6 +175,38 @@ test("add and remove groups", async () => {
     await contains(`.o_form_button_save`).click();
 });
 
+test("editing groups doesn't remove groups that are not in categories", async () => {
+    // this group doesn't belong to a category, so it can't be added/removed from the relation
+    // with the `res_user_group_ids` widget.
+    ResGroups._records.push({
+        id: 101,
+        name: "Extra Rights",
+    });
+    ResUsers._records[0].group_ids.push(101);
+
+    onRpc("web_save", ({ args }) => {
+        expect(args[1].group_ids).toEqual([[6, false, [101, 1]]]);
+    });
+
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="group_ids" nolabel="1" widget="res_user_group_ids"/>
+                    </group>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    await click(".o_field_selection select:eq(1)");
+    await select("false");
+    await contains(`.o_form_button_save`).click();
+});
+
 test.tags("desktop");
 test(`category tooltips`, async () => {
     await mountView({
