@@ -1669,9 +1669,7 @@ class CodeTranslations:
                     p = CodeTranslations._read_code_translations_file(fileobj, filter_func)
                 translations.update(p)
             except IOError:
-                iso_lang = get_iso_codes(lang)
-                filename = '[lang: %s][format: %s]' % (iso_lang or 'new', 'po')
-                _logger.exception("couldn't read translation file %s", filename)
+                _logger.exception("couldn't read translation file %s", po_path)
         return translations
 
     def _load_python_translations(self, module_name, lang):
