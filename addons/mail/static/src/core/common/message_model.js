@@ -408,7 +408,7 @@ export class Message extends Record {
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             ...this.thread.rpcParams,
         });
-        this.store.insert(data, { html: true });
+        this.store.insert(data);
         if (this.hasLink && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }

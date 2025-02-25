@@ -41,7 +41,7 @@ export class MailCoreCommon {
             }
         });
         this.busService.subscribe("mail.record/insert", (payload) => {
-            this.store.insert(payload, { html: true });
+            this.store.insert(payload);
         });
     }
 

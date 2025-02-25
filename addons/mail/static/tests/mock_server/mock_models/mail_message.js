@@ -148,6 +148,7 @@ export class MailMessage extends models.ServerModel {
                 attachment_ids: mailDataHelpers.Store.many(
                     IrAttachment.browse(message.attachment_ids).sort((a1, a2) => a1.id - a2.id)
                 ),
+                body: ["markup", data.body],
                 default_subject:
                     message.model &&
                     message.res_id &&

@@ -76,6 +76,6 @@ export class ActivityListPopover extends Component {
         const data = await this.orm.silent.call("mail.activity", "activity_format", [
             props.activityIds,
         ]);
-        this.store.insert(data, { html: true });
+        this.store.insert(data);
     }
 }
