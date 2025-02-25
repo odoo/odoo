@@ -24,7 +24,7 @@ class EventEvent(models.Model):
         for event in self:
             event.lead_count = mapped_data.get(event.id, 0)
 
-    def action_generate_leads(self):
+    def action_generate_leads(self, event_lead_rules=False):
         """ Re-generate leads based on event.lead.rules.
         The method is ran synchronously if there is a low amount of registrations, otherwise it
         goes through a CRON job that runs in batches. """
@@ -35,19 +35,23 @@ class EventEvent(models.Model):
         registrations_count = self.env['event.registration'].search_count([
             ('event_id', 'in', self.ids),
             ('state', 'not in', ['draft', 'cancel']),
-        ])
+        ]) if not event_lead_rules else len(self.registration_ids)
 
         if registrations_count <= self.env['event.lead.request']._REGISTRATIONS_BATCH_SIZE:
-            leads = self.env['event.registration'].search([
+            lead_registrations = self.env['event.registration'].search([
                 ('event_id', 'in', self.ids),
                 ('state', 'not in', ['draft', 'cancel']),
-            ])._apply_lead_generation_rules()
+            ]) if not event_lead_rules else self.registration_ids
+            leads = lead_registrations._apply_lead_generation_rules(event_lead_rules)
             if leads:
                 notification = _("Yee-ha, %(leads_count)s Leads have been created!", leads_count=len(leads))
             else:
                 notification = _("Aww! No Leads created, check your Lead Generation Rules and try again.")
         else:
-            self.env['event.lead.request'].sudo().create([{'event_id': event.id} for event in self])
+            self.env['event.lead.request'].sudo().create([{
+                'event_id': event.id,
+                'event_lead_rule_ids': event_lead_rules,
+            } for event in self])
             self.env.ref('event_crm.ir_cron_generate_leads')._trigger()
             notification = _("Got it! We've noted your request. Your leads will be created soon!")
 
