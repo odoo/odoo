@@ -95,14 +95,32 @@
                     <img id="posqrcode" t-att-src="useQrCode" class="pos-receipt-logo"/>
                 </div>
 
+<<<<<<< saas-18.1
                 <div t-if="useQrCode">
                     <div class="pos-receipt-order-data">
                         Unique Code: <t t-esc="order.ticket_code"/>
+||||||| c9da1b4017d3dde2ba1512973afec4948043de63
+                <div t-if="props.data.pos_qr_code">
+                    <div class="pos-receipt-order-data">
+                        Unique Code: <t t-esc="props.data.ticket_code"/>
+=======
+                <div t-if="props.data.pos_qr_code">
+                    <div class="unique-code pos-receipt-order-data">
+                        Unique Code: <t t-esc="props.data.ticket_code"/>
+>>>>>>> fe3876cbb3940b3c158e3f555663a2969ac047c1
                     </div>
                 </div>
 
+<<<<<<< saas-18.1
                 <div t-if="['url', 'qr_code_and_url'].includes(this.header.company.point_of_sale_ticket_portal_url_display_mode) and useQrCode">
                     <div class="pos-receipt-order-data">
+||||||| c9da1b4017d3dde2ba1512973afec4948043de63
+                <div t-if="['url', 'qr_code_and_url'].includes(props.data.headerData.company.point_of_sale_ticket_portal_url_display_mode) and props.data.pos_qr_code">
+                    <div class="pos-receipt-order-data" t-attf-class="{{ props.data.ticket_portal_url_display_mode === 'qr_code_and_url' ? 'mt-3' : '' }}">
+=======
+                <div t-if="['url', 'qr_code_and_url'].includes(props.data.headerData.company.point_of_sale_ticket_portal_url_display_mode) and props.data.pos_qr_code">
+                    <div class="portal-url pos-receipt-order-data" t-attf-class="{{ props.data.ticket_portal_url_display_mode === 'qr_code_and_url' ? 'mt-3' : '' }}">
+>>>>>>> fe3876cbb3940b3c158e3f555663a2969ac047c1
                         Portal URL: <t t-esc="getPortalURL()"/>
                     </div>
                 </div>
