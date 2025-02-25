@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_forward", {
             trigger: messagesContain("Hello, what can I do for you?"),
         },
         {
-            trigger: ".o-livechat-root:shadow li:contains(Forward to operator)",
+            trigger: ".o-livechat-root:shadow button:contains(Forward to operator)",
             run: "click",
         },
         {

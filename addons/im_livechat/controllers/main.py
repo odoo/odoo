@@ -129,9 +129,7 @@ class LivechatController(http.Controller):
                     operator, ["avatar_128", "user_livechat_username"]
                 ),
                 "name": channel_vals["name"],
-                "open_chat_window": True,
                 "scrollUnread": False,
-                "livechat_active": True,
                 "channel_type": "livechat",
                 "chatbot": chatbot_data,
             }
@@ -159,7 +157,6 @@ class LivechatController(http.Controller):
                 channel,
                 extra_fields={
                     "isLoaded": not chatbot_script,
-                    "open_chat_window": True,
                     "scrollUnread": False,
                 },
             )

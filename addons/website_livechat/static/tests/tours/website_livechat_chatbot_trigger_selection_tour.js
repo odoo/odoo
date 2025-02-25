@@ -6,7 +6,7 @@ const answerBothQuestions = [
             ".o-livechat-root:shadow .o-mail-Message:contains(Hello, here is a first question?)",
     },
     {
-        trigger: ".o-livechat-root:shadow li:contains(Yes to first question)",
+        trigger: ".o-livechat-root:shadow button:contains(Yes to first question)",
         run: "click",
     },
     {
@@ -14,7 +14,7 @@ const answerBothQuestions = [
             ".o-livechat-root:shadow .o-mail-Message:contains(Hello, here is a second question?)",
     },
     {
-        trigger: ".o-livechat-root:shadow li:contains(No to second question)",
+        trigger: ".o-livechat-root:shadow button:contains(No to second question)",
         run: "click",
     },
 ];
