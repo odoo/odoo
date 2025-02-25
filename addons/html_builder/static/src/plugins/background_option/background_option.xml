@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.BackgroundComponent">
+<t t-name="html_builder.BackgroundOption">
     <!-- BackgroundToggler -->
     <BuilderRow label.translate="Background" t-if="props.withColor or props.withImages">
     <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
@@ -25,8 +25,8 @@
         </t>
     </BuilderRow>
     <t t-if="props.withImages">
-        <BackgroundImage/>
-        <BackgroundPosition/>
+        <BackgroundImageOption/>
+        <BackgroundPositionOption/>
         <!-- TODO: BackgroundOptimize-->
         <!-- Color filter -->
         <BuilderRow t-if="isActiveItem('toggle_bg_image_id')" label.translate="Color Filter" level="2">
@@ -41,7 +41,7 @@
                             data-excluded="theme, common"
             />
         </div> -->
-        <BackgroundShape />
+        <BackgroundShapeOption />
     </t>
 </t>
 

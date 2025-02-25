@@ -1,8 +1,8 @@
-import { BackgroundComponent } from "@html_builder/plugins/background_option/background_option";
-import { BgPositionOverlay } from "@html_builder/plugins/background_option/background_position_component";
+import { BackgroundPositionOverlay } from "@html_builder/plugins/background_option/background_position_overlay";
 import { expect, test } from "@odoo/hoot";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 
 defineWebsiteModels();
 
@@ -18,7 +18,7 @@ test("change the background shape of elements", async () => {
     addOption({
         selector: ".selector",
         applyTo: ".applyTo",
-        Component: BackgroundComponent,
+        Component: BackgroundOption,
         props: {
             withColors: true,
             withImages: true,
@@ -96,7 +96,7 @@ test("Change the background position and click out of the iframe", async () => {
 });
 
 async function dragAndDropBgImage() {
-    patchWithCleanup(BgPositionOverlay.prototype, {
+    patchWithCleanup(BackgroundPositionOverlay.prototype, {
         onDragBackgroundMove(ev) {
             const movementX = ev.clientX === 200 ? 1 : 0;
             const movementY = ev.clientY === 200 ? 1 : 0;
