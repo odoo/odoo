@@ -533,7 +533,7 @@ export class Composer extends Component {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
         });
-        let default_body = await prettifyMessageContent(body, validMentions);
+        let default_body = await prettifyMessageContent(body, { validMentions });
         if (!default_body) {
             const composer = toRaw(this.props.composer);
             // Reset signature when recovering an empty body.

@@ -53,7 +53,9 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread|undefined>}
      */
     async open() {
-        await this._createThread({ persist: false });
+        const thread = await this._createThread({ persist: false });
+        await thread?.openChatWindow({ focus: true });
+        return thread;
     }
 
     /**
@@ -66,13 +68,30 @@ export class LivechatService {
         if (!thread.isTransient) {
             return thread;
         }
-        await this.store.chatHub.initPromise;
+        const temporaryThread = thread;
+        const deleteTemporary = async () => {
+            await this.store.chatHub.initPromise;
+            await this.store.ChatWindow.get({ thread: temporaryThread })?.close({ force: true });
+            temporaryThread?.delete();
+        };
         const savedThread = await this._createThread({ originThread: thread, persist: true });
-        thread?.delete();
         if (!savedThread) {
+            await deleteTemporary();
             return;
         }
-        await this.env.services["mail.store"].initialize();
+        savedThread.fetchNewMessages();
+        this.env.services["mail.store"].initialize();
+        savedThread.readyToSwapDeferred.then(async () => {
+            if (!savedThread?.exists()) {
+                return;
+            }
+            // Do not load unread messaes: new messages were loaded to avoid
+            // flickering, we do not want another load that would result in the
+            // same issue.
+            savedThread.scrollUnread = false;
+            deleteTemporary();
+            savedThread.openChatWindow({ focus: true });
+        });
         return savedThread;
     }
 
@@ -104,8 +123,6 @@ export class LivechatService {
             },
             { shadow: true }
         );
-        await this.store.chatHub.initPromise;
-        this.store.ChatWindow.get({ thread: originThread })?.close();
         if (!channel_id) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
             return;
