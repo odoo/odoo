@@ -1,4 +1,16 @@
 const RSTRIP_REGEXP = /(?=\n[ \t]*$)/;
+let translationContext = null;
+const contextByTextNode = new Map();
+
+const TCTX = "t-translation-context";
+
+function getTranslationContext(node) {
+    if (node.hasAttribute(TCTX)) {
+        return node.getAttribute(TCTX);
+    }
+    return getTranslationContext(node.parentElement);
+}
+
 /**
  * The child nodes of operation represent new content to create before target or
  * or other elements to move before target from the target tree (tree from which target is part of).
@@ -58,19 +70,19 @@ function getXpath(operation) {
             const templateName = parent.getAttribute("t-name") || parent.getAttribute("t-inherit");
             console.warn(
                 `Error-prone use of @class in template "${templateName}" (or one of its inheritors).` +
-                " Use the hasclass(*classes) function to filter elements by their classes"
+                    " Use the hasclass(*classes) function to filter elements by their classes"
             );
         }
     }
     // hasclass does not exist in XPath 1.0 but is a custom function defined server side (see _hasclass) usable in lxml.
     // Here we have to replace it by a complex condition (which is not nice).
     // Note: we assume that classes do not contain the 2 chars , and )
-    return xpath.replaceAll(HASCLASS_REGEXP, (_, capturedGroup) => {
-        return capturedGroup
+    return xpath.replaceAll(HASCLASS_REGEXP, (_, capturedGroup) =>
+        capturedGroup
             .split(",")
             .map((c) => `contains(concat(' ', @class, ' '), ' ${c.trim().slice(1, -1)} ')`)
-            .join(" and ");
-    });
+            .join(" and ")
+    );
 }
 
 /**
@@ -125,9 +137,11 @@ function getNodes(element, operation) {
     for (const childNode of operation.childNodes) {
         if (childNode.tagName === "xpath" && childNode.getAttribute?.("position") === "move") {
             const node = getElement(element, childNode);
+            node.setAttribute(TCTX, getTranslationContext(node));
             removeNode(node);
             nodes.push(node);
         } else {
+            setTranslationContext(childNode);
             nodes.push(childNode);
         }
     }
@@ -178,6 +192,7 @@ function modifyAttributes(target, operation) {
 
         if (value) {
             target.setAttribute(attributeName, value);
+            target.setAttribute(`t-translation-context-${attributeName}`, translationContext);
         } else {
             target.removeAttribute(attributeName);
         }
@@ -228,6 +243,7 @@ function replace(root, target, operation) {
                 let comment = null;
                 for (const child of operation.childNodes) {
                     if (child.nodeType === Node.ELEMENT_NODE) {
+                        setTranslationContext(child);
                         operationContent = child;
                         break;
                     }
@@ -249,12 +265,28 @@ function replace(root, target, operation) {
             while (target.firstChild) {
                 target.removeChild(target.lastChild);
             }
-            target.append(...operation.childNodes);
+            for (const node of [...operation.childNodes]) {
+                setTranslationContext(node);
+                target.append(node);
+            }
             break;
         default:
             throw new Error(`Invalid mode attribute: '${mode}'`);
     }
     return root;
+}
+
+function setTranslationContext(node) {
+    switch (node.nodeType) {
+        case Node.TEXT_NODE:
+            if (node.nodeValue.trim() != "") {
+                contextByTextNode.set(node, translationContext);
+            }
+            break;
+        case Node.ELEMENT_NODE:
+            node.setAttribute(TCTX, translationContext);
+            break;
+    }
 }
 
 /**
@@ -264,6 +296,7 @@ function replace(root, target, operation) {
  * @returns {Element} root modified (in place) by the operations
  */
 export function applyInheritance(root, operations, url = "") {
+    translationContext = url.split("/")[1] ?? ""; // use addon name as context
     for (const operation of operations.children) {
         const target = getElement(root, operation);
         const position = operation.getAttribute("position") || "inside";
@@ -314,5 +347,16 @@ export function applyInheritance(root, operations, url = "") {
                 throw new Error(`Invalid position attribute: '${position}'`);
         }
     }
+    translationContext = null;
     return root;
+}
+
+export function applyContextToTextNode() {
+    for (const [textNode, context] of contextByTextNode) {
+        const wrapper = document.createElement("t");
+        wrapper.setAttribute(TCTX, context);
+        textNode.before(wrapper);
+        wrapper.appendChild(textNode);
+    }
+    contextByTextNode.clear();
 }

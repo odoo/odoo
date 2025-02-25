@@ -21,7 +21,9 @@ preloadBundle("web.assets_emoji");
 
 test("emoji picker works well with translation with double quotes", async () => {
     patchTranslations({
-        "Japanese “here” button": `Bouton "ici" japonais`,
+        web: {
+            "Japanese “here” button": `Bouton "ici" japonais`,
+        },
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });

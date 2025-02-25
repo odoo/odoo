@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
-import { patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    allowTranslations,
+    patchTranslations,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
@@ -28,7 +32,7 @@ const dateTimeSearchItem = {
 beforeEach(() => {
     mockTimeZone(0);
     patchWithCleanup(localization, { direction: "ltr" });
-    patchTranslations();
+    allowTranslations();
 });
 
 test("construct simple domain based on date field (no comparisonOptionId)", () => {
@@ -262,7 +266,7 @@ test("construct domain based on datetime field (no comparisonOptionId)", () => {
 test("Quarter option: custom translation", async () => {
     mockDate("2020-06-01T13:00:00");
     const referenceMoment = luxon.DateTime.local().setLocale("en");
-    patchTranslations({ Q2: "Deuxième trimestre de l'an de grâce" });
+    patchTranslations({ web: { Q2: "Deuxième trimestre de l'an de grâce" } });
 
     const domain = constructDateDomain(referenceMoment, dateSearchItem, ["second_quarter", "year"]);
     expect(domain).toEqual({
@@ -291,7 +295,7 @@ test("Quarter option: custom translation and right to left", async () => {
     mockDate("2020-06-01T13:00:00");
     const referenceMoment = luxon.DateTime.local().setLocale("en");
     patchWithCleanup(localization, { direction: "rtl" });
-    patchTranslations({ Q2: "2e Trimestre" });
+    patchTranslations({ web: { Q2: "2e Trimestre" } });
 
     const domain = constructDateDomain(referenceMoment, dateSearchItem, ["second_quarter", "year"]);
     expect(domain).toEqual({
