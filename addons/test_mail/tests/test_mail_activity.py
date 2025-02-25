@@ -54,6 +54,7 @@ class TestActivityRights(TestActivityCommon):
 
         # If user has no access to the record, should return activity view instead
         with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_no_access):
+            self.env.transaction.clear_access_cache()
             self.assertFalse(self.test_record.with_user(self.user_employee).has_access('read'))
 
             action = test_activity.with_user(self.user_employee).action_open_document()
