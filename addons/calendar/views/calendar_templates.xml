@@ -17,8 +17,18 @@
                         <h2>Calendar Invitation <small><t t-esc="event.name"/></small></h2>
                     </div>
                     <div class="card-body">
-                        <div class="clearfix mb16" t-if="attendee.state != 'needsAction'">
-                            <span class="float-end badge text-bg-info">
+                        <div class="clearfix mb16 d-flex justify-content-between align-content-center flex-grow-0">
+                            <div class="col d-flex">
+                                <form t-if="attendee.state != 'accepted'" method="POST" t-attf-action="/calendar/meeting/accept?{{keep_query()}}" class="me-1 d-inline-block">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" role="button" class="btn btn-primary btn-block">Accept</button>
+                                </form>
+                                <form t-if="attendee.state != 'declined'" method="POST" t-attf-action="/calendar/meeting/decline?{{keep_query()}}" class="ms-1 d-inline-block">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" role="button" class="btn btn-danger btn-block">Decline</button>
+                                </form>
+                            </div>
+                            <span class="float-end badge text-bg-info align-self-center" t-if="attendee.state != 'needsAction'">
                                 <t t-if="attendee.state == 'accepted'">Yes I'm going.</t>
                                 <t t-if="attendee.state == 'declined'">No I'm not going.</t>
                                 <t t-if="attendee.state == 'tentative'">Tentative</t>
