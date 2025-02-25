@@ -23,7 +23,7 @@ publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
         const action = dataset.action;
         const productId = parseInt(dataset.productVariantId);
         const productTemplateId = parseInt(dataset.productTemplateId);
-        const isCombo = dataset.isCombo;
+        const isCombo = dataset.isCombo === 'true';
 
         if (!productId || isCombo) {
             this.rootProduct = {

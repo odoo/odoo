@@ -6,8 +6,8 @@
 # Mustafa Rawi <mustafa@mrawi.com>, 2024
 # Martin Trigaux, 2024
 # Ibrahim Elnahas, 2024
-# Malaz Abuidris <msea@odoo.com>, 2025
 # Wil Odoo, 2025
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,6 +145,7 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on "
 "%(date)s)%(attachment_extension)s"
 msgstr ""
+"%(attachment_name)s (مفصول بـ %(user)s في %(date)s)%(attachment_extension)s "
 
 #. module: account
 #. odoo-python
@@ -617,6 +618,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        عزيزنا\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)،\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t>،\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        إليك\n"
+"        <t t-if=\"object.name\">\n"
+"            إشعار الدائن الخاص بك <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            الإشعار الدائن\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        والذي تبلغ قيمته <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
+"        <br/><br/>\n"
+"        لا تتردد في التواصل معنا إدا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>ميتشل آدمن</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -741,6 +773,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        عزيزي <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        شركراً لإتمامك لعملية الدفع.\n"
+"        إليك إيصال الدفع <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> الذي تبلغ قيمته\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
+"        <br/><br/>\n"
+"        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <br/><br/>\n"
+"        مع تحيات،\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>ميتشل آدمن</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1850,7 +1898,7 @@ msgstr "حساب الدائن "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "العنصر النائب لبادئة الحساب "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -2955,6 +3003,8 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
+"سيتم تأجيل أي قيد حتى ذلك التاريخ إلى وقت لاحق، وفقًا لتسلسل دفتر اليومية "
+"الخاص به. لا يمكن التراجع عن تاريخ القفل هذا ولا يسمح بأي استثناء. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -2962,6 +3012,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
+"أي قيد إلى ذلك التاريخ سيتم تأجيله إلى وقت لاحق، وفقًا لتسلسله في دفتر "
+"اليومية. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -2997,6 +3049,8 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"أي قيد شراء قبل ذلك التاريخ سيتم تأجيله إلى تاريخ لاحق، وفقاً لتسلسله في "
+"دفتر اليومية. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
@@ -3004,6 +3058,8 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"أي قيد بيع قبل ذلك التاريخ سيتم تأجيله إلى تاريخ لاحق، وفقاً لتسلسله في دفتر"
+" اليومية. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -3963,7 +4019,7 @@ msgstr "لا يمكن إنشاء مستند مبيعات في دفتر يومي�
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Cannot create an accrual entry with orders in different currencies."
-msgstr ""
+msgstr "لا يمكن إنشاء قيد استحقاق بأوامر ذات عملات مختلفة. "
 
 #. module: account
 #. odoo-python
@@ -7183,7 +7239,7 @@ msgstr "النوع"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Fill in the details of the product or see the suggestion."
-msgstr ""
+msgstr "املأ تفاصيل المنتج أو اطلع على الاقتراح. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -7194,7 +7250,7 @@ msgstr "تصفية الضرائب المتعددة "
 #. odoo-python
 #: code:addons/account/models/account_root.py:0
 msgid "Filter on the Account or its Display Name instead"
-msgstr ""
+msgstr "قم بالتصفية على الحساب أو اسم العرض الخاص به عوضاً عن ذلك "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -7205,7 +7261,7 @@ msgstr "الحساب المالي"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "بادئات الحسابات المالية "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -10510,7 +10566,7 @@ msgstr "تنقل بسهولة عبر التقارير واقرأ ما بين ا�
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Nearest"
-msgstr ""
+msgstr "الأقرب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -13810,7 +13866,7 @@ msgstr "حدد سعراً. "
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
-msgstr ""
+msgstr "قم بتعيين قيمة أكبر من 0.0 لتفعيل التحقق من حد الائتمان "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -14853,6 +14909,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
+"يجب ألا يتم تحديد قالب المخطط %sمباشرة. عوضاً عن ذلك، عليك تحديد قالب المخطط"
+" المتعلق بدولتك مباشرةً. "
 
 #. module: account
 #. odoo-python

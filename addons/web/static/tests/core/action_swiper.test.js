@@ -1,30 +1,21 @@
 /** @odoo-module alias=@web/../tests/mobile/core/action_swiper_tests default=false */
 
-import { Component, onPatched, xml } from "@odoo/owl";
-import { Deferred } from "@web/core/utils/concurrency";
-import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { defineParams } from "../_framework/mock_server/mock_server";
+import { hover, queryFirst } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, mockTouch } from "@odoo/hoot-mock";
+import { Component, onPatched, xml } from "@odoo/owl";
 import {
     contains,
-    defineStyle,
     mountWithCleanup,
     patchWithCleanup,
     swipeLeft,
     swipeRight,
 } from "@web/../tests/web_test_helpers";
-import { queryFirst, hover } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, mockTouch } from "@odoo/hoot-mock";
+import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
+import { Deferred } from "@web/core/utils/concurrency";
+import { defineParams } from "../_framework/mock_server/mock_server";
 
-beforeEach(() => {
-    mockTouch(true);
-    // Disable action swiper transitions
-    defineStyle(/* css */ `
-        .o_actionswiper_target_container {
-            transition: none !important;
-        }
-    `);
-});
+beforeEach(() => mockTouch(true));
 
 // Tests marked as will fail on browsers that don't support
 // TouchEvent by default. It might be an option to activate on some browser.

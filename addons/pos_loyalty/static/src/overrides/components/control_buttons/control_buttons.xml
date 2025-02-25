@@ -38,5 +38,8 @@
                 </button>
             </t>
         </xpath>
+        <xpath expr="//button[hasclass('more-btn')]" position="attributes">
+            <attribute name="t-attf-class">{{ getPotentialRewards().length ? 'active text-action' : '' }}</attribute>
+        </xpath>
     </t>
 </templates>

@@ -142,10 +142,6 @@ customElements.define(
 
 describe.tags("ui");
 describe(parseUrl(import.meta.url), () => {
-    test.todo("should crash", async () => {
-        expect().toBeFalsy();
-    });
-
     test("formatXml", () => {
         expect(formatXml("")).toBe("");
         expect(formatXml("<input />")).toBe("<input/>");
@@ -894,52 +890,6 @@ describe(parseUrl(import.meta.url), () => {
 
             expect("div").toHaveRect({ width: 50, height: 70 }); // with padding
             expect("div").toHaveRect({ width: 40, height: 60 }, { trimPadding: true });
-        });
-
-        test.skip("performance against jQuery", async () => {
-            const jQuery = globalThis.$;
-
-            const time = (fn) => {
-                const start = performance.now();
-                fn();
-                return Number((performance.now() - start).toFixed(3));
-            };
-
-            const testCases = [
-                [
-                    FULL_HTML_TEMPLATE,
-                    `main:first-of-type:not(:has(:contains(This text does not exist))):contains('List header') > form:has([name="name"]):contains("Form title"):nth-child(6).overflow-auto:visible select[name=job] option:selected`,
-                ],
-                [
-                    /* html */ `
-                        <div class="o_we_customize_panel">
-                            <we-customizeblock-option class="snippet-option-ImageTools">
-                                <we-select data-name="shape_img_opt">
-                                    <we-toggler></we-toggler>
-                                </we-select>
-                            </we-customizeblock-option>
-                        </div>
-                    `,
-                    `.o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened)) we-customizeblock-option[class='snippet-option-ImageTools'] we-select[data-name="shape_img_opt"] we-toggler`,
-                ],
-            ];
-
-            for (const [template, selector] of testCases) {
-                const jQueryTimes = [];
-                const queryAllTimes = [];
-
-                for (let i = 0; i < 100; i++) {
-                    mountForTest(template);
-
-                    jQueryTimes.push(time(() => jQuery(selector)));
-                    queryAllTimes.push(time(() => queryAll(selector)));
-                }
-
-                const jQueryAvg = jQueryTimes.reduce((a, b) => a + b, 0) / jQueryTimes.length;
-                const queryAllAvg = queryAllTimes.reduce((a, b) => a + b, 0) / queryAllTimes.length;
-
-                expect(queryAllAvg).toBeLessThan(jQueryAvg * 1.25); // 25% margin
-            }
         });
     });
 });

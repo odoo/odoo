@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { describe, expect, makeExpect, test } from "@odoo/hoot";
-import { check, manuallyDispatchProgrammaticEvent, tick } from "@odoo/hoot-dom";
+import { check, manuallyDispatchProgrammaticEvent, tick, waitFor } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
 
@@ -23,7 +23,7 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(true);
-        expect(results.assertions).toHaveLength(2);
+        expect(results.events).toHaveLength(2);
     });
 
     test("makeExpect failing, without a test", () => {
@@ -37,7 +37,7 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(2);
+        expect(results.events).toHaveLength(2);
     });
 
     test("makeExpect with a test", async () => {
@@ -72,10 +72,26 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions[0].pass).toBe(true);
+        expect(results.events[0].pass).toBe(true);
     });
 
-    test("makeExpect with no assertions", () => {
+    test("makeExpect with no assertions & query events", async () => {
+        await mountForTest(/* xml */ `<div>ABC</div>`);
+
+        const [, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        await waitFor("div:contains(ABC)");
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(true);
+        expect(results.events).toHaveLength(1);
+        expect(results.events[0].label).toBe("waitFor");
+    });
+
+    test("makeExpect with no assertions & no query events", () => {
         const [customExpect, hooks] = makeExpect({ headless: true });
 
         hooks.before();
@@ -87,10 +103,12 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(1);
-        expect(results.assertions[0].message).toBe(
-            "expected at least 1 assertion, but none were run"
-        );
+        expect(results.events).toHaveLength(1);
+        expect(results.events[0].message).toEqual([
+            "expected at least",
+            ["1", "integer"],
+            "assertion or query event, but none were run",
+        ]);
     });
 
     test("makeExpect with unconsumed matchers", () => {
@@ -99,13 +117,16 @@ describe(parseUrl(import.meta.url), () => {
         hooks.before();
 
         expect(() => customExpect(true, true)).toThrow("`expect()` only accepts a single argument");
+        customExpect(1).toBe(1);
         customExpect(true);
 
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(1);
-        expect(results.assertions[0].message).toBe("called once without calling any matchers");
+        expect(results.events).toHaveLength(2);
+        expect(results.events[1].message.join(" ")).toBe(
+            "called once without calling any matchers"
+        );
     });
 
     test("makeExpect with unverified steps", () => {
@@ -120,8 +141,8 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(2);
-        expect(results.assertions[1].message).toBe("unverified steps");
+        expect(results.events).toHaveLength(2); // 1 'verifySteps' + 1 'unverified steps'
+        expect(results.events.at(-1).message).toEqual(["unverified steps"]);
     });
 
     test("makeExpect retains current values", () => {
@@ -135,7 +156,7 @@ describe(parseUrl(import.meta.url), () => {
 
         const testResult = hooks.after();
 
-        const [assertion] = testResult.assertions;
+        const [assertion] = testResult.events;
         expect(assertion.pass).toBe(false);
         expect(assertion.failedDetails[1][1]).toEqual({ a: 1 });
         expect(object).toEqual({ a: 1, b: 2 });
@@ -201,10 +222,25 @@ describe(parseUrl(import.meta.url), () => {
         const testResult = hooks.after();
 
         expect(testResult.pass).toBe(true);
-        expect(testResult.assertions).toHaveLength(matchers.length);
-        expect(testResult.assertions.map(({ label }) => label)).toEqual(
-            matchers.map(([name]) => name)
-        );
+        expect(testResult.events).toHaveLength(matchers.length);
+        expect(testResult.events.map(({ label }) => label)).toEqual(matchers.map(([name]) => name));
+    });
+
+    test("assertions are prevented after an error", async () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        await customExpect(Promise.resolve(1)).resolves.toBe(1);
+        hooks.error(new Error("boom"));
+        customExpect(2).toBe(2);
+        customExpect(Promise.resolve(3)).resolves.toBe(3);
+        await tick();
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(false);
+        expect(results.events).toHaveLength(3); // toBe + error + unverified errors
     });
 
     describe("standard matchers", () => {
@@ -358,13 +394,13 @@ describe(parseUrl(import.meta.url), () => {
             // Timeout
             setTimeout(() => boom("timeout"));
             // Promise
-            Promise.resolve().then(() => boom("async"));
+            queueMicrotask(() => boom("promise"));
             // Event
             manuallyDispatchProgrammaticEvent(window, "error", { message: "event" });
 
             await tick();
 
-            expect.verifyErrors(["event", "async", "timeout"]);
+            expect.verifyErrors(["event", "promise", "timeout"]);
         });
 
         test("verifySteps", () => {
@@ -487,6 +523,22 @@ describe(parseUrl(import.meta.url), () => {
                     <p>abc<strong>def</strong>ghi<br><input type="text"></p>
                 </div>
             `);
+        });
+
+        test("toHaveStyle", async () => {
+            const documentFontSize = parseFloat(
+                getComputedStyle(document.documentElement).fontSize
+            );
+            await mountForTest(/* xml */ `
+                <div class="div" style="width: 3rem; height: 26px" />
+            `);
+
+            expect(".div").toHaveStyle({ width: `${3 * documentFontSize}px`, height: 26 });
+            expect(".div").toHaveStyle({ display: "block" });
+            expect(".div").not.toHaveStyle({ height: 50 });
+
+            expect(".div").toHaveStyle("height: 26px ; width : 3rem", { inline: true });
+            expect(".div").not.toHaveStyle({ display: "block" }, { inline: true });
         });
     });
 });

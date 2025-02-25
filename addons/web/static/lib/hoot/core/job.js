@@ -106,12 +106,9 @@ export class Job {
     }
 
     /**
-     * @param {Job} [child]
+     * @returns {boolean}
      */
-    willRunAgain(child) {
-        if (this.config.multi && this.runCount < this.config.multi) {
-            return true;
-        }
-        return Boolean(this.parent?.willRunAgain(this));
+    willRunAgain() {
+        return this.runCount < (this.config.multi || 0) || this.parent?.willRunAgain();
     }
 }

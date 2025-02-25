@@ -1,8 +1,8 @@
-import { expect, test } from "@odoo/hoot";
-import { setupEditor, testEditor } from "../_helpers/editor";
-import { pointerDown, pointerUp, waitUntil } from "@odoo/hoot-dom";
-import { tick } from "@odoo/hoot-mock";
 import { leftPos, rightPos } from "@html_editor/utils/position";
+import { expect, test } from "@odoo/hoot";
+import { pointerDown, pointerUp, waitForNone } from "@odoo/hoot-dom";
+import { tick } from "@odoo/hoot-mock";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
 
 /**
@@ -117,7 +117,7 @@ test("should have collapsed selection when mouse down on a table cell", async ()
     );
     const lastCell = el.querySelector("td:last-child");
     pointerDown(lastCell);
-    await waitUntil(() => !document.querySelector(".o-we-toolbar"));
+    await waitForNone(".o-we-toolbar");
     const selection = document.getSelection();
     expect(selection.isCollapsed).toBe(true);
 });

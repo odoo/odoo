@@ -206,7 +206,7 @@ export class ProductProduct extends Base {
     }
 
     get searchString() {
-        const fields = ["display_name"];
+        const fields = ["display_name", "default_code"];
         return fields
             .map((field) => this[field] || "")
             .filter(Boolean)
@@ -214,7 +214,7 @@ export class ProductProduct extends Base {
     }
 
     exactMatch(searchWord) {
-        const fields = ["barcode", "default_code"];
+        const fields = ["barcode"];
         return fields.some((field) => this[field] && this[field].toLowerCase() == searchWord);
     }
 

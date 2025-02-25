@@ -2,7 +2,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
     fill,
-    getActiveElement,
     press,
     queryAllTexts,
     queryFirst,
@@ -10,7 +9,7 @@ import {
     queryText,
     select,
     waitFor,
-    waitUntil,
+    waitForNone,
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
@@ -34,7 +33,7 @@ describe("should open a popover", () => {
         expect(".o-we-linkpopover").toHaveCount(1);
         // selection outside a link
         setContent(el, "<p>this []is a <a>link</a></p>");
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(".o-we-linkpopover").toHaveCount(0);
     });
     test("link popover should have input field for href when the link doesn't have href", async () => {
@@ -124,7 +123,7 @@ describe("popover should edit,copy,remove the link", () => {
         const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
         await waitFor(".o-we-linkpopover");
         await click(".o_we_remove_link");
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(getContent(el)).toBe("<p>this is a li[]nk</p>");
     });
     test("after edit the label, the text of the link should be updated", async () => {
@@ -229,7 +228,7 @@ describe("Link creation", () => {
             expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a>[]</a></p>");
             await waitFor(".o-we-linkpopover");
             expect(".o-we-linkpopover").toHaveCount(1);
-            expect(getActiveElement()).toBe(queryOne(".o-we-linkpopover input.o_we_label_link"), {
+            expect(".o-we-linkpopover input.o_we_label_link").toBeFocused({
                 message: "should focus label input by default, when we don't have a label",
             });
         });
@@ -384,9 +383,7 @@ describe("Link creation", () => {
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
             await waitFor(".o-we-linkpopover", { timeout: 1500 });
-            expect(getActiveElement()).toBe(
-                queryOne(".o-we-linkpopover input.o_we_href_input_link")
-            );
+            expect(".o-we-linkpopover input.o_we_href_input_link").toBeFocused();
 
             await fill("test.com");
             await click(".o_we_apply_link");
@@ -733,7 +730,7 @@ describe("link preview", () => {
             focusNode: pNode,
             focusOffset: 1,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
 
         const linkNode = queryOne("a");
         setSelection({
@@ -774,7 +771,7 @@ describe("link preview", () => {
             focusNode: pNode,
             focusOffset: 1,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
 
         const linkNode = queryOne("a");
         setSelection({
@@ -801,7 +798,7 @@ describe("link in templates", () => {
             focusNode: pNode,
             focusOffset: 0,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>[]test<a t-attf-href="/test/1">link</a></p>'
         );
@@ -818,7 +815,7 @@ describe("link in templates", () => {
             focusNode: pNode,
             focusOffset: 0,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>[]test<a t-att-href="/test/1">link</a></p>'
         );

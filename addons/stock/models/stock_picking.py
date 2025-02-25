@@ -1066,6 +1066,7 @@ class Picking(models.Model):
 
     @api.onchange('location_id')
     def _onchange_location_id(self):
+        (self.move_ids | self.move_ids_without_package).location_id =  self.location_id
         for move in self.move_ids.filtered(lambda m: m.move_orig_ids):
             for ml in move.move_line_ids:
                 parent_path = [int(loc_id) for loc_id in ml.location_id.parent_path.split('/')[:-1]]

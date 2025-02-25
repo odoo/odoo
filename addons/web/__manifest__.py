@@ -448,9 +448,8 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/lib/hoot/ui/hoot_style.css'),
             ('remove', 'web/static/lib/hoot/tests/**/*'),
 
-            # Odoo mocks
-            # ! must be loaded before other @web assets
-            'web/static/tests/_framework/mock_module_loader.js',
+            # Applied here to allow libs above to be loaded normally
+            'web/static/tests/_framework/hoot_module_loader.js',
 
             # Assets for features to test (views, services, fields, ...)
             # Typically includes most files in 'web.web.assets_backend'
@@ -464,7 +463,6 @@ This module provides the core of the Odoo Web Client.
         'web.assets_unit_tests': [
             'web/static/tests/**/*',
 
-            ('remove', 'web/static/tests/_framework/mock_module_loader.js'),
             ('remove', 'web/static/tests/tours/**/*'),
             ('remove', 'web/static/tests/legacy/**/*'), # to remove when all legacy tests are ported
         ],

@@ -381,20 +381,21 @@ class Applicant(models.Model):
 
             new_interviewers = self.interviewer_ids - old_interviewers - self.env.user
             if new_interviewers:
-                notification_subject = _("You have been assigned as an interviewer for %s", self.display_name)
-                notification_body = _("You have been assigned as an interviewer for the Applicant %s", self.partner_name)
-                self.message_notify(
-                    res_id=self.id,
-                    model=self._name,
-                    partner_ids=new_interviewers.partner_id.ids,
-                    author_id=self.env.user.partner_id.id,
-                    email_from=self.env.user.email_formatted,
-                    subject=notification_subject,
-                    body=notification_body,
-                    email_layout_xmlid="mail.mail_notification_layout",
-                    record_name=self.display_name,
-                    model_description="Applicant",
-                )
+                for applicant in self:
+                    notification_subject = _("You have been assigned as an interviewer for %s", applicant.display_name)
+                    notification_body = _("You have been assigned as an interviewer for the Applicant %s", applicant.partner_name)
+                    applicant.message_notify(
+                        res_id=applicant.id,
+                        model=applicant._name,
+                        partner_ids=new_interviewers.partner_id.ids,
+                        author_id=self.env.user.partner_id.id,
+                        email_from=self.env.user.email_formatted,
+                        subject=notification_subject,
+                        body=notification_body,
+                        email_layout_xmlid="mail.mail_notification_layout",
+                        record_name=applicant.display_name,
+                        model_description="Applicant",
+                    )
         if vals.get('date_closed'):
             for applicant in self:
                 if applicant.job_id.date_to:

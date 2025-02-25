@@ -1969,7 +1969,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             'subtotals': [
                 {
                     'name': "Untaxed Amount",
-                    'base_amount_currency': 1300.0,
+                    'base_amount_currency': 3300.0,
                     'tax_amount_currency': 126.0,
                     'tax_groups': [
                         {
@@ -1982,7 +1982,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 1",
-                    'base_amount_currency': 1200.0,
+                    'base_amount_currency': 3426.0,
                     'tax_amount_currency': 120.0,
                     'tax_groups': [
                         {
@@ -1995,7 +1995,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 2",
-                    'base_amount_currency': 1200.0,
+                    'base_amount_currency': 3546.0,
                     'tax_amount_currency': 300.0,
                     'tax_groups': [
                         {
@@ -2033,7 +2033,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             'subtotals': [
                 {
                     'name': "Untaxed Amount",
-                    'base_amount_currency': 1200.0,
+                    'base_amount_currency': 1500.0,
                     'tax_amount_currency': 360.0,
                     'tax_groups': [
                         {
@@ -2046,7 +2046,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 1",
-                    'base_amount_currency': 500.0,
+                    'base_amount_currency': 1860.0,
                     'tax_amount_currency': 82.0,
                     'tax_groups': [
                         {
@@ -2065,7 +2065,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 2",
-                    'base_amount_currency': 300.0,
+                    'base_amount_currency': 1942.0,
                     'tax_amount_currency': -75.0,
                     'tax_groups': [
                         {
@@ -2124,7 +2124,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "Tax withholding",
-                    'base_amount_currency': 100.0,
+                    'base_amount_currency': 110.0,
                     'tax_amount_currency': -47.0,
                     'tax_groups': [
                         {

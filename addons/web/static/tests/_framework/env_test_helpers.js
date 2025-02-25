@@ -150,7 +150,11 @@ export function mockService(name, serviceFactory) {
                     return serviceFactory(env, dependencies);
                 } else {
                     const service = originalService.start(env, dependencies);
-                    patch(service, serviceFactory);
+                    if (service instanceof Promise) {
+                        service.then((value) => patch(value, serviceFactory));
+                    } else {
+                        patch(service, serviceFactory);
+                    }
                     return service;
                 }
             },

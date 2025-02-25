@@ -1,7 +1,15 @@
-import { expect, getFixture, test } from "@odoo/hoot";
+import { beforeEach, expect, getFixture, test } from "@odoo/hoot";
 import { microTick, tick } from "@odoo/hoot-dom";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+
+beforeEach(() => {
+    patchWithCleanup(document.head, {
+        appendChild: (el) => expect.step(["APPENDCHILD", el.tagName, el.className]),
+    });
+    patchWithCleanup(console, {
+        error: (...args) => expect.step(["ERROR", ...args]),
+    });
+});
 
 /** @type {typeof OdooModuleLoader} */
 const ModuleLoader = Object.getPrototypeOf(odoo.loader.constructor);
@@ -67,12 +75,6 @@ test("define: duplicate name", async () => {
 });
 
 test("define: missing module", async () => {
-    patchWithCleanup(browser.console, {
-        error: (msg, args) => {
-            expect.step(msg + args);
-        },
-    });
-
     const loader = new ModuleLoader(getFixture());
 
     loader.define("b", ["a"], () => {});
@@ -81,18 +83,21 @@ test("define: missing module", async () => {
     await microTick();
 
     expect.verifySteps([
-        "The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:a",
-        "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:b,c",
+        [
+            "ERROR",
+            "The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:",
+            ["a"],
+        ],
+        [
+            "ERROR",
+            "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:",
+            ["b", "c"],
+        ],
+        ["APPENDCHILD", "STYLE", "o_module_error_banner"],
     ]);
 });
 
 test("define: dependency cycle", async () => {
-    patchWithCleanup(browser.console, {
-        error: (msg, args) => {
-            expect.step(msg + args);
-        },
-    });
-
     const loader = new ModuleLoader(getFixture());
 
     loader.define("a", ["b"], () => {});
@@ -102,7 +107,16 @@ test("define: dependency cycle", async () => {
     await microTick();
 
     expect.verifySteps([
-        `The following modules could not be loaded because they form a dependency cycle:"a" => "b" => "c" => "a"`,
-        "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:a,b,c",
+        [
+            "ERROR",
+            "The following modules could not be loaded because they form a dependency cycle:",
+            `"a" => "b" => "c" => "a"`,
+        ],
+        [
+            "ERROR",
+            "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:",
+            ["a", "b", "c"],
+        ],
+        ["APPENDCHILD", "STYLE", "o_module_error_banner"],
     ]);
 });
