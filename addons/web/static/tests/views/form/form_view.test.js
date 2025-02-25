@@ -10108,11 +10108,15 @@ test(`"bare" buttons in template should not trigger button click`, async () => {
 test(`form view with inline list view with optional fields and local storage mock`, async () => {
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
-            expect.step(`getItem ${key}`);
+            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+                expect.step(`getItem ${key}`);
+            }
             return super.getItem(key);
         },
         setItem(key, value) {
-            expect.step(`setItem ${key} to ${value}`);
+            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+                expect.step(`setItem ${key} to ${value}`);
+            }
             return super.setItem(key, value);
         },
     });
@@ -10135,8 +10139,6 @@ test(`form view with inline list view with optional fields and local storage moc
 
     const localStorageKey = "partner,form,123456789,child_ids,list,bar,foo";
     expect.verifySteps([
-        "getItem web.emoji.frequent",
-        "getItem pwaService.installationState",
         `getItem optional_fields,${localStorageKey}`,
         `getItem debug_open_view,${localStorageKey}`,
     ]);
@@ -10165,11 +10167,15 @@ test.tags("desktop");
 test(`form view with list_view_ref with optional fields and local storage mock`, async () => {
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
-            expect.step(`getItem ${key}`);
+            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+                expect.step(`getItem ${key}`);
+            }
             return super.getItem(key);
         },
         setItem(key, value) {
-            expect.step(`setItem ${key} to ${value}`);
+            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+                expect.step(`setItem ${key} to ${value}`);
+            }
             return super.setItem(key, value);
         },
     });
@@ -10200,8 +10206,6 @@ test(`form view with list_view_ref with optional fields and local storage mock`,
 
     const localStorageKey = "partner,form,123456789,child_ids,list,bar,foo";
     expect.verifySteps([
-        "getItem web.emoji.frequent",
-        "getItem pwaService.installationState",
         `getItem optional_fields,${localStorageKey}`,
         `getItem debug_open_view,${localStorageKey}`,
     ]);
