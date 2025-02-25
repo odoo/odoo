@@ -92,7 +92,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
         related_original_applicants = dict()
         for duplicate_applicant in self.duplicate_applicant_ids:
             for original_applicant in self.applicant_ids:
-                if any((getattr(duplicate_applicant, field) and getattr(duplicate_applicant, field) == getattr(original_applicant, field)) for field in duplication_fields):
+                if any((duplicate_applicant[field] and duplicate_applicant[field] == original_applicant[field]) for field in duplication_fields):
                     related_original_applicants[duplicate_applicant] = original_applicant
         return related_original_applicants
 
