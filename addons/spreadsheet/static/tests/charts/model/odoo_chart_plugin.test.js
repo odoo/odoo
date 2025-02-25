@@ -98,6 +98,7 @@ test("Odoo bar chart runtime loads the data", async () => {
                 label: "Count",
                 xAxisID: "x",
                 yAxisID: "y",
+                hidden: undefined,
             },
         ],
         labels: ["false", "true"],
@@ -169,6 +170,7 @@ test("Odoo line chart runtime loads the data", async () => {
                 fill: false,
                 pointBackgroundColor: "#4EA7F2",
                 yAxisID: "y",
+                hidden: undefined,
             },
         ],
         labels: ["false", "true"],
@@ -914,7 +916,7 @@ test("Can configure the chart datasets", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_bar",
         serverData,
-        definition: { type: "odoo_bar", metaData, searchParams },
+        definition: { type: "odoo_bar", metaData, searchParams, id: "42" },
     });
     await waitForDataLoaded(model);
     const sheetId = model.getters.getActiveSheetId();
