@@ -224,10 +224,16 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
         ].flat(),
 });
 
-const billScreenQRCode = {
-    content: "QR codes are shown",
-    trigger: ".pos-receipt #posqrcode",
-};
+const billScreenQRCodeData = [
+    {
+        content: "Unique code is shown",
+        trigger: ".pos-receipt .unique-code",
+    },
+    {
+        content: "Portal url is shown",
+        trigger: ".pos-receipt .portal-url",
+    },
+];
 
 registry.category("web_tour.tours").add("BillScreenTour", {
     steps: () =>
@@ -238,12 +244,12 @@ registry.category("web_tour.tours").add("BillScreenTour", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickControlButton("Bill"),
             // HACK: is_modal should be false so that the trigger can be found.
-            { ...negateStep(billScreenQRCode) },
+            billScreenQRCodeData.map(negateStep),
             BillScreen.closeBillPopup(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            billScreenQRCode,
+            ...billScreenQRCodeData,
         ].flat(),
 });
 
