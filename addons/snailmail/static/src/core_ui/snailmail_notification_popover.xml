@@ -5,7 +5,7 @@
         <xpath expr="//div[hasclass('o-mail-MessageNotificationPopover')]" position="replace">
             <t t-if="props.message.message_type === 'snailmail'">
                 <div class="o-snailmail-SnailmailNotificationPopover m-2" t-attf-class="{{ className }}">
-                    <i class="me-2" t-att-class="props.message.notification_ids[0].statusIcon" role="img"/>
+                    <i class="me-2 fa-fw" t-att-class="props.message.notification_ids[0].statusIcon" role="img"/>
                     <span t-esc="props.message.notification_ids[0].statusTitle"/>
                 </div>
             </t>

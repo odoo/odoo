@@ -1540,10 +1540,12 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ),
                             "res.partner": self._filter_partners_fields(
                                 {
+                                    "email": self.user_test_inbox.partner_id.email,
                                     "id": self.user_test_inbox.partner_id.id,
                                     "name": "Paulette Testouille",
                                 },
                                 {
+                                    "email": self.user_test_inbox_2.partner_id.email,
                                     "id": self.user_test_inbox_2.partner_id.id,
                                     "name": "Jeannette Testouille",
                                 },
@@ -1648,10 +1650,12 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ),
                             "res.partner": self._filter_partners_fields(
                                 {
+                                    "email": self.user_test_inbox.partner_id.email,
                                     "id": self.user_test_inbox.partner_id.id,
                                     "name": "Paulette Testouille",
                                 },
                                 {
+                                    "email": self.user_test_inbox_2.partner_id.email,
                                     "id": self.user_test_inbox_2.partner_id.id,
                                     "name": "Jeannette Testouille",
                                 },
