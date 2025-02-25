@@ -17,8 +17,20 @@
                         <h2>Calendar Invitation <small><t t-esc="event.name"/></small></h2>
                     </div>
                     <div class="card-body">
-                        <div class="clearfix mb16" t-if="attendee.state != 'needsAction'">
-                            <span class="float-end badge text-bg-info">
+                        <div class="clearfix mb16 d-flex justify-content-between align-content-center flex-grow-0">
+                            <div class="col d-flex">
+                                <form t-if="attendee.state != 'accepted'" action="/calendar/meeting/accept" class="me-1 d-inline-block">
+                                    <input t-foreach="request.httprequest.args.items()" t-as="request_arg" t-if="request_arg[0] != 'confirm_needed'"
+                                           type="hidden" t-att-name="request_arg[0]" t-att-value="request_arg[1]"/>
+                                    <button type="submit" role="button" class="btn btn-primary btn-block">Accept</button>
+                                </form>
+                                <form t-if="attendee.state != 'declined'" action="/calendar/meeting/decline" class="ms-1 d-inline-block">
+                                    <input t-foreach="request.httprequest.args.items()" t-as="request_arg" t-if="request_arg[0] != 'confirm_needed'"
+                                           type="hidden" t-att-name="request_arg[0]" t-att-value="request_arg[1]"/>
+                                    <button type="submit" role="button" class="btn btn-danger btn-block">Decline</button>
+                                </form>
+                            </div>
+                            <span class="float-end badge text-bg-info align-self-center" t-if="attendee.state != 'needsAction'">
                                 <t t-if="attendee.state == 'accepted'">Yes I'm going.</t>
                                 <t t-if="attendee.state == 'declined'">No I'm not going.</t>
                                 <t t-if="attendee.state == 'tentative'">Tentative</t>
