@@ -2962,6 +2962,46 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(len(pick_move.move_dest_ids), 1)
         self.assertEqual(pick_move.move_dest_ids.location_id, subloc)
 
+    def test_2_steps_delivery_reaches_customer_subloc(self):
+        """
+        Ensure Customer subloc destination of a 2-steps delivery is reached.
+
+        Test Case:
+        ==========
+        1. Create child location from Partners/Customer
+        2. Create delivery with the created subloc as final destination
+        3. confirm the delivery
+        4. check the ship move is created with the destination as the subloc
+        """
+
+        self._enable_pick_ship()
+
+        # Create sublocation of Customer
+        subloc = self.env['stock.location'].create({
+            'name': 'Fancy Spot',
+            'location_id': self.env.ref('stock.stock_location_customers').id,
+            'usage': 'internal',
+        })
+
+        pick_move = self.env['stock.move'].create({
+            'name': 'pick',
+            'picking_type_id': self.wh.pick_type_id.id,
+            'location_id': self.wh.lot_stock_id.id,
+            'product_id': self.product1.id,
+            'product_uom_qty': 1,
+            'location_final_id': subloc.id,
+        })
+        pick_move._action_confirm()
+        self.assertEqual(pick_move.location_dest_id, self.wh.wh_output_stock_loc_id)
+
+        # Validate the picking
+        pick_move.write({'quantity': 1, 'picked': True})
+        pick_move.picking_id._action_done()
+
+        # Output -> Customer rule should trigger, creating the next step that reaches sublocation
+        self.assertEqual(len(pick_move.move_dest_ids), 1)
+        self.assertEqual(pick_move.move_dest_ids.location_dest_id, subloc)
+
     def test_push_rule_on_move_1(self):
         """ Create a route with a push rule, force it on a move, check that it is applied.
         """
