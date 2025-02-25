@@ -2,8 +2,9 @@ import { CalendarFilterPanel } from "@web/views/calendar/filter_panel/calendar_f
 import { TimeOffCardMobile } from "../../../dashboard/time_off_card";
 import { getFormattedDateSpan } from "@web/views/calendar/utils";
 
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { Cache } from "@web/core/utils/cache";
 import { useService } from "@web/core/utils/hooks";
-import { serializeDate } from "@web/core/l10n/dates";
 import { useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
@@ -32,28 +33,32 @@ export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
             bankHolidays: [],
         });
 
-        onWillStart(async () => {
-            await this.loadFilterData();
-            await this.updateSpecialDays();
-        });
+        this._specialDaysCache = new Cache(
+            (start, end) => this.fetchSpecialDays(start, end),
+            (start, end) => `${serializeDateTime(start)},${serializeDateTime(end)}`
+        );
+
+        onWillStart(() => Promise.all([this.loadFilterData(), this.updateSpecialDays()]));
         onWillUpdateProps(this.updateSpecialDays);
     }
 
-    async updateSpecialDays() {
+    fetchSpecialDays(start, end) {
         const context = {
             employee_id: this.props.employee_id,
         };
-        const specialDays = await this.orm.call(
+        return this.orm.call(
             "hr.employee",
             "get_special_days_data",
-            [
-                serializeDate(this.props.model.rangeStart, "datetime"),
-                serializeDate(this.props.model.rangeEnd, "datetime"),
-            ],
+            [serializeDate(start, "datetime"), serializeDate(end, "datetime")],
             {
                 context: context,
             }
         );
+    }
+
+    async updateSpecialDays() {
+        const { rangeStart, rangeEnd } = this.props.model;
+        const specialDays = await this._specialDaysCache.read(rangeStart, rangeEnd);
         specialDays["bankHolidays"].forEach((bankHoliday) => {
             bankHoliday.start = luxon.DateTime.fromISO(bankHoliday.start);
             bankHoliday.end = luxon.DateTime.fromISO(bankHoliday.end);
