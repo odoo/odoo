@@ -2312,3 +2312,148 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             data = self.leave_type.get_allocation_data(self.employee_emp, date(2025, 1, 15))
             remaining_future = data[self.employee_emp][0][1]["remaining_leaves"]
             self.assertEqual(remaining_future, 21)
+<<<<<<< saas-17.4
+||||||| ef11898ad0afa4c154c40d224881fde19b7f41ab
+
+    def test_accrual_allocation_without_working_hours(self):
+        """
+        check that creating an accrual allocation for an employee without working hours doesn't raise a traceback error
+        """
+        with freeze_time("2017-12-5"):
+            employee_without_calendar = self.env['hr.employee'].create({
+                'name': 'employee without calendar',
+                'resource_calendar_id': False,
+            })
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'accrual plan',
+                'is_based_on_worked_time': True,
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'hour',
+                    'frequency': 'hourly',
+                })],
+            })
+            past_date = datetime.date.today() - relativedelta(days=1)
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'accrual allocation for employee without calendar',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': employee_without_calendar.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': past_date,
+                'holiday_type': 'employee'
+            })
+            future_date = datetime.date.today() + relativedelta(days=1)
+            allocation._process_accrual_plans(date_to=future_date)
+=======
+
+    def test_accrual_allocation_without_working_hours(self):
+        """
+        check that creating an accrual allocation for an employee without working hours doesn't raise a traceback error
+        """
+        with freeze_time("2017-12-5"):
+            employee_without_calendar = self.env['hr.employee'].create({
+                'name': 'employee without calendar',
+                'resource_calendar_id': False,
+            })
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'accrual plan',
+                'is_based_on_worked_time': True,
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'hour',
+                    'frequency': 'hourly',
+                })],
+            })
+            past_date = datetime.date.today() - relativedelta(days=1)
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'accrual allocation for employee without calendar',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': employee_without_calendar.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': past_date,
+                'holiday_type': 'employee'
+            })
+            future_date = datetime.date.today() + relativedelta(days=1)
+            allocation._process_accrual_plans(date_to=future_date)
+
+    def test_accrual_progressive_per_year(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': '1 day 1st year, 5 days 2nd year, 20 days 3rd year, 100 days 4th year (granted at start of year)',
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'start',
+            'level_ids':
+                [(0, 0, {
+                    'added_value': 1,
+                    'added_value_type': 'day',
+                    'frequency': 'yearly',
+                    'cap_accrued_time': False,
+                    'start_count': 0,
+                    'start_type': 'day',
+                    'action_with_unused_accruals': 'all',
+                }), (0, 0, {
+                    'added_value': 5,
+                    'added_value_type': 'day',
+                    'frequency': 'yearly',
+                    'cap_accrued_time': False,
+                    'start_count': 1,
+                    'start_type': 'year',
+                    'action_with_unused_accruals': 'all',
+                }), (0, 0, {
+                    'added_value': 20,
+                    'added_value_type': 'day',
+                    'frequency': 'yearly',
+                    'cap_accrued_time': False,
+                    'start_count': 2,
+                    'start_type': 'year',
+                    'action_with_unused_accruals': 'all',
+                }), (0, 0, {
+                    'added_value': 100,
+                    'added_value_type': 'day',
+                    'frequency': 'yearly',
+                    'cap_accrued_time': False,
+                    'start_count': 3,
+                    'start_type': 'year',
+                    'action_with_unused_accruals': 'all',
+                })],
+        })
+
+        with freeze_time('2024-09-02'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation',
+                'holiday_status_id': self.leave_type.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'date_from': '2024-01-01',
+                'number_of_days': 1,
+            })
+
+            allocation.action_validate()
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 1, 'For 2024, 1 day should have been granted immediately')
+
+        with freeze_time("2025-01-01"):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 6, '1 day from 2025 + 5 days for 2025')
+
+        with freeze_time("2026-01-01"):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 26, '1 day from 2025 + 5 days for 2025 + 20 days for 2026')
+
+        with freeze_time("2027-01-01"):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 126, 1, '1 day from 2025 + 5 days for 2025 + 20 days for 2026 + 100 days for 2027')
+
+        with freeze_time("2028-01-01"):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 226, 1, 'Same as previous year + 100 days for 2028 (no specific level for this year, use last one)')
+>>>>>>> 5cfaf24837d639b97b6b98645f5caf80d60ddd62
