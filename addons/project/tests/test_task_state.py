@@ -155,3 +155,19 @@ class TestTaskState(TestProjectCommon):
 
         self.assertEqual(self.task_1.state, '04_waiting_normal')
         self.assertEqual(task_1_copy.state, '04_waiting_normal')
+
+    def test_state_dont_reset_when_enabling_task_dependencies(self):
+        self.task_1.state = "03_approved"
+        self.task_2.state = "02_changes_requested"
+        self.env['res.config.settings'].create({'group_project_task_dependencies': True}).execute()
+        self.assertEqual(self.task_1.state, "03_approved")
+        self.assertEqual(self.task_2.state, "02_changes_requested")
+
+    def test_recompute_state_when_task_dependencies_feature_changes(self):
+        self.env['res.config.settings'].create({'group_project_task_dependencies': True}).execute()
+        self.task_1.depend_on_ids = self.task_2
+        self.assertEqual(self.task_1.state, '04_waiting_normal')
+        self.project_goats.write({'allow_task_dependencies': False})
+        self.assertEqual(self.task_1.state, '01_in_progress')
+        self.project_goats.write({'allow_task_dependencies': True})
+        self.assertEqual(self.task_1.state, '04_waiting_normal')
