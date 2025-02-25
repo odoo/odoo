@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class ImportChar(models.Model):
@@ -136,3 +136,15 @@ class PropertyInherits(models.Model):
 
     parent_id = fields.Many2one('import.properties', required=True, ondelete="cascade")
 
+
+class PathToProperty(models.Model):
+    _name = _description = 'import.path.properties'
+
+    properties_id = fields.Many2one('import.properties')
+    another_properties_id = fields.Many2one('import.properties')
+    all_properties_ids = fields.Many2many('import.properties', compute='_compute_all_import_properties')
+
+    @api.depends('properties_id', 'another_properties_id')
+    def _compute_all_import_properties(self):
+        for record in self:
+            record.all_properties_ids = record.properties_id | record.another_properties_id
