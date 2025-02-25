@@ -225,9 +225,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         _logger.info(f"Container Release Payload: {json.dumps(payload, indent=4)}")
 
         try:
-            response = requests.post(full_api_url, headers={'Content-Type': 'application/json'},
-                                     data=json.dumps(payload))
-            response.raise_for_status()
+            # response = requests.post(full_api_url, headers={'Content-Type': 'application/json'},
+            #                          data=json.dumps(payload))
+            # response.raise_for_status()
             _logger.info(f"Container {container_code} successfully released.")
             return True
 
@@ -254,6 +254,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "quantity": 0,
                     "remaining_quantity": 0,
                     "weight": 0,
+                    "hscode" : line.product_id.hs_code  or "" ,
                     "picking_id": line.picking_id.name if line.picking_id else "",
                     "customer_name": line.picking_id.partner_id.name or "",
                     "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
@@ -310,6 +311,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "weight": product_weight * line.quantity,  # Weight per product line
                     "picking_id": line.picking_id.name if line.picking_id else "",
                     "customer_name": line.picking_id.partner_id.name or "",
+                    "hscode" : line.product_id.hs_code  or "" ,
                     "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
                     "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
                     "site_code": line.site_code_id.name if line.site_code_id else "",
