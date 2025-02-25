@@ -555,6 +555,10 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     def.resolve(true);
                     return res;
                 },
+                bottomSheetConfig: {
+                    forceExtendedFullHeight: true,
+                    visibleInitialMax: 70,
+                },
             };
             if (ref.el) {
                 pickerMobileProps.close = () => remove();
@@ -649,12 +653,13 @@ class PickerMobile extends Component {
 
 class PickerMobileInDialog extends PickerMobile {
     static components = { BottomSheet };
-    static props = [...PICKER_PROPS, "onClose?"];
+    static props = [...PICKER_PROPS, "onClose?", "bottomSheetConfig?"];
+
     static template = xml`
         <BottomSheet
-            showBackBtn="true"
-            visibleInitialMax="70"
             forceExtendedFullHeight="true"
+            visibleInitialMax="70"
+            showBackBtn="true"
             close="() => this.props.close?.()"
         >
             <div class="h-100" t-ref="root">
@@ -671,6 +676,23 @@ class PickerMobileInDialog extends PickerMobile {
                 this.props.close?.();
             }
         }, { capture: true });
+    }
+
+    get pickerProps() {
+        const { 
+            PickerComponent,
+            onSelect,
+            onClose,
+            close,
+            bottomSheetConfig,
+            ...emojiPickerProps 
+        } = this.props;
+
+        return {
+            ...emojiPickerProps,
+            onSelect: (...args) => this.props.onSelect(...args),
+            mobile: true,
+        };
     }
 }
 

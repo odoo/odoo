@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BottomSheetContainer">
+        <div class="o_bottom_sheet"
+            t-att-class="{ o_bottom_sheet_ready: this.state.isPositionedReady }"
+            t-ref="container"
+            t-on-scroll="onScroll"
+            >
+            <div class="o_bottom_sheet_backdrop" t-on-click="dismiss"/>
+            <div class="o_bottom_sheet_dismiss"/>
+            <div class="o_bottom_sheet_spacer"/>
+
+            <!-- Only render when there's an active sheet -->
+            <t t-if="props.state.activeSheet">
+                <div t-attf-class="o_bottom_sheet_sheet offcanvas position-relative {{ props.state.activeSheet.sheetClasses || '' }}"
+                     t-att-data-sheet-id="props.state.activeSheet.id">
+                    <div class="o_bottom_sheet_handle text-center d-flex align-items-center justify-content-center py-1">
+                        <div class="o_bottom_sheet_handle_bar pt-1 mx-auto rounded-pill d-inline-block px-4 opacity-25"/>
+                    </div>
+
+                    <!-- Render the active sheet component -->
+                    <t t-component="props.state.activeSheet.component" t-props="props.state.activeSheet.props"/>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

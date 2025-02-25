@@ -13,6 +13,11 @@ export class MessageActionMenuMobile extends Component {
         "messageToReplyTo?",
         "openReactionMenu?",
         "state",
+
+        // ButtonSheet
+        "forceExtendedFullHeight?",
+        "visibleInitialMax?",
+        "visibleExtended?",
     ];
     static template = "mail.MessageActionMenuMobile";
 
