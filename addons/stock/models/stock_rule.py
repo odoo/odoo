@@ -227,6 +227,9 @@ class StockRule(models.Model):
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
             new_move = move.sudo().copy(new_move_vals)
+            # when no more push we should reach final destination
+            if new_move._skip_push():
+                new_move.write({'location_dest_id': new_move.location_final_id.id})
             if new_move._should_bypass_reservation():
                 new_move.write({'procure_method': 'make_to_stock'})
             if not new_move.location_id.should_bypass_reservation():
