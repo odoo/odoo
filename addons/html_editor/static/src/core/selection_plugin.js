@@ -784,6 +784,9 @@ export class SelectionPlugin extends Plugin {
             const targetOffset = position === "right" && offset ? offset - 1 : offset;
             targetNode = targetOffset < nodeSize(node) ? node.childNodes[targetOffset] : node.lastChild;
         }
+        if (targetNode && targetNode !== node) {
+            [targetNode] = this.normalizeSelfClosingElement(targetNode) || [targetNode];
+        }
         targetNode = targetNode || node;
         let didMove = false;
         while (targetNode && targetNode !== editable && !this.getResource("editable_node_predicates").some(predicate => predicate(targetNode))) {

@@ -136,9 +136,10 @@ export class LinkPlugin extends Plugin {
         "lineBreak",
         "overlay",
         "color",
+        "baseContainer",
     ];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
-    static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
+    static shared = ["createLink", "insertLink", "getPathAsUrlCommand", "closeLinkTools"];
     resources = {
         user_commands: [
             {
@@ -339,6 +340,10 @@ export class LinkPlugin extends Plugin {
      * @param {HTMLElement} [linkElement]
      */
     openLinkTools(linkElement, type) {
+        // Warning this is a separate fix for a separate commit.
+        if (this.overlay.isOpen && this.linkInDocument === linkElement) {
+            return;
+        }
         this.closeLinkTools();
         if (!this.isLinkAllowedOnSelection()) {
             return this.services.notification.add(
@@ -409,6 +414,11 @@ export class LinkPlugin extends Plugin {
                     if (figure) {
                         figure.before(link);
                         link.append(figure);
+                        if (link.parentElement === this.editable) {
+                            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                            link.before(baseContainer);
+                            baseContainer.append(link);
+                        }
                     } else {
                         const content = this.dependencies.selection.extractContent(selection);
                         link.append(content);
@@ -641,6 +651,11 @@ export class LinkPlugin extends Plugin {
                 }
                 cursors.update(callbacksForCursorUpdate.unwrap(imageLink));
                 unwrapContents(imageLink);
+                if (imageOrFigure.nodeName === "FIGURE" && imageOrFigure.parentElement !== this.editable) {
+                    // <div class="o-paragraph"><figure>...</figure></div>
+                    // => <figure>...</figure> (since figure is a block, the div is not needed).
+                    unwrapContents(imageOrFigure.parentElement);
+                }
                 // update the links at the selection
                 [startLink, endLink] = [
                     closestElement(anchorNode, "a"),
