@@ -181,6 +181,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         this.router.navigate(routeName, routeParams);
+        return true;
     }
 
     navigateToFirstPage() {
@@ -1653,7 +1654,6 @@ export class PosStore extends WithLazyGetterTrap {
             true
         );
     }
-
     async printReceipt({
         basic = false,
         order = this.getOrder(),
