@@ -668,9 +668,9 @@ class BaseAutomation(models.Model):
         if automations is None:
             automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
 
-        # Minimum 1 minute, maximum 4 hours, 10% tolerance
-        delay = min(automations.mapped(get_delay), default=0)
-        return min(max(1, delay // 10), 4 * 60) if delay else 4 * 60
+        # Minimum 1 minute, maximum 4 hours, 10% tolerance, ignore automations with no delay
+        delays = [d for d in automations.mapped(get_delay) if d]
+        return min(max(1, min(delays) // 10), 4 * 60) if delays else 4 * 60
 
     def _compute_least_delay_msg(self):
         msg = _("Note that this automation rule can be triggered up to %d minutes after its schedule.")
