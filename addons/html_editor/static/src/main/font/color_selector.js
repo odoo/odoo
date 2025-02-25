@@ -37,6 +37,7 @@ export class ColorSelector extends Component {
         type: String, // either foreground or background
         getUsedCustomColors: Function,
         getSelectedColors: Function,
+        setActiveTab: Function,
         applyColor: Function,
         applyColorPreview: Function,
         applyColorResetPreview: Function,
@@ -64,6 +65,7 @@ export class ColorSelector extends Component {
 
     setTab(tab) {
         this.state.activeTab = tab;
+        this.props.setActiveTab(tab);
     }
 
     processColorFromEvent(ev) {
