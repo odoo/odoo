@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
 class ColorStylePlugin extends Plugin {
-    static id = "ColorStyle";
+    static id = "colorStyle";
     static dependencies = ["color"];
     resources = {
         builder_style_actions: this.getStyleActions(),
