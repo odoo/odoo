@@ -58,6 +58,8 @@ for (let i = 100; i <= 900; i += 100) {
     EDITOR_COLOR_CSS_VARIABLES.push(`${i}`);
 }
 
+export const RGBA_REGEX = /[\d.]{1,5}/g;
+
 /**
  * Takes a color (rgb, rgba or hex) and returns its hex representation. If the
  * color is given in rgba, the background color of the node whose color we're
@@ -73,7 +75,7 @@ export function rgbToHex(rgb = "", node = null) {
     if (rgb.startsWith("#")) {
         return rgb;
     } else if (rgb.startsWith("rgba")) {
-        const values = rgb.match(/[\d.]{1,5}/g) || [];
+        const values = rgb.match(RGBA_REGEX) || [];
         const alpha = parseFloat(values.pop());
         // Retrieve the background color.
         let bgRgbValues = [];
@@ -88,7 +90,7 @@ export function rgbToHex(rgb = "", node = null) {
             if (bgColor && bgColor.startsWith("#")) {
                 bgRgbValues = (bgColor.match(/[\da-f]{2}/gi) || []).map((val) => parseInt(val, 16));
             } else if (bgColor && bgColor.startsWith("rgb")) {
-                bgRgbValues = (bgColor.match(/[\d.]{1,5}/g) || []).map((val) => parseInt(val));
+                bgRgbValues = (bgColor.match(RGBA_REGEX) || []).map((val) => parseInt(val));
             }
         }
         bgRgbValues = bgRgbValues.length ? bgRgbValues : [255, 255, 255]; // Default to white.
