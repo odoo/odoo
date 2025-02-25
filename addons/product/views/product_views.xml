@@ -444,7 +444,7 @@
                     <field name="product_tag_ids" widget="many2many_tags" readonly="1" optional="hide"/>
                     <field name="additional_product_tag_ids" widget="many2many_tags" optional="hide"/>
                     <field name="type" optional="hide" readonly="1"/>
-                    <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" optional="show" readonly="1"/>
+                    <field name="uom_id" groups="uom.group_uom" optional="show" readonly="1"/>
                     <field name="product_tmpl_id" readonly="1" column_invisible="True"/>
                     <field name="active" column_invisible="True"/>
                 </list>
