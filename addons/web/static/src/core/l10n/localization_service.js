@@ -47,12 +47,13 @@ export const localizationService = {
         };
 
         const updateTranslations = (result) => {
-            // FIXME We flatten the result of the python route.
             // Eventually, we want a new python route to return directly the good result.
             const terms = {};
             for (const addon of Object.keys(result.modules)) {
+                terms[addon] = {};
                 for (const message of result.modules[addon].messages) {
-                    terms[message.id] = message.string;
+                    terms[addon][message.id] = message.string;
+                    translatedTermsGlobal[message.id] = message.string;
                 }
             }
             Object.assign(translatedTerms, terms);

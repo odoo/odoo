@@ -18,7 +18,7 @@ test("has a slot for translatable text", async () => {
     class Parent extends Component {
         static components = { CheckBox };
         static props = {};
-        static template = xml`<CheckBox>ragabadabadaba</CheckBox>`;
+        static template = xml`<div t-translation-context="web"><CheckBox>ragabadabadaba</CheckBox></div>`;
     }
 
     await mountWithCleanup(Parent);

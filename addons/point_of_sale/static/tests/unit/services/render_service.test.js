@@ -1,7 +1,7 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { mockFetch } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { allowTranslations, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { htmlToCanvas } from "@point_of_sale/app/services/render_service";
 import { definePosModels } from "../data/generate_model_definitions";
 
@@ -17,6 +17,7 @@ describe("RenderService", () => {
             `;
         }
 
+        allowTranslations(); // this is needed because we are not loading the localization service
         const comp = await mountWithCleanup("none");
         const renderedComp = await comp.env.services.renderer.toHtml(ComponentToBeRendered, {
             name: "Mario",

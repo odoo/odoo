@@ -4,7 +4,7 @@ import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { session } from "@web/session";
-import { _t } from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
 
 export class PortalChatterService {
@@ -70,7 +70,7 @@ export class PortalChatterService {
                 getTemplate,
                 props,
                 translatableAttributes: ["data-tooltip"],
-                translateFn: _t,
+                translateFn: appTranslateFn,
                 dev: env.debug,
             }).mount(shadow);
         });
