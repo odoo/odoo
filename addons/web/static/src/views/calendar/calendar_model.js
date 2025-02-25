@@ -128,6 +128,10 @@ export class CalendarModel extends Model {
     }
     get hasQuick() {
         // FIXME: rename
+        // Disable the QuickMode on small screen
+        if (this.env.isSmall) {
+            return false;
+        }
         return Object.keys(this.meta.quickFields).length > 0;
     }
     get hasQuickCreate() {
