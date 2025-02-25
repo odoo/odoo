@@ -8,6 +8,7 @@ ADDONS=--addons-path=odoo/addons,addons,../enterprise
 SERVER_OPTS=--stop-after-init
 DB_NAME=`date "+temp_%Y%m%d_%H%M%S"`
 DB="-d $DB_NAME"
+MODLIST=./addons/i18n/tools/modules.py
 
 echo New temp database: $DB_NAME
 
@@ -31,8 +32,8 @@ contextmanager
 # Export account
 ./odoo-bin $ADDONS i18n export $DB account
 # Install all localization modules in community
-./odoo-bin $ADDONS i18n list $DB --l10n=yes --folder=. --del=',' \
+./odoo-bin $ADDONS shell $DB -- --l10n=yes --folder=. < $MODLIST \
     | xargs ./odoo-bin $ADDONS $DB $SERVER_OPTS -i
 # Export installed localization modules
-./odoo-bin $ADDONS i18n list $DB --l10n=yes --folder=. \
+./odoo-bin $ADDONS shell $DB -- --l10n=yes --folder=. < $MODLIST \
     | xargs ./odoo-bin $ADDONS i18n export $DB
