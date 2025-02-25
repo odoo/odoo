@@ -24,7 +24,6 @@ This module adds certification to resume for employees.
     'assets': {
         'web.assets_backend': [
             'hr_skills_survey/static/src/fields/**/*',
-            'hr_skills_survey/static/src/xml/**/*',
         ],
     },
     'demo': [
