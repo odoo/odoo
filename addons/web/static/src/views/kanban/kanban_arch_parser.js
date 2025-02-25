@@ -54,8 +54,7 @@ export class KanbanArchParser {
                         ...this.processButton(node),
                         type: "button",
                         id: button_id++,
-                    }))
-                    .filter((button) => button.invisible !== "True" && button.invisible !== "1");
+                    }));
                 return false;
             } else if (node.tagName === "control") {
                 for (const childNode of node.children) {
