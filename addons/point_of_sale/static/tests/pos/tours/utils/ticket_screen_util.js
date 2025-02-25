@@ -140,6 +140,13 @@ export function nthRowContains(n, string, viewMode) {
         },
     ];
 }
+export function nthRowIsHighlighted(n) {
+    return [
+        {
+            trigger: ".ticket-screen .order-row.highlight",
+        },
+    ];
+}
 export function nthRowNotContains(n, string, viewMode) {
     return [
         {

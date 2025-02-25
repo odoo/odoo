@@ -75,7 +75,7 @@
                                                 </div>
                                             </td>
                                             <td class="text-end delete-column" name="delete-column">
-                                                <button t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.pos.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
+                                                <button t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
                                                     <i class="fa fa-trash" aria-hidden="true"/>
                                                 </button>
                                             </td>
@@ -109,7 +109,7 @@
                                                 </div>
                                     </div>
                                     <div class="mx-2" name="delete-column">
-                                        <div t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" class="d-flex align-items-center justify-content-center h-100" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
+                                        <div t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" class="d-flex align-items-center justify-content-center h-100" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                             <div class="btn btn-danger btn-lg">
                                                 <i class="fa fa-trash" aria-hidden="true"/>
                                             </div>
