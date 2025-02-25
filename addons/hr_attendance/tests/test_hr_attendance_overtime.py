@@ -446,10 +446,16 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_in': datetime(2024, 2, 1, 12, 0)
         })
 
+        attendance_flexible_pending = self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2024, 2, 1, 12, 0)
+        })
+
         self.assertEqual(attendance_utc_pending.check_out, False)
         self.assertEqual(attendance_utc_pending_within_allotted_hours.check_out, False)
         self.assertEqual(attendance_utc_done.check_out, datetime(2024, 2, 1, 17, 0))
         self.assertEqual(attendance_jpn_pending.check_out, False)
+        self.assertEqual(attendance_flexible_pending.check_out, False)
 
         self.env['hr.attendance']._cron_auto_check_out()
 
@@ -457,6 +463,9 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertEqual(attendance_utc_pending_within_allotted_hours.check_out, False)
         self.assertEqual(attendance_utc_done.check_out, datetime(2024, 2, 1, 17, 0))
         self.assertEqual(attendance_jpn_pending.check_out, datetime(2024, 2, 1, 21, 0))
+
+        # Employee with flexible working schedule should not be checked out
+        self.assertEqual(attendance_flexible_pending.check_out, False)
 
     @freeze_time("2024-02-1 14:00:00")
     def test_absence_management(self):
@@ -501,11 +510,18 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2024, 2, 1, 17, 0)
         })
 
+        self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2024, 2, 1, 8, 0),
+            'check_out': datetime(2024, 2, 1, 16, 0)
+        })
+
         self.assertAlmostEqual(self.employee.total_overtime, 0, 2)
         self.assertAlmostEqual(self.other_employee.total_overtime, 0, 2)
         self.assertAlmostEqual(self.jpn_employee.total_overtime, 0, 2)
         self.assertAlmostEqual(self.honolulu_employee.total_overtime, 0, 2)
         self.assertAlmostEqual(self.europe_employee.total_overtime, 0, 2)
+        self.assertAlmostEqual(self.flexible_employee.total_overtime, 0, 2)
 
         self.env['hr.attendance']._cron_absence_detection()
 
@@ -516,6 +532,9 @@ class TestHrAttendanceOvertime(TransactionCase):
 
         # Employee Checked in yesterday, no absence found
         self.assertAlmostEqual(self.employee.total_overtime, 0, 2)
+
+        # Flexible schedule employee, no absence found
+        self.assertAlmostEqual(self.flexible_employee.total_overtime, 0, 2)
 
         # Other company with setting disabled
         self.assertAlmostEqual(self.europe_employee.total_overtime, 0, 2)
