@@ -64,10 +64,10 @@ export const spreadsheetLinkMenuCellService = {
                     const menuId = parseIrMenuIdLink(url);
                     return env.services.menu.getMenu(menuId).name;
                 },
-                open(url) {
+                open(url, env, newWindow) {
                     const menuId = parseIrMenuIdLink(url);
                     const menu = env.services.menu.getMenu(menuId);
-                    env.services.action.doAction(menu.actionID);
+                    env.services.action.doAction(menu.actionID, { newWindow });
                 },
             })
             .add("OdooMenuXmlLink", {
@@ -88,11 +88,11 @@ export const spreadsheetLinkMenuCellService = {
                     const menuId = _getIrMenuByXmlId(xmlId).id;
                     return env.services.menu.getMenu(menuId).name;
                 },
-                open(url) {
+                open(url, env, newWindow) {
                     const xmlId = parseIrMenuXmlUrl(url);
                     const menuId = _getIrMenuByXmlId(xmlId).id;
                     const menu = env.services.menu.getMenu(menuId);
-                    env.services.action.doAction(menu.actionID);
+                    env.services.action.doAction(menu.actionID, { newWindow });
                 },
             })
             .add("OdooViewLink", {
@@ -110,9 +110,11 @@ export const spreadsheetLinkMenuCellService = {
                     const actionDescription = parseViewLink(url);
                     return actionDescription.name;
                 },
-                async open(url, env) {
+                async open(url, env, newWindow) {
                     const { viewType, action, name } = parseViewLink(url);
-                    await navigateTo(env, action.xmlId,
+                    await navigateTo(
+                        env,
+                        action.xmlId,
                         {
                             type: "ir.actions.act_window",
                             name: name,
@@ -122,7 +124,7 @@ export const spreadsheetLinkMenuCellService = {
                             domain: action.domain,
                             context: action.context,
                         },
-                        { viewType }
+                        { viewType, newWindow }
                     );
                 },
             });

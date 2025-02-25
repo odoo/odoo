@@ -38,9 +38,9 @@ cellMenuRegistry.add(
     /** @type {import("@odoo/o-spreadsheet").ActionSpec}*/ ({
         name: _t("See record"),
         sequence: 200,
-        execute: async (env) => {
+        execute: async (env, isMiddleClick) => {
             const position = env.model.getters.getActivePosition();
-            await SEE_RECORD_LIST(position, env);
+            await SEE_RECORD_LIST(position, env, isMiddleClick);
         },
         isVisible: (env) => {
             const position = env.model.getters.getActivePosition();
