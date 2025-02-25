@@ -1868,6 +1868,8 @@
             <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                 <div class="container" id="class_extra_info">
                     <form action="/website/form/" method="post" enctype="multipart/form-data" class="form_extra_info o_mark_required s_website_form_no_recaptcha" data-mark="*" data-force_action="shop.sale.order" data-model_name="sale.order" hide-change-model="true">
+                    <!--TODO-PDA-->
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <div class="s_website_form_rows s_col_no_bgcolor row">
                             <div class="s_website_form_field col-12 py-2 mb-0" data-type="char" data-name="Field">
                                 <div class="s_col_no_resize s_col_no_bgcolor row">
