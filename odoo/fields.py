@@ -3292,7 +3292,11 @@ class Many2one(_Relational[M]):
                 # Should not happen, unless the foreign key is missing.
                 return False
         else:
-            return value.id
+            try:
+                return value.id
+            except Exception as e:
+                # if many2one or one2many field's relation model name is not exist
+                raise ValueError(f"{e}({str(self)} is not exist)")
 
     def convert_to_write(self, value, record):
         if type(value) is int or type(value) is NewId:
