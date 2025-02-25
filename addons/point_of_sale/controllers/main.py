@@ -6,7 +6,7 @@ import json
 from odoo import http, _
 from odoo.http import request
 from odoo.osv.expression import AND
-from odoo.tools import format_amount, file_open
+from odoo.tools import format_amount, file_open, html_escape
 from odoo.addons.account.controllers.portal import PortalAccount
 from datetime import timedelta, datetime
 
@@ -134,6 +134,14 @@ class PosController(PortalAccount):
                     return request.redirect('/pos/ticket/validate?access_token=%s' % (order.access_token))
                 else:
                     errors['generic'] = _("No sale order found.")
+
+        elif request.httprequest.method == 'GET':
+            if kwargs.get('order_uuid'):
+                order = self.env['pos.order'].sudo().search([('uuid', '=', kwargs['order_uuid'])], limit=1)
+                form_values.update({
+                    'pos_reference': html_escape(order.pos_reference) if order.exists() else '',
+                    'date_order': html_escape(order.date_order.strftime("%Y-%m-%d")) if order.exists() else '',
+                })
 
         return request.render("point_of_sale.ticket_request_with_code", {
             'errors': errors,
