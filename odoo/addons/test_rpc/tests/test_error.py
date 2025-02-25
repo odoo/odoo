@@ -54,11 +54,11 @@ class TestError(common.HttpCase):
         e = ctx.exception
         self.assertIn("The operation cannot be completed:", e.faultString)
         self.assertIn(
-            "Another model requires the record being deleted, if possible, archive it instead",
+            "Another model is using the record you are trying to delete",
             e.faultString,
         )
-        self.assertIn("Model: 'Model A' (test_rpc.model_a)", e.faultString)
-        self.assertIn("Foreign key: 'required field'", e.faultString)
+        self.assertIn("The troublemaker is: 'Model A' (test_rpc.model_a)", e.faultString)
+        self.assertIn("Thanks to the following constraint: 'required field'", e.faultString)
 
         # Unlink b2 => ON DELETE RESTRICT constraint raises
         with self.assertRaises(Fault) as ctx, mute_logger("odoo.sql_db", "odoo.http"):
@@ -67,11 +67,11 @@ class TestError(common.HttpCase):
         e = ctx.exception
         self.assertIn("The operation cannot be completed:", e.faultString)
         self.assertIn(
-            "Another model requires the record being deleted, if possible, archive it instead",
+            "Another model is using the record you are trying to delete",
             e.faultString,
         )
-        self.assertIn("Model: 'Model A' (test_rpc.model_a)", e.faultString)
-        self.assertIn("Foreign key: 'restricted field'", e.faultString)
+        self.assertIn("The troublemaker is: 'Model A' (test_rpc.model_a)", e.faultString)
+        self.assertIn("Thanks to the following constraint: 'restricted field'", e.faultString)
 
     def test_03_sql_constraint(self):
         with mute_logger("odoo.sql_db"), self.assertLogs("odoo.http", level="WARNING") as capture:

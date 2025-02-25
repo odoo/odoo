@@ -3013,9 +3013,10 @@ class BaseModel(metaclass=MetaModel):
             if len(columns) != 1:
                 info['field_display'] = info['constraint_name']
             return self.env._(
-                "Another model requires the record being deleted, if possible, archive it instead.\n\n"
-                "Model: %(model_display)s\n"
-                "Foreign key: %(field_display)s\n",
+                "Another model is using the record you are trying to delete.\n\n"
+                "The troublemaker is: %(model_display)s\n"
+                "Thanks to the following constraint: %(field_display)s\n"
+                "How about archiving the record instead?",
                 **info,
             )
 
@@ -3732,9 +3733,9 @@ class BaseModel(metaclass=MetaModel):
                         inconsistencies.append((record, name, corecords))
 
         if inconsistencies:
-            lines = [_("Incompatible companies on records:")]
-            company_msg = _lt("- Record is company “%(company)s” and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
-            record_msg = _lt("- “%(record)s” belongs to company “%(company)s” and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
+            lines = [_("Uh-oh! You’ve got some company inconsistencies here:")]
+            company_msg = _lt("- Record is company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
+            record_msg = _lt("- “%(record)s” belongs to company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
             root_company_msg = _lt("- Only a root company can be set on “%(record)s”. Currently set to “%(company)s”")
             for record, name, corecords in inconsistencies[:5]:
                 if record._name == 'res.company':
@@ -3751,6 +3752,7 @@ class BaseModel(metaclass=MetaModel):
                     'fname': field.name,
                     'values': ", ".join(repr(rec.display_name) for rec in corecords),
                 })
+            lines.append(_("To avoid a mess, no company crossover is allowed!"))
             raise UserError("\n".join(lines))
 
     @api.private  # use has_access

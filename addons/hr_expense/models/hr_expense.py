@@ -501,7 +501,10 @@ class HrExpense(models.Model):
     def _inverse_total_amount_currency(self):
         for expense in self:
             if not expense.is_editable:
-                raise UserError(_('You are not authorized to edit this expense.'))
+                raise UserError(_(
+                    "Uh-oh! You can’t edit this expense.\n\n"
+                    "Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
+                ))
             expense.price_unit = (expense.total_amount / expense.quantity) if expense.quantity != 0 else 0.
 
     @api.depends(
@@ -807,7 +810,10 @@ class HrExpense(models.Model):
 
         if any(field in vals for field in {'tax_ids', 'analytic_distribution', 'account_id', 'manager_id'}):
             if any((not expense.is_editable and not self.env.su) for expense in self):
-                raise UserError(_('You are not authorized to edit this expense.'))
+                raise UserError(_(
+                    "Uh-oh! You can’t edit this expense.\n\n"
+                    "Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
+                ))
 
         res = super().write(vals)
 

@@ -264,9 +264,9 @@ class ProjectTask(models.Model):
                 "and then you’ll be able to delete the task.")
             )
         if len(task_with_timesheets_ids) > 1:
-            warning_msg = _("These tasks have some timesheet entries referencing them. Before removing these tasks, you have to remove these timesheet entries.")
+            warning_msg = _("Some timesheet entries are weighing down these tasks! Remove them first, then you’ll be able to delete the tasks!")
         else:
-            warning_msg = _("This task has some timesheet entries referencing it. Before removing this task, you have to remove these timesheet entries.")
+            warning_msg = _("Some timesheet entries are weighing down these tasks! Remove them first, then you’ll be able to delete the tasks!")
         raise RedirectWarning(
             warning_msg, self.env.ref('hr_timesheet.timesheet_action_task').id,
             _('See timesheet entries'), {'active_ids': task_with_timesheets_ids})

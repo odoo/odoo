@@ -1570,7 +1570,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertFalse(move.payment_ids)  # don't auto reconcile payments
 
         # If the move is already fully paid, we should alert the user
-        with self.assertRaisesRegex(UserError, r"You can't register a payment because there is nothing left"):
+        with self.assertRaisesRegex(UserError, r"There's nothing left to pay for the selected journal items, so no payment registration is necessary. You've got your finances under control like a boss!"):
             action_register_payment = move.action_force_register_payment()
             self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({})
 
