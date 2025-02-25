@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="calendar.AttendeeCalendarCommonRenderer.HeaderTemplate" t-inherit="calendar.AttendeeCalendarCommonRenderer.HeaderTemplate" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('mandatory_day_span')]" position="replace">
+            <div  t-out="title" t-attf-class="o_mandatory_day_{{color}} px-2"/>
+        </xpath>
+    </t>
+</templates>

@@ -15,4 +15,12 @@
                     </t>
             </div>
     </t>
+
+    <t t-name="calendar.AttendeeCalendarCommonRenderer.HeaderTemplate" t-inherit="web.CalendarCommonRendererHeader" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_cw_day_number')]" position="after">
+            <span class="mandatory_day_span"/>
+            <span class="worklocation_span"/>
+        </xpath>
+    </t>
+
 </templates>
