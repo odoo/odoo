@@ -24,7 +24,9 @@ export class Chrome extends Component {
             if (stopEventPropagation.includes(ev.type)) {
                 ev.stopPropagation();
             }
-            this.pos.showScreen(this.pos.firstScreen);
+            if (this.pos.mainScreen.component.name !== "PaymentScreen") {
+                this.pos.showScreen(this.pos.firstScreen);
+            }
         });
         const reactivePos = reactive(this.pos);
         // TODO: Should we continue on exposing posmodel as global variable?
