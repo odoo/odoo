@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_actions_server_kpi_website_visitor_count" model="ir.actions.server">
+        <field name="name">kpi computation of website visitors</field>
+        <field name="model_id" ref="model_digest_digest"/>
+        <field name="state">code</field>
+        <field name="group_ids" eval="[Command.link(ref('website.group_website_designer'))]"/>
+        <field name="code">action = model._website_kpi_website_visitors_count(
+            env.context.get('companies'),
+            env.context.get('start'),
+            env.context.get('end'),
+        )</field>
+    </record>
+
+    <record id="kpi_website_visitor_count" model="digest.kpi" forcecreate="True">
+        <field name="name">Visitors</field>
+        <field name="res_model_id" ref="model_website_visitor"/>
+        <field name="agg_mode">custom</field>
+        <field name="agg_custom" ref="ir_actions_server_kpi_website_visitor_count"/>
+        <field name="group_ids" eval="[Command.link(ref('website.group_website_designer'))]"/>
+        <field name="action_id" ref="website.website_visitors_action"/>
+        <field name="action_menu_root_id" ref="website.menu_website_configuration"/>
+        <field name="module_id" ref="base.module_website"/>
+        <field name="sequence" eval="10000"/>
+    </record>
+
+    <record id="ir_actions_server_kpi_website_track_count" model="ir.actions.server">
+        <field name="name">kpi computation of tracked Page Views</field>
+        <field name="model_id" ref="model_digest_digest"/>
+        <field name="state">code</field>
+        <field name="group_ids" eval="[Command.link(ref('website.group_website_designer'))]"/>
+        <field name="code">action = model._website_kpi_website_track_count(
+            env.context.get('companies'),
+            env.context.get('start'),
+            env.context.get('end'),
+        )</field>
+    </record>
+
+    <record id="kpi_website_track_count" model="digest.kpi" forcecreate="True">
+        <field name="name">Tracked Page Views</field>
+        <field name="res_model_id" ref="model_website_track"/>
+        <field name="agg_mode">custom</field>
+        <field name="agg_custom" ref="ir_actions_server_kpi_website_track_count"/>
+        <field name="group_ids" eval="[Command.link(ref('website.group_website_designer'))]"/>
+        <field name="action_id" ref="website.website_visitor_view_action"/>
+        <field name="action_menu_root_id" ref="website.menu_website_configuration"/>
+        <field name="module_id" ref="base.module_website"/>
+        <field name="sequence" eval="10100"/>
+    </record>
+</odoo>
