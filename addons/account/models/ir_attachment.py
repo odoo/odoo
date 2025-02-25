@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-from odoo import api, models
+from odoo import _, api, fields, models
 from odoo.tools.pdf import OdooPdfFileReader, PdfReadError
 from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.misc import format_date
 
+import os
 from lxml import etree
 from struct import error as StructError
 import io
@@ -22,6 +24,22 @@ class IrAttachment(models.Model):
             for attachment in self:
                 zipfile_obj.writestr(attachment.display_name, attachment.raw)
         return buffer.getvalue()
+
+    def _detach(self):
+        """
+        This method would detach the document from the field, but keep it in the database
+        """
+        self.res_field = False
+        today = format_date(self.env, fields.Date.context_today(self))
+        for attachment in self:
+            attachment_name, attachment_extension = os.path.splitext(attachment.name)
+            attachment.name = _(
+                '%(attachment_name)s (detached by %(user)s on %(date)s)%(attachment_extension)s',
+                attachment_name=attachment_name,
+                attachment_extension=attachment_extension,
+                user=self.env.user.name,
+                date=today,
+            )
 
     # -------------------------------------------------------------------------
     # EDI
