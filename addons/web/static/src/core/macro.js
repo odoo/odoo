@@ -44,7 +44,7 @@ export async function waitForStable(target = document, timeout = 1000 / 16) {
         let timer;
         const mutationList = [];
         function onMutation(mutations) {
-            mutationList.push(...mutations);
+            mutationList.push(...(mutations || []));
             clearTimeout(timer);
             timer = setTimeout(() => {
                 observer.disconnect();

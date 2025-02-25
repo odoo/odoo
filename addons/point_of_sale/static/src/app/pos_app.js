@@ -91,8 +91,8 @@ export class Chrome extends Component {
                 this.pos.config.access_token,
             ]);
         }
-        if (this.pos.config.customer_display_type === "proxy") {
-            const proxyIP = this.pos.getDisplayDeviceIP();
+        const proxyIP = this.pos.getDisplayDeviceIP();
+        if (proxyIP) {
             fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
                 method: "POST",
                 headers: {
