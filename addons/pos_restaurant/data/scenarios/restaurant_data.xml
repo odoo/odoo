@@ -537,6 +537,7 @@
             <field
                 name="combo_item_ids"
                 eval="[
+                    Command.clear(),
                     Command.create({
                         'product_id': ref('pos_food_cheeseburger'),
                         'extra_price': 0,
@@ -554,6 +555,7 @@
             <field
                 name="combo_item_ids"
                 eval="[
+                    Command.clear(),
                     Command.create({
                         'product_id': ref('coke'),
                         'extra_price': 0,
