@@ -2,6 +2,7 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
+import { session } from "@web/session";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { jsonrpc } from "@web/core/network/rpc_service";
 
@@ -15,6 +16,10 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         this._super(...arguments);
         this._recaptcha = new ReCaptcha();
         this.notification = this.bindService("notification");
+        if(session.turnstile_site_key) {
+            const { turnStile } = odoo.loader.modules.get('@website_cf_turnstile/js/turnstile');
+            this._turnstile = turnStile;
+        }
     },
 
     /**
@@ -80,6 +85,16 @@ var EventRegistrationForm = publicWidget.Widget.extend({
             }
             var $modal = $(modal);
             $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
+            if(self._turnstile) {
+                const ticketSubmitBtn = $modal.find('button[type="submit"]')[0];
+                const el = self._turnstile.addTurnstile('website_event_registration');
+                if(el) {
+                    self._turnstile.addSpinner(ticketSubmitBtn);
+                    el[0].classList.add('modal-footer');
+                    el[0].style.borderTop = 'none';
+                    el.insertAfter(ticketSubmitBtn.parentElement);
+                }
+            }
             $modal.appendTo(document.body);
             const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
             modalBS.show();
@@ -96,6 +111,10 @@ var EventRegistrationForm = publicWidget.Widget.extend({
                 tokenInput.setAttribute('name', 'recaptcha_token_response');
                 tokenInput.setAttribute('type', 'hidden');
                 tokenInput.setAttribute('value', tokenObj.token);
+                const turnstile = $modal[0].querySelector('input[name="turnstile_captcha"]');
+                if(turnstile) {
+                    ev.currentTarget.appendChild(turnstile);
+                }
                 ev.currentTarget.appendChild(tokenInput);
             })
         });

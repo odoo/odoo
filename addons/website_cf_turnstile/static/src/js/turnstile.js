@@ -6,18 +6,22 @@ import { session } from "@web/session";
 
 export const turnStile = {
     addTurnstile: function (action) {
-        if (!this.isEditable && !this.$(".s_turnstile").length) {
+        if (!this.isEditable) {
             const mode = new URLSearchParams(window.location.search).get('cf') == 'show' ? 'always' : 'interaction-only';
-            return $(`<div class="s_turnstile cf-turnstile float-end"
-                        style="display: none;"
-                        data-action="${action}"
-                        data-appearance="${mode}"
-                        data-response-field-name="turnstile_captcha"
-                        data-sitekey="${session.turnstile_site_key}"
-                        data-error-callback="throwTurnstileError"
-                        data-callback="turnstileSuccess"
-                        data-before-interactive-callback="turnstileBecomeVisible"
+            let html = `
+                <div class="s_turnstile cf-turnstile float-end"
+                    style="display: none;"
+                    data-action="${action}"
+                    data-appearance="${mode}"
+                    data-response-field-name="turnstile_captcha"
+                    data-sitekey="${session.turnstile_site_key}"
+                    data-error-callback="throwTurnstileError"
+                    data-callback="turnstileSuccess"
+                    data-before-interactive-callback="turnstileBecomeVisible"
                 ></div>
+            `
+            if(!document.getElementsByClassName("s_turnstile").length) {
+                html += `
                 <script class="s_turnstile">
                     // Rethrow the error, or we only will catch a "Script error" without any info
                     // because of the script api.js originating from a different domain.
@@ -39,7 +43,9 @@ export const turnStile = {
                     }
                 </script>
                 <script class="s_turnstile" src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
-            `);
+            `
+            }
+            return $(html);
         }
     },
 
