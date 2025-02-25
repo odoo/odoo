@@ -26,6 +26,7 @@ export class Chrome extends Component {
                 ev.stopPropagation();
             }
             this.pos.navigateToFirstPage();
+            return false;
         });
         if (this.pos.router.state.current === "SaverScreen") {
             this.pos.navigateToFirstPage();
