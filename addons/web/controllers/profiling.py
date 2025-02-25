@@ -58,3 +58,13 @@ class Profiling(Controller):
             response.headers['X-Content-Type-Options'] = 'nosniff'
             response.headers['Content-Type'] = 'text/html'
         return response
+
+    @route([
+      '/web/memory_graph',
+      '/web/memory_graph/<model("ir.profile"):profile>',
+    ], type='http', sitemap=False, auth='user', readonly=True)
+    def memory_graph(self, profile=None):
+        context = {
+            'profile': profile,
+            }
+        return request.render('web.view_memory', context)
