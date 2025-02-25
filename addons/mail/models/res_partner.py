@@ -261,6 +261,8 @@ class Partner(models.Model):
                     data["notification_preference"] = main_user.notification_type
                 if "signature" in fields:
                     data["signature"] = main_user.signature
+                if main_user and main_user._is_public():
+                    data["isPublicUser"] = True
             store.add(partner, data)
 
     @api.readonly

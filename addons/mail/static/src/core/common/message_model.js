@@ -404,7 +404,7 @@ export class Message extends Record {
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canAddReaction(thread) {
-        return Boolean(!this.is_transient && this.thread);
+        return Boolean(!this.is_transient && this.thread && !this.store.self.isPublicUser);
     }
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
