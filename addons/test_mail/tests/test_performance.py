@@ -1152,7 +1152,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=41, employee=42):
+        with self.assertQueryCount(admin=42, employee=42):
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
@@ -1202,7 +1202,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
         self.assertEqual(len(rec1.message_ids), 1)
 
-        with self.assertQueryCount(admin=57, employee=57):
+        with self.assertQueryCount(admin=58, employee=58):
             rec.write({
                 'name': 'Test2',
                 'container_id': self.container.id,
@@ -1239,7 +1239,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=62, employee=63):
+        with self.assertQueryCount(admin=64, employee=64):
             rec.write({
                 'name': 'Test2',
                 'container_id': container_id,
@@ -1272,7 +1272,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(admin=32, employee=33):
+        with self.assertQueryCount(admin=34, employee=34):
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,

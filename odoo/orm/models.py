@@ -1411,7 +1411,10 @@ class BaseModel(metaclass=MetaModel):
 
         fields_to_fetch = self._determine_fields_to_fetch(field_names)
 
-        return self._fetch_query(query, fields_to_fetch)
+        fetched = self._fetch_query(query, fields_to_fetch)
+        if not self.env.su:
+            self.env._add_to_access_cache(fetched)
+        return fetched
 
     #
     # display_name, name_create, name_search
@@ -3150,12 +3153,15 @@ class BaseModel(metaclass=MetaModel):
 
         # fetch the fields
         fetched = self._fetch_query(query, fields_to_fetch)
+        env = self.env
+        if not env.su:
+            env._add_to_access_cache(fetched)
 
         # possibly raise exception for the records that could not be read
-        if fetched != self:
+        if not env.su and fetched != self:
             forbidden = (self - fetched).exists()
             if forbidden:
-                raise self.env['ir.rule']._make_access_error('read', forbidden)
+                raise env['ir.rule']._make_access_error('read', forbidden)
 
     def _determine_fields_to_fetch(
             self,
@@ -3451,26 +3457,106 @@ class BaseModel(metaclass=MetaModel):
             records.browse().check_access(operation)
 
         """
-        if not self.env.su and (result := self._check_access(operation)):
-            raise result[1]()
+        # special cases (su or no real records) or no cache
+        if self.env.su:
+            return
+        if operation != 'read' or not any(self._ids):
+            if result := self._check_access(operation):
+                raise result[1]()
+            return
+
+        # check the cache
+        access = self.env._access_cache[self._name]
+        if all(map(access.get, self._ids)):
+            return
+        self.__check_access_fill_cache(access, operation)
+        inaccessible = self.browse(id_ for id_ in self._ids if not access[id_])
+        if not inaccessible:
+            return
+        # generate the exception
+        result = inaccessible._check_access(operation)
+        assert result is not None, "_check_access is non-deterministic or issue with fill cache"
+        raise result[1]()
 
     def has_access(self, operation: str) -> bool:
         """ Return whether the current user is allowed to perform ``operation``
         on all the records in ``self``. The method is fully consistent with
         method :meth:`check_access` but returns a boolean instead.
         """
-        return self.env.su or not self._check_access(operation)
+        # special cases (su or no real records) or no cache
+        if self.env.su:
+            return True
+        if operation != 'read' or not any(self._ids):
+            return not self._check_access(operation)
 
-    def _filtered_access(self, operation: str):
+        # check the cache
+        access = self.env._access_cache[self._name]
+        if all(map(access.get, self._ids)):
+            return True
+        self.__check_access_fill_cache(access, operation)
+        return all(map(access.__getitem__, self._ids))
+
+    def _filtered_access(self, operation: str) -> typing.Self:
         """ Return the subset of ``self`` for which the current user is allowed
         to perform ``operation``. The method is fully equivalent to::
 
             self.filtered(lambda record: record.has_access(operation))
 
         """
-        if self and not self.env.su and (result := self._check_access(operation)):
-            return self - result[0]
-        return self
+        # special cases (su or no real records)
+        if self.env.su or not self:
+            return self
+        if operation != 'read' or not any(self._ids):
+            if result := self._check_access(operation):
+                return self - result[0]
+            return self
+
+        # filter using the cache
+        access = self.env._access_cache[self._name]
+        if all(map(access.get, self._ids)):
+            return self
+        self.__check_access_fill_cache(access, operation)
+        return self.filtered(lambda rec: access[rec._ids[0]])
+
+    def __check_access_fill_cache(self, access: dict[IdType, bool], operation: str) -> None:
+        """ Fill the access cache for records in self. """
+        ids = self._ids
+
+        # Select records:
+        # We get unknown ids and recheck forbidden ids.  If we have a small
+        # number of ids, we only add unknown records from the prefetch to check
+        # access in batch.
+        # We want to avoid rechecking *all* the prefetch every time we have an
+        # inaccessible record.
+        ids_to_check = tuple(id_ for id_ in ids if not access.get(id_))
+        if len(ids) < PREFETCH_MAX and self._prefetch_ids is not ids:
+            ids_to_check = itertools.chain(ids_to_check, (
+                id_ for id_ in self._prefetch_ids
+                if id_ not in access
+            ))
+            ids_to_check = itertools.islice(unique(ids_to_check), PREFETCH_MAX)
+        records = self.browse(ids_to_check)
+
+        # Check access
+        try:
+            result = records._check_access(operation)
+        except MissingError:
+            existing = records.exists()
+            missing_ids = set(records._ids) - set(existing._ids)
+            if not missing_ids.isdisjoint(ids):
+                # raise if initial ids intersect with missing ids
+                raise
+            records = existing
+            result = records._check_access(operation)
+
+        # Update the cache
+        if result is None:
+            for id_ in records._ids:
+                access[id_] = True
+        else:
+            inaccessible_record_ids = set(result[0]._ids)
+            for id_ in records._ids:
+                access[id_] = id_ not in inaccessible_record_ids
 
     def _check_access(self, operation: str) -> tuple[Self, Callable] | None:
         """ Return ``None`` if the current user has permission to perform
@@ -6041,6 +6127,7 @@ class BaseModel(metaclass=MetaModel):
             for invf in self.pool.field_inverses[field]:
                 self.env[invf.model_name].flush_model([invf.name])
                 invf._invalidate_cache(env)
+        self.env.transaction.clear_access_cache(self._name)
 
     @api.private
     def modified(self, fnames: Collection[str], create: bool = False, before: bool = False) -> None:

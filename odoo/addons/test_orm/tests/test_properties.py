@@ -1481,7 +1481,7 @@ class PropertiesCase(TestPropertiesMixin):
         self.env['ir.rule'].sudo().create({
             'name': 'test_rule_tags',
             'model_id': self.env['ir.model']._get('test_orm.multi.tag').id,
-            'domain_force': [('name', 'not in', tags[5:].mapped('name'))],
+            'domain_force': [('id', 'not in', tags[5:].ids)],
             'perm_read': True,
             'perm_create': True,
             'perm_write': True,

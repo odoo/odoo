@@ -205,6 +205,26 @@ class Environment(Mapping[str, "BaseModel"]):
         """Return the cache object of the transaction."""
         return self.transaction.cache
 
+    @property
+    def _access_context(self):
+        """Return the context values used by the access caches."""
+        return (self.uid, *self['ir.rule']._compute_domain_context_values())
+
+    @functools.cached_property
+    def _access_cache(self):
+        """Get the cache for READ access (model -> ids -> bool).
+
+        Storing True means that we have access to the record.
+        We store False to avoid worst case complexity when re-checking all
+        records in the prefetch: see `Model.__check_access_fill_cache`.
+        """
+        return self.transaction.access_read[self._access_context]
+
+    def _add_to_access_cache(self, records: BaseModel) -> None:
+        """ Patch the read access cache so that the user has access to a record. """
+        cache = self._access_cache
+        cache[records._name].update(dict.fromkeys(records._ids, True))
+
     @functools.cached_property
     def user(self) -> BaseModel:
         """Return the current user (as an instance).
@@ -553,7 +573,7 @@ class Environment(Mapping[str, "BaseModel"]):
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
     __slots__ = (
-        '_Transaction__file_open_tmp_paths', 'cache',
+        '_Transaction__file_open_tmp_paths', 'access_read', 'cache',
         'default_env', 'envs', 'field_data', 'field_data_patches', 'field_dirty',
         'protected', 'registry', 'tocompute',
     )
@@ -584,6 +604,9 @@ class Transaction:
         # backward-compatible view of the cache
         self.cache = Cache(self)
 
+        # permission cache for record access by user
+        # {access_context: {model_name: {record_id: bool}}}
+        self.access_read = defaultdict[tuple, defaultdict[str, dict["IdType", bool]]](lambda: defaultdict(dict))
         # temporary directories (managed in odoo.tools.file_open_temporary_directory)
         self.__file_open_tmp_paths = ()  # type: ignore # noqa: PLE0237
 
@@ -598,8 +621,18 @@ class Transaction:
                 Environment(env.cr, public_user.id, {}).flush_all()
                 break
 
+    def clear_access_cache(self, model_name: str = '') -> None:
+        """ Clear the access cache for record rule checks. """
+        # clear each context separately because it is cached in Environment
+        for context_dict in self.access_read.values():
+            if model_name:
+                context_dict.pop(model_name, None)
+            else:
+                context_dict.clear()
+
     def clear(self):
         """ Clear the caches and pending computations and updates in the transactions. """
+        self.clear_access_cache()
         self.invalidate_field_data()
         self.field_data_patches.clear()
         self.field_dirty.clear()
@@ -616,6 +649,7 @@ class Transaction:
         self.registry = Registry(self.registry.db_name)
         for env in self.envs:
             reset_cached_properties(env)
+        self.access_read.clear()
         self.clear()
 
     def invalidate_field_data(self) -> None:
