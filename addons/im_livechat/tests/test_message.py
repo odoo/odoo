@@ -93,7 +93,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                     {
                         "attachment_ids": [],
                         "author": {"id": self.users[1].partner_id.id, "type": "partner"},
-                        "body": message.body,
+                        "body": ["markup", message.body],
                         "date": fields.Datetime.to_string(message.date),
                         "write_date": fields.Datetime.to_string(message.write_date),
                         "create_date": fields.Datetime.to_string(message.create_date),
@@ -203,7 +203,10 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                                             "id": self.env.user.partner_id.id,
                                             "type": "partner",
                                         },
-                                        "body": '<div class="o_mail_notification o_hide_author">Rating: <img class="o_livechat_emoji_rating" src="/rating/static/src/img/rating_5.png" alt="rating"><br>Good service</div>',
+                                        "body": [
+                                            "markup",
+                                            '<div class="o_mail_notification o_hide_author">Rating: <img class="o_livechat_emoji_rating" src="/rating/static/src/img/rating_5.png" alt="rating"><br>Good service</div>',
+                                        ],
                                         "create_date": fields.Datetime.to_string(
                                             message.create_date
                                         ),

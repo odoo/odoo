@@ -23,7 +23,7 @@ export class MailScheduledMessage extends models.ServerModel {
                     IrAttachment.browse(message.attachment_ids)
                 ),
                 author: mailDataHelpers.Store.one(ResPartner.browse(message.author_id)),
-                body: message.body,
+                body: ["markup", message.body],
                 id: message.id,
                 scheduled_date: message.scheduled_date,
                 subject: message.subject,

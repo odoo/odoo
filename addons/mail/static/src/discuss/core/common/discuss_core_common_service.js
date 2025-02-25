@@ -1,4 +1,4 @@
-import { reactive } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -39,17 +39,14 @@ export class DiscussCoreCommon {
         this.busService.subscribe("discuss.channel/transient_message", (payload) => {
             const { body, channel_id } = payload;
             const lastMessageId = this.store.getLastMessageId();
-            const message = this.store["mail.message"].insert(
-                {
-                    author: this.store.odoobot,
-                    body,
-                    id: lastMessageId + 0.01,
-                    is_note: true,
-                    is_transient: true,
-                    thread: { id: channel_id, model: "discuss.channel" },
-                },
-                { html: true }
-            );
+            const message = this.store["mail.message"].insert({
+                author: this.store.odoobot,
+                body: markup(body),
+                id: lastMessageId + 0.01,
+                is_note: true,
+                is_transient: true,
+                thread: { id: channel_id, model: "discuss.channel" },
+            });
             message.thread.messages.push(message);
             message.thread.transientMessages.push(message);
         });
@@ -94,7 +91,7 @@ export class DiscussCoreCommon {
         if (!channel) {
             return;
         }
-        const { "mail.message": messages = [] } = this.store.insert(data, { html: true });
+        const { "mail.message": messages = [] } = this.store.insert(data);
         /** @type {import("models").Message} */
         const message = messages[0];
         if (message.notIn(channel.messages)) {
