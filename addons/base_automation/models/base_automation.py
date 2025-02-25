@@ -121,8 +121,7 @@ class BaseAutomation(models.Model):
     name = fields.Char(string="Automation Rule Name", required=True, translate=True)
     description = fields.Html(string="Description")
     model_id = fields.Many2one(
-        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade",
-        help="Model on which the automation rule runs."
+        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade"
     )
     model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True, inverse="_inverse_model_name")
     model_is_mail_thread = fields.Boolean(related="model_id.is_mail_thread")
@@ -200,9 +199,7 @@ class BaseAutomation(models.Model):
         string='Delay after trigger date',
         compute='_compute_trg_date_range_data',
         readonly=False, store=True,
-        help="Delay after the trigger date. "
-        "You can put a negative number if you need a delay before the "
-        "trigger date, like sending a reminder 15 minutes before a meeting.")
+        help="Use negative value to trigger it before the date")
     trg_date_range_type = fields.Selection(
         [('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
         string='Delay type',
@@ -212,7 +209,7 @@ class BaseAutomation(models.Model):
         "resource.calendar", string='Use Calendar',
         compute='_compute_trg_date_calendar_id',
         readonly=False, store=True,
-        help="When calculating a day-based timed condition, it is possible"
+        help="When calculating a day-based timed condition, it is possible "
              "to use a calendar to compute the date based on working days.")
     filter_pre_domain = fields.Char(
         string='Before Update Domain',
