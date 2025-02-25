@@ -542,7 +542,10 @@ describe("not collapsed selection", () => {
                         <tr><td>gh</td><td>ij</td></tr>
                     </tbody></table>`
             ),
-            stepFunction: (editor) => {
+            stepFunction: async (editor) => {
+                // Table selection happens on selectionchange event which is
+                // fired in the next tick.
+                await tick();
                 editor.shared.dom.insert(span("TEST"));
                 editor.shared.history.addStep();
             },
