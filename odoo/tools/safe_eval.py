@@ -239,6 +239,7 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
         if isinstance(const, CodeType):
             assert_valid_codeobj(allowed_codes, const, 'lambda')
 
+
 def test_expr(expr, allowed_codes, mode="eval", filename=None):
     """test_expr(expression, allowed_codes[, mode[, filename]]) -> code_object
 
@@ -344,18 +345,35 @@ _BUILTINS = {
     'zip': zip,
     'Exception': Exception,
 }
-def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False, filename=None):
-    """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
 
-    System-restricted Python expression evaluation
+
+_BUBBLEUP_EXCEPTIONS = (
+    odoo.exceptions.UserError,
+    odoo.exceptions.RedirectWarning,
+    werkzeug.exceptions.HTTPException,
+    OperationalError,  # let auto-replay of serialized transactions work its magic
+    ZeroDivisionError,
+)
+
+
+def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
+    """System-restricted Python expression evaluation
 
     Evaluates a string that contains an expression that mostly
     uses Python constants, arithmetic expressions and the
     objects directly provided in context.
 
     This can be used to e.g. evaluate
-    an OpenERP domain expression from an untrusted source.
+    a domain expression from an untrusted source.
 
+    :param expr: The Python expression (or block, if ``mode='exec'``) to evaluate.
+    :type expr: string | bytes
+    :param context: Namespace available to the expression.
+                    This dict will be mutated with any variables created during
+                    evaluation
+    :type context: dict
+    :param mode: ``exec`` or ``eval``
+    :type mode: str
     :param filename: optional pseudo-filename for the compiled expression,
                      displayed for example in traceback frames
     :type filename: string
@@ -367,48 +385,29 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     if type(expr) is CodeType:
         raise TypeError("safe_eval does not allow direct evaluation of code objects.")
 
-    # prevent altering the globals/locals from within the sandbox
-    # by taking a copy.
-    if not nocopy:
-        # isinstance() does not work below, we want *exactly* the dict class
-        if (globals_dict is not None and type(globals_dict) is not dict) \
-                or (locals_dict is not None and type(locals_dict) is not dict):
-            _logger.warning(
-                "Looks like you are trying to pass a dynamic environment, "
-                "you should probably pass nocopy=True to safe_eval().")
-        if globals_dict is not None:
-            globals_dict = dict(globals_dict)
-        if locals_dict is not None:
-            locals_dict = dict(locals_dict)
+    assert context is None or type(context) is dict, "Context must be a dict"
 
-    check_values(globals_dict)
-    check_values(locals_dict)
+    check_values(context)
 
-    if globals_dict is None:
-        globals_dict = {}
+    globals_dict = dict(context or {}, __builtins__=dict(_BUILTINS))
 
-    globals_dict['__builtins__'] = dict(_BUILTINS)
-    if locals_builtins:
-        if locals_dict is None:
-            locals_dict = {}
-        locals_dict.update(_BUILTINS)
     c = test_expr(expr, _SAFE_OPCODES, mode=mode, filename=filename)
     try:
-        return unsafe_eval(c, globals_dict, locals_dict)
-    except odoo.exceptions.UserError:
+        # empty locals dict makes the eval behave like top-level code
+        return unsafe_eval(c, globals_dict, None)
+
+    except _BUBBLEUP_EXCEPTIONS:
         raise
-    except odoo.exceptions.RedirectWarning:
-        raise
-    except werkzeug.exceptions.HTTPException:
-        raise
-    except OperationalError:
-        # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
-        # of serialized transactions work its magic
-        raise
-    except ZeroDivisionError:
-        raise
+
     except Exception as e:
         raise ValueError('%r while evaluating\n%r' % (e, expr))
+
+    finally:
+        if context is not None:
+            del globals_dict['__builtins__']
+            context.update(globals_dict)
+
+
 def test_python_expr(expr, mode="eval"):
     try:
         test_expr(expr, _SAFE_OPCODES, mode=mode)
