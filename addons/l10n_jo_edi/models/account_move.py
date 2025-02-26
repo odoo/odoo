@@ -78,6 +78,19 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.company_id.l10n_jo_edi_taxpayer_type == 'sales' and self.move_type == 'out_refund'
 
+    def _get_invoice_trade_type(self):
+        self.ensure_one()
+        return 'local' if self.partner_id.state_id == self.env.ref('base.jo') else 'export'
+
+    def _get_invoice_type_code(self):
+        self.ensure_one()
+        codes_map = [
+            {'local': '0', 'export': '1', 'development': '2'},
+            {'cash': '1', 'receivable': '2'},
+            {'income': '1', 'sales': '2', 'special': '3'},
+        ]
+        return codes_map[0][self._get_invoice_trade_type()] + codes_map[1]['receivable'] + codes_map[2][self.company_id.l10n_jo_edi_taxpayer_type]
+
     def button_draft(self):
         # EXTENDS 'account'
         self.write(
