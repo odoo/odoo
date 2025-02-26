@@ -228,30 +228,29 @@ class WebsiteProfile(http.Controller):
             pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
                                           scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages,
                                           url_args=kwargs)
-
-            users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
-            user_values = self._prepare_all_users_values(users)
-
             # Get karma position for users (only website_published)
-            position_domain = [('karma', '>', 1), ('website_published', '=', True)]
-            position_map = self._get_position_map(position_domain, users, group_by)
+            users_position_map = self._get_user_tracking_karma_gain_position_per_grouping(dom, {'group_by': group_by, 'page': page, 'users_per_page': self._users_per_page})
 
-            max_position = max([user_data['karma_position'] for user_data in position_map.values()], default=1)
+            users_page_list_domain = [('id', 'in', [user_data['user_id'] for user_data in users_position_map.values()])]
+            users = User.sudo().search(expression.AND([dom, users_page_list_domain]))
+            user_values = self._prepare_all_users_values(users)
             for user in user_values:
-                user_data = position_map.get(user['id'], dict())
-                user['position'] = user_data.get('karma_position', max_position + 1)
-                user['karma_gain'] = user_data.get('karma_gain_total', 0)
+                user_data = users_position_map.get(user['id'], dict())
+                user['position'] = user_data.get('position')
+                user['karma_gain'] = user_data.get('karma_gain')
             user_values.sort(key=itemgetter('position'))
 
             if my_user.website_published and my_user.karma and my_user.id not in users.ids:
                 # Need to keep the dom to search only for users that appear in the ranking page
-                current_user = User.sudo().search(expression.AND([[('id', '=', my_user.id)], dom]))
+                current_user_dom = [('id', '=', my_user.id)]
+                current_user = User.sudo().search(current_user_dom)
+                current_user_position_map = self._get_user_tracking_karma_gain_position_per_grouping(dom, {'group_by': group_by, 'current_user_id': my_user.id, 'page': 1, 'users_per_page': 1})
                 if current_user:
                     current_user_values = self._prepare_all_users_values(current_user)[0]
 
-                    user_data = self._get_position_map(position_domain, current_user, group_by).get(current_user.id, {})
-                    current_user_values['position'] = user_data.get('karma_position', 0)
-                    current_user_values['karma_gain'] = user_data.get('karma_gain_total', 0)
+                    user_data = current_user_position_map.get(current_user.id, {})
+                    current_user_values['position'] = user_data.get('position', 0)
+                    current_user_values['karma_gain'] = user_data.get('karma_gain', 0)
 
         else:
             user_values = []
@@ -264,6 +263,7 @@ class WebsiteProfile(http.Controller):
         })
         return request.render("website_profile.users_page_main", render_values)
 
+    # TODO: this is not used anymore and can be deleted
     def _get_position_map(self, position_domain, users, group_by):
         if group_by:
             position_map = self._get_user_tracking_karma_gain_position(position_domain, users.ids, group_by)
@@ -272,6 +272,7 @@ class WebsiteProfile(http.Controller):
             position_map = dict((user_data['user_id'], dict(user_data)) for user_data in position_results)
         return position_map
 
+    # TODO: this is not used anymore and can be deleted
     def _get_user_tracking_karma_gain_position(self, domain, user_ids, group_by):
         """ Helper method computing boundaries to give to _get_tracking_karma_gain_position.
         See that method for more details. """
@@ -284,6 +285,17 @@ class WebsiteProfile(http.Controller):
             from_date = None
         results = request.env['res.users'].browse(user_ids)._get_tracking_karma_gain_position(domain, from_date=from_date, to_date=to_date)
         return dict((item['user_id'], dict(item)) for item in results)
+
+    def _get_user_tracking_karma_gain_position_per_grouping(self, domain, params):
+        """ Helper method returning user_ids sorted by karma_gain for specific grouping (week, month, all) with pagination
+        """
+        to_date = fields.Date.today()
+        if params['group_by'] == 'week':
+            params['from_date'] = to_date - relativedelta(weeks=1)
+        elif params['group_by'] == 'month':
+            params['from_date'] = to_date - relativedelta(months=1)
+        results = request.env['res.users']._get_tracking_karma_gain_position_per_grouping(domain, params)
+        return {item['user_id']: dict(item) for item in results}
 
     # User and validation
     # --------------------------------------------------
