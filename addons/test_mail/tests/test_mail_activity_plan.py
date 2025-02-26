@@ -295,3 +295,18 @@ class TestActivitySchedule(ActivityScheduleCase):
                 ValidationError, msg='When selecting responsible "other", you must specify a responsible.'):
             template.responsible_type = 'other'
         template.write({'responsible_type': 'other', 'responsible_id': self.user_admin})
+
+    def test_user_recompute_onchange_activity_type(self):
+        user_test = self.env['res.users'].create({
+            'name': 'user_test',
+            'login': 'a_user',
+        })
+        self.activity_type_call.default_user_id = user_test
+        with Form(self.env['mail.activity.schedule'].with_context({
+            'active_model': 'mail.activity.schedule',
+        })) as form:
+            form.activity_type_id = self.activity_type_todo
+            before_change_user = form.activity_user_id.name
+            form.activity_type_id = self.activity_type_call
+            form.activity_type_id = self.activity_type_todo
+            self.assertEqual(before_change_user, form.activity_user_id.name)
