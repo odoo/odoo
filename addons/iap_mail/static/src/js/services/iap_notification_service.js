@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { escape } from "@web/core/utils/strings";
 
 import { markup } from "@odoo/owl";
 
@@ -24,13 +25,10 @@ export const iapNotificationService = {
         }
 
         function displayCreditErrorNotification(params) {
-            // ℹ️ `_t` can only be inlined directly inside JS template literals
-            // after Babel has been updated to version 2.12.
-            const translatedText = _t("Buy more credits");
             const message = markup(`
             <a class='btn btn-link' href='${params.get_credits_url}' target='_blank'>
                 <i class='oi oi-arrow-right'></i>
-                ${translatedText}
+                ${escape(_t("Buy more credits"))}
             </a>`);
             notification.add(message, {
                 title: params.title,
