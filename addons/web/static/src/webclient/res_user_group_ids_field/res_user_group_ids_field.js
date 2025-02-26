@@ -9,7 +9,8 @@ import { FormRenderer } from "@web/views/form/form_renderer";
 import { Component } from "@odoo/owl";
 
 /**
- * This widget is only used for the 'group_ids' field of the 'res.users' form view,
+ * This widget is only used for the 'group_ids' field of the 'res.users'
+ * form view or the 'implied_ids' field of the 'res.groups' form view,
  * in order to vizualize and configure access rights.
  */
 export class ResUserGroupIdsField extends Component {
@@ -47,7 +48,7 @@ export class ResUserGroupIdsField extends Component {
 
     get values() {
         const values = {};
-        const ids = this.props.record.data.group_ids.currentIds;
+        const ids = this.props.record.data[this.props.name].currentIds;
         for (const category of this.categories) {
             values[this.getFieldName(category)] =
                 category.groups.find((g) => ids.includes(g[0]))?.[0] || false;
@@ -61,7 +62,9 @@ export class ResUserGroupIdsField extends Component {
 
     onRecordChanged(_, values) {
         const groupIds = Object.values(values).filter((groupId) => groupId);
-        return this.props.record.update({ group_ids: [x2ManyCommands.set(groupIds)] });
+        const update = {};
+        update[this.props.name] = [x2ManyCommands.set(groupIds)];
+        return this.props.record.update(update);
     }
 }
 

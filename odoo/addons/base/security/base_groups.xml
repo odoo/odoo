@@ -53,14 +53,6 @@
             <field name="user_ids" eval="[Command.link(ref('base.user_root'))]"/>
             <field name="implied_by_ids" eval="[Command.link(ref('base.group_system'))]"/>
         </record>
-
-        <record id="default_user" model="res.users">
-            <field name="group_ids" eval="[
-                Command.link(ref('base.group_user')),
-                Command.link(ref('base.group_partner_manager')),
-                Command.link(ref('base.group_allow_export'))]"/>
-        </record>
-
         <!--
             A group dedicated to the portal users, making groups
             restrictions more convenient.
@@ -98,5 +90,12 @@
             <field name="value" ref="template_portal_user_id"/>
         </record>
 
+    </data>
+
+    <data noupdate="1">
+        <record id="default_user_group" model="res.groups">
+            <field name="name">Default access for new users</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
     </data>
 </odoo>
