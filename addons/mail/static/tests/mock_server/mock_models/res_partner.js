@@ -20,6 +20,7 @@ export class ResPartner extends webModels.ResPartner {
         relation: "ir.attachment",
         string: "Main attachment",
     });
+    in_call = fields.Boolean({ compute: "_compute_in_call" });
 
     _views = {
         [`search, ${DEFAULT_MAIL_SEARCH_ID}`]: /* xml */ `<search/>`,
@@ -31,6 +32,17 @@ export class ResPartner extends webModels.ResPartner {
                 <chatter/>
             </form>`,
     };
+
+    _compute_in_call() {
+        for (const partner of this) {
+            partner.in_call =
+                this.env["discuss.channel.member"].search([
+                    ["rtc_session_ids", "!=", []],
+                    ["partner_id", "=", partner.id],
+                ]).length > 0;
+            console.warn(partner.name, partner.in_call);
+        }
+    }
 
     /**
      * @param {string} [search]
@@ -207,7 +219,16 @@ export class ResPartner extends webModels.ResPartner {
         const kwargs = getKwArgs(arguments, "id", "store", "fields");
         fields = kwargs.fields;
         if (!fields) {
-            fields = ["avatar_128", "name", "email", "active", "im_status", "is_company", "user"];
+            fields = [
+                "avatar_128",
+                "name",
+                "email",
+                "active",
+                "im_status",
+                "in_call",
+                "is_company",
+                "user",
+            ];
         }
 
         /** @type {import("mock_models").ResCountry} */
