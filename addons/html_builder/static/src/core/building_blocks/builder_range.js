@@ -77,4 +77,17 @@ export class BuilderRange extends Component {
         }
         return value;
     }
+
+    get className() {
+        const baseClasses = "p-0 border-0";
+        return this.props.min > this.props.max ? `${baseClasses} o_we_inverted_range` : baseClasses;
+    }
+
+    get min() {
+        return this.props.min > this.props.max ? this.props.max : this.props.min;
+    }
+
+    get max() {
+        return this.props.min > this.props.max ? this.props.min : this.props.max;
+    }
 }

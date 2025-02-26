@@ -26,4 +26,7 @@ export class BackgroundOption extends Component {
     setup() {
         this.isActiveItem = useIsActiveItem();
     }
+    showColorFilter() {
+        return this.isActiveItem("toggle_bg_image_id");
+    }
 }

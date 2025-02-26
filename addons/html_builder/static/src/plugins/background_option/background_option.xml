@@ -29,7 +29,7 @@
         <BackgroundPositionOption/>
         <!-- TODO: BackgroundOptimize-->
         <!-- Color filter -->
-        <BuilderRow t-if="isActiveItem('toggle_bg_image_id')" label.translate="Color Filter" level="2">
+        <BuilderRow t-if="this.showColorFilter()" label.translate="Color Filter" level="2">
             <!-- TODO handle all the attributes -->
             <BuilderColorPicker action="'selectFilterColor'"/>
         </BuilderRow>

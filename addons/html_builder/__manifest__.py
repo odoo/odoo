@@ -42,6 +42,7 @@
 
             'html_builder/static/src/**/*',
             ('remove', 'html_builder/static/src/website_preview/**/*'),
+            ('remove', 'html_builder/static/src/website_builder/tests/**/*'),
         ],
         'html_builder.inside_builder_style': [
             ('include', 'web._assets_helpers'),
@@ -56,6 +57,7 @@
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',
             ('include', 'html_builder.assets'),
+            'html_builder/static/src/website_builder/tests/**/*',
         ],
     },
     'license': 'LGPL-3',
