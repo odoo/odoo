@@ -495,18 +495,48 @@ export class Product extends models.Model {
     name = fields.Char({ string: "Product Name" });
     display_name = fields.Char({ string: "Product Name" });
     active = fields.Boolean({ string: "Active", default: true });
+    template_id = fields.Many2one({
+        string: "Template",
+        relation: "product",
+        store: true,
+        sortable: true,
+        groupable: true,
+        searchable: true,
+    });
     properties_definitions = fields.PropertiesDefinition();
+    pognon = fields.Monetary({
+        string: "Money!",
+        currency_field: "currency_id",
+        store: true,
+        sortable: true,
+        aggregator: "avg",
+        groupable: true,
+        searchable: true,
+    });
+    currency_id = fields.Many2one({
+        string: "Currency",
+        relation: "res.currency",
+        store: true,
+        sortable: true,
+        groupable: true,
+        searchable: true,
+    });
 
     _records = [
         {
             id: 37,
             display_name: "xphone",
             name: "xphone",
+            currency_id: 2,
+            pognon: 699.99,
         },
         {
             id: 41,
             display_name: "xpad",
+            template_id: 37,
             name: "xpad",
+            currency_id: 2,
+            pognon: 599.99,
         },
     ];
 }
