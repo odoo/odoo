@@ -12,12 +12,11 @@ RUN apt-get update \
     && apt-get install -y curl unzip 7zip \
     && rm -rf /var/lib/apt/lists/*
 
-# Use wine-devel to get the fix for this bug (fixed in wine 9.3): https://bugs.winehq.org/show_bug.cgi?id=55897
 RUN mkdir -pm755 /etc/apt/keyrings \
     && curl -sSL https://dl.winehq.org/wine-builds/winehq.key -o /etc/apt/keyrings/winehq-archive.key \
     && curl -sSL https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources -o /etc/apt/sources.list.d/winehq.sources \
     && apt-get update \
-    && apt-get install --install-recommends -y winehq-devel \
+    && apt-get install --install-recommends -y winehq-stable \
     && rm -rf /var/lib/apt/lists/*
 
 USER odoo
