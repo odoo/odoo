@@ -39,8 +39,7 @@ def load_data(env: Environment, idref, mode: str, kind: str, package: ModuleNode
 
     kind: data, demo, test, init_xml, update_xml, demo_xml.
 
-    noupdate is False, unless it is demo data or it is csv data in
-    init mode.
+    noupdate is False, unless it is demo data.
 
     :returns: Whether a file was loaded
     :rtype: bool
@@ -77,7 +76,7 @@ def load_data(env: Environment, idref, mode: str, kind: str, package: ModuleNode
         for filename in _get_files_of_kind(kind):
             _logger.info("loading %s/%s", package.name, filename)
             noupdate = False
-            if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
+            if kind in ('demo', 'demo_xml'):
                 noupdate = True
             tools.convert_file(env, package.name, filename, idref, mode, noupdate, kind)
     finally:
