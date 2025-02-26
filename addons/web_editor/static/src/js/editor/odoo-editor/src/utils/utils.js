@@ -69,7 +69,7 @@ export const PROTECTED_BLOCK_TAG = ['TR','TD','TABLE','TBODY','UL','OL','LI'];
  * override of the font-size.
  */
 export const FONT_SIZE_CLASSES = ["display-1-fs", "display-2-fs", "display-3-fs", "display-4-fs", "h1-fs",
-    "h2-fs", "h3-fs", "h4-fs", "h5-fs", "h6-fs", "base-fs", "o_small-fs", "small"];
+    "h2-fs", "h3-fs", "h4-fs", "h5-fs", "h6-fs", "base-fs", "o_small-fs", "small", "o_small_twelve-fs", "o_small_ten-fs", "o_small_eight-fs"];
 
 /**
  * Array of all the classes used by the editor to change the text style.
@@ -1175,7 +1175,7 @@ export const formatsSpecs = {
         removeStyle: (node) => removeStyle(node, 'font-size'),
     },
     setFontSizeClassName: {
-        isFormatted: hasClass,
+        isFormatted: (node) => FONT_SIZE_CLASSES.find((cls) => node.classList?.contains(cls)),
         hasStyle: (node, props) => FONT_SIZE_CLASSES
             .find(cls => node.classList.contains(cls)),
         addStyle: (node, props) => node.classList.add(props.className),
