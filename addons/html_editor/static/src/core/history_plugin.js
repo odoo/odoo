@@ -124,6 +124,7 @@ export class HistoryPlugin extends Plugin {
         "undo",
         "getIsPreviewing",
         "setStepExtra",
+        "getIsCurrentStepModified",
     ];
     resources = {
         user_commands: [
@@ -435,11 +436,7 @@ export class HistoryPlugin extends Plugin {
      */
     stageSelection() {
         const selection = this.dependencies.selection.getEditableSelection();
-        if (
-            this.currentStep.mutations.find((m) =>
-                ["characterData", "remove", "add"].includes(m.type)
-            )
-        ) {
+        if (this.getIsCurrentStepModified()) {
             console.warn(
                 `should not have any "characterData", "remove" or "add" mutations in current step when you update the selection`
             );
@@ -1068,6 +1065,12 @@ export class HistoryPlugin extends Plugin {
 
     setStepExtra(key, value) {
         this.currentStep.extra[key] = value;
+    }
+
+    getIsCurrentStepModified() {
+        return this.currentStep.mutations.find((m) =>
+            ["characterData", "remove", "add"].includes(m.type)
+        );
     }
 
     /**
