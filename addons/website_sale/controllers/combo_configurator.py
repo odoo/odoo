@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request, route
+from odoo.tools.image import image_data_uri
 
 from odoo.addons.sale.controllers.combo_configurator import SaleComboConfiguratorController
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -81,3 +82,16 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         request.session['website_sale_cart_quantity'] = order_sudo.cart_quantity
 
         return values
+
+    def _get_combo_item_data(
+        self, combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs
+    ):
+        data = super()._get_combo_item_data(
+            combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs
+        )
+        # If the root product of type 'combo' is published, but the combo_item linked to it,
+        # the image of the item will not be accessible to public/portal users.
+        # Therefore, we send the raw image from here
+        if not combo_item.product_id.is_published and combo_item.product_id.image_128:
+            data['product']['image_src'] = image_data_uri(combo_item.product_id.image_128)
+        return data
