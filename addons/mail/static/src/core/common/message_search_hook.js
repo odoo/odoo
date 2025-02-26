@@ -1,7 +1,7 @@
 import { useSequential } from "@mail/utils/common/hooks";
-import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 import { useState, onWillUnmount, markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { Markup } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
 
 export const HIGHLIGHT_CLASS = "o-mail-Message-searchHighlight";
@@ -14,7 +14,7 @@ export function searchHighlight(searchTerm, target) {
     if (!searchTerm) {
         return target;
     }
-    const htmlDoc = createDocumentFragmentFromContent(target);
+    const htmlDoc = Markup.createDocumentFragmentFromContent(target);
     for (const term of searchTerm.split(" ")) {
         const regexp = new RegExp(`(${escapeRegExp(term)})`, "gi");
         // Special handling for '

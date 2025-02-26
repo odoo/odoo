@@ -5,14 +5,13 @@ import {
     htmlToTextContentInline,
     prettifyMessageContent,
 } from "@mail/utils/common/format";
-import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
 import { browser } from "@web/core/browser/browser";
 import { stateToUrl } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { createElementWithContent } from "@web/core/utils/html";
+import { Markup } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
@@ -24,7 +23,7 @@ export class Message extends Record {
     update(data) {
         super.update(data);
         if (this.isNotification && !this.notificationType) {
-            const htmlBody = createDocumentFragmentFromContent(this.body);
+            const htmlBody = Markup.createDocumentFragmentFromContent(this.body);
             this.notificationType = htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
         }
     }
@@ -43,7 +42,9 @@ export class Message extends Record {
             return Boolean(
                 // ".o-mail-Message-edited" is the class added by the mail.thread in _message_update_content
                 // when the message is edited
-                createDocumentFragmentFromContent(this.body).querySelector(".o-mail-Message-edited")
+                Markup.createDocumentFragmentFromContent(this.body).querySelector(
+                    ".o-mail-Message-edited"
+                )
             );
         },
     });
@@ -52,7 +53,7 @@ export class Message extends Record {
             if (this.isBodyEmpty) {
                 return false;
             }
-            const div = createElementWithContent("div", this.body);
+            const div = Markup.createElementWithContent("div", this.body);
             return Boolean(div.querySelector("a:not([data-oe-model])"));
         },
     });
@@ -104,7 +105,7 @@ export class Message extends Record {
     scheduledDatetime = Record.attr(undefined, { type: "datetime" });
     onlyEmojis = Record.attr(false, {
         compute() {
-            const bodyWithoutTags = createElementWithContent("div", this.body).textContent;
+            const bodyWithoutTags = Markup.createElementWithContent("div", this.body).textContent;
             const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
             return (
                 bodyWithoutTags.length > 0 &&

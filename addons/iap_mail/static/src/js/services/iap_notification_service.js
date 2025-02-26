@@ -1,7 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-
-import { markup } from "@odoo/owl";
+import { Markup } from "@web/core/utils/html";
 
 export const iapNotificationService = {
     dependencies: ["bus_service", "notification"],
@@ -27,11 +26,11 @@ export const iapNotificationService = {
             // ℹ️ `_t` can only be inlined directly inside JS template literals
             // after Babel has been updated to version 2.12.
             const translatedText = _t("Buy more credits");
-            const message = markup(`
+            const message = Markup.build`
             <a class='btn btn-link' href='${params.get_credits_url}' target='_blank'>
                 <i class='oi oi-arrow-right'></i>
                 ${translatedText}
-            </a>`);
+            </a>`;
             notification.add(message, {
                 title: params.title,
                 type: 'danger',

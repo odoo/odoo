@@ -1,10 +1,10 @@
 import { messageActionsRegistry } from "@mail/core/common/message_actions";
-import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
 import { toRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { Markup } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
 
 messageActionsRegistry.add("set-new-message-separator", {
@@ -36,7 +36,7 @@ const editAction = messageActionsRegistry.get("edit");
 patch(editAction, {
     /** @param {import("@mail/core/common/message").Message} component */
     onClick(component) {
-        const doc = createDocumentFragmentFromContent(component.message.body);
+        const doc = Markup.createDocumentFragmentFromContent(component.message.body);
         const mentionedChannelElements = doc.querySelectorAll(".o_channel_redirect");
         component.message.mentionedChannelPromises = Array.from(mentionedChannelElements)
             .filter((el) => el.dataset.oeModel === "discuss.channel")

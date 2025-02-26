@@ -185,11 +185,8 @@ export const tourService = {
                     browser.console.log("tour succeeded");
                     let message = tourConfig.rainbowManMessage || tour.rainbowManMessage;
                     if (message) {
-                        message = window.DOMPurify.sanitize(tourConfig.rainbowManMessage);
-                        effect.add({
-                            type: "rainbow_man",
-                            message: markup(message),
-                        });
+                        message = markup(window.DOMPurify.sanitize(tourConfig.rainbowManMessage));
+                        effect.add({ type: "rainbow_man", message });
                     }
 
                     const nextTour = await orm.call("web_tour.tour", "consume", [tour.name]);

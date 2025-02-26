@@ -1,6 +1,7 @@
 import { BurgerUserMenu } from "@web/webclient/burger_menu/burger_user_menu/burger_user_menu";
 import { preferencesItem } from "@web/webclient/user_menu/user_menu_items";
 import { registry } from "@web/core/registry";
+import { Markup } from "@web/core/utils/html";
 
 import {
     clearRegistry,
@@ -10,7 +11,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, queryAll, queryAllTexts } from "@odoo/hoot-dom";
-import { markup } from "@odoo/owl";
 
 const userMenuRegistry = registry.category("user_menuitems");
 
@@ -70,7 +70,7 @@ test("can be rendered", async () => {
     userMenuRegistry.add("html_item", () => ({
         type: "item",
         id: "html",
-        description: markup(`<div>HTML<i class="fa fa-check px-2"></i></div>`),
+        description: Markup.build`<div>HTML<i class="fa fa-check px-2"></i></div>`,
         callback: () => {
             expect.step("callback html_item");
         },

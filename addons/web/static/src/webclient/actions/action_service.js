@@ -29,7 +29,7 @@ import {
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { zip } from "@web/core/utils/arrays";
-import { isHtmlEmpty } from "@web/core/utils/html";
+import { Markup } from "@web/core/utils/html";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import { exprToBoolean } from "@web/core/utils/strings";
@@ -404,7 +404,7 @@ export function makeActionManager(env, router = _router) {
                 ? evaluateExpr(domain, Object.assign({}, user.context, action.context))
                 : domain;
         if (action.help) {
-            if (isHtmlEmpty(action.help)) {
+            if (Markup.isEmpty(action.help)) {
                 delete action.help;
             }
         }

@@ -13,7 +13,6 @@ import {
     waitUntil,
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { markup } from "@odoo/owl";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts } from "../_helpers/format";
@@ -816,7 +815,7 @@ describe("shortcut", () => {
 describe("link preview", () => {
     test("test internal link preview", async () => {
         onRpc("/html_editor/link_preview_internal", () => ({
-            description: markup("Test description"),
+            description: "Test description",
             link_preview_name: "Task name | Project name",
         }));
         onRpc("/odoo/project/1/tasks/8", () => new Response("", { status: 200 }));
@@ -865,7 +864,7 @@ describe("link preview", () => {
         onRpc("/html_editor/link_preview_internal", () => {
             expect.step("/html_editor/link_preview_internal");
             return {
-                description: markup("<p>Test description</p>"),
+                description: "<p>Test description</p>",
                 link_preview_name: "Task name | Project name",
             };
         });

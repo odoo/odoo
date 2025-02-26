@@ -7,12 +7,12 @@ import { cookie } from "@web/core/browser/cookie";;
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { scrollTo, closestScrollable } from "@web_editor/js/common/scrolling";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
 import { WebsiteForumTagsWrapper } from "../components/website_forum_tags_wrapper";
+import { Markup } from "@web/core/utils/html";
 
 export class WebsiteForum extends Interaction {
     static selector = ".website_forum";
@@ -166,7 +166,9 @@ export class WebsiteForum extends Interaction {
     warnIfPublicUser() {
         if (session.is_website_user) {
             this.displayAccessDeniedNotification(
-                markup(`<a href='/web/login'>` + escape(_t("Oh no! Please sign in to perform this action")) + "</a>")
+                Markup.build`<a href='/web/login'>${_t(
+                    "Oh no! Please sign in to perform this action"
+                )}</a>`
             );
             return true;
         }
@@ -257,13 +259,13 @@ export class WebsiteForum extends Interaction {
         }
         const forumId = parseInt(this.el.ownerDocument.getElementById("wrapwrap").dataset.forum_id);
         const additionalInfoWithForumID = forumId
-            ? markup(`<br/>
+            ? Markup.build`<br/>
                 <a class="alert-link" href="/forum/${forumId}/faq">
-                    ${escape(_t("Read the guidelines to know how to gain karma."))}
-                </a>`)
+                    ${_t("Read the guidelines to know how to gain karma.")}
+                </a>`
             : "";
         const translatedText = _t("karma is required to perform this action. ");
-        const message = markup(`${karma} ${escape(translatedText)}${additionalInfoWithForumID}`);
+        const message = Markup.build`${karma} ${translatedText}${additionalInfoWithForumID}`;
         this.services.notification.add(message, {
             type: "warning",
             sticky: false,

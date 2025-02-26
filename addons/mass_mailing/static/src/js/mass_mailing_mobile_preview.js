@@ -1,6 +1,6 @@
 import { Component, useEffect, useRef } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
-import { setElementContent } from "@web/core/utils/html";
+import { Markup } from "@web/core/utils/html";
 
 export class MassMailingMobilePreviewDialog extends Component {
     static components = {
@@ -16,7 +16,7 @@ export class MassMailingMobilePreviewDialog extends Component {
     appendPreview() {
         const iframe = this.iframeRef.el.contentDocument;
         const body = iframe.querySelector("body");
-        setElementContent(body, this.props.preview);
+        Markup.setElementContent(body, this.props.preview);
     }
 
     setup() {

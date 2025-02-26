@@ -4,7 +4,7 @@ import { Component } from "@odoo/owl";
 
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
-import { isHtmlEmpty } from "@web/core/utils/html";
+import { Markup } from "@web/core/utils/html";
 import { Field } from "@web/views/fields/field";
 import { getFormattedRecord, getImageSrcFromRecordInfo } from "@web/views/kanban/kanban_record";
 import { useViewCompiler } from "@web/views/view_compiler";
@@ -25,7 +25,7 @@ export class ActivityRecord extends Component {
         this.widget = {
             deletable: false,
             editable: false,
-            isHtmlEmpty,
+            Markup,
         };
         const { templateDocs } = this.props.archInfo;
         const templates = useViewCompiler(ActivityCompiler, templateDocs);

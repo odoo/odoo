@@ -1,8 +1,7 @@
-import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { escape } from "@web/core/utils/strings";
-import { markup } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Markup } from "@web/core/utils/html";
 
 export class AccountMoveService {
     constructor(env, services) {
@@ -21,7 +20,7 @@ export class AccountMoveService {
         if (!isMoveEndOfChain) {
             const message = _t("This operation will create a gap in the sequence.");
             const confirmationDialogProps = component.deleteConfirmationDialogProps;
-            confirmationDialogProps.body = markup(`<div class="text-danger">${escape(message)}</div>${escape(confirmationDialogProps.body)}`);
+            confirmationDialogProps.body = Markup.build`<div class="text-danger">${message}</div>${confirmationDialogProps.body}`;
             this.dialog.add(ConfirmationDialog, confirmationDialogProps);
             return true;
         }

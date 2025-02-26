@@ -6,14 +6,14 @@ import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { escape } from "@web/core/utils/strings";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, markup, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";
+import { Markup } from "@web/core/utils/html";
 
 class CreateConfirmationDialog extends Component {
     static template = "web.Many2OneField.CreateConfirmationDialog";
@@ -31,7 +31,7 @@ class CreateConfirmationDialog extends Component {
 
     get dialogContent() {
         return _t("Create %(value)s as a new %(field)s?", {
-            value: markup(`<strong>${escape(this.props.value)}</strong>`),
+            value: Markup.build`<strong>${this.props.value}</strong>`,
             field: this.props.name,
         });
     }
