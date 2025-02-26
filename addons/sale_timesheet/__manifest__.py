@@ -3,7 +3,7 @@
 
 {
     'name': 'Sales Timesheet',
-    'category': 'Hidden',
+    'category': 'Sales/Sales',
     'summary': 'Sell based on timesheets',
     'description': """
 Allows to sell timesheets in your sales order

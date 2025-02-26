@@ -4,7 +4,7 @@
 {
     'name': 'POS - Restaurant Loyality',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Link module between pos_restaurant and pos_loyalty',
     'description': """

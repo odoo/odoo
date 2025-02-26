@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Products Expiration Date',
-    'category': 'Inventory/Inventory',
+    'category': 'Supply Chain/Inventory',
     'depends': ['stock'],
     'description': """
 Track different dates on products and production lots.

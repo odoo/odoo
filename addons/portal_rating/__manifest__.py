@@ -3,7 +3,7 @@
 
 {
     'name': 'Portal Rating',
-    'category': 'Hidden',
+    'category': 'Services',
     'version': '1.0',
     'description': """
 Bridge module adding rating capabilities on portal. It includes notably

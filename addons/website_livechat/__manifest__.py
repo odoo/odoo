@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Website Live Chat',
-    'category': 'Hidden',
+    'category': 'Website/Live Chat',
     'summary': 'Chat with your website visitors',
     'version': '1.0',
     'description': "Allow website visitors to chat with the collaborators.",
