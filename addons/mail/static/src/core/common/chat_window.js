@@ -132,6 +132,12 @@ export class ChatWindow extends Component {
                 }
                 break;
             }
+            case "k":
+                if (ev.ctrlKey) {
+                    this.store.env.services.command.openMainPalette({ searchValue: "@" });
+                    ev.preventDefault();
+                }
+                break;
         }
     }
 
