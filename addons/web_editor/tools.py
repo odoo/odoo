@@ -27,7 +27,7 @@ player_regexes = {
     'vimeo': r'^(?:(?:https?:)?//)?(?:www\.)?vimeo\.com\/(?P<id>[^/\?]+)(?:/(?P<hash>[^/\?]+))?(?:\?(?P<params>[^\s]+))?$',
     'vimeo_player': r'^(?:(?:https?:)?//)?player\.vimeo\.com\/video\/(?P<id>[^/\?]+)(?:\?(?P<params>[^\s]+))?$',
     'dailymotion': r'(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
-    'instagram': r'(?:(.*)instagram.com|instagr\.am)/p/(.[a-zA-Z0-9-_\.]*)',
+    'instagram': r'(?:(.*)instagram.com|instagr\.am)/(p|reel)/(.[a-zA-Z0-9-_\.]*)',
     'youku': r'(?:(https?:\/\/)?(v\.youku\.com/v_show/id_|player\.youku\.com/player\.php/sid/|player\.youku\.com/embed/|cloud\.youku\.com/services/sharev\?vid=|video\.tudou\.com/v/)|youku:)(?P<id>[A-Za-z0-9]+)(?:\.html|/v\.swf|)',
 }
 
@@ -53,7 +53,7 @@ def get_video_source_data(video_url):
             return ('dailymotion', dailymotion_match.group("id"), dailymotion_match)
         instagram_match = re.search(player_regexes['instagram'], video_url)
         if instagram_match:
-            return ('instagram', instagram_match[2], instagram_match)
+            return ('instagram', instagram_match[3], instagram_match)
         youku_match = re.search(player_regexes['youku'], video_url)
         if youku_match:
             return ('youku', youku_match.group("id"), youku_match)
