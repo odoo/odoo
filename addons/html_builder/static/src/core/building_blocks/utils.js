@@ -16,7 +16,7 @@ import { useDebounced } from "@web/core/utils/timing";
 export function useDomState(getState) {
     const env = useEnv();
     const state = useState(getState(env.getEditingElement()));
-    useBus(env.editorBus, "STEP_ADDED", () => {
+    useBus(env.editorBus, "DOM_UPDATED", () => {
         const editingElement = env.getEditingElement();
         if (!editingElement || editingElement.isConnected) {
             Object.assign(state, getState(editingElement));
@@ -192,7 +192,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     }
 
     onMounted(refreshCurrentItem);
-    useBus(env.editorBus, "STEP_ADDED", (ev) => {
+    useBus(env.editorBus, "DOM_UPDATED", (ev) => {
         if (ev.detail.isPreviewing) {
             return;
         }

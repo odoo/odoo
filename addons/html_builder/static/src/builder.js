@@ -74,9 +74,12 @@ export class Builder extends Component {
                         this.updateInvisibleEls();
                     }
                     editorBus.trigger("UPDATE_EDITING_ELEMENT");
-                    editorBus.trigger("STEP_ADDED", { isPreviewing });
+                    editorBus.trigger("DOM_UPDATED", { isPreviewing });
                 },
                 resources: {
+                    on_mobile_preview_clicked: () => {
+                        editorBus.trigger("DOM_UPDATED", { isPreviewing: false });
+                    },
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         if (!currentOptionsContainers.length) {
