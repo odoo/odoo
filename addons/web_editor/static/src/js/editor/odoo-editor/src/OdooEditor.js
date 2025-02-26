@@ -552,7 +552,7 @@ export class OdooEditor extends EventTarget {
                     priority: 90,
                     description: this.options._t('Track tasks with a checklist'),
                     fontawesome: 'fa-check-square-o',
-                    isDisabled: () => !this.isSelectionInBlockRoot(),
+                    isDisabled: () => this.options.disableCheckbox || !this.isSelectionInBlockRoot(),
                     callback: () => {
                         this.execCommand('toggleList', 'CL');
                     },
