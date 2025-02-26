@@ -12,9 +12,6 @@ class CustomerPortalBr(CustomerPortal):
             country = request.env['res.country'].browse(int(request.params['country_id']))
             if request.website.sudo().company_id.country_id.code == "BR" and country.code == "BR" and "vat" not in mandatory_fields:
                 mandatory_fields += ['vat']
-            # Needed because the user could put brazil and then change to another country, we don't want the field to stay mandatory
-            elif 'vat' in mandatory_fields and country.code != 'BR':
-                mandatory_fields.remove('vat')
 
         return mandatory_fields
 
