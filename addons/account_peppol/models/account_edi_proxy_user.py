@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from datetime import timedelta
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -104,8 +105,12 @@ class AccountEdiProxyClientUser(models.Model):
         edi_users._peppol_get_message_status()
 
     def _cron_peppol_get_participant_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['in_verification', 'sender', 'smp_registration'])])
+        waiting_status_update_domain = [('company_id.account_peppol_proxy_state', 'in', ['in_verification', 'sender', 'smp_registration'])]
+        edi_users = self.search(waiting_status_update_domain)
         edi_users._peppol_get_participant_status()
+
+        if self.search(waiting_status_update_domain):
+            self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(fields.Datetime.now() + timedelta(minutes=15))
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -341,6 +346,8 @@ class AccountEdiProxyClientUser(models.Model):
         # but we need the field for future in case the user decided to migrate away from Odoo
         company.account_peppol_migration_key = False
         company.account_peppol_proxy_state = 'smp_registration'
+
+        self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(fields.Datetime.now() + timedelta(minutes=5))
 
     def _peppol_deregister_participant(self):
         self.ensure_one()
