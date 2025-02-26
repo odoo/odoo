@@ -10,6 +10,7 @@ export class ModelSelector extends Component {
     static components = { AutoComplete };
     static props = {
         onModelSelected: Function,
+        onModelReset: { type: Function, optional: true },
         id: { type: String, optional: true },
         value: { type: String, optional: true },
         // list of models technical name, if not set
@@ -54,6 +55,12 @@ export class ModelSelector extends Component {
             label: option.label,
             technical: option.technical,
         });
+    }
+
+    onChange(value) {
+        if (!value.inputValue.length && this.props.onModelReset) {
+            this.props.onModelReset();
+        }
     }
 
     filterModels(name) {
