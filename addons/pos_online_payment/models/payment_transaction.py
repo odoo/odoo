@@ -30,6 +30,7 @@ class PaymentTransaction(models.Model):
         self._process_pos_online_payment()
 
     def _process_pos_online_payment(self):
+        payment_created = self.browse()
         for tx in self:
             if tx and tx.pos_order_id and tx.state in ('authorized', 'done') and not tx.payment_id.pos_order_id:
                 pos_order = tx.pos_order_id
@@ -38,6 +39,8 @@ class PaymentTransaction(models.Model):
 
                 if not tx.payment_id: # the payment could already have been created by account_payment module
                     tx._create_payment()
+                    payment_created += tx
+
                 if not tx.payment_id:
                     raise ValidationError(_('The POS online payment (tx.id=%d) could not be saved correctly', tx.id))
 
@@ -63,6 +66,11 @@ class PaymentTransaction(models.Model):
                 if pos_order.state == 'draft' and pos_order._is_pos_order_paid():
                     pos_order._process_saved_order(False)
                 pos_order._send_online_payments_notification_via_bus()
+
+        if payment_created:
+            payment_created.payment_id.action_post()
+            for tx in payment_created:
+                tx._reconcile_payment()
 
     def action_view_pos_order(self):
         """ Return the action for the view of the pos order linked to the transaction.

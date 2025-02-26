@@ -423,7 +423,7 @@ class AccountJournal(models.Model):
         move_date = self.env.context.get('move_date') or fields.Date.context_today(self)
         has_tax = self.env.context.get('has_tax') or False
         for journal in self:
-            temp_move = self.env['account.move'].new({'journal_id': journal.id})
+            temp_move = self.env['account.move'].new({'journal_id': journal.id, 'company_id': journal.company_id.id})
             journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
 
 
