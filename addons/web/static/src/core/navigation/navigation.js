@@ -186,10 +186,11 @@ class Navigator {
             const callback = isFunction ? hotkeyInfo : hotkeyInfo.callback;
             const isAvailable = hotkeyInfo?.isAvailable ?? (() => true);
             const bypassEditableProtection = hotkeyInfo?.bypassEditableProtection ?? false;
+            const allowRepeat = "allowRepeat" in hotkeyInfo ? hotkeyInfo.allowRepeat : true;
 
             this._hotkeyRemoves.push(
                 this._hotkeyService.add(hotkey, () => callback(this), {
-                    allowRepeat: true,
+                    allowRepeat,
                     isAvailable: () => isAvailable(this),
                     bypassEditableProtection,
                 })
@@ -342,6 +343,7 @@ class Navigator {
  * @param {hotkeyHandler} callback
  * @param {Function} isAvailable
  * @param {boolean} bypassEditableProtection
+ * @param {boolean} [allowRepeat=true]
  */
 
 /**
