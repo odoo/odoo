@@ -2779,7 +2779,7 @@ class AccountTax(models.Model):
         total_currency = self._compute_subset_base_lines_total(discountable_base_lines)
         if amount_type == 'fixed':
             percentage = (amount / total_currency) if total_currency else 0.0
-            target_amount_currency = amount
+            target_amount_currency = -amount
         else:  # if amount_type == 'percent':
             percentage = amount / 100.0
             target_amount_currency = currency.round(total_currency * -percentage)

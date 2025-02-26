@@ -1555,7 +1555,7 @@ export const accountTaxHelpers = {
         let target_amount_currency;
         if (amount_type === "fixed") {
             percentage = total_currency ? amount / total_currency : 0.0;
-            target_amount_currency = amount;
+            target_amount_currency = -amount;
         } else {
             percentage = amount / 100.0;
             target_amount_currency = roundPrecision(total_currency * -percentage, currency_pd);
