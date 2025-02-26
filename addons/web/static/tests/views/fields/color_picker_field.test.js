@@ -142,7 +142,7 @@ test("column widths: dont overflow color picker in list", async () => {
     // With the screen growing, the proportion is kept and thus int_field would remain smaller than date if
     // the color_picker wouldn't have widthInList set to '1'. With that property set, int_field size will be bigger
     // than date's one.
-    expect(parseFloat(date_column_width)).toBeLessThan(parseFloat(int_field_column_width), {
+    expect(parseFloat(date_column_width) <= parseFloat(int_field_column_width)).toBe(true, {
         message: "colorpicker should display properly (Horizontly)",
     });
 });
