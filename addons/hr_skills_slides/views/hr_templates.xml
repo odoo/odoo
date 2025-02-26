@@ -9,7 +9,7 @@
             <xpath expr="//field[@name='display_type']" position="after">
                 <field name="channel_id"
                     readonly="0"
-                    invisible="display_type != 'course'"/>
+                    invisible="display_type != 'course' or is_social_media"/>
                 <field name="course_url" invisible="1"/>
             </xpath>
         </field>

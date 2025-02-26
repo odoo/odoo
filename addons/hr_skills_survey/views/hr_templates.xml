@@ -10,7 +10,7 @@
                 <field name="survey_id"
                     domain="[('certification', '=', True)]"
                     readonly="0"
-                    invisible="display_type != 'certification'"/>
+                    invisible="not is_survey_visible"/>
             </xpath>
             <field name="employee_id" position="attributes">
                 <attribute name="invisible">0</attribute>
