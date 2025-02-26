@@ -2,15 +2,14 @@
 
 import logging
 
-from odoo import api, fields, models
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
 
+from odoo import api, fields, models
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import text_from_html
-
 
 _logger = logging.getLogger(__name__)
 
@@ -735,6 +734,7 @@ class ProductTemplate(models.Model):
         with_description = options['displayDescription']
         with_category = options['displayExtraLink']
         with_price = options['displayDetail']
+        with_reviews = options.get('displayExtraInfo')
         domains = [website.sale_product_domain()]
         category = options.get('category')
         tags = options.get('tags')
@@ -775,6 +775,8 @@ class ProductTemplate(models.Model):
             mapping['detail_strike'] = {'name': 'list_price', 'type': 'html', 'display_currency': options['display_currency']}
         if with_category:
             mapping['extra_link'] = {'name': 'category', 'type': 'html'}
+        if with_reviews:
+            mapping['extra_info'] = {'name': 'reviews', 'type': 'html'}
         return {
             'model': 'product.template',
             'base_domain': domains,
@@ -788,8 +790,10 @@ class ProductTemplate(models.Model):
         with_image = 'image_url' in mapping
         with_category = 'extra_link' in mapping
         with_price = 'detail' in mapping
+        with_reviews = 'extra_info' in mapping
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         current_website = self.env['website'].get_current_website()
+        reviews_enabled = current_website.is_view_active('website_sale.product_comment')
         for product, data in zip(self, results_data):
             categ_ids = product.public_categ_ids.filtered(lambda c: not c.website_id or c.website_id == current_website)
             if with_price:
@@ -807,6 +811,16 @@ class ProductTemplate(models.Model):
                     "website_sale.product_category_extra_link",
                     {'categories': categ_ids, 'slug': self.env['ir.http']._slug}
                 )
+            if with_reviews and reviews_enabled:
+                # Render the rating only if there is ratings
+                if product.rating_count > 0:
+                    data['reviews'] = self.env['ir.ui.view'].sudo()._render_template(
+                        "portal_rating.rating_widget_stars_static",
+                        {
+                            'rating_avg': product.rating_avg,
+                            'rating_count': product.rating_count,
+                        }
+                    )
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):
