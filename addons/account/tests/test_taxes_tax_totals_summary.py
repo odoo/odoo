@@ -1727,6 +1727,44 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 ],
             }
             yield 2, self.populate_document(document_params), expected_values
+        with self.same_tax_group(taxes), self.with_tax_calculation_rounding_method('round_per_line'):
+            cash_rounding = self.env['account.cash.rounding'].create({
+                'name': 'biggest_tax',
+                'rounding': 0.05,
+                'strategy': 'biggest_tax',
+                'rounding_method': 'HALF-UP',
+            })
+
+            document_params = self.init_document(
+                lines=[{'price_unit': 50.0, 'tax_ids': []}],
+                currency=self.foreign_currency,
+                rate=1.0,
+                cash_rounding=cash_rounding,
+            )
+
+            expected_values = {
+                'same_tax_base': True,
+                'currency_id': self.foreign_currency.id,
+                'company_currency_id': self.currency.id,
+                'base_amount_currency': 50.0,
+                'base_amount': 50.0,
+                'tax_amount_currency': 0.0, 
+                'tax_amount': 0.0,
+                'total_amount_currency': 50.0,  
+                'total_amount': 50.0,
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'base_amount_currency': 50.0,
+                        'base_amount': 50.0,
+                        'tax_amount_currency': 0.0,
+                        'tax_amount': 0.0,
+                        'tax_groups': [],  
+                    },
+                ],
+            }
+            yield 3, self.populate_document(document_params), expected_values
+
 
     def test_cash_rounding_generic_helpers(self):
         for test_index, document, expected_values in self._test_cash_rounding():
