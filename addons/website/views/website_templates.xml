@@ -2130,6 +2130,14 @@
     </xpath>
 </template>
 
+<template id="footer_copyright_private_policy" inherit_id="website.layout" active="False">
+    <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="after">
+        <span style="vertical-align: middle;">
+            <a href="/privacy">Privacy Policy</a>
+        </span>
+    </xpath>
+</template>
+
 <!-- Scroll to Top option -->
 <template id="option_footer_scrolltop" inherit_id="website.layout" active="False">
     <xpath expr="//div[@id='footer']" position="after">
