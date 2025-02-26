@@ -1113,6 +1113,10 @@ class StockQuant(models.Model):
         quants = self.env['stock.quant'].browse([quant['id'] for quant in self.env.cr.dictfetchall()])
         quants.sudo().unlink()
 
+        consumable_quants = self.env['stock.quant'].search([('product_id.is_storable', '=', False)]).sudo()
+        consumable_quants.inventory_quantity = 0
+        consumable_quants.with_context(inventory_name=_('Inventory goods not stored')).action_apply_inventory()
+
     @api.model
     def _merge_quants(self):
         """ In a situation where one transaction is updating a quant via
