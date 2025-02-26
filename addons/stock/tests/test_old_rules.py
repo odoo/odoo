@@ -139,9 +139,9 @@ class TestOldRules(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.productA, self.warehouse_3_steps.lot_stock_id, 4.0)
 
         # We alter one rule and we set it to 'mts_else_mto'
-        self.warehouse_3_steps.delivery_route_id.rule_ids.filtered(lambda r: r.procure_method == "make_to_order").write({
-            'procure_method': 'mts_else_mto',
-        })
+        self.warehouse_3_steps.delivery_route_id.rule_ids.filtered(
+            lambda r: r.procure_method == "make_to_order"
+        ).procure_method = 'mts_else_mto'
 
         pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mto'})
 
@@ -193,9 +193,7 @@ class TestOldRules(TestStockCommon):
         # We alter one rule and we set it to 'mts_else_mto'
         self.warehouse_3_steps.delivery_route_id.rule_ids.filtered(
             lambda r: r.procure_method == "make_to_order"
-        ).write({
-            'procure_method': 'mts_else_mto',
-        })
+        ).procure_method = 'mts_else_mto'
 
         pg1 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-1'})
         pg2 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-2'})
@@ -335,7 +333,7 @@ class TestOldRules(TestStockCommon):
             'product_uom_qty': 5.0,
             'product_uom': prod.uom_id.id,
             'location_id': self.warehouse_3_steps.wh_output_stock_loc_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': self.customer_location.id,
             'warehouse_id':  self.warehouse_3_steps.id,
             'picking_type_id':  self.warehouse_3_steps.out_type_id.id,
             'procure_method': 'make_to_order',
@@ -518,7 +516,7 @@ class TestOldRules(TestStockCommon):
             'product_uom_qty': 5.0,
             'product_uom': self.product.uom_id.id,
             'location_id': warehouse.wh_output_stock_loc_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': self.customer_location.id,
             'warehouse_id': warehouse.id,
             'picking_type_id': warehouse.out_type_id.id,
             'procure_method': 'make_to_order',

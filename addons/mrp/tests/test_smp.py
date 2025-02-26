@@ -167,6 +167,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': tracked_product.product_tmpl_id.id,
             'product_qty': 1,
+            'picking_type_id': self.picking_type_manu.id,
             'bom_line_ids': [Command.create({
                 'product_id': component.id,
                 'product_qty': 1,
@@ -184,9 +185,9 @@ class TestMrpSerialMassProduce(TestMrpCommon):
             'name': 'SN2',
             'product_id': tracked_product.id,
         })
-        self.env['stock.quant']._update_available_quantity(tracked_product, self.stock_location_14, 1, lot_id=sn_1)
-        self.env['stock.quant']._update_available_quantity(tracked_product, self.stock_location_14, 1, lot_id=sn_2)
-        self.env['stock.quant']._update_available_quantity(component, self.stock_location_14, 10)
+        self.env['stock.quant']._update_available_quantity(tracked_product, self.shelf_1, 1, lot_id=sn_1)
+        self.env['stock.quant']._update_available_quantity(tracked_product, self.shelf_1, 1, lot_id=sn_2)
+        self.env['stock.quant']._update_available_quantity(component, self.shelf_1, 10)
         # create an MO to use the tracked product available in stock
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_1
@@ -340,7 +341,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.env['res.config.settings'].write({
             'group_stock_adv_location': True,
         })
-        self.env.ref('stock.warehouse0').manufacture_steps = 'pbm'
+        self.warehouse_1.manufacture_steps = 'pbm'
         mo = self.generate_mo(tracking_final='lot', tracking_base_1='lot')[0]
         # Make some stock and reserve
         for product in mo.move_raw_ids.product_id:

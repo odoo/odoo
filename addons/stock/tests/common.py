@@ -32,28 +32,41 @@ class TestStockCommon(TestProductCommon):
         cls.LotObj = cls.env['stock.lot']
         cls.StockLocationObj = cls.env['stock.location']
 
+        # Warehouses
+        cls.warehouse_1 = cls.env['stock.warehouse'].create({
+            'name': 'Base Warehouse',
+            'reception_steps': 'one_step',
+            'delivery_steps': 'ship_only',
+            'code': 'BWH',
+        })
+
         # Model Data
-        cls.picking_type_in = cls.ModelDataObj._xmlid_to_res_id('stock.picking_type_in')
-        cls.picking_type_out = cls.ModelDataObj._xmlid_to_res_id('stock.picking_type_out')
-        cls.env['stock.picking.type'].browse(cls.picking_type_out).reservation_method = 'manual'
-        cls.supplier_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_suppliers')
-        cls.stock_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_stock')
-        location = cls.StockLocationObj.browse(cls.stock_location)
-        if not location.child_ids:
-            cls.StockLocationObj.create([{
-                'name': 'Shelf 1',
-                'location_id': location.id,
-            }, {
-                'name': 'Shelf 2',
-                'location_id': location.id,
-            }])
-        pack_location = cls.env.ref('stock.location_pack_zone')
+        cls.picking_type_in = cls.warehouse_1.in_type_id
+        cls.picking_type_int = cls.warehouse_1.int_type_id
+        cls.picking_type_out = cls.warehouse_1.out_type_id
+        cls.picking_type_out.reservation_method = 'manual'
+
+        cls.supplier_location = cls.StockLocationObj.browse(
+            [cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_suppliers')]
+        )[0]
+        cls.stock_location = cls.warehouse_1.lot_stock_id
+        cls.shelf_1, cls.shelf_2 = cls.StockLocationObj.create([{
+            'name': 'Shelf 1',
+            'location_id': cls.stock_location.id,
+        }, {
+            'name': 'Shelf 2',
+            'location_id': cls.stock_location.id,
+        }])
+
+        pack_location = cls.warehouse_1.wh_pack_stock_loc_id
         pack_location.active = True
-        cls.pack_location = pack_location.id
-        output_location = cls.env.ref('stock.stock_location_output')
+        cls.pack_location = pack_location
+        output_location = cls.warehouse_1.wh_output_stock_loc_id
         output_location.active = True
-        cls.output_location = output_location.id
-        cls.customer_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_customers')
+        cls.output_location = output_location
+        cls.customer_location = cls.StockLocationObj.browse(
+            [cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_customers')]
+        )[0]
 
         # Product Created A, B, C, D
         cls.productA = cls.ProductObj.create({'name': 'Product A', 'is_storable': True})
@@ -98,20 +111,6 @@ class TestStockCommon(TestProductCommon):
             groups='stock.group_stock_manager',
         )
 
-        # Warehouses
-        cls.warehouse_1 = cls.env['stock.warehouse'].create({
-            'name': 'Base Warehouse',
-            'reception_steps': 'one_step',
-            'delivery_steps': 'ship_only',
-            'code': 'BWH'})
-
-        # Locations
-        cls.location_1 = cls.env['stock.location'].create({
-            'name': 'TestLocation1',
-            'posx': 3,
-            'location_id': cls.warehouse_1.lot_stock_id.id,
-        })
-
         # Partner
         cls.partner_1 = cls.env['res.partner'].create({
             'name': 'Julia Agrolait',
@@ -125,9 +124,9 @@ class TestStockCommon(TestProductCommon):
         })
 
         # Existing data
-        cls.existing_inventories = cls.env['stock.quant'].search([('inventory_quantity', '!=', 0.0)])
-        cls.existing_quants = cls.env['stock.quant'].search([])
-        cls.env.ref('stock.route_warehouse0_mto').rule_ids.procure_method = "make_to_order"
+        cls.existing_inventories = cls.StockQuantObj.search([('inventory_quantity', '!=', 0.0)])
+        cls.existing_quants = cls.StockQuantObj.search([])
+        cls.warehouse_1.mto_pull_id.route_id.rule_ids.procure_method = "make_to_order"
 
     def url_extract_rec_id_and_model(self, url):
         # Extract model and record ID
