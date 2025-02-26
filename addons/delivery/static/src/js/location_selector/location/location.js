@@ -25,6 +25,7 @@ export class Location extends Component {
         additionalData: { type: Object, optional: true },
         isSelected: Boolean,
         setSelectedLocation: Function,
+        hideNumber: { type: Boolean, optional: true },
     };
 
     /**
