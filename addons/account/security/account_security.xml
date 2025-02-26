@@ -59,6 +59,7 @@
 
     <record id="group_account_invoice" model="res.groups">
         <field name="name">Invoicing</field>
+        <field name="sequence">20</field>
         <field name="category_id" ref="base.module_category_accounting_accounting"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
@@ -77,6 +78,7 @@
 
     <record id="group_account_manager" model="res.groups">
         <field name="name">Administrator</field>
+        <field name="sequence">50</field>
         <field name="category_id" ref="base.module_category_accounting_accounting"/>
         <field name="implied_ids" eval="[(4, ref('group_account_invoice'))]"/>
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
