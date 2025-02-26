@@ -742,7 +742,7 @@ class ProductTemplate(models.Model):
 
     is_storable = fields.Boolean(
         'Track Inventory', store=True, compute='compute_is_storable', readonly=False,
-        default=False, precompute=True, help='A storable product is a product for which you manage stock.')
+        default=False, precompute=True, tracking=True, help='A storable product is a product for which you manage stock.')
     responsible_id = fields.Many2one(
         'res.users', string='Responsible', default=lambda self: self.env.uid, company_dependent=True, check_company=True,
         help="This user will be responsible of the next activities related to logistic operations for this product.")
@@ -1051,24 +1051,14 @@ class ProductTemplate(models.Model):
                 if quant:
                     raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
 
-        if 'is_storable' in vals and not vals['is_storable'] and sum(self.mapped('nbr_reordering_rules')) != 0:
-            raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
-        if any('is_storable' in vals and vals['is_storable'] != prod_tmpl.is_storable for prod_tmpl in self):
-            existing_done_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
-                ('state', '=', 'done'),
-            ], limit=1)
-            if existing_done_move_lines:
-                raise UserError(_("You can not change the inventory tracking of a product that was already used."))
-            existing_reserved_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
-                ('state', 'in', ['partially_available', 'assigned']),
-            ], limit=1)
-            if existing_reserved_move_lines:
-                raise UserError(_("You can not change the inventory tracking of a product that is currently reserved on a stock move. If you need to change the inventory tracking, you should first unreserve the stock move."))
-        if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not p.uom_id.is_zero(p.qty_available) for p in self):
-            raise UserError(_("Available quantity should be set to zero before changing inventory tracking"))
-        return super().write(vals)
+        clean_inventory = False
+        if 'is_storable' in vals and any(vals['is_storable'] != prod_tmpl.is_storable and not prod_tmpl.is_storable for prod_tmpl in self):
+            clean_inventory = True
+
+        res = super().write(vals)
+        if clean_inventory:
+            self.env['stock.quant'].sudo()._clean_reservations()
+        return res
 
     def copy(self, default=None):
         new_products = super().copy(default=default)
