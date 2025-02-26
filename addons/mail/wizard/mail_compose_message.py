@@ -834,6 +834,7 @@ class MailComposeMessage(models.TransientModel):
             res_ids_values = list(self._prepare_mail_values(res_ids_iter).values())
 
             iter_mails_sudo = self.env['mail.mail'].sudo().create(res_ids_values)
+            self._create_notifications_batch(iter_mails_sudo)
             mails_sudo += iter_mails_sudo
 
             records = self.env[self.model].browse(res_ids_iter) if self.model and hasattr(self.env[self.model], 'message_post') else False
@@ -860,6 +861,30 @@ class MailComposeMessage(models.TransientModel):
             self.env.invalidate_all()
 
         return mails_sudo
+
+    def _create_notifications_batch(self, mails):
+        if self.auto_delete and not self.auto_delete_keep_log:
+            return self.env['mail.notification']
+
+        create_vals_all = []
+        for mail, notif_base_values in zip(mails, mails._notification_values_from_emails()):
+            partner_emails_normalized = set(mail.recipient_ids.mapped(lambda p: tools.email_normalize(p.email)))
+            # avoid duplicates if partner is in email_to
+            # fallback on naive comma-based splitting if there's no valid email (it will necessarily be a failed notification)
+            emails = set()
+            if mail.email_to:
+                emails |= set(tools.mail.email_split_and_format(mail.email_to, keep_invalid=True))
+            if mail.email_cc:
+                emails |= set(tools.mail.email_split_and_format(mail.email_cc, keep_invalid=True))
+            emails = {tools.email_normalize(email) or email for email in emails} - partner_emails_normalized
+
+            # if no recipient, the email will have mail_email_missing failure_type
+            if not mail.recipient_ids and not emails:
+                create_vals_all.append(notif_base_values)
+            else:
+                create_vals_all.extend(notif_base_values | {'res_partner_id': partner.id} for partner in mail.recipient_ids)
+                create_vals_all.extend(notif_base_values | {'email': email} for email in emails)
+        return self.env['mail.notification'].create(create_vals_all)
 
     def open_template_creation_wizard(self):
         """ hit save as template button: opens a wizard that prompts for the template's subject.
@@ -913,6 +938,10 @@ class MailComposeMessage(models.TransientModel):
     # ------------------------------------------------------------
     # RENDERING / VALUES GENERATION
     # ------------------------------------------------------------
+
+    def _invalid_email_state(self):
+        """Gives state of an email when the email is invalid or missing depending on composer settings."""
+        return 'cancel' if self.auto_delete and not self.auto_delete_keep_log else 'exception'
 
     def _prepare_mail_values(self, res_ids):
         """Generate the values that will be used by send_mail to create either
@@ -1313,6 +1342,8 @@ class MailComposeMessage(models.TransientModel):
 
             # prevent sending to blocked addresses that were included by mistake
             # blacklisted or optout or duplicate -> cancel
+            # invalid or missing email -> error if logged, otherwise cancel
+            invalid_email_state = self._invalid_email_state()
             if record_id in blacklist_ids:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_bl'
@@ -1320,10 +1351,10 @@ class MailComposeMessage(models.TransientModel):
                 mail_values['is_notification'] = False
             # void or falsy values -> error
             elif not any(recipients['mail_to']):
-                mail_values['state'] = 'cancel'
+                mail_values['state'] = invalid_email_state
                 mail_values['failure_type'] = 'mail_email_missing'
             elif not any(recipients['mail_to_normalized']):
-                mail_values['state'] = 'cancel'
+                mail_values['state'] = invalid_email_state
                 mail_values['failure_type'] = 'mail_email_invalid'
             elif optout_emails and all(
                 mail_to in optout_emails for mail_to in recipients['mail_to_normalized']

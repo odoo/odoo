@@ -25,6 +25,18 @@ class MailComposeMessage(models.TransientModel):
             self.mass_mailing_id = mass_mailing.id
         return super()._action_send_mail(auto_commit=auto_commit)
 
+    def _invalid_email_state(self):
+        """Always cancel invalid emails for mailings due to likely untractable number of failures."""
+        if self.mass_mailing_name or self.mass_mailing_id:
+            return 'cancel'
+        return super()._invalid_email_state()
+
+    def _create_notifications_batch(self, mails):
+        """Prevent notification creation as we'll generate traces."""
+        if self.mass_mailing_name or self.mass_mailing_id:
+            return self.env['mail.notification']
+        return super()._create_notifications_batch(mails)
+
     def _prepare_mail_values(self, res_ids):
         """ When being in mass mailing mode, add 'mailing.trace' values directly
         in the o2m field of mail.mail. """

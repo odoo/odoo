@@ -238,7 +238,10 @@ class MailMail(models.Model):
 
         return res
 
-    def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
+    def _postprocess_sent_message_filter_notif_mails(self):
+        return self
+
+    def _postprocess_sent_message(self, success_pids, success_email_addrs, failure_reason=False, failure_type=None):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
@@ -246,7 +249,7 @@ class MailMail(models.Model):
 
         :return: True
         """
-        notif_mails_ids = [mail.id for mail in self if mail.is_notification]
+        notif_mails_ids = self._postprocess_sent_message_filter_notif_mails().ids
         if notif_mails_ids:
             notifications = self.env['mail.notification'].search([
                 ('notification_type', '=', 'email'),
@@ -257,8 +260,14 @@ class MailMail(models.Model):
                 # find all notification linked to a failure
                 failed = self.env['mail.notification']
                 if failure_type:
-                    failed = notifications.filtered(lambda notif: notif.res_partner_id not in success_pids)
-                (notifications - failed).sudo().write({
+                    failed = notifications.filtered(lambda notif: (
+                        notif.res_partner_id and notif.res_partner_id not in success_pids
+                    ) or (
+                        not notif.res_partner_id and notif.email and notif.email not in success_email_addrs
+                    ))
+                # empty email cannot be sent
+                missing_email_notifs = notifications.filtered(lambda notif: not notif.email and not notif.res_partner_id)
+                (notifications - failed - missing_email_notifs).sudo().write({
                     'notification_status': 'sent',
                     'failure_type': '',
                     'failure_reason': '',
@@ -605,7 +614,7 @@ class MailMail(models.Model):
                 else:
                     batch = self.browse(batch_ids)
                     batch.write({'state': 'exception', 'failure_reason': tools.exception_to_unicode(exc)})
-                    batch._postprocess_sent_message(success_pids=[], failure_type="mail_smtp")
+                    batch._postprocess_sent_message(success_pids=[], success_email_addrs=[], failure_type="mail_smtp")
             else:
                 mail_server = self.env['ir.mail_server'].browse(mail_server_id)
                 self.browse(batch_ids)._send(
@@ -645,8 +654,11 @@ class MailMail(models.Model):
 
         for mail_id in self.ids:
             success_pids = []
+            success_email_addrs = []
             failure_reason = None
             failure_type = None
+            processing_email_addr = None
+            processing_pid = None
             mail = None
             try:
                 mail = self.browse(mail_id)
@@ -725,12 +737,15 @@ class MailMail(models.Model):
                         subtype_alternative='plain',
                         headers=email['headers'],
                     )
+                    processing_email_addr = email.get("email_to", None)
                     processing_pid = email.pop("partner_id", None)
                     try:
                         res = SendIrMailServer.send_email(
                             msg, mail_server_id=mail.mail_server_id.id, smtp_session=smtp_session)
                         if processing_pid:
                             success_pids.append(processing_pid)
+                        if processing_email_addr:
+                            success_email_addrs += processing_email_addr
                         processing_pid = None
                     except AssertionError as error:
                         if str(error) == IrMailServer.NO_VALID_RECIPIENT:
@@ -762,7 +777,10 @@ class MailMail(models.Model):
                         mail_vals['failure_type'] = failure_type
                     if mail_vals:
                         mail.write(mail_vals)
-                mail._postprocess_sent_message(success_pids=success_pids, failure_type=failure_type, failure_reason=failure_reason)
+                mail._postprocess_sent_message(
+                    success_pids=success_pids, success_email_addrs=success_email_addrs,
+                    failure_type=failure_type, failure_reason=failure_reason,
+                )
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
@@ -806,7 +824,7 @@ class MailMail(models.Model):
                     "state": "exception",
                 })
                 mail._postprocess_sent_message(
-                    success_pids=success_pids,
+                    success_pids=success_pids, success_email_addrs=success_email_addrs,
                     failure_reason=failure_reason, failure_type=failure_type
                 )
                 if raise_exception:
@@ -824,3 +842,31 @@ class MailMail(models.Model):
         if post_send_callback:
             post_send_callback(self.ids)
         return True
+
+    def _notification_values_from_emails(self):
+        """Get list of base notification values to create a notification for an existing email.
+
+        Recipient-specific values should be added separately.
+        """
+        return [
+            {
+                'author_id': mail.author_id.id,
+                'is_read': True,  # no mechanism to update this for outgoing emails
+                'mail_mail_id': mail.id,
+                'mail_message_id': mail.mail_message_id.id,
+                'notification_type': 'email',
+                'notification_status': mail._get_notification_status(),
+                'failure_type': mail.failure_type,
+            }
+            for mail in self
+        ]
+
+    def _get_notification_status(self):
+        """Return the equivalent status for notifications based on state."""
+        return {
+            'outgoing': 'ready',
+            'sent': 'sent',
+            'received': 'sent',
+            'exception': 'exception',
+            'cancel': 'canceled',
+        }.get(self.state, 'ready')

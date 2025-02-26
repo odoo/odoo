@@ -133,6 +133,7 @@
             'mass_mailing/static/src/xml/mass_mailing.xml',
             'mass_mailing/static/src/xml/mass_mailing_mobile_preview.xml',
             'mass_mailing/static/src/js/tours/**/*',
+            'mass_mailing/static/src/discuss/**/*',
         ],
         'web.assets_backend_lazy': [
             'mass_mailing/static/src/views/mass_mailing_subscription_graph_renderer.js',
