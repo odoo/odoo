@@ -1464,6 +1464,8 @@ class ProjectTask(models.Model):
             message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
+        if self.project_id:
+            render_context['subtitles'].append(_('Project: %s', self.project_id.name))
         if self.stage_id:
             render_context['subtitles'].append(_('Stage: %s', self.stage_id.name))
         return render_context

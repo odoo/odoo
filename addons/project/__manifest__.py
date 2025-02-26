@@ -50,6 +50,7 @@
         'data/ir_cron_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
+        'data/mail_templates_email_layouts.xml',
         'data/project_data.xml',
         'data/project_tour.xml',
         'wizard/project_task_type_delete_views.xml',

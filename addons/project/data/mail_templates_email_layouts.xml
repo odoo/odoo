@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="project_mail_notification_layout" inherit_id="mail.mail_notification_layout" primary="True">
+            <xpath expr="//td[@t-if='subtitles']" position="replace">
+                <td t-if="subtitles" style="font-size: 12px;">
+                    <span class="fw-bolder d-block">
+                        <t t-out="subtitles[0]"/>
+                    </span>
+                    <t t-foreach="subtitles[1:]" t-as="subtitle">
+                        <t t-if="':' in subtitle">
+                            <span>
+                                <t t-out="subtitle.split(':', 1)[0]"/>:
+                            </span>
+                            <t t-out="subtitle.split(':', 1)[1]"/><t t-if="not subtitle_last">,</t>
+                        </t>
+                    </t>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>
