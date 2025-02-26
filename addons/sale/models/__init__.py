@@ -10,6 +10,7 @@ from . import payment_provider
 from . import payment_transaction
 from . import product_category
 from . import product_document
+from . import product_pricelist_item
 from . import product_product
 from . import product_template
 from . import res_company
