@@ -954,6 +954,12 @@ class StockQuant(models.Model):
                                 AND product_id in %s
             """
             params = [tuple(self.location_id.ids), tuple(self.product_id.ids)]
+        elif "quant_product_ids" in self.env.context:
+            query += """
+                            WHERE
+                                product_id in %s
+                """
+            params = [tuple(self.env.context['quant_product_ids'])]
         query += """
                             GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id
                             HAVING count(id) > 1
