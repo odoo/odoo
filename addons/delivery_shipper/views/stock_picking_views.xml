@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_shipper" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.form</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header//button[@name='do_print_picking']" position="before">
+                <field name="shipper_order_id" invisible="1"/>
+                <button 
+                    name="shipper_create_order" 
+                    string="Create Shipper Order" 
+                    type="object" 
+                    invisible="delivery_type != 'shipper' or shipper_order_id or state in ('draft', 'confirmed', 'done', 'cancel')"/>
+            </xpath>
+            <!-- <xpath expr="//header//button[@name='action_open_label_type']" position="after">
+                <button 
+                    name="shipper_cancel_order" 
+                    string="Cancel Shipper Order" 
+                    type="object" 
+                    invisible="delivery_type != 'shipper' or not shipper_order_id or state in ('draft', 'confirmed', 'done', 'cancel')"/>
+            </xpath> -->
+        </field>
+    </record>
+</odoo>
