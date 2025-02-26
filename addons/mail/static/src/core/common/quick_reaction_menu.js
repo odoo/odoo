@@ -34,7 +34,21 @@ export class QuickReactionMenu extends Component {
                 popoverClass: "o-mail-QuickReactionMenu-pickerPopover",
             }
         );
-        this.dropdown = useState(useDropdownState());
+        this.dropdown = useState(
+            useDropdownState({
+                onClose: () => {
+                    const currentThread = this.env.getCurrentThread();
+                    if (!currentThread || currentThread.notEq(this.props.message.thread)) {
+                        return;
+                    }
+                    if (currentThread.messageInEdition) {
+                        currentThread.messageInEdition.composer.autofocus++;
+                    } else {
+                        currentThread.composer.autofocus++;
+                    }
+                },
+            })
+        );
         this.frequentEmojiService = useService("web.frequent.emoji");
         this.state = useState({ emojiLoaded: Boolean(loader.loaded) });
         if (!loader.loaded) {
