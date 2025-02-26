@@ -36,8 +36,12 @@ function processModelDefs(modelDefs) {
     modelDefs = clone(modelDefs);
     const inverseMap = new Map();
     const many2oneFields = [];
+    const baseData = {};
     for (const model in modelDefs) {
         const fields = modelDefs[model];
+        if (!baseData[model]) {
+            baseData[model] = {};
+        }
         for (const fieldName in fields) {
             const field = fields[fieldName];
 
@@ -133,14 +137,21 @@ function processModelDefs(modelDefs) {
         inverseMap.set(field, dummyField);
         inverseMap.set(dummyField, field);
     }
-    return [inverseMap, modelDefs];
+    return [inverseMap, modelDefs, baseData];
 }
 
 export class Base extends WithLazyGetterTrap {
+<<<<<<< master
     constructor({ model, traps, dynamicModels }) {
+||||||| 158815cc2e0bc1964696a57ce8f2b82356dd5477
+    constructor({ models, records, model, traps, dynamicModels }) {
+=======
+    constructor({ models, records, model, traps, dynamicModels, baseData }) {
+>>>>>>> df859d4093e0d9973d528a013d80bc939de19156
         super({ traps });
         this.model = model;
         this._dynamicModels = dynamicModels;
+        this.baseData = baseData;
     }
     get models() {
         return this.model.models;
@@ -213,14 +224,14 @@ export class Base extends WithLazyGetterTrap {
         return this[cacheName];
     }
     get raw() {
-        return this._raw ?? {};
+        return this.baseData[this.id];
     }
 }
 
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     const indexes = opts.databaseIndex || {};
     const database = opts.databaseTable || {};
-    const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
+    const [inverseMap, processedModelDefs, baseData] = processModelDefs(modelDefs);
     const records = mapObj(processedModelDefs, () => new Map());
     const callbacks = mapObj(processedModelDefs, () => []);
     const commands = mapObj(processedModelDefs, () => ({
@@ -228,7 +239,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         unlink: new Map(),
         update: new Set(),
     }));
-    const baseData = {};
     const missingFields = {};
 
     // object: model -> key -> keyval -> record
@@ -246,7 +256,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             container[key] = {};
         }
 
-        baseData[model] = {};
         return container;
     });
 
@@ -393,6 +402,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             model,
             traps: { set: setTrapsCache[modelName] },
             dynamicModels: opts.dynamicModels,
+            baseData: baseData[model],
         });
     }
 
@@ -406,6 +416,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         get models() {
             return models;
         }
+<<<<<<< master
         get records() {
             return records;
         }
@@ -436,14 +447,396 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const result = [];
             for (const vals of valsList) {
                 result.push(this.create(vals));
+||||||| 158815cc2e0bc1964696a57ce8f2b82356dd5477
+
+        if (!baseData[model][id]) {
+            baseData[model][id] = vals;
+        }
+
+        record._raw = baseData[model][id];
+        crud.records[model].set(id, record);
+
+        const fields = getFields(model);
+        for (const name in fields) {
+            if (name === "id") {
+                continue;
+            }
+
+            const field = fields[name];
+
+            if (field.required && !(name in vals)) {
+                throw new Error(`'${name}' field is required when creating '${model}' record.`);
+            }
+
+            if (RELATION_TYPES.has(field.type)) {
+                if (X2MANY_TYPES.has(field.type)) {
+                    record[name] = [];
+                } else if (field.type === "many2one") {
+                    record[name] = undefined;
+                }
+
+                if (ignoreRelations) {
+                    continue;
+                }
+
+                const comodelName = field.relation;
+                if (!(name in vals) || !vals[name]) {
+                    continue;
+                }
+
+                if (X2MANY_TYPES.has(field.type)) {
+                    if (fromSerialized) {
+                        const ids = vals[name];
+                        for (const id of ids) {
+                            if (exists(comodelName, id)) {
+                                connect(field, record, crud.records[comodelName].get(id));
+                            }
+                        }
+                    } else {
+                        for (const [command, ...items] of vals[name]) {
+                            if (command === "create") {
+                                const newRecords = items.map((_vals) => {
+                                    const result = create(crud, comodelName, _vals);
+                                    makeRecordsAvailable(
+                                        { [comodelName]: [result] },
+                                        { [comodelName]: [_vals] }
+                                    );
+                                    return result;
+                                });
+                                for (const record2 of newRecords) {
+                                    connect(field, record, record2);
+                                }
+                            } else if (command === "link") {
+                                const existingRecords = items.filter((record) =>
+                                    exists(comodelName, record.id)
+                                );
+                                for (const record2 of existingRecords) {
+                                    connect(field, record, record2);
+                                }
+                            }
+                        }
+                    }
+                } else if (field.type === "many2one") {
+                    const val = vals[name];
+                    if (fromSerialized) {
+                        if (exists(comodelName, val)) {
+                            connect(field, record, crud.records[comodelName].get(val));
+                        }
+                    } else {
+                        if (val instanceof Base) {
+                            if (exists(comodelName, val.id)) {
+                                connect(field, record, val);
+                            }
+                        } else if (models[field.relation] && typeof val === "object") {
+                            const newRecord = create(crud, comodelName, val);
+                            connect(field, record, newRecord);
+                        } else {
+                            record[name] = val;
+                        }
+                    }
+                }
+            } else {
+                record[name] = vals[name];
+=======
+
+        baseData[model][id] = vals;
+
+        crud.records[model].set(id, record);
+
+        const fields = getFields(model);
+        for (const name in fields) {
+            if (name === "id") {
+                continue;
+            }
+
+            const field = fields[name];
+
+            if (field.required && !(name in vals)) {
+                throw new Error(`'${name}' field is required when creating '${model}' record.`);
+            }
+
+            if (RELATION_TYPES.has(field.type)) {
+                if (X2MANY_TYPES.has(field.type)) {
+                    record[name] = [];
+                } else if (field.type === "many2one") {
+                    record[name] = undefined;
+                }
+
+                if (ignoreRelations) {
+                    continue;
+                }
+
+                const comodelName = field.relation;
+                if (!(name in vals) || !vals[name]) {
+                    continue;
+                }
+
+                if (X2MANY_TYPES.has(field.type)) {
+                    if (fromSerialized) {
+                        const ids = vals[name];
+                        for (const id of ids) {
+                            if (exists(comodelName, id)) {
+                                connect(field, record, crud.records[comodelName].get(id));
+                            }
+                        }
+                    } else {
+                        for (const [command, ...items] of vals[name]) {
+                            if (command === "create") {
+                                const newRecords = items.map((_vals) => {
+                                    const result = create(crud, comodelName, _vals);
+                                    makeRecordsAvailable(
+                                        { [comodelName]: [result] },
+                                        { [comodelName]: [_vals] }
+                                    );
+                                    return result;
+                                });
+                                for (const record2 of newRecords) {
+                                    connect(field, record, record2);
+                                }
+                            } else if (command === "link") {
+                                const existingRecords = items.filter((record) =>
+                                    exists(comodelName, record.id)
+                                );
+                                for (const record2 of existingRecords) {
+                                    connect(field, record, record2);
+                                }
+                            }
+                        }
+                    }
+                } else if (field.type === "many2one") {
+                    const val = vals[name];
+                    if (fromSerialized) {
+                        if (exists(comodelName, val)) {
+                            connect(field, record, crud.records[comodelName].get(val));
+                        }
+                    } else {
+                        if (val instanceof Base) {
+                            if (exists(comodelName, val.id)) {
+                                connect(field, record, val);
+                            }
+                        } else if (models[field.relation] && typeof val === "object") {
+                            const newRecord = create(crud, comodelName, val);
+                            connect(field, record, newRecord);
+                        } else {
+                            record[name] = val;
+                        }
+                    }
+                }
+            } else {
+                record[name] = vals[name];
+>>>>>>> df859d4093e0d9973d528a013d80bc939de19156
             }
             return result;
         }
         update(record, vals, opts = {}) {
             return disabler.call((...args) => this._update(...args), record, vals, opts);
         }
+<<<<<<< master
         delete(record, opts = {}) {
             return disabler.call((...args) => this._delete(...args), record, opts);
+||||||| 158815cc2e0bc1964696a57ce8f2b82356dd5477
+
+        return crud.records[model].get(id);
+    }
+
+    function deserialize(crud, model, vals) {
+        return create(crud, model, vals, false, true);
+    }
+
+    const update = withoutProxyTrap(_update);
+    function _update(crud, model, record, vals, opts = {}) {
+        const fields = getFields(model);
+        Object.assign(baseData[model][record.id], vals);
+
+        for (const name in vals) {
+            if (!(name in fields) && name !== "id") {
+                continue;
+            } else if (name === "id" && vals[name] !== record.id) {
+                records[model].delete(record.id);
+                delete baseData[model][record.id];
+
+                for (const key of indexes[model] || []) {
+                    const keyVal = record.raw[key];
+                    if (Array.isArray(keyVal)) {
+                        for (const val of keyVal) {
+                            indexedRecords[model][key][val].delete(record.id);
+                        }
+                    }
+                }
+
+                record.id = vals[name];
+                records[model].set(record.id, record);
+                baseData[model][record.id] = vals;
+                continue;
+            } else if (name === "id") {
+                continue;
+            }
+
+            const field = fields[name];
+            const comodelName = field.relation;
+            if (X2MANY_TYPES.has(field.type)) {
+                for (const command of vals[name]) {
+                    const [type, ...items] = command;
+                    if (type === "unlink") {
+                        for (const record2 of items) {
+                            disconnect(field, record, record2);
+                        }
+                    } else if (type === "clear") {
+                        const linkedRecs = record[name];
+                        for (const record2 of [...linkedRecs]) {
+                            disconnect(field, record, record2);
+                        }
+                    } else if (type === "create") {
+                        const newRecords = items.map((vals) => create(crud, comodelName, vals));
+                        for (const record2 of newRecords) {
+                            connect(field, record, record2);
+                        }
+                    } else if (type === "link") {
+                        const existingRecords = items.filter((record) =>
+                            exists(comodelName, record.id)
+                        );
+                        for (const record2 of existingRecords) {
+                            connect(field, record, record2);
+                        }
+                    } else if (type === "set") {
+                        const linkedRecs = record[name];
+                        const existingRecords = items.filter((record) =>
+                            exists(comodelName, record.id)
+                        );
+
+                        for (const record2 of [...linkedRecs]) {
+                            disconnect(field, record, record2);
+                        }
+                        for (const record2 of existingRecords) {
+                            connect(field, record, record2);
+                        }
+                    }
+                }
+            } else if (field.type === "many2one") {
+                if (vals[name]) {
+                    const id = vals[name]?.id || vals[name];
+                    const exist = exists(comodelName, id);
+
+                    if (exist) {
+                        connect(field, record, vals[name]);
+                    } else if (models[field.relation] && typeof vals[name] === "object") {
+                        const newRecord = create(crud, comodelName, vals[name]);
+                        connect(field, record, newRecord);
+                    } else {
+                        record[name] = vals[name];
+                    }
+                } else if (record[name]) {
+                    const linkedRec = record[name];
+                    disconnect(field, record, linkedRec);
+                }
+            } else {
+                record[name] = vals[name];
+            }
+=======
+
+        return crud.records[model].get(id);
+    }
+
+    function deserialize(crud, model, vals) {
+        return create(crud, model, vals, false, true);
+    }
+
+    const update = withoutProxyTrap(_update);
+    function _update(crud, model, record, vals, opts = {}) {
+        const fields = getFields(model);
+        Object.assign(baseData[model][record.id], vals);
+
+        for (const name in vals) {
+            if (!(name in fields) && name !== "id") {
+                continue;
+            } else if (name === "id" && vals[name] !== record.id) {
+                records[model].delete(record.id);
+
+                for (const key of indexes[model] || []) {
+                    const keyVal = record.raw[key];
+                    if (Array.isArray(keyVal)) {
+                        for (const val of keyVal) {
+                            indexedRecords[model][key][val].delete(record.id);
+                        }
+                    }
+                }
+
+                delete baseData[model][record.id];
+
+                record.id = vals[name];
+                records[model].set(record.id, record);
+                baseData[model][record.id] = vals;
+                continue;
+            } else if (name === "id") {
+                continue;
+            }
+
+            const field = fields[name];
+            const comodelName = field.relation;
+            if (X2MANY_TYPES.has(field.type) && comodelName in models) {
+                for (const command of vals[name]) {
+                    const [type, ...items] = command;
+                    if (type === "unlink") {
+                        for (const record2 of items) {
+                            disconnect(field, record, record2);
+                        }
+                    } else if (type === "clear") {
+                        const linkedRecs = record[name];
+                        for (const record2 of [...linkedRecs]) {
+                            disconnect(field, record, record2);
+                        }
+                    } else if (type === "create") {
+                        const newRecords = items.map((vals) => create(crud, comodelName, vals));
+                        for (const record2 of newRecords) {
+                            connect(field, record, record2);
+                        }
+                    } else if (type === "link") {
+                        const existingRecords = items.filter((record) =>
+                            exists(comodelName, record.id)
+                        );
+                        for (const record2 of existingRecords) {
+                            connect(field, record, record2);
+                        }
+                    } else if (type === "set") {
+                        const linkedRecs = record[name];
+                        const existingRecords = items.filter((record) =>
+                            exists(comodelName, record.id)
+                        );
+                        for (const record2 of [...linkedRecs]) {
+                            disconnect(field, record, record2);
+                        }
+                        for (const record2 of existingRecords) {
+                            connect(field, record, record2);
+                        }
+                    }
+
+                    baseData[model][record.id][name] = items
+                        .filter((r) => typeof r.id === "number")
+                        .map((r) => r.id);
+                }
+            } else if (field.type === "many2one" && comodelName in models) {
+                if (vals[name]) {
+                    const id = vals[name]?.id || vals[name];
+                    const exist = exists(comodelName, id);
+
+                    if (exist) {
+                        connect(field, record, vals[name]);
+                    } else if (models[field.relation] && typeof vals[name] === "object") {
+                        const newRecord = create(crud, comodelName, vals[name]);
+                        connect(field, record, newRecord);
+                    } else {
+                        record[name] = vals[name];
+                    }
+                } else if (record[name]) {
+                    const linkedRec = record[name];
+                    disconnect(field, record, linkedRec);
+                }
+            }
+
+            if (!RELATION_TYPES.has(field.type)) {
+                record[name] = vals[name];
+            }
+>>>>>>> df859d4093e0d9973d528a013d80bc939de19156
         }
         deleteMany(toDelete, opts = {}) {
             const result = [];
@@ -618,11 +1011,460 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         continue;
                     }
 
+<<<<<<< master
                     const comodelName = field.relation;
                     const comodel = this.models[comodelName];
                     if (!(name in vals) || !vals[name]) {
                         continue;
+||||||| 158815cc2e0bc1964696a57ce8f2b82356dd5477
+                    if (field.type === "many2one") {
+                        result[name] = record[name]?.id || record.raw[name] || false;
+                    } else if (X2MANY_TYPES.has(field.type)) {
+                        const ids = [...record[name]].map((record) => record.id);
+                        result[name] = ids.length ? ids : (!orm && record.raw[name]) || [];
+                    } else if (typeof record[name] === "object") {
+                        result[name] = JSON.stringify(record[name]);
+                    } else {
+                        result[name] = record[name] !== undefined ? record[name] : false;
+=======
+                    if (field.type === "many2one") {
+                        result[name] = record[name]?.id || record.raw[name] || false;
+                    } else if (X2MANY_TYPES.has(field.type)) {
+                        const ids = [...record[name]].map((record) => record.id).filter(Boolean);
+                        result[name] = ids.length ? ids : (!orm && record.raw[name]) || [];
+                    } else if (typeof record[name] === "object") {
+                        result[name] = JSON.stringify(record[name]);
+                    } else {
+                        result[name] = record[name] !== undefined ? record[name] : false;
+>>>>>>> df859d4093e0d9973d528a013d80bc939de19156
                     }
+<<<<<<< master
+||||||| 158815cc2e0bc1964696a57ce8f2b82356dd5477
+                }
+                return result;
+            },
+            // aliases
+            getAllBy() {
+                return this.readAllBy(...arguments);
+            },
+            getAll() {
+                return this.readAll(...arguments);
+            },
+            getBy() {
+                return this.readBy(...arguments);
+            },
+            get() {
+                return this.read(...arguments);
+            },
+            getFirst() {
+                return this.readFirst(...arguments);
+            },
+            // array prototype
+            map(fn) {
+                return this.orderedRecords.map(fn);
+            },
+            reduce(fn, initialValue) {
+                return this.orderedRecords.reduce(fn, initialValue);
+            },
+            flatMap(fn) {
+                return this.orderedRecords.flatMap(fn);
+            },
+            forEach(fn) {
+                return this.orderedRecords.forEach(fn);
+            },
+            some(fn) {
+                return this.orderedRecords.some(fn);
+            },
+            every(fn) {
+                return this.orderedRecords.every(fn);
+            },
+            find(fn) {
+                return this.orderedRecords.find(fn);
+            },
+            filter(fn) {
+                return this.orderedRecords.filter(fn);
+            },
+            sort(fn) {
+                return this.orderedRecords.sort(fn);
+            },
+            indexOf(record) {
+                return this.orderedRecords.indexOf(record);
+            },
+            get length() {
+                return this.records[model].size;
+            },
+            // External callbacks
+            addEventListener(event, callback) {
+                if (!AVAILABLE_EVENT.includes(event)) {
+                    throw new Error(`Event '${event}' is not available`);
+                }
+
+                if (!(event in callbacks[model])) {
+                    callbacks[model][event] = [];
+                }
+
+                callbacks[model][event].push(callback);
+            },
+            triggerEvents(event, data) {
+                if (!(event in callbacks[model]) || callbacks[model][event].length === 0 || !data) {
+                    return;
+                }
+
+                for (const callback of callbacks[model][event]) {
+                    callback(data);
+                }
+            },
+        };
+    }
+
+    const models = mapObj(processedModelDefs, (model, fields) => createCRUD(model, fields));
+
+    /**
+     * Load the data without the relations then link the related records.
+     * @param {*} rawData
+     */
+    const loadData = withoutProxyTrap(_loadData);
+    function _loadData(
+        models,
+        rawData,
+        load = [],
+        fromSerialized = false,
+        keepLocalRelation = false
+    ) {
+        const results = {};
+        const oldStates = {};
+        const ignoreConnection = {};
+
+        for (const model in rawData) {
+            ignoreConnection[model] = [];
+            const modelKey = database[model]?.key || "id";
+            if (!oldStates[model]) {
+                oldStates[model] = {};
+            }
+
+            if (!load.includes(model) && load.length !== 0) {
+                continue;
+            } else if (!results[model]) {
+                results[model] = [];
+            }
+
+            const _records = rawData[model];
+            for (const record of _records) {
+                if (!baseData[model]) {
+                    baseData[model] = {};
+                }
+
+                if (fromSerialized && typeof record.id === "string") {
+                    const data = record.id.split("_");
+                    const id = parseInt(data[1]);
+                    const model = data[0];
+
+                    if (id >= ID_CONTAINER[model] || !ID_CONTAINER[model]) {
+                        ID_CONTAINER[model] = id + 1;
+                    }
+                }
+
+                baseData[model][record.id] = record;
+
+                const oldRecord = models[model].indexedRecords[model][modelKey][record[modelKey]];
+                if (oldRecord) {
+                    oldStates[model][oldRecord[modelKey]] = oldRecord.serializeState();
+                    for (const [f, p] of Object.entries(modelClasses[model]?.extraFields || {})) {
+                        if (X2MANY_TYPES.has(p.type)) {
+                            record[f] = oldRecord[f]?.map((r) => r.id) || [];
+                            continue;
+                        }
+                        record[f] = oldRecord[f]?.id || false;
+                    }
+                }
+
+                if (oldRecord && keepLocalRelation) {
+                    for (const [field, value] of Object.entries(record)) {
+                        if (field === "id") {
+                            continue;
+                        }
+
+                        const params = getFields(model)[field];
+                        if (params && X2MANY_TYPES.has(params.type)) {
+                            value.push(
+                                ...oldRecord[field]
+                                    .filter((r) => typeof r.id === "string")
+                                    .map((r) => r.id)
+                            );
+                            record[field] = ["set", value];
+                        }
+                    }
+
+                    oldRecord.update(record, { silent: true });
+                    oldRecord.setup(record);
+                    ignoreConnection[model].push(record.id);
+                    results[model].push(oldRecord);
+                    continue;
+                }
+
+                const result = create(models[model], model, record, true, false, true);
+                if (oldRecord && oldRecord.id !== result.id) {
+                    oldRecord.delete();
+                }
+
+                if (!(model in results)) {
+                    results[model] = [];
+                }
+
+                results[model].push(result);
+            }
+        }
+
+        const alreadyLinkedSet = new Set();
+        const modelToSetup = [];
+
+        // link the related records
+        for (const model in rawData) {
+            if (alreadyLinkedSet.has(model) || (!load.includes(model) && load.length !== 0)) {
+                continue;
+            }
+
+            const rawRecords = rawData[model];
+            const fields = getFields(model);
+
+            for (const rawRec of rawRecords) {
+                const recorded = records[model].get(rawRec.id);
+
+                // Check if there are any missing fields for this record
+                const key = `${model}_${rawRec.id}`;
+                if (missingFields[key]) {
+                    for (const [record, field] of missingFields[key]) {
+                        // Connect the `recorded` to the missing `field` in `record`
+                        connect(field, record, recorded);
+                    }
+                    delete missingFields[key];
+                }
+
+                if (ignoreConnection[model].includes(rawRec.id)) {
+                    continue;
+                }
+
+                for (const name in fields) {
+                    const field = fields[name];
+                    alreadyLinkedSet.add(field);
+=======
+                }
+                return result;
+            },
+            // aliases
+            getAllBy() {
+                return this.readAllBy(...arguments);
+            },
+            getAll() {
+                return this.readAll(...arguments);
+            },
+            getBy() {
+                return this.readBy(...arguments);
+            },
+            get() {
+                return this.read(...arguments);
+            },
+            getFirst() {
+                return this.readFirst(...arguments);
+            },
+            // array prototype
+            map(fn) {
+                return this.orderedRecords.map(fn);
+            },
+            reduce(fn, initialValue) {
+                return this.orderedRecords.reduce(fn, initialValue);
+            },
+            flatMap(fn) {
+                return this.orderedRecords.flatMap(fn);
+            },
+            forEach(fn) {
+                return this.orderedRecords.forEach(fn);
+            },
+            some(fn) {
+                return this.orderedRecords.some(fn);
+            },
+            every(fn) {
+                return this.orderedRecords.every(fn);
+            },
+            find(fn) {
+                return this.orderedRecords.find(fn);
+            },
+            filter(fn) {
+                return this.orderedRecords.filter(fn);
+            },
+            sort(fn) {
+                return this.orderedRecords.sort(fn);
+            },
+            indexOf(record) {
+                return this.orderedRecords.indexOf(record);
+            },
+            get length() {
+                return this.records[model].size;
+            },
+            // External callbacks
+            addEventListener(event, callback) {
+                if (!AVAILABLE_EVENT.includes(event)) {
+                    throw new Error(`Event '${event}' is not available`);
+                }
+
+                if (!(event in callbacks[model])) {
+                    callbacks[model][event] = [];
+                }
+
+                callbacks[model][event].push(callback);
+            },
+            triggerEvents(event, data) {
+                if (!(event in callbacks[model]) || callbacks[model][event].length === 0 || !data) {
+                    return;
+                }
+
+                for (const callback of callbacks[model][event]) {
+                    callback(data);
+                }
+            },
+        };
+    }
+
+    const models = mapObj(processedModelDefs, (model, fields) => createCRUD(model, fields));
+
+    /**
+     * Load the data without the relations then link the related records.
+     * @param {*} rawData
+     */
+    const loadData = withoutProxyTrap(_loadData);
+    function _loadData(models, rawData, load = [], fromSerialized = false) {
+        const results = {};
+        const oldStates = {};
+        const ignoreConnection = {};
+
+        for (const model in rawData) {
+            ignoreConnection[model] = [];
+            const modelKey = database[model]?.key || "id";
+            if (!oldStates[model]) {
+                oldStates[model] = {};
+            }
+
+            if (!load.includes(model) && load.length !== 0) {
+                continue;
+            } else if (!results[model]) {
+                results[model] = [];
+            }
+
+            const _records = rawData[model];
+            for (const record of _records) {
+                if (fromSerialized && typeof record.id === "string") {
+                    const data = record.id.split("_");
+                    const id = parseInt(data[1]);
+                    const model = data[0];
+
+                    if (id >= ID_CONTAINER[model] || !ID_CONTAINER[model]) {
+                        ID_CONTAINER[model] = id + 1;
+                    }
+                }
+
+                const oldRecord = models[model].indexedRecords[model][modelKey][record[modelKey]];
+                if (oldRecord) {
+                    oldStates[model][oldRecord[modelKey]] = oldRecord.serializeState();
+                    for (const [f, p] of Object.entries(modelClasses[model]?.extraFields || {})) {
+                        if (X2MANY_TYPES.has(p.type)) {
+                            record[f] = oldRecord[f]?.map((r) => r.id) || [];
+                            continue;
+                        }
+                        record[f] = oldRecord[f]?.id || false;
+                    }
+                }
+
+                if (oldRecord) {
+                    const raw = {};
+                    for (const [field, value] of Object.entries(record)) {
+                        const params = getFields(model)[field];
+                        if (field === "id" || !params) {
+                            continue;
+                        }
+
+                        if (X2MANY_TYPES.has(params.type)) {
+                            value.push(
+                                ...oldRecord[field]
+                                    .filter((r) => typeof r.id === "string")
+                                    .map((r) => r.id)
+                            );
+                            const existingRecords = value
+                                .map((r) => models[params.relation]?.get(r))
+                                .filter(Boolean);
+                            if (existingRecords.length) {
+                                record[field] = [["set", ...existingRecords]];
+                            } else {
+                                record[field] = [];
+                            }
+                            raw[field] = value.filter((id) => typeof id === "number");
+                        } else if (
+                            params.type === "many2one" &&
+                            value &&
+                            !exists(params.relation, value)
+                        ) {
+                            const key = `${params.relation}_${value}`;
+                            if (!missingFields[key]) {
+                                missingFields[key] = [[oldRecord, params]];
+                            } else {
+                                missingFields[key].push([oldRecord, params]);
+                            }
+                        }
+                    }
+
+                    oldRecord.update(record, { silent: true });
+                    oldRecord.setup(record);
+                    ignoreConnection[model].push(record.id);
+                    results[model].push(oldRecord);
+                    Object.assign(baseData[model][record.id], raw);
+                    continue;
+                }
+
+                const result = create(models[model], model, record, true, false, true);
+                if (oldRecord && oldRecord.id !== result.id) {
+                    oldRecord.delete();
+                }
+
+                if (!(model in results)) {
+                    results[model] = [];
+                }
+
+                results[model].push(result);
+            }
+        }
+
+        const alreadyLinkedSet = new Set();
+        const modelToSetup = [];
+
+        // link the related records
+        for (const model in rawData) {
+            if (alreadyLinkedSet.has(model) || (!load.includes(model) && load.length !== 0)) {
+                continue;
+            }
+
+            const rawRecords = rawData[model];
+            const fields = getFields(model);
+
+            for (const rawRec of rawRecords) {
+                const recorded = records[model].get(rawRec.id);
+
+                // Check if there are any missing fields for this record
+                const key = `${model}_${rawRec.id}`;
+                if (missingFields[key]) {
+                    for (const [record, field] of missingFields[key]) {
+                        // Connect the `recorded` to the missing `field` in `record`
+                        connect(field, record, recorded);
+                    }
+                    delete missingFields[key];
+                }
+
+                if (ignoreConnection[model].includes(rawRec.id)) {
+                    continue;
+                }
+
+                for (const name in fields) {
+                    const field = fields[name];
+                    alreadyLinkedSet.add(field);
+>>>>>>> df859d4093e0d9973d528a013d80bc939de19156
 
                     if (X2MANY_TYPES.has(field.type)) {
                         if (fromSerialized) {
@@ -955,6 +1797,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
             }
 
+<<<<<<< master
             const alreadyLinkedSet = new Set();
             const modelToSetup = [];
 
@@ -1084,6 +1927,27 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     model: model,
                 });
             }
+||||||| 158815cc2e0bc1964696a57ce8f2b82356dd5477
+        for (const [models, values] of Object.entries(rawData)) {
+            for (const value of values) {
+                baseData[models][value.id] = value;
+            }
+        }
+
+        for (const [model, values] of Object.entries(results)) {
+            indexRecord(model, values);
+            models[model].triggerEvents("create", {
+                ids: values.map((v) => v.id),
+                model: model,
+            });
+=======
+        for (const [model, values] of Object.entries(results)) {
+            indexRecord(model, values);
+            models[model].triggerEvents("create", {
+                ids: values.map((v) => v.id),
+                model: model,
+            });
+>>>>>>> df859d4093e0d9973d528a013d80bc939de19156
         }
     }
 
