@@ -20,7 +20,7 @@
             </t>
             <div class="o-mail-SubChannelList o-mail-Discuss-threadActionPopover mw-100 w-100 h-100" t-att-class="{ 'align-items-center justify-content-center': state.subChannels.length === 0 }">
                 <div t-if="state.subChannels.length === 0" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-                    <p class="my-1 pb-2 text-center fst-italic text-500">
+                    <p class="my-1 text-center fst-italic text-500">
                         <t t-if="state.searching" t-esc="NO_THREAD_FOUND"/>
                         <t t-else="">This channel has no thread yet.</t>
                     </p>

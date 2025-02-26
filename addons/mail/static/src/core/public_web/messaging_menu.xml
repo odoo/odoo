@@ -51,13 +51,14 @@
             </t>
         </div>
     </div>
-    <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex border-top bg-view shadow-lg w-100 btn-group">
-        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2 mx-0 pb-4" t-att-class="{
-            'text-primary fw-bolder o-active': store.discuss.activeTab === tab.id,
-            'border-end': !tab_last,
+    <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex bg-view shadow-lg w-100 btn-group">
+        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2 mx-0 rounded-0 bg-transparent" t-att-class="{
+            'text-primary fw-bold o-active': store.discuss.activeTab === tab.id,
+            'pb-4': isIosPwa,
+            'pb-2': !isIosPwa,
         }" t-on-click="() => this.onClickNavTab(tab.id)">
-            <i t-attf-class="p-2 fs-4 {{ tab.icon }}"/>
-            <span class="small" t-esc="tab.label"/>
+            <i t-attf-class="p-1 fs-2 {{ tab.icon }}" t-att-class="{ 'text-primary': store.discuss.activeTab === tab.id }"/>
+            <span class="smaller" t-esc="tab.label" t-att-class="{ 'text-primary': store.discuss.activeTab === tab.id }"/>
         </button>
     </div>
 </t>

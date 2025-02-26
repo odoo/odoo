@@ -284,7 +284,7 @@ test("sidebar: chat im_status rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel-threadIcon", { count: 3 });
     await contains(".o-mail-DiscussSidebarChannel", {
         text: "Partner1",
-        contains: [".o-mail-ThreadIcon div[title='Offline']"],
+        contains: [".o-mail-ThreadIcon [title='Offline']"],
     });
     await contains(".o-mail-DiscussSidebarChannel", {
         text: "Partner2",
@@ -292,7 +292,7 @@ test("sidebar: chat im_status rendering", async () => {
     });
     await contains(".o-mail-DiscussSidebarChannel", {
         text: "Partner3",
-        contains: [".o-mail-ThreadIcon div[title='Away']"],
+        contains: [".o-mail-ThreadIcon [title='Idle']"],
     });
 });
 
@@ -1810,7 +1810,7 @@ test('auto-select "Inbox nav bar" when discuss had inbox as active thread', asyn
     await start();
     await openDiscuss();
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await contains(".o-mail-MessagingMenu-navbar button.fw-bolder", { text: "Mailboxes" });
+    await contains(".o-mail-MessagingMenu-navbar button.fw-bold", { text: "Mailboxes" });
     await contains("button.active.o-active", { text: "Inbox" });
     await contains("h4", { text: "Your inbox is empty" });
 });
