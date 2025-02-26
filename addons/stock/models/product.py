@@ -975,6 +975,7 @@ class ProductTemplate(models.Model):
         return product_templates
 
     def write(self, vals):
+        clean_inventory = False
         if 'company_id' in vals and vals['company_id']:
             products_changing_company = self.filtered(lambda product: product.company_id.id != vals['company_id'])
             if products_changing_company:
@@ -993,25 +994,13 @@ class ProductTemplate(models.Model):
                 ], order=None, limit=1)
                 if quant:
                     raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
+            if 'is_storable' in vals and any(vals['is_storable'] != prod_tmpl.is_storable and not prod_tmpl.is_storable for prod_tmpl in self):
+                clean_inventory = True
 
-        if 'is_storable' in vals and not vals['is_storable'] and sum(self.mapped('nbr_reordering_rules')) != 0:
-            raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
-        if any('is_storable' in vals and vals['is_storable'] != prod_tmpl.is_storable for prod_tmpl in self):
-            existing_done_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
-                ('state', '=', 'done'),
-            ], limit=1)
-            if existing_done_move_lines:
-                raise UserError(_("You can not change the inventory tracking of a product that was already used."))
-            existing_reserved_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
-                ('state', 'in', ['partially_available', 'assigned']),
-            ], limit=1)
-            if existing_reserved_move_lines:
-                raise UserError(_("You can not change the inventory tracking of a product that is currently reserved on a stock move. If you need to change the inventory tracking, you should first unreserve the stock move."))
-        if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
-            raise UserError(_("Available quantity should be set to zero before changing inventory tracking"))
-        return super().write(vals)
+        res = super().write(vals)
+        if clean_inventory:
+            self.env['stock.quant'].sudo()._clean_reservations()
+        return res
 
     def copy(self, default=None):
         new_products = super().copy(default=default)
