@@ -7,5 +7,6 @@
     'depends': [
         'base',
     ],
+    'installable': False,
     'license': 'LGPL-3',
 }

@@ -10,16 +10,12 @@ from pathlib import Path
 import odoo
 from odoo.cli.command import Command, SubcommandsMixin, Subcommand
 from odoo.modules import get_module_path
-from odoo.tools.translate import trans_export, load_language
+from odoo.tools.translate import trans_export
 
 _logger = logging.getLogger(__name__)
-BOOL_YES = {'1', 'yes', 'true', 'on'}
-BOOL_NO = {'0', 'no', 'false', 'off'}
-BOOL_ONLY = {'only'}
-YES_NO_ONLY = BOOL_YES | BOOL_NO | BOOL_ONLY
 
 
-def _get_languages(env, lang):
+def get_languages(env, lang):
     if lang == '*':
         domain = []
     else:
@@ -35,52 +31,6 @@ def _get_language_files(env, module_names, language_codes, export_pot=False):
             filename = f"{module_name}.pot" if isocode == 'pot' else f"{isocode}.po"
             filepath = str(Path(get_module_path(module_name)) / 'i18n' / filename)
             yield (module, code, filepath)
-
-
-# Subcommands
-# -------------------------------------------------------------------------------- 
-
-
-class I18nLoadLang(Subcommand):
-    """
-    Load a language
-
-    Example:
-    ./odoo-bin <addons> i18n list <db> --l10n --delimiter=',' \
-         | xargs ./odoo-bin <addons> <db> server -i
-    """
-    description = 'Install languages'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.parser.add_argument(
-            'languages', nargs='*',
-            help=('List of ISO codes to be installed.'))
-        self.parser.add_argument(
-            '--database', '-d', dest='db_name', required=True,
-            help='Specify the database name.')
-
-    def _parse_args(self, cmdargs):
-        parsed_args, _unknown = self.parser.parse_known_args(args=cmdargs)
-        _logger.info("Languages selected: %s", parsed_args.languages)
-        _logger.info("Connecting to database '%s'" % parsed_args.db_name)
-        return parsed_args
-
-    def run(self, cmdargs):
-        _logger.info("Installing languages...")
-
-        try:
-            # Ensure arguments are consistent
-            parsed_args = self._parse_args(cmdargs)
-        except ValueError as e:
-            self.parser.print_help()
-            Command.die(f'\n{e}\n')
-
-        # Start a new environment, create/init the database if needed
-        with self.build_env(parsed_args.db_name) as env:
-            for language in _get_languages(env, parsed_args.languages):
-                load_language(env.cr, language.code)
-            env.cr.commit()
 
 
 class I18nImport(Subcommand):
@@ -189,7 +139,7 @@ class I18nExport(Subcommand):
             self._export(env, parsed_args.lang, parsed_args.modules, parsed_args.format, export_pot)
 
     def _export(self, env, lang, modules, exp_format, export_pot):
-        language_codes = _get_languages(env, lang)
+        language_codes = get_languages(env, lang)
         language_files = _get_language_files(env, modules, language_codes, export_pot=export_pot)
         for (module, lang_code, filepath) in language_files:
             self._export_module(env, module, filepath, lang_code, exp_format)
@@ -211,10 +161,6 @@ class I18nExport(Subcommand):
             trans_export(lang_code, [module.name], outfile, fmt, env.cr)
 
 
-# Command
-# -------------------------------------------------------------------------------- 
-
-
 class I18n(Command, SubcommandsMixin):
     """ Import, export, setup languages and internationalization files """
-    subcommands = I18nExport, I18nImport, I18nLoadLang
+    subcommands = I18nExport, I18nImport
