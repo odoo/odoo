@@ -1,20 +1,21 @@
 import { classAction } from "@html_builder/core/plugins/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
 export const card_parent_handlers =
     ".s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div";
 
 class CardOptionPlugin extends Plugin {
-    static id = "CardOption";
+    static id = "cardOption";
     static dependencies = ["builderActions"];
     resources = {
         builder_options: [
-            {
+            withSequence(20, {
                 template: "html_builder.CardOption",
                 selector: ".s_card",
                 exclude: `div:is(${card_parent_handlers}) > .s_card`,
-            },
+            }),
         ],
         builder_actions: {
             p: this,
