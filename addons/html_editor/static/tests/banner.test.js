@@ -91,7 +91,7 @@ test("remove all content should preserve the first paragraph tag inside the bann
         unformat(
             `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                     <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3" contenteditable="true"><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></div>
+                    <div class="w-100 px-3" contenteditable="true"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></div>
                 </div><p><br></p>`
         )
     );
@@ -160,7 +160,7 @@ test("Everything gets selected with ctrl+a, including a banner", async () => {
 
     await press("Backspace");
     expect(getContent(el)).toBe(
-        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 
@@ -175,7 +175,7 @@ test("Everything gets selected with ctrl+a, including a contenteditable=false as
 
     await press("Backspace");
     expect(getContent(el)).toBe(
-        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 
@@ -206,7 +206,7 @@ test("add banner inside empty list", async () => {
             `<ul><li><br><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                     <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
                     <div class="w-100 px-3" contenteditable="true">
-                        <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+                        <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
                     </div>
                 </div><br></li></ul>`
         )

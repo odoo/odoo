@@ -1116,7 +1116,7 @@ describe("Selection not collapsed", () => {
             // The flagged 200B is there to preserve the font so if we
             // write now, we still write in the font element's style.
             contentAfterEdit:
-                '<h1 placeholder="Heading 1" class="o-we-hint"><i data-oe-zws-empty-inline="">[]\u200B</i><br></h1>',
+                '<h1 o-we-hint-text="Heading 1" class="o-we-hint"><i data-oe-zws-empty-inline="">[]\u200B</i><br></h1>',
             // The flagged 200B is removed by the sanitizer if its
             // parent remains empty.
             contentAfter: "<h1>[]<br></h1>",
@@ -1307,14 +1307,14 @@ describe("Selection not collapsed", () => {
             contentBefore: "<h1><u>[abcd</u></h1><p>ef]</p><h2>1</h2>",
             stepFunction: deleteForward,
             contentAfterEdit:
-                '<h1 placeholder="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>1</h2>',
+                '<h1 o-we-hint-text="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>1</h2>',
             contentAfter: "<h1>[]<br></h1><h2>1</h2>",
         });
         await testEditor({
             contentBefore: "<h1>[<u>abcd</u></h1><p>ef]</p><h2>2</h2>",
             stepFunction: deleteForward,
             contentAfterEdit:
-                '<h1 placeholder="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>2</h2>',
+                '<h1 o-we-hint-text="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>2</h2>',
             contentAfter: "<h1>[]<br></h1><h2>2</h2>",
         });
         // Backward selection
@@ -1322,14 +1322,14 @@ describe("Selection not collapsed", () => {
             contentBefore: "<h1><u>]abcd</u></h1><p>ef[</p><h2>3</h2>",
             stepFunction: deleteForward,
             contentAfterEdit:
-                '<h1 placeholder="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>3</h2>',
+                '<h1 o-we-hint-text="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>3</h2>',
             contentAfter: "<h1>[]<br></h1><h2>3</h2>",
         });
         await testEditor({
             contentBefore: "<h1>]<u>abcd</u></h1><p>ef[</p><h2>4</h2>",
             stepFunction: deleteForward,
             contentAfterEdit:
-                '<h1 placeholder="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>4</h2>',
+                '<h1 o-we-hint-text="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>4</h2>',
             contentAfter: "<h1>[]<br></h1><h2>4</h2>",
         });
     });
@@ -1345,7 +1345,7 @@ describe("Selection not collapsed", () => {
         expect(getContent(el)).toBe("<h1>[abc]</h1><p>def</p>");
         deleteForward(editor);
         expect(getContent(el)).toBe(
-            '<h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1><p>def</p>'
+            '<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]<br></h1><p>def</p>'
         );
     });
     test("should delete a heading (triple click delete) (2)", async () => {
@@ -1359,7 +1359,7 @@ describe("Selection not collapsed", () => {
         expect(getContent(el)).toBe("<h1>[abc]</h1><p><br></p><p>def</p>");
         deleteForward(editor);
         expect(getContent(el)).toBe(
-            '<h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1><p><br></p><p>def</p>'
+            '<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]<br></h1><p><br></p><p>def</p>'
         );
     });
 

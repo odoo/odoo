@@ -158,6 +158,7 @@ export class HistoryPlugin extends Plugin {
 
     setup() {
         this.mutationFilteredClasses = new Set(this.getResource("system_classes"));
+        this.mutationFilteredAttributes = new Set(this.getResource("system_attributes"));
         this._onKeyupResetContenteditableNodes = [];
         this.addDomListener(this.document, "beforeinput", this._onDocumentBeforeInput.bind(this));
         this.addDomListener(this.document, "input", this._onDocumentInput.bind(this));
@@ -346,6 +347,9 @@ export class HistoryPlugin extends Plugin {
                     continue;
                 }
                 if (record.attributeName === "contenteditable") {
+                    continue;
+                }
+                if (this.mutationFilteredAttributes.has(record.attributeName)) {
                     continue;
                 }
                 // @todo @phoenix test attributeCache

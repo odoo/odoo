@@ -623,7 +623,7 @@ describe("Enter applied to toggle title", () => {
         splitBlock(editor);
         expect(getContent(el)).toBe(
             unformat(`
-                <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+                <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
                 <p>asdf</p>
             `)
         );
