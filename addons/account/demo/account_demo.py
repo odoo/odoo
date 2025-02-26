@@ -133,68 +133,96 @@ class AccountChartTemplate(models.AbstractModel):
             ],
             limit=1,
         )
-        default_receivable = self.env.ref('base.res_partner_3').with_company(company or self.env.company).property_account_receivable_id
+        default_receivable = self.env['res.partner']._fields['property_account_receivable_id'].get_company_dependent_fallback(
+            self.env['res.partner'].with_company(company or self.env.company)
+        )
         income_account = self.env['account.account'].with_company(company or self.env.company).search([
             *self.env['account.account']._check_company_domain(cid),
             ('account_type', '=', 'income'),
             ('id', '!=', (company or self.env.company).account_journal_early_pay_discount_gain_account_id.id)
         ], limit=1)
+        has_demo_data = self.env.ref('base.res_partner_3', raise_if_not_found=False)
+        if not has_demo_data:
+            partner_2, partner_12 = self.env['res.partner'].with_company(company or self.env.company).create([
+                { 'name': 'Demo Partner_2' },
+                { 'name': 'Demo Partner_12' },
+            ])
+            product_delivery_01 = self.env['product.product'].with_company(company or self.env.company).create([
+                {'name': 'product_delivery_01', 'type': 'consu'},
+            ])
+            consu_delivery_01, consu_delivery_02, consu_delivery_03 = self.env['product.product'].with_company(company or self.env.company).create([
+                {'name': 'consu_delivery_01', 'type': 'consu'},
+                {'name': 'consu_delivery_02', 'type': 'consu'},
+                {'name': 'consu_delivery_03', 'type': 'consu'},
+            ])
+            product_order_01 = self.env['product.product'].with_company(company or self.env.company).create([
+                {'name': 'product_order_01', 'type': 'consu'},
+            ])
+        else:
+            partner_2 = self.env.ref('base.res_partner_2')
+            partner_12 = self.env.ref('base.res_partner_12')
+            product_delivery_01 = self.env.ref('product.product_delivery_01')
+            consu_delivery_01 = self.env.ref('product.consu_delivery_01')
+            consu_delivery_02 = self.env.ref('product.consu_delivery_02')
+            consu_delivery_03 = self.env.ref('product.consu_delivery_03')
+            product_order_01 = self.env.ref('product.product_order_01')
+        user_demo = self.env.ref('base.user_demo', raise_if_not_found=False) or self.env['res.users']
         return {
             'demo_invoice_1': {
                 'move_type': 'out_invoice',
-                'partner_id': 'base.res_partner_12',
-                'invoice_user_id': 'base.user_demo',
+                'partner_id': partner_12.id,
+                'invoice_user_id': user_demo.id,
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'delivery_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
-                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_02.id, 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_03.id, 'quantity': 5}),
                 ],
             },
             'demo_invoice_2': {
                 'move_type': 'out_invoice',
-                'partner_id': 'base.res_partner_2',
+                'partner_id': partner_2.id,
                 'invoice_user_id': False,
                 'invoice_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
                 'delivery_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
-                    Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 20}),
+                    Command.create({'product_id': consu_delivery_03.id, 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_01.id, 'quantity': 20}),
                 ],
             },
             'demo_invoice_3': {
                 'move_type': 'out_invoice',
-                'partner_id': 'base.res_partner_2',
+                'partner_id': partner_2.id,
                 'invoice_user_id': False,
                 'invoice_date': (fields.Date.today() + timedelta(days=-3)).strftime('%Y-%m-%d'),
                 'delivery_date': (fields.Date.today() + timedelta(days=-3)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 5}),
-                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_01.id, 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_03.id, 'quantity': 5}),
                 ],
             },
             'demo_invoice_followup': {
                 'move_type': 'out_invoice',
-                'partner_id': 'base.res_partner_2',
-                'invoice_user_id': 'base.user_demo',
+                'partner_id': partner_2.id,
+                'invoice_user_id': user_demo.id,
                 'invoice_payment_term_id': 'account.account_payment_term_immediate',
                 'invoice_date': (fields.Date.today() + timedelta(days=-15)).strftime('%Y-%m-%d'),
                 'delivery_date': (fields.Date.today() + timedelta(days=-15)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
-                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_02.id, 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_03.id, 'quantity': 5}),
                 ],
             },
             'demo_invoice_5': {
                 'move_type': 'in_invoice',
-                'partner_id': 'base.res_partner_12',
+                'partner_id': partner_12.id,
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'delivery_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.product_delivery_01', 'price_unit': 10.0, 'quantity': 1}),
-                    Command.create({'product_id': 'product.product_order_01', 'price_unit': 4.0, 'quantity': 5}),
+                    Command.create({'product_id': product_delivery_01.id, 'price_unit': 10.0, 'quantity': 1}),
+                    Command.create({'product_id': product_order_01.id, 'price_unit': 4.0, 'quantity': 5}),
                 ],
             },
             'demo_invoice_extract': {
@@ -204,7 +232,7 @@ class AccountChartTemplate(models.AbstractModel):
             'demo_invoice_equipment_purchase': {
                 'move_type': 'in_invoice',
                 'ref': f'INV/{fifteen_months_ago.year}/0057',
-                'partner_id': 'base.res_partner_12',
+                'partner_id': partner_12.id,
                 'invoice_user_id': False,
                 'invoice_date': fifteen_months_ago.strftime("%Y-%m-17"),
                 'delivery_date': fifteen_months_ago.strftime("%Y-%m-17"),
@@ -216,35 +244,35 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'demo_move_auto_reconcile_1': {
                 'move_type': 'out_refund',
-                'partner_id': 'base.res_partner_12',
+                'partner_id': partner_12.id,
                 'invoice_date': one_month_ago.strftime("%Y-%m-02"),
                 'delivery_date': one_month_ago.strftime("%Y-%m-02"),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_03.id, 'quantity': 5}),
                 ],
             },
             'demo_move_auto_reconcile_2': {
                 'move_type': 'out_refund',
-                'partner_id': 'base.res_partner_12',
+                'partner_id': partner_12.id,
                 'invoice_date': one_month_ago.strftime("%Y-%m-03"),
                 'delivery_date': one_month_ago.strftime("%Y-%m-03"),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_02.id, 'quantity': 5}),
                 ],
             },
             'demo_move_auto_reconcile_3': {
                 'move_type': 'in_refund',
-                'partner_id': 'base.res_partner_12',
+                'partner_id': partner_12.id,
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'delivery_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.product_delivery_01', 'price_unit': 10.0, 'quantity': 1}),
-                    Command.create({'product_id': 'product.product_order_01', 'price_unit': 4.0, 'quantity': 5}),
+                    Command.create({'product_id': product_delivery_01.id, 'price_unit': 10.0, 'quantity': 1}),
+                    Command.create({'product_id': product_order_01.id, 'price_unit': 4.0, 'quantity': 5}),
                 ],
             },
             'demo_move_auto_reconcile_4': {
                 'move_type': 'in_refund',
-                'partner_id': 'base.res_partner_12',
+                'partner_id': partner_12.id,
                 'invoice_date': fifteen_months_ago.strftime("%Y-%m-19"),
                 'delivery_date': fifteen_months_ago.strftime("%Y-%m-19"),
                 'invoice_line_ids': [
@@ -254,38 +282,38 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'demo_move_auto_reconcile_5': {
                 'move_type': 'out_refund',
-                'partner_id': 'base.res_partner_2',
+                'partner_id': partner_2.id,
                 'invoice_date': (fields.Date.today() + timedelta(days=-10)).strftime('%Y-%m-%d'),
                 'delivery_date': (fields.Date.today() + timedelta(days=-10)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
-                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_02.id, 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_03.id, 'quantity': 5}),
                 ],
             },
             'demo_move_auto_reconcile_6': {
                 'move_type': 'out_refund',
-                'partner_id': 'base.res_partner_2',
+                'partner_id': partner_2.id,
                 'invoice_user_id': False,
                 'invoice_date': (fields.Date.today() + timedelta(days=-1)).strftime('%Y-%m-%d'),
                 'delivery_date': (fields.Date.today() + timedelta(days=-1)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
-                    Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 20}),
+                    Command.create({'product_id': consu_delivery_03.id, 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_01.id, 'quantity': 20}),
                 ],
             },
             'demo_move_auto_reconcile_7': {
                 'move_type': 'out_refund',
-                'partner_id': 'base.res_partner_2',
+                'partner_id': partner_2.id,
                 'invoice_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
                 'delivery_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 5}),
-                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_01.id, 'quantity': 5}),
+                    Command.create({'product_id': consu_delivery_03.id, 'quantity': 5}),
                 ],
             },
             'demo_move_auto_reconcile_8': {
                 'move_type': 'entry',
-                'partner_id': 'base.res_partner_2',
+                'partner_id': partner_2.id,
                 'date': (fields.Date.today() + timedelta(days=-20)).strftime('%Y-%m-%d'),
                 'journal_id': misc_journal.id,
                 'line_ids': [
@@ -295,7 +323,7 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'demo_move_auto_reconcile_9': {
                 'move_type': 'entry',
-                'partner_id': 'base.res_partner_2',
+                'partner_id': partner_2.id,
                 'date': (fields.Date.today() + timedelta(days=-20)).strftime('%Y-%m-%d'),
                 'journal_id': misc_journal.id,
                 'line_ids': [
@@ -315,6 +343,7 @@ class AccountChartTemplate(models.AbstractModel):
             ],
             limit=1,
         )
+        partner_12 = self.env.ref('base.res_partner_12', raise_if_not_found=False) or self.env['res.partner']
         return {
             'demo_bank_statement_1': {
                 'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-01/1',
@@ -332,7 +361,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'payment_ref': time.strftime('INV/%Y/00002 and INV/%Y/00003'),
                         'amount': 1275.0,
                         'date': time.strftime('%Y-01-01'),
-                        'partner_id': 'base.res_partner_12',
+                        'partner_id': partner_12.id,
                     }),
                 ]
             },
@@ -348,6 +377,8 @@ class AccountChartTemplate(models.AbstractModel):
             ],
             limit=1,
         )
+        partner_2 = self.env.ref('base.res_partner_2', raise_if_not_found=False) or self.env['res.partner']
+        partner_12 = self.env.ref('base.res_partner_12', raise_if_not_found=False) or self.env['res.partner']
         return {
             'demo_bank_statement_line_0': {
                 'journal_id': bnk_journal.id,
@@ -358,13 +389,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'journal_id': bnk_journal.id,
                 'payment_ref': 'Prepayment',
                 'amount': 650,
-                'partner_id': 'base.res_partner_12',
+                'partner_id': partner_12.id,
             },
             'demo_bank_statement_line_2': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': time.strftime(f'First {formatLang(self.env, 2000, currency_obj=self.env.company.currency_id)} of invoice %Y/00001'),
                 'amount': 2000,
-                'partner_id': 'base.res_partner_12',
+                'partner_id': partner_12.id,
             },
             'demo_bank_statement_line_3': {
                 'journal_id': bnk_journal.id,
@@ -375,7 +406,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'journal_id': bnk_journal.id,
                 'payment_ref': time.strftime('INV/%Y/00002'),
                 'amount': 750,
-                'partner_id': 'base.res_partner_2',
+                'partner_id': partner_2.id,
             },
             'demo_bank_statement_line_5': {
                 'journal_id': bnk_journal.id,
@@ -442,13 +473,14 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_mail_message(self, company=False):
+        partner_demo = self.env.ref('base.partner_demo', raise_if_not_found=False) or self.env.user.partner_id
         return {
             'mail_message_in_invoice_1': {
                 'model': 'account.move',
                 'res_id': 'demo_invoice_extract',
                 'body': 'Vendor Bill attachment',
                 'message_type': 'comment',
-                'author_id': 'base.partner_demo',
+                'author_id': partner_demo.id,
                 'attachment_ids': [Command.set([
                     'ir_attachment_in_invoice_1',
                 ])]
@@ -458,7 +490,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'res_id': 'demo_invoice_equipment_purchase',
                 'body': 'Vendor Bill attachment',
                 'message_type': 'comment',
-                'author_id': 'base.partner_demo',
+                'author_id': partner_demo.id,
                 'attachment_ids': [Command.set([
                     'ir_attachment_in_invoice_2',
                 ])]
