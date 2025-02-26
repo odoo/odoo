@@ -30,7 +30,7 @@ setRunner(runner);
  * @param {...unknown} values
  */
 export function registerDebugInfo(...values) {
-    logger.logDebug("debug context provided:", ...values);
+    logger.logDebug("Debug context provided:", ...values);
 }
 
 // Main test API

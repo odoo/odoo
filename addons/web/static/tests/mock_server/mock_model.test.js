@@ -55,6 +55,60 @@ test("model should be defined on the mock server", async () => {
     ]);
 });
 
+test("models can be extended by having the same name", async () => {
+    class First extends models.Model {
+        _name = "same.model";
+
+        same_method() {
+            return "1";
+        }
+    }
+
+    class Second extends models.Model {
+        _name = "same.model";
+
+        second_method() {
+            return "added by 2";
+        }
+
+        same_method() {
+            return [super.same_method(), "2"].join(" & ");
+        }
+    }
+
+    class Third extends models.Model {
+        _name = "same.model";
+
+        third_method() {
+            return "added by 3";
+        }
+
+        same_method() {
+            return "overridden by 3";
+        }
+    }
+
+    defineModels([First, Second]);
+
+    await makeMockEnv(null, { lazy: false });
+
+    const orm = getService("orm");
+
+    await expect(orm.call("same.model", "same_method")).resolves.toBe("1 & 2");
+    await expect(orm.call("same.model", "second_method")).resolves.toBe("added by 2");
+    await expect(orm.call("same.model", "third_method")).rejects.toThrow();
+
+    expect(MockServer.env["same.model"]).toBeInstanceOf(Second);
+
+    defineModels([Third]);
+
+    await expect(orm.call("same.model", "same_method")).resolves.toBe("overridden by 3");
+    await expect(orm.call("same.model", "second_method")).resolves.toBe("added by 2");
+    await expect(orm.call("same.model", "third_method")).resolves.toBe("added by 3");
+
+    expect(MockServer.env["same.model"]).toBeInstanceOf(Third);
+});
+
 describe("level 1", () => {
     Oui._fields.age = fields.Integer();
     Oui._records[0].age = 42;

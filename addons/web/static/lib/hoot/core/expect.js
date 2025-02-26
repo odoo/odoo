@@ -884,7 +884,7 @@ export class Matcher {
      *  expect("foo").not.toBe("bar");
      */
     get not() {
-        if (this.flags & FLAGS.not) {
+        if (this._flags & FLAGS.not) {
             throw matcherModifierError("not", `matcher is already negated`);
         }
         return this._clone(FLAGS.not);
@@ -2147,7 +2147,7 @@ export class Matcher {
      * @private
      */
     _saveStack() {
-        if (!this._flags & FLAGS.headless) {
+        if (!(this._flags & FLAGS.headless)) {
             currentStack = getStack(1);
         }
     }
