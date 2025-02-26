@@ -160,6 +160,7 @@
         'views/snippets/s_website_form_overlay.xml',
         'views/snippets/s_title_form.xml',
         'views/snippets/s_searchbar.xml',
+        'views/snippets/s_inline_text.xml',
         'views/snippets/s_button.xml',
         'views/snippets/s_freegrid.xml',
         'views/snippets/s_card_offset.xml',
