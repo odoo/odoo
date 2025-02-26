@@ -210,7 +210,7 @@ export class FontPlugin extends Plugin {
                 },
             }),
         ],
-        powerbox_categories: withSequence(30, { id: "format", name: _t("Format") }),
+        powerbox_categories: withSequence(5, { id: "format", name: _t("Format") }),
         powerbox_items: [
             {
                 categoryId: "format",
@@ -229,11 +229,11 @@ export class FontPlugin extends Plugin {
                 commandId: "setTagParagraph",
             },
             {
-                categoryId: "structure",
+                categoryId: "format",
                 commandId: "setTagQuote",
             },
             {
-                categoryId: "structure",
+                categoryId: "format",
                 commandId: "setTagPre",
             },
         ],
