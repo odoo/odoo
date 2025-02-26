@@ -3978,6 +3978,14 @@ class AccountMove(models.Model):
     def _get_report_base_filename(self):
         return self._get_move_display_name()
 
+    def _get_report_attachment_filename(self):
+        self.ensure_one()
+        return (self.state == 'posted') and ((self.name or 'INV').replace('/', '_') + '.pdf')
+
+    def _get_report_mail_attachment_filename(self):
+        self.ensure_one()
+        return 'Invoice_' + (self.name or '').replace('/', '_') + (self.state == 'draft' and '_draft' or '')
+
     # -------------------------------------------------------------------------
     # CRON
     # -------------------------------------------------------------------------
