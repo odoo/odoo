@@ -472,6 +472,28 @@ class AdvancedFollowersTest(MailCommon):
             'AutoSubscribe: at create auto subscribe as creator + from parent take both subtypes'
         )
 
+    def test_subtype_parent_same_model(self):
+        subtype_1 = self.env['mail.message.subtype'].create({
+            'name': '',
+            'res_model': 'res.partner',
+            'default': True,
+        })
+        self.env['mail.message.subtype'].create({
+            'name': '',
+            'res_model': 'res.partner',
+            'default': True,
+            'parent_id': subtype_1.id,
+            'relation_field': 'parent_id',
+        })
+
+        Partner = self.env['res.partner']
+
+        p1 = Partner.with_user(self.user_employee).create({'name': 'Customer1', 'email': 'test1@test.example.com'})
+        p2 = Partner.with_user(self.user_admin).create({'name': 'Customer1 Child', 'email': 'test1_child@test.example.com', 'parent_id': p1.id})
+        p3 = Partner.with_user(self.user_admin).create({'name': 'Customer1 Child of CHILD', 'email': 'test1_child_child@test.example.com', 'parent_id': p1.id})
+        self.assertIn(self.partner_employee, p2.message_follower_ids.partner_id, 'The partner from the parent has not been added as follower.')
+        self.assertIn(self.partner_employee, p3.message_follower_ids.partner_id, 'The partner from the parent has not been added as follower.')
+
 
 @tagged('mail_followers')
 class AdvancedResponsibleNotifiedTest(MailCommon):
