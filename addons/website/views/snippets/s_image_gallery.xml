@@ -114,10 +114,9 @@
                 <we-button data-select-class="s_image_gallery_indicators_rounded">Rounded Miniatures</we-button>
                 <we-button data-select-class="s_image_gallery_indicators_hidden">Hidden</we-button>
             </we-select>
-            <t t-call="website.snippet_options_border_widgets">
-                <t t-set="apply_to" t-valuef="img"/>
-                <t t-set="so_rounded_no_dependencies" t-value="true"/>
-            </t>
+            <t t-call="website.snippet_options_border_widgets"
+                t-argf-apply_to="img"
+                t-arg-so_rounded_no_dependencies="true"/>
         </div>
         <div data-js="gallery_img" data-selector=".s_image_gallery img"></div>
     </xpath>

@@ -20,7 +20,6 @@ import polib
 import re
 import tarfile
 import typing
-import warnings
 from collections import defaultdict, namedtuple
 from contextlib import suppress
 from datetime import datetime
@@ -155,13 +154,22 @@ TRANSLATED_ELEMENTS = {
 
 # Which attributes must be translated. This is a dict, where the value indicates
 # a condition for a node to have the attribute translatable.
-TRANSLATED_ATTRS = dict.fromkeys({
+TRANSLATED_ATTRS = {
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
     'value_label', 'data-tooltip', 'label',
-}, lambda e: True)
+}
 
-def translate_attrib_value(node):
+TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in TRANSLATED_ATTRS})
+
+def is_translatable_attrib(key):
+    return (
+        key in TRANSLATED_ATTRS or
+        (key.endswith('.translate') and (key.startswith('t-attf-') or key.startswith('t-argf-'))) or
+        key.startswith('t-valuef.translate-')
+    )
+
+def is_translatable_attrib_value(node):
     # check if the value attribute of a node must be translated
     classes = node.attrib.get('class', '').split(' ')
     return (
@@ -171,15 +179,27 @@ def translate_attrib_value(node):
         and 'o_translatable_input_hidden' in classes
     )
 
-TRANSLATED_ATTRS.update(
-    value=translate_attrib_value,
-    text=lambda e: (e.tag == 'field' and e.attrib.get('widget', '') == 'url'),
-    **{f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()},
-)
+def is_translatable_attrib_text(node):
+    return node.tag == 'field' and node.attrib.get('widget', '') == 'url'
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 space_pattern = re.compile(r"[\s\uFEFF]*")  # web_editor uses \uFEFF as ZWNBSP
 
+# regexpr for string formatting and extract ( ruby-style )|( jinja-style  ) used in `_compile_format`
+FORMAT_REGEX = re.compile(r'((?:#\{.+?\})|(?:\{\{.+?\}\}))')
+
+def translate_format_string_expression(term, callback):
+    expressions = FORMAT_REGEX.findall(term)
+    term_without_py = term
+    for index, expression in enumerate(expressions):
+        term_without_py = term_without_py.replace(expression, '{{%s}}' % index)
+    value = callback(term_without_py)
+    if not value:
+        return None
+    for index, expression in enumerate(expressions):
+        value = value.replace('{{%s}}' % index, expression)
+    value = FORMAT_REGEX.sub('None', value)
+    return value
 
 def translate_xml_node(node, callback, parse, serialize):
     """ Return the translation of the given XML/HTML node.
@@ -221,7 +241,11 @@ def translate_xml_node(node, callback, parse, serialize):
                 and translatable(node[pos])
                 and (
                     any(  # attribute to translate
-                        val and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node[pos])
+                        val and (
+                            is_translatable_attrib(key) or
+                            (key == 'value' and is_translatable_attrib_value(node[pos])) or
+                            (key == 'text' and is_translatable_attrib_text(node[pos]))
+                        )
                         for key, val in node[pos].attrib.items()
                     )
                     # node[pos] contains some text to translate
@@ -238,7 +262,7 @@ def translate_xml_node(node, callback, parse, serialize):
             isinstance(node, SKIPPED_ELEMENT_TYPES)
             or node.tag in SKIPPED_ELEMENTS
             or node.get('t-translation', "").strip() == "off"
-            or node.tag == 'attribute' and node.get('name') not in TRANSLATED_ATTRS
+            or node.tag == 'attribute' and node.get('name') not in ('value', 'text') and not is_translatable_attrib(node.get('name'))
             or node.getparent() is None and avoid_pattern.match(node.text or "")
         ):
             return
@@ -286,8 +310,17 @@ def translate_xml_node(node, callback, parse, serialize):
 
         # translate the attributes of the node
         for key, val in node.attrib.items():
-            if nonspace(val) and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node):
-                node.set(key, callback(val.strip()) or val)
+            if nonspace(val):
+                if (
+                    is_translatable_attrib(key) or
+                    (key == 'value' and is_translatable_attrib_value(node)) or
+                    (key == 'text' and is_translatable_attrib_text(node))
+                ):
+                    if key.startswith('t-'):
+                        value = translate_format_string_expression(val.strip(), callback)
+                    else:
+                        value = callback(val.strip())
+                    node.set(key, value or val)
 
     process(node)
 
@@ -1094,7 +1127,7 @@ def _extract_translatable_qweb_terms(element, callback):
         if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
-                and not (el.tag == 'attribute' and el.get('name') not in TRANSLATED_ATTRS)
+                and not (el.tag == 'attribute' and not is_translatable_attrib(el.get('name')))
                 and el.get("t-translation", '').strip() != "off"):
 
             _push(callback, el.text, el.sourceline)
