@@ -22,7 +22,7 @@ class PosPayment(models.Model):
     amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', help="Total amount of the payment.")
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True)
     payment_date = fields.Datetime(string='Date', required=True, readonly=True, default=lambda self: fields.Datetime.now())
-    currency_id = fields.Many2one('res.currency', string='Currency', related='pos_order_id.currency_id')
+    currency_id = fields.Many2one('res.currency', string='Currency', related='pos_order_id.currency_id', store=True, precompute=True)
     currency_rate = fields.Float(string='Conversion Rate', related='pos_order_id.currency_rate', help='Conversion rate from company currency to order currency.')
     partner_id = fields.Many2one('res.partner', string='Customer', related='pos_order_id.partner_id')
     session_id = fields.Many2one('pos.session', string='Session', related='pos_order_id.session_id', store=True, index=True)
