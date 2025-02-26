@@ -119,13 +119,27 @@ class PaymentTransaction(models.Model):
         """
         super()._reconcile_after_done()
 
-        # Validate invoices automatically once the transaction is confirmed
-        self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
-
         # Create and post missing payments for transactions requiring reconciliation
-        for tx in self.filtered(lambda t: t.operation != 'validation' and not t.payment_id):
-            if not any(child.state in ['done', 'cancel'] for child in tx.child_transaction_ids):
-                tx.with_company(tx.company_id)._create_payment()
+        missing_payment = self.filtered(lambda tx:
+            tx.operation != 'validation'
+            and not tx.payment_id
+            and not any(child.state in ['done', 'cancel'] for child in tx.child_transaction_ids)
+        )
+        for tx in missing_payment:
+            tx.with_company(tx.company_id)._create_payment()
+
+        all_draft_moves = self.env['account.move'].browse({
+            move.id
+            for tx in self
+            for move in tx.payment_id.move_id + tx._get_invoices()
+        }).filtered(lambda move: move.state == 'draft')
+
+        # Post as late as possible to avoid locking when assigning a sequence number without gaps.
+        all_draft_moves.action_post()
+
+        # Reconcile the payment with the invoices.
+        for tx in self:
+            tx._reconcile_payment()
 
     def _create_payment(self, **extra_create_values):
         """Create an `account.payment` record for the current transaction.
@@ -181,25 +195,24 @@ class PaymentTransaction(models.Model):
                         payment_values['write_off_line_vals'] += [aml_vl]
 
         payment = self.env['account.payment'].create(payment_values)
-        payment.action_post()
-
         # Track the payment to make a one2one.
         self.payment_id = payment
+        return payment
 
-        # Reconcile the payment with the source transaction's invoices in case of a partial capture.
+    def _get_invoices(self):
         if self.operation == self.source_transaction_id.operation:
-            invoices = self.source_transaction_id.invoice_ids
-        else:
-            invoices = self.invoice_ids
-        if invoices:
-            invoices.filtered(lambda inv: inv.state == 'draft').action_post()
+            return self.source_transaction_id.invoice_ids
+        return self.invoice_ids
 
+    def _reconcile_payment(self):
+        payment = self.payment_id
+        invoices = self._get_invoices()
+        # Reconcile the payment with the source transaction's invoices in case of a partial capture.
+        if invoices:
             (payment.line_ids + invoices.line_ids).filtered(
                 lambda line: line.account_id == payment.destination_account_id
                 and not line.reconciled
             ).reconcile()
-
-        return payment
 
     #=== BUSINESS METHODS - LOGGING ===#
 

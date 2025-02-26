@@ -271,7 +271,7 @@ class TestAccountPayment(AccountPaymentCommon):
         This test verifies the correct application of early payment discount on an eligible invoice without taxes.
         """
         invoice_eligible = self._create_invoice_with_early_discount()
-        payment = self._create_transaction(
+        tx = self._create_transaction(
             reference='payment_1',
             flow='direct',
             state='done',
@@ -280,7 +280,9 @@ class TestAccountPayment(AccountPaymentCommon):
                 untaxed_amount=invoice_eligible.amount_tax,         # 0.0
             ),                                                      # 90.0
             invoice_ids=[invoice_eligible.id],
-        )._create_payment()
+        )
+        tx._reconcile_after_done()
+        payment = tx.payment_id
 
         self.assert_invoice_payment(
             payment=payment,
@@ -303,13 +305,15 @@ class TestAccountPayment(AccountPaymentCommon):
         This test ensures no discount is applied to an invoice past the early payment discount date.
         """
         invoice_ineligible = self._create_invoice_with_early_discount(invoice_date=(datetime.now() - timedelta(days=30)).date())
-        payment = self._create_transaction(
+        tx = self._create_transaction(
             reference='payment_2',
             flow='direct',
             state='done',
             amount=invoice_ineligible.amount_residual,  # 100.0
             invoice_ids=[invoice_ineligible.id],
-        )._create_payment()
+        )
+        tx._reconcile_after_done()
+        payment = tx.payment_id
 
         self.assert_invoice_payment(
             payment=payment,
@@ -337,7 +341,7 @@ class TestAccountPayment(AccountPaymentCommon):
                 'tax_ids': [(6, 0, self.company_data['default_tax_sale'].ids)],  # 15%
             })],
         )
-        payment = self._create_transaction(
+        tx = self._create_transaction(
             reference='payment_3',
             flow='direct',
             state='done',
@@ -346,7 +350,9 @@ class TestAccountPayment(AccountPaymentCommon):
                 untaxed_amount=invoice_eligible_with_tax.amount_tax,        # 15.0
             ),                                                              # 115.0 - 10% -> 115 * (1 - 0.1) = 103.5
             invoice_ids=[invoice_eligible_with_tax.id],
-        )._create_payment()
+        )
+        tx._reconcile_after_done()
+        payment = tx.payment_id
 
         self.assert_invoice_payment(
             payment=payment,
@@ -384,13 +390,15 @@ class TestAccountPayment(AccountPaymentCommon):
                 'tax_ids': [(6, 0, self.company_data['default_tax_sale'].ids)],  # 15%
             })],
         )
-        payment = self._create_transaction(
+        tx = self._create_transaction(
             reference='payment_4',
             flow='direct',
             state='done',
             amount=invoice_ineligible_with_mixed_and_tax.amount_residual,  # 100 + (15 * (1 - 0.1)) = 113.5
             invoice_ids=[invoice_ineligible_with_mixed_and_tax.id],
-        )._create_payment()
+        )
+        tx._reconcile_after_done()
+        payment = tx.payment_id
 
         self.assert_invoice_payment(
             payment=payment,
@@ -424,7 +432,7 @@ class TestAccountPayment(AccountPaymentCommon):
                 'tax_ids': [(6, 0, self.company_data['default_tax_sale'].ids)],  # 15%
             })],
         )
-        payment = self._create_transaction(
+        tx = self._create_transaction(
             reference='payment_5',
             flow='direct',
             state='done',
@@ -433,7 +441,9 @@ class TestAccountPayment(AccountPaymentCommon):
                 untaxed_amount=invoice_eligible_with_excluded_and_tax.amount_tax,       # 15.0
             ),                                                                          # (100 - 10%), 90 + 15 = 105
             invoice_ids=[invoice_eligible_with_excluded_and_tax.id],
-        )._create_payment()
+        )
+        tx._reconcile_after_done()
+        payment = tx.payment_id
 
         self.assert_invoice_payment(
             payment=payment,
@@ -460,7 +470,7 @@ class TestAccountPayment(AccountPaymentCommon):
             currency_id=foreign_currency.id,
             company_currency_id=self.currency.id,
         )
-        payment = self._create_transaction(
+        tx = self._create_transaction(
             reference='payment_6',
             flow='direct',
             state='done',
@@ -470,7 +480,9 @@ class TestAccountPayment(AccountPaymentCommon):
             ),                                                                          # 90.0 gold     / 45.0$
             currency_id=foreign_currency.id,
             invoice_ids=[invoice_eligible_with_foreign_currency.id],
-        )._create_payment()
+        )
+        tx._reconcile_after_done()
+        payment = tx.payment_id
 
         self.assert_invoice_payment(
             payment=payment,
