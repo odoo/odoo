@@ -118,11 +118,13 @@ class BaseAutomation(models.Model):
     _name = 'base.automation'
     _description = 'Automation Rule'
 
+    def _get_least_delay_msg(self):
+        return _("(delay tolerance: %(minutes)s minutes)", minutes=self._get_cron_interval())
+
     name = fields.Char(string="Automation Rule Name", required=True, translate=True)
     description = fields.Html(string="Description")
     model_id = fields.Many2one(
-        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade",
-        help="Model on which the automation rule runs."
+        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade"
     )
     model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True, inverse="_inverse_model_name")
     model_is_mail_thread = fields.Boolean(related="model_id.is_mail_thread")
@@ -133,7 +135,7 @@ class BaseAutomation(models.Model):
         store=True,
         readonly=False,
     )
-    url = fields.Char(compute='_compute_url')
+    url = fields.Char(compute='_compute_url', help="Use this URL in the third-party app to call this webhook.")
     webhook_uuid = fields.Char(string="Webhook UUID", readonly=True, copy=False, default=lambda self: str(uuid4()))
     record_getter = fields.Char(default="model.env[payload.get('_model')].browse(int(payload.get('_id')))",
                                 help="This code will be run to find on which record the automation rule should be run.")
@@ -200,9 +202,7 @@ class BaseAutomation(models.Model):
         string='Delay after trigger date',
         compute='_compute_trg_date_range_data',
         readonly=False, store=True,
-        help="Delay after the trigger date. "
-        "You can put a negative number if you need a delay before the "
-        "trigger date, like sending a reminder 15 minutes before a meeting.")
+        help="Use negative value to trigger it before the date")
     trg_date_range_type = fields.Selection(
         [('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
         string='Delay type',
@@ -212,7 +212,7 @@ class BaseAutomation(models.Model):
         "resource.calendar", string='Use Calendar',
         compute='_compute_trg_date_calendar_id',
         readonly=False, store=True,
-        help="When calculating a day-based timed condition, it is possible"
+        help="When calculating a day-based timed condition, it is possible "
              "to use a calendar to compute the date based on working days.")
     filter_pre_domain = fields.Char(
         string='Before Update Domain',
@@ -241,7 +241,7 @@ class BaseAutomation(models.Model):
         compute='_compute_trigger_field_ids', readonly=False, store=True,
         help="The automation rule will be triggered if and only if one of these fields is updated."
              "If empty, all fields are watched.")
-    least_delay_msg = fields.Char(compute='_compute_least_delay_msg')
+    least_delay_msg = fields.Char(store=False, readonly=True, default=_get_least_delay_msg)
 
     # which fields have an impact on the registry and the cron
     CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_field_ids']
@@ -667,14 +667,19 @@ class BaseAutomation(models.Model):
 
         if automations is None:
             automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
+            if len(self) == 1 and isinstance(self.id, api.NewId):
+                automations |= self
+                if self._origin:
+                    automations -= self._origin
 
-        # Minimum 1 minute, maximum 4 hours, 10% tolerance
-        delay = min(automations.mapped(get_delay), default=0)
-        return min(max(1, delay // 10), 4 * 60) if delay else 4 * 60
+        # Minimum 1 minute, maximum 4 hours, 10% tolerance, ignore automations with no delay
+        delays = automations.mapped(get_delay)
+        delays = list(filter(lambda d: d, delays))
+        return min(max(1, min(delays) // 10), 4 * 60) if delays else 4 * 60
 
-    def _compute_least_delay_msg(self):
-        msg = _("Note that this automation rule can be triggered up to %d minutes after its schedule.")
-        self.least_delay_msg = msg % self._get_cron_interval()
+    @api.onchange('trg_date_range', 'trg_date_range_type')
+    def _onchange_trg_date_range(self):
+        self.least_delay_msg = self._get_least_delay_msg()
 
     def _filter_pre(self, records, feedback=False):
         """ Filter the records that satisfy the precondition of automation ``self``. """
