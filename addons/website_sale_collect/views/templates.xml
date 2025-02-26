@@ -31,6 +31,7 @@
                 t-att-props="json.dumps({
                     'productId': product_variant.id,
                     'zipCode': zip_code,
+                    'hideSelectButton': len(website.in_store_dm_id.warehouse_ids) == 1,
                     'selectedWhLocation': selected_wh_location or {},
                     'inStoreStock': combination_info.get('in_store_stock', {}),
                     'deliveryStock': combination_info.get('delivery_stock', {}),

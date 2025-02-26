@@ -3,8 +3,8 @@
 
     <t t-name="website_sale_collect.ClickAndCollectAvailability">
         <div name="delivery_availability">
-            <div class="btn border border-1 mb-3 text-start p-3 cursor-default">
-                <div name="o_click_and_collect_availability">
+            <div class="btn border border-1 mb-3 text-start p-3">
+                <div name="o_click_and_collect_availability" t-on-click="openLocationSelector">
                     <h6>
                         <i class="fa fa-fw fa-map-marker text-muted"/>
                         <t t-if="this.state.selectedWhLocation.id">
@@ -28,14 +28,14 @@
                         <div t-else="" class="text-muted">
                             <i class="fa fa-fw fa-circle text-danger"/> Not available
                         </div>
-                        <a role="button" href="#" t-on-click="openLocationSelector">
+                        <a t-if="!this.props.hideSelectButton" role="button" href="#">
                             <t t-if="this.state.selectedWhLocation.id">Change a store</t>
                             <t t-elif="this.state.inStoreStock.in_stock">Select a store</t>
                         </a>
                     </div>
                 </div>
                 <hr />
-                <div t-if="this.state.deliveryStock" class="flex-row">
+                <div t-if="this.state.deliveryStock" class="flex-row cursor-default">
                     <h6>
                         <i class="fa fa-fw fa-truck text-muted"/>
                         Delivery

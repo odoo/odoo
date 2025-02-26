@@ -15,6 +15,7 @@ export class ClickAndCollectAvailability extends Component {
         selectedWhLocation: { type: Object, optional: true },
         inStoreStock: { type: Object, optional: true },
         deliveryStock: { type: Object, optional: true},
+        OnlyOneWh: { type: Boolean, optional: true },
     }
     setup() {
         super.setup();
