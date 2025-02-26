@@ -9,15 +9,15 @@
                     <i class="fa fa-caret-down ms-1"/>
                 </button>
                 <t t-set-slot="content">
-                    <DropdownItem t-if="nbSelected" onSelected="() => this.onClickOrder(false)">
+                    <DropdownItem t-if="hasSelectedRecords" onSelected="() => this.onClickOrder(false)">
                         Order
                     </DropdownItem>
-                    <DropdownItem t-if="nbSelected" onSelected="() => this.onClickOrder(true)">
+                    <DropdownItem t-if="hasSelectedRecords" onSelected="() => this.onClickOrder(true)">
                         Order To Max
                     </DropdownItem>
                 </t>
             </Dropdown>
-            <button t-if="nbSelected" type="button" t-on-click="onClickSnooze"
+            <button t-if="hasSelectedRecords" type="button" t-on-click="onClickSnooze"
                     class="o_button_snooze btn btn-secondary me-1">
                 Snooze
             </button>
