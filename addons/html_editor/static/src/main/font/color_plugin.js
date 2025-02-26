@@ -6,6 +6,7 @@ import {
     hasAnyNodesColor,
     TEXT_CLASSES_REGEX,
     BG_CLASSES_REGEX,
+    RGBA_REGEX,
 } from "@html_editor/utils/color";
 import { fillEmpty } from "@html_editor/utils/dom";
 import {
@@ -21,6 +22,9 @@ import { ColorSelector } from "./color_selector";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
+
+const RGBA_OPACITY = 0.6;
+const HEX_OPACITY = "99";
 
 /**
  * @typedef { Object } ColorShared
@@ -64,6 +68,7 @@ export class ColorPlugin extends Plugin {
     };
 
     setup() {
+        this.activeTab = "solid";
         this.selectedColors = reactive({ color: "", backgroundColor: "" });
         this.previewableApplyColor = this.dependencies.history.makePreviewableOperation(
             (color, mode, previewMode) => this._applyColor(color, mode, previewMode)
@@ -79,6 +84,7 @@ export class ColorPlugin extends Plugin {
             type,
             getUsedCustomColors: () => this.getUsedCustomColors(mode),
             getSelectedColors: () => this.selectedColors,
+            setActiveTab: (tab) => (this.activeTab = tab),
             applyColor: this.applyColor.bind(this),
             applyColorPreview: this.applyColorPreview.bind(this),
             applyColorResetPreview: this.applyColorResetPreview.bind(this),
@@ -100,12 +106,19 @@ export class ColorPlugin extends Plugin {
         const hasGradient = isColorGradient(backgroundImage);
         const hasTextGradientClass = el.classList.contains("text-gradient");
 
+        let backgroundColor = elStyle.backgroundColor;
+        if (backgroundColor.startsWith("rgba") && this.activeTab === "solid") {
+            const values = backgroundColor.match(RGBA_REGEX) || [];
+            const alpha = parseFloat(values.pop()); // Extract alpha value
+            if (alpha === RGBA_OPACITY) {
+                backgroundColor = `rgb(${values.slice(0, 3).join(", ")})`; // Remove alpha
+            }
+        }
+
         this.selectedColors.color =
             hasGradient && hasTextGradientClass ? backgroundImage : rgbToHex(elStyle.color);
         this.selectedColors.backgroundColor =
-            hasGradient && !hasTextGradientClass
-                ? backgroundImage
-                : rgbToHex(elStyle.backgroundColor);
+            hasGradient && !hasTextGradientClass ? backgroundImage : rgbToHex(backgroundColor);
     }
 
     /**
@@ -176,6 +189,9 @@ export class ColorPlugin extends Plugin {
     _applyColor(color, mode, previewMode = false) {
         if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
             return;
+        }
+        if (mode === "backgroundColor" && this.activeTab === "solid" && color.startsWith("#")) {
+            color += HEX_OPACITY;
         }
         let selection = this.dependencies.selection.getEditableSelection();
         let selectionNodes;
