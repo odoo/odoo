@@ -21,7 +21,6 @@ class EventSponsor(models.Model):
         'mail.activity.mixin',
         'website.published.mixin',
         'website.searchable.mixin',
-        'chat.room.mixin'
     ]
 
     def _default_sponsor_type_id(self):
@@ -68,9 +67,6 @@ class EventSponsor(models.Model):
     event_date_tz = fields.Selection(string='Timezone', related='event_id.date_tz', readonly=True)
     is_in_opening_hours = fields.Boolean(
         'Within opening hours', compute='_compute_is_in_opening_hours')
-    # chat room
-    chat_room_id = fields.Many2one(readonly=False)
-    room_name = fields.Char(readonly=False)
     # country information (related to ease frontend templates)
     country_id = fields.Many2one(
         'res.country', string='Country',
@@ -119,20 +115,6 @@ class EventSponsor(models.Model):
             if not sponsor[fname]:
                 sponsor[fname] = sponsor.partner_id[fname]
 
-    @api.onchange('exhibitor_type')
-    def _onchange_exhibitor_type(self):
-        """ Keep an explicit onchange to allow configuration of room names, even
-        if this field is normally a related on chat_room_id.name. It is not a real
-        computed field, an onchange used in form view is sufficient. """
-        for sponsor in self:
-            if sponsor.exhibitor_type == 'online' and not sponsor.room_name:
-                if sponsor.name:
-                    room_name = "odoo-exhibitor-%s" % sponsor.name
-                else:
-                    room_name = self.env['chat.room']._default_name(objname='exhibitor')
-                sponsor.room_name = self._jitsi_sanitize_name(room_name)
-            if sponsor.exhibitor_type == 'online' and not sponsor.room_max_capacity:
-                sponsor.room_max_capacity = '8'
 
     @api.depends('partner_id')
     def _compute_website_description(self):
@@ -209,29 +191,6 @@ class EventSponsor(models.Model):
             'icon': 'fa-black-tie',
             'order': order,
         }
-
-    # ------------------------------------------------------------
-    # CRUD
-    # ------------------------------------------------------------
-
-    @api.model_create_multi
-    def create(self, values_list):
-        for values in values_list:
-            if values.get('is_exhibitor') and not values.get('room_name'):
-                exhibitor_name = values['name'] if values.get('name') else self.env['res.partner'].browse(values['partner_id']).name
-                name = 'odoo-exhibitor-%s' % exhibitor_name or 'sponsor'
-                values['room_name'] = name
-        return super().create(values_list)
-
-    def write(self, values):
-        toupdate = self.env['event.sponsor']
-        if values.get('is_exhibitor') and not values.get('chat_room_id') and not values.get('room_name'):
-            toupdate = self.filtered(lambda exhibitor: not exhibitor.chat_room_id)
-            # go into sequential update in order to create a custom room name for each sponsor
-            for exhibitor in toupdate:
-                values['room_name'] = 'odoo-exhibitor-%s' % exhibitor.name
-                super(EventSponsor, exhibitor).write(values)
-        return super(EventSponsor, self - toupdate).write(values)
 
     # ------------------------------------------------------------
     # ACTIONS
