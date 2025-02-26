@@ -18,8 +18,16 @@
 .o-mail-Chatter-top, .o-mail-Chatter-content {
     --Chatter-default-padding-x: #{$o-spacer};
 
-    padding-left: var(--ChatterAsideForm-padding-left, var(--Chatter-default-padding-x));
     padding-right: var(--Chatter-default-padding-x);
+}
+
+.o-mail-Chatter-top {
+    padding-left: var(--ChatterAsideForm-padding-left, var(--Chatter-default-padding-x));
+}
+
+.o-mail-Chatter-content {
+    --mail-Chatter-contentPaddingLeft: var(--ChatterAsideForm-padding-left, var(--Chatter-default-padding-x));
+    padding-left: calc(var(--mail-Chatter-contentPaddingLeft) - #{($o-mail-Message-sidebarWidth - $o-mail-Avatar-size) / 2});
 }
 
 .o-mail-Followers-button:focus {

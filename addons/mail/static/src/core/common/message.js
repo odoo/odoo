@@ -214,7 +214,7 @@ export class Message extends Component {
                 this.props.thread &&
                 !this.env.messageCard &&
                 !this.props.asCard,
-            "px-2": this.props.isInChatWindow,
+            "px-1": this.props.isInChatWindow,
             "opacity-50": this.props.messageToReplyTo?.isNotSelected(
                 this.props.thread,
                 this.props.message
