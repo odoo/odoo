@@ -151,6 +151,7 @@ export class Wysiwyg extends Component {
         this.getColorPickerTemplateService = useService('get_color_picker_template');
         this.notification = useService("notification");
         this.popover = useService("popover");
+        this.userService = useService('user');
         this.busService = this.env.services.bus_service;
 
         const getColorPickedHandler = (colorType) => {
@@ -279,6 +280,15 @@ export class Wysiwyg extends Component {
                 this.env.onWysiwygReset && this.env.onWysiwygReset();
             }
         });
+        this.isPortalUser = false;
+        this.userService.hasGroup('base.group_portal')
+            .then(function(isPortal) {
+                this.isPortalUser = isPortal;
+            }.bind(this))
+            .catch(function(error) {
+                //  Might assume non-portal if in doubt.
+                this.isPortalUser = false;
+            }.bind(this));
     }
 
     defaultOptions = {
@@ -1128,6 +1138,10 @@ export class Wysiwyg extends Component {
      * @returns {Promise}
      */
     savePendingImages($editable = this.$editable) {
+        if (this.isPortalUser) {
+            // Portal users don't have rights to create attachments.
+            return Promise.resolve();
+        }
         const defs = Array.from($editable).map(async (editableEl) => {
             const { resModel, resId } = this._getRecordInfo(editableEl);
             // When saving a webp, o_b64_image_to_save is turned into
