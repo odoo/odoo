@@ -19,6 +19,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             "phone": "(683)-556-5104",
             "street": "858 Lynn Street",
             "zip": "07002",
+            "state_id": cls.env.ref("base.state_us_5").id,
         })
 
     def test_01_portal_load_tour(self):
