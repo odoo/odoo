@@ -417,7 +417,6 @@ class IrActionsServer(models.Model):
         to the currently executed action will be set in the queue instead of
         sent directly. This will avoid possible break in transactions. """
         eval_context = super()._get_eval_context(action=action)
-        ctx = dict(eval_context['env'].context)
-        ctx['mail_notify_force_send'] = False
-        eval_context['env'].context = ctx
+        env = eval_context['env']
+        eval_context['env'] = env(context={**env.context, 'mail_notify_force_send': False})
         return eval_context

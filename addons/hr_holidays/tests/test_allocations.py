@@ -320,8 +320,12 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_to': date(2024, 12, 31)
         })
         second_allocation.action_approve()
+
+        # _compute_leaves depends on the context that is getting cleared
+        self.env['hr.leave.type'].invalidate_model(['max_leaves', 'leaves_taken', 'virtual_remaining_leaves'])
         result = self.env['hr.leave.type'].with_context(
             employee_id=self.employee.id,
+            leave_date_from='2024-08-18 06:00:00',  # for _compute_leaves
             default_date_from='2024-08-18 06:00:00',
             default_date_to='2024-08-18 15:00:00'
         ).name_search(domain=[['id', '=', leave_type.id]])

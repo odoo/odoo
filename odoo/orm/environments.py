@@ -83,6 +83,12 @@ class Environment(Mapping[str, "BaseModel"]):
             transaction.default_env = self
         return self
 
+    def __setattr__(self, name: str, value: typing.Any) -> None:
+        # once initialized, attributes are read-only
+        if name in vars(self):
+            raise AttributeError(f"Attribute {name!r} is read-only, call `env()` instead")
+        return super().__setattr__(name, value)
+
     #
     # Mapping methods
     #
