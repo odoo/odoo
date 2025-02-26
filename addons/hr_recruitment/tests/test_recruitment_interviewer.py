@@ -4,12 +4,12 @@
 from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import new_test_user
 
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged
 
 
 @tagged('recruitment_interviewer')
-class TestRecruitmentInterviewer(MailCommon):
+class TestRecruitmentInterviewer(MailCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
