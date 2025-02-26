@@ -26,4 +26,23 @@
             margin-bottom: 1px;
         }
     }
+
+    div:has(> input) {
+        width: 60px;
+    }
+    div:has(> input.o_we_large) {
+        width: 100%;
+    }
+
+    input {
+        border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+        border-radius: $o-we-sidebar-content-field-border-radius;
+        background-color: $o-we-sidebar-content-field-input-bg;
+        color: inherit;
+        padding: 0 $o-we-sidebar-content-field-clickable-spacing;
+
+        &:focus {
+            border-color: $o-we-sidebar-content-field-input-border-color;
+        }
+    }
 }
