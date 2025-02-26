@@ -326,6 +326,19 @@ export class Many2XAutocomplete extends Component {
             classList: this.props.getOptionClassnames({ id: result[0], display_name: result[1] }),
         };
     }
+    onQuickCreateError(error, request) {
+        if (
+            error instanceof RPCError &&
+            error.exceptionName === "odoo.exceptions.ValidationError"
+        ) {
+            return this.openMany2X({  
+                context: this.getCreationContext(request),  
+                nextRecordsContext: this.props.context,  
+            });
+        } else {
+            throw error;
+        }
+    }
     async loadOptionsSource(request) {
         if (this.lastProm) {
             this.lastProm.abort(false);
@@ -343,16 +356,7 @@ export class Many2XAutocomplete extends Component {
                     try {
                         await this.props.quickCreate(request, params);
                     } catch (e) {
-                        if (
-                            e instanceof RPCError &&
-                            e.exceptionName === "odoo.exceptions.ValidationError"
-                        ) {
-                            return this.openMany2X({
-                                context: this.getCreationContext(request),
-                                nextRecordsContext: this.props.context,
-                            });
-                        }
-                        throw e;
+                        this.onQuickCreateError(e, request);
                     }
                 },
             });
