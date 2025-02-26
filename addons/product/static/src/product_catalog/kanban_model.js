@@ -49,11 +49,13 @@ export class ProductCatalogKanbanModel extends RelationalModel {
         const numRecords = 10; // Number of records to generate
         for (let i = 1; i <= numRecords; i++) {
             sampleOrderLineInfo[i] = {
+                isSample: true,
                 quantity: Math.floor(Math.random() * 10),
                 min_qty: 0,
                 price: Math.floor(Math.random() * 500) + 100,
+                productType: "consu",
                 readOnly: false,
-                uom: { display_name: "Units", id: 1 }
+                uom: { display_name: "Units", id: 1 },
             };
         }
         return sampleOrderLineInfo;
