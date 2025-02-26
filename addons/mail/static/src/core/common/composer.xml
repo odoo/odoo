@@ -14,13 +14,13 @@
                     'pb-2': extended and !props.composer.message,
                     'o-extended': extended,
                     'o-isUiSmall': ui.isSmall,
-                    'px-3 pb-2': normal,
+                    'ps-2 pe-4 pb-2': normal,
                     'o-hasSelfAvatar': showComposerAvatar,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
                     'o-chatWindow mx-2': env.inChatWindow,
                     'mb-3': env.inChatWindow and !props.composer.message,
-                    'o-discussApp': env.inDiscussApp,
+                    'o-discussApp pt-1': env.inDiscussApp,
                     'm-1': !env.inDiscussApp,
                 }" t-attf-class="{{ props.className }}">
             <FileUploader t-if="allowUpload" multiUpload="isMultiUpload" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
@@ -29,7 +29,7 @@
                 </t>
             </FileUploader>
             <div t-if="showComposerAvatar" class="o-mail-Composer-sidebarMain flex-shrink-0">
-                <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
+                <img class="o-mail-Composer-avatar mx-auto o_avatar rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
             </div>
             <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread?.eq(props.composer.thread)">
                 <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message, props.composer.thread)">

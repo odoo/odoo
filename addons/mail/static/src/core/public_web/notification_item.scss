@@ -17,13 +17,10 @@
             background-color: mix($o-gray-100, $o-info, 87.5%) !important;
         }
     }
-    &:not(.o-small) {
-        padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
-    }
 }
 
 .o-mail-NotificationItem-avatarContainer {
-    height: 40px;
+    height: 42px;
     aspect-ratio: 1;
     margin-top: map-get($spacers, 1) / 2;
     margin-bottom: map-get($spacers, 1) / 2;
@@ -60,12 +57,4 @@
         // invisible character so that typing status bar has constant height, regardless of text content.
         content: "\200b"; /* unicode zero width space character */
     }
-}
-
-.o-mail-NotificationItem-unreadIndicator {
-    color: darken($info, 5%);
-    font-size: 0.5rem;
-    left: 1px;
-    top: 40px;
-    transform: translateY(-125%);
 }

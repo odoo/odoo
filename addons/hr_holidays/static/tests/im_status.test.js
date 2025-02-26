@@ -19,20 +19,20 @@ test("change icon on change partner im_status for leave variants", async () => {
     patchWithCleanup(Persona, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-ImStatus .fa-plane[title='Online']");
+    await contains(".o-mail-Discuss-header .o-mail-ImStatus .fa-plane[title='Online']");
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: serverState.partnerId,
         im_status: "offline",
     });
-    await contains(".o-mail-ImStatus .fa-plane[title='Out of office']");
+    await contains(".o-mail-Discuss-header .o-mail-ImStatus .fa-plane[title='Out of office']");
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: serverState.partnerId,
         im_status: "away",
     });
-    await contains(".o-mail-ImStatus .fa-plane[title='Idle']");
+    await contains(".o-mail-Discuss-header .o-mail-ImStatus .fa-plane[title='Idle']");
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: serverState.partnerId,
         im_status: "online",
     });
-    await contains(".o-mail-ImStatus .fa-plane[title='Online']");
+    await contains(".o-mail-Discuss-header .o-mail-ImStatus .fa-plane[title='Online']");
 });
