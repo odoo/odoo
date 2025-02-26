@@ -18,14 +18,10 @@ export function useColorPickerBuilderComponent() {
     const state = useDomState(getState);
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation((applySpecs) => {
         for (const applySpec of applySpecs) {
-            let actionValue = applySpec.actionValue;
-            if (actionValue.startsWith("color-prefix-")) {
-                actionValue = `var(${actionValue.replace("color-prefix-", "--")})`;
-            }
             applySpec.apply({
                 editingElement: applySpec.editingElement,
                 param: applySpec.actionParam,
-                value: actionValue,
+                value: applySpec.actionValue,
                 loadResult: applySpec.loadResult,
                 dependencyManager: comp.env.dependencyManager,
             });
@@ -45,13 +41,18 @@ export function useColorPickerBuilderComponent() {
             selectedColor: actionValue,
         };
     }
+    function getColor(colorValue) {
+        return colorValue.startsWith("color-prefix-")
+            ? `var(${colorValue.replace("color-prefix-", "--")})`
+            : colorValue;
+    }
 
     function onApply(colorValue) {
-        callOperation(applyOperation.commit, { userInputValue: colorValue });
+        callOperation(applyOperation.commit, { userInputValue: getColor(colorValue) });
     }
     let onPreview = (colorValue) => {
         callOperation(applyOperation.preview, {
-            userInputValue: colorValue,
+            userInputValue: getColor(colorValue),
             operationParams: {
                 cancellable: true,
                 cancelPrevious: () => applyOperation.revert(),
