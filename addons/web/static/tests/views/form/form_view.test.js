@@ -9030,6 +9030,54 @@ test(`form view is not broken if save operation fails`, async () => {
     expect.verifySteps(["web_save"]); // write on save (it works)
 });
 
+test(`form view is not broken if save operation fails with redirect warning`, async () => {
+    onRpc("web_save", ({ args }) => {
+        if (args[1].foo === "incorrect value") {
+            throw makeServerError({
+                type: `RedirectWarning`,
+                args: [
+                    "The message",
+                    {
+                        name: "Sub view",
+                        res_model: "partner",
+                        type: "ir.actions.act_window",
+                        domain: [],
+                        target: "new",
+                        views: [[false, "form"]],
+                    },
+                    "Button Label",
+                    {},
+                ],
+                description: "Beep boop server stuff and technical string",
+            });
+        }
+    });
+    onRpc(({ method }) => expect.step(method));
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"/></form>`,
+        resId: 1,
+    });
+    expect.verifySteps(["get_views", "web_read"]);
+
+    await contains(`.o_field_widget[name=foo] input`).edit("incorrect value");
+    await contains(`.o_form_button_create`).click();
+    await animationFrame();
+    expect.verifySteps(["web_save"]);
+
+    // Oh snap dialog
+    expect(`.o_dialog`).toHaveCount(1);
+    expect(`.o_dialog .modal-footer .btn-primary`).toHaveCount(1);
+    expect(`.o_dialog .modal-footer .btn-secondary`).toHaveCount(2);
+    await contains(`.o_dialog .modal-footer .btn-secondary:first`).click();
+    await animationFrame();
+    expect.verifySteps(["get_views", "onchange"]);
+
+    // RedirectWarning dialog
+    expect(`.modal-title`).toHaveText("Sub view");
+});
+
 test.tags("desktop");
 test(`context is correctly passed after save & new in FormViewDialog`, async () => {
     Product._views = {
