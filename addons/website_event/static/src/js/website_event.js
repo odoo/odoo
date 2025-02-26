@@ -4,6 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { rpc } from "@web/core/network/rpc";
+import { session } from "@web/session";
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = publicWidget.Widget.extend({
@@ -15,6 +16,11 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         this._super(...arguments);
         this._recaptcha = new ReCaptcha();
         this.notification = this.bindService("notification");
+        // dynamic get rather than import as we don't depend on this module
+        if (session.turnstile_site_key) {
+            const { turnStile } = odoo.loader.modules.get("@website_cf_turnstile/js/turnstile");
+            this._turnstile = turnStile;
+        }
     },
 
     /**
@@ -79,6 +85,8 @@ var EventRegistrationForm = publicWidget.Widget.extend({
                 return false;
             }
             var $modal = $(modal);
+            const form = $modal[0].querySelector("form#attendee_registration");
+            self._addTurnstile(form);
             $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
             $modal.appendTo(document.body);
             const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
@@ -99,6 +107,23 @@ var EventRegistrationForm = publicWidget.Widget.extend({
                 ev.currentTarget.appendChild(tokenInput);
             })
         });
+    },
+
+    _addTurnstile: function (form) {
+        if (!this._turnstile) {
+            return false;
+        }
+
+        const turnstileNodes = this._turnstile.addTurnstile("website_event_registration");
+
+        const modalFooter = form.querySelector("div.modal-footer");
+        const formButton = form.querySelector("button[type=submit]");
+
+        this._turnstile.addSpinnerNoMangle(formButton);
+        turnstileNodes.prependTo(modalFooter);
+        this._turnstile.renderTurnstile(turnstileNodes);
+
+        return true;
     },
 });
 
