@@ -2250,18 +2250,22 @@ class AccountTax(models.Model):
                     subtotals[untaxed_amount_subtotal_label]['base_amount_currency'] += cash_rounding_base_amount_currency
                     subtotals[untaxed_amount_subtotal_label]['base_amount'] += cash_rounding_base_amount
                 elif strategy == 'biggest_tax':
-                    max_subtotal, max_tax_group = max(
-                        [
-                            (subtotal, tax_group)
-                            for subtotal in tax_totals_summary['subtotals']
-                            for tax_group in subtotal['tax_groups']
-                        ],
-                        key=lambda item: item[1]['tax_amount_currency'],
-                    )
-                    max_tax_group['tax_amount_currency'] += cash_rounding_base_amount_currency
-                    max_tax_group['tax_amount'] += cash_rounding_base_amount
-                    max_subtotal['tax_amount_currency'] += cash_rounding_base_amount_currency
-                    max_subtotal['tax_amount'] += cash_rounding_base_amount
+                    tax_data = [
+                        (subtotal, tax_group)
+                        for subtotal in subtotals.values()
+                    if 'tax_groups' in subtotal and subtotal['tax_groups']
+                        for tax_group in subtotal['tax_groups']
+                    ]
+
+                    if tax_data:
+                        max_subtotal, max_tax_group = max(
+                            tax_data,
+                            key=lambda item: item[1]['tax_amount_currency'],
+                        )
+                        max_tax_group['tax_amount_currency'] += cash_rounding_base_amount_currency
+                        max_tax_group['tax_amount'] += cash_rounding_base_amount
+                        max_subtotal['tax_amount_currency'] += cash_rounding_base_amount_currency
+                        max_subtotal['tax_amount'] += cash_rounding_base_amount 
                     tax_totals_summary['tax_amount_currency'] += cash_rounding_base_amount_currency
                     tax_totals_summary['tax_amount'] += cash_rounding_base_amount
 
