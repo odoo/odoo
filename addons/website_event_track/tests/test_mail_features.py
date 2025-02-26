@@ -1,10 +1,10 @@
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 from odoo.tests import tagged, users
 
 
 @tagged('post_install', '-at_install', 'mail_flow', 'mail_tools')
-class TestTrackMailFeatures(TestEventOnlineCommon, MailCommon):
+class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
 
     @classmethod
     def setUpClass(cls):

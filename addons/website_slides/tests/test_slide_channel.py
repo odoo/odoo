@@ -174,7 +174,8 @@ class TestSlidesManagement(slides_common.SlidesCase):
             })],
             'completed_template_id': mail_template.id
         })
-        self.channel.completed_template_id.body_html = '<p>TestBodyTemplate</p>'
+        # sudo because creator has no rights to modify templates
+        self.channel.sudo().completed_template_id.body_html = '<p>TestBodyTemplate</p>'
 
         all_channels = self.channel | channel_2
         all_channels.sudo()._action_add_members(self.user_officer.partner_id)
