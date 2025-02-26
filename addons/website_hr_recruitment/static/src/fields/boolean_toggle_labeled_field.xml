@@ -3,8 +3,16 @@
 
     <t t-name="website_hr_recruitment.BooleanToggleFieldLabeled" t-inherit="web.BooleanToggleField" >
         <xpath expr="//CheckBox" position="inside">
+<<<<<<< master
             <t t-if="this.state.value">Published</t>
             <t t-else="">Not Published</t>
+||||||| 2108ad3f7c851eeceb84d7459485a18e1574fa64
+            <t t-out="this.state.label"></t>
+=======
+            <label invisible="1" string="Published"/>
+            <label invisible="1" string="Not Published"/>
+            <t t-out="this.state.label"></t>
+>>>>>>> 57873c5f09338f7b4e7a6193a1f13903e07a88e8
         </xpath>
     </t>
 
