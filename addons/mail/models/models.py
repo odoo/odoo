@@ -114,12 +114,11 @@ class Base(models.AbstractModel):
           customers to contact;
         """
         partner_fields = self._mail_get_partner_fields(introspect_fields=introspect_fields)
-        pids = {pid for record in self for fn in partner_fields for pid in record[fn].ids}
-        Partner = self.env['res.partner'].with_prefetch(pids)
+        all_pids = {pid for record in self for fn in partner_fields for pid in record[fn].ids}
         records_partners = {}
         for record in self:
             pids = tools.unique(pid for fn in partner_fields for pid in record[fn].ids)
-            records_partners[record.id] = Partner.browse(pids)
+            records_partners[record.id] = self.env['res.partner'].browse(pids).with_prefetch(all_pids)
         return records_partners
 
     @api.model
@@ -251,9 +250,9 @@ class Base(models.AbstractModel):
         primary_emails = self._mail_get_primary_email()
         for record in self:
             email_cc_lst, email_to_lst = [], []
-            # main recipients (res.partner)
+            # main recipients (res.partner) (filter twice, otherwise prefetch is lost /shrug)
             recipients_all = customers.get(record.id).filtered(lambda p: not p.is_public)
-            recipients = recipients_all.filtered(lambda p: p.email_normalized)
+            recipients = customers.get(record.id).filtered(lambda p: not p.is_public and p.email_normalized)
             # to computation
             email_to = primary_emails[record.id]
             if not email_to:
