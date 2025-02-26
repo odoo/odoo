@@ -656,8 +656,8 @@ class HrEmployee(models.Model):
 
     def _get_tz(self):
         self.ensure_one()
-        return self.tz or\
-               self.resource_calendar_id.tz or\
+        return self.resource_calendar_id.tz or\
+               self.tz or\
                self.company_id.resource_calendar_id.tz or\
                'UTC'
 
