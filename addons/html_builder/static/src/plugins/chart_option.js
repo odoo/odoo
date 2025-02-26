@@ -68,6 +68,26 @@ export class ChartOption extends Component {
         return isPieChart;
     }
     /**
+     * Retrieve the colors already in use in the chart.
+     *
+     * @returns {Set} set of hexadecimal colors
+     */
+    getColorPalette() {
+        const editingElement = this.env.getEditingElement();
+        const data = this.getData(editingElement);
+        const colorSet = new Set();
+        for (const dataset of data.datasets) {
+            if (this.isPieChart(editingElement)) {
+                dataset.backgroundColor.forEach((color) => colorSet.add(this.getColor(color)));
+                dataset.borderColor.forEach((color) => colorSet.add(this.getColor(color)));
+            } else {
+                colorSet.add(this.getColor(dataset.backgroundColor));
+                colorSet.add(this.getColor(dataset.borderColor));
+            }
+        }
+        return colorSet;
+    }
+    /**
      * Store in the state the coords of the cell that is currently focused.
      * (Used to display the corresponding colorpickers.)
      *
