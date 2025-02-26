@@ -1,17 +1,13 @@
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
-import { session } from "@web/session";
-import { deepCopy, deepEqual } from "@web/core/utils/objects";
+import { deepEqual } from "@web/core/utils/objects";
 
 const loadMenusUrl = `/web/webclient/load_menus`;
+const loadMenusHash = new Date().getTime().toString();
 
 function makeFetchLoadMenus() {
-    const cacheHashes = session.cache_hashes;
-    let loadMenusHash = cacheHashes.load_menus || new Date().getTime().toString();
     return async function fetchLoadMenus(reload) {
-        if (reload) {
-            loadMenusHash = new Date().getTime().toString();
-        } else if (odoo.loadMenusPromise) {
+        if (!reload && odoo.loadMenusPromise) {
             return odoo.loadMenusPromise;
         }
         const res = await browser.fetch(`${loadMenusUrl}/${loadMenusHash}`);
@@ -83,18 +79,18 @@ export const menuService = {
     dependencies: ["action"],
     async start(env) {
         const fetchLoadMenus = makeFetchLoadMenus();
-        const storageMenus = JSON.parse(browser.localStorage.getItem("webclient_menus_data"));
+        let storageMenus = JSON.parse(browser.localStorage.getItem("webclient_menus_data"));
         const storageMenusVersion = browser.localStorage.getItem("webclient_menus_version");
         if (storageMenus && storageMenusVersion === odoo.info.server_version) {
             const fetchLoadMenusPromise = fetchLoadMenus();
             fetchLoadMenusPromise.then((res) => {
                 if (!deepEqual(res, storageMenus)) {
-                    browser.localStorage.setItem("webclient_menus", JSON.stringify(res));
+                    browser.localStorage.setItem("webclient_menus_data", JSON.stringify(res));
+                    storageMenus = res;
                     env.bus.trigger("MENUS:APP-CHANGED");
                 }
             });
-            // The deepCopy is to be sure to compare non modified on the localStorage;
-            return makeMenus(env, deepCopy(storageMenus), fetchLoadMenus);
+            return makeMenus(env, storageMenus, fetchLoadMenus);
         }
         const menusData = await fetchLoadMenus();
         browser.localStorage.setItem("webclient_menus_version", odoo.info.server_version);
