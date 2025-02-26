@@ -391,7 +391,7 @@ class HolidaysAllocation(models.Model):
         If force_period is set, the accrual will run until date_to in a prorated way (used for end of year accrual actions).
         """
         date_to = date_to or fields.Date.today()
-        already_accrued = {allocation.id: allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start' for allocation in self}
+        already_accrued = {allocation.id: allocation.already_accrued or (allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start') for allocation in self}
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
