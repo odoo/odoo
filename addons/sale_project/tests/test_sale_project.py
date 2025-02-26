@@ -16,9 +16,10 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
             'name': 'Plan Test',
         })
+        cls.project_plan = cls.env['account.analytic.plan'].browse(int(cls.env['ir.config_parameter'].get_param('analytic.project_plan', 0)))
         cls.analytic_account_sale = cls.env['account.analytic.account'].create({
             'name': 'Project for selling timesheet - AA',
-            'plan_id': cls.analytic_plan.id,
+            'plan_id': cls.project_plan.id,
             'code': 'AA-2030'
         })
 
