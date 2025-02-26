@@ -9,3 +9,4 @@ from . import test_mail_activity_plan
 from . import test_resource
 from . import test_hr_contract_history_groupby
 from . import test_attendances
+from . import test_get_employee_working_periods
