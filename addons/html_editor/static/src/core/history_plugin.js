@@ -122,6 +122,7 @@ export class HistoryPlugin extends Plugin {
         "serializeSelection",
         "stageSelection",
         "undo",
+        "getIsPreviewing",
     ];
     resources = {
         user_commands: [
@@ -180,6 +181,10 @@ export class HistoryPlugin extends Plugin {
         this.observer = new MutationObserver(this.handleNewRecords.bind(this));
         this._cleanups.push(() => this.observer.disconnect());
         this.clean();
+    }
+
+    getIsPreviewing() {
+        return this.isPreviewing;
     }
 
     clean() {
