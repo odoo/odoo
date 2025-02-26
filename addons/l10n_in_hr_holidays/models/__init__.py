@@ -2,3 +2,4 @@
 
 from . import hr_leave
 from . import hr_leave_type
+from . import l10n_in_hr_leave_optional_holiday
