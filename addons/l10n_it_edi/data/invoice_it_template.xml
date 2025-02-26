@@ -25,8 +25,6 @@
                         <Tipo t-out="format_alphanumeric(sconto_maggiorazione['tipo'])"/>
                         <Percentuale t-if="sconto_maggiorazione['percentuale']"
                                      t-out="format_float(sconto_maggiorazione['percentuale'], 2)"/>
-                        <Importo t-if="sconto_maggiorazione['importo']"
-                                 t-out="format_float(sconto_maggiorazione['importo'], 8)"/>
                     </ScontoMaggiorazione>
                     <PrezzoTotale t-out="format_float(it_values['prezzo_totale'], 8)"/>
                     <AliquotaIVA t-foreach="it_values['aliquota_iva_list']"
