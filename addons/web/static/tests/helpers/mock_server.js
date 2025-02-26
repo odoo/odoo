@@ -107,14 +107,14 @@ function makeLogger(prefix, title) {
     return { request, response };
 }
 
-export function makeServerError({ code, context, description, message, subType, type } = {}) {
+export function makeServerError({ code, context, description, message, subType, type, args } = {}) {
     return makeErrorFromResponse({
         code: code || 200,
         message: message || "Odoo Server Error",
         data: {
             name: `odoo.exceptions.${type || "UserError"}`,
             debug: "traceback",
-            arguments: [],
+            arguments: args || [],
             context: context || {},
             subType,
             message: description,
