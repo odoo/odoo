@@ -3,7 +3,6 @@ import { patchTranslations } from "@web/../tests/web_test_helpers";
 
 import {
     capitalize,
-    escape,
     escapeRegExp,
     intersperse,
     isEmail,
@@ -14,19 +13,6 @@ import {
 import { _t } from "@web/core/l10n/translation";
 
 describe.current.tags("headless");
-
-test("escape", () => {
-    expect(escape("<a>this is a link</a>")).toBe("&lt;a&gt;this is a link&lt;/a&gt;");
-    expect(escape(`<a href="https://www.odoo.com">odoo<a>`)).toBe(
-        `&lt;a href=&quot;https://www.odoo.com&quot;&gt;odoo&lt;a&gt;`
-    );
-    expect(escape(`<a href='https://www.odoo.com'>odoo<a>`)).toBe(
-        `&lt;a href=&#x27;https://www.odoo.com&#x27;&gt;odoo&lt;a&gt;`
-    );
-    expect(escape("<a href='https://www.odoo.com'>Odoo`s website<a>")).toBe(
-        `&lt;a href=&#x27;https://www.odoo.com&#x27;&gt;Odoo&#x60;s website&lt;a&gt;`
-    );
-});
 
 test("escapeRegExp", () => {
     expect(escapeRegExp("")).toBe("");

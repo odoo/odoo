@@ -1,39 +1,13 @@
-import {
-    createDocumentFragmentFromContent,
-    htmlJoin,
-    htmlReplace,
-    htmlTrim,
-} from "@mail/utils/common/html";
-
 import { markup } from "@odoo/owl";
 
 import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
-import { createElementWithContent, htmlEscape, setElementContent } from "@web/core/utils/html";
+import { Markup } from "@web/core/utils/html";
 import { escapeRegExp, unaccent } from "@web/core/utils/strings";
 import { setAttributes } from "@web/core/utils/xml";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
-
-/**
- * Escape < > & as html entities
- *
- * @param {string}
- * @return {string}
- */
-const _escapeEntities = (function () {
-    const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;" };
-    const escaper = function (match) {
-        return map[match];
-    };
-    const testRegexp = RegExp("(?:&|<|>)");
-    const replaceRegexp = RegExp("(?:&|<|>)", "g");
-    return function (string) {
-        string = string == null ? "" : "" + string;
-        return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
-    };
-})();
 
 /**
  * @param {string|ReturnType<markup>} rawBody
@@ -48,8 +22,8 @@ export async function prettifyMessageContent(
     // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
     // And further extended to include Latin-1 Supplement, Latin Extended-A, Latin Extended-B and Latin Extended Additional.
     const escapedAndCompactContent = escapeAndCompactTextContent(rawBody);
-    let body = htmlReplace(escapedAndCompactContent, /&nbsp;/g, " ");
-    body = htmlTrim(body);
+    let body = Markup.replace(escapedAndCompactContent, /&nbsp;/g, " ");
+    body = Markup.trim(body);
     // This message will be received from the mail composer as html content
     // subtype but the urls will not be linkified. If the mail composer
     // takes the responsibility to linkify the urls we end up with double
@@ -76,9 +50,9 @@ export async function prettifyMessageContent(
 export function parseAndTransform(htmlString, transformFunction) {
     const div = document.createElement("div");
     try {
-        setElementContent(div, htmlString);
+        Markup.setElementContent(div, htmlString);
     } catch {
-        div.appendChild(createElementWithContent("pre", htmlString));
+        div.appendChild(Markup.createElementWithContent("pre", htmlString));
     }
     return _parseAndTransform(Array.from(div.childNodes), transformFunction);
 }
@@ -95,8 +69,8 @@ function _parseAndTransform(nodes, transformFunction) {
     if (!nodes) {
         return;
     }
-    return htmlJoin(
-        ...Object.values(nodes).map((node) =>
+    return Markup.join(
+        Object.values(nodes).map((node) =>
             transformFunction(node, function () {
                 return _parseAndTransform(node.childNodes, transformFunction);
             })
@@ -113,21 +87,17 @@ function linkify(text) {
     let result = "";
     let match;
     while ((match = urlRegexp.exec(text)) !== null) {
-        result = htmlJoin(result, text.slice(curIndex, match.index));
+        result = Markup.join([result, text.slice(curIndex, match.index)]);
         // Decode the url first, in case it's already an encoded url
         const url = decodeURI(match[0]);
         const href = encodeURI(!/^https?:\/\//i.test(url) ? "http://" + url : url);
-        result = htmlJoin(
+        result = Markup.join([
             result,
-            markup(
-                `<a target="_blank" rel="noreferrer noopener" href="${href}">${_escapeEntities(
-                    url
-                )}</a>`
-            )
-        );
+            Markup.build`<a target="_blank" rel="noreferrer noopener" href="${href}">${url}</a>`,
+        ]);
         curIndex = match.index + match[0].length;
     }
-    return htmlJoin(result, text.slice(curIndex));
+    return Markup.join([result, text.slice(curIndex)]);
 }
 
 /**
@@ -140,7 +110,7 @@ export function addLink(node, transformChildren) {
         // text node
         const linkified = linkify(node.textContent);
         if (linkified.toString() !== node.textContent) {
-            const div = createElementWithContent("div", linkified);
+            const div = Markup.createElementWithContent("div", linkified);
             for (const childNode of [...div.childNodes]) {
                 node.parentNode.insertBefore(childNode, node);
             }
@@ -164,13 +134,13 @@ export function addLink(node, transformChildren) {
  */
 export function escapeAndCompactTextContent(content) {
     //Removing unwanted extra spaces from message
-    let value = htmlTrim(content);
-    value = htmlReplace(value, /(\r|\n){2,}/g, markup("<br/><br/>"));
-    value = htmlReplace(value, /(\r|\n)/g, markup("<br/>"));
+    let value = Markup.trim(content);
+    value = Markup.replace(value, /(\r|\n){2,}/g, Markup.build`<br/><br/>`);
+    value = Markup.replace(value, /(\r|\n)/g, Markup.build`<br/>`);
 
     // prevent html space collapsing
-    value = htmlReplace(value, / /g, markup("&nbsp;"));
-    value = htmlReplace(value, /([^>])&nbsp;([^<])/g, markup("$1 $2"));
+    value = Markup.replace(value, / /g, Markup.build`&nbsp;`);
+    value = Markup.replace(value, /([^>])&nbsp;([^<])/g, Markup.build`$1 $2`);
     return value;
 }
 
@@ -178,7 +148,7 @@ export function escapeAndCompactTextContent(content) {
  * @param body {string|ReturnType<markup>}
  * @param validRecords {Object}
  * @param validRecords.partners {Array}
- * @return {ReturnType<markup>}
+ * @return {string|ReturnType<markup>}
  */
 function generateMentionsLinks(body, { partners = [], threads = [], specialMentions = [] }) {
     const mentions = [];
@@ -192,7 +162,7 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
             placeholder,
             text,
         });
-        body = htmlReplace(body, text, placeholder);
+        body = Markup.replace(body, text, placeholder);
     }
     for (const thread of threads) {
         const placeholder = `#-mention-channel-${thread.id}`;
@@ -211,13 +181,13 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
             placeholder,
             text,
         });
-        body = htmlReplace(body, text, placeholder);
+        body = Markup.replace(body, text, placeholder);
     }
     for (const special of specialMentions) {
-        body = htmlReplace(
+        body = Markup.replace(
             body,
             `@${special}`,
-            markup(`<a href="#" class="o-discuss-mention">@${htmlEscape(special)}</a>`)
+            Markup.build`<a href="#" class="o-discuss-mention">@${special}</a>`
         );
     }
     for (const mention of mentions) {
@@ -231,26 +201,26 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
             contenteditable: "false",
         });
         link.textContent = mention.text;
-        body = htmlReplace(body, mention.placeholder, markup(link.outerHTML));
+        body = Markup.replace(body, mention.placeholder, markup(link.outerHTML));
     }
-    return htmlEscape(body);
+    return body;
 }
 
 /**
  * @private
  * @param {string|ReturnType<markup>} htmlString
- * @returns {ReturnType<markup>}
+ * @returns {Promise<string|ReturnType<markup>>}
  */
 async function _generateEmojisOnHtml(htmlString) {
     const { emojis } = await loadEmoji();
     for (const emoji of emojis) {
         for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
-            const escapedSource = htmlEscape(String(source));
+            const escapedSource = Markup.escape(String(source));
             const regexp = new RegExp("(\\s|^)(" + escapeRegExp(escapedSource) + ")(?=\\s|$)", "g");
-            htmlString = htmlReplace(htmlString, regexp, "$1" + emoji.codepoints);
+            htmlString = Markup.replace(htmlString, regexp, "$1" + emoji.codepoints);
         }
     }
-    return htmlEscape(htmlString);
+    return htmlString;
 }
 
 /**
@@ -258,7 +228,7 @@ async function _generateEmojisOnHtml(htmlString) {
  * @returns {ReturnType<markup>}
  */
 export function getNonEditableMentions(body) {
-    const doc = createDocumentFragmentFromContent(body);
+    const doc = Markup.createDocumentFragmentFromContent(body);
     for (const block of doc.body.querySelectorAll(".o_mail_reply_hide")) {
         block.classList.remove("o_mail_reply_hide");
     }
@@ -278,12 +248,12 @@ export function getNonEditableMentions(body) {
  * @returns {string}
  */
 export function htmlToTextContentInline(htmlString) {
-    htmlString = htmlReplace(htmlString, /<br\s*\/?>/gi, " ");
+    htmlString = Markup.replace(htmlString, /<br\s*\/?>/gi, " ");
     const div = document.createElement("div");
     try {
-        setElementContent(div, htmlString);
+        Markup.setElementContent(div, htmlString);
     } catch {
-        div.appendChild(createElementWithContent("pre", htmlString));
+        div.appendChild(Markup.createElementWithContent("pre", htmlString));
     }
     return div.textContent
         .trim()
@@ -292,8 +262,8 @@ export function htmlToTextContentInline(htmlString) {
 }
 
 export function convertBrToLineBreak(str) {
-    str = htmlReplace(str, /<br\s*\/?>/gi, "\n");
-    return createDocumentFragmentFromContent(str).body.textContent;
+    str = Markup.replace(str, /<br\s*\/?>/gi, "\n");
+    return Markup.createDocumentFragmentFromContent(str).body.textContent;
 }
 
 export function cleanTerm(term) {

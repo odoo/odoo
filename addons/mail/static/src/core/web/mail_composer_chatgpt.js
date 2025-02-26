@@ -1,11 +1,10 @@
 import { ChatGPTPromptDialog } from "@html_editor/main/chatgpt/chatgpt_prompt_dialog";
 
-import { htmlJoin } from "@mail/utils/common/html";
-
 import { Component, markup } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Markup } from "@web/core/utils/html";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class MailComposerChatGPT extends Component {
@@ -24,7 +23,7 @@ export class MailComposerChatGPT extends Component {
                 root.appendChild(content);
                 const { body } = this.props.record.data;
                 this.props.record.update({
-                    body: htmlJoin(body, markup(root.innerHTML)),
+                    body: Markup.join([body, markup(root.innerHTML)]),
                 });
             },
             /**

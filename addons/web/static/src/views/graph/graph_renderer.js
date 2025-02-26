@@ -19,7 +19,7 @@ import { Component, onWillUnmount, useEffect, useRef, onWillStart } from "@odoo/
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
-import { createElementWithContent } from "@web/core/utils/html";
+import { Markup } from "@web/core/utils/html";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 
 const NO_DATA = _t("No data");
@@ -199,7 +199,7 @@ export class GraphRenderer extends Component {
             mode: this.model.metaData.mode,
             tooltipItems: this.getTooltipItems(data, metaData, tooltipModel),
         });
-        const template = createElementWithContent("template", content);
+        const template = Markup.createElementWithContent("template", content);
         const tooltip = template.content.firstChild;
         this.containerRef.el.prepend(tooltip);
 

@@ -2,8 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { HistoryDialog } from "@html_editor/components/history_dialog/history_dialog";
 import { useService } from '@web/core/utils/hooks';
-import { markup } from '@odoo/owl';
-import { escape } from '@web/core/utils/strings';
+import { Markup } from "@web/core/utils/html";
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
 
 export const subTaskDeleteConfirmationMessage = _t(
@@ -51,9 +50,9 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
         const historyMetadata = record.data["html_field_history_metadata"]?.[versionedFieldName];
         if (!historyMetadata) {
             this.notifications.add(
-                escape(_t(
+                _t(
                     "The task description lacks any past content that could be restored at the moment."
-                ))
+                )
             );
             return;
         }
@@ -62,13 +61,9 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
             HistoryDialog,
             {
                 title: _t("Task Description History"),
-                noContentHelper: markup(
-                    `<span class='text-muted fst-italic'>${escape(
-                        _t(
-                            "The task description was empty at the time."
-                        )
-                    )}</span>`
-                ),
+                noContentHelper: Markup.build`<span class='text-muted fst-italic'>${_t(
+                    "The task description was empty at the time."
+                )}</span>`,
                 recordId: record.resId,
                 recordModel: this.props.resModel,
                 versionedFieldName,

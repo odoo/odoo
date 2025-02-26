@@ -1,7 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryFirst, queryOne, queryText } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
-import { markup } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -26,6 +25,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
+import { Markup } from "@web/core/utils/html";
 import { PivotController } from "@web/views/pivot/pivot_controller";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -2642,7 +2642,7 @@ test("empty pivot view with action helper", async () => {
         type: "pivot",
         resModel: "partner",
         context: { search_default_small_than_0: true },
-        noContentHelp: markup(`<p class="abc">click to add a foo</p>`),
+        noContentHelp: Markup.build`<p class="abc">click to add a foo</p>`,
         config: {
             views: [[false, "search"]],
         },
@@ -2669,7 +2669,7 @@ test("empty pivot view with sample data", async () => {
         type: "pivot",
         resModel: "partner",
         context: { search_default_small_than_0: true },
-        noContentHelp: markup('<p class="abc">click to add a foo</p>'),
+        noContentHelp: Markup.build`<p class="abc">click to add a foo</p>`,
         config: {
             views: [[false, "search"]],
         },
@@ -2695,7 +2695,7 @@ test("non empty pivot view with sample data", async () => {
     await mountView({
         type: "pivot",
         resModel: "partner",
-        noContentHelp: markup('<p class="abc">click to add a foo</p>'),
+        noContentHelp: Markup.build`<p class="abc">click to add a foo</p>`,
         config: {
             views: [[false, "search"]],
         },

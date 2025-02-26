@@ -1,9 +1,9 @@
 import { HtmlViewer } from "@html_editor/fields/html_viewer";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { markup } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
+import { Markup } from "@web/core/utils/html";
 import { WebClient } from "@web/webclient/webclient";
 
 test(`XML-like self-closing elements are fixed in a standalone HtmlViewer`, async () => {
@@ -13,7 +13,7 @@ test(`XML-like self-closing elements are fixed in a standalone HtmlViewer`, asyn
         Component: HtmlViewer,
         props: {
             config: {
-                value: markup(`<a href="#"/>outside<a href="#">inside</a>`),
+                value: Markup.build`<a href="#"/>outside<a href="#">inside</a>`,
             },
         },
     });

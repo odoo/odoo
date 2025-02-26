@@ -1,7 +1,5 @@
-import { markup } from "@odoo/owl";
-
 import { Deferred } from "@web/core/utils/concurrency";
-import { htmlEscape } from "@web/core/utils/html";
+import { Markup } from "@web/core/utils/html";
 import { sprintf } from "@web/core/utils/strings";
 
 export const translationLoaded = Symbol("translationLoaded");
@@ -9,8 +7,6 @@ export const translatedTerms = {
     [translationLoaded]: false,
 };
 export const translationIsReady = new Deferred();
-
-const Markup = markup().constructor;
 
 /**
  * Translates a term, or returns the term as it is if no translation can be
@@ -29,7 +25,7 @@ const Markup = markup().constructor;
  * _t("Good morning"); // "Bonjour"
  * _t("Good morning %s", user.name); // "Bonjour Marc"
  * _t("Good morning %(newcomer)s, goodbye %(departer)s", { newcomer: Marc, departer: Mitchel }); // Bonjour Marc, au revoir Mitchel
- * _t("I love %s", markup("<blink>Minecraft</blink>")); // Markup {"J'adore <blink>Minecraft</blink>"}
+ * _t("I love %s", Markup.build`<blink>Minecraft</blink>`); // Markup {"J'adore <blink>Minecraft</blink>"}
  *
  * @param {string} term
  * @returns {string|Markup|LazyTranslatedString}
@@ -118,25 +114,7 @@ function _safeSprintf(str, ...values) {
         hasMarkup = values.some((v) => v instanceof Markup);
     }
     if (hasMarkup) {
-        return markup(sprintf(htmlEscape(str), ..._escapeNonMarkup(values)));
+        return Markup.sprintf(str, ...values);
     }
     return sprintf(str, ...values);
-}
-
-/**
- * Go through each value to be passed to sprintf and escape anything that isn't
- * a markup.
- *
- * @param {any[]|[Object]} values Values for use with sprintf.
- * @returns {any[]|[Object]}
- */
-function _escapeNonMarkup(values) {
-    if (Object.prototype.toString.call(values[0]) === "[object Object]") {
-        const sanitized = {};
-        for (const [key, value] of Object.entries(values[0])) {
-            sanitized[key] = htmlEscape(value);
-        }
-        return [sanitized];
-    }
-    return values.map((x) => htmlEscape(x));
 }

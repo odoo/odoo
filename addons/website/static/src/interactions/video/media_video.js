@@ -2,7 +2,6 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
-import { escape } from "@web/core/utils/strings";
 import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
 
 export class MediaVideo extends Interaction {
@@ -55,7 +54,7 @@ export class MediaVideo extends Interaction {
         // 'data-oe-expression' one (the latter is used as a workaround in 10.0
         // system but should obviously be reviewed in master).
 
-        let src = escape(this.el.getAttribute('oe-expression') || this.el.getAttribute('src'));
+        let src = this.el.getAttribute('oe-expression') || this.el.getAttribute('src');
         // Validate the src to only accept supported domains we can trust
 
         let m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);

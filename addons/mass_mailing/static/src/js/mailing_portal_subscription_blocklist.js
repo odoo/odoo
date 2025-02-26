@@ -1,7 +1,7 @@
 /** @odoo-module alias=mailing.PortalSubscriptionBlocklist **/
 
 import { rpc } from "@web/core/network/rpc";
-import { setElementContent } from "@web/core/utils/html";
+import { Markup } from "@web/core/utils/html";
 import { renderToMarkup } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
@@ -120,7 +120,7 @@ publicWidget.registry.MailingPortalSubscriptionBlocklist = publicWidget.Widget.e
                     infoKey: infoKey,
                 }
             );
-            setElementContent(updateInfo, infoContent);
+            Markup.setElementContent(updateInfo, infoContent);
             if (['blocklist_add', 'blocklist_remove'].includes(infoKey)) {
                 updateInfo.classList.add('text-success');
                 updateInfo.classList.remove('text-danger');

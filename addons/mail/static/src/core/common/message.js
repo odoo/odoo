@@ -33,12 +33,11 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { createElementWithContent } from "@web/core/utils/html";
+import { Markup } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
 import { messageActionsRegistry, useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
-import { escape } from "@web/core/utils/strings";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 
@@ -99,7 +98,7 @@ export class Message extends Component {
 
     setup() {
         super.setup();
-        this.escape = escape;
+        this.Markup = Markup;
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
             isEditing: false,
@@ -168,7 +167,7 @@ export class Message extends Component {
         useEffect(
             () => {
                 if (this.shadowBody.el) {
-                    const bodyEl = createElementWithContent(
+                    const bodyEl = Markup.createElementWithContent(
                         "span",
                         this.state.showTranslation
                             ? this.message.translationValue

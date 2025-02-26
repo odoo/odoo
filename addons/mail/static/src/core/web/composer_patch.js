@@ -3,10 +3,10 @@ import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 
 import { Composer } from "@mail/core/common/composer";
-import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
 import { markup } from "@odoo/owl";
 
+import { Markup } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -19,7 +19,7 @@ patch(Composer.prototype, {
      * @returns {ReturnType<markup>}
      */
     formatDefaultBodyForFullComposer(defaultBody, signature = "") {
-        const fragment = createDocumentFragmentFromContent(defaultBody).body;
+        const fragment = Markup.createDocumentFragmentFromContent(defaultBody).body;
         if (!fragment.firstChild) {
             fragment.append(document.createElement("BR"));
         }

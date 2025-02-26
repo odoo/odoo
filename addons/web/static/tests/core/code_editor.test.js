@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, markup, useState, xml } from "@odoo/owl";
+import { Component, useState, xml } from "@odoo/owl";
 import {
     editAce,
     mountWithCleanup,
@@ -11,6 +11,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { Markup } from "@web/core/utils/html";
 import { debounce } from "@web/core/utils/timing";
 
 preloadBundle("web.ace_lib");
@@ -101,7 +102,7 @@ test("CodeEditor shouldn't accepts markup values", async () => {
     }
 
     const codeEditor = await mountWithCleanup(GrandParent);
-    const textMarkup = markup("<div>Some Text</div>");
+    const textMarkup = Markup.build`<div>Some Text</div>`;
 
     codeEditor.state.value = textMarkup;
     await animationFrame();

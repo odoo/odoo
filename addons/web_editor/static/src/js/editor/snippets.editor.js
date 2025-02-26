@@ -1,12 +1,12 @@
 import { clamp } from "@web/core/utils/numbers";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService, useBus } from "@web/core/utils/hooks";
+import { Markup } from "@web/core/utils/html";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { useDragAndDrop } from "@web_editor/js/editor/drag_and_drop";
 import options from "@web_editor/js/editor/snippets.options";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
-import { escape } from "@web/core/utils/strings";
 import { closestElement, isUnremovable } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
@@ -16,7 +16,6 @@ import { Toolbar } from "@web_editor/js/editor/toolbar";
 import {
     Component,
     EventBus,
-    markup,
     onMounted,
     onWillStart,
     onWillUnmount,
@@ -3289,8 +3288,8 @@ class SnippetsMenu extends Component {
                     displayName: snippetEl.getAttribute("name"),
                     category: category,
                     content: snippetEl.children,
-                    thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
-                    imagePreview: escape(snippetEl.dataset.oImagePreview),
+                    thumbnailSrc: snippetEl.dataset.oeThumbnail,
+                    imagePreview: snippetEl.dataset.oImagePreview,
                     visible: true,
                     baseBody: snippetEl.children[0],
                     data: {...snippetEl.dataset, ...snippetEl.children[0].dataset},
@@ -5184,7 +5183,7 @@ class SnippetsMenu extends Component {
         const linkUrl = '/odoo/action-base.open_module_tree/' + encodeURIComponent(moduleID);
         this.dialog.add(ConfirmationDialog, {
             title: _t("Install %s", snippetName),
-            body: markup(`${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`),
+            body: Markup.build`${bodyText}\n<a href="${linkUrl}" target="_blank">${linkText}</a>`,
             confirm: async () => {
                 try {
                     await this.orm.call("ir.module.module", "button_immediate_install", [[moduleID]]);
@@ -5196,7 +5195,7 @@ class SnippetsMenu extends Component {
                     });
                 } catch (e) {
                     if (e instanceof RPCError) {
-                        const message = escape(_t("Could not install module %s", snippetName));
+                        const message = _t("Could not install module %s", snippetName);
                         this.notification.add(message, {
                             type: "danger",
                             sticky: true,

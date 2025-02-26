@@ -1,17 +1,18 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, markup, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { getService, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { user } from "@web/core/user";
+import { Markup } from "@web/core/utils/html";
 
 let effectParams;
 
 beforeEach(async () => {
     await mountWithCleanup(MainComponentsContainer);
     effectParams = {
-        message: markup("<div>Congrats!</div>"),
+        message: Markup.build`<div>Congrats!</div>`,
     };
 });
 

@@ -1,10 +1,10 @@
 import { expect, test } from "@odoo/hoot";
 import { click, hover, leave } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { markup } from "@odoo/owl";
 import { getService, makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
+import { Markup } from "@web/core/utils/html";
 
 test("can display a basic notification", async () => {
     await makeMockEnv();
@@ -49,7 +49,7 @@ test("can display a notification with markup content", async () => {
         .category("main_components")
         .get("NotificationContainer");
     await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
-    getService("notification").add(markup("<b>I'm a <i>markup</i> notification</b>"));
+    getService("notification").add(Markup.build`<b>I'm a <i>markup</i> notification</b>`);
     await animationFrame();
     expect(".o_notification").toHaveCount(1);
     expect(".o_notification_content").toHaveInnerHTML("<b>I'm a <i>markup</i> notification</b>");

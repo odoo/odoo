@@ -28,7 +28,7 @@ export class HistoryDialog extends Component {
 
     static defaultProps = {
         title: _t("History"),
-        noContentHelper: markup(""),
+        noContentHelper: "",
         embeddedComponents: [...READONLY_MAIN_EMBEDDINGS],
     };
 

@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToMarkup } from "@web/core/utils/render";
-import { setElementContent } from "@web/core/utils/html";
+import { Markup } from "@web/core/utils/html";
 
 publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.extend({
     events: {
@@ -136,7 +136,7 @@ publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.ex
                     infoKey: infoKey,
                 }
             );
-            setElementContent(feedbackInfo, infoContent);
+            Markup.setElementContent(feedbackInfo, infoContent);
             feedbackInfo.classList.add(infoKey === 'feedback_sent' ? 'text-success' : 'text-danger');
             feedbackInfo.classList.remove('d-none', infoKey === 'feedback_sent' ? 'text-danger': 'text-success');
         }

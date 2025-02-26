@@ -4,7 +4,6 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { escape } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
 import {
     createPropertyActiveField,
@@ -14,6 +13,7 @@ import {
     parseServerValue,
 } from "./utils";
 import { FetchRecordError } from "./errors";
+import { Markup } from "@web/core/utils/html";
 
 export class Record extends DataPoint {
     static type = "Record";
@@ -447,11 +447,11 @@ export class Record extends DataPoint {
         const isValid = !this._invalidFields.size;
         if (!isValid && displayNotification) {
             const items = [...this._invalidFields].map(
-                (fieldName) => `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`,
+                (fieldName) => Markup.build`<li>${this.fields[fieldName].string || fieldName}</li>`,
                 this
             );
             this._closeInvalidFieldsNotification = this.model.notification.add(
-                markup(`<ul>${items.join("")}</ul>`),
+                Markup.build`<ul>${Markup.join(items)}</ul>`,
                 {
                     title: _t("Invalid fields: "),
                     type: "danger",
@@ -1025,10 +1025,9 @@ export class Record extends DataPoint {
                 this.dirty = false;
             } else {
                 this.model._closeUrgentSaveNotification = this.model.notification.add(
-                    markup(
-                        _t(
-                            `Heads up! Your recent changes are too large to save automatically. Please click the <i class="fa fa-cloud-upload fa-fw"></i> button now to ensure your work is saved before you exit this tab.`
-                        )
+                    _t(
+                        `Heads up! Your recent changes are too large to save automatically. Please click the %(icon)s button now to ensure your work is saved before you exit this tab.`,
+                        { icon: Markup.build`<i class="fa fa-cloud-upload fa-fw"></i>` }
                     ),
                     { sticky: true }
                 );
