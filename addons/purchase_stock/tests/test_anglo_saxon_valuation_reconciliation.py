@@ -378,10 +378,12 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         bill.action_post()
 
         # Register a payment creating the CABA journal entry on the fly and reconcile it with the tax line.
-        self.env['account.payment.register']\
-            .with_context(active_ids=bill.ids, active_model='account.move')\
-            .create({})\
-            ._create_payments()
+        self.env['account.payment.register'].with_context(
+            active_ids=bill.ids,
+            active_model='account.move',
+        ).create({
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
 
         partial_rec = bill.mapped('line_ids.matched_debit_ids')
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])

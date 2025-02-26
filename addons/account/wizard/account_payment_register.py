@@ -31,9 +31,8 @@ class AccountPaymentRegister(models.TransientModel):
         help="The payment's currency.")
     journal_id = fields.Many2one(
         comodel_name='account.journal',
-        compute='_compute_journal_id', store=True, readonly=False, precompute=True,
-        check_company=True,
-        domain="[('id', 'in', available_journal_ids)]")
+        related='payment_method_line_id.journal_id',
+    )
     available_journal_ids = fields.Many2many(
         comodel_name='account.journal',
         compute='_compute_available_journal_ids'
@@ -108,6 +107,8 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_from_lines')  # used to check if user can edit info such as the amount
     can_group_payments = fields.Boolean(store=True, copy=False,
         compute='_compute_can_group_payments')  # can the user see the 'group_payments' box
+    can_edit_payment_method_line = fields.Boolean(copy=False,
+        compute='_compute_can_edit_payment_method_line')
     company_id = fields.Many2one('res.company', store=True, copy=False,
         compute='_compute_from_lines')
     partner_id = fields.Many2one('res.partner',
@@ -482,24 +483,6 @@ class AccountPaymentRegister(models.TransientModel):
                 available_journals |= wizard._get_batch_available_journals(batch)
             wizard.available_journal_ids = [Command.set(available_journals.ids)]
 
-    @api.depends('available_journal_ids')
-    def _compute_journal_id(self):
-        for wizard in self:
-            if wizard.journal_id in wizard.available_journal_ids:
-                continue
-            move_payment_method_lines = wizard.line_ids.move_id.preferred_payment_method_line_id
-            if move_payment_method_lines and len(move_payment_method_lines) == 1:
-                wizard.journal_id = move_payment_method_lines.journal_id
-            elif wizard.can_edit_wizard:
-                batch = wizard.batches[0]
-                wizard.journal_id = wizard._get_batch_journal(batch)
-            else:
-                wizard.journal_id = self.env['account.journal'].search([
-                    *self.env['account.journal']._check_company_domain(wizard.company_id),
-                    ('type', 'in', ('bank', 'cash', 'credit')),
-                    ('id', 'in', self.available_journal_ids.ids)
-                ], limit=1)
-
     @api.depends('can_edit_wizard', 'journal_id')
     def _compute_available_partner_bank_ids(self):
         for wizard in self:
@@ -526,31 +509,19 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('payment_type', 'journal_id', 'currency_id')
     def _compute_payment_method_line_fields(self):
         for wizard in self:
-            if wizard.journal_id:
-                wizard.available_payment_method_line_ids = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
-            else:
-                wizard.available_payment_method_line_ids = False
+            wizard.available_payment_method_line_ids = self.env['account.payment.method.line']._get_available(payment_type=wizard.payment_type)
 
-    @api.depends('payment_type', 'journal_id')
+    @api.depends('payment_type', 'available_payment_method_line_ids')
     def _compute_payment_method_line_id(self):
         for wizard in self:
-            if wizard.journal_id:
-                available_payment_method_lines = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
+            if wizard.available_payment_method_line_ids and self.payment_method_line_id in wizard.available_payment_method_line_ids:
+                wizard.payment_method_line_id = wizard.payment_method_line_id
             else:
-                available_payment_method_lines = False
-
-            if available_payment_method_lines and wizard.payment_method_line_id in available_payment_method_lines:
-                continue
-
-            # Select the first available one by default.
-            if available_payment_method_lines:
-                move_payment_method_lines = wizard.line_ids.move_id.preferred_payment_method_line_id
-                if len(move_payment_method_lines) == 1 and move_payment_method_lines.id in available_payment_method_lines.ids:
+                move_payment_method_lines = self.line_ids.move_id.preferred_payment_method_line_id
+                if len(move_payment_method_lines) == 1 and move_payment_method_lines.id in wizard.available_payment_method_line_ids.ids:
                     wizard.payment_method_line_id = move_payment_method_lines
                 else:
-                    wizard.payment_method_line_id = available_payment_method_lines[0]._origin
-            else:
-                wizard.payment_method_line_id = False
+                    wizard.payment_method_line_id = wizard.available_payment_method_line_ids[0]._origin
 
     @api.depends('payment_method_line_id')
     def _compute_show_require_partner_bank(self):
@@ -606,6 +577,14 @@ class AccountPaymentRegister(models.TransientModel):
                 # Foreign currency on payment different than the one set on the journal entries.
                 total_amount += comp_curr._convert(amount_residual, wizard_curr, self.company_id, self.payment_date)
         return total_amount
+
+    @api.depends('batches')
+    def _compute_can_edit_payment_method_line(self):
+        for wizard in self:
+            wizard.can_edit_payment_method_line = len(wizard.batches) <= 1 or all(
+                batch['payment_values']['payment_type'] == wizard.batches[0]['payment_values']['payment_type']
+                for batch in wizard.batches[1:]
+            )
 
     def _get_total_amounts_to_pay(self, batch_results):
         self.ensure_one()
@@ -1037,7 +1016,7 @@ class AccountPaymentRegister(models.TransientModel):
         payment_method_line = self.payment_method_line_id
 
         if batch_values['payment_type'] != payment_method_line.payment_type:
-            payment_method_line = self.journal_id._get_available_payment_method_lines(batch_values['payment_type'])[:1]
+            payment_method_line = self.env['account.payment.method.line']._get_available(payment_type=batch_values['payment_type'])
 
         payment_vals = {
             'date': self.payment_date,

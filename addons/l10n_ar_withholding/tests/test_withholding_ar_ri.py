@@ -108,7 +108,9 @@ class TestL10nArWithholdingArRi(TestAr):
         return invoice
 
     def new_payment_register(self, move_ids, taxes):
-        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move_ids.ids).create({'payment_date': '2023-01-01'})
+        wizard = (self.env['account.payment.register']
+            .with_context(active_model='account.move', active_ids=move_ids.ids)
+            .create({'payment_date': '2023-01-01', 'payment_method_line_id': self.inbound_payment_method_line.id}))
         wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x['id'], 'base_amount': x['base_amount'], 'amount': 0}) for x in taxes]
         wizard.l10n_ar_withholding_ids._compute_amount()
         return wizard
@@ -201,6 +203,7 @@ class TestL10nArWithholdingArRi(TestAr):
         taxes = [{'id': self.tax_wth_test_1.id, 'base_amount': 5}, {'id': self.tax_wth_test_2.id, 'base_amount': 6.05}]
         wizard = self.new_payment_register(moves, [])
         wizard.currency_id = self.other_currency.id
+        wizard.payment_method_line_id = self.inbound_payment_method_line
         wizard.amount = 6.05
         wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x['id'], 'base_amount': x['base_amount'], 'amount': 0}) for x in taxes]
         wizard.l10n_ar_withholding_ids._compute_amount()
@@ -300,6 +303,7 @@ class TestL10nArWithholdingArRi(TestAr):
             'payment_date': '2023-01-01',
             'currency_id': self.company_data['currency'].id,
             'l10n_ar_withholding_ids': [Command.create({'tax_id': self.tax_wth_test_1.id, 'base_amount': sum(in_invoice_wht.mapped('amount_untaxed')), 'amount': 0})],
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         wizard.l10n_ar_withholding_ids._compute_amount()
         action = wizard.action_create_payments()
@@ -335,6 +339,7 @@ class TestL10nArWithholdingArRi(TestAr):
             'payment_date': '2023-01-01',
             'currency_id': self.other_currency.id,
             'l10n_ar_withholding_ids': [Command.create({'tax_id': self.tax_wth_test_1.id, 'base_amount': sum(in_invoice_wht.mapped('amount_untaxed')), 'amount': 0})],
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         wizard.l10n_ar_withholding_ids._compute_amount()
         action = wizard.action_create_payments()

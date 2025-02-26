@@ -66,6 +66,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             'partner_type': 'customer',
             'partner_id': cls.partner_a.id,
             'date': '2022-02-10',
+            'payment_method_line_id': cls.inbound_payment_method_line.id,
         })
 
         cls.payment_move_23 = cls.env['account.payment'].create({
@@ -74,6 +75,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             'partner_type': 'customer',
             'partner_id': cls.partner_a.id,
             'date': '2023-02-10',
+            'payment_method_line_id': cls.outbound_payment_method_line.id,
         })
 
         # Post the move and payment and reconcile them

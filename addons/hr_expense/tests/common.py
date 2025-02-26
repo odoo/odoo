@@ -84,6 +84,14 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'code': '610010',
             'name': 'Expense Account 1'
         })
+        # create expense outstanding account
+        cls.expense_outstanding_account = cls.env['account.account'].create({
+            'name': "Expense Outstanding Account",
+            'code': 'EXPO00',
+            'reconcile': True,
+            'account_type': 'asset_current',
+        })
+        cls.env.company.expense_outstanding_account_id = cls.expense_outstanding_account
 
     @classmethod
     def create_expenses(cls, values=None):

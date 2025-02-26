@@ -1801,14 +1801,15 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
         invoice.action_post()
 
-        payment = self.env['account.payment.register']\
-            .with_context(active_model=invoice._name, active_ids=invoice.ids)\
-            .create({
-                'payment_date': '2016-01-01',
-                'amount': 90.0,
-                'currency_id': foreign_curr.id,
-            })\
-            ._create_payments()
+        payment = self.env['account.payment.register'].with_context(
+            active_model=invoice._name,
+            active_ids=invoice.ids,
+        ).create({
+            'payment_date': '2016-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'amount': 90.0,
+            'currency_id': foreign_curr.id,
+        })._create_payments()
 
         lines = (invoice + payment.move_id).line_ids\
             .filtered(lambda x: x.account_id.account_type == 'asset_receivable')
@@ -1943,6 +1944,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 1907.17,
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pay1.action_post()
         pay1_liquidity_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
@@ -1961,6 +1963,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 0.09,
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pay2.action_post()
         pay2_rec_line = pay2.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
@@ -2246,6 +2249,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 1907.17,
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pay1.action_post()
         pay1_liquidity_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
@@ -2264,6 +2268,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 0.09,
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pay2.action_post()
         pay2_rec_line = pay2.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
@@ -3665,14 +3670,15 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
         caba_inv.action_post()
 
-        self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=caba_inv.ids)\
-            .create({
-                'payment_date': '2017-01-01',
-                'currency_id': currency_id,
-                'amount': 110.0,
-            })\
-            ._create_payments()
+        self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=caba_inv.ids,
+        ).create({
+            'payment_date': '2017-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'currency_id': currency_id,
+            'amount': 110.0,
+        })._create_payments()
 
         receivable_line = caba_inv.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
         partial_rec = caba_inv.line_ids.matched_credit_ids
@@ -4602,8 +4608,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
         invoice.action_post()
 
-        self.env['account.payment.register'].with_context(active_ids=invoice.ids, active_model='account.move').create({
+        self.env['account.payment.register'].with_context(
+            active_ids=invoice.ids,
+            active_model='account.move',
+        ).create({
             'payment_date': invoice.date,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
@@ -4675,7 +4685,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         invoice.action_post()
 
-        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({})
+        pmt_wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })
         pmt_wizard._create_payments()
 
         caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
@@ -4714,15 +4729,23 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         payment_date_1 = fields.Date.from_string('2017-01-01')
         payment_date_2 = fields.Date.from_string('2018-01-01')
 
-        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+        pmt_wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
             'amount': 66.66,
             'payment_date': payment_date_1,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pmt_wizard._create_payments()
 
-        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+        pmt_wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
             'amount': 66.66,
             'payment_date': payment_date_2,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pmt_wizard._create_payments()
 
@@ -4802,17 +4825,25 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         payment_date_1 = fields.Date.from_string('2017-01-01')
         payment_date_2 = fields.Date.from_string('2018-01-01')
 
-        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+        pmt_wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
             'amount': 66.66,
             'currency_id': currency_id,
             'payment_date': payment_date_1,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pmt_wizard._create_payments()
 
-        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+        pmt_wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
             'amount': 66.66,
             'currency_id': currency_id,
             'payment_date': payment_date_2,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pmt_wizard._create_payments()
 
@@ -4916,8 +4947,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         invoice.action_post()
 
         # make payment
-        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+        self.env['account.payment.register'].with_context(
+            active_model='account.move', 
+            active_ids=invoice.ids,
+        ).create({
             'payment_date': invoice.date,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         # check caba move
@@ -5043,6 +5078,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 800.0,
             'currency_id': foreign_currency.id,
             'partner_id': self.partner_a.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         payment.action_post()
         # unlink the rate to simulate a custom rate on the payment
@@ -5081,9 +5117,15 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {**move_vals, 'date': '2017-01-01', 'invoice_date': '2017-01-01'}
         )
         invoice_no_diff.action_post()
-        wizard_no_diff = self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=invoice_no_diff.ids)\
-            .create({**payment_vals, 'payment_date': '2017-01-01', 'amount': 3000})  # 3000 EUR = 1000 USD.
+        wizard_no_diff = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice_no_diff.ids,
+        ).create({
+            **payment_vals,
+            'payment_date': '2017-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'amount': 3000,
+        })  # 3000 EUR = 1000 USD.
         wizard_no_diff._create_payments()
 
         # Then check that an error is raised when trying to create a payment with an exchange difference.
@@ -5091,9 +5133,15 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {**move_vals, 'date': '2016-01-01', 'invoice_date': '2016-01-01'}
         )
         invoice_diff.action_post()
-        wizard_diff = self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=invoice_diff.ids)\
-            .create({**payment_vals, 'payment_date': '2018-01-01', 'amount': 2000})  # 2000 EUR = 1000 USD.
+        wizard_diff = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice_diff.ids,
+        ).create({
+            **payment_vals,
+            'payment_date': '2018-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'amount': 2000,
+        })  # 2000 EUR = 1000 USD.
         with self.assertRaises(UserError):
             wizard_diff._create_payments()
 
@@ -5203,8 +5251,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         }])
         invoice.action_post()
 
-        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+        self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
             'payment_date': invoice.date,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         # Check the caba move lines.
@@ -5390,8 +5442,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         }])
         invoice.action_post()
 
-        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+        self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
             'payment_date': invoice.date,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         # Check the caba move lines.

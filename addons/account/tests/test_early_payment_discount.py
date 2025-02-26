@@ -149,6 +149,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         active_ids = out_invoice_1.ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'payment_date': '2019-01-02',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
@@ -182,6 +183,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         active_ids = inv.ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'payment_date': '2017-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
@@ -215,10 +217,13 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         })
 
         invoice.action_post()
-        payments = self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({'payment_date': '2017-01-01'})\
-            ._create_payments()
+        payments = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
+            'payment_date': '2017-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -242,6 +247,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         active_ids = inv_1500_10_percents_discount_tax_incl_15_percents_tax.ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'payment_date': '2017-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
@@ -266,6 +272,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         active_ids = inv_1500_10_percents_discount_tax_incl_15_percents_tax.ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'payment_date': '2017-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
@@ -293,7 +300,8 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         active_ids = inv_mixed_lines_discount_and_no_discount.ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'payment_date': '2017-01-01',
-            'group_payment': True
+            'group_payment': True,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
@@ -329,7 +337,9 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         (out_invoice_1 + out_invoice_2).action_post()
         active_ids = (out_invoice_1 + out_invoice_2).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
-            'payment_date': '2019-01-01', 'group_payment': True
+            'payment_date': '2019-01-01',
+            'group_payment': True,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         self.assertTrue(payments.is_reconciled)
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -362,7 +372,9 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         (out_invoice_1 + out_invoice_2).action_post()
         active_ids = (out_invoice_1 + out_invoice_2).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
-            'payment_date': '2019-01-01', 'group_payment': True
+            'payment_date': '2019-01-01',
+            'group_payment': True,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         self.assertTrue(payments.is_reconciled)
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -395,7 +407,9 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         (out_invoice_1 + out_invoice_2).action_post()
         active_ids = (out_invoice_1 + out_invoice_2).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
-            'payment_date': '2019-01-01', 'group_payment': True
+            'payment_date': '2019-01-01',
+            'group_payment': True,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         self.assertTrue(payments.is_reconciled)
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -428,7 +442,9 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         (out_invoice_1 + out_invoice_2).action_post()
         active_ids = (out_invoice_1 + out_invoice_2).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
-            'payment_date': '2019-01-01', 'group_payment': True
+            'payment_date': '2019-01-01',
+            'group_payment': True,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         self.assertTrue(payments.is_reconciled)
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -534,10 +550,13 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         })
         bill.action_post()
 
-        payment = self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=bill.ids)\
-            .create({'payment_date': '2019-01-01'})\
-            ._create_payments()
+        payment = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=bill.ids,
+        ).create({
+            'payment_date': '2019-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
 
         self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
             # pylint: disable=bad-whitespace
@@ -801,7 +820,9 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         active_ids = (out_invoice_1 + out_invoice_2).ids
 
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
-            'payment_date': '2019-01-01', 'group_payment': False
+            'payment_date': '2019-01-01',
+            'group_payment': False,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         self.assertTrue(all(payments.mapped('is_reconciled')))
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -841,7 +862,9 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         active_ids = (out_invoice_1 + out_invoice_2).ids
 
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
-            'payment_date': '2019-01-01', 'group_payment': False
+            'payment_date': '2019-01-01',
+            'group_payment': False,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         self.assertTrue(all(payments.mapped('is_reconciled')))
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -1092,10 +1115,13 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         invoice.action_post()
 
         # Payment.
-        payment = self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({'payment_date': '2017-01-01'})\
-            ._create_payments()
+        payment = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
+            'payment_date': '2017-01-01',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
 
         self.assertRecordValues(payment.move_id.line_ids.sorted('amount_currency'), [
             # Invoice's total:

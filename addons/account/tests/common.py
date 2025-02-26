@@ -167,23 +167,30 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         # ==== Payment methods ====
         bank_journal = cls.company_data['default_journal_bank']
-        in_outstanding_account = cls.env['account.account'].create({
+        cls.in_outstanding_account = cls.env['account.account'].create({
             'name': "Outstanding Receipts",
             'code': 'OSTR00',
             'reconcile': True,
             'account_type': 'asset_current'
         })
-        out_outstanding_account = cls.env['account.account'].create({
+        cls.out_outstanding_account = cls.env['account.account'].create({
             'name': "Outstanding Payments",
             'code': 'OSTP00',
             'reconcile': True,
             'account_type': 'asset_current'
         })
-        if bank_journal:
-            cls.inbound_payment_method_line = bank_journal.inbound_payment_method_line_ids[0]
-            cls.inbound_payment_method_line.payment_account_id = in_outstanding_account
-            cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
-            cls.outbound_payment_method_line.payment_account_id = out_outstanding_account
+        cls.inbound_payment_method_line = cls.env['account.payment.method.line'].create({
+            'payment_method_id': cls.env.ref('account.account_payment_method_manual_in').id,
+            'journal_id': bank_journal.id,
+            'payment_account_id': cls.in_outstanding_account.id,
+        })
+        cls.outbound_payment_method_line = cls.env['account.payment.method.line'].create({
+            'payment_method_id': cls.env.ref('account.account_payment_method_manual_out').id,
+            'journal_id': bank_journal.id,
+            'payment_account_id': cls.out_outstanding_account.id,
+        })
+        cls.inbound_payment_method_line_without_journal = cls.env.ref('account.account_payment_method_line_manual_in')
+        cls.outbound_payment_method_line_without_journal = cls.env.ref('account.account_payment_method_line_manual_out')
 
     @classmethod
     def change_company_country(cls, company, country):
@@ -494,7 +501,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         return rslt
 
     @classmethod
-    def init_payment(cls, amount, post=False, date=None, partner=None, currency=None):
+    def init_payment(cls, amount, post=False, date=None, partner=None, currency=None, payment_method_line=None):
         payment = cls.env['account.payment'].create({
             'amount': abs(amount),
             'date': date or fields.Date.from_string('2019-01-01'),
