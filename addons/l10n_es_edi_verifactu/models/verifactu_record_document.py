@@ -5,10 +5,19 @@ from odoo.exceptions import UserError
 class L10nEsEdiVerifactuRecordDocument(models.Model):
     """Veri*Factu Record Document
     It represents an internal record / event in the Veri*Factu XML format as specified by the AEAT.
-    It i.e.:
-      * stores the XML we send
+    It i.e. ...
+      * stores the XML we will send to the AEAT
       * is eventually associated with a "Veri*Factu Document" ('l10n_es_edi_verifactu.document') of type "Batch" to send it to the AEAT
-      * stores information extracted from the associated "Veri*Factu Document" about the received response"""
+      * stores information extracted from the associated "Veri*Factu Document" about the received response
+
+    Note that (succesfully generated) Record Documents can not be deleted.
+    This is since the Record Documents form a chain (in generation order) by including a reference to the preceding record document.
+    The chain also includes documents that are (/ possibly will be) rejected by the AEAT.
+    The correct chaining is handled by function `l10n_es_edi_verifactu_mark_for_next_batch`  of model / mixin
+    "Veri*Factu Record Mixin" / 'l10n_es_edi_verifactu.record_mixin'.
+
+    Also see the docstring of the "Veri*Factu Record Mixin" for more details about the general flow.
+    """
     _name = 'l10n_es_edi_verifactu.record_document'
     _description = "Veri*Factu Record Document"
     _order = 'response_time DESC NULLS FIRST, create_date DESC, id DESC'
@@ -57,7 +66,7 @@ class L10nEsEdiVerifactuRecordDocument(models.Model):
     # To use the binary widget in the form view to download the attachment
     xml_attachment_base64 = fields.Binary(
         string="XML Attachment (Base64)",
-        related='xml_attachment_id.datas'
+        related='xml_attachment_id.datas',
     )
     state = fields.Selection(
         string='Status',
@@ -73,10 +82,10 @@ class L10nEsEdiVerifactuRecordDocument(models.Model):
         store=True,
         help="""- Creating Failed: The record could not be created.
                 - Sending Failed: Tried to send to the AEAT but failed
+                - Parsing Failed: There was an error while parsing the response from he AEAT
                 - Rejected: Successfully sent to the AEAT, but it was rejected during validation
                 - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record
-                - Accepted: Registered by the AEAT without errors
-                - Cancelled: Registered by the AEAT as cancelled""",
+                - Accepted: Registered by the AEAT without errors""",
         copy=False,
         readonly=True,
     )

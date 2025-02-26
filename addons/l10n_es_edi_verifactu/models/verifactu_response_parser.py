@@ -2,42 +2,20 @@ from lxml import etree
 
 from odoo import _, api, models
 
-# Parse Errors
-ERROR_UNSUPPORTED_CONTENT_TYPE = 'unsupported_content_type'
-ERROR_UNSUPPORTED_DOCUMENT_TYPE = 'unsupported_document_type'
-ERROR_MALFORMED_RESPONSE = 'malformed_response'
-# "Normal" Errors
-ERROR_ACCESS_DENIED = 'access_denied'
-ERROR_SOAPFAULT = 'soapfault'
-ERROR_MALFORMED_DOCUMENT = 'malformed_document'
+from odoo.addons.l10n_es_edi_verifactu.models.verifactu_document import (
+    ERROR_UNSUPPORTED_DOCUMENT_TYPE,
+    ERROR_SOAPFAULT,
+    ERROR_UNSUPPORTED_CONTENT_TYPE,
+    ERROR_MALFORMED_RESPONSE,
+    ERROR_ACCESS_DENIED,
+    ERROR_MALFORMED_DOCUMENT,
+)
 
 
 class L10nEsEdiVerifactuResponseParser(models.AbstractModel):
     """ Handles the parsing of the response from the AEAT after submitting a request to them. """
     _name = 'l10n_es_edi_verifactu.response_parser'
     _description = "Veri*Factu Response Parser"
-
-    @api.model
-    def _translate_error_tuple(self, error_tuple):
-        error_type, error_message = error_tuple
-
-        type_string = {
-            ERROR_UNSUPPORTED_CONTENT_TYPE: _("We can not parse documents with that content type"),
-            ERROR_UNSUPPORTED_DOCUMENT_TYPE: _("The document type is currently not supported"),
-            ERROR_MALFORMED_RESPONSE: _("The response could not be parsed"),
-            ERROR_ACCESS_DENIED: _("The document could not be sent; the access was denied"),
-            ERROR_SOAPFAULT: _("The document was rejected by the AEAT"),
-        }
-
-        if error_type == ERROR_MALFORMED_DOCUMENT or error_type not in type_string:
-            return error_message or _("Unknown error.")
-
-        error_type_string = type_string[error_type]
-
-        if error_message:
-            return f"{error_type_string}: {error_message}"
-
-        return error_type_string
 
     @api.model
     def _parse_response(self, response, document_type):

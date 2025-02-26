@@ -17,11 +17,11 @@ class PosOrder(models.Model):
         for order in self:
             if not order.l10n_es_edi_verifactu_required:
                 identifier = {
-                    'errors': [_("Veri*Factu is not enabled for the point of sale order.")]
+                    'errors': [_("Veri*Factu is not enabled for the point of sale order.")],
                 }
             elif order.state == 'draft':
                 identifier = {
-                    'errors': [_("The point of sale order is in draft.")]
+                    'errors': [_("The point of sale order is in draft.")],
                 }
             else:
                 identifier = self.env['l10n_es_edi_verifactu.document']._record_identifier(
@@ -32,25 +32,18 @@ class PosOrder(models.Model):
     def _l10n_es_edi_verifactu_get_record_values(self, cancellation=False):
         vals, errors = super()._l10n_es_edi_verifactu_get_record_values(cancellation=cancellation)
 
-        record_identifier = self.l10n_es_edi_verifactu_record_identifier
-        errors.extend(record_identifier['errors'])
-
         company = self.company_id
 
         vals.update({
-            'cancellation': cancellation,
             'company': company,
             'delivery_date': False,
             'description': None,
-            'identifier': record_identifier,
             'invoice_date': self.date_order,
             'is_simplified': True,
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'name': self.name,
             'partner': self.partner_id.address_get(['invoice'])['invoice'],
-            'record': self,
             'refunded_record': self.refunded_order_ids,
-            'verifactu_state': self.l10n_es_edi_verifactu_state,
         })
 
         tax_details_functions = self.env['account.tax']._l10n_es_edi_verifactu_get_tax_details_functions()

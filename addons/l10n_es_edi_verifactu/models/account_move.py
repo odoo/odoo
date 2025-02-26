@@ -1,16 +1,10 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
 
 class AccountMove(models.Model):
     _name = 'account.move'
     _inherit = ['account.move', 'l10n_es_edi_verifactu.record_mixin']
 
     l10n_es_edi_verifactu_state = fields.Selection(tracking=True)  # defined in 'l10n_es_edi_verifactu.record_mixin'
-
-    l10n_es_edi_verifactu_show_cancel_button = fields.Boolean(
-        string="Show Veri*Factu Cancel Button",
-        compute='_compute_l10n_es_edi_verifactu_show_cancel_button',
-    )
 
     @api.depends('country_code')
     def _compute_l10n_es_edi_verifactu_required(self):
@@ -24,11 +18,11 @@ class AccountMove(models.Model):
         for move in self:
             if not move.l10n_es_edi_verifactu_required:
                 identifier = {
-                    'errors': [_("Veri*Factu is not enabled for the invoice.")]
+                    'errors': [_("Veri*Factu is not enabled for the invoice.")],
                 }
             elif move.state == 'draft':
                 identifier = {
-                    'errors': [_("The invoice is in draft.")]
+                    'errors': [_("The invoice is in draft.")],
                 }
             else:
                 identifier = self.env['l10n_es_edi_verifactu.document']._record_identifier(
@@ -52,11 +46,6 @@ class AccountMove(models.Model):
             if waiting_record_documents:
                 move.show_reset_to_draft_button = False
 
-    @api.depends('l10n_es_edi_verifactu_state')
-    def _compute_l10n_es_edi_verifactu_show_cancel_button(self):
-        for move in self:
-            move.l10n_es_edi_verifactu_show_cancel_button = move.l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')
-
     def _l10n_es_edi_verifactu_get_record_values(self, cancellation=False):
         vals, errors = super()._l10n_es_edi_verifactu_get_record_values(cancellation=cancellation)
 
@@ -68,25 +57,18 @@ class AccountMove(models.Model):
             errors.append(_("Please set a company on the invoice."))
             return {}, errors
 
-        record_identifier = invoice.l10n_es_edi_verifactu_record_identifier
-        errors.extend(record_identifier['errors'])
-
         is_simplified = invoice.l10n_es_is_simplified
 
         vals.update({
-            'cancellation': cancellation,
             'company': company,
             'delivery_date': invoice.delivery_date,
             'description': invoice.invoice_origin[:500] if invoice.invoice_origin else None,
-            'identifier': record_identifier,
             'invoice_date': invoice.invoice_date,
             'is_simplified': is_simplified,
             'move_type': invoice.move_type,
             'name': invoice.name,
             'partner': invoice.commercial_partner_id,
-            'record': invoice,
             'refunded_record': invoice.reversed_entry_id,
-            'verifactu_state': invoice.l10n_es_edi_verifactu_state,
         })
 
         tax_details_functions = self.env['account.tax']._l10n_es_edi_verifactu_get_tax_details_functions()
@@ -98,10 +80,3 @@ class AccountMove(models.Model):
         )
 
         return vals, errors
-
-    def l10n_es_edi_verifactu_button_cancel(self):
-        created_record_documents = self.l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
-        skipped_moves = self.filtered(lambda move: not created_record_documents.get(move))
-        if skipped_moves and len(self) == 1:
-            raise UserError(_("The entry is waiting to send a Veri*Factu record to the AEAT already."))
-        # In other cases we just silently skip them

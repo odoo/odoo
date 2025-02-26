@@ -2,12 +2,34 @@ from werkzeug.urls import url_quote_plus
 from lxml import etree
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
     """"Veri*Factu Record Mixin"
-    It can be added to models from which we want to create Veri*Factu records ("Veri*Factu Record Document" / 'l10n_es_edi_verifactu.recorddocument'):
-    I.e. it can be added to Invoices ('account.move') and PoS Orders ('pos.order')"""
+    It can be added to models from which we want to create Veri*Factu billing records
+    (represented by model "Veri*Factu Record Document" / 'l10n_es_edi_verifactu.record_document'):
+    I.e. it can be added to Invoices ('account.move') and PoS Orders ('pos.order').
+
+    The main function to generate Veri*Factu Record Documents is `l10n_es_edi_verifactu_mark_for_next_batch`:
+      1. It generates the record documents (submission or cancellation)
+         * The record documents form a chain in generation order by including a reference to the preceding record document.
+         * The function handles the correct chaining.
+      2. It sends them (and any other unsent record documents) directly to the AEAT if possible (see below).
+
+    We can not necessarily send the record documents directly after generation.
+    This is because the AEAT requires a waiting time between shipments (or reaching 1000 new records to send).
+    The waiting time is usually 60 seconds.
+    In case we cannot send the records directly a cron will be triggered at the next possible time.
+
+    The record documents are not send directly to the AEAT but aggregated in batches.
+    The batches are represented by model "Veri*Factu Document" / 'l10n_es_edi_verifactu.document' (with document type "Batch").
+
+    The functions that need to be implemented (override / extend) in models inheriting this mixin:
+      - `_compute_l10n_es_edi_verifactu_required`
+      - `_compute_l10n_es_edi_verifactu_record_identifier`
+      - `_l10n_es_edi_verifactu_get_record_values`
+    """
     _name = 'l10n_es_edi_verifactu.record_mixin'
     _description = "Veri*Factu Record Mixin"
 
@@ -37,6 +59,7 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
         ],
         compute='_compute_l10n_es_edi_verifactu_info_from_record_document_ids',
         help="""- Sending Failed: Tried to send to the AEAT but failed
+                - Parsing Failed: There was an error while parsing the response from he AEAT
                 - Rejected: Successfully sent to the AEAT, but it was rejected during validation
                 - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record
                 - Accepted: Registered by the AEAT without errors
@@ -64,6 +87,10 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
         string="Veri*Factu QR Code",
         compute='_compute_l10n_es_edi_verifactu_qr_code',
         help="This QR code is mandatory for Veri*Factu invoices.",
+    )
+    l10n_es_edi_verifactu_show_cancel_button = fields.Boolean(
+        string="Show Veri*Factu Cancel Button",
+        compute='_compute_l10n_es_edi_verifactu_show_cancel_button',
     )
 
     def _compute_l10n_es_edi_verifactu_required(self):
@@ -122,6 +149,11 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
             qr_code = url and f'/report/barcode/?barcode_type=QR&value={url}&barLevel=M&width=180&height=180'
             record.l10n_es_edi_verifactu_qr_code = qr_code
 
+    @api.depends('l10n_es_edi_verifactu_state')
+    def _compute_l10n_es_edi_verifactu_show_cancel_button(self):
+        for move in self:
+            move.l10n_es_edi_verifactu_show_cancel_button = move.l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')
+
     def _l10n_es_edi_verifactu_get_record_values(self, cancellation=False):
         # To extend
         self.ensure_one()
@@ -137,8 +169,15 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
                 rejected_before = True
                 break
 
+        record_identifier = self.l10n_es_edi_verifactu_record_identifier
+        errors.extend(record_identifier['errors'])
+
         vals = {
+            'cancellation': cancellation,
+            'record': self,
             'rejected_before': rejected_before,
+            'identifier': record_identifier,
+            'verifactu_state': self.l10n_es_edi_verifactu_state,
         }
         return vals, errors
 
@@ -237,3 +276,10 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
                 result[record] = record_document
             self.env['l10n_es_edi_verifactu.document'].trigger_next_batch()
         return result
+
+    def l10n_es_edi_verifactu_button_cancel(self):
+        created_record_documents = self.l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
+        skipped_moves = self.filtered(lambda move: not created_record_documents.get(move))
+        if skipped_moves and len(self) == 1:
+            raise UserError(_("We are waiting to send a Veri*Factu record to the AEAT already."))
+        # In other cases we just silently skip them

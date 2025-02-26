@@ -66,6 +66,7 @@
                 <sum1:NumSerieFactura t-out="_path_get(vals, 'RegistroAlta/IDFactura/NumSerieFactura')"/>
                 <sum1:FechaExpedicionFactura t-out="_path_get(vals, 'RegistroAlta/IDFactura/FechaExpedicionFactura')"/>
             </sum1:IDFactura>
+            <sum1:RefExterna t-out="_path_get(vals, 'RegistroAlta/RefExterna')"/>
             <sum1:NombreRazonEmisor t-out="_path_get(vals, 'RegistroAlta/NombreRazonEmisor')"/>
             <sum1:Subsanacion t-out="_path_get(vals, 'RegistroAlta/Subsanacion')"/>
             <sum1:RechazoPrevio t-out="_path_get(vals, 'RegistroAlta/RechazoPrevio')"/>
@@ -95,6 +96,7 @@
                     </sum1:IDOtro>
                 </sum1:IDDestinatario>
             </sum1:Destinatarios>
+            <sum1:Cupon t-out="_path_get(vals, 'RegistroAlta/Cupon')"/>
             <sum1:Desglose>
                 <sum1:DetalleDesglose t-foreach="_path_get(vals, 'RegistroAlta/Desglose/DetalleDesglose')" t-as="detalle">
                     <sum1:Impuesto t-out="detalle['Impuesto']"/>
@@ -136,6 +138,7 @@
                 <sum1:NumSerieFacturaAnulada t-out="_path_get(vals, 'RegistroAnulacion/IDFactura/NumSerieFacturaAnulada')"/>
                 <sum1:FechaExpedicionFacturaAnulada t-out="_path_get(vals, 'RegistroAnulacion/IDFactura/FechaExpedicionFacturaAnulada')"/>
             </sum1:IDFactura>
+            <sum1:RefExterna t-out="_path_get(vals, 'RegistroAlta/RefExterna')"/>
             <sum1:SinRegistroPrevio t-out="_path_get(vals, 'RegistroAnulacion/SinRegistroPrevio')"/>
             <sum1:RechazoPrevio t-out="_path_get(vals, 'RegistroAnulacion/RechazoPrevio')"/>
             <sum1:GeneradoPor t-out="_path_get(vals, 'RegistroAnulacion/GeneradoPor')"/>

@@ -34,7 +34,12 @@
             <field name="inherit_id" ref="account.view_move_tree"/>
             <field name="arch" type="xml">
                 <field name="state" position="after">
-                    <field name="l10n_es_edi_verifactu_state" optional="hide"/>
+                    <field name="l10n_es_edi_verifactu_state" widget="badge"
+                           decoration-danger="l10n_es_edi_verifactu_state not in ('cancelled', 'accepted', 'registered_with_errors')"
+                           decoration-warning="l10n_es_edi_verifactu_state == 'registered_with_errors'"
+                           decoration-success="l10n_es_edi_verifactu_state == 'accepted'"
+                           decoration-muted="l10n_es_edi_verifactu_state == 'cancelled'"
+                           optional="hide"/>
                 </field>
             </field>
         </record>
@@ -45,7 +50,12 @@
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="arch" type="xml">
                 <field name="state" position="after">
-                    <field name="l10n_es_edi_verifactu_state" optional="hide"/>
+                    <field name="l10n_es_edi_verifactu_state" widget="badge"
+                           decoration-danger="l10n_es_edi_verifactu_state not in ('cancelled', 'accepted', 'registered_with_errors')"
+                           decoration-warning="l10n_es_edi_verifactu_state == 'registered_with_errors'"
+                           decoration-success="l10n_es_edi_verifactu_state == 'accepted'"
+                           decoration-muted="l10n_es_edi_verifactu_state == 'cancelled'"
+                           optional="hide"/>
                 </field>
             </field>
         </record>
@@ -98,7 +108,10 @@
                                     <field name="id"/>
                                     <field name="response_time"/>
                                     <field name="record_type"/>
-                                    <field name="state"/>
+                                    <field name="state" widget="badge"
+                                           decoration-danger="state not in ('accepted', 'registered_with_errors')"
+                                           decoration-warning="state == 'registered_with_errors'"
+                                           decoration-success="state == 'accepted'"/>
                                 </tree>
                             </field>
                         </group>

@@ -1,7 +1,7 @@
-import re
-import requests.exceptions
-
 from dateutil.relativedelta import relativedelta
+from enum import Enum
+
+import requests.exceptions
 
 from odoo import _, api, Command, fields, models
 from odoo.addons.l10n_es.models.http_adapter import PatchedHTTPAdapter
@@ -10,15 +10,32 @@ from odoo.exceptions import UserError
 
 BATCH_LIMIT = 1000
 
+# We store the errors as a language-independent code to avoid storing translated strings
+# Document Errors
+ERROR_NOTHING_TO_SEND = 'nothing_to_send'
+ERROR_UNSUPPORTED_DOCUMENT_TYPE = 'unsupported_document_type'
+ERROR_REQUEST_FAILED = 'request_failed'
+ERROR_SOAPFAULT = 'soapfault'
+# Parse Errors
+ERROR_UNSUPPORTED_CONTENT_TYPE = 'unsupported_content_type'
+ERROR_MALFORMED_RESPONSE = 'malformed_response'
+ERROR_MALFORMED_RESPONSE_STATE = 'malformed_response_state'
+# "Normal" Errors
+ERROR_ACCESS_DENIED = 'access_denied'
+ERROR_MALFORMED_DOCUMENT = 'malformed_document'
+
 
 class L10nEsEdiVerifactuDocument(models.Model):
     """Veri*Factu Document
     It represents a Veri*Factu request to the AEAT (and eventually information about the received response).
-    It i.e.:
+    It i.e. ...
       * stores the XML we send
         * A Batch document basically just aggregates one or several "Veri*Factu Record Documents" ('l10n_es_edi_verifactu.record_document').
       * handles the sending to the AEAT
-      * and stores information about the received response (handled by the model "Veri*Factu Response Parser" / 'l10n_es_edi_verifactu.response_parser')"""
+        * In case we can not send the document directly due to waiting time a cron is triggered at the next possible time.
+      * and stores information about the received response (handled by the model "Veri*Factu Response Parser" / 'l10n_es_edi_verifactu.response_parser')
+    Also see the docstring of the "Veri*Factu Record Mixin" for more details about the general flow.
+    """
     _name = 'l10n_es_edi_verifactu.document'
     _description = "Veri*Factu Document"
     _order = 'response_time DESC NULLS FIRST, create_date DESC, id DESC'
@@ -74,13 +91,18 @@ class L10nEsEdiVerifactuDocument(models.Model):
         selection=[
             ('sending_failed', 'Sending Failed'),
             ('parsing_failed', 'Error while Parsing the Response'),
+            ('rejected', 'Rejected'),
             ('registered_with_errors', 'Registered with Errors'),
             ('accepted', 'Accepted'),
-            ('rejected', 'Rejected'),
         ],
         string='Status',
         compute='_compute_l10n_es_edi_verifactu_fields_from_response_info',
         store=True,
+        help="""- Sending Failed: Tried to send to the AEAT but failed
+                - Parsing Failed: There was an error while parsing the response from he AEAT
+                - Rejected: Successfully sent to the AEAT, but it was rejected during validation
+                - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record
+                - Accepted: Registered by the AEAT without errors""",
     )
 
     @api.depends('document_type')
@@ -165,6 +187,31 @@ class L10nEsEdiVerifactuDocument(models.Model):
         # `record_identifier` is a dictionary like returned from function `_record_identifier`
         return str((record_identifier['IDEmisorFactura'], record_identifier['NumSerieFactura']))
 
+    @api.model
+    def _translate_error_tuple(self, error_tuple):
+        error_type, error_message = error_tuple
+
+        type_string = {
+            ERROR_NOTHING_TO_SEND: _("There is no XML attachment to send."),
+            ERROR_UNSUPPORTED_DOCUMENT_TYPE: _("The document type is currently not supported"),
+            ERROR_REQUEST_FAILED: _("Sending the document to the AEAT failed"),
+            ERROR_SOAPFAULT: _("The document was rejected by the AEAT"),
+            ERROR_UNSUPPORTED_CONTENT_TYPE: _("We can not parse documents with that content type"),
+            ERROR_MALFORMED_RESPONSE: _("The response could not be parsed"),
+            ERROR_MALFORMED_RESPONSE_STATE: _("The state could not be determined from the response"),
+            ERROR_ACCESS_DENIED: _("The document could not be sent; the access was denied"),
+        }
+
+        if error_type == ERROR_MALFORMED_DOCUMENT or error_type not in type_string:
+            return error_message or _("Unknown error.")
+
+        error_type_string = type_string[error_type]
+
+        if error_message:
+            return f"{error_type_string}: {error_message}"
+
+        return error_type_string
+
     def _get_record_response_info(self, record_identifier):
         # `record_identifier` is a dictionary like returned from function `_record_identifier`
         self.ensure_one()
@@ -195,8 +242,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         # We translate the error tuples returned by the response parser into strings
         translated_errors = [
-            self.env['l10n_es_edi_verifactu.response_parser']._translate_error_tuple(error)
-            for error in record_response_info['errors']
+            self._translate_error_tuple(error) for error in record_response_info['errors']
         ]
         record_response_info['errors'] = translated_errors
         return record_response_info
@@ -252,8 +298,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
 
         record_document_domain = [
-            ('state', '=', False),
-            ('response_time', '=', False),
+            ('document_id', '=', False),
         ]
         record_documents_per_company = self.env['l10n_es_edi_verifactu.record_document']._read_group(
             record_document_domain,
@@ -321,12 +366,12 @@ class L10nEsEdiVerifactuDocument(models.Model):
         }
 
         if not self.xml_attachment_id.raw:
-            info['errors'].append("There is nothing to send.")
+            info['errors'].append((ERROR_NOTHING_TO_SEND, None))
             info['state'] = 'sending_failed'
             return info
 
         if self.document_type not in ('batch', 'query'):
-            info['errors'].append("Sending Veri*Factu documents of this type is not implemented yet.")
+            info['errors'].append((ERROR_UNSUPPORTED_DOCUMENT_TYPE, None))
             info['state'] = 'sending_failed'
             return info
 
@@ -335,7 +380,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             info['response'] = response
             info['response_message'] = response.text
         except requests.exceptions.RequestException as e:
-            info['errors'].append(f"Sending the Veri*Factu document to the AEAT failed: {e}")
+            info['errors'].append((ERROR_REQUEST_FAILED, f"{e}"))
             info['state'] = 'sending_failed'
         info['response_time'] = fields.Datetime.to_string(fields.Datetime.now())
 
@@ -366,7 +411,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             info.update(parse_info)
 
         if 'state' not in info:
-            info['errors'].append(_('The state could not be determined from the response.'))
+            info['errors'].append((ERROR_MALFORMED_RESPONSE_STATE, None))
             info['state'] = 'parsing_failed'
 
         # remove non-serializable values
