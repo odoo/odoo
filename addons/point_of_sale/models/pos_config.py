@@ -21,6 +21,20 @@ class PosConfig(models.Model):
     _check_company_auto = True
 
     def sync_from_ui_2(self, queue):
+
+
+
+
+            # const idUpdateMap = await this.orm.call(
+            #     "pos.config",
+            #     "sync_from_ui_2",
+            #     [odoo.pos_config_id, this.queue],
+            #     {},
+            #     false
+            # );
+            # for (const [model, uuid, id] of idUpdateMap) {
+            #     this.models[model].find((x) => x.uuid === uuid).id = id;
+            # }
         get_record = lambda model, id: self.env[model].search([('uuid', '=', id)], limit=1) if type(id) == str else self.env[model].browse(id)
         def replace_uuid_with_id(vals):
             return {
@@ -51,6 +65,8 @@ class PosConfig(models.Model):
         to_send = {}
         configs_that_might_be_interested = self._configs_that_might_be_interested()
 
+        id_updates = []
+
         for [operation, *data] in queue:
             # _logger.info('Processing operation %s with data %s', operation, data)
             match operation:
@@ -59,6 +75,7 @@ class PosConfig(models.Model):
                     updated_vals = replace_uuid_with_id(vals)
                     print("CREATE", model, updated_vals)
                     new_record = self.env[model].create([updated_vals])
+                    id_updates.append([model, vals['uuid'], new_record.id])
                     for config in configs_that_might_be_interested:
                         if config._interested_in_this_change(self, new_record):
                             to_send.setdefault(config, []).append([operation, *data])
@@ -80,6 +97,7 @@ class PosConfig(models.Model):
                             to_send.setdefault(config, []).append([operation, *data])
                     if record.exists():
                         print('DELETE', model, id)
+                        id_updates = [update for update in id_updates if update[1] != record.uuid]
                         record.unlink()
                 case _:
                     pass
@@ -91,7 +109,7 @@ class PosConfig(models.Model):
         #     config._notify('DATA_CHANGED', queue )
         for config, queue in to_send.items():
             config._notify('DATA_CHANGED', queue)
-        return
+        return id_updates
 
     def _interested_in_this_change(self, original_config, record_changed):
         self.ensure_one()

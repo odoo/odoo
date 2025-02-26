@@ -535,36 +535,39 @@ export class PosData extends Reactive {
     }
 
     async flush() {
-        return;
-        // if (this.queue.length === 0 || !navigator.onLine) {
-        //     return;
-        // }
-        // console.log("Flushing queue");
-        // const log = (data) =>
-        //     console.log(
-        //         "%c" + JSON.stringify(data, null, 2),
-        //         "color: white; font-family: monospace; white-space: pre;"
-        //     );
-        // this.queue.forEach((data) => log(data));
-        // try {
-        //     await this.call(
-        //         "pos.config",
-        //         "sync_from_ui_2",
-        //         [odoo.pos_config_id, this.queue],
-        //         {},
-        //         false
-        //     );
-        //     this.queue = [];
-        //     console.log("Queue flushed");
-        //     return true;
-        // } catch (error) {
-        //     localStorage.setItem(
-        //         `pos_config_${odoo.pos_config_id}_changes_queue`,
-        //         JSON.stringify(this.queue)
-        //     );
-        //     console.error("Flush failed", error);
-        //     return false;
-        // }
+        // return;
+        if (this.queue.length === 0 || !navigator.onLine) {
+            return;
+        }
+        console.log("Flushing queue");
+        const log = (data) =>
+            console.log(
+                "%c" + JSON.stringify(data, null, 2),
+                "color: white; font-family: monospace; white-space: pre;"
+            );
+        this.queue.forEach((data) => log(data));
+        try {
+            const idUpdates = await this.orm.call(
+                "pos.config",
+                "sync_from_ui_2",
+                [odoo.pos_config_id, this.queue],
+                {},
+                false
+            );
+            for (const [model, uuid, id] of idUpdates) {
+                this.models[model].find((x) => x.uuid === uuid).id = id;
+            }
+            this.queue = [];
+            console.log("Queue flushed");
+            return true;
+        } catch (error) {
+            localStorage.setItem(
+                `pos_config_${odoo.pos_config_id}_changes_queue`,
+                JSON.stringify(this.queue)
+            );
+            console.error("Flush failed", error);
+            return false;
+        }
     }
 
     async execute({ type, model, ids, args = [], fields = [], options = [] }) {
@@ -696,7 +699,10 @@ export class PosData extends Reactive {
     }
 
     async call(model, method, args = [], kwargs = {}) {
-        // await this.flush();
+        await this.flush();
+        if (this.queue.length > 0) {
+            throw new Error("There are unsynced changes in the queue.");
+        }
         return await this.orm.call(model, method, args, kwargs);
     }
 

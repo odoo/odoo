@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.shippingLaterHighlighted(),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
-            Dialog.confirm("Continue with limited functionality"),
+            // Dialog.confirm("Continue with limited functionality"),
             //receipt had expected delivery printed
             ReceiptScreen.shippingDateExists(),
             ReceiptScreen.shippingDateIsToday(),
