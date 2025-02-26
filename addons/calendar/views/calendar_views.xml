@@ -133,6 +133,7 @@
                             <field name="start" widget="daterange" options="{'end_date_field': 'stop'}" invisible="allday" required="not allday" readonly="not user_can_edit"/>
                             <field name="stop_date" invisible="1"/>
                             <field name="stop" invisible="1" />
+                            <field name="unavailable_partner_ids" invisible="1" /> <!-- this field will be used in many2many_attendees widget -->
                             <label for="duration" class="fw-bold text-900 opacity-100"/>
                             <div class="d-flex gap-2">
                                 <div class="d-flex align-items-start" invisible="allday">
@@ -302,6 +303,7 @@
                         <field name="start" widget="daterange" options="{'end_date_field': 'stop'}" invisible="allday" required="not allday"/>
                         <field name="stop_date" invisible="1" />
                         <field name="stop" invisible="1" />
+                        <field name="unavailable_partner_ids" invisible="1" /> <!-- this field will be used in many2many_attendees widget -->
                         <field name="allday"/>
                         <field name="partner_ids" widget="many2manyattendee"
                             placeholder="Add attendees..."

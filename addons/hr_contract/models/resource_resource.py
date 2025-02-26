@@ -5,7 +5,7 @@ from datetime import datetime
 from pytz import timezone
 
 from odoo import models
-from odoo.addons.resource.models.utils import Intervals
+from odoo.tools.date_intervals import Intervals
 
 
 class ResourceResource(models.Model):
