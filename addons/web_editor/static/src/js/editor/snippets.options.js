@@ -5720,6 +5720,18 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      * @override
      */
     start: function () {
+        // TODO: remove in master, handle the same in respective template.
+        const overlayButtonsTooltips = {
+            "we-button.o_we_user_value_widget.fa-angle-up": _t("Move up"),
+            "we-button.o_we_user_value_widget.fa-angle-down": _t("Move down"),
+            "we-button.o_we_user_value_widget.fa-angle-left": _t("Move left"),
+            "we-button.o_we_user_value_widget.fa-angle-right": _t("Move right"),
+        };
+
+        for (const [selector, tooltip] of Object.entries(overlayButtonsTooltips)) {
+            this.el.querySelector(selector)?.setAttribute("data-tooltip", tooltip);
+        }
+
         var $buttons = this.$el.find('we-button');
         var $overlayArea = this.$overlay.find('.o_overlay_move_options');
         // Putting the arrows side by side.
