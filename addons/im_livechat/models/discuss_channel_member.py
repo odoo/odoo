@@ -61,3 +61,18 @@ class DiscussChannelMember(models.Model):
                 ]
             )
         return domain
+
+    # -------------------------------------------------------------------------
+    # OVERRIDES
+    # -------------------------------------------------------------------------
+
+    def _get_html_link(self, *args, for_persona=False, **kwargs):
+        if self.channel_id.channel_type == 'livechat' and self.partner_id:
+            # sudo: livechat operators can read livechat_username of other operators if they have one
+            user_setting_domain = [('user_id', '=', self.partner_id.user_id.id)]
+            user_setting = self.env["res.users.settings"].sudo().search(user_setting_domain)
+            mentioned_username = user_setting.livechat_username or self.partner_id.name
+            title = f"@{mentioned_username}"
+            return self.partner_id._get_html_link(title=title)
+        else:
+            return super()._get_html_link(for_persona=for_persona)
