@@ -123,6 +123,7 @@ export class HistoryPlugin extends Plugin {
         "stageSelection",
         "undo",
         "getIsPreviewing",
+        "setStepExtra",
     ];
     resources = {
         user_commands: [
@@ -197,6 +198,7 @@ export class HistoryPlugin extends Plugin {
             mutations: [],
             id: this.generateId(),
             previousStepId: undefined,
+            extra: {},
         });
         /** @type { Map<string, "consumed"|"undo"|"redo"> } */
         this.stepsStates = new Map();
@@ -610,6 +612,7 @@ export class HistoryPlugin extends Plugin {
             selection: {},
             mutations: [],
             previousStepId: undefined,
+            extra: {},
         });
         this.stageSelection();
         this.dispatchTo("step_added_handlers", {
@@ -642,15 +645,17 @@ export class HistoryPlugin extends Plugin {
         lastStep.mutations = [];
 
         const pos = this.getNextUndoIndex();
+        let revertedStep;
         if (pos > 0) {
             // Consider the position consumed.
-            this.stepsStates.set(this.steps[pos].id, "consumed");
-            this.revertMutations(this.steps[pos].mutations, { forNewStep: true });
-            this.setSerializedSelection(this.steps[pos].selection);
+            revertedStep = this.steps[pos];
+            this.stepsStates.set(revertedStep.id, "consumed");
+            this.revertMutations(revertedStep.mutations, { forNewStep: true });
+            this.setSerializedSelection(revertedStep.selection);
             this.addStep({ stepState: "undo" });
             // Consider the last position of the history as an undo.
         }
-        this.dispatchTo("post_undo_handlers");
+        this.dispatchTo("post_undo_handlers", revertedStep);
     }
     redo() {
         this.handleObserverRecords();
@@ -664,13 +669,15 @@ export class HistoryPlugin extends Plugin {
         this.currentStep.mutations = [];
 
         const pos = this.getNextRedoIndex();
+        let revertedStep;
         if (pos > 0) {
-            this.stepsStates.set(this.steps[pos].id, "consumed");
-            this.revertMutations(this.steps[pos].mutations, { forNewStep: true });
-            this.setSerializedSelection(this.steps[pos].selection);
+            revertedStep = this.steps[pos];
+            this.stepsStates.set(revertedStep.id, "consumed");
+            this.revertMutations(revertedStep.mutations, { forNewStep: true });
+            this.setSerializedSelection(revertedStep.selection);
             this.addStep({ stepState: "redo" });
         }
-        this.dispatchTo("post_redo_handlers");
+        this.dispatchTo("post_redo_handlers", revertedStep);
     }
     /**
      * @param { SerializedSelection } selection
@@ -1053,6 +1060,10 @@ export class HistoryPlugin extends Plugin {
         // Register resulting mutations as a new consumed step (prevent undo).
         this.dispatchContentUpdated();
         this.addStep({ stepState: "consumed" });
+    }
+
+    setStepExtra(key, value) {
+        this.currentStep.extra[key] = value;
     }
 
     /**
