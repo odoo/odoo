@@ -8,10 +8,10 @@
         <t t-foreach="visibleChatWindows" t-as="cw" t-key="cw.localId">
             <ChatWindow chatWindow="cw" right="chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (visibleChatWindows.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2)"/>
         </t>
-        <div class="o-mail-ChatHub-bubbles position-fixed d-flex flex-column align-content-start justify-content-end align-items-center" t-attf-style="top: {{position.top}}; left: {{position.left}}; right: {{position.right}}; bottom: {{position.bottom}}" t-att-class="{ 'o-liftUp': busMonitoring.hasConnectionIssues }" t-ref="bubbles">
+        <div class="o-mail-ChatHub-bubbles position-fixed d-flex flex-column align-content-start justify-content-end align-items-center" t-attf-style="top: {{position.top}}; left: {{position.left}}; right: {{position.right}}; bottom: {{position.bottom}}" t-att-class="{ 'o-liftUp': busMonitoring.hasConnectionIssues, 'o-mobile': isMobileOS }" t-ref="bubbles">
             <div class="d-flex flex-column align-content-start justify-content-end align-items-center gap-1">
                 <Dropdown t-if="displayConversations or position.dragged" state="options" position="'top-end'" menuClass="'d-flex flex-column bg-100 shadow-sm m-0 p-0 mb-1 border-secondary'">
-                    <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn fa fa-ellipsis-h bg-100 mt-1" t-att-class="{ 'opacity-0': !bubblesHover.isHover and !position.dragged and !options.isOpen and !isMobileOS, 'text-500': (bubblesHover.isHover or position.dragged) and !options.isOpen and !isMobileOS, 'o-active': bubblesHover.isHover or options.isOpen }" title="Chat Options"/>
+                    <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn fa fa-ellipsis-h bg-100 mt-1 fs-3" t-att-class="{ 'opacity-0': !bubblesHover.isHover and !position.dragged and !options.isOpen and !isMobileOS, 'text-500': (bubblesHover.isHover or position.dragged) and !options.isOpen and !isMobileOS, 'o-active': bubblesHover.isHover or options.isOpen }" title="Chat Options"/>
                     <t t-set-slot="content">
                         <t t-if="displayConversations">
                             <button class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal" t-on-click="() => chatHub.hideAll()"><i class="fa fa-fw fa-eye-slash"></i>Hide all conversations</button>
