@@ -26,9 +26,9 @@ class TestHttpWebJson_2(TestHttpBase):
             scope='rpc', name='test', expiration_date=datetime.now() + timedelta(days=0.5))
         cls.bearer_header = {"Authorization": f"Bearer {key}"}
 
-    def test_webjson2_multi_db(self):
+    def test_webjson2_multi_db_no_header(self):
         res = self.multidb_url_open(
-            '/json/2/res.partner/search',
+            '/json/2/res.users/search',
             data=r'{"kwargs": {"domain": []}}',
             headers=CT_JSON | self.bearer_header,
             dblist=(get_db_name(), 'another-database'),
@@ -36,6 +36,32 @@ class TestHttpWebJson_2(TestHttpBase):
         self.assertIn("The requested URL was not found on the server.", res.text)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
+
+    def test_webjson2_multi_db_bad_header(self):
+        res = self.multidb_url_open(
+            '/json/2/res.users/search',
+            data=r'{"kwargs": {"domain": []}}',
+            headers={**CT_JSON, **self.bearer_header,
+                'X-odoo-database': f'{get_db_name()}-idontexist',
+            },
+            dblist=(get_db_name(), 'another-database'),
+        )
+        self.assertIn("The requested URL was not found on the server.", res.text)
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
+
+    def test_webjson2_multi_db_good_header(self):
+        res = self.multidb_url_open(
+            '/json/2/res.users/read',
+            data=r'{}',
+            headers={**CT_JSON, **self.bearer_header,
+                'X-odoo-database': get_db_name(),
+            },
+            dblist=(get_db_name(), 'another-database'),
+        )
+        self.assertEqual(res.text, "[]")
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
     def test_webjson2_bad_content_type(self):
         res = self.db_url_open(
