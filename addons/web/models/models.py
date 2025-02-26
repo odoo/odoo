@@ -47,6 +47,15 @@ class Base(models.AbstractModel):
 
     @api.model
     @api.readonly
+    def web_name_search(self, name, specification, domain=None, operator='ilike', limit=100):
+        id_name_pairs = self.name_search(name, domain, operator, limit)
+        if len(specification) == 1 and 'display_name' in specification:
+            return [{ 'id': id, 'display_name': name } for id, name in id_name_pairs]
+        records = self.browse([id for id, _ in id_name_pairs])
+        return records.web_read(specification)
+
+    @api.model
+    @api.readonly
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         records = self.search_fetch(domain, specification.keys(), offset=offset, limit=limit, order=order)
         values_records = records.web_read(specification)

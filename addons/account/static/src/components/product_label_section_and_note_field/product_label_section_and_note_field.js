@@ -2,136 +2,42 @@ import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { onMounted, onPatched, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { Component, onMounted, onPatched, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import {
-    SectionAndNoteListRenderer,
-    sectionAndNoteFieldOne2Many,
-} from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
 import { useProductAndLabelAutoresize } from "@account/core/utils/product_and_label_autoresize";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 
-export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
-
-    setup() {
-        super.setup();
-        this.productColumns = ["product_id", "product_template_id"];
-    }
-
-    getCellTitle(column, record) {
-        // When using this list renderer, we don't want the product_id cell to have a tooltip with its label.
-        if (this.productColumns.includes(column.name)) {
-            return;
-        }
-        super.getCellTitle(column, record);
-    }
-
-    processAllColumn(allColumns, list) {
-        allColumns = allColumns.map((column) => {
-            if (column["optional"] === "conditional" && column["name"] === "product_id") {
-                /**
-                 * The preference should be different for Bills & Invoices lines
-                 * Invoices -> Should show the products by default
-                 * Bills -> Should show the labels by default
-                 */
-                column["optional"] = ['in_invoice', 'in_refund', 'in_receipt'].includes(this.props.list.evalContext.parent.move_type) ? "hide" : "show";
-            }
-            return column;
-        });
-        return super.processAllColumn(allColumns, list);
-    }
-
-    getActiveColumns(list) {
-        let activeColumns = super.getActiveColumns(list);
-        const productCol = activeColumns.find((col) => this.productColumns.includes(col.name));
-        const labelCol = activeColumns.find((col) => col.name === "name");
-
-        if (productCol) {
-            if (labelCol) {
-                list.records.forEach((record) => (record.columnIsProductAndLabel = true));
-            } else {
-                list.records.forEach((record) => (record.columnIsProductAndLabel = false));
-            }
-            activeColumns = activeColumns.filter((col) => col.name !== "name");
-            this.titleField = productCol.name;
-        } else {
-            this.titleField = "name";
-        }
-
-        return activeColumns;
-    }
-}
-
-export class ProductLabelSectionAndNoteOne2Many extends X2ManyField {
-    static components = {
-        ...X2ManyField.components,
-        ListRenderer: ProductLabelSectionAndNoteListRender,
-    };
-}
-
-export const productLabelSectionAndNoteOne2Many = {
-    ...x2ManyField,
-    component: ProductLabelSectionAndNoteOne2Many,
-    additionalClasses: sectionAndNoteFieldOne2Many.additionalClasses,
-};
-
-registry
-    .category("fields")
-    .add("product_label_section_and_note_field_o2m", productLabelSectionAndNoteOne2Many);
-
-export class ProductLabelSectionAndNoteAutocomplete extends AutoComplete {
-    setup() {
-        super.setup();
-        this.labelTextarea = useRef("labelNodeRef");
-    }
+class ProductLabelSectionAndNoteFieldAutocomplete extends AutoComplete {
     onInputKeydown(event) {
         super.onInputKeydown(event);
         const hotkey = getActiveHotkey(event);
         const labelVisibilityButton = document.getElementById('labelVisibilityButtonId');
-        if (hotkey === "enter") {
-            if (labelVisibilityButton && !this.labelTextarea.el) {
-                labelVisibilityButton.click();
-                event.stopPropagation();
-                event.preventDefault();
-            }
+        if (hotkey === "enter" && labelVisibilityButton) {
+            labelVisibilityButton.click();
+            event.stopPropagation();
+            event.preventDefault();
         }
     }
 }
 
-export class ProductLabelSectionAndNoteFieldAutocomplete extends Many2XAutocomplete {
+class ProductLabelSectionAndNoteFieldMany2XAutocomplete extends Many2XAutocomplete {
     static components = {
-        ...Many2XAutocomplete.components,
-        AutoComplete: ProductLabelSectionAndNoteAutocomplete,
+        ...super.components,
+        AutoComplete: ProductLabelSectionAndNoteFieldAutocomplete,
     };
-    static props = {
-        ...Many2XAutocomplete.props,
-        isNote: { type: Boolean },
-        isSection: { type: Boolean },
-        onFocusout: { type: Function, optional: true },
-        updateLabel: { type: Function, optional: true },
+}
+class ProductLabelSectionAndNoteFieldMany2One extends Many2One {
+    static components = {
+        ...super.components,
+        Many2XAutocomplete: ProductLabelSectionAndNoteFieldMany2XAutocomplete,
     };
-    static template = "account.ProductLabelSectionAndNoteFieldAutocomplete";
-    setup() {
-        super.setup();
-        this.input = useRef("section_and_note_input");
-    }
-
-    get isSectionOrNote() {
-        return this.props.isSection || this.props.isNote;
-    }
-
-    get isSection() {
-        return this.props.isSection;
-    }
 }
 
-export class ProductLabelSectionAndNoteField extends Many2OneField {
-    static components = {
-        ...Many2OneField.components,
-        Many2XAutocomplete: ProductLabelSectionAndNoteFieldAutocomplete,
-    };
+export class ProductLabelSectionAndNoteField extends Component {
     static template = "account.ProductLabelSectionAndNoteField";
+    static components = { Many2One: ProductLabelSectionAndNoteFieldMany2One };
+    static props = { ...Many2OneField.props };
 
     setup() {
         super.setup();
@@ -196,30 +102,27 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
         return label;
     }
 
-    get Many2XAutocompleteProps() {
-        const props = super.Many2XAutocompleteProps;
-        props.isSection = this.isSection(this.props.record);
-        props.isNote = this.isNote(this.props.record);
-        props.placeholder = _t("Search a product");
-        props.updateLabel = this.updateLabel.bind(this);
-        return props;
+    get m2oProps() {
+        const p = computeM2OProps(this.props);
+        if (this.props.readonly && this.productName) {
+            p.value[1] = this.productName;
+        }
+        return {
+            ...p,
+            canOpen: !this.props.readonly || this.isProductClickable,
+            placeholder: _t("Search a product"),
+        };
     }
 
     get isProductClickable() {
         return this.props.record.evalContext.parent.state !== "draft";
     }
 
-    get isSectionOrNote() {
-        return this.isSection(this.props.record) || this.isNote(this.props.record);
-    }
-
     get sectionAndNoteClasses() {
-        if (this.isSection()) {
-            return "fw-bold";
-        } else if (this.isNote()) {
-            return "fst-italic";
-        }
-        return "";
+        return {
+            "fw-bold": this.isSection(),
+            "fst-italic": this.isNote(),
+        };
     }
 
     isSection(record = null) {
@@ -245,9 +148,8 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
 }
 
 export const productLabelSectionAndNoteField = {
-    ...many2OneField,
+    ...buildM2OFieldDescription(ProductLabelSectionAndNoteField),
     listViewWidth: [240, 400],
-    component: ProductLabelSectionAndNoteField,
 };
 registry
     .category("fields")

@@ -40,7 +40,7 @@ class Product extends models.Model {
     // to allow the search in barcode too
     name_search() {
         const result = super.name_search(...arguments);
-        const kwargs = getKwArgs(arguments, "name", "domain");
+        const kwargs = getKwArgs(arguments, "name", "domain", "operator", "limit");
         for (const record of this) {
             if (record.barcode === kwargs.name) {
                 result.push([record.id, record.name]);

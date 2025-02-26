@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="resource_mail.Many2OneAvatarResourceField" t-inherit="mail.Many2OneAvatarUserField" t-inherit-mode="primary">
-        <xpath expr="//span[hasclass('o_m2o_avatar')]" position="attributes">
-            <attribute name="t-attf-class" add="{{ displayResourcePopover ? 'o_field_many2one_avatar': '' }}" separator=" "/>
-        </xpath>
-        <xpath expr="//span[hasclass('o_m2o_avatar')]/img" position="attributes">
-            <attribute name="t-if">props.record.data.resource_type !== 'material' &amp;&amp; props.record.data[props.name] !== false</attribute>
-        </xpath>
-        <xpath expr="//span[hasclass('o_m2o_avatar')]/img" position="after">
-            <t t-if="props.record.data.resource_type === 'material'">
-                <span t-if="props.record.data[props.name] !== false"
-                      t-att-title="props.record.data[props.name][1]"
-                      class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1">
-                    <i class="fa fa-wrench"/>
-                </span>
-                <span t-elif="!props.readonly" class="o_m2o_avatar_empty"></span>
+
+    <t t-name="resource_mail.Many2OneAvatarResourceField">
+        <t t-set="relation" t-value="props.record.fields[props.name].relation"/>
+        <t t-set="value" t-value="props.record.data[props.name]"/>
+        <div class="d-flex align-items-center gap-1">
+            <t t-if="value !== false">
+                <t t-if="props.record.data.resource_type === 'material'">
+                    <span class="o_avatar o_m2o_avatar">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="value[1]">
+                            <i class="fa fa-wrench"/>
+                        </span>
+                    </span>
+                </t>
+                <t t-elif="props.record.data.resource_type === 'user'">
+                    <AvatarResource cssClass="'o_m2o_avatar'" resModel="relation" resId="value[0]"/>
+                </t>
             </t>
-        </xpath>
+            <Many2One t-props="m2oProps" cssClass="'w-100'">
+                <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                    <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                        <t t-if="autoCompleteItemScope.record.resource_type === 'material'">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="autoCompleteItemScope.record.id">
+                                <i class="fa fa-wrench"/>
+                            </span>
+                        </t>
+                        <t t-elif="autoCompleteItemScope.record.resource_type === 'user'">
+                            <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
+                        </t>
+                        <t t-esc="autoCompleteItemScope.record.display_name"/>
+                    </span>
+                </t>
+            </Many2One>
+        </div>
     </t>
 
-    <t t-name="resource_mail.KanbanMany2OneAvatarResourceField" t-inherit="mail.KanbanMany2OneAvatarUserField" t-inherit-mode="primary">
-        <xpath expr="//span[hasclass('o_m2o_avatar')]/img" position="attributes">
-            <attribute name="t-if">props.record.data.resource_type !== 'material' &amp;&amp; props.record.data[props.name] !== false</attribute>
-        </xpath>
-        <xpath expr="//span[hasclass('o_m2o_avatar')]/img" position="after">
-            <t t-if="props.record.data.resource_type === 'material'">
-                <span t-if="props.record.data[props.name] !== false"
-                      t-att-title="props.record.data[props.name][1]"
-                      class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1">
-                    <i class="fa fa-wrench"/>
-                </span>
-                <span t-elif="!props.readonly" class="o_m2o_avatar_empty"></span>
-            </t>
-        </xpath>
-    </t>
 </templates>

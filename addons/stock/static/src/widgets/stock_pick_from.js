@@ -1,14 +1,19 @@
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
+export class StockPickFrom extends Component {
+    static template = "stock.StockPickFrom";
+    static components = { Many2One };
+    static props = { ...Many2OneField.props };
 
-export class StockPickFrom extends Many2OneField {
-    get displayName() {
-        return super.displayName || this._quant_display_name();
-    }
-
-    get value() {
-        return super.value || [0, this._quant_display_name()];
+    get m2oProps() {
+        const props = computeM2OProps(this.props);
+        return {
+            ...props,
+            value: props.value || [0, this._quant_display_name()],
+        };
     }
 
     _quant_display_name() {
@@ -31,17 +36,13 @@ export class StockPickFrom extends Many2OneField {
     }
 }
 
-export const stockPickFrom = {
-    ...many2OneField,
-    component: StockPickFrom,
+registry.category("fields").add("pick_from", {
+    ...buildM2OFieldDescription(StockPickFrom),
     fieldDependencies: [
-        ...(many2OneField.fieldDependencies || []),
         // dependencies to build the quant display name
         { name: "location_id", type: "relation" },
         { name: "location_dest_id", type: "relation" },
         { name: "package_id", type: "relation" },
         { name: "owner_id", type: "relation" },
     ],
-};
-
-registry.category("fields").add("pick_from", stockPickFrom);
+});

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="uom.Many2OneUomField">
+        <UomMany2One t-props="m2oProps">
+            <!-- <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                <t t-set="record" t-value="autoCompleteItemScope.record"/>
+                <t t-if="record.relative_uom_id">
+                    <div class="uom_autocomplete_grid">
+                        <div t-esc="getLabel(record)"/>
+                        <div t-esc="`${record.relative_factor} ${record.relative_uom_id.display_name}`" class="text-muted"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <span t-esc="getLabel(record)"/>
+                </t>
+            </t> -->
+        </UomMany2One>
+    </t>
+
+</templates>

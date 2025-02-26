@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ReferenceField">
+        <t t-set="relation" t-value="getRelation()"/>
         <div class="o_row">
             <t t-if="!props.readonly and !hideModelSelector">
                 <select class="o_input"
@@ -15,10 +16,7 @@
                 </select>
             </t>
             <t t-if="relation">
-                <Many2OneField
-                    t-key="m2oProps.relation"
-                    t-props="m2oProps"
-                />
+                <Many2One t-key="relation" t-props="m2oProps"/>
             </t>
         </div>
     </t>

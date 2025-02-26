@@ -51,7 +51,7 @@ async function applyProduct(record, product) {
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "sale.SaleProductField";
     static props = {
-        ...ProductLabelSectionAndNoteField.props,
+        ...super.props,
         readonlyField: { type: Boolean, optional: true },
     };
 
@@ -59,23 +59,19 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         super.setup();
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.orm = useService("orm")
+        this.orm = useService("orm");
+        this.isInternalUpdate = false;
+        this.wasCombo = false;
         let isMounted = false;
-        let isInternalUpdate = false;
-        let wasCombo = false;
-        const { updateRecord } = this;
-        this.updateRecord = (value) => {
-            isInternalUpdate = true;
-            wasCombo = this.isCombo;
-            return updateRecord.call(this, value);
-        };
+        this.isInternalUpdate = false;
+        this.wasCombo = false;
         useEffect(value => {
             if (!isMounted) {
                 isMounted = true;
-            } else if (value && isInternalUpdate) {
+            } else if (value && this.isInternalUpdate) {
                 // we don't want to trigger product update when update comes from an external sources,
                 // such as an onchange, or the product configuration dialog itself
-                if (wasCombo) {
+                if (this.wasCombo) {
                     // If the previously selected product was a combo, delete its selected combo
                     // items before changing the product.
                     this.props.record.update({ selected_combo_items: JSON.stringify([]) });
@@ -86,7 +82,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                     this._onProductUpdate();
                 }
             }
-            isInternalUpdate = false;
+            this.isInternalUpdate = false;
         }, () => [Array.isArray(this.value) && this.value[0]]);
     }
 
@@ -107,12 +103,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             (this.props.record.model.root.activeFields.order_line &&
                 this.props.record.model.root._isReadonly("order_line"))
         );
-    }
-    get hasExternalButton() {
-        // Keep external button, even if field is specified as 'no_open' so that the user is not
-        // redirected to the product when clicking on the field content
-        const res = super.hasExternalButton;
-        return res || (!!this.props.record.data[this.props.name] && !this.state.isFloating);
     }
     get hasConfigurationButton() {
         return this.isConfigurableLine || this.isConfigurableTemplate || this.isCombo;
@@ -138,21 +128,38 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
      * @override
      */
     get sectionAndNoteClasses() {
-        const className = super.sectionAndNoteClasses;
-        if (!className && !this.productName && !this.isDownpayment) {
-            return "text-warning";
-        }
-        return className;
+        return {
+            ...super.sectionAndNoteClasses,
+            "text-warning":
+                !this.isSection() && !this.isNote() && !this.productName && !this.isDownpayment,
+        };
     }
 
-    onClick(ev) {
-        // Override to get internal link to products in SOL that cannot be edited
-        if (this.props.readonly) {
-            ev.stopPropagation();
-            this.openAction();
-        } else {
-            super.onClick(ev);
+    get m2oProps() {
+        const p = super.m2oProps;
+        const value = p.value && [...p.value];
+        if (this.isCombo && value[1]) {
+            // Show the product quantity next to the product name for combo lines.
+            value[1] = `${value[1]} x ${this.props.record.data.product_uom_qty}`;
         }
+        return {
+            ...p,
+            canOpen: this.props.canOpen || !this.props.readonly || this.isProductClickable,
+            update: (value) => {
+                this.isInternalUpdate = true;
+                this.wasCombo = this.isCombo;
+                return p.update(value);
+            },
+            value,
+        };
+    }
+
+    get relation() {
+        return this.props.record.fields[this.props.name].relation;
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name];
     }
 
     async _onProductTemplateUpdate() {
@@ -204,6 +211,8 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             }
         }
     }
+
+    _openGridConfigurator(edit = false) {} // sale_product_matrix
 
     async _onProductUpdate() {} // event_booth_sale, event_sale, sale_renting
 

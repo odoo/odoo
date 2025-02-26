@@ -2433,6 +2433,28 @@ export class Model extends Array {
     }
 
     /**
+     * @param {string} name
+     * @param {Record<string, any>} specification
+     * @param {DomainListRepr} [domain]
+     * @param {string} [operator]
+     * @param {number} [limit]
+     */
+    web_name_search(name, specification, domain, operator, limit) {
+        const kwargs = getKwArgs(arguments, "name", "specification", "args", "operator", "limit");
+        ({ name, specification, domain = [], operator = "ilike", limit = 100 } = kwargs);
+
+        const idNamePairs = this.name_search(name, domain, operator, limit, kwargs);
+        if (Object.keys(specification).length === 1 && "display_name" in specification) {
+            return idNamePairs.map(([id, name]) => ({ id, display_name: name }));
+        }
+
+        return this.web_read(
+            idNamePairs.map(([id]) => id),
+            specification
+        );
+    }
+
+    /**
      * @param {MaybeIterable<number>} idOrIds
      * @param {Record<string, any>} specification
      */

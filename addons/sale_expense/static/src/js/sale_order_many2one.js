@@ -1,28 +1,21 @@
-import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
-
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
-export class OrderField extends Many2OneField {
-    setup() {
-        super.setup();
-    }
+export class OrderField extends Component {
+    static template = "sale_expense.OrderField";
+    static components = { Many2One };
+    static props = { ...Many2OneField.props };
 
-    /**
-     * @override
-     */
-    get Many2XAutocompleteProps() {
-        // hide the search more option from the dropdown menu
-       return {
-           ...super.Many2XAutocompleteProps,
-           noSearchMore: true,
-       }
+    get m2oProps() {
+        return {
+            ...computeM2OProps(this.props),
+            canSearchMore: false,
+        };
     }
 }
 
-export const orderField = {
-    ...many2OneField,
-    component: OrderField,
-};
-
-registry.category("fields").add("sale_order_many2one", orderField);
-registry.add('sale_order_many2one', OrderField);
+registry.category("fields").add("sale_order_many2one", {
+    ...buildM2OFieldDescription(OrderField),
+});
