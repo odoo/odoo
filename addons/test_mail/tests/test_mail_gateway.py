@@ -110,7 +110,11 @@ class TestEmailParsing(MailCommon):
 
     def test_message_parse_eml(self):
         # Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
-        mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to=f'generic@{self.alias_domain}')
+        mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to=f'generic@{self.alias_domain}',
+                           msg_id='<cb7eaf62-58dc-2017-148c-305d0c78892f@odoo.com>',
+                           references='<f3b9f8f8-28fa-2543-cab2-7aa68f679ebb@odoo.com>',
+                           subject='Re: test attac',
+                           )
         self.env['mail.thread'].message_parse(self.from_string(mail))
 
     def test_message_parse_eml_bounce_headers(self):
