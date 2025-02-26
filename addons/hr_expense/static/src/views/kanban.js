@@ -11,6 +11,7 @@ import { KanbanController } from '@web/views/kanban/kanban_controller';
 import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 
 export class ExpenseKanbanController extends ExpenseDocumentUpload(KanbanController) {}
+ExpenseKanbanController.template = "hr_expense.KanbanView";
 
 export class ExpenseKanbanRenderer extends ExpenseDocumentDropZone(ExpenseMobileQRCode(KanbanRenderer)) {}
 ExpenseKanbanRenderer.template = 'hr_expense.KanbanRenderer';
@@ -21,14 +22,12 @@ ExpenseDashboardKanbanRenderer.template = 'hr_expense.DashboardKanbanRenderer';
 
 registry.category('views').add('hr_expense_kanban', {
     ...kanbanView,
-    buttonTemplate: 'hr_expense.KanbanButtons',
     Controller: ExpenseKanbanController,
     Renderer: ExpenseKanbanRenderer,
 });
 
 registry.category('views').add('hr_expense_dashboard_kanban', {
     ...kanbanView,
-    buttonTemplate: 'hr_expense.KanbanButtons',
     Controller: ExpenseKanbanController,
     Renderer: ExpenseDashboardKanbanRenderer,
 });
