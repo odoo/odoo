@@ -206,7 +206,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         return this.unusedLists;
     }
 
-    _getListFormat(listId, position, field) {
+    _getListFormat(listId, position, path, field) {
         const locale = this.getters.getLocale();
         switch (field?.type) {
             case "integer":
@@ -214,7 +214,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             case "float":
                 return "#,##0.00";
             case "monetary": {
-                const currency = this.getListCurrency(listId, position, field.currency_field);
+                const currency = this.getListCurrency(listId, position, path, field.currency_field);
                 if (!currency) {
                     return "#,##0.00";
                 }
@@ -271,34 +271,36 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * Get the value of a list header
      *
      * @param {string} listId Id of a list
-     * @param {string} fieldName
+     * @param {string} path
      */
-    getListHeaderValue(listId, fieldName) {
-        return this.getters.getListDataSource(listId).getListHeaderValue(fieldName);
+    getListHeaderValue(listId, path) {
+        return this.getters.getListDataSource(listId).getListHeaderValue(path);
     }
 
     /**
      * Get the value for a field of a record in the list
      * @param {string} listId Id of the list
      * @param {number} position Position of the record in the list
-     * @param {string} fieldName Field Name
+     * @param {string} path Path of the field
      *
      * @returns {string|undefined}
      */
-    getListCellValueAndFormat(listId, position, fieldName) {
+    getListCellValueAndFormat(listId, position, path) {
         const dataSource = this.getters.getListDataSource(listId);
-        dataSource.addFieldToFetch(fieldName);
-        const value = dataSource.getListCellValue(position, fieldName);
+        dataSource.addFieldPathToFetch(path);
+        const value = dataSource.getListCellValue(position, path);
         if (typeof value === "object" && isEvaluationError(value.value)) {
             return value;
         }
-        const field = dataSource.getField(fieldName);
-        const format = this._getListFormat(listId, position, field);
+        const field = dataSource.getFieldFromFieldPath(path);
+        const format = this._getListFormat(listId, position, path, field);
         return { value, format };
     }
 
-    getListCurrency(listId, position, fieldName) {
-        return this.getters.getListDataSource(listId).getListCurrency(position, fieldName);
+    getListCurrency(listId, position, path, currentFieldName) {
+        return this.getters
+            .getListDataSource(listId)
+            .getListCurrency(position, path, currentFieldName);
     }
 
     /**
