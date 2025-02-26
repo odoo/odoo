@@ -495,6 +495,13 @@ describe("Selection collapsed", () => {
                 contentAfter: `<p>abcd[]</p>`,
             });
         });
+        test("should delete only the button", async () => {
+            await testEditor({
+                contentBefore: `<p>a<a class="btn" href="#">[]</a></p>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<p>a[]</p>`,
+            });
+        });
     });
 
     describe("Line breaks", () => {
