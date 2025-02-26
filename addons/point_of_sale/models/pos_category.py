@@ -37,16 +37,13 @@ class PosCategory(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        # Load categories according to loaded products
-        product_catg_ids = []
-        for product in data['product.template']:
-            product_catg_ids += product['pos_categ_ids']
+        domain = []
         limited_categories = data['pos.config'][0]['limit_categories']
         if limited_categories:
             available_category_ids = data['pos.config'][0]['iface_available_categ_ids']
             category_ids = self.env['pos.category'].browse(available_category_ids)._get_descendants().ids
-            product_catg_ids = list(set(product_catg_ids) & set(category_ids))
-        return [('id', 'in', product_catg_ids)]
+            domain += [('id', 'in', category_ids)]
+        return domain
 
     @api.model
     def _load_pos_data_fields(self, config_id):
