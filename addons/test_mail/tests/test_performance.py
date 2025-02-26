@@ -419,7 +419,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, _test_template = self._create_test_records()
         customer = self.env['res.partner'].browse(self.customer.ids)
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
-        with self.assertQueryCount(admin=20, employee=20):  # tm 14/14
+        with self.assertQueryCount(admin=20, employee=20):  # tm 19/19
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -487,8 +487,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
         test_template.write({'attachment_ids': [(5, 0)]})
 
-        # TDE FIXME: from 9 to 34 due to suggested recipients -> to optimize
-        with self.assertQueryCount(admin=34, employee=34):
+        with self.assertQueryCount(admin=29, employee=29):  # tm: 22/22
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -502,9 +501,12 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         # notifications
         message = test_record.message_ids[0]
         self.assertFalse(message.attachment_ids)
+        new_partner = self.env['res.partner'].sudo().search([('email', '=', 'nopartner.test@example.com')])
+        self.assertTrue(new_partner)
+        self.assertEqual(message.notified_partner_ids, self.user_test.partner_id + self.customer + new_partner)
 
         # remove created partner to ensure tests are the same each run
-        self.env['res.partner'].sudo().search([('email', '=', 'nopartner.test@example.com')]).unlink()
+        new_partner.unlink()
 
     @users('admin', 'employee')
     @warmup
@@ -512,8 +514,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_mail_composer_w_template_attachments(self):
         test_record, test_template = self._create_test_records()
 
-        # TDE FIXME: from 10 to 35 due to suggested recipients -> to optimize
-        with self.assertQueryCount(admin=35, employee=35):
+        with self.assertQueryCount(admin=35, employee=35):  # tm: 23/23
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -541,9 +542,8 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
         test_template.write({'attachment_ids': [(5, 0)]})
 
-        # TDE FIXME: from 20 to 49 due to suggested recipients -> to optimize
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=49, employee=49):  # tm 16/16
+        with self.assertQueryCount(admin=49, employee=49):  # tm 36/36
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -572,9 +572,8 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_mail_composer_w_template_form_attachments(self):
         test_record, test_template = self._create_test_records()
 
-        # TDE FIXME: from 20 to 49 due to suggested recipients -> to optimize
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=49, employee=49):  # tm 16/16
+        with self.assertQueryCount(admin=49, employee=49):  # tm 36/36
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -612,7 +611,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         # use another user already pre-defined with the email notification type,
         # so the ormcache is preserved.
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(admin=40, employee=39):
+        with self.assertQueryCount(admin=39, employee=38):
             record.write({
                 'user_id': self.user_test_email.id,
             })
@@ -814,6 +813,23 @@ class TestMailAPIPerformance(BaseMailPerformance):
             cls.env.ref('test_mail.st_mail_test_container_child_full').id
         ])
 
+        cls.test_records_recipients = cls.env['mail.performance.thread.recipients'].create([
+            {
+                'email_from': 'only.email.1@test.example.com',
+            }, {
+                'email_from': 'only.email.2@test.example.com',
+            }, {
+                'email_from': 'both.1@test.example.com',
+                'partner_id': cls.partners[0].id,
+            }, {
+                'email_from': 'trice.1@test.example.com',
+                'partner_id': cls.partners[1].id,
+                'user_id': cls.user_admin.id,
+            }, {
+                'partner_id': cls.partners[2].id,
+            },
+        ])
+
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('admin', 'employee')
     @warmup
@@ -888,6 +904,67 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertIn(mails[-2].id, unlinked_mails, 'Mail: mails with invalid recipient are also to be unlinked')
         self.assertEqual(mails[-1].state, 'exception')
         self.assertIn(mails[-1].id, unlinked_mails, 'Mail: mails with invalid recipient are also to be unlinked')
+
+    @users('employee')
+    @warmup
+    def test_message_get_default_recipients(self):
+        record = self.test_records_recipients[0].with_env(self.env)
+        with self.assertQueryCount(employee=1):
+            defaults = record._message_get_default_recipients()
+        self.assertDictEqual(defaults, {record.id: {
+            'email_cc': '', 'email_to': 'only.email.1@test.example.com', 'partner_ids': [],
+        }})
+
+    @users('employee')
+    @warmup
+    def test_message_get_default_recipients_batch(self):
+        records = self.test_records_recipients.with_env(self.env)
+        with self.assertQueryCount(employee=4):
+            defaults = records._message_get_default_recipients()
+        self.assertDictEqual(defaults, {
+            records[0].id: {
+                'email_cc': '',
+                'email_to': 'only.email.1@test.example.com',
+                'partner_ids': []},
+            records[1].id: {
+                'email_cc': '',
+                'email_to': 'only.email.2@test.example.com',
+                'partner_ids': []},
+            records[2].id: {
+                'email_cc': '',
+                'email_to': '',
+                'partner_ids': self.partners[0].ids},
+            records[3].id: {
+                'email_cc': '',
+                'email_to': '',
+                'partner_ids': self.partners[1].ids},
+            records[4].id: {
+                'email_cc': '',
+                'email_to': '',
+                'partner_ids': self.partners[2].ids},
+        })
+
+    @users('employee')
+    @warmup
+    def test_message_get_suggested_recipients(self):
+        record = self.test_records_recipients[0].with_env(self.env)
+        with self.assertQueryCount(employee=21):  # tm: 14
+            recipients = record._message_get_suggested_recipients(no_create=False)
+        new_partner = self.env['res.partner'].search([('email_normalized', '=', 'only.email.1@test.example.com')])
+        self.assertEqual(len(new_partner), 1)
+        self.assertDictEqual(recipients[0], {
+            'email': 'only.email.1@test.example.com',
+            'name': 'only.email.1@test.example.com',
+            'partner_id': new_partner.id,
+            'create_values': {},
+        })
+
+    @users('employee')
+    @warmup
+    def test_message_get_suggested_recipients_batch(self):
+        records = self.test_records_recipients.with_env(self.env)
+        with self.assertQueryCount(employee=26):  # tm: 19
+            _recipients = records._message_get_suggested_recipients_batch(no_create=False)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('admin', 'employee')
@@ -991,6 +1068,29 @@ class TestMailAPIPerformance(BaseMailPerformance):
             )
 
         self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners)
+
+    @users('employee')
+    @warmup
+    def test_partner_find_from_emails(self):
+        """ Test '_partner_find_from_emails', notably to check batch optimization """
+        records = self.test_records_recipients.with_user(self.env.user)
+        with self.assertQueryCount(employee=26):  # tm: 18
+            partners = records._partner_find_from_emails(
+                {record: [record.email_from, record.partner_id.email, record.user_id.email] for record in records},
+                avoid_alias=True,
+                no_create=False,
+            )
+        new_p1 = self.env['res.partner'].search([('email_normalized', '=', 'only.email.1@test.example.com')])
+        new_p2 = self.env['res.partner'].search([('email_normalized', '=', 'only.email.2@test.example.com')])
+        new_p3 = self.env['res.partner'].search([('email_normalized', '=', 'both.1@test.example.com')])
+        new_p4 = self.env['res.partner'].search([('email_normalized', '=', 'trice.1@test.example.com')])
+        self.assertDictEqual(partners, {
+            records[0].id: new_p1,
+            records[1].id: new_p2,
+            records[2].id: new_p3 + self.partners[0],
+            records[3].id: new_p4 + self.partners[1] + self.partner_admin,
+            records[4].id: self.partners[2],
+        })
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('admin', 'employee')

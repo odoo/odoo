@@ -544,6 +544,7 @@ class MailComposeMessage(models.TransientModel):
                 rendered_values = composer._generate_template_for_composer(
                     res_ids,
                     {'email_cc', 'email_to', 'partner_ids'},
+                    allow_suggested=composer.message_type == 'comment',
                     find_or_create_partners=True,
                 )[res_ids[0]]
                 if rendered_values.get('partner_ids'):
@@ -1127,6 +1128,7 @@ class MailComposeMessage(models.TransientModel):
                  'report_template_ids',
                  'scheduled_date',
                 ],
+                allow_suggested=self.composition_mode == 'comment' and not self.composition_batch and self.message_type == 'comment',
                 find_or_create_partners=self.env.context.get("mail_composer_force_partners", True),
             )
             for res_id in res_ids:
@@ -1353,12 +1355,16 @@ class MailComposeMessage(models.TransientModel):
         return mail_values_dict
 
     def _generate_template_for_composer(self, res_ids, render_fields,
+                                        allow_suggested=False,
                                         find_or_create_partners=True):
         """ Generate values based on template and relevant values for the
         mail.compose.message wizard.
 
         :param list res_ids: list of record IDs on which template is rendered;
         :param list render_fields: list of fields to render on template;
+        :param boolean allow_suggested: when computing default recipients,
+          include suggested recipients in addition to minimal defaults
+          (see ``Template._generate_template_recipients``);
         :param boolean find_or_create_partners: transform emails into partners
           (see ``Template._generate_template_recipients``);
 
@@ -1386,7 +1392,7 @@ class MailComposeMessage(models.TransientModel):
             res_ids,
             template_fields,
             # monorecord comment mode -> ok to use suggested instead of defaults
-            recipients_allow_suggested=self.composition_mode == 'comment' and not self.composition_batch and self.message_type == 'comment',
+            recipients_allow_suggested=allow_suggested,
             find_or_create_partners=find_or_create_partners,
         )
 

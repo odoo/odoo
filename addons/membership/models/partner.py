@@ -47,6 +47,13 @@ class ResPartner(models.Model):
     def _compute_membership_state(self):
         today = fields.Date.today()
         for partner in self:
+            if not partner.member_lines and not partner.associate_member:
+                partner.membership_start = partner.membership_start or False
+                partner.membership_stop = partner.membership_stop or False
+                partner.membership_cancel = partner.membership_cancel or False
+                partner.membership_state = partner.membership_state or (partner.free_member and 'free') or 'none'
+                continue
+
             partner.membership_start = self.env['membership.membership_line'].search([
                 ('partner', 'in', (partner.associate_member or partner).ids), ('date_cancel', '=', False)
             ], limit=1, order='date_from').date_from
