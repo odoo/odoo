@@ -49,7 +49,7 @@ class TestPurchaseRequisitionSale(TransactionCase):
         # Create an alternative RFQ for another vendor
         action = purchase_order.action_create_alternative()
         alt_po_wizard = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
-        alt_po_wizard.partner_id = self.vendor_2
+        alt_po_wizard.partner_ids = self.vendor_2
         alt_po_wizard.copy_products = True
         alt_po_wizard = alt_po_wizard.save()
         alt_po_wizard.action_create_alternative()
