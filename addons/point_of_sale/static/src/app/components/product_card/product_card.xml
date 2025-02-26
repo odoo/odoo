@@ -19,9 +19,9 @@
                     t-att-class="{'no-image d-flex justify-content-center align-items-center text-center': !props.imageUrl}"
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
-                <h1 t-if="props.productCartQty"
+                <span t-if="props.productCartQty"
                     t-out="props.productCartQty"
-                    class="product-cart-qty position-absolute bottom-0 end-0 fw-bolder mb-0 px-1" />
+                    class="product-cart-qty position-absolute bottom-0 end-0 m-1 px-2 rounded bg-black text-white fs-5 fw-bolder"/>
             </div>
         </article>
     </t>

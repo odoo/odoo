@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <div t-if="order.internal_note"
-                        class="internal-note-container d-flex gap-2 flex-wrap">
+                        class="internal-note-container d-flex gap-2 flex-wrap m-2">
                         <t t-foreach="order.internal_note.split('\n') or []" t-as="note"
                             t-key="note_index">
                             <li t-if="note.trim() !== ''" t-esc="note"
