@@ -119,7 +119,7 @@ export class ListPlugin extends Plugin {
                 categoryId: "structure",
                 commandId: "toggleListCL",
             },
-        ],
+        ].map((item) => withSequence(5, item)),
         power_buttons: [
             { commandId: "toggleListUL" },
             { commandId: "toggleListOL" },
