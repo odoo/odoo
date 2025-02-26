@@ -4,7 +4,7 @@
     'name': 'Maintenance',
     'version': '1.0',
     'sequence': 100,
-    'category': 'Manufacturing/Maintenance',
+    'category': 'Supply Chain/Maintenance',
     'description': """
 Track equipment and maintenance requests""",
     'depends': ['mail'],

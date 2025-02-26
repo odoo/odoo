@@ -3,7 +3,7 @@
 
 {
     'name': 'Mass mailing sms on lead / opportunities',
-    'category': 'Hidden',
+    'category': 'Marketing/Email Marketing',
     'version': '1.0',
     'summary': 'Add lead / opportunities info on mass mailing sms',
     'description': """Mass mailing sms on lead / opportunities""",

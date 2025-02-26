@@ -10,7 +10,7 @@ This module allows users to more easily identify subcontracting orders when appl
 by also displaying the associated picking reference in the search view.
     """,
     'depends': ['stock_landed_costs', 'mrp_subcontracting'],
-    'category': 'Manufacturing/Manufacturing',
+    'category': 'Supply Chain/Manufacturing',
     'data': [
         'views/stock_landed_cost_views.xml',
     ],

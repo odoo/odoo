@@ -6,7 +6,7 @@
     'name': 'Repairs',
     'version': '1.0',
     'sequence': 230,
-    'category': 'Inventory/Inventory',
+    'category': 'Supply Chain/Inventory',
     'summary': 'Repair damaged products',
     'description': """
 The aim is to have a complete module to manage all products repairs.

@@ -3,7 +3,7 @@
 
 {
     'name': 'Website Mail',
-    'category': 'Hidden',
+    'category': 'Website/Website',
     'summary': 'Website Module for Mail',
     'version': '0.1',
     'description': """
