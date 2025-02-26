@@ -1954,7 +1954,7 @@ class Request:
         self._set_request_dispatcher(rule)
         readonly = rule.endpoint.routing['readonly']
         if callable(readonly):
-            readonly = readonly(rule.endpoint.func.__self__)
+            readonly = readonly(rule.endpoint.func.__self__, rule, args)
         return self._transactioning(
             functools.partial(self._serve_ir_http, rule, args),
             readonly=readonly,

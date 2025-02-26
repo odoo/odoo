@@ -86,11 +86,11 @@ class Json2RpcDispatcher(http.Dispatcher):
 
 
 class WebJson2Controller(http.Controller):
-    def _web_json_2_rpc_readonly(self):
+    def _web_json_2_rpc_readonly(self, rule, args):
         try:
-            model_name = request.httprequest.args['model']
-            method_name = request.httprequest.args['method']
-            Model = request.env[model_name]
+            model_name = args['model']
+            method_name = args['method']
+            Model = request.registry[model_name]
         except KeyError:
             return False
         for cls in Model.mro():
