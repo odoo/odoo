@@ -27,7 +27,7 @@ class AccountChartTemplate(models.AbstractModel):
                 })
                 demo_data = {
                     'res.partner.category': self._get_demo_data_res_partner_category(company),
-                    'res.partner': self._get_demo_data_partner(company),
+                    'res.partner': self._get_demo_data_partner(),
                     'account.move': self._get_demo_data_move(company),
                     'res.config.settings': self._get_demo_data_config_settings(company),
                     'ir.attachment': self._get_demo_data_attachment(company),
@@ -62,11 +62,13 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_partner(self, company=False):
-        cid = company and company.id or self.env.company.id
+    def _get_demo_data_partner(self):
+        company = self.env.company
+        if company.account_fiscal_country_id.code != "IN" or not company.state_id:
+            return super()._get_demo_data_partner()
         inter_state_ref = 'base.state_in_ts'
         intra_state_ref = 'base.state_in_gj'
-        default_partner_dict = {'country_id': 'base.in', 'is_company': True, 'company_id': cid,}
+        default_partner_dict = {'country_id': 'base.in', 'is_company': True, 'company_id': company.id}
         return{
             'res_partner_registered_customer': {
                 **default_partner_dict,
@@ -146,7 +148,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'state_id': 'base.state_us_5',
                 'country_id': 'base.us',
                 'is_company': True,
-                'company_id': cid,
+                'company_id': company.id,
             },
         }
 
