@@ -545,9 +545,10 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(leaves, categories.filtered(lambda c: not c.child_ids))
         assert parents and leaves, "did we test something?"
 
-        # check `in` condition containing False or and an id
-        leaves_or_parent = self._search(categories, [('child_ids', 'in', [leaves[0].parent_id.id, False])])
-        self.assertEqual(leaves_or_parent, leaves | leaves[0].parent_id)
+        # check `in` condition containing False or/and an id
+        leaves_with_parent = leaves.sorted('parent_id', reverse=True) # Prioritize leaves with parents
+        leaves_or_parent = self._search(categories, [('child_ids', 'in', [leaves_with_parent[0].id, False])])
+        self.assertEqual(leaves_or_parent, leaves | leaves_with_parent[0].parent_id)
 
         # filtering on nonexistent value across x2many should return nothing
         partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
