@@ -1076,6 +1076,7 @@ class Field(typing.Generic[T]):
         if column['is_nullable'] == 'NO':
             sql.drop_not_null(model._cr, model._table, self.name)
         self._convert_db_column(model, column)
+        column.clear()  # remove information, because it may no longer be valid
 
     def _convert_db_column(self, model, column):
         """ Convert the given database column to the type of the field. """
