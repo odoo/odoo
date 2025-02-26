@@ -14,9 +14,17 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
+<<<<<<< saas-18.1
 import { hover, queryFirst } from "@odoo/hoot-dom";
 import { mockUserAgent } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
+||||||| 2108ad3f7c851eeceb84d7459485a18e1574fa64
+import { hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
+import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
+=======
+import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
+import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
+>>>>>>> d9220719000cbebd19572e5d4774733c85058520
 import {
     asyncStep,
     Command,
@@ -562,6 +570,7 @@ test("Use saved volume settings", async () => {
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
 });
 
+<<<<<<< saas-18.1
 test("show call participants after stopping screen share", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
@@ -591,4 +600,21 @@ test("show call participants after stopping camera share", async () => {
     await contains("video", { count: 0 });
     // when all participant cards are shown they are minimized
     await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
+||||||| 2108ad3f7c851eeceb84d7459485a18e1574fa64
+=======
+test("automatically cancel incoming call after some time", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const [memberId] = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    const rtcSessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: memberId,
+        channel_id: channelId,
+    });
+    pyEnv["discuss.channel.member"].write([memberId], { rtc_inviting_session_id: rtcSessionId });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-CallInvitation");
+    await advanceTime(30_000);
+    await contains(".o-discuss-CallInvitation", { count: 0 });
+>>>>>>> d9220719000cbebd19572e5d4774733c85058520
 });
