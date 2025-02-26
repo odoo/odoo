@@ -120,10 +120,10 @@ class MrpProduction(models.Model):
     date_start = fields.Datetime(
         'Start', copy=False, default=_get_default_date_start,
         help="Date you plan to start production or date you actually started production.",
-        index=True, required=True)
+        index=True, required=True, tracking=True)
     date_finished = fields.Datetime(
         'End', copy=False, default=_get_default_date_finished,
-        compute='_compute_date_finished', store=True,
+        compute='_compute_date_finished', store=True, tracking=True,
         help="Date you expect to finish production or actual date you finished production.")
     duration_expected = fields.Float("Expected Duration", help="Total expected duration (in minutes)", compute='_compute_duration_expected')
     duration = fields.Float("Real Duration", help="Total real duration (in minutes)", compute='_compute_duration')
