@@ -1206,6 +1206,9 @@ class MrpProduction(models.Model):
             origin = '%s,%s' % (origin, self.name)
         return origin
 
+    def _check_is_waiting(self):
+        return self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
+
     def _set_qty_producing(self):
         if self.product_id.tracking == 'serial':
             qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
@@ -1213,7 +1216,7 @@ class MrpProduction(models.Model):
                 self.qty_producing = self.product_id.uom_id._compute_quantity(1, self.product_uom_id, rounding_method='HALF-UP')
 
         # waiting for a preproduction move before assignement
-        is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
+        is_waiting = self._check_is_waiting()
 
         for move in (self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none') | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
             # picked + manual means the user set the quantity manually
