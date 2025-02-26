@@ -378,8 +378,8 @@ export class MockServer {
     menus = [];
     /** @type {Record<string, Model>} */
     models = Object.create(null);
-    /** @type {Record<string, ModelConstructor>} */
-    modelSpecs = Object.create(null);
+    /** @type {ModelConstructor[]} */
+    modelSpecs = [];
     /** @type {Set<string>} */
     modelNamesToFetch = new Set();
 
@@ -420,10 +420,11 @@ export class MockServer {
             assign(this, "menus", params.menus);
         }
         if (params.models) {
-            for (const ModelClass of params.models) {
-                const model = this._getModelDefinition(ModelClass);
-                assign(this.modelSpecs, model._name, model);
-            }
+            assign(
+                this,
+                "modelSpecs",
+                [...params.models].map((ModelClass) => this._getModelDefinition(ModelClass))
+            );
             if (this.status & MockServer.MODELS_LOADED) {
                 this._loadModels();
             }
@@ -804,9 +805,9 @@ export class MockServer {
     async _loadModels() {
         this.status |= MockServer.MODELS_LOADED;
 
-        const models = Object.values(this.modelSpecs);
+        const models = this.modelSpecs;
         const serverModelInheritances = new Set();
-        this.modelSpecs = Object.create(null);
+        this.modelSpecs = [];
         if (this.modelNamesToFetch.size) {
             const modelEntries = await fetchModelDefinitions(this.modelNamesToFetch);
             this.modelNamesToFetch.clear();
@@ -855,9 +856,11 @@ export class MockServer {
                 model._rec_name = "x_name";
             }
 
-            if (model._name in this.env) {
+            if (model._name in this.models) {
+                Object.setPrototypeOf(Object.getPrototypeOf(model), this.models[model._name]);
+            } else if (model._name in this.env) {
                 throw new MockServerError(
-                    `cannot register model "${model._name}": a model or a server environment property with the same name already exists`
+                    `cannot register model "${model._name}": a server environment property with the same name already exists`
                 );
             }
 
