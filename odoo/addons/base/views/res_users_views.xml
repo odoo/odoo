@@ -174,6 +174,17 @@
                 <form string="Users">
                     <header>
                     </header>
+                    <div class="alert alert-info text-center o_form_header"
+                            invisible="active and active_partner or not active and not active_partner or active and not active_partner"
+                            role="alert">
+                            <a class="close" data-bs-dismiss="alert" href="#">x</a>
+                        <div>
+                            <strong>The contact linked to this user is still active</strong>
+                        </div>
+                        <div>You can archive the contact
+                            <field name="partner_id" required="0" readonly="1"/>
+                        </div>
+                    </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users">
@@ -187,17 +198,6 @@
                             </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <div class="alert alert-info text-center o_form_header"
-                            invisible="active and active_partner or not active and not active_partner or active and not active_partner"
-                            role="alert">
-                          <a class="close" data-bs-dismiss="alert" href="#">x</a>
-                          <div>
-                            <strong>The contact linked to this user is still active</strong>
-                          </div>
-                          <div>You can archive the contact
-                            <field name="partner_id" required="0" readonly="1"/>
-                          </div>
-                        </div>
                         <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                         <div class="oe_title">
                             <label for="name"/>
