@@ -26,7 +26,10 @@ class AccountChartTemplate(models.AbstractModel):
             'ir.attachment': self._get_demo_data_attachment(company),
             'mail.message': self._get_demo_data_mail_message(company),
             'mail.activity': self._get_demo_data_mail_activity(company),
+            'product.product': self._get_demo_data_product(),
             'res.partner.bank': self._get_demo_data_bank(company),
+            'res.partner': self._get_demo_data_partner(),
+            'res.users': self._get_demo_data_user(),
             'account.journal': self._get_demo_data_journal(company),
         }
 
@@ -104,6 +107,36 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
+    def _get_demo_data_partner(self):
+        if self.env.ref('base.res_partner_2', raise_if_not_found=False):
+            return {}
+        return {
+            'base.res_partner_2': {'name': 'Demo Partner 2'},
+            'base.res_partner_12': {'name': 'Demo Partner 12'},
+            'base.partner_demo': {'name': 'Marc Demo'},
+        }
+
+    @api.model
+    def _get_demo_data_user(self):
+        if self.env.ref('base.user_demo', raise_if_not_found=False):
+            return {}
+        return {
+            'base.user_demo': {'name': 'Marc Demo', 'login': 'demo'}
+        }
+
+    @api.model
+    def _get_demo_data_product(self):
+        if self.env.ref('product.product_delivery_01', raise_if_not_found=False):
+            return {}
+        return {
+            'product.product_delivery_01': {'name': 'product_delivery_01', 'type': 'consu'},
+            'product.consu_delivery_01': {'name': 'consu_delivery_01', 'type': 'consu'},
+            'product.consu_delivery_02': {'name': 'consu_delivery_02', 'type': 'consu'},
+            'product.consu_delivery_03': {'name': 'consu_delivery_03', 'type': 'consu'},
+            'product.product_order_01': {'name': 'product_order_01', 'type': 'consu'},
+        }
+
+    @api.model
     def _get_demo_data_journal(self, company=False):
         if company.partner_id.bank_ids:
             # if a bank is created in xml, link it to the journal
@@ -133,7 +166,7 @@ class AccountChartTemplate(models.AbstractModel):
             ],
             limit=1,
         )
-        default_receivable = self.env.ref('base.res_partner_3').with_company(company or self.env.company).property_account_receivable_id
+        default_receivable = self.env.company.partner_id.with_company(company or self.env.company).property_account_receivable_id
         income_account = self.env['account.account'].with_company(company or self.env.company).search([
             *self.env['account.account']._check_company_domain(cid),
             ('account_type', '=', 'income'),
