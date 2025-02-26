@@ -78,6 +78,8 @@ def load_data(env: Environment, idref, mode: str, kind: str, package: ModuleNode
             noupdate = False
             if kind in ('demo', 'demo_xml'):
                 noupdate = True
+            if (filename.endswith('.csv') and kind in ('init', 'init_xml')):
+                _logger.error("KIND %s", kind)
             tools.convert_file(env, package.name, filename, idref, mode, noupdate, kind)
     finally:
         if kind in ('demo', 'test'):
