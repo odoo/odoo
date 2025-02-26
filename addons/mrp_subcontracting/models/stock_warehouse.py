@@ -135,7 +135,6 @@ class StockWarehouse(models.Model):
                 'code': 'mrp_operation',
                 'use_create_components_lots': True,
                 'sequence': next_sequence + 2,
-                'sequence_code': 'SBC',
                 'company_id': self.company_id.id,
             },
             'subcontracting_resupply_type_id': {
@@ -145,7 +144,6 @@ class StockWarehouse(models.Model):
                 'use_existing_lots': True,
                 'default_location_dest_id': self._get_subcontracting_location().id,
                 'sequence': next_sequence + 3,
-                'sequence_code': 'RES',
                 'print_label': True,
                 'company_id': self.company_id.id,
             }
@@ -158,13 +156,13 @@ class StockWarehouse(models.Model):
         values.update({
             'subcontracting_type_id': {
                 'name': _('%(name)s Sequence subcontracting', name=self.name),
-                'prefix': self.code + '/' + (self.subcontracting_type_id.sequence_code or (('SBC' + str(count)) if count else 'SBC')) + '/',
+                'prefix': self.code + '/' + ('SBC' + str(count) if count else 'SBC') + '/',
                 'padding': 5,
                 'company_id': self.company_id.id
             },
             'subcontracting_resupply_type_id': {
                 'name': _('%(name)s Sequence Resupply Subcontractor', name=self.name),
-                'prefix': self.code + '/' + (self.subcontracting_resupply_type_id.sequence_code or (('RES' + str(count)) if count else 'RES')) + '/',
+                'prefix': self.code + '/' + ('RES' + str(count) if count else 'RES') + '/',
                 'padding': 5,
                 'company_id': self.company_id.id
             },
