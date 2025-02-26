@@ -555,7 +555,11 @@ export class PosData extends Reactive {
                 false
             );
             for (const [model, uuid, id] of idUpdates) {
-                this.models[model].find((x) => x.uuid === uuid).id = id;
+                this.baseData[model][id] = this.models[model].find((x) => x.uuid === uuid);
+                this.baseData[model][id].id = id;
+                delete this.baseData[model][uuid];
+                // find((x) => x.uuid === uuid).id = id;
+                // baseData[model][vals.id] = vals;
             }
             this.queue = [];
             console.log("Queue flushed");
