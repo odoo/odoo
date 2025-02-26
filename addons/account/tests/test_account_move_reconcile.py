@@ -5552,3 +5552,23 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             self.assertEqual(payment2.state, 'paid')
             reconcile_move(payment1.move_id, 12, lines_filter=lambda l: l.account_id.account_type not in ('asset_receivable', 'liability_payable'))
             self.assertEqual(payment1.state, 'paid')
+
+    def test_reconcile_partial_reconciliations(self):
+        """
+        When trying to reconcile lines that are partially reconciled, it should only be possible to reconcile
+        a line not belonging to a matching_group with lines of a partial reconcile group.
+        """
+        line_1 = self.create_line_for_reconciliation(300.0, 300.0, self.company_data['currency'], '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(700.0, 700.0, self.company_data['currency'], '2016-01-01')
+        line_3 = self.create_line_for_reconciliation(-1000.0, -1000.0, self.company_data['currency'], '2016-01-01')
+
+        (line_1 + line_3).reconcile()
+        self.assertFalse(line_1.full_reconcile_id)
+        self.assertFalse(line_3.full_reconcile_id)
+        self.assertEqual(line_1.matching_number.startswith("P") and line_1.matching_number, line_3.matching_number)
+
+        (line_1 + line_2 + line_3).reconcile()
+        self.assertTrue(line_1.full_reconcile_id)
+        self.assertTrue(line_2.full_reconcile_id)
+        self.assertTrue(line_3.full_reconcile_id)
+        self.assertEqual(not line_2.matching_number.startswith("P") and line_2.matching_number, line_3.matching_number)
