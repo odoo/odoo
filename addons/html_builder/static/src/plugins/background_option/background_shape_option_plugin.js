@@ -6,12 +6,16 @@ import { pick } from "@web/core/utils/objects";
 import { backgroundShapesDefinition } from "./background_shapes_definition";
 import { ShapeSelector } from "../shape/shape_selector";
 import { getDefaultColors } from "./background_shape_option";
+import { withSequence } from "@html_editor/utils/resource";
 
-class BackgroundShapeOptionPlugin extends Plugin {
+export class BackgroundShapeOptionPlugin extends Plugin {
     static id = "backgroundShapeOption";
     static dependencies = ["customizeTab"];
     resources = {
         builder_actions: this.getActions(),
+        background_shape_target_providers: withSequence(5, (editingElement) =>
+            editingElement.querySelector(":scope > .o_we_bg_filter")
+        ),
     };
     static shared = [
         "getShapeStyleUrl",
@@ -271,13 +275,6 @@ class BackgroundShapeOptionPlugin extends Plugin {
         return pick(colors, ...defaultKeys);
     }
     /**
-     *
-     * @param {HTMLElement} editingElement
-     */
-    getLastPreShapeLayerElement(editingElement) {
-        return editingElement.querySelector(":scope > .o_we_bg_filter");
-    }
-    /**
      * Returns the default colors for the a shape in the selector.
      *
      * @param {String} selectedBackgroundUrl
@@ -348,9 +345,15 @@ class BackgroundShapeOptionPlugin extends Plugin {
             this.removeShapeEl(shapeContainerEl);
         }
         if (newContainer) {
-            const preShapeLayerElement = this.getLastPreShapeLayerElement(editingElement);
-            if (preShapeLayerElement) {
-                preShapeLayerElement.insertAdjacentElement("afterend", newContainer);
+            let preShapeLayerEl;
+            for (const fn of this.getResource("background_shape_target_providers")) {
+                preShapeLayerEl = fn(editingElement);
+                if (preShapeLayerEl) {
+                    break;
+                }
+            }
+            if (preShapeLayerEl) {
+                preShapeLayerEl.insertAdjacentElement("afterend", newContainer);
             } else {
                 editingElement.prepend(newContainer);
             }

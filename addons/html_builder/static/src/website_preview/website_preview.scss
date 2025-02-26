@@ -1,0 +1,19 @@
+// Parallax
+.parallax {
+    // TODO this introduces a limitation: no dropdown will be able to
+    // overflow. Maybe there is a better way to find.
+    &:not(.s_parallax_no_overflow_hidden) {
+        overflow: hidden;
+    }
+
+    > .s_parallax_bg {
+        @extend %o-we-background-layer;
+    }
+    &.s_parallax_is_fixed > .s_parallax_bg {
+        background-attachment: fixed;
+    }
+}
+// Keeps parallax snippet element selectable when Height = auto.
+.s_parallax {
+    min-height: 10px;
+}

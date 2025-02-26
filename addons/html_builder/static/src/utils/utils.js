@@ -134,3 +134,25 @@ export function toRatio(value) {
     const ratio = inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
     return `${ratio.toFixed(2)}x`;
 }
+
+/**
+ * Returns the list of selector, exclude and applyTo on which an option is
+ * applied.
+ * @param {Array<Object>} builderOptions - All the builder options
+ * @param {Class} optionClass - The applied option
+ */
+export function getSelectorParams(builderOptions, optionClass) {
+    const selectorParams = [];
+    const optionClassName = optionClass.name;
+    for (const builderOption of builderOptions) {
+        const { OptionComponent } = builderOption;
+        if (
+            OptionComponent &&
+            (OptionComponent.name === optionClassName ||
+                OptionComponent.prototype instanceof optionClass)
+        ) {
+            selectorParams.push(builderOption);
+        }
+    }
+    return selectorParams;
+}

@@ -1,6 +1,8 @@
+import { useDomState } from "@html_builder/core/building_blocks/utils";
+import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, hover, runAllTimers } from "@odoo/hoot-dom";
-import { xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     addActionOption,
@@ -631,4 +633,67 @@ test("do not load when an operation is cleaned", async () => {
     await contains("[data-action-id='customAction']").click();
     await contains("[data-action-id='customAction']").click();
     expect.verifySteps(["load", "apply", "clean"]);
+});
+
+class SubTestOption extends Component {
+    static template = xml`
+        <BuilderContext applyTo="this.domState.applyTo">
+            <BuilderButton classAction="'actionClass'">actionClass</BuilderButton>
+        </BuilderContext>
+    `;
+    static props = {};
+    static components = {
+        ...defaultBuilderComponents,
+    };
+    setup() {
+        this.domState = useDomState((el) => ({
+            applyTo: el.matches(".first") ? ".a" : ".b",
+        }));
+    }
+}
+
+class TestOption extends Component {
+    static template = xml`
+        <BuilderButton classAction="'secondCase'">secondCase</BuilderButton>
+        <BuilderContext applyTo="this.domState.applyTo">
+            <SubTestOption/>
+        </BuilderContext>
+    `;
+    static props = {};
+    static components = {
+        ...defaultBuilderComponents,
+        SubTestOption,
+    };
+    setup() {
+        this.domState = useDomState((el) => ({
+            applyTo: el.matches(".secondCase") ? ".second" : ".first",
+        }));
+    }
+}
+
+test("consecutive dynamic applyTo", async () => {
+    addOption({
+        selector: ".selector",
+        Component: TestOption,
+    });
+    await setupWebsiteBuilder(`
+        <div class="selector">
+            <div class="first">
+                <div class="a">a</div>
+                <div class="b">b</div>
+            </div>
+            <div class="second">
+                <div class="a">a</div>
+                <div class="b">b</div>
+            </div>
+        </div>
+    `);
+    await contains(":iframe .selector").click();
+    await contains("[data-class-action='actionClass']").click();
+    expect(":iframe .first .a").toHaveClass("actionClass");
+    expect(":iframe .first .b").not.toHaveClass("actionClass");
+    await contains("[data-class-action='secondCase']").click();
+    await contains("[data-class-action='actionClass']").click();
+    expect(":iframe .second .a").not.toHaveClass("actionClass");
+    expect(":iframe .second .b").toHaveClass("actionClass");
 });

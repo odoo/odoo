@@ -3,6 +3,7 @@ import {
     onMounted,
     onWillDestroy,
     onWillStart,
+    onWillUpdateProps,
     useComponent,
     useEffect,
     useEnv,
@@ -39,18 +40,27 @@ export function useBuilderComponent() {
     const comp = useComponent();
     const newEnv = {};
     const oldEnv = useEnv();
-    if (comp.props.applyTo) {
-        let editingElements = querySelectorAll(oldEnv.getEditingElements(), comp.props.applyTo);
-        const updateEditingElements = () => {
-            editingElements = querySelectorAll(oldEnv.getEditingElements(), comp.props.applyTo);
-        };
-        oldEnv.editorBus.addEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
-        newEnv.getEditingElements = () => editingElements;
-        newEnv.getEditingElement = () => editingElements[0];
-        onWillDestroy(() => {
-            oldEnv.editorBus.removeEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
-        });
-    }
+    let editingElements;
+    let applyTo = comp.props.applyTo;
+    const updateEditingElements = () => {
+        editingElements = applyTo
+            ? querySelectorAll(oldEnv.getEditingElements(), applyTo)
+            : oldEnv.getEditingElements();
+    };
+    updateEditingElements();
+    oldEnv.editorBus.addEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
+    onWillUpdateProps((nextProps) => {
+        if (comp.props.applyTo !== nextProps.applyTo) {
+            applyTo = nextProps.applyTo;
+            oldEnv.editorBus.trigger("UPDATE_EDITING_ELEMENT");
+            oldEnv.editorBus.trigger("DOM_UPDATED");
+        }
+    });
+    onWillDestroy(() => {
+        oldEnv.editorBus.removeEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
+    });
+    newEnv.getEditingElements = () => editingElements;
+    newEnv.getEditingElement = () => editingElements[0];
     const weContext = {};
     for (const key in basicContainerBuilderComponentProps) {
         if (key in comp.props) {
@@ -254,7 +264,6 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
         useDependencyDefinition(id, {
             isActive: isSelectableActive,
             getActions,
-            onBeforeApplyAction: () => {},
             cleanSelectedItem: env.selectableContext?.cleanSelectedItem,
         });
     }
