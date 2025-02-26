@@ -65,7 +65,7 @@ class PosPayment(models.Model):
 
     def _create_payment_moves(self, is_reverse=False):
         result = self.env['account.move']
-        change_payment = self.filtered(lambda p: p.is_change and p.payment_method_id.type == 'cash')
+        change_payment = self.filtered(lambda p: p.is_change and p.payment_method_id.type == 'cash' and p.amount > 0)
         payment_to_change = self.filtered(lambda p: not p.is_change and p.payment_method_id.type == 'cash')[:1]
         normal_payments = (self - payment_to_change) - change_payment if change_payment else self
 
@@ -91,6 +91,7 @@ class PosPayment(models.Model):
             self.write({'account_move_id': payment_move.id})
             payment_move._post()
             return payment_move
+        return self.env['account.move']
 
     def _create_payment_move_entry(self, is_reverse=False):
         self.ensure_one()
