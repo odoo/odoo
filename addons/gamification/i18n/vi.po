@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "\n"
 "    <strong>Nhắc nhở</strong><br/>\n"
-"    Bạn chưa cập nhật tiến trình cho mục tiêu <t t-out=\"object.definition_id.name or ''\"/> (hiện đã đạt được <t t-out=\"object.completeness or ''\"/>%) trong ít nhất <t t-out=\"object.remind_update_delay or ''\"/> ngày. Đừng quên tiếp tục nhé.\n"
+"    Bạn chưa cập nhật tiến độ cho mục tiêu <t t-out=\"object.definition_id.name or ''\"/> (hiện đã đạt được <t t-out=\"object.completeness or ''\"/>%) trong ít nhất <t t-out=\"object.remind_update_delay or ''\"/> ngày. Đừng quên tiếp tục nhé.\n"
 "    <br/><br/>\n"
 "    Cảm ơn bạn!\n"
 "    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
@@ -584,7 +584,7 @@ msgstr ""
 "                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
 "                    <tr><td style=\"padding: 15px;\">\n"
 "                        <t t-if=\"object.visibility_mode == 'personal'\">\n"
-"                            <span style=\"color:#666666;font-size:13px;\">Đây là tiến trình của bạn trong thử thách <strong t-out=\"object.name or ''\"/> này.</span>\n"
+"                            <span style=\"color:#666666;font-size:13px;\">Đây là tiến độ của bạn trong thử thách <strong t-out=\"object.name or ''\"/> này.</span>\n"
 "                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n"
 "                                <tr>\n"
 "                                    <td align=\"center\">\n"
@@ -2317,7 +2317,7 @@ msgstr "Người phụ trách"
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Retrieving progress for personal challenge without user information"
-msgstr "Lấy tiến trình cho thử thách cá nhân mà không có thông tin người dùng"
+msgstr "Lấy tiến độ cho thử thách cá nhân mà không có thông tin người dùng"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
