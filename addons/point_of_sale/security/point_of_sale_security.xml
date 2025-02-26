@@ -7,10 +7,12 @@
 
     <record id="group_pos_user" model="res.groups">
         <field name="name">User</field>
+        <field name="sequence">10</field>
         <field name="category_id" ref="base.module_category_sales_point_of_sale"/>
     </record>
     <record id="group_pos_manager" model="res.groups">
         <field name="name">Administrator</field>
+        <field name="sequence">20</field>
         <field name="category_id" ref="base.module_category_sales_point_of_sale"/>
         <field name="implied_ids" eval="[(4, ref('group_pos_user')), (4, ref('stock.group_stock_user'))]"/>
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>

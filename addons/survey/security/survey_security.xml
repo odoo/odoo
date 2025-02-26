@@ -9,12 +9,14 @@
         <!-- Survey users -->
         <record model="res.groups" id="group_survey_user">
             <field name="name">User</field>
+            <field name="sequence">10</field>
             <field name="category_id" ref="base.module_category_marketing_surveys"/>
         </record>
 
         <!-- Survey managers -->
         <record model="res.groups" id="group_survey_manager">
             <field name="name">Administrator</field>
+            <field name="sequence">20</field>
             <field name="category_id" ref="base.module_category_marketing_surveys"/>
             <field name="implied_ids" eval="[(4, ref('group_survey_user'))]"/>
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
