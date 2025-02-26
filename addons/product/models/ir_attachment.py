@@ -17,9 +17,10 @@ class IrAttachment(models.Model):
                     and not attachment.res_field
             )
             if product_attachments:
-                self.env['product.document'].sudo().create(
+                self.env['product.document'].sudo().create([
                     {
                         'ir_attachment_id': attachment.id
-                    } for attachment in product_attachments
-                )
+                    }
+                    for attachment in product_attachments
+                ])
         return attachments
