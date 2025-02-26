@@ -9,16 +9,20 @@ class ProductTemplate(models.Model):
         config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         rewards = config_id._get_program_ids().reward_ids
         reward_products = rewards.discount_line_product_id | rewards.reward_product_ids | rewards.reward_product_id
-        trigger_products = config_id._get_program_ids().filtered(lambda p: p.program_type in ['ewallet', 'gift_card']).trigger_product_ids
+        trigger_products = config_id._get_program_ids().trigger_product_ids
 
-        loyalty_product_ids = set(reward_products.ids + trigger_products.ids)
-        classic_product_ids = {product['id'] for product in res}
-        products = self.env['product.product'].browse(list(loyalty_product_ids - classic_product_ids))
+        loyalty_product_tmpl_ids = set((reward_products.product_tmpl_id | trigger_products.product_tmpl_id).ids)
+        already_loaded_product_tmpl_ids = {template['id'] for template in res}
+
+        missing_product_tmpl_ids = list(loyalty_product_tmpl_ids - already_loaded_product_tmpl_ids)
         fields = self.env['product.template']._load_pos_data_fields(data['pos.config'][0]['id'])
-        product_tmpl_ids = products.product_tmpl_id.read(fields=fields, load=False)
-        self._process_pos_ui_product_product(product_tmpl_ids, config_id)
 
-        data['pos.session'][0]['_pos_special_products_ids'] += [product.id for product in reward_products if product.id not in [p["id"] for p in res]]
-        res.extend(product_tmpl_ids)
+        missing_product_templates = self.env['product.template'].browse(missing_product_tmpl_ids).read(fields=fields, load=False)
+        self._process_pos_ui_product_product(missing_product_templates, config_id)
+
+        product_ids_to_hide = reward_products.product_tmpl_id - self.env['product.template'].browse(already_loaded_product_tmpl_ids)
+
+        data['pos.session'][0]['_pos_special_products_ids'] += product_ids_to_hide.product_variant_id.ids
+        res.extend(missing_product_templates)
 
         return res
