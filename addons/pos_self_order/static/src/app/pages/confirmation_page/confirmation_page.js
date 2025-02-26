@@ -28,28 +28,7 @@ export class ConfirmationPage extends Component {
                     this.setDefautLanguage();
                 }, 5000);
 
-                setTimeout(async () => {
-                    try {
-                        await this.printer.print(OrderReceipt, {
-                            order: this.confirmedOrder,
-                        });
-                        if (!this.selfOrder.has_paper) {
-                            this.updateHasPaper(true);
-                        }
-                    } catch (e) {
-                        if (e.errorCode === "EPTR_REC_EMPTY") {
-                            this.dialog.add(OutOfPaperPopup, {
-                                title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
-                                close: () => {
-                                    this.router.navigate("default");
-                                },
-                            });
-                            this.updateHasPaper(false);
-                        } else {
-                            console.error(e);
-                        }
-                    }
-                }, 500);
+                setTimeout(() => this.printOrderAfterTime(), 500);
                 this.defaultTimeout = setTimeout(() => {
                     this.router.navigate("default");
                 }, 30000);
@@ -62,6 +41,33 @@ export class ConfirmationPage extends Component {
         onWillStart(() => {
             this.initOrder();
         });
+    }
+
+    async printOrderAfterTime() {
+        try {
+            if (this.confirmedOrder && Object.keys(this.confirmedOrder).length > 0) {
+                await this.printer.print(OrderReceipt, {
+                    order: this.confirmedOrder,
+                });
+                if (!this.selfOrder.has_paper) {
+                    this.updateHasPaper(true);
+                }
+            } else {
+                setTimeout(() => this.printOrderAfterTime(), 500);
+            }
+        } catch (e) {
+            if (e.errorCode === "EPTR_REC_EMPTY") {
+                this.dialog.add(OutOfPaperPopup, {
+                    title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
+                    close: () => {
+                        this.router.navigate("default");
+                    },
+                });
+                this.updateHasPaper(false);
+            } else {
+                console.error(e);
+            }
+        }
     }
 
     async initOrder() {
