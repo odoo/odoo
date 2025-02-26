@@ -267,6 +267,13 @@ export function hasVisibleContent(node) {
     return (node ? childNodes(node) : []).some((n) => isVisible(n));
 }
 
+export function isButton(node) {
+    if (!node || node.nodeType !== Node.ELEMENT_NODE) {
+        return false;
+    }
+    return node.nodeName === "BUTTON" || node.classList.contains("btn");
+}
+
 export function isZwnbsp(node) {
     return node?.nodeType === Node.TEXT_NODE && node.textContent === "\ufeff";
 }

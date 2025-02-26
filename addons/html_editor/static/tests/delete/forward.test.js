@@ -347,6 +347,14 @@ describe("Selection collapsed", () => {
                 contentAfter: `<p>[]<br></p>`,
             });
         });
+
+        test("should delete only the button", async () => {
+            await testEditor({
+                contentBefore: `<p><a class="btn" href="#">[]</a>a</p>`,
+                stepFunction: deleteForward,
+                contentAfter: `<p>[]a</p>`,
+            });
+        });
     });
 
     describe("white spaces", () => {
