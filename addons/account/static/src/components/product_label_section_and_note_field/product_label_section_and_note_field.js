@@ -132,6 +132,10 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
         Many2XAutocomplete: ProductLabelSectionAndNoteFieldAutocomplete,
     };
     static template = "account.ProductLabelSectionAndNoteField";
+    static props = {
+        ...Many2OneField.props,
+        show_label_warning: { type: Boolean, optional: true, default: false },
+    };
 
     setup() {
         super.setup();
@@ -218,6 +222,8 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
             return "fw-bold";
         } else if (this.isNote()) {
             return "fst-italic";
+        } else if (!this.productName && this.props.show_label_warning) {
+            return "text-warning";
         }
         return "";
     }
@@ -248,6 +254,20 @@ export const productLabelSectionAndNoteField = {
     ...many2OneField,
     listViewWidth: [240, 400],
     component: ProductLabelSectionAndNoteField,
+    supportedOptions: [
+        ...many2OneField.supportedOptions,
+        {
+            label: _t("Show Label Warning"),
+            name: "show_label_warning",
+            type: "boolean",
+            default: false
+        },
+    ],
+    extractProps({ options }) {
+        const props = many2OneField.extractProps(...arguments);
+        props.show_label_warning = options.show_label_warning;
+        return props;
+    },
 };
 registry
     .category("fields")

@@ -180,9 +180,49 @@
                                     <t t-set="_contactLink" t-value="True"/>
                                 </t>
                             </div>
+
+                            <div>
+                                <button id="sale_portal_connect_software_modal_btn" type="button" class="btn btn-primary"
+                                    data-bs-toggle="modal" data-bs-target="#sale_portal_connect_software_modal">
+                                        Connect with your software!
+                                </button>
+                            </div>
                         </div>
                     </t>
                 </t>
+
+                <div class="modal fade" id="sale_portal_connect_software_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div>
+                                    <h5>Want to import this document in Odoo?</h5>
+                                    <p>Drag and drop the request for quotation PDF file into your list of quotations in Odoo. Enjoy the automation!</p>
+                                </div>
+                                <div>
+                                    <h5>Not using Odoo?</h5>
+                                    <div class="input-group mb-3 w-50">
+                                        <t t-set="base_address" t-value="sale_order.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                        <t t-set="doc_url" t-value="base_address + '/my/orders/' + str(sale_order.id) + '/download_edi?' + str(keep_query())"/>
+                                        <input type="text" class="form-control" aria-describedby="copy-button" readonly="readonly" t-att-value="doc_url"/>
+                                        <button class="btn btn-outline-secondary" type="button" id="copy-button"
+                                        t-attf-onclick="navigator.clipboard.writeText('#{doc_url}')">Copy</button>
+                                    </div>
+                                    <p>Use the above REST URL to get structured data of the purchase order in UBL format.
+                                        <a href="https://www.odoo.com/documentation/">Read the documentation </a>to learn all the ways to connect your software with <a href="https://www.odoo.com">Odoo</a>.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h5>You don't use a good CRM software?</h5>
+                                    <p><a href="https://www.odoo.com/app/sales">Start on Odoo</a>, it's 100% free! You'll save time creating beautiful quotations and track sales.</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Page content -->
                 <div id="quote_content" class="col-12 col-lg-8 col-xxl-9 mt-5 mt-lg-0">
