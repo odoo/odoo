@@ -2,7 +2,7 @@ import { Dialog } from "../dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef } from "@web/core/utils/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 
 export const deleteConfirmationMessage = _t(
     `Ready to make your record disappear into thin air? Are you sure?
@@ -100,4 +100,19 @@ export class AlertDialog extends ConfirmationDialog {
         ...ConfirmationDialog.defaultProps,
         title: _t("Alert"),
     };
+}
+
+export class ActionsDialog extends ConfirmationDialog {
+    static template = "web.ActionsDialog";
+    static props = {
+        ...ConfirmationDialog.props,
+        contentClass: { type: String, optional: true },
+    };
+    static defaultProps = {
+        ...ConfirmationDialog.defaultProps
+    };
+
+    setup() {
+        super.setup();
+    }
 }
