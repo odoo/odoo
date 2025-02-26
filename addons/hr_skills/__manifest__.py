@@ -37,7 +37,7 @@ This module introduces skills and resume management for employees.
         'data/hr.resume.line.csv',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'application': True,
     'assets': {
         'web.assets_backend': [
