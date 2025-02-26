@@ -681,7 +681,7 @@ class AccountMove(models.Model):
         string='Cash Rounding Method',
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
-    sending_data = fields.Json(copy=False)
+    sending_data = fields.Json(copy=False, help="Setting while sending the invoice")
     invoice_pdf_report_id = fields.Many2one(
         comodel_name='ir.attachment',
         string="PDF Attachment",
@@ -5688,33 +5688,40 @@ class AccountMove(models.Model):
     # CRON
     # -------------------------------------------------------------------------
 
-    def _autopost_draft_entries(self):
+    def _autopost_draft_entries(self, *, batch_size=100):
         ''' This method is called from a cron job.
         It is used to post entries such as those created by the module
         account_asset and recurring entries created in _post().
         '''
-        moves = self.search([
+        domain = [
             ('state', '=', 'draft'),
             ('date', '<=', fields.Date.context_today(self)),
             ('auto_post', '!=', 'no'),
             '|', ('checked', '=', True), ('journal_id.autocheck_on_post', '=', True)
-        ], limit=100)
+        ]
+        moves = self.search(domain, limit=batch_size)
+        self.env['ir.cron']._commit_progress(
+            remaining=len(moves) if len(moves) < batch_size else self.search_count(domain))
 
         try:  # try posting in batch
-            with self.env.cr.savepoint():
-                moves._post()
+            moves._post()
+            self.env['ir.cron']._commit_progress(len(moves))
+            return
         except UserError:  # if at least one move cannot be posted, handle moves one by one
-            for move in moves:
-                try:
-                    with self.env.cr.savepoint():
-                        move._post()
-                except UserError as e:
-                    move.checked = False
-                    msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
-                    move.message_post(body=msg, message_type='comment')
+            self.env.cr.rollback()
 
-        if len(moves) == 100:  # assumes there are more whenever search hits limit
-            self.env.ref('account.ir_cron_auto_post_draft_entry')._trigger()
+        for move in moves:
+            try:
+                move = move.lock_for_update().filter_domain(domain)
+                if not move:
+                    continue
+                move._post()
+                self.env['ir.cron']._commit_progress(1)
+            except UserError as e:
+                self.env.cr.rollback()
+                move.checked = False
+                msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
+                move.message_post(body=msg, message_type='comment')
 
     @api.model
     def _cron_account_move_send(self, job_count=10):
@@ -5739,40 +5746,12 @@ class AccountMove(models.Model):
                 },
             ]
 
-        limit = job_count + 1
-        to_process = self.env['account.move'].search(
-            [('sending_data', '!=', False)],
-            limit=limit,
-        )
-        need_retrigger = len(to_process) > job_count
+        domain = [('sending_data', '!=', False)]
+        to_process = self.search(domain, limit=job_count).try_lock_for_update()
         if not to_process:
             return
-
-        to_process = to_process[:job_count]
-        if not self.env['res.company']._with_locked_records(to_process, allow_raising=False):
-            return
-
-        # Collect moves by res.partner that executed the Send & Print wizard, must be done before the _process
-        # that modify sending_data.
-        moves_by_partner = to_process.grouped(lambda m: m.sending_data['author_partner_id'])
-
-        self.env['account.move.send']._generate_and_send_invoices(
-            to_process,
-            from_cron=True,
-        )
-
-        for partner_id, partner_moves in moves_by_partner.items():
-            partner = self.env['res.partner'].browse(partner_id)
-            partner_moves_error = partner_moves.filtered(lambda m: m.sending_data and m.sending_data.get('error'))
-            if partner_moves_error:
-                partner._bus_send(*get_account_notification(partner_moves_error, False))
-            partner_moves_success = partner_moves - partner_moves_error
-            if partner_moves_success:
-                partner._bus_send(*get_account_notification(partner_moves_success, True))
-            partner_moves_error.sending_data = False
-
-        if need_retrigger:
-            self.env.ref('account.ir_cron_account_move_send')._trigger()
+        self.env['account.move.send']._generate_and_send_invoices(to_process, allow_rising=False, notification=get_account_notification)
+        self.env['ir.cron']._commit_progress(len(to_process), self.search_count(domain))
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
