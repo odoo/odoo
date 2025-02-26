@@ -1,4 +1,4 @@
-import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { waitNotifications, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import {
     click,
@@ -18,7 +18,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, mockDate, tick } from "@odoo/hoot-mock";
+import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -33,8 +33,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
-import { rpc } from "@web/core/network/rpc";
 import { press } from "@odoo/hoot-dom";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1047,7 +1047,6 @@ test("auto-focus composer on opening thread", async () => {
 test("no out-of-focus notification on receiving self messages in chat", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
@@ -1086,7 +1085,6 @@ test("out-of-focus notif on needaction message in channel", async () => {
         ],
         channel_type: "channel",
     });
-    mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
@@ -1131,7 +1129,6 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
         ],
         channel_type: "chat",
     });
-    mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
@@ -1174,7 +1171,6 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
         ],
         channel_type: "channel",
     });
-    mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
@@ -1226,7 +1222,6 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
             ],
         },
     ]);
-    mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setCounters(counters) {
             if (!counters.discuss) {
@@ -1288,7 +1283,6 @@ test("new message in tab title has precedence over action name", async () => {
             Command.create({ partner_id: bobPartnerId }),
         ],
     });
-    mockService("presence", { isOdooFocused: () => false });
     await start();
     await openDiscuss();
     await contains(".o_breadcrumb:contains(Inbox)"); // wait for action name being Inbox
@@ -1302,7 +1296,7 @@ test("new message in tab title has precedence over action name", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await animationFrame();
+    await waitNotifications(["discuss.channel.member/fetched"]);
     expect(titleService.current).toBe("(1) Inbox");
 });
 
@@ -1311,7 +1305,6 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    mockService("presence", { isOdooFocused: () => false });
     onRpcBefore("/mail/data", async (args) => {
         if (args.fetch_params.includes("init_messaging")) {
             asyncStep("init_messaging");
@@ -1350,7 +1343,6 @@ test("out-of-focus notif on needaction message in group chat contributes only on
         ],
         channel_type: "group",
     });
-    mockService("presence", { isOdooFocused: () => false });
     onRpcBefore("/mail/data", async (args) => {
         if (args.fetch_params.includes("init_messaging")) {
             asyncStep("init_messaging");
@@ -1386,7 +1378,6 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
-    mockService("presence", { isOdooFocused: () => false });
     onRpcBefore("/mail/data", async (args) => {
         if (args.fetch_params.includes("init_messaging")) {
             asyncStep("init_messaging");

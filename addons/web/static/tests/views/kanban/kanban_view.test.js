@@ -8,6 +8,7 @@ import {
     keyDown,
     keyUp,
     leave,
+    on,
     pointerDown,
     press,
     queryAll,
@@ -16,6 +17,7 @@ import {
     queryOne,
     queryText,
     resize,
+    scroll,
     setInputFiles,
 } from "@odoo/hoot-dom";
 import {
@@ -12683,6 +12685,7 @@ test("scroll on group unfold and progressbar click", async () => {
         groupBy: ["product_id"],
     });
 
+<<<<<<< saas-18.2
     expect.verifySteps([
         "get_views",
         "read_progress_bar",
@@ -12694,22 +12697,35 @@ test("scroll on group unfold and progressbar click", async () => {
         expect.step("scrolled");
         expect(params.top).toBe(0);
     };
+||||||| 612b42687237e534b5f06359652b858afe6a51e3
+    expect.verifySteps(["get_views", "read_progress_bar", "web_read_group", "web_search_read"]);
+    queryOne(".o_content").scrollTo = (params) => {
+        expect.step("scrolled");
+        expect(params.top).toBe(0);
+    };
+=======
+    expect.verifySteps(["get_views", "read_progress_bar", "web_read_group", "web_search_read"]);
+    queryOne(".o_content").style.maxHeight = "80px";
+    on(".o_content", "scroll", () => expect.step("scrolled"));
+>>>>>>> fe09b7843f7fbcad3356d70d1150689e2b1e74d7
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanProgressBars(0)[0]).click();
 
     expect.verifySteps([
+        "scrolled",
         "web_read_group",
         "web_search_read",
         "read_progress_bar",
         "web_read_group",
         "web_read_group",
-        "scrolled",
     ]);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanColumn(1)).click();
 
-    expect.verifySteps(["web_search_read", "scrolled"]);
+    expect.verifySteps(["scrolled", "web_search_read"]);
 });
 
 test.tags("desktop");
