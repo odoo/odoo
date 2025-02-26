@@ -5,7 +5,7 @@
     'name': "Project - SMS",
     'summary': 'Send text messages when project/task stage move',
     'description': "Send text messages when project/task stage move",
-    'category': 'Hidden',
+    'category': 'Services/Project',
     'version': '1.0',
     'depends': ['project', 'sms'],
     'data': [

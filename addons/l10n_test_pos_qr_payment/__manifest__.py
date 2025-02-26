@@ -4,7 +4,7 @@
 {
     'name': 'POS QR Tests',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales/Point of Sale',
     'sequence': 9876,
     'description': """
         This module contains tests related to point of sale QR code payment.

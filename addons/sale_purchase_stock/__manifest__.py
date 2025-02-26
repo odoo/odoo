@@ -4,7 +4,7 @@
 {
     'name': 'MTO Sale <-> Purchase',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales/Sales',
     'summary': 'SO/PO relation in case of MTO',
     'description': """
 Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.

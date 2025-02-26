@@ -9,7 +9,7 @@ This module doesn't implement the WebService. It is only the integration of the 
 
 Delivery price pre-configured is an example, you need to adapt the pricing's rules.
     """,
-    'category': 'Inventory/Delivery',
+    'category': 'Shipping Connectors',
     'version': '0.1',
     'depends': ['stock_delivery'],
     'data': [

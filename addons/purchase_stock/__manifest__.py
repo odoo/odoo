@@ -4,7 +4,7 @@
 {
     'name': 'Purchase Stock',
     'version': '1.2',
-    'category': 'Inventory/Purchase',
+    'category': 'Supply Chain/Purchase',
     'sequence': 60,
     'summary': 'Purchase Orders, Receipts, Vendor Bills for Stock',
     'depends': ['stock_account', 'purchase'],

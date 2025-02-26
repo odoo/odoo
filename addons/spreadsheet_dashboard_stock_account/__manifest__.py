@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Spreadsheet dashboard for stock",
-    'category': 'Hidden',
+    'category': 'Productivity/Dashboard',
     'summary': 'Spreadsheet',
     'description': 'Spreadsheet',
     'depends': ['spreadsheet_dashboard', 'stock_account'],

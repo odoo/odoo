@@ -3,7 +3,7 @@
 {
     'name': "Spreadsheet dashboard for expenses",
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Productivity/Dashboard',
     'summary': 'Spreadsheet',
     'description': 'Spreadsheet',
     'depends': ['spreadsheet_dashboard', 'sale_expense'],

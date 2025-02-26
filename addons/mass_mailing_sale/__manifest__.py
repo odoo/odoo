@@ -3,7 +3,7 @@
 
 {
     'name': 'Mass mailing on sale orders',
-    'category': 'Hidden',
+    'category': 'Marketing/Email Marketing',
     'version': '1.0',
     'summary': 'Add sale order UTM info on mass mailing',
     'description': """UTM and mass mailing on sale orders""",

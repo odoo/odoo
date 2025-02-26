@@ -4,7 +4,7 @@
 {
     'name': 'Opportunity to Quotation',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales/Sales',
     'description': """
 This module adds a shortcut on one or several opportunity cases in the CRM.
 ===========================================================================

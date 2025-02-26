@@ -5,7 +5,7 @@
     'summary': 'Add extra fields on addresses',
     'sequence': 19,
     'version': '1.1',
-    'category': 'Hidden',
+    'category': 'Sales/Sales',
     'description': """
 Extended Addresses Management
 =============================
