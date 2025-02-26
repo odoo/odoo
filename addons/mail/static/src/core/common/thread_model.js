@@ -178,6 +178,7 @@ export class Thread extends Record {
     mainAttachment = Record.one("ir.attachment");
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
+    messageInEdition = Record.one("mail.message", { inverse: "threadAsInEdition" });
     /**
      * Contains continuous sequence of messages to show in message list.
      * Messages are ordered from older to most recent.

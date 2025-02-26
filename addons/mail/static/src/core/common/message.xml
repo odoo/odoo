@@ -85,7 +85,7 @@
                                                             'flex-grow-1': state.isEditing,
                                                             }" t-ref="body">
                                                     <i t-if="message.isEmpty" class="text-muted opacity-75" t-esc="message.inlineBody"/>
-                                                    <Composer t-elif="state.isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
+                                                    <Composer t-elif="props.message.eq(props.messageEdition?.editingMessage)" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
                                                         <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
