@@ -1,7 +1,6 @@
 import glob
 import itertools
 import os
-import sys
 
 from . import Command
 from .server import main
@@ -57,7 +56,7 @@ class Start(Command):
         except DatabaseExists as e:
             pass
         except Exception as e:
-            die("Could not create database `%s`. (%s)" % (args.db_name, e))
+            Command.die("Could not create database `%s`. (%s)" % (args.db_name, e))
 
         if '--db-filter' not in cmdargs:
             cmdargs.append('--db-filter=^%s$' % args.db_name)
@@ -70,7 +69,3 @@ class Start(Command):
                    if not to_remove(i, cmdargs)]
 
         main(cmdargs)
-
-def die(message, code=1):
-    print(message, file=sys.stderr)
-    sys.exit(code)
