@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.OrderReceipt">
         <div class="pos-receipt">
             <ReceiptHeader data="props.data.headerData" />
-            <OrderWidget lines="props.data.orderlines" t-slot-scope="scope">
+            <OrderWidget lines="props.data.orderlines" t-slot-scope="scope" editable="false">
                 <t t-set="line" t-value="scope.line"/>
                 <Orderline line="omit(scope.line, 'customerNote')" class="{ 'pe-none': true }">
                     <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break">
