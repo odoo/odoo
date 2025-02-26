@@ -346,7 +346,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'request_unit': 'hour',
         })
 
-        with Form(self.env['hr.leave.allocation']) as allocation_form:
+        with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
             allocation_form.allocation_type = 'regular'
             allocation_form.employee_id = employee
             allocation_form.holiday_status_id = leave_type
