@@ -65,7 +65,7 @@
     </template>
 
     <template id="template_header_mobile" inherit_id="website.template_header_mobile">
-        <xpath expr="//ul[hasclass('o_header_mobile_buttons_wrap')]//li" position="before">
+        <xpath expr="//ul[hasclass('o_header_mobile_buttons_wrap')]" position="inside">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_link_class" t-value="'o_navlink_background_hover btn position-relative rounded-circle border-0 p-1 text-reset'"/>
