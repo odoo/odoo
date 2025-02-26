@@ -268,6 +268,7 @@ test("Referencing non-existing fields does not crash", async function () {
     setCellContent(model, "A1", `=ODOO.LIST.HEADER("1", "${forbiddenFieldName}")`);
     setCellContent(model, "A2", `=ODOO.LIST("1","1","${forbiddenFieldName}")`);
 
+    await animationFrame();
     expect(model.getters.getListDataSource(listId).getFields()[forbiddenFieldName]).toBe(undefined);
     expect(getCellValue(model, "A1")).toBe(forbiddenFieldName);
     const A2 = getEvaluatedCell(model, "A2");
@@ -721,7 +722,7 @@ test("Preload currency of monetary field", async function () {
         mockRPC: async function (route, args) {
             if (args.method === "web_search_read" && args.model === "partner") {
                 const spec = args.kwargs.specification;
-                expect(Object.keys(spec).length).toBe(2);
+                expect(Object.keys(spec).length).toBe(3);
                 expect(spec.currency_id).toEqual({
                     fields: {
                         name: {},
@@ -765,6 +766,7 @@ test("fetch all and only required fields", async function () {
             if (args.method === "web_search_read" && args.model === "partner") {
                 expect.step("data-fetched");
                 expect(args.kwargs.specification).toEqual({
+                    id: {},
                     foo: {},
                     product_id: {
                         fields: {
@@ -884,6 +886,7 @@ test("Spec of web_search_read is minimal", async function () {
         mockRPC: function (route, args) {
             if (args.method === "web_search_read") {
                 expect(args.kwargs.specification).toEqual({
+                    id: {},
                     pognon: {},
                     currency_id: {
                         fields: {
@@ -1101,4 +1104,106 @@ test("An error is displayed if the list has invalid model", async function () {
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
+});
+
+test("Support field chaining in list", async function () {
+    const { model } = await createSpreadsheetWithList();
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "product_id.id")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe(37);
+});
+
+test("Invalid field chaining in list should be marked as such", async function () {
+    const { model } = await createSpreadsheetWithList();
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "product_id.id.id")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(
+        `The field product_id.id.id does not exist or you do not have access to that field`
+    );
+});
+
+test("Field chaining can be more than 1 deep", async function () {
+    const { model } = await createSpreadsheetWithList();
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 2, "product_id.template_id.name")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("xphone");
+});
+
+test("Chaining fields are fetched with the same web_search_read", async function () {
+    let initialLoad = true;
+    const { model } = await createSpreadsheetWithList({
+        mockRPC: function (route, args) {
+            if (args.method === "web_search_read") {
+                if (!initialLoad) {
+                    expect(args.kwargs.specification).toEqual({
+                        id: {},
+                        bar: {},
+                        date: {},
+                        foo: {},
+                        product_id: {
+                            fields: {
+                                display_name: {},
+                                template_id: {
+                                    fields: {
+                                        name: {},
+                                        display_name: {},
+                                    },
+                                },
+                            },
+                        },
+                    });
+                    expect.step("web_search_read");
+                }
+            }
+        },
+    });
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "product_id.template_id.name")`);
+    initialLoad = false;
+    await animationFrame();
+    expect.verifySteps(["web_search_read"]);
+});
+
+test("Chaining monetary fields includes the currency field", async function () {
+    let initialLoad = true;
+    const { model } = await createSpreadsheetWithList({
+        mockRPC: function (route, args) {
+            if (args.method === "web_search_read") {
+                if (!initialLoad) {
+                    expect(args.kwargs.specification).toEqual({
+                        id: {},
+                        bar: {},
+                        date: {},
+                        foo: {},
+                        product_id: {
+                            fields: {
+                                display_name: {},
+                                pognon: {},
+                                currency_id: {
+                                    fields: {
+                                        name: {},
+                                        symbol: {},
+                                        decimal_places: {},
+                                        position: {},
+                                    },
+                                },
+                            },
+                        },
+                    });
+                    expect.step("web_search_read");
+                }
+            }
+        },
+    });
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "product_id.pognon")`);
+    initialLoad = false;
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe(699.99);
+    expect(getEvaluatedCell(model, "A1").formattedValue).toBe("$699.99");
+    expect.verifySteps(["web_search_read"]);
 });
