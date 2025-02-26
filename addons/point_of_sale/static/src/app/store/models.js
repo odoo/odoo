@@ -1463,7 +1463,7 @@ export class Order extends PosModel {
         }
 
         this.lastOrderPrepaChange = this.lastOrderPrepaChange || {};
-        this.trackingNumber = (
+        this.trackingNumber = this.trackingNumber || (
             (this.pos_session_id % 10) * 100 +
             (this.sequence_number % 100)
         ).toString();
@@ -1585,6 +1585,7 @@ export class Order extends PosModel {
         this.ticketCode = json.ticket_code || "";
         this.lastOrderPrepaChange =
             json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
+        this.trackingNumber = json.tracking_number;
     }
     updateSequenceNumber(json) {
         this.pos.pos_session.sequence_number = Math.max(
