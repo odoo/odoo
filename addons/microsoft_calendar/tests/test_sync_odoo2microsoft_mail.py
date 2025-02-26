@@ -4,13 +4,13 @@ from unittest.mock import patch
 from datetime import datetime
 from freezegun import freeze_time
 
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.models.res_users import ResUsers
 from odoo.addons.microsoft_calendar.tests.common import TestCommon
 
 
-class TestSyncOdoo2MicrosoftMail(TestCommon, MailCommon):
+class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -7,7 +7,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUser
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.event_crm.tests.common import EventCrmCase
-from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCase
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.addons.sms.tests.common import SMSCase
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
@@ -301,7 +301,7 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
                     self.assertIn(answer.value_text_box, lead.description)  # better: check multi line
 
 
-class TestEventMailCommon(EventCase, SMSCase, MailCommon, CronMixinCase):
+class TestEventMailCommon(EventCase, SMSCase, MailCase, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
