@@ -48,6 +48,9 @@ Preferences
         'web.assets_backend': [
             'sale_stock/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'sale_stock/static/tests/tours/*.js',
+        ]
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
