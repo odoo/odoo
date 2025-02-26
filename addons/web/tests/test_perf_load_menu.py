@@ -8,17 +8,32 @@ from odoo.tests import common, tagged
 @tagged('post_install', '-at_install')
 class TestPerfSessionInfo(common.HttpCase):
 
-    def test_performance_session_info(self):
-        user = common.new_test_user(
-            self.env,
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Improve stability of query count by using dedicated company and user.
+        cls.company = cls.env['res.company'].create({
+            'name': 'Test Company',
+        })
+        cls.user = common.new_test_user(
+            cls.env,
             "session",
             email="session@in.fo",
             tz="UTC",
+            company_id=cls.company.id,
         )
-        self.authenticate(user.login, "info")
+
+    def setUp(self):
+        super().setUp()
+        self.uid = self.user
+
+    def test_performance_session_info(self):
+        self.authenticate(self.user.login, "info")
 
         self.env.registry.clear_all_caches()
-        # cold ormcache (only web: 37, all module: 120)
+        # cold ormcache:
+        # - Only web: 42
+        # - All modules: 120
         with self.assertQueryCount(120):
             self.url_open(
                 "/web/session/get_session_info",
@@ -26,7 +41,9 @@ class TestPerfSessionInfo(common.HttpCase):
                 headers={"Content-Type": "application/json"},
             )
 
-        # cold fields cache - warm ormcache (only web: 5, all module: 25)
+        # cold fields cache - warm ormcache:
+        # - Only web: 5
+        # - All modules: 25
         with self.assertQueryCount(25):
             self.url_open(
                 "/web/session/get_session_info",
@@ -37,11 +54,15 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_load_web_menus_perf(self):
         self.env.registry.clear_all_caches()
         self.env.invalidate_all()
-        # cold orm/fields cache (only web: 10, all module: 38 (+3 if not has group account.group_account_readonly); without demo: 45)
-        with self.assertQueryCount(45):
+        # cold orm/fields cache:
+        # - Web only: 14
+        # - All modules 57
+        with self.assertQueryCount(57):
             self.env['ir.ui.menu'].load_web_menus(False)
 
-        # cold fields cache - warm orm cache (only web: 0, all module: 1)
+        # cold fields cache:
+        # - Web only: 0
+        # - All modules: 1 (web_studio + 1)
         self.env.invalidate_all()
         with self.assertQueryCount(1):
             self.env['ir.ui.menu'].load_web_menus(False)
@@ -49,11 +70,15 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_load_menus_perf(self):
         self.env.registry.clear_all_caches()
         self.env.invalidate_all()
-        # cold orm/fields cache (only web: 10, all module: 38 (+3 if not has group account.group_account_readonly); without demo: 45)
-        with self.assertQueryCount(45):
+        # cold orm/fields cache:
+        # - Web only: 14
+        # - All modules 57
+        with self.assertQueryCount(57):
             self.env['ir.ui.menu'].load_menus(False)
 
-        # cold fields cache - warm orm cache (only web: 0, all module: 1)
+        # cold fields cache:
+        # - Web only: 0
+        # - All modules: 1 (web_studio + 1)
         self.env.invalidate_all()
         with self.assertQueryCount(1):
             self.env['ir.ui.menu'].load_menus(False)
@@ -61,8 +86,10 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_visible_menu_ids(self):
         self.env.registry.clear_all_caches()
         self.env.invalidate_all()
-        # cold ormcache (only web: 5, all module: 14 (+4 if not has group account.group_account_readonly))
-        with self.assertQueryCount(18):
+        # cold ormcache:
+        # - Only web 13
+        # - All modules: 21
+        with self.assertQueryCount(21):
             self.env['ir.ui.menu']._visible_menu_ids()
 
         # cold fields cache - warm orm cache (only web: 0, all module: 0)
