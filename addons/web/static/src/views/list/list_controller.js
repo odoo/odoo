@@ -130,16 +130,8 @@ export class ListController extends Component {
         });
         useSetupAction({
             rootRef: this.rootRef,
-            beforeLeave: async () => this.model.root.leaveEditMode(),
-            beforeUnload: async (ev) => {
-                if (this.editedRecord) {
-                    const isValid = await this.editedRecord.urgentSave();
-                    if (!isValid) {
-                        ev.preventDefault();
-                        ev.returnValue = "Unsaved changes";
-                    }
-                }
-            },
+            beforeLeave: this.beforeLeave.bind(this),
+            beforeUnload: this.beforeUnload.bind(this),
             getLocalState: () => {
                 const renderer = this.rootRef.el.querySelector(".o_list_renderer");
                 return {
@@ -278,6 +270,20 @@ export class ListController extends Component {
                 .filter((field) => field.exportable !== false)
                 .filter((field) => field.type !== "properties")
         );
+    }
+
+    async beforeLeave(ev) {
+        return this.model.root.leaveEditMode();
+    }
+
+    async beforeUnload(ev) {
+        if (this.editedRecord) {
+            const isValid = await this.editedRecord.urgentSave();
+            if (!isValid) {
+                ev.preventDefault();
+                ev.returnValue = "Unsaved changes";
+            }
+        }
     }
 
     onDeleteSelectedRecords() {
