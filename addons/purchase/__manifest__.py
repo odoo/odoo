@@ -4,7 +4,7 @@
 {
     'name': 'Purchase',
     'version': '1.2',
-    'category': 'Inventory/Purchase',
+    'category': 'Logistics/Purchase',
     'sequence': 35,
     'summary': 'Purchase orders, tenders and agreements',
     'website': 'https://www.odoo.com/app/purchase',

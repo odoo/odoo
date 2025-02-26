@@ -3,7 +3,7 @@
 
 {
     'name': 'Mass mailing on lead / opportunities',
-    'category': 'Hidden',
+    'category': 'Marketing/Email Marketing',
     'version': '1.0',
     'summary': 'Add lead / opportunities UTM info on mass mailing',
     'description': """UTM and mass mailing on lead / opportunities""",

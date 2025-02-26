@@ -3,7 +3,7 @@
 
 {
     'name': 'Website profile',
-    'category': 'Hidden',
+    'category': 'Website/Website',
     'version': '1.0',
     'summary': 'Access the website profile of the users',
     'description': "Allows to access the website profile of the users and see their statistics (karma, badges, etc..)",

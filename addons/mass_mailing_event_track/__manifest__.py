@@ -3,7 +3,7 @@
 
 {
     'name': 'Mass mailing on track speakers',
-    'category': 'Hidden',
+    'category': 'Marketing/Email Marketing',
     'version': '1.0',
     'description':
         """

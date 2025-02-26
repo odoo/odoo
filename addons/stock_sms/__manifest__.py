@@ -5,7 +5,7 @@
     'name': "Stock - SMS",
     'summary': 'Send text messages when final stock move',
     'description': "Send text messages when final stock move",
-    'category': 'Hidden',
+    'category': 'Logistics/InventoryHidden',
     'version': '1.0',
     'depends': ['stock', 'sms'],
     'data': [

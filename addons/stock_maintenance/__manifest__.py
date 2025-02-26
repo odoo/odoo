@@ -3,7 +3,7 @@
 {
     'name': 'Stock - Maintenance',
     'version': '1.0',
-    'category': 'Inventory/Inventory',
+    'category': 'Logistics/Inventory',
     'description': """
 Stock in Maintenance
 ====================

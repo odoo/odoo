@@ -4,7 +4,7 @@
 
 {
     "name": "Website Jitsi",
-    'category': 'Hidden',
+    'category': 'Website/Website',
     'version': '1.0',
     "summary": "Create Jitsi room on website.",
     'website': 'https://www.odoo.com/app/events',

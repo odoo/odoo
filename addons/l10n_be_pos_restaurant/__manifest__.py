@@ -2,7 +2,7 @@
 {
     'name': 'Belgian POS Restaurant Localization',
     'version': '1.0',
-    'category': 'Localization/Point of Sale',
+    'category': 'Sales/Point of Sale',
     'depends': ['pos_restaurant', 'l10n_be'],
     'auto_install': True,
     'installable': True,
