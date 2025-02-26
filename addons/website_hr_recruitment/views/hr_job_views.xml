@@ -17,8 +17,10 @@
             </xpath>
             <xpath expr="//div[@name='kanban_boxes']" position="inside">
                 <field name="website_url" invisible="1"/>
-                <div class="col-6">
-                    <field name="is_published" widget="boolean_toggle_labeled" options="{'false_label': 'Not Published', 'true_label': 'Published'}"/>
+                <div class="col-6 d-flex gap-2">
+                    <field name="is_published" widget="boolean_toggle"/>
+                    <label class="text-start" for="is_published" invisible="not is_published">Published</label>
+                    <label class="text-start" for="is_published" invisible="is_published">Not Published</label>
                 </div>
                 <div class="col-6" name="bottom_right"></div>
             </xpath>

@@ -21,7 +21,9 @@
             </div>
             <xpath expr="//div[hasclass('oe_title')]" position="before">
                 <div class="float-end">
-                    <field name="website_published" widget="boolean_toggle_labeled" nolabel="1" options="{'false_label': 'Not Published', 'true_label': 'Published'}"/>
+                    <field name="website_published" nolabel="1"/>
+                    <label class="text-start" for="website_published" invisible="not website_published">Published</label>
+                    <label class="text-start" for="website_published" invisible="website_published">Not Published</label>
                 </div>
             </xpath>
             <xpath expr="//div[@name='recruitment_target']" position="after">

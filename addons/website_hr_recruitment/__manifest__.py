@@ -33,7 +33,6 @@
         'web.assets_backend': [
             'website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js',
             'website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.xml',
-            'website_hr_recruitment/static/src/fields/**/*',
         ],
         'website.assets_wysiwyg': [
             'website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js',
