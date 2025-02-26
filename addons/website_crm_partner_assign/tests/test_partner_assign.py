@@ -5,7 +5,11 @@ from datetime import date, timedelta
 from unittest.mock import patch
 
 from odoo.exceptions import AccessError
-from odoo.tests.common import TransactionCase
+from odoo.fields import Command
+from odoo.tests.common import tagged, TransactionCase
+from odoo.tools import mute_logger
+
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website.tools import MockRequest
@@ -291,3 +295,63 @@ class TestPartnerLeadPortal(TestCrmCommon):
             mock_request.render = render_function
             res = WebsiteCrmPartnerAssign().partners()
             self.assertEqual([b'rendered'], res.response, "render_function wasn't called")
+
+
+@tagged('post_install', '-at_install')
+class TestPublish(HttpCaseWithUserDemo):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.group_restricted_editor = cls.env.ref('website.group_website_restricted_editor')
+        cls.group_salesman = cls.env.ref('sales_team.group_sale_salesman')
+        cls.partner = cls.env['res.partner'].create({
+            'name': "Agrolait",
+            'is_company': True,
+            'city': "Wavre",
+            'zip': "1300",
+            'country_id': cls.env.ref("base.be").id,
+            'street': "69 rue de Namur",
+            'partner_weight': 10,
+            'website_published': True,
+        })
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_01_admin(self):
+        self.start_tour(self.env['website'].get_client_action_url(self.partner.website_url), 'test_can_publish_partner', login="admin")
+        self.assertTrue(self.partner.website_published, "Partner should have been published")
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_02_reditor_salesman(self):
+        self.user_demo.groups_id = [
+            Command.link(self.group_restricted_editor.id),
+            Command.link(self.group_salesman.id),
+        ]
+        self.start_tour(self.env['website'].get_client_action_url(self.partner.website_url), 'test_can_publish_partner', login="demo")
+        self.assertTrue(self.partner.website_published, "Partner should have been published")
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_03_reditor_not_salesman(self):
+        self.user_demo.groups_id = [
+            Command.link(self.group_restricted_editor.id),
+            Command.unlink(self.group_salesman.id),
+        ]
+        self.start_tour(self.env['website'].get_client_action_url(self.partner.website_url), 'test_can_publish_partner', login="demo")
+        self.assertTrue(self.partner.website_published, "Partner should have been published")
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_04_not_reditor_salesman(self):
+        self.user_demo.groups_id = [
+            Command.unlink(self.group_restricted_editor.id),
+            Command.link(self.group_salesman.id),
+        ]
+        self.start_tour(self.env['website'].get_client_action_url(self.partner.website_url), 'test_can_publish_partner', login="demo")
+        self.assertTrue(self.partner.website_published, "Partner should have been published")
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_05_not_reditor_not_salesman(self):
+        self.user_demo.groups_id = [
+            Command.unlink(self.group_restricted_editor.id),
+            Command.unlink(self.group_salesman.id),
+        ]
+        self.start_tour(self.env['website'].get_client_action_url(self.partner.website_url), 'test_can_publish_partner', login="demo")
+        self.assertTrue(self.partner.website_published, "Partner should have been published")
