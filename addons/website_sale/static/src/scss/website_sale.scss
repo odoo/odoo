@@ -829,6 +829,23 @@ a.no-decoration {
 }
 
 .o_website_sale_checkout {
+    #cart_products {
+        --cart-product-image-size-lg: 6rem;
+        --cart-product-image-size-sm: 4rem;
+
+        .o_cart_product_image img {
+            width: var(--cart-product-image-size-lg);
+
+            @include media-breakpoint-down(md) {
+                width: var(--cart-product-image-size-sm);
+            }
+        }
+
+        .o_description_line {
+            @include o-line-clamp(2);
+        }
+    }
+
     .o_total_card {
         // The accordion have to mimick the styling of a card
         background-color: $card-bg;
