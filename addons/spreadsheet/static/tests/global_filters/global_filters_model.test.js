@@ -518,7 +518,7 @@ test("Relational filter default to current user", async function () {
     const [filter] = model.getters.getGlobalFilters();
     expect(model.getters.getGlobalFilterValue(filter.id)).toEqual([7]);
 
-    model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id: filter.id });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: filter.id });
     expect(model.getters.getGlobalFilterValue(filter.id)).toEqual([], {
         message: "can clear automatic value",
     });
@@ -985,15 +985,15 @@ test("ODOO.FILTER.VALUE date from/to with from and to defined", async function (
 
 test("ODOO.FILTER.VALUE relation filter", async function () {
     const { model } = await createModelWithDataSource({
-        mockRPC: function (route, { method, args }) {
-            if (method === "read") {
-                const resId = args[0][0];
+        mockRPC: function (route, { method, kwargs }) {
+            if (method === "web_search_read") {
+                const resId = kwargs.domain[0][2][0];
                 const names = {
                     1: "Jean-Jacques",
                     2: "Raoul Grosbedon",
                 };
                 expect.step(`read_${resId}`);
-                return [{ id: resId, display_name: names[resId] }];
+                return { records: [{ id: resId, display_name: names[resId] }] };
             }
         },
     });
@@ -1884,11 +1884,10 @@ test("can clear 'from_to' date filter values", async function () {
         to: "2022-05-16",
     };
     await setGlobalFilterValue(model, { id: "42", value });
-    model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id: filter.id });
-    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual(
-        { preventAutomaticValue: true },
-        { message: "can clear 'from_to' date filter values" }
-    );
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: filter.id });
+    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual(undefined, {
+        message: "can clear 'from_to' date filter values",
+    });
 });
 
 test("A date filter without a yearOffset value yields an empty domain", async function () {
@@ -1906,7 +1905,7 @@ test("A date filter without a yearOffset value yields an empty domain", async fu
     });
     let computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
     assertDateDomainEqual("date", "2022-01-01", "2022-12-31", computedDomain);
-    model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id: filter.id });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: filter.id });
     computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
     expect(computedDomain).toEqual([]);
 });
@@ -1927,7 +1926,7 @@ test("Date filter with automatic default without a yearOffset value yields an em
     });
     let computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
     assertDateDomainEqual("date", "2022-01-01", "2022-12-31", computedDomain);
-    model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id: filter.id });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: filter.id });
     computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
     expect(computedDomain).toEqual([]);
 });
