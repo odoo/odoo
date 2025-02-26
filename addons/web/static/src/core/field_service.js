@@ -1,6 +1,7 @@
-import { Cache } from "@web/core/utils/cache";
 import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Cache } from "@web/core/utils/cache";
 
 /**
  * @typedef {Object} LoadFieldsOptions
@@ -8,19 +9,33 @@ import { registry } from "@web/core/registry";
  * @property {string[]} [attributes]
  */
 
+// see READ_GROUP_NUMBER_GRANULARITY in odoo/orm/utils.py
+export const DATETIME_OPTIONS = Object.fromEntries(
+    Object.entries({
+        second_number: { string: _t("Second number") },
+        minute_number: { string: _t("Minute number") },
+        hour_number: { string: _t("Hour number") },
+        iso_week_number: { string: _t("Week number") },
+        month_number: { string: _t("Month number") },
+        quarter_number: { string: _t("Quarter number") },
+        day_of_year: { string: _t("Day of year") },
+        day_of_month: { string: _t("Day of month") },
+        day_of_week: { string: _t("Day of week") },
+    }).map(([name, o]) => [name, { ...o, searchable: true, name, type: "datetimeOption" }])
+);
+
 export const fieldService = {
     dependencies: ["orm"],
     async: ["loadFields", "loadPath", "loadPropertyDefinitions"],
     start(env, { orm }) {
         const cache = new Cache(
-            (resModel, options) => {
-                return orm
+            (resModel, options) =>
+                orm
                     .call(resModel, "fields_get", [options.fieldNames, options.attributes])
                     .catch((error) => {
                         cache.clear(resModel, options);
                         return Promise.reject(error);
-                    });
-            },
+                    }),
             (resModel, options) =>
                 JSON.stringify([resModel, options.fieldNames, options.attributes])
         );
@@ -127,6 +142,8 @@ export const fieldService = {
                     await _loadPropertyDefinitions(fieldDefs, name),
                     remainingNames
                 );
+            } else if (fieldDef.type === "datetime") {
+                subResult = await _loadPath("*", { ...DATETIME_OPTIONS }, remainingNames);
             }
 
             if (subResult) {

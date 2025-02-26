@@ -37,7 +37,20 @@ export function getDomainDisplayedOperators(fieldDef) {
             ];
         case "date":
         case "datetime":
-            return ["=", "!=", ">", ">=", "<", "<=", "between", "is_not_between", "within", "is_not_within", "set", "not_set"];
+            return [
+                "=",
+                "!=",
+                ">",
+                ">=",
+                "<",
+                "<=",
+                "between",
+                "is_not_between",
+                "within",
+                "is_not_within",
+                "set",
+                "not_set",
+            ];
         case "integer":
         case "float":
         case "monetary":
@@ -76,6 +89,8 @@ export function getDomainDisplayedOperators(fieldDef) {
             return ["=", "!=", "ilike", "not ilike", "set", "not_set"];
         case "properties":
             return ["set", "not_set"];
+        case "datetimeOption":
+            return ["=", "!=", ">", ">=", "<", "<=", "between", "set", "not_set"];
         case undefined:
             return ["="];
         default:
