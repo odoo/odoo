@@ -948,6 +948,8 @@ msgid ""
 "An error occurred while closing the session. Unsynced orders will be "
 "available in the next session. The page will be reloaded."
 msgstr ""
+"حدث خطأ أثناء إغلاق الجلسة. ستتوفر الطلبات التي لم تتم مزامنتها في الجلسة "
+"التالية. سيتم إعادة تحميل الصفحة. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1759,6 +1761,12 @@ msgstr ""
 "الشراء في المحل مقابل الطلبية للتوصيل، وما إلى ذلك). "
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/generic_components/list_container/list_container.js:0
+msgid "Choose an order"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 msgid "Choose how the URL to the portal will be print on the receipt."
@@ -1794,7 +1802,7 @@ msgstr "حزام جلدي كلاسيكي، إكسسوار لا غنى عنه ف�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 msgid "Clear Cache"
-msgstr ""
+msgstr "مسح ذاكرة التخزين المؤقت "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2833,7 +2841,7 @@ msgstr "تعديل الشريك"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Edit Payment"
-msgstr ""
+msgstr "تعديل الدفع "
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action_edit_pos
@@ -3627,7 +3635,7 @@ msgstr "عنوان IP لجهاز IoT "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
 msgid "IoT Customer Display Error"
-msgstr ""
+msgstr "خطأ في شاشة نقطة البيع للعميل "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_is_follower
@@ -3705,7 +3713,7 @@ msgstr "هل يمكن طباعة تذاكرك عن طريق الاستفادة �
 msgid ""
 "It seems like you don't have enough rights to create point of sale "
 "configurations."
-msgstr ""
+msgstr "يبدو أنك لا تملك صلاحيات الوصول الكافية لإعداد تهيئات لنقاط البيع. "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
@@ -3842,7 +3850,7 @@ msgstr "آخر حالة مطبوعة للطلب "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 msgid "Launch fake tours"
-msgstr ""
+msgstr "إطلاق جولات وهمية "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leather_jacket_product_template
@@ -4000,6 +4008,8 @@ msgid ""
 "Make sure there is an IoT Box subscription associated with your Odoo "
 "database, then restart the IoT Box."
 msgstr ""
+"تأكد من وجود اشتراك لجهاز IoT مرتبط بقاعدة بياناتك على أودو، ثم أعد تشغيل "
+"جهاز IoT. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5810,6 +5820,8 @@ msgid ""
 "Print information on the receipt to allow the customer to easily access the "
 "invoice anytime, from Odoo's portal."
 msgstr ""
+"قم بطباعة المعلومات على الإيصال للسماح للعميل بالوصول إلى الفاتورة في أي وقت"
+" من بوابة أودو. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6347,7 +6359,7 @@ msgstr "إعادة طباعة الفاتورة "
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Request Invoice"
-msgstr ""
+msgstr "طلب فاتورة "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6497,6 +6509,8 @@ msgstr "خطأ في التقريب في بنود الدفع "
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 msgid "Running a fake tour will create random orders. Use at your own risk."
 msgstr ""
+"سيؤدي إجراء جولة وهمية إلى إنشاء أوامر عشوائية. استخدمها على مسؤوليتك "
+"الخاصة. "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_rye_bread_product_template
@@ -7336,7 +7350,7 @@ msgstr "مجموعة الضريبة"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 msgid "Tax ID: %(vatId)s"
-msgstr ""
+msgstr "المعرّف الضريبي: %(vatId)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
@@ -7748,7 +7762,7 @@ msgstr "هذه الجلسة مفتوحة منذ وقت طويل. ننصح بإغ
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid ""
 "The session is being closed by another user. The page will be reloaded."
-msgstr ""
+msgstr "يتم إغلاق الجلسة من قبل مستخدم آخر. سيتم إعادة تحميل الصفحة. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
