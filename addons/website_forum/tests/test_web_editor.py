@@ -15,24 +15,13 @@ class TestAttachmentController(HttpCase):
         cls.headers = {"Content-Type": "application/json"}
         cls.pixel = 'R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
 
-    def _build_payload(self, params=None):
-        """
-        Helper to properly build jsonrpc payload
-        """
-        return {
-            "jsonrpc": "2.0",
-            "method": "call",
-            "id": 0,
-            "params": params or {},
-        }
-
     def test_01_portal_attachment(self):
         post = self.env['forum.post'].create({
             "name": "Forum Post Test",
             "forum_id": self.env.ref("website_forum.forum_help").id,
         })
         self.authenticate(self.portal_user.login, self.portal_user.login)
-        payload = self._build_payload({'name': 'pixel', 'data': self.pixel, 'is_image': True, 'res_model': 'forum.post', 'res_id': post.id})
+        payload = self.build_rpc_payload({'name': 'pixel', 'data': self.pixel, 'is_image': True, 'res_model': 'forum.post', 'res_id': post.id})
         self.portal_user.karma = 30
         response = self.url_open('/web_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers, timeout=60000)
         self.assertEqual(200, response.status_code)
@@ -41,7 +30,7 @@ class TestAttachmentController(HttpCase):
 
     def test_02_admin_attachment(self):
         self.authenticate(self.admin_user.login, self.admin_user.login)
-        payload = self._build_payload({"name": "pixel", "data": self.pixel, "is_image": True, "res_model": "forum.post"})
+        payload = self.build_rpc_payload({"name": "pixel", "data": self.pixel, "is_image": True, "res_model": "forum.post"})
         response = self.url_open('/web_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers)
         self.assertEqual(200, response.status_code)
         attachment = self.env['ir.attachment'].search([('name', '=', 'pixel')])
