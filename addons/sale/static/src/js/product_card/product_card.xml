@@ -17,12 +17,17 @@
             <div class="card-body">
                 <div class="card-title" t-out="props.product.display_name"/>
                 <div class="card-subtitle">
-                    <div
-                        t-foreach="props.product.ptals.filter(shouldShowPtal)"
-                        t-as="ptal"
-                        t-key="ptal.id"
-                        t-out="ptal.ptalDisplayName"
-                    />
+                    <t t-if="arePtavsSelected()">
+                        <div
+                            t-foreach="props.product.ptals.filter(shouldShowPtal)"
+                            t-as="ptal"
+                            t-key="ptal.id"
+                            t-out="ptal.ptalDisplayName"
+                        />
+                    </t>
+                    <t t-else="">
+                        <a href="#">Configure</a>
+                    </t>
                 </div>
                 <BadgeExtraPrice
                     t-if="props.extraPrice"

@@ -25,7 +25,12 @@ export class Product extends Component {
         parent_exclusions: Object,
         parent_product_tmpl_id: { type: Number, optional: true },
         price_info: { type: String, optional: true },
+        selected_combo_products: { type: Array, optional: true },
     };
+
+    setup(){
+        this.props.selected_combo_products = Array.from(this.props.selected_combo_products || []);
+    }
 
     //--------------------------------------------------------------------------
     // Private
