@@ -11,8 +11,8 @@
     }
 
     .o-mail-Composer-sidebarMain {
-        padding-top: 0.1875rem; // avatar centered with composer text input: 36px (avatar) + 2*3px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
-        width: 48px;
+        padding-top: 0.125rem; // avatar centered with composer text input: 38px (avatar) + 2*2px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
+        width: $o-mail-Message-sidebarWidth;
     }
 
     .o-mail-Composer-coreHeader {
@@ -202,11 +202,11 @@
 .o-mail-Composer-inputContainer {
 
     &.o-iosPwa:not(:focus-within) {
-        margin-bottom: map-get($spacers, 5) !important;
+        margin-bottom: map-get($spacers, 3) !important;
     }
 
     &:has(textarea:focus) {
-        --border-opacity: 0.35;
+        --border-opacity: .25;
         border-color: rgba($o-action, var(--border-opacity)) !important;
     }
 }

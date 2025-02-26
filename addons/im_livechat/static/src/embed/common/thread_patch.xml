@@ -3,7 +3,7 @@
     <t t-inherit="mail.Thread" t-inherit-mode="extension">
         <xpath expr="//*[@name='content']" position="before">
             <div t-if="props.thread?.livechatWelcomeMessage" class="bg-100 py-3">
-                <Message message="props.thread.livechatWelcomeMessage" hasActions="false" thread="props.thread" className="'px-3'"/>
+                <Message message="props.thread.livechatWelcomeMessage" hasActions="false" thread="props.thread"/>
             </div>
         </xpath>
         <xpath expr="(//div[hasclass('o-mail-Thread')])" position="inside">

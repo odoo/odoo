@@ -579,7 +579,7 @@ test("mobile: active icon is highlighted", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu-tab", { text: "Chat" });
-    await contains(".o-mail-MessagingMenu-tab.fw-bolder", { text: "Chat" });
+    await contains(".o-mail-MessagingMenu-tab.fw-bold", { text: "Chat" });
 });
 
 test("open chat window from preview", async () => {

@@ -1,8 +1,17 @@
-.o-mail-MessageReactions:not(.o-emojiPickerOpen):not(:hover) .o-mail-MessageReactions-add {
-    visibility: hidden;
+.o-mail-MessageReaction {
+    line-height: 1.25;
+    --border-opacity: .5;
+
+    &:not(.o-selfReacted):hover {
+        border-color: rgba($primary, var(--mail-MessageReaction-selfReactedBorderOpacity, .35)) !important;
+    }
+
+    &.o-selfReacted {
+        --border-opacity: #{var(--mail-MessageReaction-selfReactedBorderOpacity, .35)};
+        background: mix($o-brand-primary, $o-view-background-color, 10%);
+    }
 }
 
-.o-mail-MessageReaction.o-selfReacted {
-    --border-opacity: 0.75;
-    background: mix($o-brand-primary, $o-view-background-color, 10%);
+.o-mail-MessageReactions:not(.o-emojiPickerOpen):not(:hover) .o-mail-MessageReactions-add {
+    visibility: hidden;
 }

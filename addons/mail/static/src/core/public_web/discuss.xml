@@ -8,7 +8,7 @@
         <div t-if="!(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
             <div class="o-mail-Discuss-header px-3 d-flex flex-shrink-0 align-items-center border-bottom border-secondary z-1 flex-grow-0" t-ref="header">
                 <t t-if="thread">
-                    <div t-if="['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
+                    <div t-if="['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center ms-1 me-2 my-1">
                         <img class="rounded o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
                         <FileUploader t-if="!thread.parent_channel_id and thread.is_editable and thread.channel_type !== 'chat'" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                             <t t-set-slot="toggler">
@@ -19,7 +19,7 @@
                         </FileUploader>
                     </div>
                     <t t-else="">
-                        <ThreadIcon className="'me-2 align-self-center'" size="'large'" thread="thread"/>
+                        <ThreadIcon className="'mx-2 align-self-center fs-2 my-2 opacity-75'" size="'large'" thread="thread"/>
                     </t>
                     <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-Discuss-headerCountry border'"/>
                     <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" className="'me-1'" member="thread.correspondent" />

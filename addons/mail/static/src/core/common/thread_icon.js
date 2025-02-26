@@ -3,6 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 import { Thread } from "./thread_model";
 import { _t } from "@web/core/l10n/translation";
+import { ImStatus } from "./im_status";
 
 /**
  * @typedef {Object} Props
@@ -13,6 +14,7 @@ import { _t } from "@web/core/l10n/translation";
  */
 export class ThreadIcon extends Component {
     static template = "mail.ThreadIcon";
+    static components = { ImStatus };
     static props = {
         thread: { type: Thread },
         size: { optional: true, validate: (size) => ["small", "medium", "large"].includes(size) },

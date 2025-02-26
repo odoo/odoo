@@ -5,7 +5,7 @@ import { useDiscussSystray } from "@mail/utils/common/hooks";
 
 import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -20,6 +20,7 @@ export class MessagingMenu extends Component {
 
     setup() {
         super.setup();
+        this.isIosPwa = isIOS() && isDisplayStandalone();
         this.discussSystray = useDiscussSystray();
         this.store = useService("mail.store");
         this.hasTouch = hasTouch;
