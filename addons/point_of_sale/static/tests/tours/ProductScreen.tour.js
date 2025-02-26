@@ -217,3 +217,24 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_add_multiple_serials_at_once", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLotNumbers(["SN001", "SN002", "SN003"]),
+            ProductScreen.selectedOrderlineHas("Product A", "3.0"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            [
+                {
+                    trigger: ".fa-trash-o",
+                    run: "click",
+                },
+            ],
+            ProductScreen.enterLotNumbers(["SN005", "SN006"]),
+            ProductScreen.selectedOrderlineHas("Product A", "4.0"),
+            Chrome.endTour(),
+        ].flat(),
+});
