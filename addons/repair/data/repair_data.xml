@@ -14,7 +14,7 @@
         <field name="default_location_dest_id" model="stock.location" search="[('usage', '=', 'production'), ('company_id', '=', obj().env.ref('base.main_company').id)]"/>
         <field name="default_remove_location_dest_id" model="stock.location" search="[('usage', '=', 'inventory'), ('company_id', '=', obj().env.ref('base.main_company').id)]"/>
         <field name="default_recycle_location_dest_id" ref="stock.stock_location_stock"/>
-        <field name="sequence_code">RO</field>
+        <field name="sequence_code">WH/RO/</field>
         <field name="warehouse_id" ref="stock.warehouse0"/>
     </record>
 
