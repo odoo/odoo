@@ -39,6 +39,7 @@
         'views/product_attribute_views.xml',
         'views/product_document_views.xml',
         'views/product_image_views.xml',
+        'views/product_pricelist_item_views.xml',
         'views/product_pricelist_views.xml',
         'views/product_product_add.xml',
         'views/product_public_category_views.xml',
