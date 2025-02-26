@@ -50,6 +50,7 @@ export class ResUsers extends webModels.ResUsers {
                 ),
                 settings: ResUsersSettings.res_users_settings_format(userSettings.id),
             });
+            store.add(ResPartner.browse(this.env.user.partner_id), { can_add_reaction: true });
         } else if (this.env.cookie.get("dgid")) {
             store.add({
                 self: mailDataHelpers.Store.one(
@@ -57,6 +58,7 @@ export class ResUsers extends webModels.ResUsers {
                     makeKwArgs({ fields: ["avatar_128", "name"] })
                 ),
             });
+            store.add(MailGuest.browse(this.env.cookie.get("dgid")), { can_add_reaction: true });
         }
     }
     systray_get_activities() {
