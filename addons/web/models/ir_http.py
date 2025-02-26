@@ -98,10 +98,7 @@ class IrHttp(models.AbstractModel):
         is_internal_user = user._is_internal()
         session_info = {
             "uid": session_uid,
-            "is_system": user._is_system() if session_uid else False,
-            "is_admin": user._is_admin() if session_uid else False,
             "is_public": user._is_public(),
-            "is_internal_user": is_internal_user,
             "user_context": user_context,
             "db": self.env.cr.dbname,
             "user_settings": self.env['res.users.settings']._find_or_create_for_user(user)._res_users_settings_format(),
@@ -131,6 +128,12 @@ class IrHttp(models.AbstractModel):
             },
             'test_mode': config['test_enable'],
             'view_info': self.env['ir.ui.view'].get_view_info(),
+            'groups': {
+                'base.group_system': user._is_system() if session_uid else False,
+                'base.group_erp_manager': user._is_admin() if session_uid else False,
+                'base.group_public': user._is_public(),
+                'base.group_user': is_internal_user,
+            },
         }
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug
@@ -182,8 +185,6 @@ class IrHttp(models.AbstractModel):
         user = self.env.user
         session_uid = request.session.uid
         session_info = {
-            'is_admin': user._is_admin() if session_uid else False,
-            'is_system': user._is_system() if session_uid else False,
             'is_public': user._is_public(),
             'is_website_user': user._is_public() if session_uid else False,
             'uid': session_uid,
@@ -197,6 +198,12 @@ class IrHttp(models.AbstractModel):
                 'lang': request.session.context['lang'],
             },
             'test_mode': config['test_enable'],
+            'groups': {
+                'base.group_system': user._is_system() if session_uid else False,
+                'base.group_erp_manager': user._is_admin() if session_uid else False,
+                'base.group_public': user._is_public(),
+                'base.group_user': user._is_internal(),
+            },
         }
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug

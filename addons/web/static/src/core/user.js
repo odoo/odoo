@@ -48,9 +48,6 @@ export function _makeUser(session) {
     // Retrieve user-related information from the session
     const {
         home_action_id: homeActionId,
-        is_admin: isAdmin,
-        is_internal_user: isInternalUser,
-        is_system: isSystem,
         name,
         partner_id: partnerId,
         show_effect: showEffect,
@@ -60,9 +57,12 @@ export function _makeUser(session) {
         user_settings,
         partner_write_date: writeDate,
         user_companies: userCompanies,
+        groups,
     } = session;
     const settings = user_settings || {};
 
+    const isAdmin = !!groups["base.group_erp_manager"];
+    const isSystem = !!groups["base.group_system"];
     // Companies information
     let allowedCompanies = [];
     const allowedCompaniesWithAncestors = [];
@@ -91,9 +91,6 @@ export function _makeUser(session) {
 
     // Delete user-related information from the session, s.t. there's a single source of truth
     delete session.home_action_id;
-    delete session.is_admin;
-    delete session.is_internal_user;
-    delete session.is_system;
     delete session.name;
     delete session.partner_id;
     delete session.show_effect;
@@ -103,6 +100,7 @@ export function _makeUser(session) {
     delete session.user_settings;
     delete session.partner_write_date;
     delete session.user_companies;
+    delete session.groups;
 
     // Generate caches for has_group and has_access calls
     const getGroupCacheValue = (group, context) => {
@@ -118,11 +116,8 @@ export function _makeUser(session) {
     };
     const getGroupCacheKey = (group) => group;
     const groupCache = new Cache(getGroupCacheValue, getGroupCacheKey);
-    if (isInternalUser !== undefined) {
-        groupCache.cache["base.group_user"] = Promise.resolve(isInternalUser);
-    }
-    if (isSystem !== undefined) {
-        groupCache.cache["base.group_system"] = Promise.resolve(isSystem);
+    for (const group in groups) {
+        groupCache.cache[group] = Promise.resolve(!!groups[group]);
     }
     const getAccessRightCacheValue = (model, operation, ids, context) => {
         const url = `/web/dataset/call_kw/${model}/has_access`;

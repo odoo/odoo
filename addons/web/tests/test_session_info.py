@@ -47,6 +47,13 @@ class TestSessionInfo(common.HttpCase):
         data = response.json()
         result = data["result"]
 
+        self.assertEqual(result["groups"], {
+            'base.group_system': self.user._is_system(),
+            'base.group_public': self.user._is_public(),
+            'base.group_erp_manager': self.user._is_admin(),
+            'base.group_user': self.user._is_internal(),
+        })
+
         expected_allowed_companies = {
             str(company.id): {
                 'id': company.id,
