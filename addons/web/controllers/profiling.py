@@ -58,3 +58,27 @@ class Profiling(Controller):
             response.headers['X-Content-Type-Options'] = 'nosniff'
             response.headers['Content-Type'] = 'text/html'
         return response
+
+    @route([
+      '/web/other_profiles',
+      '/web/other_profiles/<profile>',
+    ], type='http', sitemap=False, auth='user', readonly=True)
+    def other_profiles(self, profile=None, action=False, **kwargs):
+        if not profile:
+            raise request.not_found()
+        profile_str = profile
+        profiles = request.env['ir.profile'].browse((int(p) for p in profile.split(',')))
+        if not kwargs and not action:
+            context = {
+                'profile_str': profile_str,
+                'profiles': profiles,
+            }
+            return request.render('web.other_profiles_config_wizard', context)
+        if action == 'memory':
+            memory_profile = profiles._generate_memory_profile(**profiles._parse_other_profile_params(**kwargs))
+            encoded_memory_profile = json.dumps(memory_profile).encode('utf_8')
+            context = {
+                'profile': profiles,
+                'memory_graph': base64.b64encode(encoded_memory_profile).decode('utf-8')
+                }
+            return request.render('web.view_memory', context)
