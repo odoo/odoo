@@ -31,6 +31,11 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     updateContainers(target) {
+        if (this.dependencies.history.getIsCurrentStepModified()) {
+            console.warn(
+                "Should not have any mutations in the current step when you update the container selection"
+            );
+        }
         if (this.dependencies.history.getIsPreviewing()) {
             return;
         }

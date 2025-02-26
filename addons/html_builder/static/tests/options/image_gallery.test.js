@@ -138,9 +138,45 @@ test("Change gallery layout", async () => {
     await waitFor(":iframe .o_grid");
     expect(":iframe .o_grid").toHaveCount(1);
     expect(":iframe .o_masonry_col").toHaveCount(0);
-    // TODO DAFL: delete the next line when we fallback the selection
-    await contains(":iframe .first_img").click();
     expect(queryOne("[data-label='Mode'] button").textContent).toBe("Grid");
+});
+
+test("Change gallery restore the container to the cloned equivalent image", async () => {
+    const { getEditor } = await setupWebsiteBuilder(
+        `
+        <section class="s_image_gallery o_masonry" data-columns="2">
+            <div class="container">
+                <div class="o_masonry_col col-lg-6">
+                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
+                </div>
+                <div class="o_masonry_col col-lg-6">
+                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
+                </div>
+            </div>
+        </section>
+        `
+    );
+    const editor = getEditor();
+    const builderOptions = editor.shared["builder-options"];
+    const expectOptionContainerToInclude = (elem) => {
+        expect(builderOptions.getContainers().map((container) => container.element)).toInclude(
+            elem
+        );
+    };
+
+    await contains(":iframe .first_img").click();
+    await contains("[data-label='Mode'] button").click();
+
+    await contains("[data-action-param='grid']").click();
+    await waitFor(":iframe .o_grid");
+
+    // The container include the new image equivalent to the old selected image
+    expectOptionContainerToInclude(queryOne(":iframe .first_img"));
+
+    await contains(".o-snippets-top-actions .fa-undo").click();
+    expectOptionContainerToInclude(queryOne(":iframe .first_img"));
+    await contains(".o-snippets-top-actions .fa-repeat").click();
+    expectOptionContainerToInclude(queryOne(":iframe .first_img"));
 });
 
 function dataURItoBlob(dataURI) {
