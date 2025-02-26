@@ -15,8 +15,7 @@ class TestMrpAccount(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMrpAccount, cls).setUpClass()
-        cls.source_location_id = cls.stock_location_14.id
-        cls.warehouse = cls.env.ref('stock.warehouse0')
+        cls.source_location_id = cls.shelf_1.id
         # setting up alternative workcenters
         cls.wc_alt_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter bis',

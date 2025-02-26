@@ -36,6 +36,7 @@ class TestMrpCommon(TestStockCommon):
             'product_id': product_to_build.id,
             'product_tmpl_id': product_to_build.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
+            'picking_type_id': cls.picking_type_manu.id,
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': consumption if consumption else 'flexible',
@@ -101,6 +102,7 @@ class TestMrpCommon(TestStockCommon):
         # field `product_uom_id` must be set by many tests, and subviews of
         # `workorder_ids` must be present in many tests to create records.
         cls.env.user.group_ids += cls.env.ref('uom.group_uom') + cls.env.ref('mrp.group_mrp_routings')
+        cls.picking_type_manu = cls.warehouse_1.manu_type_id
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',
@@ -129,6 +131,7 @@ class TestMrpCommon(TestStockCommon):
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
+            'picking_type_id': cls.picking_type_manu.id,
             'consumption': 'flexible',
             'operation_ids': [
             ],
@@ -141,6 +144,7 @@ class TestMrpCommon(TestStockCommon):
             'product_id': cls.product_5.id,
             'product_tmpl_id': cls.product_5.product_tmpl_id.id,
             'product_uom_id': cls.product_5.uom_id.id,
+            'picking_type_id': cls.picking_type_manu.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
@@ -157,6 +161,7 @@ class TestMrpCommon(TestStockCommon):
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
             'product_uom_id': cls.uom_dozen.id,
             'ready_to_produce': 'asap',
+            'picking_type_id': cls.picking_type_manu.id,
             'consumption': 'flexible',
             'product_qty': 2.0,
             'operation_ids': [
@@ -172,6 +177,7 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_4 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
+            'picking_type_id': cls.picking_type_manu.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
@@ -185,6 +191,7 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_5 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
+            'picking_type_id': cls.picking_type_manu.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
@@ -198,6 +205,7 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_6 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
+            'picking_type_id': cls.picking_type_manu.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
@@ -209,14 +217,7 @@ class TestMrpCommon(TestStockCommon):
                 (0, 0, {'product_id': cls.product_1.id, 'product_qty': 1}),
             ]})
 
-        cls.stock_location_14 = cls.env['stock.location'].create({
-            'name': 'Shelf 2',
-            'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,
-        })
-        cls.stock_location_components = cls.env['stock.location'].create({
-            'name': 'Shelf 1',
-            'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,
-        })
+        cls.stock_location_components = cls.shelf_1
         cls.laptop = cls.env['product.product'].create({
             'name': 'Acoustic Bloc Screens',
             'uom_id': cls.env.ref("uom.product_uom_unit").id,
