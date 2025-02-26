@@ -63,7 +63,9 @@ class ProductPricelistItem(models.Model):
         default='1_product',
         required=True,
         help="Pricelist Item applicable on selected option")
-
+    is_discount_enabled = fields.Boolean(
+        compute='_compute_is_discount_enabled',
+    )
     categ_id = fields.Many2one(
         comodel_name='product.category',
         string="Category",
@@ -230,6 +232,10 @@ class ProductPricelistItem(models.Model):
                     base=base_str,
                     extra=extra_fee_str,
                 )
+
+    def _compute_is_discount_enabled(self):
+        for record in self:
+            record.is_discount_enabled= self._is_discount_feature_enabled()
 
     @api.depends('price_discount')
     def _compute_price_markup(self):

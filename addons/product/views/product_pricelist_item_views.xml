@@ -140,14 +140,44 @@
                                 <field name="base_pricelist_id" placeholder="sales price"/>
                             </div>
                         </group>
-                        <group name="pricelist_rule_limits">
-                            <field name="min_quantity" string="Min Qty"/>
-                            <field name="date_start"
-                                string="Validity Period"
-                                widget="daterange"
-                                options="{'end_date_field': 'date_end'}"/>
-                            <field name="date_end" invisible="1"/>
-                        </group>
+                        <div>
+                            <group name="pricelist_rule_limits">
+                                <field name="min_quantity" string="Min Qty"/>
+                                <field
+                                    name="date_start"
+                                    string="Validity Period"
+                                    widget="daterange"
+                                    options="{'end_date_field': 'date_end'}"
+                                />
+                                <field name="date_end" invisible="1"/>
+                            </group>
+                            <div invisible="not is_discount_enabled">
+                                <div
+                                    class="alert alert-info"
+                                    role="alert"
+                                    invisible="compute_price != 'percentage'"
+                                >
+                                    <div>
+                                        In sale order line original price is unit price and discount is in
+                                        discount column.
+                                    </div>
+                                    <div>
+                                        On the website original price is crossed out.
+                                    </div>
+                                </div>
+                                <div
+                                    class="alert alert-danger"
+                                    role="alert"
+                                    invisible="compute_price == 'percentage'"
+                                >
+                                    <div>
+                                        When prices are calculated through formula or fixed, original price is NOT
+                                        displayed on website or in sale order lines. Calculated/fixed price is set as
+                                        unit price with 0% discount
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </group>
                     <group name="pricelist_rule_base" invisible="compute_price != 'formula'">
                         <group>
