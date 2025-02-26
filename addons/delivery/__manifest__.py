@@ -41,11 +41,6 @@ The system is able to add and compute the shipping line.
         ],
     },
     'demo': ['data/delivery_demo.xml'],
-    'assets': {
-        'web.assets_frontend': [
-            'delivery/static/src/**/*',
-        ],
-    },
     'uninstall_hook': 'uninstall_hook',
     'installable': True,
     'author': 'Odoo S.A.',
