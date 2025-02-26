@@ -35,7 +35,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { setElementContent } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
-import { messageActionsRegistry, useMessageActions } from "./message_actions";
+import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
 import { escape } from "@web/core/utils/strings";
@@ -134,9 +134,7 @@ export class Message extends Component {
         });
         useEffect(
             (editingMessage) => {
-                if (this.props.message.eq(editingMessage)) {
-                    messageActionsRegistry.get("edit").onClick(this);
-                }
+                this.state.isEditing = this.props.message.eq(editingMessage);
             },
             () => [this.props.messageEdition?.editingMessage]
         );
@@ -432,10 +430,7 @@ export class Message extends Component {
     }
 
     exitEditMode() {
-        const message = toRaw(this.props.message);
-        this.props.messageEdition?.exitEditMode();
-        message.composer = undefined;
-        this.state.isEditing = false;
+        this.props.messageEdition.exitEditMode();
     }
 
     onClickNotification(ev) {
