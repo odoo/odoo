@@ -468,7 +468,7 @@ export class Composer extends Component {
                 if (this.props.messageEdition && composer.text === "") {
                     const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
-                        this.props.messageEdition.editingMessage = messageToEdit;
+                        this.props.messageEdition.enterEditMode(messageToEdit);
                     }
                 }
                 break;

@@ -1,5 +1,6 @@
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
+import { useMessageEdition } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -34,6 +35,7 @@ export class Chatter extends Component {
         });
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
+        this.messageEdition = useMessageEdition();
         useChildSubEnv(this.childSubEnv);
 
         onMounted(this._onMounted);
