@@ -3055,6 +3055,54 @@ options.registry.HideFooter = VisibilityPageOptionUpdate.extend({
     shownValue: 'shown',
 });
 
+options.registry.FooterTemplateSelector = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Enables the footer view and its corresponding copyright view to match
+     * content width
+     *
+     * @override
+     */
+    customizeWebsiteViews: async function (previewMode, widgetValue, params) {
+        await rpc("/website/update_footer_template", {
+            template_key: widgetValue,
+            possible_values: this._getDataKeysFromPossibleValues(params.possibleValues),
+        })
+    },
+});
+
+options.registry.ContainerWidthFooter = options.registry.ContainerWidth.extend({
+    /**
+     * @override
+     */
+    start(){
+        this._copyright_already_updated = false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to customize the view only if the footer copyright section
+     * is the target (due to the data-apply-to).
+     *
+     * @override
+     */
+    customizeWebsiteViews: async function (previewMode, widgetValue, params) {
+        // TODO: When new api available, update 'data-apply-to' to avoid
+        // customize-website-views to be called for all elements, just once.
+        if (!this._copyright_already_updated && !previewMode) {
+            this._copyright_already_updated = true;
+            await this._super(...arguments);
+        }
+    },
+});
+
 /**
  * Handles the edition of snippet's anchor name.
  */

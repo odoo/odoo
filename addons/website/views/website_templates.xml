@@ -215,6 +215,7 @@
 
     <xpath expr="//header" position="before">
         <t t-set="cta_btn_text" t-value="False"/>
+        <t t-set="header_content_width" t-valuef="container"/>
         <t t-set="cta_btn_href">/contactus</t>
         <t t-set="extra_items_toggle_aria_label">Extra items button</t>
         <t t-set="primary_additional_colors" t-value="False"/>
@@ -529,7 +530,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
 
-            <div id="o_main_nav" class="o_main_nav container">
+            <div id="o_main_nav" t-attf-class="o_main_nav #{header_content_width}">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
                     <t t-set="_link_class" t-valuef="me-4"/>
@@ -603,7 +604,7 @@
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
             <t t-set="_navbar_expand_class" t-valuef=""/>
 
-            <div id="o_main_nav" class="o_main_nav container d-grid py-0 o_grid_header_3_cols">
+            <div id="o_main_nav" t-attf-class="o_main_nav d-grid py-0 o_grid_header_3_cols #{header_content_width}">
                 <!-- Nav Toggler -->
                 <t t-call="website.navbar_toggler">
                     <t t-set="_toggler_class" t-valuef="btn me-auto p-2"/>
@@ -737,7 +738,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block py-0 shadow-sm"/>
 
-            <div id="o_main_nav" class="o_main_nav container align-items-stretch">
+            <div id="o_main_nav" t-attf-class="o_main_nav align-items-stretch #{header_content_width}">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
                     <t t-set="_link_class" t-valuef="d-flex align-items-center me-4 p-2"/>
@@ -823,7 +824,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block pt-3 shadow-sm"/>
 
-            <div id="o_main_nav" class="o_main_nav container flex-wrap">
+            <div id="o_main_nav" t-attf-class="o_main_nav flex-wrap #{header_content_width}">
                 <div class="o_header_hide_on_scroll d-grid align-items-center w-100 o_grid_header_3_cols pb-3">
                     <ul class="navbar-nav align-items-center gap-1">
                         <!-- Search bar -->
@@ -892,7 +893,7 @@
 
             <div id="o_main_nav" class="o_main_nav flex-wrap">
                 <div aria-label="Top" class="o_header_hide_on_scroll border-bottom o_border_contrast">
-                    <div class="container d-flex justify-content-between flex-wrap w-100">
+                    <div t-attf-class="#{header_content_width} d-flex justify-content-between flex-wrap w-100">
                         <ul class="o_header_search_left_col navbar-nav flex-wrap">
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
@@ -924,7 +925,7 @@
                         </ul>
                     </div>
                 </div>
-                <div aria-label="Bottom" class="container d-grid align-items-center w-100 py-2 o_grid_header_3_cols">
+                <div aria-label="Bottom" t-attf-class="#{header_content_width} d-grid align-items-center w-100 py-2 o_grid_header_3_cols">
                     <!-- Navbar -->
                     <t t-call="website.navbar_nav">
                         <t t-set="_nav_class" t-valuef="me-4"/>
@@ -996,7 +997,7 @@
             <t t-set="_navbar_classes" t-valuef="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm"/>
 
             <div id="o_main_nav" class="o_main_nav">
-                <div aria-label="Top" class="container d-flex align-items-center justify-content-between py-3">
+                <div aria-label="Top" t-attf-class="#{header_content_width} d-flex align-items-center justify-content-between py-3">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
                         <t t-set="_link_class" t-valuef="me-4"/>
@@ -1047,7 +1048,7 @@
                     </ul>
                 </div>
                 <div aria-label="Bottom" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links')" class="o_header_sales_one_bot o_header_hide_on_scroll gap-3 py-2">
-                    <ul class="navbar-nav container justify-content-between align-items-center">
+                    <ul t-attf-class="#{header_content_width} navbar-nav justify-content-between align-items-center">
                         <!-- Text element -->
                         <t t-call="website.placeholder_header_text_element">
                             <t t-set="_txt_elt_content" t-valuef="list"/>
@@ -1090,7 +1091,7 @@
             <div id="o_main_nav" class="o_main_nav">
                 <div class="o_header_hide_on_scroll">
                     <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_language_selector')" class="o_header_sales_two_top py-1">
-                        <ul class="navbar-nav container d-grid h-100 px-3 o_grid_header_3_cols">
+                        <ul t-attf-class="#{header_content_width} navbar-nav d-grid h-100 px-3 o_grid_header_3_cols">
                             <!-- Return empty placeholder if the element is not active to keep the right layout -->
                             <li class="o_header_sales_two_lang_selector_placeholder" t-if="is_view_active('website.header_language_selector') == False"/>
                             <!-- Language Selector -->
@@ -1114,7 +1115,7 @@
                             </t>
                         </ul>
                     </div>
-                    <div aria-label="Middle" class="container d-flex justify-content-between align-items-center py-1">
+                    <div aria-label="Middle" t-attf-class="#{header_content_width} d-flex justify-content-between align-items-center py-1">
                         <!-- Brand -->
                         <t t-call="website.placeholder_header_brand">
                             <t t-set="_link_class" t-valuef="me-4"/>
@@ -1143,7 +1144,7 @@
                     </div>
                 </div>
                 <div aria-label="Bottom" class="border-top o_border_contrast">
-                    <div class="container d-flex justify-content-between">
+                    <div t-attf-class="#{header_content_width} d-flex justify-content-between">
                         <!-- Navbar -->
                         <t t-call="website.navbar_nav">
                             <t t-set="_nav_class" t-valuef="align-items-center me-4 py-1"/>
@@ -1194,7 +1195,7 @@
             <div id="o_main_nav" class="o_main_nav">
                 <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_search_box') or is_view_active('website.header_call_to_action')"
                      class="o_header_sales_three_top o_header_hide_on_scroll position-relative border-bottom z-1 o_border_contrast">
-                    <div class="container d-flex justify-content-between gap-3 h-100">
+                    <div t-attf-class="#{header_content_width} d-flex justify-content-between gap-3 h-100">
                         <ul class="navbar-nav align-items-center gap-3 py-1">
                             <!-- Social -->
                             <t t-call="website.placeholder_header_social_links"/>
@@ -1220,7 +1221,7 @@
                         </ul>
                     </div>
                 </div>
-                <div aria-label="Bottom" class="container d-flex align-items-center py-2">
+                <div aria-label="Bottom" t-attf-class="#{header_content_width} d-flex align-items-center py-2">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
                         <t t-set="_link_class" t-valuef="me-4"/>
@@ -1283,7 +1284,7 @@
             <t t-set="_navbar_classes" t-valuef="o_header_sales_four_top o_header_force_no_radius d-none d-lg-block p-0 shadow-sm z-1"/>
 
             <div id="o_main_nav" class="o_main_nav">
-                <div aria-label="Top" class="container d-flex">
+                <div aria-label="Top" t-attf-class="#{header_content_width} d-flex">
                     <!-- Navbar -->
                     <t t-call="website.navbar_nav">
                         <t t-set="_nav_class" t-valuef="align-items-center me-auto pe-3"/>
@@ -1331,7 +1332,7 @@
                     </ul>
                 </div>
                 <div aria-label="Bottom" class="o_header_sales_four_bot o_header_hide_on_scroll z-0">
-                    <div class="container">
+                    <div t-attf-class="#{header_content_width}">
                         <ul class="navbar-nav d-grid align-items-center py-2 o_grid_header_3_cols">
                             <!-- Search bar -->
                             <li class="o_header_sales_four_search_placeholder" t-if="is_view_active('website.header_search_box') == False"/>
@@ -1505,11 +1506,11 @@
 <!-- "Rounded box" template -->
 <template id="template_header_boxed" inherit_id="website.layout" name="Template Header Rounded Box" active="False">
     <xpath expr="//header//nav" position="replace">
-        <div class="container py-3 px-0">
+        <div t-attf-class="#{header_content_width} py-3 px-0">
             <t t-call="website.navbar">
                 <t t-set="_navbar_classes" t-valuef="o_full_border d-none d-lg-block rounded-pill px-3 shadow-sm"/>
 
-                <div id="o_main_nav" class="o_main_nav container">
+                <div id="o_main_nav" t-attf-class="#{header_content_width} o_main_nav">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
                         <t t-set="_link_class" t-valuef="me-4"/>
@@ -1682,6 +1683,18 @@
     </xpath>
 </template>
 
+<template id="header_width_small" inherit_id="website.layout" active="False">
+    <xpath expr="//t[@t-set='header_content_width']" position="attributes">
+        <attribute name="t-valuef">o_container_small</attribute>
+    </xpath>
+</template>
+
+<template id="header_width_full" inherit_id="website.layout" active="False">
+    <xpath expr="//t[@t-set='header_content_width']" position="attributes">
+        <attribute name="t-valuef">container-fluid</attribute>
+    </xpath>
+</template>
+
 <!-- Features template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">
@@ -1758,14 +1771,12 @@
 <template id="template_footer_descriptive" inherit_id="website.layout" name="Descriptive" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
-            <section class="s_title pt48 pb24" data-vcss="001" data-snippet="s_title">
-                <div class="container s_allow_columns">
-                    <h4><b>Designed</b> for companies</h4>
-                </div>
-            </section>
             <section class="s_text_block pb32" data-snippet="s_text_block" data-name="Text">
-                <div class="container">
+                <div class="container s_allow_columns">
                     <div class="row">
+                        <div class="col-lg-12 pt48 pb24">
+                            <h4><b>Designed</b> for companies</h4>
+                        </div>
                         <div class="col-lg-5">
                             <p>We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems. Our products are designed for small to medium size companies willing to optimize their performance.</p>
                         </div>
@@ -1822,10 +1833,6 @@
                         <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                         <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-envelope me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                     </ul>
-                </div>
-            </section>
-            <section class="s_text_block pt16 pb16" data-snippet="s_text_block" data-name="Logo">
-                <div class="container">
                     <div class="row">
                         <div class="col-lg-2 offset-lg-5">
                             <a href="/" class="o_footer_logo logo">
@@ -1946,21 +1953,32 @@
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt32 pb16" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-lg-3 pt16 pb16">
+                    <div class="row o_grid_mode">
+                        <div class="col-lg-3 pt16 pb16 o_grid_item g-col-lg-3 o_colored_level g-height-2"
+                             style="z-index: 1; grid-area: 1 / 1 / 3 / 4; --grid-item-padding-y: 0px; --grid-item-padding-x: 10px;">
                             <p class="mb-2">How can we help?</p>
                             <h4>Contact us anytime</h4>
                         </div>
-                        <div class="col-lg-3 pt16 pb16">
+                        <div class="col-lg-3 pt16 pb16 o_grid_item g-col-lg-3 o_colored_level g-height-2"
+                             style="z-index: 2; grid-area: 1 / 4 / 3 / 7; --grid-item-padding-y: 0px; --grid-item-padding-x: 10px;">
                             <p class="mb-2">Call us</p>
-                            <h5><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></h5>
+                            <h5>
+                                <span class="o_force_ltr">
+                                    <a href="tel:+1 555-555-5556">+1 555-555-5556</a>
+                                </span>
+                            </h5>
                         </div>
-                        <div class="col-lg-3 pt16 pb16">
+                        <div class="col-lg-3 pt16 pb16 o_grid_item g-col-lg-3 o_colored_level g-height-2"
+                             style="z-index: 3; grid-area: 1 / 7 / 3 / 10; --grid-item-padding-x: 0px; --grid-item-padding-y: 10px;">
                             <p class="mb-2">Send us a message</p>
-                            <h5><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></h5>
+                            <h5>
+                                <a href="mailto:hello@mycompany.com">hello@mycompany.com</a>
+                            </h5>
                         </div>
-                        <div class="col-lg-3 pt16 pb16">
-                            <div class="s_social_media text-end no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                        <div class="col-lg-3 pt16 pb16 o_grid_item g-col-lg-3 o_colored_level g-height-2"
+                             style="z-index: 4; grid-area: 1 / 10 / 3 / 13; --grid-item-padding-y: 0px; --grid-item-padding-x: 10px;">
+                            <div class="s_social_media text-end no_icon_color o_not_editable"
+                                 data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <p class="s_social_media_title d-block mb-2" contenteditable="true">Follow us</p>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
                                     <i class="fa fa-twitter m-1 o_editable_media"/>
@@ -1973,37 +1991,43 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </section>
-            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
-                <div class="container allow_columns">
-                    <div class="s_hr pt16 pb16">
-                        <hr class="w-100 mx-auto" style="border-color: var(--600);"/>
-                    </div>
-                </div>
-            </section>
-            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-2 pb16">
+                        <div class="col-lg-12 pt16 pb16 o_grid_item g-col-lg-12 o_colored_level g-height-1"
+                             style="z-index: 5; grid-area: 3 / 1 / 4 / 13; --grid-item-padding-y: 0px; --grid-item-padding-x: 10px;">
+                            <div class="s_hr pt16 pb16">
+                                <hr class="w-100 mx-auto" style="border-color: var(--600);"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 o_grid_item g-col-lg-2 o_grid_item_image o_colored_level o_grid_item_image_contain g-height-1"
+                             style="z-index: 6; grid-area: 4 / 1 / 5 / 3; --grid-item-padding-y: 0px; --grid-item-padding-x: 10px;">
                             <a href="/" class="o_footer_logo logo">
-                                <img src="/website/static/src/img/website_logo.svg" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
+                                <img src="/website/static/src/img/website_logo.svg" class="img-fluid"
+                                     aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
                             </a>
                         </div>
-                        <div class="col-lg-10 pb16 text-end">
+                        <div class="col-lg-8 pt16 text-end o_colored_level o_grid_item g-col-lg-8 g-height-1"
+                             style="z-index: 7; grid-area: 4 / 5 / 5 / 13; --grid-item-padding-y: 0px; --grid-item-padding-x: 10px;">
                             <ul class="list-inline mb-0">
-                                <li class="list-inline-item"><a href="/">Home</a></li>
+                                <li class="list-inline-item">
+                                    <a href="/">Home</a>
+                                </li>
                                 <li class="list-inline-item">•</li>
-                                <li class="list-inline-item"><a href="#">About us</a></li>
+                                <li class="list-inline-item">
+                                    <a href="#">About us</a>
+                                </li>
                                 <li class="list-inline-item">•</li>
-                                <li class="list-inline-item"><a href="#">Products</a></li>
+                                <li class="list-inline-item">
+                                    <a href="#">Products</a>
+                                </li>
                                 <li class="list-inline-item">•</li>
-                                <li class="list-inline-item"><a href="#">Terms of Services</a></li>
+                                <li class="list-inline-item">
+                                    <a href="#">Terms of Services</a>
+                                </li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
                                 <t t-foreach="configurator_footer_links" t-as="link" class="list-inline-item">
                                     <li class="list-inline-item">•</li>
-                                    <li class="list-inline-item"><a t-att-href="link['href']" t-esc="link['text']"/></li>
+                                    <li class="list-inline-item">
+                                        <a t-att-href="link['href']" t-out="link['text']"/>
+                                    </li>
                                 </t>
                             </ul>
                         </div>
@@ -2014,37 +2038,30 @@
     </xpath>
 </template>
 
-<!-- Call-to-Action -->
 <template id="template_footer_call_to_action" inherit_id="website.layout" name="Call-to-Action" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
-            <section class="s_call_to_action pt64 pb64">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-9">
+            <section class="s_call_to_action" data-snippet="s_call_to_action" data-name="Text">
+                <div class="container s_allow_columns">
+                    <div class="row o_grid_mode" data-row-count="7">
+                        <div class="col-lg-9 pt64 pb56 o_grid_item g-col-lg-9 g-height-3" style="grid-area: 2 / 1 / 5 / 10; z-index: 1; --grid-item-padding-x: 10px; --grid-item-padding-y: 0px;">
                             <h3>50,000+ companies run Odoo to grow their businesses.</h3>
                             <p class="lead">Join us and make your company a better place.</p>
                         </div>
-                        <div class="col-lg-3">
-                            <a href="/contactus" class="btn btn-primary btn-lg btn-block">Start Button</a>
+                        <div class="col-lg-3 pt64 pb56 o_grid_item g-col-lg-3 g-height-3" style="text-align: right; grid-area: 2 / 10 / 5 / 13; z-index: 2; --grid-item-padding-x: 10px; --grid-item-padding-y: 0px;">
+                            <a href="/contactus" class="btn btn-primary btn-lg btn-block">Start
+                                Button
+                            </a>
                         </div>
-                    </div>
-                </div>
-            </section>
-            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
-                <div class="container s_allow_columns">
-                    <div class="s_hr pt16 pb16">
-                        <hr class="w-100 mx-auto" style="border-color: var(--600);"/>
-                    </div>
-                </div>
-            </section>
-            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-9">
+                        <div class="col-lg-12 o_grid_item g-col-lg-12 g-height-1" style="grid-area: 5 / 1 / 6 / 13; z-index: 3; --grid-item-padding-x: 10px; --grid-item-padding-y: 0px;">
+                            <div class="s_hr pt16 pb16">
+                                 <hr class="w-100 mx-auto" style="border-color: var(--600);"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 o_grid_item g-col-lg-9 g-height-1" style="grid-area: 6 / 1 / 7 / 10; z-index: 4; --grid-item-padding-x: 10px; --grid-item-padding-y: 0px;">
                             <p><i class="fa fa-1x fa-fw fa-map-marker me-2"/>250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-1" style="grid-area: 6 / 10 / 7 / 13; z-index; --grid-item-padding-x: 10px; --grid-item-padding-y: 0px;">
                             <p><i class="fa fa-1x fa-fw fa-envelope me-2"/><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></p>
                         </div>
                     </div>
@@ -2054,7 +2071,6 @@
     </xpath>
 </template>
 
-<!-- Headline -->
 <template id="template_footer_headline" inherit_id="website.layout" name="Headline" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
@@ -2067,12 +2083,6 @@
                         <div class="col-lg-9 pb24">
                             <p class="lead">We are a team of passionate people whose goal is to improve everyone's life.<br/>Our services are designed for small to medium size companies.</p>
                         </div>
-                    </div>
-                </div>
-            </section>
-            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
-                <div class="container">
-                    <div class="row align-items-center">
                         <div class="col-lg-3 pb24">
                             <ul class="ps-3 mb-0">
                                 <li><a href="/">Home</a></li>
@@ -2121,6 +2131,19 @@
 <template id="footer_no_copyright" inherit_id="website.layout" name="Footer No Copyright" active="False">
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="before">
         <t t-set="no_copyright" t-value="True"/>
+    </xpath>
+</template>
+
+<!-- Copyright Content Width -->
+<template id="footer_copyright_content_width_small" inherit_id="website.layout" name="Footer Copyright Width Small" active="False">
+    <xpath expr="//*[hasclass('o_footer_copyright')]/div" position="attributes">
+        <attribute name="class" remove="container" add="o_container_small" separator=" "/>
+    </xpath>
+</template>
+
+<template id="footer_copyright_content_width_fluid" inherit_id="website.layout" name="Footer Copyright Width Fluid" active="False">
+    <xpath expr="//*[hasclass('o_footer_copyright')]/div" position="attributes">
+        <attribute name="class" remove="container" add="container-fluid" separator=" "/>
     </xpath>
 </template>
 
