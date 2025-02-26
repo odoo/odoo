@@ -561,7 +561,7 @@ class EventEvent(models.Model):
         search_tags = self.env['event.tag']
         if tags:
             try:
-                tag_ids = literal_eval(tags)
+                tag_ids = list(filter(None, [self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')])) or literal_eval(tags)
             except SyntaxError:
                 pass
             else:
