@@ -17,6 +17,7 @@ export class BuilderNumberInput extends Component {
         step: { type: Number, optional: true },
         id: { type: String, optional: true },
         placeholder: { type: String, optional: true },
+        style: { type: String, optional: true },
         // TODO support a min and max value
     };
     static components = { BuilderComponent };

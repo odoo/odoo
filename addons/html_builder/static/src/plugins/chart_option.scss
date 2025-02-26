@@ -1,0 +1,28 @@
+table.o_builder_matrix {
+    table-layout: fixed;
+    max-width: 100%;
+
+    td, th {
+        text-align: center;
+
+        &.o_builder_matrix_selected_cell input {
+            background-color: darken($primary, 10%);
+        }
+
+        > :is(div, button) {
+            width: 100% !important;
+        }
+
+        .btn {
+            padding: unset;
+        }
+
+        input {
+            background-color: $o-we-sidebar-content-field-input-bg;
+        }
+
+        &:last-child {
+            width: 28px;
+        }
+    }
+}
