@@ -38,8 +38,6 @@ class PosOrder(models.Model):
             else:
                 addr = self.partner_id.address_get(['delivery'])
                 invoice_vals['partner_shipping_id'] = addr['delivery']
-            if sale_orders[0].payment_term_id:
-                invoice_vals['invoice_payment_term_id'] = sale_orders[0].payment_term_id.id
             if sale_orders[0].partner_invoice_id != sale_orders[0].partner_id:
                 invoice_vals['partner_id'] = sale_orders[0].partner_invoice_id.id
         return invoice_vals
