@@ -24,17 +24,13 @@
                             <span t-esc="props.formatCurrency(subtotal.base_amount_currency)" class="ms-auto"/>
                         </div>
 
-                        <div t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id" class="d-flex">
+                        <div t-foreach="getTaxDetails(subtotal.tax_groups)" t-as="tax_group" t-key="tax_group.id" class="d-flex">
                             <t t-if="showTaxGroupLabels">
                                 <span t-if="tax_group.group_label" t-out="tax_group.group_label" class="me-2"/>
                                 <span t-else="" class="me-2" style="visibility: hidden;">A</span>
                             </t>
                             <span>
-                                <span t-esc="tax_group.group_name"/>
-                                <t t-if="!taxTotals.same_tax_base">
-                                    on
-                                    <span t-esc="props.formatCurrency(tax_group.base_amount_currency)"/>
-                                </t>
+                                <span t-esc="tax_group.tax_name"/>
                             </span>
                             <span t-esc="props.formatCurrency(tax_group.tax_amount_currency)" class="ms-auto"/>
                         </div>
