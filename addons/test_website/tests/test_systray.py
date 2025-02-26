@@ -6,7 +6,7 @@ from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'bso')
 class TestSystray(HttpCaseWithUserDemo):
 
     @classmethod
