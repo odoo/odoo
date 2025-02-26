@@ -144,13 +144,7 @@ class AccountTax(models.Model):
             'max': max,
         }
         try:
-            return safe_eval(
-                self.formula_decoded_info['py_formula'],
-                globals_dict=formula_context,
-                locals_dict={},
-                locals_builtins=False,
-                nocopy=True,
-            )
+            return safe_eval(self.formula_decoded_info['py_formula'], formula_context)
         except ZeroDivisionError:
             return 0.0
 

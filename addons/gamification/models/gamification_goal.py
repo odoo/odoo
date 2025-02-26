@@ -163,7 +163,7 @@ class GamificationGoal(models.Model):
                         'time': time,
                     }
                     code = definition.compute_code.strip()
-                    safe_eval(code, cxt, mode="exec", nocopy=True)
+                    safe_eval(code, cxt, mode="exec")
                     # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
                     result = cxt.get('result')
                     if isinstance(result, (float, int)):

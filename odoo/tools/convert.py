@@ -26,13 +26,9 @@ from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from odoo.exceptions import ValidationError
 
-from .safe_eval import safe_eval as s_eval, pytz, time
+from .safe_eval import safe_eval, pytz, time
 
 _logger = logging.getLogger(__name__)
-
-
-def safe_eval(expr, ctx={}):
-    return s_eval(expr, ctx, nocopy=True)
 
 
 class ParseError(Exception):

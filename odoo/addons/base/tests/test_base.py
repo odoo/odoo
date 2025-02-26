@@ -34,17 +34,17 @@ class TestSafeEval(BaseCase):
             self.assertEqual(expr_eval(expr), expected)
 
     def test_safe_eval_opcodes(self):
-        for expr, locals_dict, expected in [
+        for expr, context, expected in [
             ('[x for x in (1,2)]', {}, [1, 2]),  # LOAD_FAST_AND_CLEAR
             ('list(x for x in (1,2))', {}, [1, 2]),  # END_FOR, CALL_INTRINSIC_1
             ('v if v is None else w', {'v': False, 'w': 'foo'}, 'foo'),  # POP_JUMP_IF_NONE
             ('v if v is not None else w', {'v': None, 'w': 'foo'}, 'foo'),  # POP_JUMP_IF_NOT_NONE
             ('{a for a in (1, 2)}', {}, {1, 2}),  # RERAISE
         ]:
-            self.assertEqual(safe_eval(expr, locals_dict=locals_dict), expected)
+            self.assertEqual(safe_eval(expr, context), expected)
 
     def test_safe_eval_exec_opcodes(self):
-        for expr, locals_dict, expected in [
+        for expr, context, expected in [
             ("""
                 def f(v):
                     if v:
@@ -53,8 +53,47 @@ class TestSafeEval(BaseCase):
                 result = f(42)
             """, {}, 1),  # LOAD_FAST_CHECK
         ]:
-            safe_eval(dedent(expr), locals_dict=locals_dict, mode="exec", nocopy=True)
-            self.assertEqual(locals_dict['result'], expected)
+            safe_eval(dedent(expr), context, mode="exec")
+            self.assertEqual(context['result'], expected)
+
+    def test_safe_eval_strips(self):
+        # cpython strips spaces and tabs by deafult since 3.10
+        # https://github.com/python/cpython/commit/e799aa8b92c195735f379940acd9925961ad04ec
+        # but we need to strip all whitespaces
+        for expr, expected in [
+            # simple ascii
+            ("\n 1 + 2", 3),
+            ("\n\n\t 1 + 2 \n", 3),
+            ("   1 + 2", 3),
+            ("1 + 2   ", 3),
+
+            # Unicode (non-ASCII spaces)
+            ("\u00A01 + 2\u00A0", 3),  # nbsp
+        ]:
+            self.assertEqual(safe_eval(expr), expected)
+
+    def test_runs_top_level_scope(self):
+        # when we define var in top-level scope, it should become available in locals and globals
+        # such that f's frame will be able to access var too.
+        expr = dedent("""
+        var = 1
+        def f():
+            return var
+        f()
+        """)
+        safe_eval(expr, mode="exec")
+        safe_eval(expr, context={}, mode="exec")
+
+    def test_safe_eval_ctx_mutation(self):
+        # simple eval also has side-effect on context
+        expr = '(answer := 42)'
+        context = {}
+        self.assertEqual(safe_eval(expr, context), 42)
+        self.assertEqual(context, {'answer': 42})
+
+    def test_safe_eval_ctx_no_builtins(self):
+        ctx = {'__builtins__': {'max': min}}
+        self.assertEqual(safe_eval('max(1, 2)', ctx), 2)
 
     def test_01_safe_eval(self):
         """ Try a few common expressions to verify they work with safe_eval """
