@@ -372,6 +372,31 @@ describe("Around icons", () => {
             contentAfter: `<p>abc[]<span class="fa fa-music"></span>def</p>`,
         });
     });
+    test("should not skip icons (ArrowRight)", async () => {
+        await testEditor({
+            contentBefore: `<p>[]<span class="fa fa-music"></span><span class="fa fa-music"></span></p>`,
+            contentBeforeEdit: `<p>[]<span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span></p>`,
+            stepFunction: keyPress("ArrowRight"),
+            contentAfterEdit: `<p><span class="fa fa-music" contenteditable="false">\u200b</span>[]<span class="fa fa-music" contenteditable="false">\u200b</span></p>`,
+            contentAfter: `<p><span class="fa fa-music"></span>[]<span class="fa fa-music"></span></p>`,
+        });
+        await testEditor({
+            contentBefore: `<p><span class="fa fa-music"></span>[]<span class="fa fa-music"></span></p><p><br></p>`,
+            contentBeforeEdit: `<p><span class="fa fa-music" contenteditable="false">\u200b</span>[]<span class="fa fa-music" contenteditable="false">\u200b</span></p><p><br></p>`,
+            stepFunction: async () => await press("ArrowRight"),
+            contentAfterEdit: `<p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]</p><p><br></p>`,
+            contentAfter: `<p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]</p><p><br></p>`,
+        });
+    });
+    test("should not skip icons (ArrowLeft)", async () => {
+        await testEditor({
+            contentBefore: `<p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]</p>`,
+            contentBeforeEdit: `<p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]</p>`,
+            stepFunction: keyPress("ArrowLeft"),
+            contentAfterEdit: `<p><span class="fa fa-music" contenteditable="false">\u200b</span>[]<span class="fa fa-music" contenteditable="false">\u200b</span></p>`,
+            contentAfter: `<p><span class="fa fa-music"></span>[]<span class="fa fa-music"></span></p>`,
+        });
+    });
 });
 
 describe("Selection correction when it lands at the editable root", () => {
