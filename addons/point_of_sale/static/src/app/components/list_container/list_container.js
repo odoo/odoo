@@ -2,6 +2,7 @@ import { Component, useEffect, useRef, xml } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
 
 class ListContainerDialog extends Component {
     static components = { Dialog };
@@ -11,7 +12,7 @@ class ListContainerDialog extends Component {
         close: Function,
     };
     static template = xml`
-        <Dialog title.translate="Choose an order" footer="false">
+        <Dialog title="title" footer="false">
             <div class="list-container-items d-flex p-2 flex-wrap" style="gap: 0.5rem;">
                 <t t-foreach="props.items" t-as="item" t-key="item_index">
                     <t t-slot="default" item="item" />
@@ -19,6 +20,9 @@ class ListContainerDialog extends Component {
             </div>
         </Dialog>
     `;
+    setup() {
+        this.title = _t("Choose an order");
+    }
 }
 
 export class ListContainer extends Component {
