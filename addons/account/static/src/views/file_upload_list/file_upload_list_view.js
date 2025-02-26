@@ -7,7 +7,6 @@ export const fileUploadListView = {
     ...listView,
     Controller: FileUploadListController,
     Renderer: FileUploadListRenderer,
-    buttonTemplate: "account.FileuploadListView.Buttons",
 };
 
 registry.category("views").add("file_upload_list", fileUploadListView);

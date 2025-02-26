@@ -7,7 +7,6 @@ export const accountMoveUploadListView = {
     ...fileUploadListView,
     Controller: AccountMoveListController,
     Renderer: AccountMoveUploadListRenderer,
-    buttonTemplate: "account.AccountMoveListView.Buttons",
 };
 
 registry.category("views").add("account_tree", accountMoveUploadListView);
