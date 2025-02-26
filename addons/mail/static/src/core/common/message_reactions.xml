@@ -10,7 +10,7 @@
         <t t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content">
             <MessageReactionList message="this.props.message" openReactionMenu="this.props.openReactionMenu" reaction="reaction"/>
         </t>
-        <button class="o-mail-MessageReactions-add btn bg-inherit d-flex px-1 py-0 border-0 rounded-0 mb-1 align-items-center fs-5 opacity-75 opacity-100-hover" title="Add Reaction" t-ref="add"><i class="oi fa-fw oi-smile-add"/></button>
+        <button class="o-mail-MessageReactions-add btn bg-inherit d-flex px-1 py-0 border-0 rounded-0 mb-1 align-items-center fs-5 opacity-25 opacity-100-hover" title="Add Reaction" t-ref="add"><i class="oi fa-fw oi-smile-add"/></button>
     </div>
 </t>
 </templates>

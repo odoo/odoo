@@ -208,7 +208,7 @@ export class Message extends Component {
                 this.props.thread &&
                 !this.env.messageCard &&
                 !this.props.asCard,
-            "px-2": this.props.isInChatWindow,
+            "px-1": this.props.isInChatWindow,
             "opacity-50": this.props.thread?.composer.replyToMessage?.notEq(this.props.message),
             "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
             "o-editing": this.state.isEditing,

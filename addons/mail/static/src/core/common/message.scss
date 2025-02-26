@@ -13,14 +13,14 @@
     }
 
     &.o-actionMenuMobileOpen {
-        background-color: rgba($o-action, .1);
-        outline: 1px solid rgba($o-action, .15);
+        background-color: rgba($o-action, .075);
+        outline: 1px solid rgba($o-action, .125);
         outline-offset: -1px;
     }
 }
 
 .o-mail-Message-date {
-    opacity: 50%;
+    opacity: 35%;
 }
 
 .o-mail-Message-edited {
@@ -90,7 +90,7 @@
 .o-mail-Message-bubble {
     &.o-blue {
         background-color: mix($o-view-background-color, $info, 87.5%) !important;
-        border-color: darken(mix($o-view-background-color, $info, 87.5%), 10%) !important;
+        border-color: darken(mix($o-view-background-color, $info, 87.5%), 5%) !important;
 
         &.o-muted {
             background-color: mix($white, mix($o-view-background-color, $info, 87.5%)) !important;
@@ -98,7 +98,7 @@
     }
     &.o-green {
         background-color: mix($o-view-background-color, $success, 87.5%) !important;
-        border-color: darken(mix($o-view-background-color, $success, 87.5%), 10%) !important;
+        border-color: darken(mix($o-view-background-color, $success, 87.5%), 5%) !important;
 
         &.o-muted {
             background-color: mix($white, mix($o-view-background-color, $success, 87.5%)) !important;
@@ -106,7 +106,7 @@
     }
     &.o-orange {
         background-color: mix($o-view-background-color, $warning, 75%) !important;
-        border-color: darken(mix($o-view-background-color, $warning, 75%), 10%) !important;
+        border-color: darken(mix($o-view-background-color, $warning, 75%), 5%) !important;
 
         &.o-muted {
             background-color: mix($white, mix($o-view-background-color, $warning, 75%), 85%) !important;
@@ -136,7 +136,7 @@
     }
 
     button {
-        opacity: 50%;
+        opacity: 35%;
 
         &:hover, &.focus, &.show {
             opacity: 100%;
@@ -149,9 +149,13 @@
     z-index: $o-mail-NavigableList-zIndex;
 }
 
-.o-mail-Message-openActionMobile:active {
-    opacity: 75% !important;
-}
+.o-mail-Message-openActionMobile {
+    opacity: 15% !important;
+
+    &:active {
+        opacity: 75% !important;
+    }
+} 
 
 .o-mail-Message-pendingProgress {
     animation: o-mail-message-pendingProgress-animation 0s ease-in 0.5s forwards;

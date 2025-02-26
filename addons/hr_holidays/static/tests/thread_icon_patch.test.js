@@ -43,7 +43,7 @@ test("thread icon of a chat when correspondent is on leave & away", async () => 
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
-        contains: [".o-mail-ThreadIcon .fa-plane[title='Away']"],
+        contains: [".o-mail-ThreadIcon .fa-plane[title='Idle']"],
         text: "Demo",
     });
 });
