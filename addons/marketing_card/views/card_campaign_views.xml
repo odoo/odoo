@@ -199,4 +199,21 @@
         </field>
     </record>
 
+    <record id="card_campaign_tag_view_form" model="ir.ui.view">
+        <field name="name">card.campaign.tag.form</field>
+        <field name="model">card.campaign.tag</field>
+        <field name="arch" type="xml">
+            <form string="Card Campaign Tag">
+                <group>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="color" widget="color_picker"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
 </odoo>
