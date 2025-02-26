@@ -146,7 +146,7 @@ export class LinkPlugin extends Plugin {
                 title: _t("Link"),
                 description: _t("Add a link"),
                 icon: "fa-link",
-                run: ({ link, type} = {}) => this.openLinkTools(link, type),
+                run: ({ link, type } = {}) => this.openLinkTools(link, type),
             },
             {
                 id: "removeLinkFromSelection",
@@ -203,7 +203,12 @@ export class LinkPlugin extends Plugin {
             },
         ],
 
-        power_buttons: { commandId: "openLinkTools" },
+        power_buttons: withSequence(10, {
+            commandId: "openLinkTools",
+            commandParams: { type: "primary" },
+            title: _t("Button"),
+            icon: "fa-square",
+        }),
 
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),

@@ -28,7 +28,6 @@ export class TableUIPlugin extends Plugin {
                 commandId: "openTablePicker",
             },
         ],
-        power_buttons: { commandId: "openTablePicker" },
     };
 
     setup() {
