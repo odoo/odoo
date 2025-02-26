@@ -229,8 +229,12 @@ class WebsitePublishedMixin(models.AbstractModel):
         the 'website_published' value if this method sets can_publish False """
         for record in self:
             try:
-                self.check_access_rights('write')
-                self.check_access_rule('write')
+                # Some main_record might be in sudo because their content needs
+                # to be rendered by a template even if they were not supposed
+                # to be accessible
+                plain_record = record.sudo(flag=False) if self._context.get('can_publish_unsudo_main_object', False) else record
+                plain_record.check_access_rights('write')
+                plain_record.check_access_rule('write')
                 record.can_publish = True
             except AccessError:
                 record.can_publish = False
