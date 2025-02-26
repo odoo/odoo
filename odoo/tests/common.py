@@ -1237,8 +1237,7 @@ class ChromeBrowser:
             if self._result.done():
                 return
             if not self.error_checker or self.error_checker(message):
-                self.take_screenshot()
-                self._save_screencast()
+                self._capture_debug_information()
                 try:
                     self._result.set_exception(ChromeBrowserException(message))
                 except CancelledError:
@@ -1302,8 +1301,7 @@ which leads to stray network requests and inconsistencies."""
                 "Exception received after termination: %s", message)
             return
 
-        self.take_screenshot()
-        self._save_screencast()
+        self._capture_debug_information()
         try:
             self._result.set_exception(ChromeBrowserException(message))
         except CancelledError:
@@ -1345,6 +1343,11 @@ which leads to stray network requests and inconsistencies."""
         # endGroup, assert, profile, profileEnd, count, timeEnd
     }
 
+    def _capture_debug_information(self):
+        self.take_screenshot()
+        self._capture_html()
+        self._save_screencast()
+
     def take_screenshot(self, prefix='sc_', suffix=None):
         def handler(f):
             try:
@@ -1367,6 +1370,30 @@ which leads to stray network requests and inconsistencies."""
 
         self._logger.info('Asking for screenshot')
         f = self._websocket_send('Page.captureScreenshot', with_future=True)
+        f.add_done_callback(handler)
+        return f
+
+    def _capture_html(self):
+        def handler(f):
+            try:
+                page_html = f.result(timeout=0)['data']
+            except Exception as e:
+                # 2 HTML capture requests in parallel will fail for one of them consistently
+                log_level = logging.INFO if isinstance(e, ChromeBrowserException) and str(e) == 'Failed to generate MHTML' else logging.RUNBOT
+                self._logger.log(log_level, "Couldn't capture HTML: %s", e)
+                return
+            if not page_html:
+                self._logger.runbot("Couldn't capture HTML: got %r", page_html)
+                return
+
+            fname = '{:%Y%m%d_%H%M%S_%f}{}.mhtml'.format(datetime.now(),'_%s' % self.test_class.__name__)
+            full_path = os.path.join(self.screenshots_dir, fname)
+            with open(full_path, 'w') as f:
+                f.write(page_html)
+            self._logger.runbot('HTML Snapshot in: %s', full_path)
+
+        self._logger.info('Asking for page HTML')
+        f = self._websocket_send('Page.captureSnapshot', params={"format": "mhtml"}, with_future=True)
         f.add_done_callback(handler)
         return f
 
@@ -1483,8 +1510,7 @@ which leads to stray network requests and inconsistencies."""
         except Exception as e:
             err = e
 
-        self.take_screenshot()
-        self._save_screencast()
+        self._capture_debug_information()
         if isinstance(err, ChromeBrowserException):
             raise err
 
