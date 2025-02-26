@@ -1313,6 +1313,25 @@ class AccountMove(models.Model):
 
     def _compute_payments_widget_to_reconcile_info(self):
         for move in self:
+
+            def _get_common_domain():
+                """ Return the common domain conditions for searching outstanding payments """
+                return [
+                    ('parent_state', '=', 'posted'),
+                    ('partner_id', '=', move.commercial_partner_id.id),
+                    ('reconciled', '=', False),
+                    '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
+                ]
+
+            def get_move_counts(domain):
+                """ Helper function to fetch move counts based on the given domain. """
+                return {
+                    rec[0]: rec[1]
+                    for rec in self.env['account.move.line']._read_group(
+                        domain, ['move_name'], ['__count']
+                    )
+                }
+
             move.invoice_outstanding_credits_debits_widget = False
             move.invoice_has_outstanding = False
 
@@ -1324,24 +1343,48 @@ class AccountMove(models.Model):
             pay_term_lines = move.line_ids\
                 .filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
 
-            domain = [
-                ('account_id', 'in', pay_term_lines.account_id.ids),
-                ('parent_state', '=', 'posted'),
-                ('partner_id', '=', move.commercial_partner_id.id),
-                ('reconciled', '=', False),
-                '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
-            ]
+
+            # Construct the base domain
+            domain = expression.AND([_get_common_domain(), [('account_id', 'in', pay_term_lines.account_id.ids)]])
+
+            # Bank line domain
+            bank_journal_ids = self.env['account.journal'].search_fetch(
+                [
+                    *self.env['account.journal']._check_company_domain(move.company_id),
+                    ('type', '=', 'bank'),
+                ],
+                ['id'],
+            ).ids
+
+            bank_domain = expression.AND([_get_common_domain(), [
+                ('account_id.account_type', 'in', ['asset_cash', 'asset_receivable']),
+                ('journal_id', 'in', bank_journal_ids),
+                ('partner_id', '!=', False),
+                ('balance', '>', 0.0)
+            ]])
 
             payments_widget_vals = {'outstanding': True, 'content': [], 'move_id': move.id}
 
             if move.is_inbound():
                 domain.append(('balance', '<', 0.0))
+                domain = expression.OR([domain, bank_domain])
                 payments_widget_vals['title'] = _('Outstanding credits')
             else:
                 domain.append(('balance', '>', 0.0))
                 payments_widget_vals['title'] = _('Outstanding debits')
 
-            for line in self.env['account.move.line'].search(domain):
+            lines = self.env['account.move.line'].search(domain)
+
+            move_names = set(lines.mapped('move_name'))
+            move_counts = get_move_counts([('move_name', 'in', move_names), ('id', 'in', lines.ids)])
+            reconciled_counts = get_move_counts([('move_name', 'in', move_names), ('reconciled', '=', True)])
+
+            for line in lines:
+                if (
+                    line.account_id.account_type == 'asset_cash' and
+                    (move_counts.get(line.move_name, 0) > 1 or reconciled_counts.get(line.move_name, 0))
+                ):
+                    continue
 
                 if line.currency_id == move.currency_id:
                     # Same foreign currency.
@@ -5517,6 +5560,13 @@ class AccountMove(models.Model):
         '''
         self.ensure_one()
         lines = self.env['account.move.line'].browse(line_id)
+        if lines[0].account_id.account_type == "asset_cash":
+            st_line = self.env['account.bank.statement.line'].search([
+                ('invoice_line_ids', 'in', lines[0].id)
+            ], limit=1)
+            wizard = self.env['bank.rec.widget'].with_context(default_st_line_id=st_line.id).new({})
+            wizard._action_validate()
+            lines = st_line.invoice_line_ids.filtered(lambda line: line.account_id.account_type == 'asset_receivable')
         lines += self.line_ids.filtered(lambda line: line.account_id == lines[0].account_id and not line.reconciled)
         return lines.reconcile()
 
