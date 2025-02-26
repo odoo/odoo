@@ -116,6 +116,32 @@
             }
         }
     }
+    table.o_main_table{
+        tr {
+            &.o_line_section td {
+                background-color: rgba($gray-300, .5);
+            }
+    
+            th {
+                font-weight: bolder;
+            }
+        }
+    }
+    div#total {
+        tr {
+            &.o_subtotal,
+            &.o_total {
+                td {
+                    border-top: 1px solid black !important;
+                }
+                &.o_border_bottom {
+                    td {
+                        border-bottom: 1px solid black !important;
+                    }
+                }
+            }
+        }
+    }
 }
 
 .din_page_pdf {
