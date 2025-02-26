@@ -1638,14 +1638,14 @@ export class SearchModel extends EventBus {
      * of a search item of type 'field'.
      */
     _getFieldDomain(field, autocompleteValues) {
-        const domains = autocompleteValues.map(({ label, value, operator, enforceEqual }) => {
+        const domains = autocompleteValues.map(({ label, value, operator, enforceOperator }) => {
             let domain;
             if (field.filterDomain) {
                 let filterDomain = field.filterDomain;
-                if (enforceEqual) {
+                if (enforceOperator) {
                     filterDomain = field.filterDomain
-                        .replaceAll("'ilike'", "'='")
-                        .replaceAll('"ilike"', '"="');
+                        .replaceAll("'ilike'", `'${operator}'`)
+                        .replaceAll('"ilike"', `"${operator}"`);
                 }
                 domain = new Domain(filterDomain).toList({
                     self: label.trim(),
