@@ -98,7 +98,7 @@
         "A44": { "content": "=PIVOT.HEADER(2,\"#country_id\",7)" },
         "A45": { "content": "=PIVOT.HEADER(2,\"#country_id\",8)" },
         "A46": { "content": "=PIVOT.HEADER(2,\"#country_id\",9)" },
-        "A48": { "content": "=PIVOT.HEADER(2,\"#country_id\",10)" },
+        "A47": { "content": "=PIVOT.HEADER(2,\"#country_id\",10)" },
         "A49": {
           "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"product_id\",\"!=\",false],[\"price_subtotal\",\">=\",0]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})"
         },
@@ -152,7 +152,7 @@
         "B46": {
           "content": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",9)"
         },
-        "B48": {
+        "B47": {
           "content": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",10)"
         },
         "B50": { "content": "=_t(\"Amount\")" },
@@ -225,7 +225,7 @@
         "C46": {
           "content": "=iferror(if(B46,B46/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")"
         },
-        "C48": {
+        "C47": {
           "content": "=iferror(if(B48,B48/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")"
         },
         "C50": { "content": "=_t(\"Ratio\")" },
@@ -283,7 +283,7 @@
         "E44": { "content": "=PIVOT.HEADER(1,\"#product_categ_id\",7)" },
         "E45": { "content": "=PIVOT.HEADER(1,\"#product_categ_id\",8)" },
         "E46": { "content": "=PIVOT.HEADER(1,\"#product_categ_id\",9)" },
-        "E48": { "content": "=PIVOT.HEADER(1,\"#product_categ_id\",10)" },
+        "E47": { "content": "=PIVOT.HEADER(1,\"#product_categ_id\",10)" },
         "E49": {
           "content": "[Top Salespeople](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"invoice_user_id\",\"!=\",false],[\"price_subtotal\",\">=\",0]],\"context\":{\"group_by\":[\"invoice_user_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"invoice_user_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})"
         },
@@ -337,7 +337,7 @@
         "F46": {
           "content": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",9)"
         },
-        "F48": {
+        "F47": {
           "content": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",10)"
         },
         "F50": { "content": "=_t(\"Amount\")" },
@@ -410,7 +410,7 @@
         "G46": {
           "content": "=iferror(if(F46,F46/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")"
         },
-        "G48": {
+        "G47": {
           "content": "=iferror(if(F48,F48/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")"
         },
         "G50": { "content": "=_t(\"Ratio\")" },
