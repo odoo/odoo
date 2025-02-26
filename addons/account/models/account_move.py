@@ -1337,7 +1337,7 @@ class AccountMove(models.Model):
         for move in self.with_context(active_test=False):
             move.display_inactive_currency_warning = move.state == 'draft' and move.currency_id and not move.currency_id.active
 
-    @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
+    @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat', 'company_id')
     def _compute_tax_country_id(self):
         foreign_vat_records = self.filtered(lambda r: r.fiscal_position_id.foreign_vat)
         for fiscal_position_id, record_group in groupby(foreign_vat_records, key=lambda r: r.fiscal_position_id):
