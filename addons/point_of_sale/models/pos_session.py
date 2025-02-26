@@ -398,7 +398,7 @@ class PosSession(models.Model):
 
     def unlink(self):
         self.statement_line_ids.unlink()
-        (self.order_seq_id | self.login_number_seq_id).unlink()
+        (self.order_seq_id | self.login_number_seq_id).with_context(delete_from_unlink_session=True).unlink()
         return super(PosSession, self).unlink()
 
     def login(self):
