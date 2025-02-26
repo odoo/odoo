@@ -78,5 +78,40 @@ class TestPoSSetup(TestPoSCommon):
 
     def test_archive_used_journal(self):
         journal = self.cash_pm1.journal_id
+<<<<<<< 17.0
+||||||| 9f941f0b23588df4bd3f9dca718d564bf9d467ce
+=======
+        payment_method = self.env['pos.payment.method'].create({'name': 'Lets Pay for Tests', 'journal_id': journal.id})
+        self.basic_config.write({'payment_method_ids': [payment_method.id]})
+        journal.write({'pos_payment_method_ids': [payment_method.id]})
+        session = self.env['pos.session'].create(
+            {
+                'name': 'lets sell some tests',
+                'config_id': self.basic_config.id,
+                'user_id': self.env.user.id,
+                'state': 'opened'
+            }
+        )
+        order = self.env['pos.order'].create(
+            {
+                'name': 'MIX',
+                'amount_tax': 0,
+                'amount_total': 0,
+                'amount_paid': 0,
+                'amount_return': 0,
+                'company_id': self.company.id,
+                'pricelist_id': self.currency_pricelist.id,
+                'session_id': session.id
+            }
+        )
+        self.env['pos.payment'].create(
+            {
+                'amount': 100,
+                'payment_date': '2025-01-01',
+                'payment_method_id': payment_method.id,
+                'pos_order_id': order.id
+            }
+        )
+>>>>>>> 77a69736823af5ffa7c2a518b1a32bbc1ca437b5
         with self.assertRaises(ValidationError):
             journal.action_archive()
