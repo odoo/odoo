@@ -39,8 +39,8 @@ test("Error due to an automation rule", async () => {
     await animationFrame();
     expect.verifyErrors(["Message"]);
     expect.verifySteps(["error setup"]);
-    expect(".modal .o_disable_action_button").toHaveCount(1);
-    expect(".modal .o_edit_action_button").toHaveCount(1);
+    expect(".modal .modal-footer .o_disable_action_button").toHaveCount(1);
+    expect(".modal .modal-footer .o_edit_action_button").toHaveCount(1);
 });
 
 test("Error not due to an automation rule", async () => {
@@ -56,8 +56,8 @@ test("Error not due to an automation rule", async () => {
     Promise.reject(error);
     await animationFrame();
     expect.verifyErrors(["Message"]);
-    expect(".modal .o_disable_action_button").toHaveCount(0);
-    expect(".modal .o_edit_action_button").toHaveCount(0);
+    expect(".modal .modal-footer .o_disable_action_button").toHaveCount(0);
+    expect(".modal .modal-footer .o_edit_action_button").toHaveCount(0);
 });
 
 test("display automation rule id and name in Error dialog", async () => {
@@ -88,7 +88,7 @@ test("display automation rule id and name in Error dialog", async () => {
     await animationFrame();
     expect.verifyErrors(["Message"]);
     expect.verifySteps(["error setup"]);
-    expect(".modal-body p:nth-child(5)").toHaveText(
+    expect(".modal-body p:nth-child(2)").toHaveText(
         `The error occurred during the execution of the automation rule "Test base automation error dialog" (ID: 1).`
     );
 });
