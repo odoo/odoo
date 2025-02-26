@@ -11,6 +11,8 @@ export class BuilderOptionsPlugin extends Plugin {
     resources = {
         step_added_handlers: () => this.updateContainers(),
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        post_undo_handlers: this.restoreContainer.bind(this),
+        post_redo_handlers: this.restoreContainer.bind(this),
     };
 
     setup() {
@@ -34,6 +36,7 @@ export class BuilderOptionsPlugin extends Plugin {
         }
         if (!this.target || !this.target.isConnected) {
             this.lastContainers = [];
+            this.dependencies.history.setStepExtra("optionSelection", this.target);
             this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
             return;
         }
@@ -41,6 +44,7 @@ export class BuilderOptionsPlugin extends Plugin {
             delete this.target;
             // The element is present on a page but is not visible
             this.lastContainers = [];
+            this.dependencies.history.setStepExtra("optionSelection", this.target);
             this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
             return;
         }
@@ -115,6 +119,7 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         this.lastContainers = newContainers;
+        this.dependencies.history.setStepExtra("optionSelection", this.target);
         this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
     }
 
@@ -157,6 +162,12 @@ export class BuilderOptionsPlugin extends Plugin {
             for (const el of getElementsWithOption(root, selector, exclude)) {
                 cleanForSave(el);
             }
+        }
+    }
+
+    restoreContainer(revertedStep) {
+        if (revertedStep && revertedStep.extra.optionSelection) {
+            this.updateContainers(revertedStep.extra.optionSelection);
         }
     }
 }
