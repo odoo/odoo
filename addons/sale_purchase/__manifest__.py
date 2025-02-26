@@ -10,7 +10,7 @@ by external providers and will automatically generate purchase orders directed t
     """,
     'version': '1.0',
     'website': 'https://www.odoo.com/',
-    'category': 'Hidden',
+    'category': 'Sales/Sales',
     'depends': [
         'sale',
         'purchase',

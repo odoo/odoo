@@ -7,7 +7,7 @@
     'description': 'Adds a full traceability of reinvoice expenses on the profitability report.',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
-    'category': 'Hidden',
+    'category': 'Services/Project',
     'depends': ['sale_project', 'sale_expense', 'project_hr_expense'],
     'auto_install': True,
 }

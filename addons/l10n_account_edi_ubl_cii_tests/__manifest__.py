@@ -2,7 +2,7 @@
 {
     'name': "Testing the Import/Export invoices with UBL/CII",
     'version': '1.0',
-    'category': 'Hidden/Tests',
+    'category': 'Accounting/Accounting',
     'description': """
 This module tests the module 'account_edi_ubl_cii', it is separated since dependencies to some
 localizations were required. Its name begins with 'l10n' to not overload runbot.

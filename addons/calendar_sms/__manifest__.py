@@ -6,7 +6,7 @@
     'version': "1.1",
     'summary': 'Send text messages as event reminders',
     'description': "Send text messages as event reminders",
-    'category': 'Hidden',
+    'category': 'Productivity/Calendar',
     'depends': ['calendar', 'sms'],
     'data': [
         'data/sms_data.xml',

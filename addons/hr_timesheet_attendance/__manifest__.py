@@ -6,7 +6,7 @@
     'description': """
     Module linking the attendance module to the timesheet app.
     """,
-    'category': 'Hidden',
+    'category': 'Human Resources/Attendances',
     'version': '1.1',
 
     'depends': ['hr_timesheet', 'hr_attendance'],

@@ -4,7 +4,7 @@
 {
     'name': 'Purchase Requisition Stock',
     'version': '1.2',
-    'category': 'Inventory/Purchase',
+    'category': 'Supply Chain/Purchase',
     'sequence': 70,
     'depends': ['purchase_requisition', 'purchase_stock'],
     'data': [

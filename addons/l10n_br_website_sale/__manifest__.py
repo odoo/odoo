@@ -3,7 +3,7 @@
     'name': 'Brazil - Website Sale',
     'version': '1.0',
     'description': 'Bridge Website Sale for Brazil',
-    'category': 'Localization',
+    'category': 'Sales/Sales',
     'depends': [
         'l10n_br',
         'website_sale',

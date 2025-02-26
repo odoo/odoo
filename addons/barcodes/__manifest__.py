@@ -1,7 +1,7 @@
 {
     'name': 'Barcode',
     'version': '2.0',
-    'category': 'Hidden',
+    'category': 'Supply Chain/Inventory',
     'summary': 'Scan and Parse Barcodes',
     'depends': ['web'],
     'data': [
