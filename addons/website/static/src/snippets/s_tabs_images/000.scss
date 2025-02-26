@@ -1,0 +1,11 @@
+.s_tabs_images {
+    .o_nav_tabs_description {
+        display: none;
+    }
+
+    .s_tabs_nav_with_descriptions:where(.s_tabs_nav_vertical) :where(.o_nav_tabs_description) {
+        @include media-breakpoint-up(lg) {
+            display: block;
+        }
+    }
+}
