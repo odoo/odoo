@@ -1248,7 +1248,7 @@ class StockQuant(models.Model):
         return self
 
     @api.model
-    def _get_quants_action(self, domain=None, extend=False):
+    def _get_quants_action(self, extend=False):
         """ Returns an action to open (non-inventory adjustment) quant view.
         Depending of the context (user have right to be inventory mode or not),
         the list view will be editable or readonly.
@@ -1274,6 +1274,7 @@ class StockQuant(models.Model):
                 (action['view_id'], 'list'),
                 (form_view, 'form'),
             ],
+            'context': ctx,
         })
         if extend:
             action.update({
