@@ -712,6 +712,10 @@ class StockPicking(models.Model):
         string='Date Category', store=False,
         search='_search_date_category', readonly=True
     )
+    picking_warning_text = fields.Text(
+        "Picking Instructions",
+        help="Internal instructions for the partner or its parent company as set by the user.",
+        compute='_compute_picking_warning_text')
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -984,6 +988,16 @@ class StockPicking(models.Model):
         for picking in self:
             picking.return_count = len(picking.return_ids)
 
+    @api.depends('partner_id.name', 'partner_id.parent_id.name')
+    def _compute_picking_warning_text(self):
+        for picking in self:
+            text = ''
+            if partner_msg := picking.partner_id.picking_warn_msg:
+                text += partner_msg + '\n'
+            if parent_msg := picking.partner_id.parent_id.picking_warn_msg:
+                text += parent_msg + '\n'
+            picking.picking_warning_text = text
+
     def _get_next_transfers(self):
         next_pickings = self.move_ids.move_dest_ids.picking_id
         return next_pickings.filtered(lambda p: p not in self.return_ids)
@@ -1053,21 +1067,6 @@ class StockPicking(models.Model):
                 if not move.product_id:
                     continue
                 move.description_picking = move.product_id._get_description(move.picking_type_id)
-
-        if self.partner_id and self.partner_id.picking_warn:
-            if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
-                partner = self.partner_id.parent_id
-            elif self.partner_id.picking_warn not in ('no-message', 'block') and self.partner_id.parent_id.picking_warn == 'block':
-                partner = self.partner_id.parent_id
-            else:
-                partner = self.partner_id
-            if partner.picking_warn != 'no-message':
-                if partner.picking_warn == 'block':
-                    self.partner_id = False
-                return {'warning': {
-                    'title': ("Warning for %s") % partner.name,
-                    'message': partner.picking_warn_msg
-                }}
 
     @api.onchange('location_dest_id')
     def _onchange_location_dest_id(self):

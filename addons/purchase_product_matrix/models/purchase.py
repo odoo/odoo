@@ -107,7 +107,6 @@ class PurchaseOrder(models.Model):
                         product_no_variant_attribute_value_ids=no_variant_attribute_values.ids)
                     ))
             if product_ids:
-                res = False
                 if new_lines:
                     # Add new PO lines
                     self.update(dict(order_line=new_lines))
@@ -115,8 +114,6 @@ class PurchaseOrder(models.Model):
                 # Recompute prices for new/modified lines:
                 for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):
                     line._product_id_change()
-                    res = line.onchange_product_id_warning() or res
-                return res
 
     def _get_matrix(self, product_template):
         def has_ptavs(line, sorted_attr_ids):
