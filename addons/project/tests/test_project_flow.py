@@ -1,10 +1,10 @@
 from .test_project_base import TestProjectCommon
 from odoo import Command
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.exceptions import AccessError
 
 
-class TestProjectFlow(TestProjectCommon, MailCommon):
+class TestProjectFlow(TestProjectCommon, MailCase):
 
     def test_project_process_project_manager_duplicate(self):
         pigs = self.project_pigs.with_user(self.user_projectmanager)
