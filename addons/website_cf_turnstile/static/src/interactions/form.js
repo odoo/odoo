@@ -18,14 +18,18 @@ patch(Form.prototype, {
         ) {
             this.uniq = uniqueId("turnstile_");
             this.el.classList.add(this.uniq);
-            const { turnstileEl, script1El, script2El } = new TurnStile(
+            const { turnstileEl, script1El, script2El, inputValidation } = new TurnStile(
                 "website_form",
                 `.${this.uniq} .s_website_form_send,.${this.uniq} .o_website_form_send`,
             );
             const formSendEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
+            if (!formSendEl.classList.contains('disabled') && !formSendEl.classList.contains('no_auto_disable')) {
+                formSendEl.classList.add('disabled', 'cf_form_disabled');
+            }
             formSendEl.parentNode.insertBefore(turnstileEl, formSendEl);
             formSendEl.parentNode.insertBefore(script1El, formSendEl.nextSibling);
             formSendEl.parentNode.insertBefore(script2El, formSendEl.nextSibling);
+            formSendEl.parentNode.insertBefore(inputValidation, formSendEl.nextSibling);
         }
     },
 
