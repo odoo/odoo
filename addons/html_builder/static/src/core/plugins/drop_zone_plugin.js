@@ -104,8 +104,8 @@ export class DropZonePlugin extends Plugin {
         this.dropZoneElements = [];
     }
 
-    dragElement(element) {
-        const { x, y, height, width } = element.getClientRects()[0];
+    dragElement(element, x, y) {
+        const { height, width } = element.getClientRects()[0];
         const position = { x, y, height, width };
         const dropzoneEl = closest(touching(this.dropZoneElements, position), position);
         if (this.currentDropzoneEl !== dropzoneEl) {
