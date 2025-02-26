@@ -5,6 +5,13 @@
     <BuilderRow label.translate="Shape">
         <div class="btn btn-primary o-dropdown dropdown-toggle dropdown" t-on-click="this.showImageShapes">None</div>
     </BuilderRow>
+    <BuilderRow label.translate="Colors" level="2">
+        <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 0}" t-if="this.state.showImageShape0" />
+        <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 1}" t-if="this.state.showImageShape1" />
+        <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 2}" t-if="this.state.showImageShape2" />
+        <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 3}" t-if="this.state.showImageShape3" />
+        <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 4}" t-if="this.state.showImageShape4" />
+    </BuilderRow>
 </t>
 
 </templates>

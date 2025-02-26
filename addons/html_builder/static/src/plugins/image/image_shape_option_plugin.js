@@ -10,6 +10,7 @@ import {
     loadImage,
     loadImageInfo,
 } from "@html_editor/utils/image_processing";
+import { getValueFromVar } from "@html_builder/utils/utils";
 
 class ImageShapeOptionPlugin extends Plugin {
     static id = "imageShapeOption";
@@ -33,6 +34,30 @@ class ImageShapeOptionPlugin extends Plugin {
 
                     img.dataset.shapeColors = loadResult.shapeColors;
                     img.src = loadResult.shapeDataURL;
+                },
+            },
+            setImgShapeColor: {
+                getValue: ({ editingElement: img, param: { index: colorIndex } }) =>
+                    img.dataset.shapeColors?.split(";")[colorIndex] || "",
+                load: async ({
+                    editingElement: img,
+                    param: { index: colorIndex },
+                    value: color,
+                }) => {
+                    color = getValueFromVar(color);
+                    const shapeName = img.dataset.shape;
+                    const newColorId = parseInt(colorIndex);
+                    const oldColors = img.dataset.shapeColors.split(";");
+                    const newColors = oldColors.slice(0);
+                    newColors[newColorId] = this.getCSSColorValue(
+                        color === "" ? `o-color-${newColorId + 1}` : color
+                    );
+                    return this.loadShape(img, shapeName, newColors);
+                },
+                apply: ({ editingElement: img, loadResult }) => {
+                    img.dataset.shapeColors = loadResult.shapeColors;
+                    img.src = loadResult.shapeDataURL;
+                    img.classList.add("o_modified_image_to_save");
                 },
             },
         };
