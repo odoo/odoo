@@ -3,7 +3,7 @@
 {
     'name': 'Argentina - Accounting',
     'icon': '/base/static/img/country_flags/ar.png',
-    'version': "3.5",
+    'version': "3.6",
     'description': """
 Functional
 ----------
