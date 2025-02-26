@@ -11,6 +11,9 @@
             <span t-esc="props.label"/>
             <span t-if="props.description" class="text-muted" t-esc="props.description"/>
         </label>
+    <t t-if="props.value and props.label === 'Start at'">
+        <input type="text" class="o_input w-lg-auto"  t-att-value="props.value" placeholder="Enter seconds or HH:MM:SS format" t-on-input="props.onChangeStartAt"/>
+    </t>
     </div>
 </t>
 
@@ -37,6 +40,7 @@
                 <VideoOption t-foreach="shownOptions" t-as="option" t-key="option.id"
                     value="option.value"
                     onChangeOption="() => this.onChangeOption(option.id)"
+                    onChangeStartAt="(ev) => this.onChangeStartAt(ev, option.id)"
                     label="option.label"
                     description="option.description"/>
             </div>
