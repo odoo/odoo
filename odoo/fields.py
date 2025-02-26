@@ -397,6 +397,8 @@ class Field(MetaField('DummyField', (object,), {})):
             # only for fields on definition classes, not registry classes
             self._module = owner._module
             owner._field_definitions.append(self)
+        elif self._toplevel:
+            self._module = owner._module
 
         if not self.args.get('related'):
             self._direct = True
