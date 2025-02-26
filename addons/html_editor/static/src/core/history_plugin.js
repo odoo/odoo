@@ -1013,6 +1013,10 @@ export class HistoryPlugin extends Plugin {
             },
         };
     }
+
+    getIsPreviewing() {
+        return this.isPreviewing;
+    }
     /**
      * Discard the current draft, and, if necessary, consume and revert
      * reversible steps until the specified step index, and ensure that
