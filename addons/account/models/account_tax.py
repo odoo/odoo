@@ -945,9 +945,6 @@ class AccountTax(models.Model):
             incl_base_multiplicator = 1.0 if total_percentage == 1.0 else 1 - total_percentage
             return raw_base * self.amount / 100.0 / incl_base_multiplicator
 
-    def _eval_raw_base(self, quantity, price_unit, evaluation_context):
-        return quantity * price_unit
-
     def _get_tax_details(
         self,
         price_unit,
@@ -1043,11 +1040,7 @@ class AccountTax(models.Model):
                     'is_reverse_charge': True,
                 }
 
-        raw_base_evaluation_context = {
-            'taxes': sorted_taxes,
-            'precision_rounding': precision_rounding,
-        }
-        raw_base = self._eval_raw_base(quantity, price_unit, raw_base_evaluation_context)
+        raw_base = quantity * price_unit
         if rounding_method == 'round_per_line':
             raw_base = float_round(raw_base, precision_rounding=precision_rounding or self.env.company.currency_id.rounding)
 
@@ -1057,7 +1050,6 @@ class AccountTax(models.Model):
             'quantity': quantity,
             'raw_base': raw_base,
             'special_mode': special_mode,
-            'precision_rounding': precision_rounding,
         }
 
         # Define the order in which the taxes must be evaluated.
