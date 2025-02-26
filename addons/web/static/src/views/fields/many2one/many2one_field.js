@@ -251,6 +251,7 @@ export class Many2OneField extends Component {
         await this.action.doAction(action, { newWindow });
     }
     async openDialog(resId) {
+        // debugger;
         return this.openMany2X({ resId, context: this.context });
     }
 
