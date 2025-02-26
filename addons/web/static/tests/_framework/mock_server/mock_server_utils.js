@@ -81,6 +81,7 @@ export function makeServerError({
     subType,
     errorName,
     type,
+    args,
 } = {}) {
     return makeErrorFromResponse({
         code: code || 200,
@@ -88,7 +89,7 @@ export function makeServerError({
         data: {
             name: errorName || `odoo.exceptions.${type || "UserError"}`,
             debug: "traceback",
-            arguments: [],
+            arguments: args || [],
             context: context || {},
             subType,
             message: description,
