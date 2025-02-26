@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from dbus.mainloop.glib import DBusGMainLoop
 import logging
 import platform
 import requests
@@ -8,8 +7,12 @@ import schedule
 from threading import Thread
 import time
 
-from odoo.addons.hw_drivers.tools import helpers, wifi
+from odoo.addons.hw_drivers.tools import helpers, upgrade, wifi
 from odoo.addons.hw_drivers.websocket_client import WebsocketClient
+
+if platform.system() == 'Linux':
+    from dbus.mainloop.glib import DBusGMainLoop
+    DBusGMainLoop(set_as_default=True) # Must be started from main thread
 
 _logger = logging.getLogger(__name__)
 
@@ -75,10 +78,10 @@ class Manager(Thread):
             wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
 
         helpers.start_nginx_server()
-
         _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))
+        upgrade.check_git_branch()
+
         if platform.system() == 'Linux' and helpers.get_odoo_server_url():
-            helpers.check_git_branch()
             helpers.generate_password()
         is_certificate_ok, certificate_details = helpers.get_certificate_status()
         if not is_certificate_ok and certificate_details != 'ERR_IOT_HTTPS_CHECK_NO_SERVER':
@@ -124,9 +127,6 @@ class Manager(Thread):
             except Exception:
                 # No matter what goes wrong, the Manager loop needs to keep running
                 _logger.exception("Manager loop unexpected error")
-
-# Must be started from main thread
-DBusGMainLoop(set_as_default=True)
 
 manager = Manager()
 manager.daemon = True

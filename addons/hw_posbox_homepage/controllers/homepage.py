@@ -4,13 +4,11 @@ import json
 import logging
 import netifaces
 import platform
-import requests
 import subprocess
 import threading
 import time
 
 from itertools import groupby
-from pathlib import Path
 
 from odoo import http
 from odoo.addons.hw_drivers.tools import helpers, wifi
@@ -72,7 +70,8 @@ class IotBoxOwlHomePage(http.Controller):
 
     @http.route('/hw_posbox_homepage/iot_logs', auth='none', type='http', cors='*')
     def get_iot_logs(self):
-        with open("/var/log/odoo/odoo-server.log", encoding="utf-8") as file:
+        logs_path = "/var/log/odoo/odoo-server.log" if platform.system() == 'Linux' else helpers.path_file('odoo.log')
+        with open(logs_path, encoding="utf-8") as file:
             return json.dumps({
                 'status': 'success',
                 'logs': file.read(),
@@ -155,7 +154,7 @@ class IotBoxOwlHomePage(http.Controller):
         }
 
         six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
-        network_qr_codes = wifi.generate_network_qr_codes()
+        network_qr_codes = wifi.generate_network_qr_codes() if platform.system() == 'Linux' else {}
         odoo_server_url = helpers.get_odoo_server_url()
 
         return json.dumps({
@@ -176,8 +175,8 @@ class IotBoxOwlHomePage(http.Controller):
             'is_certificate_ok': is_certificate_ok,
             'certificate_details': certificate_details,
             'wifi_ssid': helpers.get_conf('wifi_ssid'),
-            'qr_code_wifi' : network_qr_codes['qr_wifi'],
-            'qr_code_url' : network_qr_codes['qr_url'],
+            'qr_code_wifi' : network_qr_codes.get('qr_wifi'),
+            'qr_code_url' : network_qr_codes.get('qr_url'),
         })
 
     @http.route('/hw_posbox_homepage/wifi', auth="none", type="http", cors='*')
@@ -195,30 +194,29 @@ class IotBoxOwlHomePage(http.Controller):
 
     @http.route('/hw_posbox_homepage/version_info', auth="none", type="http", cors='*')
     def get_version_info(self):
-        git = ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git"]
         # Check branch name and last commit hash on IoT Box
-        current_commit = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, check=False, text=True)
-        current_branch = subprocess.run(
-            [*git, "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, check=False, text=True
-        )
-        if current_commit.returncode != 0 or current_branch.returncode != 0:
-            return
-        current_commit = current_commit.stdout.strip()
-        current_branch = current_branch.stdout.strip()
+        current_commit = upgrade.git("rev-parse", "HEAD")
+        current_branch = upgrade.git("rev-parse", "--abbrev-ref", "HEAD")
+        if not current_commit or not current_branch:
+            return json.dumps({
+                'status': 'error',
+                'message': 'Failed to retrieve current commit or branch',
+            })
 
-        last_available_commit = subprocess.run(
-            [*git, "ls-remote", "origin", current_branch], capture_output=True, check=False, text=True
-        )
-        if last_available_commit.returncode != 0:
+        last_available_commit = upgrade.git("ls-remote", "origin", current_branch)
+        if not last_available_commit:
             _logger.error("Failed to retrieve last commit available for branch origin/%s", current_branch)
-            return
-        last_available_commit = last_available_commit.stdout.split()[0].strip()
+            return json.dumps({
+                'status': 'error',
+                'message': 'Failed to retrieve last commit available for branch origin/' + current_branch,
+            })
+        last_available_commit = last_available_commit.split()[0].strip()
 
         return json.dumps({
             'status': 'success',
             # Checkout requires db to align with its version (=branch)
             'odooIsUpToDate': current_commit == last_available_commit or not bool(helpers.get_odoo_server_url()),
-            'imageIsUpToDate': not bool(helpers.check_image()),
+            'imageIsUpToDate': platform.system() == "Linux" and not bool(helpers.check_image()),
             'currentCommitHash': current_commit,
         })
 
