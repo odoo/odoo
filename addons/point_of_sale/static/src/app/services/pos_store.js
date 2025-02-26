@@ -1011,7 +1011,7 @@ export class PosStore extends WithLazyGetterTrap {
     cashierHasPriceControlRights() {
         return !this.config.restrict_price_control || this.getCashier()._role == "manager";
     }
-    createNewOrder(data = {}) {
+    createNewOrder(data = {}, onGetNextOrderRefs = () => {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find(
             (fp) => fp.id === this.config.default_fiscal_position_id?.id
         );
@@ -1031,7 +1031,7 @@ export class PosStore extends WithLazyGetterTrap {
             ...data,
         });
 
-        this.getNextOrderRefs(order);
+        this.getNextOrderRefs(order).then(() => onGetNextOrderRefs(order));
         order.setPricelist(this.config.pricelist_id);
 
         if (this.config.use_presets) {
