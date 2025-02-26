@@ -16,11 +16,8 @@
             'barcodes/static/src/**/*',
         ],
         'web.tests_assets': ['barcodes/static/tests/legacy/helpers.js'],
-        'web.qunit_suite_tests': ['barcodes/static/tests/legacy/basic/**/*.js'],
-        'web.assets_unit_tests': [
-            'barcodes/static/tests/**/*.js',
-            ('remove', 'barcodes/static/tests/legacy/**/*'),  # to remove when all legacy tests are ported
-        ],
+        'web.qunit_suite_tests': ['barcodes/static/tests/legacy/basic/**/*_test.js'],
+        'web.assets_unit_tests': ['barcodes/static/tests/*.test.js'],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
