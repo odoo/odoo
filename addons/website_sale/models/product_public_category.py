@@ -75,7 +75,8 @@ class ProductPublicCategory(models.Model):
     @api.depends('parents_and_self')
     def _compute_display_name(self):
         for category in self:
-            category.display_name = " / ".join(category.parents_and_self.mapped(
+            # sudo needed in case we access parents that do not have any published products
+            category.display_name = " / ".join(category.sudo().parents_and_self.mapped(
                 lambda cat: cat.name or self.env._("New")
             ))
 
