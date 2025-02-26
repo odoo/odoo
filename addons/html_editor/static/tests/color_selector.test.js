@@ -1,15 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import {
-    click,
-    waitFor,
-    queryOne,
-    hover,
-    press,
-    waitUntil,
-    edit,
-    queryAllValues,
-    queryAll,
-} from "@odoo/hoot-dom";
+import { click, waitFor, queryOne, hover, press, waitUntil, edit, queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -112,7 +102,7 @@ test("custom text-colors used in the editor are shown in the colorpicker", async
     await click(".btn:contains('Custom')");
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#00FF00");
-    expect(queryAllValues(".o_rgba_div input")).toEqual(["0", "255", "0", "100"]);
+    expect(".o_rgba_div input").toHaveCount(0);
     expect(queryAll("button[data-color='#ff0000']")).toHaveCount(1);
     expect(queryOne("button[data-color='#ff0000']").style.backgroundColor).toBe("rgb(255, 0, 0)");
     expect(queryAll("button[data-color='#00ff00']")).toHaveCount(1);
@@ -133,7 +123,7 @@ test("custom background colors used in the editor are shown in the colorpicker",
     await click(".btn:contains('Custom')");
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#00FF00");
-    expect(queryAllValues(".o_rgba_div input")).toEqual(["0", "255", "0", "100"]);
+    expect(".o_rgba_div input").toHaveCount(0);
     expect(queryAll("button[data-color='#ff0000']")).toHaveCount(1);
     expect(queryOne("button[data-color='#ff0000']").style.backgroundColor).toBe("rgb(255, 0, 0)");
     expect(queryAll("button[data-color='#00ff00']")).toHaveCount(1);
@@ -159,12 +149,78 @@ test("select hex color and apply it", async () => {
     await animationFrame();
     expect("button[data-color='#017E84']").toHaveCount(1);
     expect(queryOne("button[data-color='#017E84']").style.backgroundColor).toBe("rgb(1, 126, 132)");
-    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">test</font></p>`);
 
     await click(".odoo-editor-editable");
     await animationFrame();
     expect(".o_font_color_selector").toHaveCount(0);
     expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+});
+
+test("should be able to apply hex color with opacity component", async () => {
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    await click(".o_hex_input");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await edit("#017E8480"); // === rgba(1, 126, 132, 0.5)
+    await animationFrame();
+    expect("button[data-color='#017E8480']").toHaveCount(1);
+    expect(queryOne("button[data-color='#017E8480']").style.backgroundColor).toBe(
+        "rgba(1, 126, 132, 0.5)"
+    );
+    expect(getContent(el)).toBe(`<p><font style="color: rgba(1, 126, 132, 0.5);">test</font></p>`);
+
+    await click(".odoo-editor-editable");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(0);
+    expect(getContent(el)).toBe(
+        `<p><font style="color: rgba(1, 126, 132, 0.5);">[test]</font></p>`
+    );
+});
+
+test("custom color tab should be opened by default if selected color is a custom color", async () => {
+    await setupEditor(`<p>a<font style="color: rgb(120, 100, 0, 0.6);">[test]</font>b</p>`);
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".btn:contains('Custom')").toHaveClass("active");
+});
+
+test("gradient tab should be opened by default if selected color is a gradient color", async () => {
+    await setupEditor(
+        `<p>a<font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font>b</p>`
+    );
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".btn:contains('Gradient')").toHaveClass("active");
+});
+
+test("solid color tab should be opened by default if selected color is a theme color", async () => {
+    await setupEditor(`<p>a<font class="text-o-color-1">[test]</font>b</p>`);
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".btn:contains('Solid')").toHaveClass("active");
 });
 
 test("always show the current custom color", async () => {
@@ -357,6 +413,24 @@ test("clicking on button color parent does not crash", async () => {
     expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
 });
 
+test("gradient picker should be closed by default when switching gradient tab", async () => {
+    await setupEditor("<p>[test]</p>");
+
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    expect(".o_colorpicker_widget").toHaveCount(0);
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect(".o_colorpicker_widget").toHaveCount(1);
+    await click("button[title='Define a custom gradient']"); // Should be toggleable
+    await animationFrame();
+    expect(".o_colorpicker_widget").toHaveCount(0);
+});
+
 test("gradient picker correctly shows the current selected gradient", async () => {
     await setupEditor(
         `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
@@ -365,9 +439,10 @@ test("gradient picker correctly shows the current selected gradient", async () =
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
-    await click(".btn:contains('Gradient')");
+    await click("button[title='Define a custom gradient']");
     await animationFrame();
     expect("button.active:contains('Linear')").toHaveCount(1);
+    expect(".o_rgba_div input").toHaveCount(0);
     expect("input[name='angle']").toHaveValue("2");
     expect("input[name='firstColorPercentage']").toHaveValue(10);
     expect("input[name='secondColorPercentage']").toHaveValue(90);
@@ -381,7 +456,7 @@ test("gradient picker does change the selector gradient color", async () => {
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
-    await click(".btn:contains('Gradient')");
+    await click("button[title='Define a custom gradient']");
     await animationFrame();
     expect("button.active:contains('Linear')").toHaveCount(1);
     await contains("input[name='angle'").edit("10");
@@ -400,7 +475,7 @@ test("clicking on the angle input does not close the dropdown", async () => {
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
-    await click(".btn:contains('Gradient')");
+    await click("button[title='Define a custom gradient']");
     await animationFrame();
     expect("button.active:contains('Linear')").toHaveCount(1);
     await contains("input[name='angle'").click();
@@ -414,6 +489,8 @@ test("should be able to select farthest-corner option in radial gradient", async
     await animationFrame();
     expect(".btn:contains('Gradient')").toHaveCount(1);
     await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
     await animationFrame();
     expect("button:contains('Radial')").toHaveCount(1);
     await click(".btn:contains('Radial')");

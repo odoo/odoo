@@ -1,11 +1,11 @@
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { GradientPicker } from "./gradient_picker/gradient_picker";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
-const DEFAULT_COLORS = [
+export const DEFAULT_COLORS = [
     ["#000000", "#424242", "#636363", "#9C9C94", "#CEC6CE", "#EFEFEF", "#F7F7F7", "#FFFFFF"],
     ["#FF0000", "#FF9C00", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#9C00FF", "#FF00FF"],
     ["#F7C6CE", "#FFE7CE", "#FFEFC6", "#D6EFD6", "#CEDEE7", "#CEE7F7", "#D6D6E7", "#E7D6DE"],
@@ -27,6 +27,18 @@ const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
 ];
 
+const htmlStyle = document.defaultView.getComputedStyle(document.documentElement);
+export const DEFAULT_THEME_COLORS = [
+    "o-color-1",
+    "o-color-2",
+    "o-color-3",
+    "o-color-4",
+    "o-color-5",
+].map((color) => {
+    const value = htmlStyle.getPropertyValue(`--${color}`).trim();
+    return normalizeCSSColor(value);
+});
+
 export class ColorPicker extends Component {
     static template = "web.ColorPicker";
     static components = { CustomColorPicker, GradientPicker };
@@ -35,6 +47,7 @@ export class ColorPicker extends Component {
             type: Object,
             shape: {
                 selectedColor: String,
+                defaultTab: String,
             },
         },
         getUsedCustomColors: Function,
@@ -51,11 +64,13 @@ export class ColorPicker extends Component {
     setup() {
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
+        this.DEFAULT_THEME_COLORS = DEFAULT_THEME_COLORS;
 
         this.defaultColor = this.props.state.selectedColor;
         this.state = useState({
-            activeTab: "solid",
+            activeTab: this.props.state.defaultTab,
             currentCustomColor: this.props.state.selectedColor,
+            showGradientPicker: false,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
     }
@@ -113,6 +128,10 @@ export class ColorPicker extends Component {
         if (isColorGradient(this.props.state.selectedColor)) {
             return this.props.state.selectedColor;
         }
+    }
+
+    toggleGradientPicker() {
+        this.state.showGradientPicker = !this.state.showGradientPicker;
     }
 }
 
