@@ -58,8 +58,8 @@ export const booleanToggleFieldLabeled = {
         return {
             autosave: "autosave" in options ? Boolean(options.autosave) : true,
             readonly: dynamicInfo.readonly,
-            true_label: options.true_label,
-            false_label: options.false_label,
+            true_label: _t(options.true_label),
+            false_label: _t(options.false_label),
         };
     },
 };
