@@ -454,6 +454,10 @@ var SnippetEditor = publicWidget.Widget.extend({
             // body. If the editable has options, we do not want to show them.
             parent = $(parent).closest('body');
         }
+        const nextSelectedSnippet = previousSibling || nextSibling;
+        if (nextSelectedSnippet) {
+            nextSelectedSnippet.dataset.shapeAfterRemove = previousSibling ? "previous" : "next";
+        }
         const activateSnippetProm = new Promise(resolve => {
             this.trigger_up('activate_snippet', {
                 $snippet: $(previousSibling || nextSibling || parent),
