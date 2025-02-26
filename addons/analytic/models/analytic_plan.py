@@ -281,7 +281,14 @@ class AccountAnalyticPlan(models.Model):
                     'model_id': self.env['ir.model']._get_id(model),
                     'ttype': 'many2one',
                     'relation': 'account.analytic.account',
+<<<<<<< saas-17.4
                     'copied': True,
+||||||| 36fcb71454b3c1ad23c71b4e0a0424195b121883
+                    'store': True,
+=======
+                    'store': True,
+                    'on_delete': 'restrict',
+>>>>>>> c85dd373abb7578aedb9190fe1b60e30f6fb02e3
                 })
                 Model = self.env[model]
                 if Model._auto:
