@@ -265,7 +265,40 @@ patch(PosStore.prototype, {
         }
         return super.addLineToCurrentOrder(vals, opts, configure);
     },
+<<<<<<< saas-17.4
     async getServerOrders() {
+||||||| 8b0dddf8b4fb68fc12f15a71e150cf1607d5cd24
+    /**
+     * Replace all the orders of a table by orders fetched from the backend
+     * @param tableId ID of the table
+     * @throws error
+     */
+    async _syncTableOrdersFromServer(tableId) {
+        await this._removeOrdersFromServer(); // in case we were offline and we deleted orders in the mean time
+        const ordersJsons = await this._getTableOrdersFromServer([tableId]);
+        await this._addPricelists(ordersJsons);
+        await this._addFiscalPositions(ordersJsons);
+        const tableOrders = this.getTableOrders(tableId);
+        this._replaceOrders(tableOrders, ordersJsons);
+    },
+    async _getOrdersJson() {
+=======
+    /**
+     * Replace all the orders of a table by orders fetched from the backend
+     * @param tableId ID of the table
+     * @throws error
+     */
+    async _syncTableOrdersFromServer(tableId) {
+        await this.push_orders({ show_error: true }); // in case we were offline and we paid orders in the mean time
+        await this._removeOrdersFromServer(); // in case we were offline and we deleted orders in the mean time
+        const ordersJsons = await this._getTableOrdersFromServer([tableId]);
+        await this._addPricelists(ordersJsons);
+        await this._addFiscalPositions(ordersJsons);
+        const tableOrders = this.getTableOrders(tableId);
+        this._replaceOrders(tableOrders, ordersJsons);
+    },
+    async _getOrdersJson() {
+>>>>>>> 069c76b45736a21a89b953673e2a43fdb14e2f6c
         if (this.config.module_pos_restaurant) {
             const tableIds = [].concat(
                 ...this.models["restaurant.floor"].map((floor) =>
