@@ -5,7 +5,7 @@
         <field name="model">stock.lot</field>
         <field name="inherit_id" ref="stock.view_production_lot_form" />
         <field name="arch" type="xml">
-        <xpath expr="//page[@name='description']" position="before">
+            <xpath expr="//page[@name='description']" position="before">
             <page string="Dates" name="expiration_dates" invisible="not use_expiration_date">
                 <field name="use_expiration_date" invisible="1"/>
                 <group>
@@ -20,10 +20,13 @@
                 </group>
             </page>
         </xpath>
-        <xpath expr="//div[hasclass('oe_title')]" position="inside">
+            <xpath expr="//div[hasclass('oe_title')]" position="inside">
             <field name="product_expiry_alert" invisible="1"/>
             <span class="badge text-bg-danger" invisible="not product_expiry_alert">Expiration Alert</span>
         </xpath>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="expiration_date" invisible="not use_expiration_date or display_complete"/>
+            </xpath>
         </field>
     </record>
 
