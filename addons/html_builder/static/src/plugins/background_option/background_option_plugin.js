@@ -1,4 +1,5 @@
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
+import { getSelectorParams } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BackgroundOption } from "./background_option";
@@ -8,18 +9,6 @@ class BackgroundOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             // TODO: add the other options that need BackgroundComponent
-            {
-                selector: "section",
-                OptionComponent: BackgroundOption,
-                props: {
-                    withColors: true,
-                    withImages: true,
-                    // todo: handle with_videos
-                    withShapes: true,
-                    withGradient: true,
-                    withColorCombinations: true,
-                },
-            },
             // Background-color only
             {
                 selector: ".s_chart",
@@ -36,15 +25,10 @@ class BackgroundOptionPlugin extends Plugin {
         system_classes: ["o_colored_level"],
     };
     setup() {
-        this.coloredLevelBackgroundParams = [];
-        for (const builderOption of this.resources.builder_options) {
-            if (builderOption.props.withColors && builderOption.props.withColorCombinations) {
-                this.coloredLevelBackgroundParams.push({
-                    selector: builderOption.selector,
-                    exclude: builderOption.exclude || "",
-                });
-            }
-        }
+        this.coloredLevelBackgroundParams = getSelectorParams(
+            this.getResource("builder_options"),
+            BackgroundOption
+        );
     }
     normalize(root) {
         for (const coloredLevelBackgroundParam of this.coloredLevelBackgroundParams) {

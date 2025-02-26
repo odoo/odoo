@@ -3,6 +3,7 @@ import {
     backgroundImageCssToParts,
     backgroundImagePartsToCss,
     getBgImageURLFromEl,
+    isBackgroundImageAttribute,
 } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { removeOnImageChangeAttrs } from "@html_editor/utils/image_processing";
@@ -12,9 +13,10 @@ import { getBackgroundImageColor } from "./background_image_option";
 
 // TODO: support the setTarget
 
-class BackgroundImageOptionPlugin extends Plugin {
+export class BackgroundImageOptionPlugin extends Plugin {
     static id = "backgroundImageOption";
     static dependencies = ["builderActions", "media"];
+    static shared = ["changeEditingEl"];
     resources = {
         builder_actions: this.getActions(),
     };
@@ -38,7 +40,13 @@ class BackgroundImageOptionPlugin extends Plugin {
                     if (!filterEl) {
                         filterEl = document.createElement("div");
                         filterEl.classList.add("o_we_bg_filter");
-                        const lastBackgroundEl = this.getLastPreFilterLayerElement();
+                        let lastBackgroundEl;
+                        for (const fn of this.getResource("background_filter_target_providers")) {
+                            lastBackgroundEl = fn(editingElement);
+                            if (lastBackgroundEl) {
+                                break;
+                            }
+                        }
                         if (lastBackgroundEl) {
                             lastBackgroundEl.insertAdjacentElement("afterend", filterEl);
                         } else {
@@ -77,6 +85,7 @@ class BackgroundImageOptionPlugin extends Plugin {
                         loadResult: "",
                         param: { forceClean: true },
                     });
+                    this.dispatchTo("on_bg_image_hide_handlers", editingElement);
                 },
             },
             replaceBgImage: {
@@ -96,6 +105,39 @@ class BackgroundImageOptionPlugin extends Plugin {
                 },
             },
         };
+    }
+    /**
+     * Transfers the background-image and the dataset information relative to
+     * this image from the old editing element to the new one.
+     * @param {HTMLElement} oldEditingEl - The old editing element.
+     * @param {HTMLElement} newEditingEl - The new editing element.
+     */
+    changeEditingEl(oldEditingEl, newEditingEl) {
+        // When we change the target of this option we need to transfer the
+        // background-image and the dataset information relative to this image
+        // from the old target to the new one.
+        const oldBgURL = getBgImageURLFromEl(oldEditingEl);
+        const isModifiedImage = oldEditingEl.classList.contains("o_modified_image_to_save");
+        const filteredOldDataset = Object.entries(oldEditingEl.dataset).filter(([key]) =>
+            isBackgroundImageAttribute(key)
+        );
+        // Delete the dataset information relative to the background-image of
+        // the old target.
+        for (const [key] of filteredOldDataset) {
+            delete oldEditingEl.dataset[key];
+        }
+        // It is important to delete ".o_modified_image_to_save" from the old
+        // target as its image source will be deleted.
+        oldEditingEl.classList.remove("o_modified_image_to_save");
+        this.setImageBackground(oldEditingEl, "");
+        // Apply the changes on the new editing element
+        if (oldBgURL) {
+            this.setImageBackground(newEditingEl, oldBgURL);
+            for (const [key, value] of filteredOldDataset) {
+                newEditingEl.dataset[key] = value;
+            }
+            newEditingEl.classList.toggle("o_modified_image_to_save", isModifiedImage);
+        }
     }
     loadReplaceBackgroundImage() {
         return new Promise((resolve) => {
@@ -153,9 +195,6 @@ class BackgroundImageOptionPlugin extends Plugin {
             },
             value: combined,
         });
-    }
-    getLastPreFilterLayerElement() {
-        return null;
     }
 }
 
