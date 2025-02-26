@@ -26,7 +26,7 @@ class TestPoSSaleReport(TestPoSCommon):
         # Process two orders
         orders.append(self.create_ui_order_data([(self.product0, 3)]))
         orders.append(self.create_ui_order_data([(self.product0, 1)]))
-        self.env['pos.order'].sync_from_ui(orders)
+        self.env['pos.order'].create(orders)
         # Duplicate the first line of the first order
         session.order_ids[0].lines.copy()
 
@@ -70,7 +70,7 @@ class TestPoSSaleReport(TestPoSCommon):
         session = self.pos_session
 
         order = self.create_ui_order_data([(product_1, 3), (product_2, 3)])
-        self.env['pos.order'].sync_from_ui([order])
+        self.env['pos.order'].create([order])
 
         session.action_pos_session_closing_control()
 
@@ -95,7 +95,7 @@ class TestPoSSaleReport(TestPoSCommon):
         data = self.create_ui_order_data([(product_0, 1)], self.customer, True)
         data['lines'][0][2]['sale_order_origin_id'] = sale_order.id
         data['lines'][0][2]['sale_order_line_id'] = sale_order.order_line[0].id
-        order_ids = self.env['pos.order'].sync_from_ui([data])
+        order_ids = self.env['pos.order'].create([data])
 
         move_id = self.env['account.move'].browse(order_ids['pos.order'][0]['account_move'])
         self.assertEqual(move_id.partner_id.id, self.customer.id)
@@ -109,7 +109,7 @@ class TestPoSSaleReport(TestPoSCommon):
 
         # Process two orders
         orders.append(self.create_ui_order_data([(self.product0, 3)]))
-        self.env['pos.order'].sync_from_ui(orders)
+        self.env['pos.order'].create(orders)
 
         session.action_pos_session_closing_control()
 
@@ -131,7 +131,7 @@ class TestPoSSaleReport(TestPoSCommon):
         orders.append(self.create_ui_order_data([(self.product0, 5)], self.partner_1))
         orders[0]['shipping_date'] = fields.Date.to_string(fields.Date.today())
 
-        order = self.env['pos.order'].sync_from_ui(orders)
+        order = self.env['pos.order'].create(orders)
         order = self.env['pos.order'].browse(order['pos.order'][0]['id'])
 
         session.action_pos_session_closing_control()

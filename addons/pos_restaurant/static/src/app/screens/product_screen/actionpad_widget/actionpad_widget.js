@@ -24,7 +24,7 @@ patch(ActionpadWidget.prototype, {
         );
     },
     get hasChangesToPrint() {
-        let hasChange = this.pos.getOrderChanges();
+        let hasChange = this.pos.getOrder().getChanges();
         hasChange =
             hasChange.generalCustomerNote == ""
                 ? true // for the case when removed all general note
@@ -32,7 +32,7 @@ patch(ActionpadWidget.prototype, {
         return hasChange;
     },
     async submitOrder() {
-        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+        await this.pos.sendOrderInPreparation(this.currentOrder);
         this.pos.showDefault();
     },
     hasQuantity(order) {
