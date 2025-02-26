@@ -1159,13 +1159,11 @@ export const accountTaxHelpers = {
                 cash_rounding_pd,
                 cash_rounding_method
             );
-            const cash_rounding_base_amount_currency =
+            let cash_rounding_base_amount_currency =
                 expected_total_amount_currency - total_amount_currency;
+            const rate = total_amount ? Math.abs(total_amount_currency / total_amount) : 0.0;
+            let cash_rounding_base_amount = rate ? roundPrecision(cash_rounding_base_amount_currency / rate, company_pd) : 0.0;
             if (!floatIsZero(cash_rounding_base_amount_currency, currency.decimal_places)) {
-                const rate = total_amount ? Math.abs(total_amount_currency / total_amount) : 0.0;
-                const cash_rounding_base_amount = rate
-                    ? roundPrecision(cash_rounding_base_amount_currency / rate, company_pd)
-                    : 0.0;
                 if (strategy === "add_invoice_line") {
                     tax_totals_summary.cash_rounding_base_amount_currency =
                         cash_rounding_base_amount_currency;
@@ -1175,16 +1173,24 @@ export const accountTaxHelpers = {
                     subtotals[untaxed_amount_subtotal_label].base_amount_currency += cash_rounding_base_amount_currency;
                     subtotals[untaxed_amount_subtotal_label].base_amount += cash_rounding_base_amount;
                 } else if (strategy === 'biggest_tax') {
-                    const [max_subtotal, max_tax_group] = tax_totals_summary.subtotals
-                        .flatMap(subtotal => subtotal.tax_groups.map(tax_group => [subtotal, tax_group]))
-                        .reduce((a, b) => (b[1].tax_amount_currency > a[1].tax_amount_currency ? b : a));
+                    const all_subtotal_tax_group = tax_totals_summary.subtotals
+                        .flatMap(subtotal => subtotal.tax_groups.map(tax_group => [subtotal, tax_group]));
 
-                    max_tax_group.tax_amount_currency += cash_rounding_base_amount_currency;
-                    max_tax_group.tax_amount += cash_rounding_base_amount;
-                    max_subtotal.tax_amount_currency += cash_rounding_base_amount_currency;
-                    max_subtotal.tax_amount += cash_rounding_base_amount;
-                    tax_totals_summary.tax_amount_currency += cash_rounding_base_amount_currency;
-                    tax_totals_summary.tax_amount += cash_rounding_base_amount;
+                    if (all_subtotal_tax_group.length) {
+                        const [max_subtotal, max_tax_group] = all_subtotal_tax_group
+                            .reduce((a, b) => (b[1].tax_amount_currency > a[1].tax_amount_currency ? b : a));
+
+                        max_tax_group.tax_amount_currency += cash_rounding_base_amount_currency;
+                        max_tax_group.tax_amount += cash_rounding_base_amount;
+                        max_subtotal.tax_amount_currency += cash_rounding_base_amount_currency;
+                        max_subtotal.tax_amount += cash_rounding_base_amount;
+                        tax_totals_summary.tax_amount_currency += cash_rounding_base_amount_currency;
+                        tax_totals_summary.tax_amount += cash_rounding_base_amount;
+                    } else {
+                        // Failed to apply the cash rounding since there is no tax.
+                        cash_rounding_base_amount_currency = 0.0
+                        cash_rounding_base_amount = 0.0
+                    }
                 }
             }
         }
