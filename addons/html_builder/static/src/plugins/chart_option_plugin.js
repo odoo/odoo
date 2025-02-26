@@ -7,6 +7,7 @@ import { isCSSColor } from "@web/core/utils/colors";
 const CHART_SELECTOR = ".s_chart";
 class ChartOptionPlugin extends Plugin {
     static id = "chartOptionPlugin";
+    static dependencies = ["history"];
     resources = {
         builder_options: [
             {
@@ -39,6 +40,9 @@ class ChartOptionPlugin extends Plugin {
 
     updateDOMData(editingElement, data) {
         editingElement.dataset.data = JSON.stringify(data);
+        if (this.dependencies.history.getIsPreviewing()) {
+            this.reloadGraph(editingElement);
+        }
     }
 
     getActions() {
