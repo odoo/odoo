@@ -1133,8 +1133,8 @@ test("PIVOT day_of_week with same user and spreadsheet week start", async functi
             if (method === "formatted_read_group" && kwargs.groupby?.includes("date:day_of_week")) {
                 return [
                     {
-                        "date:day_of_week": 2, // 2 days after the user week start (Monday + 2 = Wednesday)
-                        __domain: [["date.day_of_week", "=", 2]],
+                        "date:day_of_week": 3, // Wednesday
+                        __domain: [["date.day_of_week", "=", 3]],
                         __count: 1,
                         "probability:avg": 11,
                     },
@@ -1172,8 +1172,8 @@ test("PIVOT day_of_week with user week start and spreadsheet week start differen
             if (method === "formatted_read_group" && kwargs.groupby?.includes("date:day_of_week")) {
                 return [
                     {
-                        "date:day_of_week": 1, // 2 days after the user week start (Tuesday + 1 = Wednesday)
-                        __domain: [["date.day_of_week", "=", 1]],
+                        "date:day_of_week": 3, // Wednesday
+                        __domain: [["date.day_of_week", "=", 3]],
                         __count: 1,
                         "probability:avg": 11,
                     },
