@@ -140,6 +140,14 @@ class AlarmManager(models.AbstractModel):
                 'notify_at': one_date - timedelta(minutes=alarm.duration_minutes),
             })
         return result
+    
+    @api.model
+    def _get_notify_alert_extra_conditions(self):
+        """
+        To be Overriden on google_calendar and microsoft_calendar 
+        adding extra conditions to extract only the unsynced events         
+        """
+        return ""
 
     def _get_events_by_alarm_to_notify(self, alarm_type):
         """
@@ -165,7 +173,7 @@ class AlarmManager(models.AbstractModel):
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) >= %s
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < now() at time zone 'utc'
                AND "event"."stop" > now() at time zone 'utc'
-             )''', [alarm_type, lastcall])
+             )''' + self._get_notify_alert_extra_conditions(), [alarm_type, lastcall])
 
         events_by_alarm = {}
         for alarm_id, event_id in self.env.cr.fetchall():
