@@ -35,7 +35,6 @@ Here be dragons:
         else:
             Request._serve_db
                 env['ir.http']._match
-
                 if not match:
                     Request._transactioning
                         model.retrying
@@ -708,11 +707,14 @@ def route(route=None, **routing):
         Whether this endpoint should open a cursor on a read-only
         replica instead of (by default) the primary read/write database.
     :param Callable[[Exception], Response] handle_params_access_error:
-        Implement a custom behavior if an error occurred when retrieving the record
-        from the URL parameters (access error or missing error).
-    :param str captcha: The action name of the captcha. When set the request will be
-        validated against a captcha implementation. Upon failing these requests will
-        return a UserError.
+        Implement a custom behavior if an error occurred when retrieving
+        the record from the URL parameters (access error or missing error).
+    :param str captcha: The action name of the captcha. When set the
+        request will be validated against a captcha implementation. Upon
+        failing these requests will return a UserError.
+    :param bool save_session: Whether it should set a session_id cookie
+        on the http response and save dirty session on disk. ``False``
+        by default for ``auth='bearer'``. ``True`` by default otherwise.
     """
     def decorator(endpoint):
         fname = f"<function {endpoint.__module__}.{endpoint.__name__}>"
@@ -733,6 +735,8 @@ def route(route=None, **routing):
         if wrong is not None:
             _logger.warning("%s defined with invalid routing parameter 'method', assuming 'methods'", fname)
             routing['methods'] = wrong
+        if routing.get('auth') == 'bearer':
+            routing.setdefault('save_session', False)  # stateless
 
         @functools.wraps(endpoint)
         def route_wrapper(self, *args, **params):
@@ -1518,8 +1522,17 @@ class Request:
 
         dbname = None
         host = self.httprequest.environ['HTTP_HOST']
+        header_dbname = self.httprequest.headers.get('X-Odoo-Database')
         if session.db and db_filter([session.db], host=host):
             dbname = session.db
+            if header_dbname and header_dbname != dbname:
+                e = ("Cannot use both the session_id cookie and the "
+                     "x-odoo-database header.")
+                raise werkzeug.exceptions.Forbidden(e)
+        elif header_dbname:
+            session.can_save = False  # stateless
+            if db_filter([header_dbname], host=host):
+                dbname = header_dbname
         else:
             all_dbs = db_list(force=True, host=host)
             if len(all_dbs) == 1:
@@ -2071,7 +2084,7 @@ class Dispatcher(ABC):
         to save them in the session or in the context.
         """
         routing = rule.endpoint.routing
-        self.request.session.can_save = routing.get('save_session', True)
+        self.request.session.can_save &= routing.get('save_session', True)
 
         set_header = self.request.future_response.headers.set
         cors = routing.get('cors')
