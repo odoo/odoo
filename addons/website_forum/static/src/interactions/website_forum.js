@@ -262,8 +262,11 @@ export class WebsiteForum extends Interaction {
                     ${escape(_t("Read the guidelines to know how to gain karma."))}
                 </a>`)
             : "";
-        const translatedText = _t("karma is required to perform this action. ");
-        const message = markup(`${karma} ${escape(translatedText)}${additionalInfoWithForumID}`);
+        const message = markup(
+            `${karma} ${escape(
+                _t("karma is required to perform this action. ")
+            )}${additionalInfoWithForumID}`
+        );
         this.services.notification.add(message, {
             type: "warning",
             sticky: false,
