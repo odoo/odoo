@@ -192,7 +192,7 @@ class Message(models.Model):
                 message.account_audit_log_move_id
                 and not message.account_audit_log_move_id.posted_before
             ):
-                raise UserError(_("You cannot remove parts of the audit trail. Archive the record instead."))
+                raise UserError(_("You cannot remove parts of the audit trail."))
 
     def write(self, vals):
         # We allow any whitespace modifications in the subject
