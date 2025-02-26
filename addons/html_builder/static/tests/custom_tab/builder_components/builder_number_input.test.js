@@ -243,17 +243,47 @@ test("input should step up or down from by the step prop", async () => {
 
     // simulate arrow up
     await contains(".options-container input").keyDown("ArrowUp");
-    queryFirst(".options-container input").dispatchEvent(new Event("change"));
     await advanceTime();
     expect(":iframe .test-options-target").toHaveInnerHTML("12");
 
     // simulate arrow down
     await contains(".options-container input").keyDown("ArrowDown");
-    queryFirst(".options-container input").dispatchEvent(new Event("change"));
     await advanceTime();
     expect(":iframe .test-options-target").toHaveInnerHTML("10");
 
     expect.verifySteps(["customAction 12", "customAction 10"]);
+});
+test("apply change on each value with up or down", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.innerHTML,
+            apply: ({ editingElement, value }) => {
+                expect.step(`customAction ${value}`);
+                editingElement.innerHTML = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">10 4 0</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+
+    // simulate arrow up
+    await contains(".options-container input").focus();
+    await contains(".options-container input").keyDown("ArrowUp");
+    await advanceTime();
+    expect(":iframe .test-options-target").toHaveInnerHTML("11 5 1");
+
+    // simulate arrow down
+    await contains(".options-container input").keyDown("ArrowDown");
+    await advanceTime();
+    expect(":iframe .test-options-target").toHaveInnerHTML("10 4 0");
+
+    expect.verifySteps(["customAction 11 5 1", "customAction 10 4 0"]);
 });
 test("should handle unit", async () => {
     addActionOption({
@@ -384,4 +414,50 @@ test("clear BuilderNumberInput with default value", async () => {
     await click(".options-container");
     expect("[data-action-id='customAction'] input").toHaveValue("1");
     expect(":iframe .test-options-target").toHaveInnerHTML("1");
+});
+
+test("up on empty BuilderNumberInput gives 1", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.dataset.number,
+            apply: ({ editingElement, value }) => {
+                editingElement.dataset.number = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'" />`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">Non empty div.</div>`);
+    await contains(":iframe .test-options-target").click();
+    await click("[data-action-id='customAction'] input");
+    expect("[data-action-id='customAction'] input").toHaveValue("");
+
+    await contains("[data-action-id='customAction'] input").keyDown("ArrowUp");
+    expect("[data-action-id='customAction'] input").toHaveValue("1");
+    expect(":iframe .test-options-target").toHaveAttribute("data-number", "1");
+});
+test("down on empty BuilderNumberInput gives -1", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.dataset.number,
+            apply: ({ editingElement, value }) => {
+                editingElement.dataset.number = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'" />`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">Non empty div.</div>`);
+    await contains(":iframe .test-options-target").click();
+    await click("[data-action-id='customAction'] input");
+    expect("[data-action-id='customAction'] input").toHaveValue("");
+
+    await contains("[data-action-id='customAction'] input").keyDown("ArrowDown");
+    await animationFrame();
+    expect("[data-action-id='customAction'] input").toHaveValue("-1");
+    expect(":iframe .test-options-target").toHaveAttribute("data-number", "-1");
 });
