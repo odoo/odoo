@@ -53,19 +53,22 @@ class PurchaseOrderLine(models.Model):
         lines_stock = self.filtered(lambda l: l.qty_received_method == 'stock_moves' and l.move_ids and l.state != 'cancel')
         product_by_company = defaultdict(OrderedSet)
         for line in lines_stock:
-            product_by_company[line.company_id].add(line.product_id.id)
+            product_by_company[line.product_id.company_id].add(line.product_id.id)
         kits_by_company = {
             company: self.env['mrp.bom']._bom_find(self.env['product.product'].browse(product_ids), company_id=company.id, bom_type='phantom')
             for company, product_ids in product_by_company.items()
         }
         for line in lines_stock:
-            kit_bom = kits_by_company[line.company_id].get(line.product_id)
+            kit_bom = kits_by_company[line.product_id.company_id].get(line.product_id)
             if kit_bom:
                 moves = line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
                 order_qty = line.product_uom._compute_quantity(line.product_uom_qty, kit_bom.product_uom_id)
                 filters = {
-                    'incoming_moves': lambda m: m.location_id.usage == 'supplier' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
-                    'outgoing_moves': lambda m: m.location_id.usage != 'supplier' and m.to_refund
+                    'incoming_moves': lambda move: move._is_incoming() and (
+                        not move.origin_returned_move_id or
+                        (move.origin_returned_move_id and move.to_refund)
+                    ),
+                    'outgoing_moves': lambda move: not move._is_incoming() and move.to_refund,
                 }
                 line.qty_received = moves._compute_kit_quantities(line.product_id, order_qty, kit_bom, filters)
                 kit_lines += line
