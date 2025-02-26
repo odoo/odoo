@@ -1028,3 +1028,56 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertTrue(downpayment_line_pos)
         self.assertNotIn('(draft)', downpayment_line_pos.name.lower())
         self.assertNotIn('(canceled)', downpayment_line_pos.name.lower())
+
+    def test_pos_order_and_invoice_amounts(self):
+        payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'early_discount': True,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 0,
+                'value_amount': 100,
+            })]
+        })
+        partner_test = self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'property_payment_term_id': payment_term.id,
+        })
+
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 10%',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        test_product = self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 1000,
+            'taxes_id': [(6, 0, [tax.id])],
+        })
+
+        self.env['sale.order'].create({
+            'partner_id': partner_test.id,
+            'order_line': [(0, 0, {
+                'product_id': test_product.id,
+                'name': test_product.name,
+                'price_unit': test_product.lst_price,
+            })],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleAndInvoiceOrder', login="accountman")
+
+        order = self.env['pos.order'].search([('partner_id', '=', partner_test.id)], limit=1)
+        self.assertTrue(order)
+        self.assertEqual(order.partner_id, partner_test)
+
+        invoice = self.env['account.move'].search([('invoice_origin', '=', order.name)], limit=1)
+        self.assertTrue(invoice)
+        self.assertFalse(invoice.invoice_payment_term_id) 
+
+        self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
