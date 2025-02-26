@@ -41,3 +41,10 @@ class TestSystray(HttpCaseWithUserDemo):
     def test_05_not_reditor_not_tester(self):
         self.user_demo.groups_id = self.user_demo.groups_id.filtered(lambda group: group not in [self.group_restricted_editor, self.group_tester])
         self.start_tour(self.env['website'].get_client_action_url('/test_model/1'), 'test_systray_not_reditor_not_tester', login="demo")
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_06_single_website(self):
+        website_2 = self.env['website'].search([('name', '=', 'My Website 2')], limit=1)
+        if website_2:
+            website_2.unlink()
+        self.start_tour(self.env['website'].get_client_action_url('/test_model/1'), 'test_systray_single_website', login="admin")
