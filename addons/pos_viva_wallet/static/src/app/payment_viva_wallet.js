@@ -72,29 +72,31 @@ export class PaymentVivaWallet extends PaymentInterface {
         let customerTrns = " ";
         line.setPaymentStatus("waitingCard");
 
-        if (line.amount < 0) {
-            this._show_error(_t("Cannot process transactions with negative amount."));
-            return false;
-        }
-
         if (order.partner) {
             customerTrns = order.partner.name + " - " + order.partner.email;
         }
 
-        line.sessionId = order.uuid + " - " + uuidv4();
+        line.viva_wallet_session_id = order.uuid + " - " + uuidv4();
         var data = {
-            sessionId: line.sessionId,
+            sessionId: line.viva_wallet_session_id,
+            parentSessionId: line.vivaWalletParentSessionId,
             terminalId: line.payment_method_id.viva_wallet_terminal_id,
             cashRegisterId: this.pos.getCashier().name,
-            amount: roundPrecision(line.amount * 100),
+            amount: roundPrecision(Math.abs(line.amount * 100)),
             currencyCode: this.pos.currency.iso_numeric.toString(),
-            merchantReference: line.sessionId + "/" + this.pos.session.id,
+            merchantReference: line.viva_wallet_session_id + "/" + this.pos.session.id,
             customerTrns: customerTrns,
             preauth: false,
             maxInstalments: 0,
             tipAmount: 0,
         };
-        return this._call_viva_wallet(data, "viva_wallet_send_payment_request").then((data) =>
+
+        const action =
+            line.amount < 0
+                ? "viva_wallet_send_refund_request"
+                : "viva_wallet_send_payment_request";
+
+        return this._call_viva_wallet(data, action).then((data) =>
             this._viva_wallet_handle_response(data)
         );
     }
@@ -107,7 +109,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         const line = this.pos.getOrder().getSelectedPaymentline();
 
         var data = {
-            sessionId: line.sessionId,
+            sessionId: line.viva_wallet_session_id,
             cashRegisterId: this.pos.getCashier().name,
         };
         return this._call_viva_wallet(data, "viva_wallet_send_payment_cancel").then((data) => {
@@ -158,7 +160,7 @@ export class PaymentVivaWallet extends PaymentInterface {
     isPaymentSuccessful(notification) {
         return (
             notification &&
-            notification.sessionId == this.pending_viva_wallet_line().sessionId &&
+            notification.sessionId == this.pending_viva_wallet_line().viva_wallet_session_id &&
             notification.success
         );
     }
@@ -166,12 +168,12 @@ export class PaymentVivaWallet extends PaymentInterface {
     waitForPaymentConfirmation() {
         return new Promise((resolve) => {
             const paymentLine = this.pending_viva_wallet_line();
-            const sessionId = paymentLine.sessionId;
+            const sessionId = paymentLine.viva_wallet_session_id;
             this.paymentLineResolvers[paymentLine.uuid] = resolve;
             const intervalId = setInterval(async () => {
                 const isPaymentStillValid = () =>
                     this.paymentLineResolvers[paymentLine.uuid] &&
-                    this.pending_viva_wallet_line()?.sessionId === sessionId &&
+                    this.pending_viva_wallet_line()?.viva_wallet_session_id === sessionId &&
                     paymentLine.payment_status === "waitingCard";
                 if (!isPaymentStillValid()) {
                     clearInterval(intervalId);
