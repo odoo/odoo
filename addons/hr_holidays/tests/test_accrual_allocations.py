@@ -1644,7 +1644,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'accrued_gain_time': 'start',
             'carryover_date': 'other',
             'carryover_day': 20,
-            'carryover_month': 'apr',
+            'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
                 'start_count': 0,
@@ -1736,7 +1736,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'accrued_gain_time': 'end',
             'carryover_date': 'other',
             'carryover_day': 5,
-            'carryover_month': 'jun',
+            'carryover_month': '6',
             'level_ids': [
                 (0, 0, {
                     'added_value_type': 'day',
@@ -2338,13 +2338,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         leave.action_validate()
         leave.action_refuse()
-        leave.action_reset_confirm()
+        leave.write({
+            'request_date_from': '2024-01-09',
+            'request_date_to': '2024-01-12',
+        })
 
         with self.assertRaises(ValidationError):
-            leave.write({
-                'request_date_from': '2024-01-09',
-                'request_date_to': '2024-01-12',
-            })
+            leave.action_validate()
 
     def test_compute_allocation_days_after_adding_employee(self):
         """
@@ -2451,7 +2451,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual Plan For Test',
                 'carryover_date': 'other',
                 'carryover_day': 1,
-                'carryover_month': 'jul',
+                'carryover_month': '7',
                 'level_ids': [(0, 0, {
                     'added_value': 10,
                     'added_value_type': 'day',
@@ -2574,7 +2574,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual Plan For Test',
                 'carryover_date': 'other',
                 'carryover_day': 1,
-                'carryover_month': 'jul',
+                'carryover_month': '7',
                 'level_ids': [(0, 0, {
                     'added_value': 12,
                     'added_value_type': 'day',
@@ -2654,7 +2654,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrued_gain_time': 'start',
                 'carryover_date': 'other',
                 'carryover_day': 1,
-                'carryover_month': 'jun',
+                'carryover_month': '6',
                 'level_ids': [(0, 0, {
                     'added_value': 1,
                     'added_value_type': 'day',
@@ -2745,7 +2745,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrued_gain_time': 'start',
                 'carryover_date': 'other',
                 'carryover_day': 1,
-                'carryover_month': 'jun',
+                'carryover_month': '6',
                 'level_ids': [(0, 0, {
                     'added_value': 10,
                     'added_value_type': 'day',
@@ -2830,7 +2830,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'carryover_date': 'other',
             'carryover_day': 1,
-            'carryover_month': 'apr',
+            'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
                 'start_count': 0,
@@ -2906,7 +2906,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'carryover_date': 'other',
             'carryover_day': 1,
-            'carryover_month': 'apr',
+            'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
                 'start_count': 0,
@@ -2979,7 +2979,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'carryover_date': 'other',
             'carryover_day': 1,
-            'carryover_month': 'may',
+            'carryover_month': '5',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
                 'start_count': 0,
@@ -3050,7 +3050,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'carryover_date': 'other',
             'carryover_day': 1,
-            'carryover_month': 'may',
+            'carryover_month': '5',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
                 'start_count': 0,
@@ -3078,7 +3078,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation._update_accrual()
             self.assertEqual(allocation.carried_over_days_expiration_date, datetime.date(2024, 7, 1))
 
-        accrual_plan.carryover_month = 'jul'
+        accrual_plan.carryover_month = '7'
         with freeze_time('2025-01-01'):
             allocation._update_accrual()
             self.assertEqual(allocation.carried_over_days_expiration_date, datetime.date(2025, 9, 1))
@@ -3111,7 +3111,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'carryover_date': 'other',
             'carryover_day': 1,
-            'carryover_month': 'may',
+            'carryover_month': '5',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
                 'start_count': 0,
@@ -3140,7 +3140,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertEqual(allocation.carried_over_days_expiration_date, datetime.date(2024, 7, 1))
 
         with freeze_time('2024-06-01'):
-            accrual_plan.carryover_month = 'jul'
+            accrual_plan.carryover_month = '7'
             allocation._update_accrual()
             self.assertEqual(allocation.carried_over_days_expiration_date, datetime.date(2024, 7, 1))
 
@@ -3172,7 +3172,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'carryover_date': 'other',
             'carryover_day': 20,
-            'carryover_month': 'apr',
+            'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
                 'start_count': 0,
@@ -3234,7 +3234,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'carryover_date': 'other',
             'carryover_day': 1,
-            'carryover_month': 'apr',
+            'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
                 'start_count': 0,
@@ -3317,7 +3317,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'carryover_date': 'other',
             'carryover_day': 1,
-            'carryover_month': 'apr',
+            'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
                 'start_count': 0,
