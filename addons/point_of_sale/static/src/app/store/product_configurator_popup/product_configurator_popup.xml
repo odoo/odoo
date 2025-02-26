@@ -61,7 +61,7 @@
                     <t t-set="is_custom" t-value="is_custom || (value.is_custom and value.id == state.attribute_value_ids)"/>
                     <t t-esc="value.name"/>
                     <t t-if="value.price_extra">
-                        <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                        <span> (<t t-esc="getFormatPriceExtra(value.price_extra)"/>)</span>
                     </t>
                 </option>
             </select>
