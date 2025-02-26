@@ -1055,7 +1055,37 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # Unsubscribe the public partner if the cart was previously anonymous.
             order_sudo.message_unsubscribe(order_sudo.website_id.partner_id.ids)
 
+<<<<<<< master
         return json.dumps(feedback_dict)
+||||||| bc8cc9fc0b7b150324411366cb6579da5be55ee7
+        is_extra_step_active = request.website.viewref('website_sale.extra_info').active
+        if is_extra_step_active:
+            callback = callback or 'shop/extra_info'
+        elif is_new_address or order_sudo.only_services:
+            callback = callback or '/shop/checkout?try_skip_step=true'
+        else:
+            callback = callback or '/shop/checkout'
+
+        self._handle_extra_form_data(extra_form_data, address_values)
+
+        return json.dumps({
+            'successUrl': callback,
+        })
+=======
+        is_extra_step_active = request.website.viewref('website_sale.extra_info').active
+        if is_extra_step_active:
+            callback = callback or '/shop/extra_info'
+        elif is_new_address or order_sudo.only_services:
+            callback = callback or '/shop/checkout?try_skip_step=true'
+        else:
+            callback = callback or '/shop/checkout'
+
+        self._handle_extra_form_data(extra_form_data, address_values)
+
+        return json.dumps({
+            'successUrl': callback,
+        })
+>>>>>>> 2cb3d9ad6ecf313c63ffda30eaa5737e27c69296
 
     def _prepare_address_update(self, order_sudo, partner_id=None, address_type=None):
         """ Find the partner whose address to update and return it along with its address type.
