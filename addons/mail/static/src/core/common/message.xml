@@ -18,7 +18,7 @@
                 t-if="message.exists()"
             >
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
-                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight, 'align-items-start justify-content-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
+                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0 justify-content-center" t-att-class="{ 'align-items-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view" t-att-class="getAvatarContainerAttClass()">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
@@ -179,7 +179,7 @@
 
 <t t-name="mail.Message.expandAction">
     <button class="btn border-0 rounded-0 o-mail-Message-expandBtn" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
-        'o-mail-Message-openActionMobile opacity-25 p-2 mt-n2 rounded-circle user-select-none': isMobileOS and !mobileExpanded,
+        'o-mail-Message-openActionMobile p-2 mt-n2 rounded-circle user-select-none': isMobileOS and !mobileExpanded,
         'me-n2': isMobileOS and !mobileExpanded and isAlignedRight,
         'ms-n2': isMobileOS and !mobileExpanded and !isAlignedRight,
         'px-2 py-0': !isMobileOS,

@@ -3,7 +3,7 @@
 
     z-index: $zindex-sticky;
     &:not(.o-mobile) {
-        --border-opacity: .15;
+        --border-opacity: var(--mail-ChatWindow-borderDesktopOpacity, .15);
         aspect-ratio: 9 / 15;
     }
     outline: none;

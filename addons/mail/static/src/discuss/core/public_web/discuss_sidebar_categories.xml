@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCategories">
         <Dropdown t-if="store.discuss.isSidebarCompact" state="searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary mx-2 my-0 min-w-0 p-0 shadow-sm'" manual="true">
-            <button class="o-mail-DiscussSidebarCategories-searchBtn btn btn-light d-flex align-items-center justify-content-center px-1 mx-2 border opacity-75" t-on-click="onClickFindOrStartConversation" t-ref="search-btn"><i class="fa fa-search"/></button>
+            <button class="o-mail-DiscussSidebarCategories-searchBtn btn btn-light d-flex align-items-center justify-content-center border-0 px-1 mx-2 opacity-75" t-on-click="onClickFindOrStartConversation" t-ref="search-btn"><i class="fa fa-lg fa-fw fa-search"/></button>
             <t t-set-slot="content">
                 <div class="p-2" t-ref="search-floating">
                     <span class="text-muted user-select-none">Find or start a conversation</span>
                 </div>
             </t>
         </Dropdown>
-        <div t-else="" class="o-mail-DiscussSidebarCategories-search rounded mx-3 my-2 border position-relative d-flex align-items-center justify-content-center gap-1" t-on-click="onClickFindOrStartConversation">
+        <div t-else="" class="o-mail-DiscussSidebarCategories-search rounded mx-3 my-2 border border-secondary position-relative d-flex align-items-center justify-content-center gap-1" t-on-click="onClickFindOrStartConversation">
             <input class="form-control rounded-3 border-0 bg-inherit" t-att-class="{ 'lh-1': !ui.isSmall }" disabled="true" placeholder="Find or start a conversation" tabindex="0"/>
             <div class="o-mail-DiscussSidebarCategories-searchClickable position-absolute z-1 opacity-0 cursor-pointer w-100 h-100"/>
         </div>
@@ -155,7 +155,7 @@
             t-ref="root"
         >
             <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0" t-att-class="{ 'overflow-hidden': !store.discuss.isSidebarCompact }" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName">
-                <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:26px;height:26px" t-att-class="{ 'ms-2': !store.discuss.isSidebarCompact }">
+                <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:32px;height:32px" t-att-class="{ 'ms-2': !store.discuss.isSidebarCompact }">
                     <img class="w-100 h-100 rounded o_object_fit_cover" t-att-src="thread.avatarUrl" alt="Thread Image"/>
                     <ThreadIcon t-if="thread.channel_type?.includes('chat') or (thread.channel_type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
                     <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'position-absolute o-mail-DiscussSidebarChannel-country border'"/>
