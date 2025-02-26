@@ -40,6 +40,9 @@ export class PosOrder extends Base {
         if (!this.date_order) {
             this.date_order = DateTime.now();
         }
+        if (!this.user_id && this.models["res.users"]) {
+            this.user_id = this.user;
+        }
 
         // !!Keep all uiState in one object!!
         if (!this.uiState) {
