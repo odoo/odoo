@@ -320,15 +320,10 @@ class PortalMailGroup(http.Controller):
         # SUDO to have access to field of the many2one
         group_sudo = group.sudo()
 
-        if token and token != group_sudo._generate_group_access_token():
+        if (token != group_sudo._generate_group_access_token()) if token else (
+            not group.has_access('read')
+        ):
             raise werkzeug.exceptions.NotFound()
-
-        elif not token:
-            try:
-                # Check that the current user has access to the group
-                group.check_access('read')
-            except AccessError:
-                raise werkzeug.exceptions.NotFound()
 
         partner_id = None
         if not request.env.user._is_public():

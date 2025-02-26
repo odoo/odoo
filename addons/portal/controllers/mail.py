@@ -31,21 +31,23 @@ class MailController(mail.MailController):
         if isinstance(request.env[model], request.env.registry['portal.mixin']):
             uid = request.session.uid or request.env.ref('base.public_user').id
             record_sudo = request.env[model].sudo().browse(res_id).exists()
-            try:
-                record_sudo.with_user(uid).check_access('read')
-            except AccessError:
-                if record_sudo.access_token and access_token and consteq(record_sudo.access_token, access_token):
-                    record_action = record_sudo._get_access_action(force_website=True)
-                    if record_action['type'] == 'ir.actions.act_url':
-                        pid = kwargs.get('pid')
-                        hash = kwargs.get('hash')
-                        url = record_action['url']
-                        if pid and hash:
-                            url = urls.url_parse(url)
-                            url_params = url.decode_query()
-                            url_params.update([("pid", pid), ("hash", hash)])
-                            url = url.replace(query=urls.url_encode(url_params)).to_url()
-                        return request.redirect(url)
+            if (
+                not record_sudo.with_user(uid).has_access('read')
+                and record_sudo.access_token
+                and access_token
+                and consteq(record_sudo.access_token, access_token)
+            ):
+                record_action = record_sudo._get_access_action(force_website=True)
+                if record_action['type'] == 'ir.actions.act_url':
+                    pid = kwargs.get('pid')
+                    hash = kwargs.get('hash')
+                    url = record_action['url']
+                    if pid and hash:
+                        url = urls.url_parse(url)
+                        url_params = url.decode_query()
+                        url_params.update([("pid", pid), ("hash", hash)])
+                        url = url.replace(query=urls.url_encode(url_params)).to_url()
+                    return request.redirect(url)
         return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
 
     # Add website=True to support the portal layout

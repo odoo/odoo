@@ -596,11 +596,8 @@ class SurveySurvey(models.Model):
     def _check_answer_creation(self, user, partner, email, test_entry=False, check_attempts=True, invite_token=False):
         """ Ensure conditions to create new tokens are met. """
         self.ensure_one()
-        if test_entry:
-            try:
-                self.with_user(user).check_access('read')
-            except AccessError:
-                raise exceptions.UserError(_('Creating test token is not allowed for you.'))
+        if test_entry and not self.with_user(user).has_access('read'):
+            raise exceptions.UserError(_('Creating test token is not allowed for you.'))
 
         if not test_entry:
             if not self.active:
