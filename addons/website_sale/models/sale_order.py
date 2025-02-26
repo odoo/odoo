@@ -169,7 +169,7 @@ class SaleOrder(models.Model):
         action = super().action_preview_sale_order()
         if action['url'].startswith('/'):
             # URL should always be relative, safety check
-            action['url'] = f'/@{action["url"]}'
+            action['url'] = f'{action["url"]}'
         return action
 
     def action_recovery_email_send(self):
