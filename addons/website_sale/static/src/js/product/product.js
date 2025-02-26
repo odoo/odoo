@@ -10,7 +10,11 @@ patch(Product, {
         // The following fields are needed for tracking.
         category_name: { type: String, optional: true },
         currency_name: { type: String, optional: true },
+        website_published: { type: Boolean, optional: true },
     },
+    defaultProps: {
+        website_published: true,
+    }
 });
 
 patch(Product.prototype, {
