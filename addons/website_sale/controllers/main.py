@@ -3,6 +3,8 @@
 
 import json
 import logging
+import threading
+from collections import defaultdict
 from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
@@ -1762,6 +1764,10 @@ class WebsiteSale(http.Controller):
 
 class PaymentPortal(payment_portal.PaymentPortal):
 
+    def __init__(self):
+        super().__init__()
+        self._payment_locks = defaultdict(threading.Lock)
+
     def _validate_transaction_for_order(self, transaction, sale_order_id):
         """
         Perform final checks against the transaction & sale_order.
@@ -1792,34 +1798,47 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         if order_sudo.state == "cancel":
             raise ValidationError(_("The order has been canceled."))
+        if not self._payment_locks[order_sudo.id].acquire(blocking=False):
+            raise ValidationError(_("Payment is already being processed"))
 
-        kwargs.update({
-            'reference_prefix': None,  # Allow the reference to be computed based on the order
-            'partner_id': order_sudo.partner_invoice_id.id,
-            'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
-        })
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
-        if not kwargs.get('amount'):
-            kwargs['amount'] = order_sudo.amount_total
+        try:
+            kwargs.update({
+                'reference_prefix': None,  # Allow the reference to be computed based on the order
+                'partner_id': order_sudo.partner_invoice_id.id,
+                'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize
+            })
+            kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
+            if not kwargs.get('amount'):
+                kwargs['amount'] = order_sudo.amount_total
 
-        if tools.float_compare(kwargs['amount'], order_sudo.amount_total, precision_rounding=order_sudo.currency_id.rounding):
-            raise ValidationError(_("The cart has been updated. Please refresh the page."))
+            compare_amounts = order_sudo.currency_id.compare_amounts
+            if compare_amounts(kwargs['amount'], order_sudo.amount_total):
+                raise ValidationError(_("The cart has been updated. Please refresh the page."))
+            amount_paid = sum(
+                tx.amount for tx in order_sudo.transaction_ids if tx.state in ('authorized', 'done')
+            )
+            if compare_amounts(amount_paid, order_sudo.amount_total) == 0:
+                raise ValidationError(_("The cart has already been paid. Please refresh the page."))
 
-        tx_sudo = self._create_transaction(
-            custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
-        )
+            tx_sudo = self._create_transaction(
+                custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
+            )
 
-        # Store the new transaction into the transaction list and if there's an old one, we remove
-        # it until the day the ecommerce supports multiple orders at the same time.
-        last_tx_id = request.session.get('__website_sale_last_tx_id')
-        last_tx = request.env['payment.transaction'].browse(last_tx_id).sudo().exists()
-        if last_tx:
-            PaymentPostProcessing.remove_transactions(last_tx)
-        request.session['__website_sale_last_tx_id'] = tx_sudo.id
+            # Store the new transaction into the transaction list and if there's an old one, we
+            # remove it until the day the ecommerce supports multiple orders at the same time.
+            last_tx_id = request.session.get('__website_sale_last_tx_id')
+            last_tx = request.env['payment.transaction'].browse(last_tx_id).sudo().exists()
+            if last_tx:
+                PaymentPostProcessing.remove_transactions(last_tx)
+            request.session['__website_sale_last_tx_id'] = tx_sudo.id
 
-        self._validate_transaction_for_order(tx_sudo, order_id)
+            self._validate_transaction_for_order(tx_sudo, order_id)
 
-        return tx_sudo._get_processing_values()
+            return tx_sudo._get_processing_values()
+
+        finally:
+            self._payment_locks[order_sudo.id].release()
+            del self._payment_locks[order_sudo.id]
 
 
 class CustomerPortal(portal.CustomerPortal):
