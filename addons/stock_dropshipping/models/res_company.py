@@ -52,7 +52,6 @@ class ResCompany(models.Model):
                 'code': 'dropship',
                 'default_location_src_id': self.env.ref('stock.stock_location_suppliers').id,
                 'default_location_dest_id': self.env.ref('stock.stock_location_customers').id,
-                'sequence_code': 'DS',
                 'use_existing_lots': False,
             })
         if dropship_vals:
