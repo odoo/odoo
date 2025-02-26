@@ -266,7 +266,7 @@ class TestPoSStock(TestPoSCommon):
         refund_payment.with_context(**payment_context).check()
 
         self.pos_session.action_pos_session_validate()
-        expense_account_move_line = self.env['account.move.line'].search([('account_id', '=', self.expense_account.id)])
+        expense_account_move_line = self.env['account.move.line'].search([('account_id', '=', self.expense_account.id), ('product_id', '=', False)])
         self.assertEqual(expense_account_move_line.balance, 0.0, "Expense account should be 0.0")
 
     def test_stock_user_without_pos_permissions_can_create_product(self):
