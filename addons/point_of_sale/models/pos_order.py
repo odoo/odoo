@@ -1397,6 +1397,7 @@ class PosOrderLine(models.Model):
 
     combo_item_id = fields.Many2one('product.combo.item', string='Combo Item')
     is_edited = fields.Boolean('Edited', default=False)
+    # Technical field holding custom data for the taxes computation engine.
     extra_tax_data = fields.Json()
 
     @api.model

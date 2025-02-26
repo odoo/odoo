@@ -162,6 +162,7 @@ class SaleOrderLine(models.Model):
         store=True, readonly=False, precompute=True,
         context={'active_test': False},
         check_company=True)
+    # Technical field holding custom data for the taxes computation engine.
     extra_tax_data = fields.Json()
 
     # Tech field caching pricelist rule used for price & discount computation

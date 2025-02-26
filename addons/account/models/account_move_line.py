@@ -226,6 +226,7 @@ class AccountMoveLine(models.Model):
         tracking=True,
         help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.",
     )
+    # Technical field holding custom data for the taxes computation engine.
     extra_tax_data = fields.Json()
 
     # Technical field. True if the balance of this move line needs to be
