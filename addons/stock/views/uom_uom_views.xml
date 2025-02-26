@@ -24,7 +24,7 @@
                 <field 
                     name="product_uom_ids"
                     invisible="not context.get('product_id')"
-                    widget="many2many_tags"
+                    widget="many2many_barcode_tags"
                     options="{'no_create_edit': True, 'no_open': True}"
                     readonly="not context.get('product_id')"
                     force_save="1"
