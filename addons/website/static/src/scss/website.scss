@@ -1271,6 +1271,12 @@ header {
             }
         }
     }
+} @else if o-website-value('header-template') == 'boxed' { // TODO: Adapt in master, just add ps-3 class in xml
+    @include media-breakpoint-down(sm) {
+        nav.rounded-pill {
+            padding-left: 1rem !important;
+        }
+    }
 }
 
 .o_grid_header_3_cols {
