@@ -193,12 +193,8 @@ class TestEventBoothSaleInvoice(AccountTestInvoicingCommon, TestEventBoothSaleWD
         self.assertEqual(
             sale_order.invoice_status, 'invoiced',
             f"Order is in '{sale_order.invoice_status}' status while it should be 'invoiced'.")
-        # Pay the invoice.
-        journal = self.env['account.journal'].search([('type', '=', 'cash'), ('company_id', '=', sale_order.company_id.id)], limit=1)
 
-        register_payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
-            'journal_id': journal.id,
-        })
+        register_payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({})
         register_payments._create_payments()
 
         # Check the invoice payment state after paying the invoice
