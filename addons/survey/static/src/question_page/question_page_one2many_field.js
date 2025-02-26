@@ -48,7 +48,10 @@ class QuestionPageOneToManyField extends X2ManyField {
         const saveRecord = async (record) => {
             await superSaveRecord(record);
             try {
+                const limit = this.list.config.limit;
+                const offset = (Math.ceil(this.list.count / limit) - 1) * limit;
                 await self.props.record.save();
+                await this.list.load({ limit: limit, offset: offset });
             } catch (error) {
                 // In case of error occurring when saving.
                 // Remove erroneous question row added to the embedded list
@@ -83,9 +86,21 @@ class QuestionPageOneToManyField extends X2ManyField {
             if (params.record) {
                 params.record = record.data[name].records.find(r => r.resId === params.record.resId);
             }
+            if (params.context.question_create) {
+                const limit = this.list.config.limit;
+                const offset = (Math.ceil(this.list.count / limit) - 1) * limit;
+                await this.list.load({ limit: limit, offset: offset });
+            }
             await openRecord(params);
         };
         this.canOpenRecord = true;
+    }
+
+    async onAdd({ context, editable } = {}) {
+        const limit = this.list.config.limit;
+        const offset = (Math.ceil(this.list.count / limit) - 1) * limit;
+        await this.list.load({ limit: limit, offset: offset });
+        await super.onAdd({ context, editable });
     }
 }
 QuestionPageOneToManyField.components = {
