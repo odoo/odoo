@@ -31,11 +31,15 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     updateContainers(target) {
+        if (this.dependencies.history.getIsPreviewing()) {
+            return;
+        }
         if (target) {
             this.target = target;
         }
         if (!this.target || !this.target.isConnected) {
-            this.lastContainers = [];
+            this.lastContainers = this.lastContainers.filter((c) => c.element.isConnected);
+            this.target = this.lastContainers.at(-1)?.element;
             this.dependencies.history.setStepExtra("optionSelection", this.target);
             this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
             return;

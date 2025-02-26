@@ -51,3 +51,42 @@ test("Undo/Redo correctly restore the container target", async () => {
     await contains(".o-snippets-top-actions .fa-repeat").click();
     expectOptionContainerToInclude(editor, queryOne(":iframe .target2"));
 });
+
+test("Container fallback to a valid ancestor if target dissapear", async () => {
+    addActionOption({
+        customAction: {
+            apply: ({ editingElement }) => {
+                editingElement.remove();
+            },
+        },
+        ancestorAction: {
+            apply: ({ editingElement }) => {
+                editingElement.remove();
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
+    });
+    addOption({
+        selector: ".test-ancestor",
+        template: xml`<BuilderButton action="'ancestorAction'">Ancestor selected</BuilderButton>`,
+    });
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-ancestor">
+            Hey I'm an ancestor
+            <div class="test-options-target target1">
+                Homepage
+            </div>
+        </div>
+
+    `);
+    const editor = getEditor();
+
+    await contains(":iframe .target1").click();
+    expectOptionContainerToInclude(editor, queryOne(":iframe .target1"));
+    await contains("[data-action-id='customAction']").click();
+    expectOptionContainerToInclude(editor, queryOne(":iframe .test-ancestor"));
+    expect("[data-action-id='ancestorAction']").toHaveCount(1);
+});
