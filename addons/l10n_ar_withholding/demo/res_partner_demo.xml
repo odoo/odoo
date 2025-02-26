@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_adhoc_caba" model="res.partner">
+        <field name="name">Oficina CABA</field>
+        <field name="parent_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="state_id" ref="base.state_ar_c"/>
+        <field name="type">delivery</field>
+        <field name="zip">1000</field>
+        <field name="country_id" ref="base.ar"/>
+        <field name="street">Libertador 1234</field>
+    </record>
+
+    <record id="res_partner_adhoc_cordoba" model="res.partner">
+        <field name="name">Oficina Córdoba</field>
+        <field name="parent_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="state_id" ref="base.state_ar_x"/>
+        <field name="type">delivery</field>
+        <field name="zip">5000</field>
+        <field name="country_id" ref="base.ar"/>
+        <field name="street">Galera 1234</field>
+    </record>
+
+</odoo>

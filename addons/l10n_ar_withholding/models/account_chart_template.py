@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import models, api
 from odoo.addons.account.models.chart_template import template
 
 
@@ -36,4 +36,50 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ar_base_res_company(self):
         res = super()._get_ar_base_res_company()
         res[self.env.company.id].update({'l10n_ar_tax_base_account_id': 'base_tax_account'})
+        return res
+
+    @api.model
+    def _l10n_ar_add_wth_sequences(self, company):
+        """ Agregamos etiquetas en repartition lines de impuestos de percepciones de iva, ganancias e ingresos brutos.  """
+        company.ensure_one()
+
+        # creacion de secuencias y agregado de etiquetas para liquidación de impuestos
+        withholdings_domain = [
+            ('company_id', '=', company.id),
+            ('type_tax_use', '=', 'none'),
+            ('country_code', '=', 'AR'),
+            ('l10n_ar_withholding_payment_type', '=', 'supplier'),
+        ]
+        non_profits_domain = withholdings_domain + [('l10n_ar_tax_type', 'not in', ['earnings', 'earnings_scale'])]
+
+        for tax in self.env['account.tax'].with_context(active_test=False).search(non_profits_domain):
+            sequence = self.env['ir.sequence'].create({
+                'name': tax.invoice_label or tax.name,
+                'prefix': '%(year)s-',
+                'padding': 8,
+                'number_increment': 1,
+                'implementation': 'standard',
+                'company_id': company.id,
+            })
+            tax.l10n_ar_withholding_sequence_id = sequence.id
+
+        profits_domain = withholdings_domain + [('l10n_ar_tax_type', 'in', ['earnings', 'earnings_scale'])]
+        sequence = self.env['ir.sequence'].create({
+                'name': tax.invoice_label or 'Retención de Ganancias',
+                'prefix': '%(year)s-',
+                'padding': 8,
+                'number_increment': 1,
+                'implementation': 'standard',
+                'company_id': company.id,
+            })
+        profits_taxes = self.env['account.tax'].with_context(active_test=False).search(profits_domain)
+        profits_taxes.l10n_ar_withholding_sequence_id = sequence.id
+
+    def _load(self, template_code, company, install_demo):
+        """ Luego de que creen los impuestos del archivo account.tax-ar_ri.csv de l10n_ar al instalar el plan de cuentas en la nueva compañìa argentina agregamos en este método las etiquetas que correspondan en los repartition lines. """
+        # Llamamos a super para que se creen los impuestos
+        res = super()._load(template_code, company, install_demo)
+        company = company or self.env.company
+        if company.chart_template in ('ar_ri', 'ar_ex', 'ar_base'):
+            self.sudo()._add_wh_taxes(company)
         return res
