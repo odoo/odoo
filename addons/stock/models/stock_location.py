@@ -125,6 +125,16 @@ class StockLocation(models.Model):
             else:
                 location.complete_name = location.name
 
+    @api.depends('warehouse_id.name', 'name')
+    @api.depends_context('include_wh_code')
+    def _compute_display_name(self):
+        if not self.env.context.get('include_wh_code') or not self.env.user.has_group('stock.group_stock_multi_warehouses'):
+            return super()._compute_display_name()
+        warehoused_locations = self.filtered('warehouse_id')
+        for loc in warehoused_locations:
+            loc.display_name = '[%s] %s' % (loc.warehouse_id.code, loc.name)
+        return super(StockLocation, self - warehoused_locations)._compute_display_name()
+
     def _compute_is_empty(self):
         groups = self.env['stock.quant']._read_group(
             [('location_id.usage', 'in', ('internal', 'transit')),
