@@ -1366,6 +1366,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             **sale_portal.CustomerPortal._get_payment_values(
                 self, order, website_id=request.website.id
             ),
+            'display_submit_button': False,  # The submit button is re-added outside the form.
             'transaction_route': f'/shop/payment/transaction/{order.id}',
             'landing_route': '/shop/payment/validate',
             'sale_order_id': order.id,  # Allow Stripe to check if tokenization is required.
