@@ -209,9 +209,10 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
         body = htmlReplace(body, text, placeholder);
     }
     for (const special of specialMentions) {
-        body = body.replace(
-            `@${escape(special)}`,
-            `<a href="#" class="o-discuss-mention">@${escape(special)}</a>`
+        body = htmlReplace(
+            body,
+            `@${special}`,
+            markup(`<a href="#" class="o-discuss-mention">@${htmlEscape(special)}</a>`)
         );
     }
     const baseHREF = url("/web");
