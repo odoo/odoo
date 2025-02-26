@@ -22,9 +22,9 @@ test("auto-select 'Inbox' when discuss had channel as active thread", async () =
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-ChatWindow [title*='Close Chat Window']");
-    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Channel" });
+    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bold", { text: "Channel" });
     await click("button", { text: "Mailboxes" });
-    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Mailboxes" });
+    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bold", { text: "Mailboxes" });
     await contains("button.active", { text: "Inbox" });
 });
 

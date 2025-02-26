@@ -18,7 +18,7 @@ test("on leave & online", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-ImStatus i.fa-plane[title='Online']");
+    await contains(".o-mail-Discuss-header .o-mail-ImStatus i.fa-plane[title='Online']");
 });
 
 test("on leave & away", async () => {
@@ -33,7 +33,7 @@ test("on leave & away", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-ImStatus i.fa-plane[title='Idle']");
+    await contains(".o-mail-Discuss-header .o-mail-ImStatus i.fa-plane[title='Idle']");
 });
 
 test("on leave & offline", async () => {
@@ -48,5 +48,5 @@ test("on leave & offline", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-ImStatus i.fa-plane[title='Out of office']");
+    await contains(".o-mail-Discuss-header .o-mail-ImStatus i.fa-plane[title='Out of office']");
 });

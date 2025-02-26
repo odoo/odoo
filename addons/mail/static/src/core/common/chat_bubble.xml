@@ -15,8 +15,8 @@
 
     <t t-name="mail.ChatBubblePreview">
         <div class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border border-secondary bg-100 rounded">
-            <div class="text-truncate base-fs fw-bolder mb-0 mx-2" t-esc="props.chatWindow.displayName"/>
-            <div t-if="previewContent" class="text-truncate small mx-2 text-muted">
+            <div class="text-truncate base-fs fw-bolder mb-0 mx-2 px-1" t-esc="props.chatWindow.displayName"/>
+            <div t-if="previewContent" class="text-truncate small mx-2 px-1 text-muted">
                 <t t-call="mail.message_preview_prefix">
                     <t t-set="message" t-value="thread?.newestPersistentOfAllMessage"/>
                 </t>

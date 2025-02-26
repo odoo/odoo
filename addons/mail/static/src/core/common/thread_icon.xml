@@ -11,11 +11,10 @@
             <t t-elif="props.thread.channel_type?.includes('chat') and correspondent">
                 <t name="chat">
                     <t name="chat_static">
-                        <div t-if="correspondent.persona.im_status === 'online'" class="fa fa-fw fa-circle text-success" title="Online"/>
-                        <div t-elif="correspondent.persona.im_status === 'offline'" class="fa fa-fw fa-circle-o opacity-75" title="Offline"/>
-                        <div t-elif="correspondent.persona.im_status === 'away'" class="fa fa-fw fa-circle o-yellow" title="Away"/>
-                        <div t-elif="correspondent.persona.im_status === 'bot'" class="fa fa-fw fa-heart text-success" title="Bot"/>
-                        <div t-else="" class="fa-fw" t-att-class="largeClass" t-attf-class="#{ defaultChatIcon.class }" t-att-title="defaultChatIcon.title"/>
+                        <ImStatus t-if="correspondent.persona.im_status" member="correspondent" size="'md'"/>
+                        <div t-else="" class="d-flex rounded-circle bg-inherit">
+                            <i class="fa-fw" t-att-class="largeClass" t-attf-class="#{ defaultChatIcon.class }" t-att-title="defaultChatIcon.title"/>
+                        </div>
                     </t>
                 </t>
             </t>

@@ -19,7 +19,7 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
 .o-mail-DiscussSidebarChannel-country {
     bottom: -2px;
     left: -4px;
-    width: 12px;
+    width: 16px;
 }
 
 .o-mail-DiscussSidebar-floatingMenu {
@@ -33,16 +33,6 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
 
     &:hover .o-mail-DiscussSidebarChannel-commands {
         display: flex !important;
-        .btn-group .btn {
-            &:hover {
-                border-color: var(--mail-DiscussSidebarChannel-commandsHover, rgba($o-action, .15));
-                background-color: $o-view-background-color !important;
-            }
-            &:not(:hover) {
-                border-color: transparent;
-                background-color: transparent;
-            }
-        }
     }
 }
 
@@ -67,12 +57,6 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
     background-color: inherit !important; // Not 'bg-inherit' so it cancels btn hover effect too
 }
 
-.o-mail-DiscussSidebarChannel-threadIcon {
-    font-size: xx-small;
-    width: 14px;
-    height: 14px;
-}
-
 .o-mail-DiscussSidebarChannel-indicatorCompact {
     top: 3px;
     left: 3px;
@@ -84,7 +68,7 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
 
 .o-mail-DiscussSidebar-unreadIndicator {
     font-size: 0.35rem;
-    left: 0px;
+    left: -2px;
 
     .o-mail-DiscussSidebarSubchannel &:not(.o-compact) {
         left: map-get($spacers, 2) + map-get($spacers, 1) / 2;
@@ -110,6 +94,6 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
 
 .o-mail-DiscussSidebarSubchannel svg {
     color: var(--mail-DiscussSidebarSubchannel-svgColor, mix($gray-300, $gray-400, 75%));
-    left: 20px;
+    left: 22px;
     transform: scaleX(1) #{"/* rtl:scaleX(-1) */"};
 }
