@@ -1005,15 +1005,6 @@ class ProductTemplate(models.Model):
                 if quant:
                     raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
 
-        if 'is_storable' in vals and not vals['is_storable'] and sum(self.mapped('nbr_reordering_rules')) != 0:
-            raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
-        if any('is_storable' in vals and vals['is_storable'] != prod_tmpl.is_storable for prod_tmpl in self):
-            existing_done_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
-                ('state', '=', 'done'),
-            ], limit=1)
-            if existing_done_move_lines:
-                raise UserError(_("You can not change the inventory tracking of a product that was already used."))
             existing_reserved_move_lines = self.env['stock.move.line'].sudo().search([
                 ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
