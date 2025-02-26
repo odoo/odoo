@@ -22,6 +22,8 @@
                 <h1 t-if="props.productCartQty"
                     t-out="props.productCartQty"
                     class="product-cart-qty text-muted display-6 fw-bolder m-0 mt-auto" />
+                <span t-if="props.priceExtra" class="price-extra-tag d-flex my-2 align-items-end"
+                    t-esc="props.priceExtra" />
             </div>
         </article>
     </t>
