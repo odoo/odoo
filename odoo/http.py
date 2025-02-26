@@ -1519,7 +1519,16 @@ class Request:
 
         dbname = None
         host = self.httprequest.environ['HTTP_HOST']
-        if session.db and db_filter([session.db], host=host):
+        header_dbname = self.httprequest.headers.get('X-Odoo-Database')
+        if header_dbname and db_filter([header_dbname], host=host):
+            if session.db and session.db != dbname:
+                _logger.warning("Logged into database %r, but X-odoo-database requests another database; logging session out.", session.db)
+                session.logout(keep_db=False)
+            dbname = header_dbname
+        elif session.db and db_filter([session.db], host=host):
+            if session.db and session.db != dbname:
+                _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", session.db)
+                session.logout(keep_db=False)
             dbname = session.db
         else:
             all_dbs = db_list(force=True, host=host)
@@ -1527,9 +1536,6 @@ class Request:
                 dbname = all_dbs[0]  # monodb
 
         if session.db != dbname:
-            if session.db:
-                _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", session.db)
-                session.logout(keep_db=False)
             session.db = dbname
 
         session.is_dirty = False
@@ -1954,7 +1960,7 @@ class Request:
         self._set_request_dispatcher(rule)
         readonly = rule.endpoint.routing['readonly']
         if callable(readonly):
-            readonly = readonly(rule.endpoint.func.__self__)
+            readonly = readonly(rule.endpoint.func.__self__, rule, args)
         return self._transactioning(
             functools.partial(self._serve_ir_http, rule, args),
             readonly=readonly,
